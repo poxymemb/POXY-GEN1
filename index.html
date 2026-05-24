@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>POXY</title>
+<title>POXY WORLD</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -13,6 +13,9 @@ body.bg-epic{background:linear-gradient(135deg,rgba(171,71,188,0.08) 0%,#fff 60%
 body.bg-legendary{background:linear-gradient(135deg,rgba(255,202,40,0.10) 0%,rgba(255,152,0,0.05) 50%,#fff 80%)}
 body.bg-mythic{animation:prism 3s ease-in-out infinite}
 body.dark-club{background:#0a0a0c;color:#e8e8e8;animation:none}
+body[data-theme="cyberpunk"]{background:#0d0d10}
+body[data-theme="cyberpunk"] .page,.page.visible[data-theme="cyberpunk"],.app{background:transparent}
+body[data-theme="mayfair"]{background:#0e0608}
 @keyframes prism{0%,100%{background:linear-gradient(135deg,#ffe0e0,#fff0e0,#ffe0f0,#fff)}50%{background:linear-gradient(225deg,#ffe8f0,#fff5e0,#f8e0ff,#fff)}}
 @keyframes burst{0%{transform:scale(1)}40%{transform:scale(1.22)}70%{transform:scale(0.95)}100%{transform:scale(1)}}
 @keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
@@ -31,72 +34,261 @@ body.dark-club{background:#0a0a0c;color:#e8e8e8;animation:none}
 @keyframes revealFadeSoft{0%{opacity:0;transform:scale(0.88) translateY(12px)}100%{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes revealPunch{0%{opacity:0;transform:scale(0.75)}40%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
 @keyframes premiumFrameShift{0%,100%{box-shadow:0 0 0 2px #FFCA28,0 0 12px #FFCA2888,0 0 0 3px #FF525266}50%{box-shadow:0 0 0 2px #FF5252,0 0 18px #FF5252aa,0 0 0 3px #AB47BC66}}
-@keyframes marqueeScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-@keyframes spinFlash{0%{opacity:1}100%{opacity:1}}
-
-/* ── LIVE DROPS TICKER ── */
-.live-drops-ticker{position:fixed;top:0;left:0;right:0;z-index:250;height:28px;background:linear-gradient(90deg,#1a1a1a,#2a1a2e,#1a1a1a);overflow:hidden;display:none;border-bottom:1px solid #333}
-.live-drops-ticker.visible{display:block}
-.live-drops-ticker.has-user{top:0}
-body.ticker-on .balance-badge{top:38px}
-body.ticker-on .user-bar{margin-top:28px}
-.live-drops-viewport{width:100%;height:100%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.live-drops-track{display:flex;align-items:center;height:100%;width:max-content;animation:marqueeScroll 45s linear infinite;will-change:transform}
-.live-drops-track:hover{animation-play-state:paused}
-.live-drop-item{display:inline-flex;align-items:center;gap:6px;padding:0 20px;font-size:10px;font-weight:600;color:#e0e0e0;white-space:nowrap;flex-shrink:0}
-.live-drop-av{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;background:#333;overflow:hidden;flex-shrink:0}
-.live-drop-av img{width:100%;height:100%;object-fit:cover}
-.live-drop-tier{font-weight:800}
-.live-drop-time{color:#666;margin-left:2px}
-
-/* ── POXY COIN ── */
-.coin-inline{display:inline-flex;align-items:center;gap:4px;vertical-align:middle}
-.poxy-coin-icon{display:inline-block;flex-shrink:0;vertical-align:middle;filter:drop-shadow(0 1px 3px rgba(255,193,7,0.45))}
-.poxy-coin-sm{width:14px;height:14px}
-.poxy-coin-md{width:18px;height:18px}
-.poxy-coin-lg{width:22px;height:22px}
+@keyframes hamburgerBreathe{0%,100%{transform:scale(1);box-shadow:0 0 10px #ff416c66,0 4px 14px #ff4b2b44}50%{transform:scale(1.07);box-shadow:0 0 22px #ff416caa,0 4px 22px #ff4b2b88}}
+@keyframes sidebarSlideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+@keyframes gradientShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes auraBurst{0%{opacity:0;transform:scale(0.3)}40%{opacity:0.85;transform:scale(1.2)}100%{opacity:0.35;transform:scale(1.5)}}
 
 /* ── GPU / MOTION ── */
 .gpu-accel{will-change:transform,opacity;transform:translateZ(0);backface-visibility:hidden}
-.box,.reward-box,#spinBox,.live-drops-track,.col-card,.market-card{will-change:transform,opacity}
+.box,.reward-box,#spinBox,.col-card,.market-card{will-change:transform,opacity}
 body.screen-shake{animation:screenShake 0.45s ease-out}
 body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 
 /* ── PREMIUM AVATAR FRAME ── */
 .avatar-premium-frame{border-radius:50%;animation:premiumFrameShift 3.5s ease-in-out infinite;padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC,#FFCA28);background-size:300% 300%}
 
-/* ── COLLECTION STICKY + WIDE ── */
-.page-collection-wide{max-width:min(1100px,96vw)!important;padding:20px 24px 40px!important}
-.col-sticky-bar{position:sticky;top:0;z-index:10;background:#fff;padding:12px 0 10px;margin:-12px 0 14px;border-bottom:1px solid #f0f0f0}
-body.dark-club .col-sticky-bar{background:#0a0a0c;border-color:#252530}
-.col-grid-wide{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;gap:14px!important}
-
-/* ── CASE SPIN / REVEAL ── */
-.box.spin-rapid,.box.spin-white{will-change:transform,opacity,background,border-color}
-.reward-box.reveal-common,.reward-box.reveal-uncommon{animation:revealFadeSoft 0.55s ease-out forwards,floatUp 2.5s ease-in-out 0.55s infinite}
-.reward-box.reveal-rare,.reward-box.reveal-epic{animation:revealPunch 0.4s cubic-bezier(0.25,1,0.5,1) forwards,revealGlowPulse 1.2s ease-in-out 0.4s infinite,floatUp 2.5s ease-in-out 0.4s infinite}
-.reward-box.reveal-legendary,.reward-box.reveal-mythic{animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards}
-.reward-aura{position:absolute;inset:-30px;border-radius:50%;opacity:0;pointer-events:none;z-index:-1;will-change:transform,opacity}
-.reward-aura.burst{animation:auraBurst 0.9s ease-out forwards}
-@keyframes auraBurst{0%{opacity:0;transform:scale(0.3)}40%{opacity:0.85;transform:scale(1.2)}100%{opacity:0.35;transform:scale(1.5)}}
-
-/* ── MARKET CONTROLS ── */
-.market-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.market-sort-select{flex:1;min-width:140px;padding:9px 12px;border:1.5px solid #f0f0f0;border-radius:10px;font-family:inherit;font-size:11px;font-weight:700;color:#1a1a1a;background:#fafafa;cursor:pointer;outline:none}
-.market-sort-select:focus{border-color:#FF5722}
-.market-card-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.btn-quick-buy{padding:7px 14px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:0.5px;transition:transform 0.15s;white-space:nowrap}
-.btn-quick-buy:hover{transform:scale(1.05)}
-.btn-quick-buy:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-
-/* ── LAYOUT ── */
-.app{background:transparent;min-height:520px;display:flex;flex-direction:column;align-items:center;padding:44px 24px 16px;position:relative;max-width:380px;margin:0 auto}
-
-/* ── BALANCE BADGE ── */
-.balance-badge{position:fixed;top:10px;right:12px;z-index:200;background:#1a1a1a;color:#fff;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:0.5px;display:none;cursor:pointer;transition:transform 0.15s}
+/* ── PC CURRENCY ── */
+.pc-badge{display:inline-block;font-weight:800;letter-spacing:0.5px}
+.balance-badge{position:fixed;top:10px;right:12px;z-index:200;background:#1a1a1a;color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:0.5px;display:none;cursor:pointer;transition:transform 0.15s}
 .balance-badge:hover{transform:scale(1.05)}
 .balance-badge.visible{display:block}
 .balance-badge.pop{animation:balancePop 0.3s ease}
+
+/* ── USERNAME GRADIENT ── */
+.username-gradient-active{background:var(--ug);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 100%;animation:gradientShift 3s linear infinite}
+
+/* ── HAMBURGER ── */
+.hamburger-btn{position:fixed;top:10px;left:12px;z-index:300;width:36px;height:36px;border:none;border-radius:10px;background:linear-gradient(45deg,#ff416c,#ff4b2b);display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;will-change:transform,opacity;animation:hamburgerBreathe 2.5s ease-in-out infinite;padding:0}
+.hamburger-btn.visible{display:flex}
+.hamburger-line{width:18px;height:2px;background:#fff;border-radius:2px;transition:transform 0.3s ease,opacity 0.3s ease}
+
+/* ── SIDEBAR ── */
+.sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.72);opacity:0;transition:opacity 0.3s;pointer-events:none;backdrop-filter:blur(4px)}
+.sidebar-backdrop.open{opacity:1;pointer-events:all}
+.sidebar-panel{position:fixed;top:0;left:0;z-index:401;width:340px;max-width:92vw;height:100vh;background:#0d0d10;border-right:1px solid #1e1e28;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.35s cubic-bezier(0.25,1,0.5,1);will-change:transform;overflow:hidden}
+.sidebar-panel.open{transform:translateX(0)}
+.sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid #1a1a24;flex-shrink:0}
+.sidebar-logo{font-size:14px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#ff416c,#ff4b2b,#ffab2e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sidebar-close{width:28px;height:28px;border:none;background:#1a1a24;border-radius:8px;color:#666;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;font-family:inherit}
+.sidebar-close:hover{background:#252530;color:#fff}
+.sidebar-tabs{display:flex;overflow-x:auto;border-bottom:1px solid #1a1a24;flex-shrink:0;scrollbar-width:none}
+.sidebar-tabs::-webkit-scrollbar{display:none}
+.sidebar-tab-btn{flex-shrink:0;padding:10px 13px;border:none;background:none;color:#444;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:color 0.2s,border-bottom-color 0.2s;border-bottom:2px solid transparent;font-family:inherit;white-space:nowrap}
+.sidebar-tab-btn.active{color:#ff416c;border-bottom-color:#ff416c}
+.sidebar-tab-btn:hover:not(.active){color:#888}
+.sidebar-content{flex:1;overflow-y:auto;padding:18px 16px;scrollbar-width:thin;scrollbar-color:#2a2a35 transparent}
+.sidebar-content::-webkit-scrollbar{width:4px}
+.sidebar-content::-webkit-scrollbar-track{background:transparent}
+.sidebar-content::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:4px}
+.sidebar-tab-content{display:none}
+.sidebar-tab-content.active{display:block;animation:fadeIn 0.25s ease}
+
+/* ── CODEX (TAB A) ── */
+.codex-hero{text-align:center;margin-bottom:22px;padding:18px 0 16px;border-bottom:1px solid #1a1a24}
+.codex-emblem{font-size:32px;margin-bottom:6px}
+.codex-title{font-size:13px;font-weight:900;letter-spacing:4px;color:#fff;margin-bottom:4px}
+.codex-subtitle{font-size:9.5px;color:#444;letter-spacing:1.5px}
+.codex-section{margin-bottom:20px}
+.codex-section h3{font-size:9px;font-weight:800;letter-spacing:2.5px;color:#ff416c;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a1a24}
+.codex-section p{font-size:11px;color:#7070880;line-height:1.8;margin-bottom:9px;color:#707080}
+.codex-amenities{margin:12px 0;display:flex;flex-direction:column;gap:8px}
+.codex-amenity{padding:10px 12px;background:#13131a;border-radius:8px;border-left:2px solid #ff416c55}
+.codex-amenity-title{font-size:11px;font-weight:700;color:#ccc;margin-bottom:3px}
+.codex-amenity p{font-size:10px;color:#555;line-height:1.6;margin:0}
+.codex-note{font-size:10px;color:#3a3a4a;font-style:italic;border-top:1px solid #1a1a24;padding-top:10px;margin-top:12px;line-height:1.6}
+
+/* ── NEWS FEED (TAB B) ── */
+.news-create-form{background:#13131a;border-radius:10px;padding:14px;margin-bottom:16px;border:1px solid #1e1e28}
+.news-create-title{font-size:9px;font-weight:700;letter-spacing:2px;color:#ff416c;text-transform:uppercase;margin-bottom:10px}
+.news-input{width:100%;padding:9px 12px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:12px;outline:none;transition:border-color 0.2s;margin-bottom:8px}
+.news-input:focus{border-color:#ff416c}
+.news-input::placeholder{color:#333}
+.news-textarea{width:100%;padding:9px 12px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:12px;outline:none;resize:vertical;min-height:70px;transition:border-color 0.2s;margin-bottom:8px}
+.news-textarea:focus{border-color:#ff416c}
+.news-textarea::placeholder{color:#333}
+.btn-news-publish{width:100%;padding:10px;background:linear-gradient(135deg,#ff416c,#ff4b2b);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+.btn-news-publish:hover{opacity:0.85}
+.btn-news-publish:disabled{opacity:0.4;cursor:not-allowed}
+.news-post-card{background:#13131a;border-radius:10px;border:1px solid #1e1e28;margin-bottom:12px;overflow:hidden}
+.news-post-image{width:100%;max-height:160px;object-fit:cover;display:block}
+.news-post-body{padding:12px}
+.news-post-title-text{font-size:13px;font-weight:800;color:#e0e0e0;margin-bottom:6px;line-height:1.4}
+.news-post-content-text{font-size:11px;color:#707080;line-height:1.7;margin-bottom:10px}
+.news-post-meta{display:flex;align-items:center;gap:6px;font-size:9px;color:#444;margin-bottom:10px}
+.news-post-author{color:#ff416c;font-weight:700}
+.news-post-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn-news-action{background:none;border:1px solid #252530;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;color:#555}
+.btn-news-action.liked{border-color:#4CAF50;color:#4CAF50}
+.btn-news-action.disliked{border-color:#E91E63;color:#E91E63}
+.btn-news-action:hover{border-color:#ff416c;color:#ff416c}
+.btn-news-delete{background:none;border:1px solid #FF525255;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;color:#FF5252;margin-left:auto}
+.btn-news-delete:hover{background:#FF525222}
+.btn-toggle-comments{background:none;border:none;font-size:10px;color:#444;cursor:pointer;font-family:inherit;padding:0;transition:color 0.2s}
+.btn-toggle-comments:hover{color:#ff416c}
+.news-comments-section{border-top:1px solid #1a1a24;padding:10px 12px;display:none}
+.news-comments-section.open{display:block}
+.news-comment-item{padding:7px 0;border-bottom:1px solid #12121a}
+.news-comment-item:last-child{border-bottom:none}
+.news-comment-header{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.news-comment-username{font-size:10px;font-weight:700;color:#ff416c}
+.news-comment-time{font-size:9px;color:#333;margin-left:auto}
+.news-comment-text{font-size:11px;color:#8080a0;line-height:1.6}
+.news-comment-actions{display:flex;gap:8px;margin-top:4px;align-items:center}
+.btn-comment-like{background:none;border:none;font-size:9px;color:#444;cursor:pointer;font-family:inherit;padding:0;transition:color 0.2s}
+.btn-comment-like:hover,.btn-comment-like.liked{color:#4CAF50}
+.btn-comment-reply-toggle{background:none;border:none;font-size:9px;color:#444;cursor:pointer;font-family:inherit;padding:0;transition:color 0.2s}
+.btn-comment-reply-toggle:hover{color:#ff416c}
+.news-reply-indent{padding-left:14px;border-left:1px solid #1e1e28;margin-top:6px}
+.news-comment-input-row{display:flex;gap:6px;margin-top:8px}
+.news-comment-input{flex:1;padding:7px 10px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:11px;outline:none;transition:border-color 0.2s}
+.news-comment-input:focus{border-color:#ff416c}
+.news-comment-input::placeholder{color:#333}
+.btn-comment-submit{padding:7px 12px;background:#ff416c;border:none;border-radius:8px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;flex-shrink:0}
+.btn-comment-submit:hover{opacity:0.85}
+.news-empty{text-align:center;padding:40px 20px;color:#333;font-size:12px}
+
+/* ── GEN 1 (TAB C) ── */
+.gen1-season-banner{background:linear-gradient(135deg,#1a0505,#2a0808);border:1px solid #FF525244;border-radius:10px;padding:12px 14px;margin-bottom:16px;text-align:center}
+.gen1-season-label{font-size:8px;font-weight:700;letter-spacing:2px;color:#FF5252;text-transform:uppercase;margin-bottom:4px}
+.gen1-season-timer{font-size:18px;font-weight:900;color:#fff;font-variant-numeric:tabular-nums}
+.gen1-season-sub{font-size:9px;color:#555;margin-top:3px}
+.gen1-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.gen1-model-card{background:#13131a;border-radius:9px;border:1px solid #1e1e28;padding:10px;text-align:center}
+.gen1-model-icon{font-size:24px;margin-bottom:4px}
+.gen1-model-name{font-size:11px;font-weight:800;color:#e0e0e0;margin-bottom:2px}
+.gen1-model-tier{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.gen1-model-desc{font-size:9px;color:#555;line-height:1.6;margin-top:4px}
+.gen1-founder-box{background:linear-gradient(135deg,#0a0800,#1a1200);border:1px solid #FFCA2844;border-radius:10px;padding:14px;margin-top:12px;display:none}
+.gen1-founder-box.unlocked{display:block}
+.gen1-founder-title{font-size:10px;font-weight:800;letter-spacing:2px;color:#FFCA28;text-transform:uppercase;margin-bottom:6px}
+.gen1-founder-badge{font-size:20px;margin-bottom:4px}
+.gen1-founder-text{font-size:11px;color:#888;line-height:1.7}
+.gen1-checklist{margin-top:12px}
+.gen1-check-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;color:#666}
+.gen1-check-item.done{color:#4CAF50}
+.gen1-check-dot{width:8px;height:8px;border-radius:50%;background:#2a2a35;flex-shrink:0}
+.gen1-check-item.done .gen1-check-dot{background:#4CAF50}
+
+/* ── APPRAISAL (TAB D) ── */
+.appraisal-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.appraisal-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#13131a;border-radius:8px;border-left:3px solid var(--tc)}
+.appraisal-left{display:flex;align-items:center;gap:10px}
+.appraisal-icon{font-size:18px}
+.appraisal-name{font-size:11px;font-weight:700;color:#ccc}
+.appraisal-tier-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tc)}
+.appraisal-price{font-size:13px;font-weight:900;color:var(--tc)}
+.appraisal-header{font-size:9px;font-weight:700;letter-spacing:2px;color:#444;text-transform:uppercase;margin-bottom:12px}
+.appraisal-algo-note{font-size:10px;color:#333;line-height:1.7;margin-top:12px;padding:10px;background:#0d0d10;border-radius:8px;border:1px solid #1a1a24}
+
+/* ── LEADERBOARDS (TAB E) ── */
+.lb-toggle{display:flex;margin-bottom:14px;background:#0d0d10;border-radius:8px;padding:3px}
+.lb-toggle-btn{flex:1;padding:8px;border:none;background:none;font-family:inherit;font-size:9.5px;font-weight:700;letter-spacing:0.5px;color:#444;cursor:pointer;border-radius:6px;transition:all 0.2s;text-transform:uppercase}
+.lb-toggle-btn.active{background:#13131a;color:#ff416c}
+.lb-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:6px;background:#13131a;border:1px solid #1a1a24}
+.lb-rank{font-size:11px;font-weight:900;color:#ff416c;width:20px;text-align:center;flex-shrink:0}
+.lb-rank.gold{color:#FFCA28}
+.lb-rank.silver{color:#C0C0C0}
+.lb-rank.bronze{color:#CD7F32}
+.lb-avatar{font-size:16px;width:30px;height:30px;border-radius:50%;background:#0d0d10;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.lb-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.lb-username{font-size:11px;font-weight:700;color:#ccc;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-value{font-size:11px;font-weight:800;color:#ff416c;text-align:right;flex-shrink:0}
+.lb-empty{text-align:center;padding:30px;color:#333;font-size:11px}
+.lb-loading{text-align:center;padding:30px}
+
+/* ── SUPPORT (TAB F) ── */
+.support-section{margin-bottom:18px}
+.support-section h3{font-size:9px;font-weight:800;letter-spacing:2.5px;color:#ff416c;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a1a24}
+.support-section p{font-size:10.5px;color:#606070;line-height:1.8;margin-bottom:8px}
+.support-section strong{color:#888}
+.support-email{display:inline-block;padding:10px 16px;background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;margin:8px 0;transition:opacity 0.2s}
+.support-email:hover{opacity:0.85}
+.support-response{font-size:9.5px;color:#333;margin-top:8px;font-style:italic}
+
+/* ── CUSTOMIZATION (TAB G) ── */
+.customize-section-label{font-size:9px;font-weight:700;letter-spacing:2px;color:#555;text-transform:uppercase;margin-bottom:10px}
+.customize-items{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.customize-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#13131a;border-radius:9px;border:1px solid #1e1e28;transition:border-color 0.2s}
+.customize-item:hover{border-color:#ff416c44}
+.customize-preview{width:32px;height:32px;border-radius:6px;flex-shrink:0;border:1px solid #2a2a35}
+.customize-info{flex:1;min-width:0}
+.customize-name{font-size:11px;font-weight:700;color:#ccc;margin-bottom:2px}
+.customize-desc{font-size:9px;color:#444}
+.customize-cost{font-size:11px;font-weight:800;color:#ff416c;white-space:nowrap;margin-right:8px}
+.btn-customize-buy{padding:6px 12px;border:1px solid #ff416c;border-radius:20px;background:none;color:#ff416c;font-size:9.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;flex-shrink:0}
+.btn-customize-buy:hover{background:#ff416c;color:#fff}
+.btn-customize-buy.owned{border-color:#4CAF50;color:#4CAF50;cursor:default}
+.btn-customize-buy:disabled{opacity:0.4;cursor:not-allowed}
+
+/* ── PROFILE INSPECTION MODAL ── */
+.inspect-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.inspect-avatar-wrap{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;background:#f7f7f7;overflow:hidden}
+.inspect-avatar-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.inspect-avatar-wrap.inspect-prem{padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC);animation:premiumFrameShift 3.5s ease-in-out infinite}
+.inspect-header-info{flex:1;min-width:0}
+.inspect-username-text{font-size:15px;font-weight:800;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inspect-sub-text{font-size:11px;color:#B0B0B0;margin-top:2px}
+.inspect-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.inspect-stat{background:#f7f7f7;border-radius:9px;padding:10px 6px;text-align:center}
+.inspect-stat-val{font-size:16px;font-weight:800;color:#1a1a1a}
+.inspect-stat-label{font-size:9px;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.inspect-fav-poxy{background:#f7f7f7;border-radius:10px;padding:12px;margin-bottom:14px;text-align:center;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.inspect-fav-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:4px}
+.inspect-fav-icon{font-size:28px}
+.inspect-fav-tier{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.inspect-fav-serial{font-size:9px;color:#B0B0B0;font-family:monospace}
+.inspect-fav-none{font-size:11px;color:#C8C8C8}
+.inspect-actions-row{display:flex;gap:8px}
+
+/* ── PROFILE BADGES ── */
+.badge-wallet{margin:14px 0}
+.badge-wallet-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:8px}
+.badge-list{display:flex;flex-wrap:wrap;gap:6px}
+.badge-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:9.5px;font-weight:700;letter-spacing:0.5px;border:1px solid transparent}
+.badge-chip.market_baron{background:rgba(255,202,40,0.1);border-color:#FFCA2855;color:#FFCA28}
+.badge-chip.first_drop_set{background:rgba(76,175,80,0.1);border-color:#4CAF5055;color:#4CAF50}
+.badge-chip.founder{background:rgba(171,71,188,0.1);border-color:#AB47BC55;color:#AB47BC}
+.badge-chip.developer{background:rgba(255,82,82,0.1);border-color:#FF525255;color:#FF5252}
+.badge-none{font-size:11px;color:#C8C8C8}
+
+/* ── PROFILE MYTHIC TRACKER ── */
+.mythic-club-tracker{background:linear-gradient(135deg,#fafafa,#fff5f2);border:1px solid #FFE0D5;border-radius:12px;padding:12px 14px;margin:12px 0}
+.mct-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#FF5722;text-transform:uppercase;margin-bottom:6px}
+.mct-bar-track{height:6px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.mct-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#FF5722,#E91E63);transition:width 0.6s ease}
+.mct-status{font-size:11px;font-weight:600;color:#1a1a1a}
+.mct-status.closed{color:#E91E63}
+
+/* ── PROFILE PASSWORD FORM ── */
+.pwd-form{background:#f7f7f7;border-radius:12px;padding:14px;margin:12px 0}
+.pwd-form-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:10px}
+.pwd-msg{font-size:11px;margin-top:8px;min-height:16px;font-weight:500}
+.pwd-msg.error{color:#E91E63}
+.pwd-msg.success{color:#4CAF50}
+
+/* ── FEATURED POXY ── */
+.featured-poxy-section{margin:12px 0}
+.featured-poxy-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:8px}
+.featured-poxy-display{background:#f7f7f7;border-radius:10px;padding:12px;text-align:center}
+.featured-poxy-empty{font-size:11px;color:#C8C8C8}
+
+/* ── PENDING REQUESTS ── */
+.pending-section{margin-bottom:18px}
+.pending-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#FF5722;text-transform:uppercase;margin-bottom:8px}
+.pending-card{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#fff5f2;border-radius:10px;border:1px solid #FFE0D5;margin-bottom:6px}
+.pending-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-accept-req{padding:5px 12px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:9.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+.btn-accept-req:hover{opacity:0.85}
+.btn-decline-req{padding:5px 10px;background:none;border:1px solid #e0e0e0;border-radius:20px;color:#B0B0B0;font-size:9.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s}
+.btn-decline-req:hover{background:#f5f5f5}
+.btn-remove-friend{padding:5px 10px;border:1px solid #e0e0e0;border-radius:20px;font-size:9.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;background:none;color:#B0B0B0}
+.btn-remove-friend:hover{border-color:#E91E63;color:#E91E63}
+.user-card-clickable{cursor:pointer}
+.user-card-clickable:hover .user-card-name{color:#FF5722}
+
+/* ── LAYOUT ── */
+.app{background:transparent;min-height:520px;display:flex;flex-direction:column;align-items:center;padding:44px 24px 16px;position:relative;max-width:380px;margin:0 auto}
 
 /* ── LOGO ── */
 .logo-row{display:flex;align-items:baseline;position:relative;user-select:none;margin-bottom:8px}
@@ -117,10 +309,16 @@ body.dark-club .col-sticky-bar{background:#0a0a0c;border-color:#252530}
 .reward-label{font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase}
 .reward-serial{font-size:8.5px;font-weight:500;letter-spacing:1.5px;color:#9E9E9E;font-family:'Inter',monospace;margin-top:2px}
 canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.reward-aura{position:absolute;inset:-30px;border-radius:50%;opacity:0;pointer-events:none;z-index:-1;will-change:transform,opacity}
+.reward-aura.burst{animation:auraBurst 0.9s ease-out forwards}
+.box.spin-rapid,.box.spin-white{will-change:transform,opacity,background,border-color}
+.reward-box.reveal-common,.reward-box.reveal-uncommon{animation:revealFadeSoft 0.55s ease-out forwards,floatUp 2.5s ease-in-out 0.55s infinite}
+.reward-box.reveal-rare,.reward-box.reveal-epic{animation:revealPunch 0.4s cubic-bezier(0.25,1,0.5,1) forwards,revealGlowPulse 1.2s ease-in-out 0.4s infinite,floatUp 2.5s ease-in-out 0.4s infinite}
+.reward-box.reveal-legendary,.reward-box.reveal-mythic{animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards}
 
 /* ── CTA ── */
 .cta-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
-.btn-open{background:linear-gradient(135deg,#FF5722 0%,#E91E63 60%,#9C27B0 100%);border:none;border-radius:50px;padding:16px 40px;color:#fff;font-size:15px;font-weight:700;letter-spacing:0.5px;cursor:pointer;font-family:inherit;transition:transform 0.2s,box-shadow 0.2s,opacity 0.4s;box-shadow:0 4px 20px #FF572233;white-space:nowrap}
+.btn-open{background:linear-gradient(135deg,#FF5722 0%,#E91E63 60%,#9C27B0 100%);border:none;border-radius:50px;padding:16px 40px;color:#fff;font-size:15px;font-weight:700;letter-spacing:0.5px;cursor:pointer;font-family:inherit;transition:transform 0.2s,box-shadow 0.2s,opacity 0.4s;box-shadow:0 4px 20px #FF572233;white-space:nowrap;will-change:transform,opacity}
 .btn-open:hover{transform:scale(1.03);box-shadow:0 6px 28px #FF572266}
 .btn-open:active{transform:scale(0.97)}
 .btn-open:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
@@ -168,6 +366,10 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .pstat-label{font-size:9px;color:#B0B0B0;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
 
 /* ── COLLECTION ── */
+.page-collection-wide{max-width:min(1100px,96vw)!important;padding:20px 24px 40px!important}
+.col-sticky-bar{position:sticky;top:0;z-index:10;background:#fff;padding:12px 0 10px;margin:-12px 0 14px;border-bottom:1px solid #f0f0f0}
+body[data-theme="cyberpunk"] .col-sticky-bar{background:#0d0d10}
+body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .col-title{font-size:17px;font-weight:800;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px}
 .col-count{font-size:11px;color:#B0B0B0;font-weight:500}
@@ -183,6 +385,7 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .btn-bulk-dust{padding:7px 16px;background:#FF5722;border:none;border-radius:20px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
 .btn-bulk-dust:hover{opacity:0.85}
 .col-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.col-grid-wide{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;gap:14px!important}
 .col-card{border-radius:16px;padding:14px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;border:1.5px solid transparent;transition:transform 0.2s,opacity 0.35s;cursor:default;animation:fadeIn 0.4s ease both;position:relative}
 .col-card:hover{transform:translateY(-2px)}
 .col-card.selected-for-dust{outline:2px solid #FF5722;outline-offset:2px}
@@ -191,8 +394,8 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .col-card-date{font-size:8.5px;color:#9E9E9E}
 .col-card-serial{font-size:8px;font-weight:500;letter-spacing:1px;color:#B8B8B8;font-family:'Inter',monospace}
 .col-card-actions{display:flex;gap:6px;margin-top:4px}
-.btn-burn,.btn-sell-card{border:none;background:none;cursor:pointer;font-size:13px;opacity:0.4;transition:opacity 0.2s,transform 0.2s;padding:2px;line-height:1}
-.btn-burn:hover,.btn-sell-card:hover{opacity:0.9;transform:scale(1.2)}
+.btn-burn,.btn-sell-card,.btn-feature-card{border:none;background:none;cursor:pointer;font-size:13px;opacity:0.4;transition:opacity 0.2s,transform 0.2s;padding:2px;line-height:1}
+.btn-burn:hover,.btn-sell-card:hover,.btn-feature-card:hover{opacity:0.9;transform:scale(1.2)}
 .col-empty{text-align:center;padding:60px 20px;color:#C8C8C8;font-size:13px;line-height:1.7}
 .col-empty-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
 .col-loading{text-align:center;padding:60px 20px}
@@ -203,11 +406,12 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .search-input{flex:1;padding:11px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:13px;outline:none;background:#fafafa;transition:border-color 0.2s}
 .search-input:focus{border-color:#FF5722;background:#fff}
 .btn-search{padding:11px 16px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:12px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-.user-card{display:flex;align-items:center;gap:12px;padding:11px;background:#fafafa;border-radius:12px;border:0.5px solid #f0f0f0;margin-bottom:8px}
+.user-card{display:flex;align-items:center;gap:12px;padding:11px;background:#fafafa;border-radius:12px;border:0.5px solid #f0f0f0;margin-bottom:8px;transition:border-color 0.2s}
 .user-card-avatar{font-size:22px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #f0f0f0;flex-shrink:0;overflow:hidden}
 .user-card-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.user-card-avatar.avatar-premium-frame{padding:2px}
 .user-card-info{flex:1;min-width:0}
-.user-card-name{font-size:13px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-card-name{font-size:13px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color 0.2s}
 .user-card-sub{font-size:10px;color:#B0B0B0;margin-top:1px}
 .btn-friend{padding:6px 14px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;border:1.5px solid #FF5722;color:#FF5722;background:transparent;white-space:nowrap}
 .btn-friend:hover{background:#FF5722;color:#fff}
@@ -219,15 +423,22 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .market-tabs{display:flex;margin-bottom:16px;border-radius:10px;background:#f7f7f7;padding:3px}
 .market-tab{flex:1;padding:9px;border:none;background:none;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:0.5px;color:#B0B0B0;cursor:pointer;border-radius:8px;transition:all 0.2s;text-transform:uppercase}
 .market-tab.active{background:#fff;color:#FF5722;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.market-card{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;border:1.5px solid transparent;margin-bottom:10px;transition:transform 0.15s}
+.market-card{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;border:1.5px solid transparent;margin-bottom:10px;transition:transform 0.15s;will-change:transform,opacity}
 .market-card:hover{transform:translateY(-1px)}
 .market-card-icon{font-size:22px;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .market-card-info{flex:1;min-width:0}
 .market-card-tier{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
 .market-card-serial{font-size:9px;color:#9E9E9E;font-family:monospace;margin-top:1px}
-.market-card-price{font-size:15px;font-weight:800;color:#1a1a1a;text-align:right;white-space:nowrap}
+.market-card-price{font-size:14px;font-weight:800;color:#1a1a1a;text-align:right;white-space:nowrap}
+.market-card-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 .btn-buy{display:block;padding:6px 12px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:transform 0.15s,opacity 0.2s}
 .btn-buy:hover{transform:scale(1.05)}.btn-buy:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-quick-buy{padding:7px 14px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:0.5px;transition:transform 0.15s;white-space:nowrap}
+.btn-quick-buy:hover{transform:scale(1.05)}
+.btn-quick-buy:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.market-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.market-sort-select{flex:1;min-width:140px;padding:9px 12px;border:1.5px solid #f0f0f0;border-radius:10px;font-family:inherit;font-size:11px;font-weight:700;color:#1a1a1a;background:#fafafa;cursor:pointer;outline:none}
+.market-sort-select:focus{border-color:#FF5722}
 
 /* ── MODALS ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity 0.25s}
@@ -249,7 +460,7 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .bank-amt{padding:12px 8px;border-radius:12px;border:1.5px solid #f0f0f0;background:#fafafa;text-align:center;cursor:pointer;transition:all 0.2s;font-family:inherit}
 .bank-amt:hover{border-color:#FF5722}
 .bank-amt.selected{border-color:#FF5722;background:#fff5f2}
-.bank-amt-val{font-size:16px;font-weight:800;color:#1a1a1a}
+.bank-amt-val{font-size:14px;font-weight:800;color:#1a1a1a}
 .bank-amt-sub{font-size:9px;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
 .bank-form{background:#f7f7f7;border-radius:16px;padding:16px;margin-bottom:16px}
 .bank-form-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:6px}
@@ -326,10 +537,8 @@ body.dark-club .club-sub{color:#888}
 .user-bar{max-width:380px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;gap:8px}
 .user-bar-left{display:flex;align-items:center;gap:8px;min-width:0}
 .user-bar-avatar{font-size:18px;cursor:pointer;transition:transform 0.2s;flex-shrink:0;width:28px;height:28px;border-radius:50%;overflow:visible;display:flex;align-items:center;justify-content:center}
-.user-bar-avatar #userBarAvatar,.user-bar-avatar.avatar-premium-frame #userBarAvatar{width:28px;height:28px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.user-card-avatar.avatar-premium-frame{padding:2px}
 .user-bar-avatar:hover{transform:scale(1.12)}
-.user-bar-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.user-bar-avatar #userBarAvatar{width:28px;height:28px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .user-email{font-size:10.5px;color:#B0B0B0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .user-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .user-username{font-size:11px;font-weight:700;color:#1a1a1a}
@@ -343,15 +552,132 @@ body.dark-club .club-sub{color:#888}
 </head>
 <body>
 
-<!-- LIVE DROPS TICKER -->
-<div class="live-drops-ticker" id="liveDropsTicker">
-  <div class="live-drops-viewport">
-    <div class="live-drops-track gpu-accel" id="liveDropsTrack"></div>
+<!-- HAMBURGER -->
+<button class="hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open Poxy World menu">
+  <div class="hamburger-line"></div>
+  <div class="hamburger-line"></div>
+  <div class="hamburger-line"></div>
+</button>
+
+<!-- SIDEBAR BACKDROP -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR PANEL -->
+<div class="sidebar-panel" id="sidebarPanel">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">POXY WORLD</div>
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+  </div>
+  <div class="sidebar-tabs">
+    <button class="sidebar-tab-btn active" id="stab-codex" onclick="switchSidebarTab('codex')">Codex</button>
+    <button class="sidebar-tab-btn" id="stab-news" onclick="switchSidebarTab('news')">News</button>
+    <button class="sidebar-tab-btn" id="stab-gen1" onclick="switchSidebarTab('gen1')">Gen 1</button>
+    <button class="sidebar-tab-btn" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
+    <button class="sidebar-tab-btn" id="stab-leaderboard" onclick="switchSidebarTab('leaderboard')">Ranks</button>
+    <button class="sidebar-tab-btn" id="stab-support" onclick="switchSidebarTab('support')">Legal</button>
+    <button class="sidebar-tab-btn" id="stab-customize" onclick="switchSidebarTab('customize')">Store</button>
+  </div>
+  <div class="sidebar-content">
+
+    <!-- TAB A: CODEX -->
+    <div id="sidebarTabCodex" class="sidebar-tab-content active">
+      <div class="codex-hero">
+        <div class="codex-emblem">✸</div>
+        <div class="codex-title">THE POXY CODEX</div>
+        <div class="codex-subtitle">The Definitive Record of Immutable Digital Heritage</div>
+      </div>
+      <div class="codex-section">
+        <h3>I. The Asset Philosophy</h3>
+        <p>Every POXY is an immutable cryptographic entity. From the precise nanosecond of its generation, each asset carries a permanent, unalterable chain of custody — a digital fingerprint that follows the asset through every transaction, trade, and transfer in perpetuity. No two POXY share identical provenance. Each serial code is a unique gateway into the historical record of an asset's complete life cycle.</p>
+        <p>Ownership is not a permission granted by a platform. It is a verifiable mathematical fact recorded on an immutable ledger. Your POXY is not rented, licensed, or conditionally granted. It belongs to you in the most absolute digital sense possible.</p>
+        <p>The rarity tiers — Common through Mythic — are not arbitrary labels. They represent genuine scarcity coefficients baked permanently into the generation algorithm. A Mythic is mathematically certified to have a 1-in-10,000 emergence probability, making each one a statistically extraordinary event by computational definition.</p>
+      </div>
+      <div class="codex-section">
+        <h3>II. London Private Club Roadmap</h3>
+        <p>POXY World is building the world's first digital collectible-backed private member's club in central London. Ownership of a Legendary or Mythic tier POXY confers provisional membership candidacy. The physical club facility — currently in advanced lease negotiation within Mayfair — will be accessible exclusively to verified top-tier holders.</p>
+        <div class="codex-amenities">
+          <div class="codex-amenity"><div class="codex-amenity-title">🍸 Private Mixology Bar</div><p>Curated cocktail programme operated by internationally certified bartenders. Members-only menu crafted exclusively for the POXY community.</p></div>
+          <div class="codex-amenity"><div class="codex-amenity-title">🎱 Billiards Rooms</div><p>Three championship-grade billiard tables in a dedicated room finished with bespoke POXY-branded equipment and premium low-glare lighting systems.</p></div>
+          <div class="codex-amenity"><div class="codex-amenity-title">💼 Executive Networking</div><p>Closed-door sessions with curated guest speakers from technology, finance, and creative industries. Attendance by verified holder invitation only.</p></div>
+          <div class="codex-amenity"><div class="codex-amenity-title">🎁 Heavyweight Merchandise</div><p>Limited physical runs of museum-quality collectible objects. Each item paired with a unique digital asset code creating a permanent physical-digital link.</p></div>
+          <div class="codex-amenity"><div class="codex-amenity-title">🏆 Custom Figurines</div><p>Premium hand-finished resin figurines of your specific POXY character, individually stamped with your exact serial code. Maximum edition runs of 10 per character variant.</p></div>
+        </div>
+        <p class="codex-note">London club opening: target Q4 2026, subject to membership threshold requirements. Full membership deed and physical keycard issued to qualifying holders at launch.</p>
+      </div>
+    </div>
+
+    <!-- TAB B: NEWS FEED -->
+    <div id="sidebarTabNews" class="sidebar-tab-content" style="display:none">
+      <div id="newsCreateFormContainer"></div>
+      <div id="newsPostsList"><div class="news-empty">Loading news...</div></div>
+    </div>
+
+    <!-- TAB C: GEN 1 -->
+    <div id="sidebarTabGen1" class="sidebar-tab-content" style="display:none">
+      <div class="gen1-season-banner">
+        <div class="gen1-season-label">⚠ Generation 1 Seals In</div>
+        <div class="gen1-season-timer" id="gen1TimerDisplay">--d --h --m</div>
+        <div class="gen1-season-sub">After seal: acquisition via marketplace only</div>
+      </div>
+      <div class="gen1-grid" id="gen1ModelGrid"></div>
+      <div class="gen1-checklist" id="gen1ChecklistContainer"></div>
+      <div class="gen1-founder-box" id="gen1FounderBox">
+        <div class="gen1-founder-badge">🏆</div>
+        <div class="gen1-founder-title">Founder Status Achieved</div>
+        <p class="gen1-founder-text">You own all 5 base Gen 1 items. Your Founder badge has been permanently unlocked. You are eligible for a permanent platform discount on all future case openings, applicable from the London club launch date.</p>
+      </div>
+    </div>
+
+    <!-- TAB D: APPRAISAL -->
+    <div id="sidebarTabAppraisal" class="sidebar-tab-content" style="display:none">
+      <div class="appraisal-header">POXY Box Appraisal Guide — Current Estimated Market Values</div>
+      <div class="appraisal-grid" id="appraisalGrid"></div>
+      <p class="appraisal-algo-note">Valuations are dynamically calculated using rarity scarcity coefficients multiplied by character weight factors. These are estimated reference values; actual marketplace prices are determined by peer-to-peer supply and demand. All values expressed in PC (Poxy Coin).</p>
+    </div>
+
+    <!-- TAB E: LEADERBOARDS -->
+    <div id="sidebarTabLeaderboard" class="sidebar-tab-content" style="display:none">
+      <div class="lb-toggle">
+        <button class="lb-toggle-btn active" id="lbBtnBalance" onclick="switchLeaderboard('balance')">PC Balance</button>
+        <button class="lb-toggle-btn" id="lbBtnCollection" onclick="switchLeaderboard('collection')">Rare+ Count</button>
+      </div>
+      <div id="leaderboardList"><div class="lb-loading"><div class="col-spinner"></div></div></div>
+    </div>
+
+    <!-- TAB F: SUPPORT -->
+    <div id="sidebarTabSupport" class="sidebar-tab-content" style="display:none">
+      <div class="support-section">
+        <h3>Privacy Policy</h3>
+        <p><strong>Data Collection:</strong> POXY World collects email address, username, avatar URL, and usage metadata (collection contents, transaction history, session timestamps) strictly for platform operation. No personal data is sold, shared with third parties for marketing purposes, or transmitted outside secure Supabase infrastructure.</p>
+        <p><strong>Cookie Configuration:</strong> Authentication session tokens are stored in secure, httpOnly, sameSite cookies issued by Supabase Auth. No third-party tracking cookies, advertising pixels, or fingerprinting technologies are deployed on this platform.</p>
+        <p><strong>Asset Security:</strong> All POXY asset records are stored in PostgreSQL with row-level security policies. Only the authenticated owner can read, modify, or initiate the transfer of their own assets. No platform administrator has unilateral access to modify asset ownership records without corresponding transaction log entries.</p>
+        <p><strong>Data Retention:</strong> Account data is retained for the duration of active membership. Deletion requests submitted to worldpoxy@gmail.com are processed within 30 days of receipt.</p>
+      </div>
+      <div class="support-section">
+        <h3>Terms of Service</h3>
+        <p><strong>Platform Utilisation:</strong> Access to POXY World requires acceptance of these terms. Users are prohibited from: automated scripts or bots accessing the platform; exploiting pricing or availability vulnerabilities; selling or transferring account credentials; engaging in market manipulation through coordinated buy/sell activity of any kind.</p>
+        <p><strong>Asset Ownership:</strong> Purchase of PC (Poxy Coins) and acquisition of POXY digital assets constitutes purchase of a limited digital asset record within the platform. POXY World reserves no right to revoke issued assets except in documented cases of fraudulent acquisition or security breach remediation, subject to investigation and notice.</p>
+        <p><strong>Virtual Currency Policy:</strong> PC (Poxy Coins) has no cash value and cannot be withdrawn, refunded, or exchanged for fiat currency under any circumstances. All PC top-ups are final and non-refundable. Chargebacks or payment disputes will result in immediate account suspension pending investigation.</p>
+        <p><strong>Marketplace Conduct:</strong> Users list assets at their own discretion. POXY World charges no platform fee on marketplace transactions in the current version. Price manipulation, wash trading, and coordinated artificial price inflation are expressly prohibited and will result in permanent account termination without refund.</p>
+      </div>
+      <div class="support-section">
+        <h3>Help Desk</h3>
+        <p>For all support enquiries, account issues, asset disputes, or partnership proposals, contact the POXY World operations team directly:</p>
+        <a href="mailto:worldpoxy@gmail.com" class="support-email">worldpoxy@gmail.com</a>
+        <p class="support-response">Response time: 24–72 business hours. Please include your registered email address and username in all correspondence for faster resolution.</p>
+      </div>
+    </div>
+
+    <!-- TAB G: CUSTOMIZE -->
+    <div id="sidebarTabCustomize" class="sidebar-tab-content" style="display:none">
+      <div id="customizeStoreContent"><div class="news-empty">Sign in to access the store.</div></div>
+    </div>
+
   </div>
 </div>
 
 <!-- BALANCE BADGE -->
-<div class="balance-badge coin-inline gpu-accel" id="balanceBadge" onclick="showPage('bank')"></div>
+<div class="balance-badge gpu-accel" id="balanceBadge" onclick="showPage('bank')">0 PC</div>
 
 <!-- AUTH -->
 <div class="auth-overlay" id="authOverlay">
@@ -362,7 +688,7 @@ body.dark-club .club-sub{color:#888}
       <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
       <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
     </div>
-    <input class="auth-input" type="email" id="authEmail" placeholder="Email" autocomplete="email">
+    <input class="auth-input" type="text" id="authEmail" placeholder="Email or Username" autocomplete="email">
     <input class="auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
     <button class="auth-btn" id="authSubmitBtn" onclick="handleAuth()">Sign In</button>
     <div class="auth-msg" id="authMsg"></div>
@@ -401,7 +727,7 @@ body.dark-club .club-sub{color:#888}
       </div>
     </div>
     <div class="cta-wrap">
-      <button class="btn-open coin-inline gpu-accel" id="btnOpen"></button>
+      <button class="btn-open gpu-accel" id="btnOpen">OPEN FOR 1 PC</button>
       <div class="post-btns" id="postBtns">
         <button class="btn-add" id="btnAdd">ADD TO COLLECTION</button>
         <button class="btn-discard" id="btnDiscard">DISCARD</button>
@@ -433,7 +759,27 @@ body.dark-club .club-sub{color:#888}
     <div class="pstat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
     <div class="pstat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
   </div>
-  <button class="btn-primary" id="btnSaveProfile">Save Profile</button>
+  <div class="mythic-club-tracker" id="mythicClubTracker">
+    <div class="mct-label">Ecosystem Private Club Entry</div>
+    <div class="mct-bar-track"><div class="mct-bar-fill" id="mctBarFill" style="width:0%"></div></div>
+    <div class="mct-status" id="mctStatus">Loading...</div>
+  </div>
+  <div class="badge-wallet" id="badgeWalletContainer">
+    <div class="badge-wallet-label">Badge Wallet</div>
+    <div class="badge-list" id="badgeList"><span class="badge-none">No badges yet.</span></div>
+  </div>
+  <div class="featured-poxy-section">
+    <div class="featured-poxy-label">Featured POXY</div>
+    <div class="featured-poxy-display" id="featuredPoxyDisplay"><div class="featured-poxy-empty">No POXY featured yet. Select one from your collection.</div></div>
+  </div>
+  <div class="pwd-form">
+    <div class="pwd-form-label">Change Password</div>
+    <input class="profile-input" type="password" id="pwdNewPassword" placeholder="New password" style="margin-bottom:8px">
+    <input class="profile-input" type="password" id="pwdConfirmPassword" placeholder="Confirm new password" style="margin-bottom:8px">
+    <button class="btn-primary" id="btnChangePassword" style="margin-top:4px">Update Password</button>
+    <div class="pwd-msg" id="pwdMsg"></div>
+  </div>
+  <button class="btn-primary" id="btnSaveProfile" style="margin-top:8px">Save Profile</button>
 </div>
 
 <!-- COLLECTION PAGE -->
@@ -461,11 +807,12 @@ body.dark-club .club-sub{color:#888}
 <!-- FRIENDS PAGE -->
 <div class="page" id="friendsPage">
   <div class="page-title">FRIENDS</div>
+  <div id="pendingRequestsContainer"></div>
   <div class="search-bar">
-    <input class="search-input" id="friendSearch" placeholder="Search by username..." onkeydown="if(event.key==='Enter')searchUsers()">
+    <input class="search-input" id="friendSearch" placeholder="Search by exact username..." onkeydown="if(event.key==='Enter')searchUsers()">
     <button class="btn-search" onclick="searchUsers()">Find</button>
   </div>
-  <div class="search-hint">Search by exact username (letters, numbers, underscores).</div>
+  <div class="search-hint">Enter exact username (letters, numbers, underscores).</div>
   <div style="margin-top:4px;margin-bottom:16px">
     <div class="section-label">Search results</div>
     <div id="searchResults"><div style="font-size:12px;color:#C8C8C8;padding:6px 0">Enter a username and press Find</div></div>
@@ -489,7 +836,7 @@ body.dark-club .club-sub{color:#888}
 <!-- BANK PAGE -->
 <div class="page" id="bankPage">
   <div class="page-title">ADD FUNDS</div>
-  <div style="font-size:12px;color:#B0B0B0;margin-bottom:20px;line-height:1.6">Deposit Poxy Coins (PC) — 1:1 with deposit amount. Test mode — no real charges.</div>
+  <div style="font-size:12px;color:#B0B0B0;margin-bottom:20px;line-height:1.6">Deposit Poxy Coins (PC) — 1 PC per unit deposited. Test mode — no real charges.</div>
   <div class="bank-amounts" id="bankAmounts"></div>
   <div class="bank-form">
     <div class="bank-form-label">Card Number</div>
@@ -527,8 +874,8 @@ body.dark-club .club-sub{color:#888}
       <div class="club-sub">Founders Circle</div>
     </div>
     <div class="club-open-row">
-      <button class="btn-club-open one coin-inline" id="btnClub1"></button>
-      <button class="btn-club-open five coin-inline" id="btnClub5"></button>
+      <button class="btn-club-open one" id="btnClub1">Open 1 Box<br><span style="font-size:10px;opacity:0.8">1 PC</span></button>
+      <button class="btn-club-open five" id="btnClub5">Open 5 Boxes<br><span style="font-size:10px;opacity:0.8">4 PC</span></button>
     </div>
     <div class="club-multi-stage" id="clubBoxes"></div>
     <div class="club-results" id="clubResults"></div>
@@ -568,7 +915,7 @@ body.dark-club .club-sub{color:#888}
 <div class="modal-overlay hidden" id="priceModal">
   <div class="modal-card">
     <div class="modal-title" id="modalTitle">List POXY for sale</div>
-    <div class="modal-sub" id="modalSub">Set your price in Poxy Coins (PC)</div>
+    <div class="modal-sub" id="modalSub">Set your price in PC</div>
     <input class="modal-input" type="number" id="modalPrice" placeholder="1" min="0.01" step="0.01">
     <div class="modal-btns">
       <button class="btn-modal-ok" id="modalOk">List Now</button>
@@ -589,6 +936,23 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
+<!-- PROFILE INSPECTION MODAL -->
+<div class="modal-overlay hidden" id="inspectModal">
+  <div class="modal-card" style="max-width:340px">
+    <div class="inspect-header">
+      <div class="inspect-avatar-wrap" id="inspectAvatarWrap"><span id="inspectAvatarInner">👾</span></div>
+      <div class="inspect-header-info">
+        <div class="inspect-username-text" id="inspectUsernameText">–</div>
+        <div class="inspect-sub-text" id="inspectSubText">POXY Member</div>
+      </div>
+      <button class="btn-modal-cancel" style="flex-shrink:0;padding:8px 12px;font-size:14px" onclick="closeInspectModal()">✕</button>
+    </div>
+    <div class="inspect-stats-grid" id="inspectStatsGrid"></div>
+    <div class="inspect-fav-poxy" id="inspectFavPoxy"><div class="inspect-fav-none">No featured POXY set.</div></div>
+    <div class="inspect-actions-row" id="inspectActionsRow"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -598,7 +962,7 @@ const sb = supabase.createClient(
   'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG'
 );
 
-// ── TIERS (updated colors) ──
+// ── TIERS ──
 const TIERS = [
   {id:'common',    label:'Common',    icon:'◆', color:'#9E9E9E', glow:'rgba(158,158,158,0.14)', prob:0.604},
   {id:'uncommon',  label:'Uncommon',  icon:'◈', color:'#4CAF50', glow:'rgba(76,175,80,0.14)',   prob:0.22},
@@ -615,6 +979,29 @@ const BANK_AMOUNTS = [
 const CLUB_PRICE_ONE = 1.00;
 const CLUB_PRICE_FIVE = 4.00;
 
+const GEN1_MODELS = [
+  {id:'ash',    name:'Ash',     tier:'common',    icon:'◆', desc:'The first manifestation. Born from digital dust, carrying the foundational code of the POXY universe in its base structure.'},
+  {id:'stone',  name:'Stone',   tier:'common',    icon:'◆', desc:'Solid and immovable. A sentinel of the base layer, forged in computational bedrock from the earliest generation cycles.'},
+  {id:'verdant',name:'Verdant', tier:'uncommon',  icon:'◈', desc:'A living circuit. Nature merged with digital architecture, growing stronger with each new block confirmation.'},
+  {id:'pulse',  name:'Pulse',   tier:'uncommon',  icon:'◈', desc:'Pure energy given form. The heartbeat of the network made visually tangible through precision generation.'},
+  {id:'azure',  name:'Azure',   tier:'rare',      icon:'✦', desc:'Crystallised data streams. A rare confluence of perfect code alignment, achieved only when conditions align precisely.'},
+  {id:'void',   name:'Void',    tier:'epic',      icon:'⬟', desc:'A dimensional rift entity. It does not exist in ordinary space — it inhabits the gaps between confirmed blocks.'},
+  {id:'solar',  name:'Solar',   tier:'legendary', icon:'★', desc:'A celestial apex manifestation. Born from a thousand simultaneous perfect drops across the global network.'},
+  {id:'eclipse',name:'Eclipse', tier:'mythic',    icon:'✸', desc:'The ultimate singularity. Only 10 can exist per month worldwide. Reality bends perceptibly around its confirmed presence.'}
+];
+
+const APPRAISER_BASE_PC = {common:1.5,uncommon:4,rare:15,epic:65,legendary:420,mythic:2800};
+const APPRAISER_CHAR_WEIGHTS = {ash:1.0,stone:1.05,verdant:1.1,pulse:1.15,azure:1.2,void:1.3,solar:1.5,eclipse:2.0};
+const CUSTOMIZATION_ITEMS = [
+  {id:'theme_cyberpunk', type:'theme', name:'Cyberpunk Carbon', desc:'Dark carbon interface overlay', cost:50, previewBg:'#0d0d10', themeVal:'cyberpunk'},
+  {id:'theme_mayfair',   type:'theme', name:'Mayfair Velvet',   desc:'Luxury deep burgundy aesthetic', cost:75, previewBg:'#1a0a14', themeVal:'mayfair'},
+  {id:'theme_arctic',    type:'theme', name:'Arctic Glass',     desc:'Crystalline minimal theme', cost:60, previewBg:'#e8f4f8', themeVal:'arctic'},
+  {id:'gradient_gold',   type:'gradient', name:'Gold Fusion',   desc:'Molten gold animated username', cost:30, gradientVal:'linear-gradient(90deg,#FFD700,#FF8C00,#FFD700)'},
+  {id:'gradient_cyan',   type:'gradient', name:'Electric Cyan', desc:'Neon electric animated username', cost:25, gradientVal:'linear-gradient(90deg,#00FFFF,#0080FF,#00FFFF)'},
+  {id:'gradient_plasma', type:'gradient', name:'Plasma Wave',   desc:'Shifting plasma animated username', cost:40, gradientVal:'linear-gradient(90deg,#FF0080,#7F00FF,#FF0080)'}
+];
+const GEN1_SEAL_DATE = new Date('2026-06-22T23:59:59Z');
+
 // ── STATE ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null;
 let mythicCount=0, hasMythic=false, busy=false;
@@ -624,35 +1011,37 @@ let pendingListItem=null, pendingBuyItem=null;
 let selectedBankAmt=10;
 let colFilter='all', selectedForDust=new Set();
 let marketSort='newest', hasPremiumFrame=false, pendingSpinTier=null;
-let liveDropsInterval=null, marketBuyCache=[];
+let marketBuyCache=[];
+let sidebarOpen=false, activeSidebarTab='codex';
+let leaderboardMode='balance';
+let friendIncoming=[], friendOutgoing=[], friendAccepted=[];
+let inspectTargetUserId=null;
+let realtimeSubs=[];
+let friendPollInterval=null;
+let spinStartTime=0;
 
 const $=id=>document.getElementById(id);
 
-// ── POXY COIN SVG ──
-let _coinSvgSeq=0;
-function poxyCoinSVG(size){
-  const s=size||16;
-  const gid='pcg'+(_coinSvgSeq++);
-  const fid='pcf'+_coinSvgSeq;
-  return '<svg class="poxy-coin-icon" width="'+s+'" height="'+s+'" viewBox="0 0 24 24" aria-hidden="true"><defs><radialGradient id="'+gid+'" cx="35%" cy="30%"><stop offset="0%" stop-color="#FFF8E1"/><stop offset="45%" stop-color="#FFD54F"/><stop offset="100%" stop-color="#FF8F00"/></radialGradient><filter id="'+fid+'"><feGaussianBlur stdDeviation="0.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="12" cy="12" r="10.5" fill="url(#'+gid+')" stroke="#E65100" stroke-width="0.8" filter="url(#'+fid+')"/><circle cx="12" cy="12" r="9" fill="none" stroke="#FFFDE7" stroke-width="0.5" opacity="0.6"/><path d="M7.5 7.5 L16.5 16.5 M16.5 7.5 L7.5 16.5" stroke="#5D4037" stroke-width="2.2" stroke-linecap="round"/><path d="M7.5 7.5 L16.5 16.5 M16.5 7.5 L7.5 16.5" stroke="#FFE082" stroke-width="0.9" stroke-linecap="round" opacity="0.85"/></svg>';
-}
-function coinAmountHTML(amount,size){
+// ── SANITIZATION ──
+function sanitizeText(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function validateUrl(url){if(!url||typeof url!=='string')return false;try{const u=new URL(url);return['http:','https:'].includes(u.protocol);}catch{return false;}}
+
+// ── PC CURRENCY ──
+function formatPC(amount){
   const n=parseFloat(amount||0);
-  const txt=Number.isInteger(n)?String(n):n.toFixed(2).replace(/\.?0+$/,'');
-  return poxyCoinSVG(size||16)+'<span>'+txt+'</span>';
+  if(isNaN(n))return'0 PC';
+  if(Number.isInteger(n))return n+' PC';
+  return n.toFixed(2)+' PC';
 }
-function formatPC(amount){const n=parseFloat(amount||0);return Number.isInteger(n)?String(n):n.toFixed(2).replace(/\.?0+$/,'');}
-function setOpenCaseButton(){
-  const b=$('btnOpen');if(!b)return;
-  b.innerHTML='OPEN FOR '+poxyCoinSVG(18)+'<span>1</span>';
-}
-function setClubButtons(){
-  const b1=$('btnClub1'),b5=$('btnClub5');
-  if(b1)b1.innerHTML='Open 1 Box<br><span class="coin-inline" style="font-size:10px;opacity:0.85;justify-content:center;margin-top:4px">'+poxyCoinSVG(12)+'<span>1</span></span>';
-  if(b5)b5.innerHTML='Open 5 Boxes<br><span class="coin-inline" style="font-size:10px;opacity:0.85;justify-content:center;margin-top:4px">'+poxyCoinSVG(12)+'<span>4</span></span>';
+function updateBalanceBadge(bal){
+  const b=$('balanceBadge');
+  b.textContent=formatPC(bal);
+  b.classList.add('visible');
+  b.classList.remove('pop');
+  requestAnimationFrame(()=>b.classList.add('pop'));
 }
 
-// ── USERNAME ──
+// ── USERNAME VALIDATION ──
 function validateUsername(u){
   if(!u)return{ok:false,msg:'Username is required.'};
   if(u.length<3)return{ok:false,msg:'Username must be at least 3 characters.'};
@@ -677,22 +1066,14 @@ function playDrop(id){try{const ac=getAC(),freq={common:200,uncommon:280,rare:35
 
 // ── UTILS ──
 function genSerial(){const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';let s='PX-';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
-function setBodyBg(id){document.body.className='';const map={rare:'bg-rare',epic:'bg-epic',legendary:'bg-legendary',mythic:'bg-mythic'};if(map[id])document.body.classList.add(map[id]);}
-function clearBg(){if(!document.body.classList.contains('dark-club'))document.body.className='';}
-function showToast(msg,dur=2800){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function setBodyBg(id){const cls=document.body.className.replace(/bg-\S+/g,'').trim();document.body.className=cls;const map={rare:'bg-rare',epic:'bg-epic',legendary:'bg-legendary',mythic:'bg-mythic'};if(map[id])document.body.classList.add(map[id]);}
+function clearBg(){if(!document.body.classList.contains('dark-club')){const cls=document.body.className.replace(/bg-\S+/g,'').trim();document.body.className=cls;}}
+function showToast(msg,dur=2800){const t=$('toast');t.textContent=String(msg||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
 function pickTier(){let r=Math.random(),acc=0;for(const t of TIERS){acc+=t.prob;if(r<acc)return t;}return TIERS[TIERS.length-1];}
 function timeSince(iso){const s=Math.floor((Date.now()-new Date(iso))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+function maskSerial(serial,showFull){if(showFull)return serial||'–';if(!serial)return'XXXX-XXXX';const s=String(serial);if(s.length<=4)return'XXXX-XXXX';return'XXXX-'+s.slice(-4);}
 
-// ── BALANCE (Poxy Coins) ──
-function updateBalanceBadge(bal){
-  const b=$('balanceBadge');
-  b.innerHTML=coinAmountHTML(bal,16);
-  b.classList.add('visible');
-  b.classList.remove('pop');
-  requestAnimationFrame(()=>b.classList.add('pop'));
-}
-
-// ── PREMIUM PROFILE FRAME ──
+// ── PREMIUM FRAME ──
 async function refreshPremiumFrame(){
   if(!currentUser){hasPremiumFrame=false;applyPremiumFrameUI();return;}
   try{
@@ -707,17 +1088,43 @@ function applyPremiumFrameUI(){
   if(pw)pw.classList.toggle('avatar-premium-frame',hasPremiumFrame);
 }
 function renderUserCardAvatar(avEl,avatarUrl,premium){
-  if(avatarUrl&&avatarUrl.startsWith('http'))avEl.innerHTML='<img src="'+avatarUrl+'" alt="">';
+  if(avatarUrl&&avatarUrl.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(avatarUrl)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
   else avEl.textContent=avatarUrl||'👾';
   if(premium)avEl.classList.add('avatar-premium-frame');else avEl.classList.remove('avatar-premium-frame');
 }
-function maskSerial(serial,showFull){
-  if(showFull)return serial||'–';
-  if(!serial)return 'XXXX-XXXX';
-  const s=String(serial);
-  if(s.length<=4)return 'XXXX-XXXX';
-  return 'XXXX-'+s.slice(-4);
-}
+
+// ── SIDEBAR ──
+window.openSidebar=function(){
+  sidebarOpen=true;
+  $('sidebarPanel').classList.add('open');
+  $('sidebarBackdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(activeSidebarTab==='news')loadNewsFeedTab();
+  else if(activeSidebarTab==='leaderboard')loadLeaderboardData();
+  else if(activeSidebarTab==='gen1')renderGen1TabContent();
+  else if(activeSidebarTab==='appraisal')renderAppraisalTabContent();
+  else if(activeSidebarTab==='customize')renderCustomizeTab();
+};
+window.closeSidebar=function(){
+  sidebarOpen=false;
+  $('sidebarPanel').classList.remove('open');
+  $('sidebarBackdrop').classList.remove('open');
+  document.body.style.overflow='';
+};
+window.switchSidebarTab=function(tab){
+  activeSidebarTab=tab;
+  document.querySelectorAll('.sidebar-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sidebar-tab-content').forEach(c=>{c.classList.remove('active');c.style.display='none';});
+  const tabIdMap={codex:'sidebarTabCodex',news:'sidebarTabNews',gen1:'sidebarTabGen1',appraisal:'sidebarTabAppraisal',leaderboard:'sidebarTabLeaderboard',support:'sidebarTabSupport',customize:'sidebarTabCustomize'};
+  const btnId='stab-'+tab;
+  const btn=$(btnId);if(btn)btn.classList.add('active');
+  const cont=$(tabIdMap[tab]);if(cont){cont.style.display='block';cont.classList.add('active');}
+  if(tab==='news')loadNewsFeedTab();
+  else if(tab==='gen1')renderGen1TabContent();
+  else if(tab==='appraisal')renderAppraisalTabContent();
+  else if(tab==='leaderboard')loadLeaderboardData();
+  else if(tab==='customize')renderCustomizeTab();
+};
 
 // ── AUTH ──
 sb.auth.onAuthStateChange(async(_e,session)=>{
@@ -728,39 +1135,58 @@ sb.auth.onAuthStateChange(async(_e,session)=>{
     $('userEmailEl').textContent=currentUser.email;
     $('bottomNav').style.display='flex';
     $('balanceBadge').classList.add('visible');
+    $('hamburgerBtn').classList.add('visible');
     showPage('hunt');
-    document.body.classList.add('ticker-on');
-    $('liveDropsTicker').classList.add('visible');
-    setOpenCaseButton();setClubButtons();
     Promise.all([loadProfile(),checkMythic(),refreshPremiumFrame()]).catch(console.error);
-    startLiveDropsTicker();
-  }else{
+    setupRealtimeSubscriptions();
+    startFriendPoll();
+  } else {
     $('authOverlay').classList.remove('hidden');
     $('userBar').style.display='none';
     $('bottomNav').style.display='none';
     $('balanceBadge').classList.remove('visible');
+    $('hamburgerBtn').classList.remove('visible');
     $('huntPage').style.display='none';
-    document.body.classList.remove('ticker-on');
-    $('liveDropsTicker').classList.remove('visible');
-    if(liveDropsInterval){clearInterval(liveDropsInterval);liveDropsInterval=null;}
+    teardownRealtimeSubscriptions();
+    if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
+    if(sidebarOpen)closeSidebar();
   }
 });
 const authMode={v:'login'};
-window.switchTab=m=>{authMode.v=m;$('tabLogin').classList.toggle('active',m==='login');$('tabSignup').classList.toggle('active',m==='signup');$('authSubmitBtn').textContent=m==='login'?'Sign In':'Create Account';$('authMsg').textContent='';};
-window.handleAuth=async()=>{
-  const email=$('authEmail').value.trim(),pw=$('authPassword').value;
+window.switchTab=function(m){
+  authMode.v=m;
+  $('tabLogin').classList.toggle('active',m==='login');
+  $('tabSignup').classList.toggle('active',m==='signup');
+  $('authSubmitBtn').textContent=m==='login'?'Sign In':'Create Account';
+  $('authMsg').textContent='';
+  $('authEmail').placeholder=m==='login'?'Email or Username':'Email';
+  $('authEmail').type=m==='login'?'text':'email';
+};
+window.handleAuth=async function(){
+  let identifier=$('authEmail').value.trim();
+  const pw=$('authPassword').value;
   const msg=$('authMsg'),btn=$('authSubmitBtn');
-  if(!email||!pw){msg.className='auth-msg error';msg.textContent='Please fill in all fields.';return;}
+  if(!identifier||!pw){msg.className='auth-msg error';msg.textContent='Please fill in all fields.';return;}
   btn.disabled=true;msg.className='auth-msg';msg.textContent='';
   try{
     let res;
-    if(authMode.v==='login')res=await sb.auth.signInWithPassword({email,password:pw});
-    else{res=await sb.auth.signUp({email,password:pw});if(!res.error&&res.data.user&&!res.data.session){msg.className='auth-msg success';msg.textContent='Check your email!';btn.disabled=false;return;}}
+    if(authMode.v==='login'){
+      let emailToUse=identifier;
+      if(!identifier.includes('@')){
+        const{data:emailData,error:lookupErr}=await sb.rpc('get_email_by_username',{p_username:identifier});
+        if(lookupErr||!emailData){msg.className='auth-msg error';msg.textContent='Username not found.';btn.disabled=false;return;}
+        emailToUse=emailData;
+      }
+      res=await sb.auth.signInWithPassword({email:emailToUse,password:pw});
+    } else {
+      res=await sb.auth.signUp({email:identifier,password:pw});
+      if(!res.error&&res.data.user&&!res.data.session){msg.className='auth-msg success';msg.textContent='Check your email!';btn.disabled=false;return;}
+    }
     if(res.error)throw res.error;
   }catch(e){msg.className='auth-msg error';msg.textContent=e.message||'Error.';}
   btn.disabled=false;
 };
-window.handleLogout=async()=>{await sb.auth.signOut();clearBg();document.body.className='';};
+window.handleLogout=async function(){await sb.auth.signOut();clearBg();document.body.className='';document.body.removeAttribute('data-theme');};
 
 // ── PROFILE ──
 async function loadProfile(){
@@ -770,24 +1196,43 @@ async function loadProfile(){
       currentProfile=data;
       selectedAvatar=data.avatar_url||AVATARS[0];
       $('userUsernameEl').textContent=data.username||'';
+      applyNameGradientUI(data.name_gradient);
+      applyTheme(data.profile_theme);
       setBarAvatar(selectedAvatar);
       updateBalanceBadge(data.balance||0);
-    }else{
-      currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0};
+    } else {
+      currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null};
       sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).then(({error})=>{if(error&&error.code!=='23505')console.error(error);});
     }
   }catch(e){console.error('loadProfile:',e);}
 }
+function applyNameGradientUI(gradient){
+  const el=$('userUsernameEl');
+  if(gradient&&typeof gradient==='string'){
+    el.style.setProperty('--ug',gradient);
+    el.classList.add('username-gradient-active');
+  } else {
+    el.style.removeProperty('--ug');
+    el.classList.remove('username-gradient-active');
+  }
+}
+function applyTheme(theme){
+  if(theme&&typeof theme==='string'){
+    document.body.setAttribute('data-theme',theme);
+  } else {
+    document.body.removeAttribute('data-theme');
+  }
+}
 function setBarAvatar(av){
   const el=$('userBarAvatar');
   if(!el)return;
-  if(av&&av.startsWith('http'))el.innerHTML='<img src="'+av+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+  if(av&&av.startsWith('http')){el.innerHTML='<img src="'+sanitizeText(av)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
   else{el.innerHTML='';el.textContent=av||'🎭';}
   applyPremiumFrameUI();
 }
 function renderProfilePage(){
   const bigAv=$('profileBigAvatar');
-  if(selectedAvatar&&selectedAvatar.startsWith('http')){bigAv.innerHTML='<img src="'+selectedAvatar+'" class="avatar-upload-preview">';}
+  if(selectedAvatar&&selectedAvatar.startsWith('http')){bigAv.innerHTML='<img src="'+sanitizeText(selectedAvatar)+'" class="avatar-upload-preview">';}
   else{bigAv.innerHTML='<span style="font-size:56px">'+selectedAvatar+'</span>';}
   $('profileUsername').value=currentProfile?.username||'';
   const row=$('avatarRow');row.innerHTML='';
@@ -807,7 +1252,60 @@ async function renderProfileStats(){
     $('statDust').textContent=currentProfile?.dust||0;
   }catch(e){}
 }
-$('btnSaveProfile').addEventListener('click',async()=>{
+async function renderMythicClubTracker(){
+  try{
+    const now=new Date();
+    const monthStart=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
+    const{data}=await sb.from('user_poxy').select('user_id').eq('poxy_tier','mythic').gte('dropped_at',monthStart);
+    const uniqueUsers=new Set((data||[]).map(r=>r.user_id));
+    const count=uniqueUsers.size;
+    const remaining=Math.max(0,10-count);
+    const pct=Math.min(100,(count/10)*100);
+    const fill=$('mctBarFill');const status=$('mctStatus');
+    if(fill)fill.style.width=pct+'%';
+    if(status){
+      if(count>=10){status.textContent='Closed for this Month.';status.className='mct-status closed';}
+      else{status.textContent='Ecosystem Private Club Entry: '+remaining+' / 10 Global Seats Remaining This Month';status.className='mct-status';}
+    }
+  }catch(e){const s=$('mctStatus');if(s)s.textContent='Club tracker unavailable.';}
+}
+async function renderBadgeWallet(){
+  const list=$('badgeList');
+  if(!list||!currentUser)return;
+  try{
+    const badges=[];
+    const{data:listings}=await sb.from('marketplace').select('id').eq('seller_id',currentUser.id).limit(1);
+    if(listings&&listings.length)badges.push('market_baron');
+    const{data:tiers}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+    const tierSet=new Set((tiers||[]).map(t=>t.poxy_tier));
+    if(['common','uncommon','rare','epic','legendary'].every(t=>tierSet.has(t)))badges.push('first_drop_set');
+    if(tierSet.has('mythic'))badges.push('founder');
+    if(!badges.length&&!currentProfile?.is_verified_employee){list.innerHTML='<span class="badge-none">No badges yet.</span>';return;}
+    list.innerHTML='';
+    const badgeDefs={market_baron:{label:'Market Baron',emoji:'💰'},first_drop_set:{label:'First Drop Set',emoji:'🎯'},founder:{label:'Founder',emoji:'🏆'}};
+    badges.forEach(b=>{
+      const d=badgeDefs[b];if(!d)return;
+      const chip=document.createElement('span');chip.className='badge-chip '+b;chip.textContent=d.emoji+' '+d.label;
+      list.appendChild(chip);
+    });
+    if(currentProfile?.is_verified_employee===true){
+      const devChip=document.createElement('span');devChip.className='badge-chip developer';devChip.textContent='⚡ Developer';
+      list.appendChild(devChip);
+    }
+  }catch(e){list.innerHTML='<span class="badge-none">Error loading badges.</span>';}
+}
+async function renderFeaturedPoxyDisplay(){
+  const el=$('featuredPoxyDisplay');
+  if(!el||!currentProfile)return;
+  if(!currentProfile.favorite_poxy_id){el.innerHTML='<div class="featured-poxy-empty">No POXY featured yet. Select one from your collection.</div>';return;}
+  try{
+    const{data,error}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('id',currentProfile.favorite_poxy_id).single();
+    if(error||!data){el.innerHTML='<div class="featured-poxy-empty">Featured POXY not found.</div>';return;}
+    const tier=TIERS.find(t=>t.id===data.poxy_tier)||TIERS[0];
+    el.innerHTML='<div style="font-size:28px;margin-bottom:4px">'+tier.icon+'</div><div style="font-size:11px;font-weight:800;color:'+tier.color+';letter-spacing:1.5px;text-transform:uppercase">'+tier.label+'</div><div style="font-size:9px;color:#B0B0B0;font-family:monospace;margin-top:3px">'+sanitizeText(data.serial_number||'–')+'</div>';
+  }catch(e){el.innerHTML='<div class="featured-poxy-empty">Could not load featured POXY.</div>';}
+}
+$('btnSaveProfile').addEventListener('click',async function(){
   const username=$('profileUsername').value.trim();
   const v=validateUsername(username);
   if(!v.ok){showToast(v.msg);return;}
@@ -822,8 +1320,23 @@ $('btnSaveProfile').addEventListener('click',async()=>{
   }catch(e){showToast(usernameTakenMessage(e));}
   btn.disabled=false;
 });
-// Avatar upload
-document.getElementById('avatarUpload').addEventListener('change',async(e)=>{
+$('btnChangePassword').addEventListener('click',async function(){
+  const np=$('pwdNewPassword').value;
+  const cp=$('pwdConfirmPassword').value;
+  const msg=$('pwdMsg');
+  msg.textContent='';msg.className='pwd-msg';
+  if(!np||np.length<6){msg.className='pwd-msg error';msg.textContent='Password must be at least 6 characters.';return;}
+  if(np!==cp){msg.className='pwd-msg error';msg.textContent='Passwords do not match.';return;}
+  const btn=$('btnChangePassword');btn.disabled=true;btn.textContent='Updating...';
+  try{
+    const{error}=await sb.auth.updateUser({password:np});
+    if(error)throw error;
+    msg.className='pwd-msg success';msg.textContent='Password updated successfully.';
+    $('pwdNewPassword').value='';$('pwdConfirmPassword').value='';
+  }catch(e){msg.className='pwd-msg error';msg.textContent=e.message||'Update failed.';}
+  btn.disabled=false;btn.textContent='Update Password';
+});
+document.getElementById('avatarUpload').addEventListener('change',async function(e){
   const file=e.target.files[0];if(!file||!currentUser)return;
   const status=$('uploadStatus');
   if(!file.type.startsWith('image/')){showToast('Please select an image.');return;}
@@ -838,7 +1351,7 @@ document.getElementById('avatarUpload').addEventListener('change',async(e)=>{
     const url=urlData.publicUrl;
     await sb.from('profiles').upsert({id:currentUser.id,avatar_url:url});
     selectedAvatar=url;currentProfile={...currentProfile,avatar_url:url};
-    $('profileBigAvatar').innerHTML='<img src="'+url+'" class="avatar-upload-preview">';
+    $('profileBigAvatar').innerHTML='<img src="'+sanitizeText(url)+'" class="avatar-upload-preview">';
     setBarAvatar(url);
     document.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));
     status.textContent='Photo saved!';setTimeout(()=>status.textContent='',3000);
@@ -847,7 +1360,7 @@ document.getElementById('avatarUpload').addEventListener('change',async(e)=>{
 });
 
 // ── NAVIGATION ──
-window.showPage=page=>{
+window.showPage=function(page){
   $('huntPage').style.display=page==='hunt'?'block':'none';
   ['profile','collection','friends','market','bank'].forEach(p=>{const el=$(p+'Page');if(el)el.classList.toggle('visible',page===p);});
   const clubEl=$('clubPage');if(clubEl)clubEl.classList.toggle('visible',page==='club');
@@ -855,10 +1368,10 @@ window.showPage=page=>{
   const navMap={hunt:'navHunt',collection:'navCollection',friends:'navFriends',market:'navMarket',bank:'navBank',club:'navClub',profile:'navHunt'};
   const nv=$(navMap[page]);if(nv)nv.classList.add('active');
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
-  if(page==='friends'){$('friendsList').innerHTML='';loadFriends();}
+  if(page==='friends'){loadFriends();loadPendingRequests();}
   if(page==='market')loadMarket();
   if(page==='club')renderClub();
-  if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();}
+  if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();}
   if(page==='bank')renderBank();
   if(page==='club'){document.body.classList.add('dark-club');}
   else{document.body.classList.remove('dark-club');if(currentTier&&page==='hunt')setBodyBg(currentTier.id);}
@@ -869,23 +1382,15 @@ $('lX').addEventListener('mouseenter',()=>$('logoRow').classList.add('x-active')
 $('lX').addEventListener('mouseleave',()=>$('logoRow').classList.remove('x-active'));
 $('lX').addEventListener('touchstart',e=>{e.preventDefault();$('logoRow').classList.toggle('x-active');});
 
-// ── GACHA (epic spin + reveal) ──
+// ── GACHA ──
 const SPIN_MS=2400;
-let spinNearMissTier=null,spinFlashTimer=null;
-
-function tierBgStyle(tier){
-  return{background:tier.glow,borderColor:tier.color,boxShadow:'0 0 22px '+tier.color+'99,inset 0 0 16px '+tier.glow};
-}
-function flashSpinTier(tier,sb2){
-  Object.assign(sb2.style,tierBgStyle(tier));
-  sb2.style.opacity='1';
-}
+let spinNearMissTier=null;
+function tierBgStyle(tier){return{background:tier.glow,borderColor:tier.color,boxShadow:'0 0 22px '+tier.color+'99,inset 0 0 16px '+tier.glow};}
+function flashSpinTier(tier,sb2){Object.assign(sb2.style,tierBgStyle(tier));sb2.style.opacity='1';}
 function startSpin(){
   pendingSpinTier=pickTier();
   spinNearMissTier=null;
-  if(Math.random()<0.72){
-    spinNearMissTier=Math.random()<0.35?TIERS.find(t=>t.id==='mythic'):TIERS.find(t=>t.id==='legendary');
-  }
+  if(Math.random()<0.72){spinNearMissTier=Math.random()<0.35?TIERS.find(t=>t.id==='mythic'):TIERS.find(t=>t.id==='legendary');}
   const sb2=$('spinBox');
   sb2.classList.add('spin-rapid');
   sb2.style.opacity='1';
@@ -904,11 +1409,7 @@ function startSpin(){
       flashSpinTier(flashTier,sb2);
       tickCount++;
       if(tickCount%2===0)playTick();
-      if(spinNearMissTier&&t>0.5&&t<0.78&&now-lastNearMiss>180){
-        lastNearMiss=now;
-        flashSpinTier(spinNearMissTier,sb2);
-        playTick();
-      }
+      if(spinNearMissTier&&t>0.5&&t<0.78&&now-lastNearMiss>180){lastNearMiss=now;flashSpinTier(spinNearMissTier,sb2);playTick();}
     }
     const wobble=Math.sin(elapsed*0.02)*(1-t)*6;
     const rot=(t<0.85?t*1.4:0.85*1.4)*540+wobble;
@@ -945,49 +1446,30 @@ function launchParticles(color){
 }
 function triggerRevealFX(tierId){
   document.body.classList.remove('screen-shake','screen-shake-heavy');
-  if(tierId==='legendary'||tierId==='mythic'){
-    document.body.classList.add('screen-shake-heavy');
-    setTimeout(()=>document.body.classList.remove('screen-shake-heavy'),700);
-  }else if(tierId==='rare'||tierId==='epic'){
-    document.body.classList.add('screen-shake');
-    setTimeout(()=>document.body.classList.remove('screen-shake'),500);
-  }
+  if(tierId==='legendary'||tierId==='mythic'){document.body.classList.add('screen-shake-heavy');setTimeout(()=>document.body.classList.remove('screen-shake-heavy'),700);}
+  else if(tierId==='rare'||tierId==='epic'){document.body.classList.add('screen-shake');setTimeout(()=>document.body.classList.remove('screen-shake'),500);}
 }
 function showReward(tier){
   currentTier=tier||pendingSpinTier||pickTier();
   currentSerial=genSerial();
   const tid=currentTier.id;
-  launchParticles(currentTier.color);
-  playDrop(tid);
-  setBodyBg(tid);
-  triggerRevealFX(tid);
-  $('rewardIcon').textContent=currentTier.icon;
-  $('rewardIcon').style.color=currentTier.color;
-  $('rewardLabel').textContent=currentTier.label;
-  $('rewardLabel').style.color=currentTier.color;
+  launchParticles(currentTier.color);playDrop(tid);setBodyBg(tid);triggerRevealFX(tid);
+  $('rewardIcon').textContent=currentTier.icon;$('rewardIcon').style.color=currentTier.color;
+  $('rewardLabel').textContent=currentTier.label;$('rewardLabel').style.color=currentTier.color;
   $('rewardSerial').textContent=currentSerial;
-  const rb=$('rewardBox');
-  const aura=$('rewardAura');
+  const rb=$('rewardBox');const aura=$('rewardAura');
   rb.className='reward-box gpu-accel reveal-'+tid;
   rb.style.setProperty('--rg',currentTier.glow);
   rb.style.borderColor=currentTier.color;
   rb.style.background=currentTier.glow.replace('0.14','0.10').replace('0.18','0.12').replace('0.20','0.14');
   rb.style.boxShadow='0 0 0 1px '+currentTier.glow+', 0 0 40px '+currentTier.glow;
-  if(aura){
-    aura.className='reward-aura';
-    aura.style.background='radial-gradient(circle,'+currentTier.color+'55 0%, transparent 70%)';
-    if(tid==='legendary'||tid==='mythic'){aura.classList.add('burst');setTimeout(()=>aura.classList.remove('burst'),900);}
-  }
+  if(aura){aura.className='reward-aura';aura.style.background='radial-gradient(circle,'+currentTier.color+'55 0%, transparent 70%)';if(tid==='legendary'||tid==='mythic'){aura.classList.add('burst');setTimeout(()=>aura.classList.remove('burst'),900);}}
   if(tid==='mythic'&&mythicCount<10){mythicCount++;$('fomoText').textContent='Mythic POXY claimed this month: '+mythicCount+'/10';}
   if(tid==='mythic'){hasMythic=true;toggleClubAccess(true);refreshPremiumFrame();}
   if(tid==='legendary')refreshPremiumFrame();
-  rb.style.opacity='0';
-  rb.style.transform='scale(0.5)';
-  rb.style.transition='none';
+  rb.style.opacity='0';rb.style.transform='scale(0.5)';rb.style.transition='none';
   requestAnimationFrame(()=>{rb.style.opacity='1';rb.style.transform='';});
-  pushLiveDrop(currentProfile?.username||'Hunter',currentTier.label,tid,currentProfile?.avatar_url);
-  $('btnOpen').style.opacity='0';
-  $('btnOpen').style.pointerEvents='none';
+  $('btnOpen').style.opacity='0';$('btnOpen').style.pointerEvents='none';
   $('postBtns').classList.add('visible');
   requestAnimationFrame(()=>requestAnimationFrame(()=>$('postBtns').classList.add('faded-in')));
   $('btnListFromHunt').classList.add('show');
@@ -997,28 +1479,24 @@ function resetAll(){
   $('cvs').getContext('2d').clearRect(0,0,240,240);particles=[];
   const rb=$('rewardBox');rb.style.transition='opacity 0.3s';rb.style.opacity='0';rb.style.animation='';rb.className='reward-box gpu-accel';
   const aura=$('rewardAura');if(aura){aura.className='reward-aura';aura.style.background='';}
-  const sb2=$('spinBox');sb2.style.opacity='0';sb2.style.animation='';sb2.style.boxShadow='';
+  const sb2=$('spinBox');sb2.style.opacity='0';sb2.style.animation='';sb2.style.boxShadow='';sb2.style.transition='';
   $('idleBox').style.opacity='1';
   $('postBtns').classList.remove('faded-in');setTimeout(()=>$('postBtns').classList.remove('visible'),400);
   $('btnOpen').style.opacity='1';$('btnOpen').style.pointerEvents='auto';$('btnOpen').disabled=false;
   $('btnListFromHunt').classList.remove('show');
   busy=false;currentTier=null;currentSerial=null;clearBg();
 }
-
-$('btnOpen').addEventListener('click',async()=>{
+$('btnOpen').addEventListener('click',async function(){
   if(busy||!currentUser)return;
-  // Deduct 1 Poxy Coin
   const bal=currentProfile?.balance||0;
   if(bal<1){showToast('Insufficient Poxy Coins. Add funds in BANK tab.');return;}
   busy=true;$('btnOpen').disabled=true;
-  // Optimistic deduct
   currentProfile.balance=bal-1;
   updateBalanceBadge(currentProfile.balance);
   await sb.from('profiles').update({balance:bal-1}).eq('id',currentUser.id);
   $('idleBox').style.opacity='0';spinStartTime=performance.now();startSpin();
 });
-
-$('btnAdd').addEventListener('click',async()=>{
+$('btnAdd').addEventListener('click',async function(){
   if(!currentTier||!currentUser||!currentSerial)return;
   const orig=$('btnAdd').textContent;$('btnAdd').disabled=true;$('btnAdd').textContent='Saving...';
   try{
@@ -1030,8 +1508,8 @@ $('btnAdd').addEventListener('click',async()=>{
   }catch(e){showToast('Error saving.');}
   $('btnAdd').disabled=false;$('btnAdd').textContent=orig;resetAll();
 });
-$('btnDiscard').addEventListener('click',()=>{showToast('POXY discarded.');resetAll();});
-$('btnListFromHunt').addEventListener('click',()=>{if(!currentTier||!currentSerial)return;pendingListItem={tier:currentTier,serial:currentSerial,fromHunt:true};openPriceModal();});
+$('btnDiscard').addEventListener('click',function(){showToast('POXY discarded.');resetAll();});
+$('btnListFromHunt').addEventListener('click',function(){if(!currentTier||!currentSerial)return;pendingListItem={tier:currentTier,serial:currentSerial,fromHunt:true};openPriceModal();});
 
 // ── MYTHIC ──
 async function checkMythic(){
@@ -1039,7 +1517,7 @@ async function checkMythic(){
 }
 function toggleClubAccess(has){$('btnClubEnter').classList.toggle('show',has);$('navClub').classList.toggle('show',has);$('clubNavSep').style.display=has?'':'none';}
 
-// ── COLLECTION with filters + bulk dust ──
+// ── COLLECTION ──
 let colData=[];
 async function loadCollection(){
   const cont=$('colContent'),cnt=$('colCount');
@@ -1049,8 +1527,7 @@ async function loadCollection(){
     const{data,error}=await sb.from('user_poxy').select('*').eq('user_id',currentUser.id).order('dropped_at',{ascending:false});
     if(error)throw error;
     colData=data||[];
-    renderFilterButtons();
-    renderCollection();
+    renderFilterButtons();renderCollection();
     cnt.textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
   }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
 }
@@ -1086,12 +1563,24 @@ function renderCollection(){
     const acts=document.createElement('div');acts.className='col-card-actions';
     const burnBtn=document.createElement('button');burnBtn.className='btn-burn';burnBtn.title='Burn for +10 dust';burnBtn.textContent='🔥';
     const sellBtn=document.createElement('button');sellBtn.className='btn-sell-card';sellBtn.title='List on market';sellBtn.textContent='💰';
-    acts.appendChild(burnBtn);acts.appendChild(sellBtn);
+    const featBtn=document.createElement('button');featBtn.className='btn-feature-card';featBtn.title='Feature in profile';
+    featBtn.textContent=currentProfile?.favorite_poxy_id==item.id?'⭐':'☆';
+    acts.appendChild(burnBtn);acts.appendChild(sellBtn);acts.appendChild(featBtn);
     card.appendChild(ico);card.appendChild(lbl);card.appendChild(dt);card.appendChild(ser);card.appendChild(acts);
-    // Toggle select on card click
-    card.addEventListener('click',e=>{if(e.target===burnBtn||e.target===sellBtn)return;if(selectedForDust.has(item.id)){selectedForDust.delete(item.id);card.classList.remove('selected-for-dust');}else{selectedForDust.add(item.id);card.classList.add('selected-for-dust');}updateBulkBar();});
+    card.addEventListener('click',e=>{if(e.target===burnBtn||e.target===sellBtn||e.target===featBtn)return;if(selectedForDust.has(item.id)){selectedForDust.delete(item.id);card.classList.remove('selected-for-dust');}else{selectedForDust.add(item.id);card.classList.add('selected-for-dust');}updateBulkBar();});
     burnBtn.addEventListener('click',e=>{e.stopPropagation();burnPoxySecure(item.id,card);});
     sellBtn.addEventListener('click',e=>{e.stopPropagation();pendingListItem={poxyId:item.id,tier,serial:item.serial_number||'',fromHunt:false};openPriceModal();});
+    featBtn.addEventListener('click',async e=>{
+      e.stopPropagation();
+      const newId=currentProfile?.favorite_poxy_id==item.id?null:item.id;
+      try{
+        const{error}=await sb.from('profiles').update({favorite_poxy_id:newId}).eq('id',currentUser.id);
+        if(error)throw error;
+        if(currentProfile)currentProfile.favorite_poxy_id=newId;
+        showToast(newId?'Featured in profile!':'Removed from profile.');
+        renderCollection();
+      }catch(e){showToast('Error: '+(e.message||'update failed'));}
+    });
     grid.appendChild(card);
   });
   cont.innerHTML='';cont.appendChild(grid);
@@ -1102,7 +1591,6 @@ function updateBulkBar(){
   bar.classList.toggle('show',n>0);
   if(cnt)cnt.textContent=n+' selected (+'+n*10+' dust)';
 }
-// Secure dust via RPC
 async function burnPoxySecure(itemId,cardEl){
   cardEl.style.pointerEvents='none';
   cardEl.style.animation='burnOut 0.5s ease forwards';
@@ -1123,7 +1611,7 @@ async function burnPoxySecure(itemId,cardEl){
     },520);
   }catch(e){cardEl.style.pointerEvents='';cardEl.style.animation='';showToast('Burn failed: '+(e.message||'server error'));}
 }
-$('btnBulkDust').addEventListener('click',async()=>{
+$('btnBulkDust').addEventListener('click',async function(){
   if(!selectedForDust.size)return;
   const ids=[...selectedForDust];
   const btn=$('btnBulkDust');btn.disabled=true;btn.textContent='Burning...';
@@ -1134,8 +1622,7 @@ $('btnBulkDust').addEventListener('click',async()=>{
     colData=colData.filter(i=>!ids.includes(i.id));
     if(currentProfile)currentProfile.dust=(currentProfile.dust||0)+data.dust_gained;
     $('dustVal').textContent=currentProfile?.dust||0;
-    selectedForDust=new Set();updateBulkBar();
-    renderCollection();
+    selectedForDust=new Set();updateBulkBar();renderCollection();
     $('colCount').textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
     showToast('+'+data.dust_gained+' Dust for '+data.deleted+' items 🔥');
     refreshPremiumFrame();
@@ -1143,68 +1630,215 @@ $('btnBulkDust').addEventListener('click',async()=>{
   btn.disabled=false;btn.textContent='🔥 Dust All Selected';
 });
 
-// ── FRIENDS ──
+// ── FRIENDS (rebuilt) ──
+async function loadPendingRequests(){
+  const cont=$('pendingRequestsContainer');
+  if(!cont||!currentUser)return;
+  try{
+    const{data:incoming,error}=await sb.from('friend_requests').select('*').eq('to_id',currentUser.id).eq('status','pending');
+    if(error)throw error;
+    friendIncoming=incoming||[];
+    if(!friendIncoming.length){cont.innerHTML='';return;}
+    const ids=friendIncoming.map(r=>r.from_id);
+    const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',ids);
+    const profMap={};(profs||[]).forEach(p=>{profMap[p.id]=p;});
+    cont.innerHTML='';
+    const label=document.createElement('div');label.className='pending-label';label.textContent=friendIncoming.length+' Pending Request'+(friendIncoming.length!==1?'s':'');
+    cont.appendChild(label);
+    friendIncoming.forEach(req=>{
+      const prof=profMap[req.from_id]||{};
+      const card=document.createElement('div');card.className='pending-card';
+      const avEl=document.createElement('div');avEl.className='user-card-avatar';
+      if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(prof.avatar_url)+'">';else avEl.textContent=prof.avatar_url||'👾';
+      const info=document.createElement('div');info.className='user-card-info';info.style.flex='1';
+      info.innerHTML='<div class="user-card-name">'+sanitizeText(prof.username||'Anonymous')+'</div><div class="user-card-sub">Sent you a request</div>';
+      const actions=document.createElement('div');actions.className='pending-actions';
+      const acceptBtn=document.createElement('button');acceptBtn.className='btn-accept-req';acceptBtn.textContent='Accept';
+      const declineBtn=document.createElement('button');declineBtn.className='btn-decline-req';declineBtn.textContent='Decline';
+      acceptBtn.addEventListener('click',async function(){
+        acceptBtn.disabled=true;declineBtn.disabled=true;
+        try{
+          const{error:ae}=await sb.from('friend_requests').update({status:'accepted'}).eq('id',req.id);
+          if(ae)throw ae;
+          showToast('Friend added: '+sanitizeText(prof.username||'User'));
+          await loadPendingRequests();await loadFriends();
+        }catch(e){showToast('Error: '+(e.message||'could not accept'));acceptBtn.disabled=false;declineBtn.disabled=false;}
+      });
+      declineBtn.addEventListener('click',async function(){
+        acceptBtn.disabled=true;declineBtn.disabled=true;
+        try{
+          const{error:de}=await sb.from('friend_requests').delete().eq('id',req.id);
+          if(de)throw de;
+          showToast('Request declined.');
+          await loadPendingRequests();
+        }catch(e){showToast('Error: '+(e.message||'could not decline'));acceptBtn.disabled=false;declineBtn.disabled=false;}
+      });
+      actions.appendChild(acceptBtn);actions.appendChild(declineBtn);
+      card.appendChild(avEl);card.appendChild(info);card.appendChild(actions);
+      cont.appendChild(card);
+    });
+  }catch(e){if(cont)cont.innerHTML='';}
+}
 async function loadFriends(){
   const cont=$('friendsList');
+  if(!cont||!currentUser)return;
   cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
   try{
-    const{data:reqs}=await sb.from('friend_requests').select('*').or('from_id.eq.'+currentUser.id+',to_id.eq.'+currentUser.id).eq('status','accepted');
+    const{data:reqs,error}=await sb.from('friend_requests').select('*').or('from_id.eq.'+currentUser.id+',to_id.eq.'+currentUser.id).eq('status','accepted');
+    if(error)throw error;
     if(!reqs||!reqs.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">No friends yet.</div>';return;}
     const ids=reqs.map(r=>r.from_id===currentUser.id?r.to_id:r.from_id);
     const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',ids);
-    cont.innerHTML='';
     const premIds=new Set();
-    try{
-      const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic']);
-      (hi||[]).forEach(r=>premIds.add(r.user_id));
-    }catch(e){}
+    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic']);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
+    cont.innerHTML='';
     (profs||[]).forEach(p=>{
-      const card=document.createElement('div');card.className='user-card';
+      const req=reqs.find(r=>r.from_id===p.id||r.to_id===p.id);
+      const card=document.createElement('div');card.className='user-card user-card-clickable';
       const avEl=document.createElement('div');avEl.className='user-card-avatar';
       renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id));
       const info=document.createElement('div');info.className='user-card-info';
-      info.innerHTML='<div class="user-card-name">'+(p.username||'Anonymous')+'</div><div class="user-card-sub">Friend</div>';
-      const btn=document.createElement('button');btn.className='btn-friend sent';btn.textContent='Friends ✓';
-      card.appendChild(avEl);card.appendChild(info);card.appendChild(btn);cont.appendChild(card);
+      info.innerHTML='<div class="user-card-name">'+sanitizeText(p.username||'Anonymous')+'</div><div class="user-card-sub">Friend</div>';
+      const removeBtn=document.createElement('button');removeBtn.className='btn-remove-friend';removeBtn.textContent='Remove';
+      removeBtn.addEventListener('click',async function(e){
+        e.stopPropagation();
+        removeBtn.disabled=true;removeBtn.textContent='...';
+        try{
+          const{error:re}=await sb.from('friend_requests').delete().eq('id',req.id);
+          if(re)throw re;
+          showToast('Friend removed.');
+          card.remove();
+        }catch(e){showToast('Error: '+(e.message||'could not remove'));removeBtn.disabled=false;removeBtn.textContent='Remove';}
+      });
+      card.addEventListener('click',function(){openInspectModal(p.id);});
+      card.appendChild(avEl);card.appendChild(info);card.appendChild(removeBtn);cont.appendChild(card);
     });
   }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63">Error loading friends.</div>';}
 }
-window.searchUsers=async()=>{
+window.searchUsers=async function(){
   const q=$('friendSearch').value.trim();
   const cont=$('searchResults');
   if(!q){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">Enter an exact username above</div>';return;}
   const v=validateUsername(q);
-  if(!v.ok){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">'+v.msg+'</div>';return;}
+  if(!v.ok){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">'+sanitizeText(v.msg)+'</div>';return;}
   cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
   try{
     const{data,error}=await sb.from('profiles').select('id,username,avatar_url').eq('username',q).neq('id',currentUser.id).limit(5);
     if(error)throw error;
-    if(!data||!data.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:10px 0">No user found with username "'+q+'".</div>';return;}
+    if(!data||!data.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:10px 0">No user found with username "'+sanitizeText(q)+'".</div>';return;}
     const ids=data.map(p=>p.id);
     const orParts=ids.map(id=>'and(from_id.eq.'+currentUser.id+',to_id.eq.'+id+'),and(from_id.eq.'+id+',to_id.eq.'+currentUser.id+')').join(',');
     const{data:reqs}=await sb.from('friend_requests').select('id,status,from_id,to_id').or(orParts);
     const reqMap={};(reqs||[]).forEach(r=>{const o=r.from_id===currentUser.id?r.to_id:r.from_id;reqMap[o]=r;});
     const premIds=new Set();
-    try{
-      const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic']);
-      (hi||[]).forEach(r=>premIds.add(r.user_id));
-    }catch(e){}
+    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic']);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
     cont.innerHTML='';
     data.forEach(p=>{
       const ex=reqMap[p.id];
-      const card=document.createElement('div');card.className='user-card';
+      const card=document.createElement('div');card.className='user-card user-card-clickable';
       const avEl=document.createElement('div');avEl.className='user-card-avatar';
       renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id));
       const info=document.createElement('div');info.className='user-card-info';
-      const nm=document.createElement('div');nm.className='user-card-name';nm.textContent=p.username;
-      const sb2=document.createElement('div');sb2.className='user-card-sub';sb2.textContent='POXY member';
-      info.appendChild(nm);info.appendChild(sb2);
+      const nm=document.createElement('div');nm.className='user-card-name';nm.textContent=sanitizeText(p.username||'');
+      const sub=document.createElement('div');sub.className='user-card-sub';sub.textContent='POXY member';
+      info.appendChild(nm);info.appendChild(sub);
       const btn=document.createElement('button');
       if(ex){btn.className='btn-friend sent';btn.textContent=ex.status==='accepted'?'Friends ✓':'Sent';}
-      else{btn.className='btn-friend';btn.textContent='+ Add';btn.addEventListener('click',async function(){this.disabled=true;const{error:ie}=await sb.from('friend_requests').insert({from_id:currentUser.id,to_id:p.id});if(ie){this.disabled=false;showToast(ie.code==='23505'?'Already sent!':'Error.');return;}this.textContent='Sent';this.classList.add('sent');});}
+      else{
+        btn.className='btn-friend';btn.textContent='+ Add';
+        btn.addEventListener('click',async function(e){
+          e.stopPropagation();
+          this.disabled=true;
+          const{error:ie}=await sb.from('friend_requests').insert({from_id:currentUser.id,to_id:p.id});
+          if(ie){this.disabled=false;showToast(ie.code==='23505'?'Already sent!':'Error: '+ie.message);return;}
+          this.textContent='Sent';this.classList.add('sent');
+        });
+      }
+      card.addEventListener('click',function(){openInspectModal(p.id);});
       card.appendChild(avEl);card.appendChild(info);card.appendChild(btn);cont.appendChild(card);
     });
-  }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">Error: '+(e.message||'unknown')+'</div>';}
+  }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">Error: '+sanitizeText(e.message||'unknown')+'</div>';}
+};
+function startFriendPoll(){
+  if(friendPollInterval)clearInterval(friendPollInterval);
+  friendPollInterval=setInterval(async()=>{
+    if(currentUser){
+      try{
+        const{data}=await sb.from('friend_requests').select('id').eq('to_id',currentUser.id).eq('status','pending');
+        if(data&&data.length!==friendIncoming.length){loadPendingRequests();}
+      }catch(e){}
+    }
+  },60000);
+}
+
+// ── PROFILE INSPECTION MODAL ──
+async function openInspectModal(userId){
+  if(!userId)return;
+  inspectTargetUserId=userId;
+  const modal=$('inspectModal');
+  $('inspectUsernameText').textContent='Loading...';
+  $('inspectSubText').textContent='';
+  $('inspectStatsGrid').innerHTML='';
+  $('inspectFavPoxy').innerHTML='<div class="inspect-fav-none">Loading...</div>';
+  $('inspectActionsRow').innerHTML='';
+  $('inspectAvatarInner').textContent='👾';
+  $('inspectAvatarWrap').className='inspect-avatar-wrap';
+  modal.classList.remove('hidden');requestAnimationFrame(()=>modal.classList.add('show'));
+  try{
+    const[{data:prof},{data:poxyData},{data:reqs},{data:premData}]=await Promise.all([
+      sb.from('profiles').select('*').eq('id',userId).single(),
+      sb.from('user_poxy').select('poxy_tier').eq('user_id',userId),
+      sb.from('friend_requests').select('id,status,from_id,to_id').or('and(from_id.eq.'+currentUser.id+',to_id.eq.'+userId+'),and(from_id.eq.'+userId+',to_id.eq.'+currentUser.id+')').limit(1),
+      sb.from('user_poxy').select('id').eq('user_id',userId).in('poxy_tier',['legendary','mythic']).limit(1)
+    ]);
+    if(!prof){closeInspectModal();showToast('User not found.');return;}
+    const isPrem=!!(premData&&premData.length);
+    const avWrap=$('inspectAvatarWrap');
+    if(isPrem)avWrap.classList.add('inspect-prem');
+    const avInner=$('inspectAvatarInner');
+    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(prof.avatar_url)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    else avInner.textContent=prof.avatar_url||'👾';
+    $('inspectUsernameText').textContent=sanitizeText(prof.username||'Anonymous');
+    const totalItems=poxyData?.length||0;
+    const rareItems=poxyData?.filter(d=>['rare','epic','legendary','mythic'].includes(d.poxy_tier)).length||0;
+    $('inspectSubText').textContent='POXY Member';
+    const grid=$('inspectStatsGrid');
+    grid.innerHTML='<div class="inspect-stat"><div class="inspect-stat-val">'+totalItems+'</div><div class="inspect-stat-label">Items</div></div><div class="inspect-stat"><div class="inspect-stat-val">'+rareItems+'</div><div class="inspect-stat-label">Rare+</div></div><div class="inspect-stat"><div class="inspect-stat-val">'+formatPC(prof.balance||0)+'</div><div class="inspect-stat-label">Balance</div></div>';
+    const favEl=$('inspectFavPoxy');
+    if(prof.favorite_poxy_id){
+      try{
+        const{data:fp}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('id',prof.favorite_poxy_id).single();
+        if(fp){
+          const ft=TIERS.find(t=>t.id===fp.poxy_tier)||TIERS[0];
+          favEl.innerHTML='<div class="inspect-fav-label">Featured POXY</div><div class="inspect-fav-icon">'+ft.icon+'</div><div class="inspect-fav-tier" style="color:'+ft.color+'">'+ft.label+'</div><div class="inspect-fav-serial">'+sanitizeText(fp.serial_number||'–')+'</div>';
+        } else {favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
+      }catch(e){favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
+    } else {favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
+    const actionsRow=$('inspectActionsRow');
+    const existingReq=reqs&&reqs[0];
+    if(existingReq&&existingReq.status==='accepted'){
+      const fb=document.createElement('button');fb.className='btn-friend sent';fb.style.flex='1';fb.textContent='Friends ✓';actionsRow.appendChild(fb);
+    } else if(existingReq&&existingReq.status==='pending'){
+      const fb=document.createElement('button');fb.className='btn-friend sent';fb.style.flex='1';fb.textContent='Request Sent';actionsRow.appendChild(fb);
+    } else {
+      const addBtn=document.createElement('button');addBtn.className='btn-friend';addBtn.style.flex='1';addBtn.textContent='+ Add Friend';
+      addBtn.addEventListener('click',async function(){
+        this.disabled=true;
+        const{error:ie}=await sb.from('friend_requests').insert({from_id:currentUser.id,to_id:userId});
+        if(ie){showToast(ie.code==='23505'?'Already sent!':'Error: '+ie.message);this.disabled=false;return;}
+        this.textContent='Sent';this.classList.add('sent');
+      });
+      actionsRow.appendChild(addBtn);
+    }
+    const closeBtn=document.createElement('button');closeBtn.className='btn-modal-cancel';closeBtn.style.flex='1';closeBtn.textContent='Close';closeBtn.onclick=closeInspectModal;
+    actionsRow.appendChild(closeBtn);
+  }catch(e){closeInspectModal();showToast('Could not load profile.');}
+}
+window.closeInspectModal=function(){
+  const modal=$('inspectModal');
+  modal.classList.remove('show');
+  setTimeout(()=>modal.classList.add('hidden'),250);
+  inspectTargetUserId=null;
 };
 
 // ── MARKETPLACE ──
@@ -1214,20 +1848,13 @@ function sortMarketListings(list){
   else if(marketSort==='price_desc')arr.sort((a,b)=>parseFloat(b.price)-parseFloat(a.price));
   return arr;
 }
-function marketPriceEl(price){
-  const el=document.createElement('div');
-  el.className='market-card-price coin-inline';
-  el.innerHTML=coinAmountHTML(price,14);
-  return el;
-}
-window.switchMarketTab=tab=>{marketTab=tab;$('mTabBuy').classList.toggle('active',tab==='buy');$('mTabSell').classList.toggle('active',tab==='sell');loadMarket();};
-window.onMarketSortChange=()=>{const sel=$('marketSort');if(sel)marketSort=sel.value;loadMarket();};
+window.switchMarketTab=function(tab){marketTab=tab;$('mTabBuy').classList.toggle('active',tab==='buy');$('mTabSell').classList.toggle('active',tab==='sell');loadMarket();};
+window.onMarketSortChange=function(){const sel=$('marketSort');if(sel)marketSort=sel.value;loadMarket();};
 async function quickBuyListing(item,tier,buyBtn){
   if(!item||!currentUser)return;
   const bal=currentProfile?.balance||0;
   if(bal<parseFloat(item.price)){showToast('Insufficient Poxy Coins.');return;}
   if(buyBtn){buyBtn.disabled=true;buyBtn.textContent='...';}
-  pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id};
   try{
     const{data,error}=await sb.rpc('purchase_poxy',{p_listing_id:item.id,p_buyer_id:currentUser.id});
     if(error)throw error;
@@ -1237,7 +1864,6 @@ async function quickBuyListing(item,tier,buyBtn){
     showToast('Purchased! Check your collection.');
     loadMarket();
   }catch(e){showToast(e.message||'Purchase failed.');if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='Quick Buy';}}
-  pendingBuyItem=null;
 }
 async function loadMarket(){
   const cont=$('marketContent');
@@ -1253,46 +1879,52 @@ async function loadMarket(){
       const toolbar=document.createElement('div');toolbar.className='market-toolbar';
       const sel=document.createElement('select');sel.className='market-sort-select';sel.id='marketSort';
       sel.innerHTML='<option value="newest">Newest First</option><option value="price_asc">Price: Lowest First</option><option value="price_desc">Price: Highest First</option>';
-      sel.value=marketSort;
-      sel.onchange=window.onMarketSortChange;
-      toolbar.appendChild(sel);
-      cont.appendChild(toolbar);
+      sel.value=marketSort;sel.onchange=window.onMarketSortChange;
+      toolbar.appendChild(sel);cont.appendChild(toolbar);
       sorted.forEach(item=>{
         const tier=TIERS.find(t=>t.id===item.user_poxy?.poxy_tier)||TIERS[0];
         const isOwner=item.seller_id===currentUser.id;
         const serialDisplay=maskSerial(item.user_poxy?.serial_number,isOwner);
-        const card=document.createElement('div');card.className='market-card gpu-accel';
-        card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
+        const card=document.createElement('div');card.className='market-card gpu-accel';card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
         const ico=document.createElement('div');ico.className='market-card-icon';ico.style.cssText='background:'+tier.glow+';border:1.5px solid '+tier.color+'44';ico.textContent=tier.icon;
         const info=document.createElement('div');info.className='market-card-info';
-        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+serialDisplay+'</div>';
+        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+sanitizeText(serialDisplay)+'</div>';
         const right=document.createElement('div');right.className='market-card-actions';
-        right.appendChild(marketPriceEl(item.price));
+        const priceEl=document.createElement('div');priceEl.className='market-card-price';priceEl.textContent=formatPC(item.price);
         const quickBtn=document.createElement('button');quickBtn.className='btn-quick-buy';quickBtn.textContent='Quick Buy';
         quickBtn.addEventListener('click',()=>quickBuyListing(item,tier,quickBtn));
-        const buyBtn=document.createElement('button');buyBtn.className='btn-buy';buyBtn.textContent='Details';
-        buyBtn.addEventListener('click',()=>{pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id};openBuyModal(tier.label,item.price);});
-        right.appendChild(quickBtn);right.appendChild(buyBtn);
+        const detailBtn=document.createElement('button');detailBtn.className='btn-buy';detailBtn.textContent='Details';
+        detailBtn.addEventListener('click',()=>{pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id};openBuyModal(tier.label,item.price);});
+        right.appendChild(priceEl);right.appendChild(quickBtn);right.appendChild(detailBtn);
         card.appendChild(ico);card.appendChild(info);card.appendChild(right);cont.appendChild(card);
       });
-    }else{
+    } else {
       const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number)').eq('seller_id',currentUser.id).order('created_at',{ascending:false});
       if(error)throw error;
       if(!data||!data.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">📋</div>No listings.<br>List from your collection!</div>';return;}
       cont.innerHTML='';
       data.forEach(item=>{
         const tier=TIERS.find(t=>t.id===item.user_poxy?.poxy_tier)||TIERS[0];
-        const isOwner=true;
-        const serialDisplay=maskSerial(item.user_poxy?.serial_number,isOwner);
+        const serialDisplay=maskSerial(item.user_poxy?.serial_number,true);
         const sColor=item.status==='sold'?'#4CAF50':item.status==='active'?'#FF5722':'#9E9E9E';
-        const card=document.createElement('div');card.className='market-card gpu-accel';
-        card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
+        const card=document.createElement('div');card.className='market-card gpu-accel';card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
         const ico=document.createElement('div');ico.className='market-card-icon';ico.style.cssText='background:'+tier.glow+';border:1.5px solid '+tier.color+'44';ico.textContent=tier.icon;
         const info=document.createElement('div');info.className='market-card-info';
-        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+serialDisplay+'</div><div style="font-size:9px;font-weight:700;color:'+sColor+';margin-top:2px">'+item.status.toUpperCase()+'</div>';
+        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+sanitizeText(serialDisplay)+'</div><div style="font-size:9px;font-weight:700;color:'+sColor+';margin-top:2px">'+item.status.toUpperCase()+'</div>';
         const right=document.createElement('div');right.className='market-card-actions';
-        right.appendChild(marketPriceEl(item.price));
-        if(item.status==='active'){const cb=document.createElement('button');cb.className='btn-buy';cb.style.cssText='background:#f0f0f0;color:#9E9E9E';cb.textContent='Cancel';cb.addEventListener('click',async()=>{try{await sb.from('marketplace').update({status:'cancelled'}).eq('id',item.id);cb.textContent='Cancelled';cb.disabled=true;showToast('Cancelled.');}catch(e){showToast('Error.');}});right.appendChild(cb);}
+        const priceEl=document.createElement('div');priceEl.className='market-card-price';priceEl.textContent=formatPC(item.price);
+        right.appendChild(priceEl);
+        if(item.status==='active'){
+          const cb=document.createElement('button');cb.className='btn-buy';cb.style.cssText='background:#f0f0f0;color:#9E9E9E';cb.textContent='Cancel';
+          cb.addEventListener('click',async function(){
+            try{
+              const{error}=await sb.from('marketplace').update({status:'cancelled'}).eq('id',item.id);
+              if(error)throw error;
+              cb.textContent='Cancelled';cb.disabled=true;showToast('Cancelled.');
+            }catch(e){showToast('Error: '+(e.message||'could not cancel'));}
+          });
+          right.appendChild(cb);
+        }
         card.appendChild(ico);card.appendChild(info);card.appendChild(right);cont.appendChild(card);
       });
     }
@@ -1305,8 +1937,8 @@ function openPriceModal(){
   $('modalPrice').value='';
   o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
 }
-window.closeModal=()=>{const o=$('priceModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingListItem=null;};
-$('modalOk').addEventListener('click',async()=>{
+window.closeModal=function(){const o=$('priceModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingListItem=null;};
+$('modalOk').addEventListener('click',async function(){
   const price=parseFloat($('modalPrice').value);
   if(!price||price<=0){showToast('Enter a valid price.');return;}
   const btn=$('modalOk');btn.disabled=true;
@@ -1324,19 +1956,18 @@ $('modalOk').addEventListener('click',async()=>{
 });
 function openBuyModal(tierLabel,price){
   const o=$('buyModal');
-  $('buyModalSub').innerHTML='Buy <strong>'+tierLabel+'</strong> for '+coinAmountHTML(price,14)+'? Your balance: '+coinAmountHTML(currentProfile?.balance||0,14);
+  $('buyModalSub').textContent='Buy '+tierLabel+' for '+formatPC(price)+'? Your balance: '+formatPC(currentProfile?.balance||0);
   o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
 }
-window.closeBuyModal=()=>{const o=$('buyModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingBuyItem=null;};
-$('buyModalOk').addEventListener('click',async()=>{
+window.closeBuyModal=function(){const o=$('buyModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingBuyItem=null;};
+$('buyModalOk').addEventListener('click',async function(){
   if(!pendingBuyItem)return;
   const btn=$('buyModalOk');btn.disabled=true;
   try{
-    // Use secure RPC
     const{data,error}=await sb.rpc('purchase_poxy',{p_listing_id:pendingBuyItem.listingId,p_buyer_id:currentUser.id});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);
-    if(currentProfile)currentProfile.balance=(currentProfile.balance||0)-pendingBuyItem.price;
+    if(currentProfile)currentProfile.balance=(currentProfile.balance||0)-parseFloat(pendingBuyItem.price);
     updateBalanceBadge(currentProfile?.balance||0);
     showToast('Purchased! Check your collection.');
     closeBuyModal();loadMarket();
@@ -1349,7 +1980,7 @@ function renderBank(){
   const grid=$('bankAmounts');grid.innerHTML='';
   BANK_AMOUNTS.forEach(a=>{
     const div=document.createElement('div');div.className='bank-amt'+(a.val===selectedBankAmt?' selected':'');
-    div.innerHTML='<div class="bank-amt-val coin-inline" style="justify-content:center">'+coinAmountHTML(a.val,16)+'</div><div class="bank-amt-sub">'+a.label+'</div>';
+    div.innerHTML='<div class="bank-amt-val">'+a.val+' PC</div><div class="bank-amt-sub">'+a.label+'</div>';
     div.onclick=()=>{selectedBankAmt=a.val;document.querySelectorAll('.bank-amt').forEach(x=>x.classList.remove('selected'));div.classList.add('selected');};
     grid.appendChild(div);
   });
@@ -1369,22 +2000,22 @@ async function processTopup(){
   if(!data.ok)throw new Error(data.error);
   if(currentProfile)currentProfile.balance=data.new_balance;
   updateBalanceBadge(data.new_balance);
-  showToast('+'+formatPC(selectedBankAmt)+' Poxy Coins added!');
+  showToast('+'+selectedBankAmt+' Poxy Coins added!');
 }
-$('btnPayCard').addEventListener('click',async()=>{
+$('btnPayCard').addEventListener('click',async function(){
   if(!validateCard())return;
   const btn=$('btnPayCard');btn.disabled=true;btn.textContent='Processing...';
   try{await processTopup();}catch(e){showToast(e.message||'Payment failed.');}
   btn.disabled=false;btn.textContent='Pay with Card';
 });
-$('btnApplePay').addEventListener('click',async()=>{
+$('btnApplePay').addEventListener('click',async function(){
   const btn=$('btnApplePay');btn.disabled=true;btn.innerHTML='<span style="font-size:18px">🍎</span> Processing...';
   await new Promise(r=>setTimeout(r,900));
   try{await processTopup();}catch(e){showToast(e.message||'Apple Pay failed.');}
   btn.disabled=false;btn.innerHTML='<span style="font-size:18px">🍎</span> Apple Pay';
 });
-window.formatCard=el=>{let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;};
-window.formatExpiry=el=>{let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
+window.formatCard=function(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;};
+window.formatExpiry=function(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
 
 // ── DARK CLUB ──
 function renderClub(){
@@ -1403,7 +2034,6 @@ async function doClubOpen(count,price){
   if(bal<price){showToast('Insufficient Poxy Coins. Add funds in BANK.');return;}
   const btn1=$('btnClub1'),btn5=$('btnClub5');
   btn1.disabled=true;btn5.disabled=true;
-  // Deduct balance
   const newBal=bal-price;
   await sb.from('profiles').update({balance:newBal}).eq('id',currentUser.id);
   currentProfile.balance=newBal;updateBalanceBadge(newBal);
@@ -1429,7 +2059,7 @@ async function doClubOpen(count,price){
 }
 $('btnClub1').addEventListener('click',()=>doClubOpen(1,CLUB_PRICE_ONE));
 $('btnClub5').addEventListener('click',()=>doClubOpen(5,CLUB_PRICE_FIVE));
-$('btnApplyClub').addEventListener('click',async()=>{
+$('btnApplyClub').addEventListener('click',async function(){
   const nick=$('clubNickname').value.trim();
   if(!nick){showToast('Enter a club nickname.');return;}
   showToast('Application submitted! Welcome to the club ✸');$('clubNickname').value='';
@@ -1445,7 +2075,7 @@ async function loadFeed(){
       const el=document.createElement('div');el.className='feed-item';
       const auth=document.createElement('div');auth.className='feed-author';
       const avs=document.createElement('span');avs.className='feed-avatar';avs.textContent=item.author_avatar||'✸';
-      const un=document.createElement('span');un.className='feed-username';un.textContent=item.author_username||'Member';
+      const un=document.createElement('span');un.className='feed-username';un.textContent=sanitizeText(item.author_username||'Member');
       const tm=document.createElement('span');tm.className='feed-time';tm.textContent=timeSince(item.created_at);
       auth.appendChild(avs);auth.appendChild(un);auth.appendChild(tm);
       const txt=document.createElement('div');txt.className='feed-content';txt.textContent=item.content;
@@ -1453,7 +2083,7 @@ async function loadFeed(){
     });
   }catch(e){cont.innerHTML='<div style="font-size:12px;color:#444">Feed unavailable.</div>';}
 }
-window.postToFeed=async()=>{
+window.postToFeed=async function(){
   const input=$('feedInput'),content=input.value.trim();
   if(!content||!currentUser)return;
   const username=currentProfile?.username||currentUser.email.split('@')[0];
@@ -1461,75 +2091,344 @@ window.postToFeed=async()=>{
   try{await sb.from('club_feed').insert({author_id:currentUser.id,author_username:username,author_avatar:avatar,content});input.value='';loadFeed();}
   catch(e){showToast('Post failed.');}
 };
-// ── LIVE DROPS TICKER ──
-const LIVE_DROP_NAMES={common:['Ash POXY','Dust POXY','Stone POXY'],uncommon:['Verdant POXY','Pulse POXY'],rare:['Azure POXY','Frost POXY'],epic:['Void POXY','Nebula POXY'],legendary:['Solar POXY','Crown POXY'],mythic:['Prism POXY','Eclipse POXY']};
-const SIM_USERNAMES=['nova_x','pixel_hunter','xen_arc','poxy_king','luna_drop','arc_flux','mint_vex','cyber_pox'];
-let liveDropItems=[];
 
-function tierColorForLabel(label){
-  const t=TIERS.find(x=>x.label===label);
-  return t?t.color:'#FF5722';
-}
-function buildLiveDropHTML(d){
-  const tc=tierColorForLabel(d.tierLabel)||d.color||'#FF5722';
-  const av=d.avatar&&d.avatar.startsWith('http')?'<img src="'+d.avatar+'" alt="">':(d.avatar||'🎭');
-  return '<span class="live-drop-item"><span class="live-drop-av">'+av+'</span><span>'+escapeHtml(d.username)+'</span> unlocked <span class="live-drop-tier" style="color:'+tc+'">'+escapeHtml(d.poxyName)+'</span><span class="live-drop-time">'+d.ago+'</span></span>';
-}
-function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function renderLiveDropsTrack(){
-  const track=$('liveDropsTrack');
-  if(!track||!liveDropItems.length)return;
-  const chunk=liveDropItems.map(buildLiveDropHTML).join('');
-  track.innerHTML=chunk+chunk;
-}
-function pushLiveDrop(username,tierLabel,tierId,avatar){
-  const names=LIVE_DROP_NAMES[tierId]||LIVE_DROP_NAMES.common;
-  liveDropItems.unshift({username:username||'player',poxyName:names[Math.floor(Math.random()*names.length)],tierLabel,avatar,ago:'just now'});
-  if(liveDropItems.length>24)liveDropItems.pop();
-  renderLiveDropsTrack();
-}
-function simulateLiveDrop(){
-  const tid=['common','uncommon','rare','epic','legendary','mythic'][Math.floor(Math.random()*6)];
-  const tier=TIERS.find(t=>t.id===tid);
-  const names=LIVE_DROP_NAMES[tid];
-  liveDropItems.push({
-    username:SIM_USERNAMES[Math.floor(Math.random()*SIM_USERNAMES.length)],
-    poxyName:names[Math.floor(Math.random()*names.length)],
-    tierLabel:tier.label,
-    avatar:AVATARS[Math.floor(Math.random()*AVATARS.length)],
-    ago:Math.floor(Math.random()*12+1)+'m ago'
-  });
-  if(liveDropItems.length>30)liveDropItems.shift();
-  renderLiveDropsTrack();
-}
-async function fetchRecentPublicDrops(){
+// ── NEWS FEED ──
+async function loadNewsFeedTab(){
+  if(!currentUser)return;
+  const listEl=$('newsPostsList');
+  const formEl=$('newsCreateFormContainer');
+  if(!listEl)return;
+  if(formEl){
+    if(currentProfile?.is_verified_employee===true){
+      formEl.innerHTML='<div class="news-create-form"><div class="news-create-title">Publish News Post</div><input class="news-input" id="newsInputTitle" placeholder="Post title..." maxlength="200"><textarea class="news-textarea" id="newsInputContent" placeholder="Post content..." maxlength="5000"></textarea><input class="news-input" id="newsInputImage" placeholder="Image URL (optional)..." maxlength="1000"><button class="btn-news-publish" id="btnNewsPublish" onclick="submitNewsPost()">Publish Post</button></div>';
+    } else {formEl.innerHTML='';}
+  }
+  listEl.innerHTML='<div class="news-empty"><div class="col-spinner" style="border-top-color:#ff416c;margin:0 auto 12px"></div></div>';
   try{
-    const{data}=await sb.from('user_poxy').select('poxy_tier,dropped_at,user_id').order('dropped_at',{ascending:false}).limit(12);
-    if(!data||!data.length)return false;
-    const uids=[...new Set(data.map(d=>d.user_id))];
-    const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',uids);
-    const pmap={};(profs||[]).forEach(p=>{pmap[p.id]=p;});
-    liveDropItems=data.map(d=>{
-      const tier=TIERS.find(t=>t.id===d.poxy_tier)||TIERS[0];
-      const p=pmap[d.user_id]||{};
-      const names=LIVE_DROP_NAMES[d.poxy_tier]||LIVE_DROP_NAMES.common;
-      return{username:p.username||'hunter',poxyName:names[0],tierLabel:tier.label,avatar:p.avatar_url||'🎭',ago:timeSince(d.dropped_at)};
-    });
-    renderLiveDropsTrack();
-    return true;
-  }catch(e){return false;}
+    const{data,error}=await sb.from('news_posts').select('*').order('created_at',{ascending:false}).limit(30);
+    if(error)throw error;
+    if(!data||!data.length){listEl.innerHTML='<div class="news-empty">No news posts yet.</div>';return;}
+    listEl.innerHTML='';
+    for(const post of data){renderNewsPostCard(post,listEl);}
+  }catch(e){listEl.innerHTML='<div class="news-empty">Failed to load news.</div>';}
 }
-function startLiveDropsTicker(){
-  liveDropItems=[];
-  for(let i=0;i<8;i++)simulateLiveDrop();
-  fetchRecentPublicDrops();
-  if(liveDropsInterval)clearInterval(liveDropsInterval);
-  liveDropsInterval=setInterval(()=>{simulateLiveDrop();if(Math.random()<0.25)fetchRecentPublicDrops();},14000);
+function renderNewsPostCard(post,container){
+  const card=document.createElement('div');card.className='news-post-card';card.id='news-post-'+post.id;
+  let html='';
+  if(post.image_url&&validateUrl(post.image_url)){html+='<img class="news-post-image" src="'+sanitizeText(post.image_url)+'" alt="" onerror="this.style.display=\'none\'">';}
+  html+='<div class="news-post-body">';
+  html+='<div class="news-post-title-text">'+sanitizeText(post.title)+'</div>';
+  html+='<div class="news-post-content-text">'+sanitizeText(post.content)+'</div>';
+  html+='<div class="news-post-meta"><span class="news-post-author">'+sanitizeText(post.author_username||'Staff')+'</span><span>'+timeSince(post.created_at)+'</span></div>';
+  html+='<div class="news-post-actions" id="npa-'+post.id+'">';
+  const myLike=(post.likes||[]).includes(currentUser?.id);
+  const myDislike=(post.dislikes||[]).includes(currentUser?.id);
+  html+='<button class="btn-news-action'+(myLike?' liked':'')+'" onclick="toggleNewsLike('+post.id+',true)">👍 '+((post.likes||[]).length)+'</button>';
+  html+='<button class="btn-news-action'+(myDislike?' disliked':'')+'" onclick="toggleNewsLike('+post.id+',false)">👎 '+((post.dislikes||[]).length)+'</button>';
+  html+='<button class="btn-toggle-comments" onclick="toggleNewsComments('+post.id+')">💬 Comments</button>';
+  if(currentProfile?.is_verified_employee===true){html+='<button class="btn-news-delete" onclick="deleteNewsPost('+post.id+')">Delete</button>';}
+  html+='</div>';
+  html+='<div class="news-comments-section" id="ncs-'+post.id+'">';
+  html+='<div class="news-comment-input-row"><input class="news-comment-input" id="nci-'+post.id+'" placeholder="Add a comment..." maxlength="1000"><button class="btn-comment-submit" onclick="submitNewsComment('+post.id+',null)">Post</button></div>';
+  html+='<div id="ncl-'+post.id+'"><div style="font-size:10px;color:#333;padding:8px 0">Loading comments...</div></div>';
+  html+='</div>';
+  html+='</div>';
+  card.innerHTML=html;
+  container.appendChild(card);
+}
+async function toggleNewsComments(postId){
+  const sec=$('ncs-'+postId);
+  if(!sec)return;
+  const isOpen=sec.classList.contains('open');
+  sec.classList.toggle('open');
+  if(!isOpen)await loadNewsComments(postId);
+}
+async function loadNewsComments(postId){
+  const listEl=$('ncl-'+postId);if(!listEl)return;
+  listEl.innerHTML='<div style="font-size:10px;color:#333;padding:6px 0">Loading...</div>';
+  try{
+    const{data,error}=await sb.from('news_comments').select('*').eq('post_id',postId).is('parent_id',null).order('created_at',{ascending:true});
+    if(error)throw error;
+    if(!data||!data.length){listEl.innerHTML='<div style="font-size:10px;color:#333;padding:6px 0">No comments yet.</div>';return;}
+    const allIds=data.map(c=>c.id);
+    const{data:replies}=await sb.from('news_comments').select('*').eq('post_id',postId).not('parent_id','is',null).order('created_at',{ascending:true});
+    listEl.innerHTML='';
+    data.forEach(comment=>{
+      const commentEl=buildCommentElement(comment,postId,false);
+      listEl.appendChild(commentEl);
+      const subReplies=(replies||[]).filter(r=>r.parent_id===comment.id);
+      if(subReplies.length){
+        const replyIndent=document.createElement('div');replyIndent.className='news-reply-indent';
+        subReplies.forEach(r=>{replyIndent.appendChild(buildCommentElement(r,postId,true));});
+        listEl.appendChild(replyIndent);
+      }
+    });
+  }catch(e){listEl.innerHTML='<div style="font-size:10px;color:#E91E63;padding:6px 0">Error loading comments.</div>';}
+}
+function buildCommentElement(comment,postId,isReply){
+  const el=document.createElement('div');el.className='news-comment-item';el.id='nc-'+comment.id;
+  const myLike=(comment.likes||[]).includes(currentUser?.id);
+  el.innerHTML='<div class="news-comment-header"><span class="news-comment-username">'+sanitizeText(comment.username||'User')+'</span><span class="news-comment-time">'+timeSince(comment.created_at)+'</span></div><div class="news-comment-text">'+sanitizeText(comment.content)+'</div><div class="news-comment-actions"><button class="btn-comment-like'+(myLike?' liked':'')+'" onclick="toggleCommentLike('+comment.id+','+postId+')">'+((comment.likes||[]).length)+' 👍</button>'+(isReply?'':'<button class="btn-comment-reply-toggle" onclick="toggleReplyInput('+comment.id+','+postId+')">Reply</button>')+'</div><div id="reply-input-'+comment.id+'"></div>';
+  return el;
+}
+function toggleReplyInput(parentId,postId){
+  const cont=$('reply-input-'+parentId);if(!cont)return;
+  if(cont.innerHTML){cont.innerHTML='';return;}
+  cont.innerHTML='<div class="news-comment-input-row" style="margin-top:6px"><input class="news-comment-input" id="rci-'+parentId+'" placeholder="Reply..." maxlength="1000"><button class="btn-comment-submit" onclick="submitNewsComment('+postId+','+parentId+')">Reply</button></div>';
+  const inp=$('rci-'+parentId);if(inp)inp.focus();
+}
+async function submitNewsComment(postId,parentId){
+  const inputId=parentId?'rci-'+parentId:'nci-'+postId;
+  const inp=$(inputId);
+  if(!inp)return;
+  const content=inp.value.trim();
+  if(!content){showToast('Enter a comment.');return;}
+  try{
+    const username=currentProfile?.username||currentUser.email.split('@')[0];
+    const{error}=await sb.from('news_comments').insert({post_id:postId,user_id:currentUser.id,username,content,parent_id:parentId||null});
+    if(error)throw error;
+    inp.value='';
+    await loadNewsComments(postId);
+  }catch(e){showToast('Comment failed: '+(e.message||'error'));}
+}
+async function toggleCommentLike(commentId,postId){
+  try{
+    const{data}=await sb.from('news_comments').select('likes').eq('id',commentId).single();
+    if(!data)return;
+    const likes=data.likes||[];
+    const idx=likes.indexOf(currentUser.id);
+    if(idx>=0)likes.splice(idx,1);else likes.push(currentUser.id);
+    const{error}=await sb.from('news_comments').update({likes}).eq('id',commentId);
+    if(error)throw error;
+    await loadNewsComments(postId);
+  }catch(e){showToast('Error: '+(e.message||'like failed'));}
+}
+window.toggleNewsLike=async function(postId,isLike){
+  try{
+    const{data}=await sb.from('news_posts').select('likes,dislikes').eq('id',postId).single();
+    if(!data)return;
+    const likes=data.likes||[];
+    const dislikes=data.dislikes||[];
+    const uid=currentUser.id;
+    if(isLike){
+      const li=likes.indexOf(uid);if(li>=0)likes.splice(li,1);else{likes.push(uid);const di=dislikes.indexOf(uid);if(di>=0)dislikes.splice(di,1);}
+    } else {
+      const di=dislikes.indexOf(uid);if(di>=0)dislikes.splice(di,1);else{dislikes.push(uid);const li=likes.indexOf(uid);if(li>=0)likes.splice(li,1);}
+    }
+    const{error}=await sb.from('news_posts').update({likes,dislikes}).eq('id',postId);
+    if(error)throw error;
+    const actEl=$('npa-'+postId);
+    if(actEl){
+      const btns=actEl.querySelectorAll('.btn-news-action');
+      if(btns[0]){btns[0].textContent='👍 '+likes.length;btns[0].classList.toggle('liked',likes.includes(uid));}
+      if(btns[1]){btns[1].textContent='👎 '+dislikes.length;btns[1].classList.toggle('disliked',dislikes.includes(uid));}
+    }
+  }catch(e){showToast('Error: '+(e.message||'reaction failed'));}
+};
+window.deleteNewsPost=async function(postId){
+  if(!currentProfile?.is_verified_employee)return;
+  try{
+    const{error}=await sb.from('news_posts').delete().eq('id',postId);
+    if(error)throw error;
+    const card=$('news-post-'+postId);if(card)card.remove();
+    showToast('Post deleted.');
+  }catch(e){showToast('Delete failed: '+(e.message||'error'));}
+};
+window.submitNewsPost=async function(){
+  if(!currentProfile?.is_verified_employee){showToast('Not authorized.');return;}
+  const title=$('newsInputTitle')?.value.trim();
+  const content=$('newsInputContent')?.value.trim();
+  const imageUrl=$('newsInputImage')?.value.trim();
+  if(!title){showToast('Enter a title.');return;}
+  if(!content){showToast('Enter post content.');return;}
+  if(imageUrl&&!validateUrl(imageUrl)){showToast('Invalid image URL.');return;}
+  const btn=$('btnNewsPublish');if(btn)btn.disabled=true;
+  try{
+    const username=currentProfile?.username||currentUser.email.split('@')[0];
+    const{error}=await sb.from('news_posts').insert({title,content,image_url:imageUrl||null,author_id:currentUser.id,author_username:username});
+    if(error)throw error;
+    if($('newsInputTitle'))$('newsInputTitle').value='';
+    if($('newsInputContent'))$('newsInputContent').value='';
+    if($('newsInputImage'))$('newsInputImage').value='';
+    showToast('Post published!');
+    await loadNewsFeedTab();
+  }catch(e){showToast('Publish failed: '+(e.message||'error'));}
+  if(btn)btn.disabled=false;
+};
+
+// ── GEN 1 TAB ──
+function renderGen1TabContent(){
+  const grid=$('gen1ModelGrid');
+  if(!grid||grid.children.length>0)return;
+  GEN1_MODELS.forEach(model=>{
+    const tier=TIERS.find(t=>t.id===model.tier)||TIERS[0];
+    const card=document.createElement('div');card.className='gen1-model-card';
+    card.innerHTML='<div class="gen1-model-icon" style="color:'+tier.color+'">'+tier.icon+'</div><div class="gen1-model-name">'+model.name+'</div><div class="gen1-model-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="gen1-model-desc">'+model.desc+'</div>';
+    grid.appendChild(card);
+  });
+  updateGen1Timer();
+  setInterval(updateGen1Timer,60000);
+  if(currentUser)checkFoundersRace();
+}
+function updateGen1Timer(){
+  const display=$('gen1TimerDisplay');if(!display)return;
+  const now=Date.now();
+  const diff=GEN1_SEAL_DATE.getTime()-now;
+  if(diff<=0){display.textContent='SEALED';return;}
+  const days=Math.floor(diff/(1000*60*60*24));
+  const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const mins=Math.floor((diff%(1000*60*60))/(1000*60));
+  display.textContent=days+'d '+hours+'h '+mins+'m';
+}
+async function checkFoundersRace(){
+  const checklistEl=$('gen1ChecklistContainer');const founderBox=$('gen1FounderBox');
+  if(!checklistEl||!founderBox||!currentUser)return;
+  try{
+    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+    const tierSet=new Set((data||[]).map(t=>t.poxy_tier));
+    const baseTiers=['common','uncommon','rare','epic','legendary'];
+    checklistEl.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#444;text-transform:uppercase;margin-bottom:8px">Founder\'s Race Progress</div>';
+    let allOwned=true;
+    baseTiers.forEach(tid=>{
+      const owned=tierSet.has(tid);
+      if(!owned)allOwned=false;
+      const tier=TIERS.find(t=>t.id===tid)||TIERS[0];
+      const item=document.createElement('div');item.className='gen1-check-item'+(owned?' done':'');
+      item.innerHTML='<div class="gen1-check-dot"></div><span>'+tier.label+(owned?' ✓':' — not collected')+'</span>';
+      checklistEl.appendChild(item);
+    });
+    founderBox.classList.toggle('unlocked',allOwned);
+  }catch(e){}
+}
+
+// ── APPRAISAL TAB ──
+function renderAppraisalTabContent(){
+  const grid=$('appraisalGrid');if(!grid||grid.children.length>0)return;
+  GEN1_MODELS.forEach(model=>{
+    const basePc=APPRAISER_BASE_PC[model.tier]||1;
+    const weight=APPRAISER_CHAR_WEIGHTS[model.id]||1.0;
+    const value=Math.round(basePc*weight*100)/100;
+    const tier=TIERS.find(t=>t.id===model.tier)||TIERS[0];
+    const row=document.createElement('div');row.className='appraisal-row';row.style.setProperty('--tc',tier.color);
+    row.innerHTML='<div class="appraisal-left"><div class="appraisal-icon" style="color:'+tier.color+'">'+tier.icon+'</div><div><div class="appraisal-name">'+model.name+'</div><div class="appraisal-tier-label">'+tier.label+'</div></div></div><div class="appraisal-price">'+formatPC(value)+'</div>';
+    grid.appendChild(row);
+  });
+}
+
+// ── LEADERBOARDS ──
+window.switchLeaderboard=function(mode){
+  leaderboardMode=mode;
+  $('lbBtnBalance').classList.toggle('active',mode==='balance');
+  $('lbBtnCollection').classList.toggle('active',mode==='collection');
+  loadLeaderboardData();
+};
+async function loadLeaderboardData(){
+  const listEl=$('leaderboardList');if(!listEl)return;
+  listEl.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
+  try{
+    if(leaderboardMode==='balance'){
+      const{data,error}=await sb.from('profiles').select('id,username,avatar_url,balance').order('balance',{ascending:false}).limit(25);
+      if(error)throw error;
+      renderLeaderboardList(data||[],'balance');
+    } else {
+      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']);
+      if(pe)throw pe;
+      const counts={};
+      (poxyData||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
+      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,25);
+      const uids=sorted.map(([id])=>id);
+      if(!uids.length){listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;}
+      const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',uids);
+      const pm={};(profs||[]).forEach(p=>{pm[p.id]=p;});
+      const merged=sorted.map(([id,count])=>({id,count,username:pm[id]?.username,avatar_url:pm[id]?.avatar_url}));
+      renderLeaderboardList(merged,'collection');
+    }
+  }catch(e){listEl.innerHTML='<div class="lb-empty">Error loading leaderboard.</div>';}
+}
+function renderLeaderboardList(data,mode){
+  const listEl=$('leaderboardList');if(!listEl)return;
+  if(!data.length){listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;}
+  listEl.innerHTML='';
+  data.forEach((item,i)=>{
+    const rank=i+1;
+    const row=document.createElement('div');row.className='lb-row';
+    const rankEl=document.createElement('div');rankEl.className='lb-rank'+(rank===1?' gold':rank===2?' silver':rank===3?' bronze':'');rankEl.textContent='#'+rank;
+    const avEl=document.createElement('div');avEl.className='lb-avatar';
+    const av=item.avatar_url||item.avatar||'';
+    if(av&&av.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(av)+'" alt="">';else avEl.textContent=av||'👾';
+    const nameEl=document.createElement('div');nameEl.className='lb-username';nameEl.textContent=sanitizeText(item.username||'Anonymous');
+    const valEl=document.createElement('div');valEl.className='lb-value';
+    valEl.textContent=mode==='balance'?formatPC(item.balance||0):(item.count||0)+' items';
+    row.appendChild(rankEl);row.appendChild(avEl);row.appendChild(nameEl);row.appendChild(valEl);
+    listEl.appendChild(row);
+  });
+}
+
+// ── CUSTOMIZATION STORE ──
+function renderCustomizeTab(){
+  const cont=$('customizeStoreContent');if(!cont||!currentUser)return;
+  if(!currentProfile){cont.innerHTML='<div class="news-empty">Loading profile...</div>';return;}
+  const ownedTheme=currentProfile.profile_theme||null;
+  const ownedGradient=currentProfile.name_gradient||null;
+  let html='<div class="customize-section-label">Profile Themes</div><div class="customize-items">';
+  CUSTOMIZATION_ITEMS.filter(c=>c.type==='theme').forEach(item=>{
+    const isOwned=ownedTheme===item.themeVal;
+    html+='<div class="customize-item"><div class="customize-preview" style="background:'+item.previewBg+'"></div><div class="customize-info"><div class="customize-name">'+item.name+'</div><div class="customize-desc">'+item.desc+'</div></div><div class="customize-cost">'+item.cost+' PC</div><button class="btn-customize-buy'+(isOwned?' owned':'')+'" data-id="'+item.id+'" onclick="purchaseCustomization(\''+item.id+'\')">'+( isOwned?'Active':'Buy')+'</button></div>';
+  });
+  html+='</div><div class="customize-section-label">Username Gradients</div><div class="customize-items">';
+  CUSTOMIZATION_ITEMS.filter(c=>c.type==='gradient').forEach(item=>{
+    const isOwned=ownedGradient===item.gradientVal;
+    html+='<div class="customize-item"><div class="customize-preview" style="background:'+item.gradientVal+'"></div><div class="customize-info"><div class="customize-name">'+item.name+'</div><div class="customize-desc">'+item.desc+'</div></div><div class="customize-cost">'+item.cost+' PC</div><button class="btn-customize-buy'+(isOwned?' owned':'')+'" data-id="'+item.id+'" onclick="purchaseCustomization(\''+item.id+'\')">'+( isOwned?'Active':'Buy')+'</button></div>';
+  });
+  html+='</div>';
+  cont.innerHTML=html;
+}
+window.purchaseCustomization=async function(itemId){
+  const item=CUSTOMIZATION_ITEMS.find(c=>c.id===itemId);
+  if(!item||!currentUser||!currentProfile)return;
+  const bal=currentProfile.balance||0;
+  if(bal<item.cost){showToast('Insufficient Poxy Coins. Need '+item.cost+' PC.');return;}
+  const isOwned=item.type==='theme'?currentProfile.profile_theme===item.themeVal:currentProfile.name_gradient===item.gradientVal;
+  if(isOwned){showToast('Already active!');return;}
+  const updateData={balance:bal-item.cost};
+  if(item.type==='theme')updateData.profile_theme=item.themeVal;
+  else if(item.type==='gradient')updateData.name_gradient=item.gradientVal;
+  try{
+    const{error}=await sb.from('profiles').update(updateData).eq('id',currentUser.id);
+    if(error)throw error;
+    currentProfile={...currentProfile,...updateData};
+    updateBalanceBadge(currentProfile.balance);
+    if(item.type==='theme')applyTheme(item.themeVal);
+    else if(item.type==='gradient')applyNameGradientUI(item.gradientVal);
+    showToast(item.name+' activated!');
+    renderCustomizeTab();
+  }catch(e){showToast('Purchase failed: '+(e.message||'error'));}
+};
+
+// ── REALTIME SUBSCRIPTIONS ──
+function setupRealtimeSubscriptions(){
+  teardownRealtimeSubscriptions();
+  try{
+    const friendSub=sb.channel('friend-requests-'+currentUser.id)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'friend_requests',filter:'to_id=eq.'+currentUser.id},payload=>{
+        if(payload.new&&payload.new.status==='pending'){showToast('New friend request!');loadPendingRequests();}
+      })
+      .subscribe();
+    realtimeSubs.push(friendSub);
+    const balanceSub=sb.channel('profile-balance-'+currentUser.id)
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+currentUser.id},payload=>{
+        if(payload.new&&payload.new.balance!==undefined&&currentProfile){currentProfile.balance=payload.new.balance;updateBalanceBadge(currentProfile.balance);}
+      })
+      .subscribe();
+    realtimeSubs.push(balanceSub);
+  }catch(e){console.warn('Realtime subscription error:',e);}
+}
+function teardownRealtimeSubscriptions(){
+  realtimeSubs.forEach(sub=>{try{sb.removeChannel(sub);}catch(e){}});
+  realtimeSubs=[];
 }
 
 // Init
-setOpenCaseButton();
-setClubButtons();
 renderBank();
 updateBalanceBadge(0);
 </script>
