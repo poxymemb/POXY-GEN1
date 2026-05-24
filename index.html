@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>POXY</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;font-family:'Inter',system-ui,sans-serif;min-height:100vh;transition:background 1s ease}
+body.bg-rare{background:linear-gradient(135deg,rgba(41,182,246,0.07) 0%,#fff 70%)}
+body.bg-epic{background:linear-gradient(135deg,rgba(171,71,188,0.08) 0%,#fff 60%)}
+body.bg-legendary{background:linear-gradient(135deg,rgba(255,202,40,0.10) 0%,rgba(255,152,0,0.05) 50%,#fff 80%)}
+body.bg-mythic{animation:prism 3s ease-in-out infinite}
+body.dark-club{background:#0a0a0c;color:#e8e8e8;animation:none}
+@keyframes prism{0%,100%{background:linear-gradient(135deg,#ffe0e0,#fff0e0,#ffe0f0,#fff)}50%{background:linear-gradient(225deg,#ffe8f0,#fff5e0,#f8e0ff,#fff)}}
+@keyframes burst{0%{transform:scale(1)}40%{transform:scale(1.22)}70%{transform:scale(0.95)}100%{transform:scale(1)}}
+@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes mythicShimmer{0%,100%{filter:drop-shadow(0 0 10px #FF5252) drop-shadow(0 0 24px #FF525266)}50%{filter:drop-shadow(0 0 20px #FF5252) drop-shadow(0 0 48px #FF525299)}}
+@keyframes legendaryShimmer{0%,100%{filter:drop-shadow(0 0 10px #FFCA28) drop-shadow(0 0 24px #FFCA2866)}50%{filter:drop-shadow(0 0 20px #FFCA28) drop-shadow(0 0 48px #FFCA2899)}}
+@keyframes glitchIn{0%{opacity:0;transform:scale(0.6) rotate(-8deg)}60%{transform:scale(1.08) rotate(2deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes burnOut{0%{opacity:1;transform:scale(1)}40%{transform:scale(1.05);opacity:0.6}100%{opacity:0;transform:scale(0.75)}}
+@keyframes neonPulse{0%,100%{box-shadow:0 0 8px #FF5252,0 0 20px #FF525244}50%{box-shadow:0 0 18px #FF5252,0 0 44px #FF525288}}
+@keyframes balancePop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* ── LAYOUT ── */
+.app{background:transparent;min-height:520px;display:flex;flex-direction:column;align-items:center;padding:44px 24px 16px;position:relative;max-width:380px;margin:0 auto}
+
+/* ── BALANCE BADGE ── */
+.balance-badge{position:fixed;top:10px;right:12px;z-index:200;background:#1a1a1a;color:#fff;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:0.5px;display:none;cursor:pointer;transition:transform 0.15s}
+.balance-badge:hover{transform:scale(1.05)}
+.balance-badge.visible{display:block}
+.balance-badge.pop{animation:balancePop 0.3s ease}
+
+/* ── LOGO ── */
+.logo-row{display:flex;align-items:baseline;position:relative;user-select:none;margin-bottom:8px}
+.l-letter{font-size:52px;font-weight:900;line-height:1;background:linear-gradient(135deg,#FF5722 0%,#E91E63 50%,#9C27B0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:transform 0.4s cubic-bezier(0.25,1,0.5,1)}
+.l-x{font-size:76px;font-weight:900;line-height:1;letter-spacing:-4px;background:linear-gradient(135deg,#FF5722 0%,#E91E63 40%,#9C27B0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;cursor:pointer;transition:transform 0.4s cubic-bezier(0.25,1,0.5,1),filter 0.4s cubic-bezier(0.25,1,0.5,1);position:relative;z-index:2;padding:0 2px}
+.logo-row:hover .l-x,.logo-row.x-active .l-x{transform:scale(1.25);filter:drop-shadow(0 0 14px #FF572299)}
+.logo-row:hover .l-p,.logo-row.x-active .l-p{transform:translateX(-18px)}
+.logo-row:hover .l-o,.logo-row.x-active .l-o{transform:translateX(-10px)}
+.logo-row:hover .l-y,.logo-row.x-active .l-y{transform:translateX(18px)}
+.fomo{font-size:11px;color:#B0B0B0;letter-spacing:0.3px;margin-bottom:28px;font-weight:400}
+
+/* ── STAGE ── */
+.stage{width:240px;height:240px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:20px;flex-shrink:0}
+.box{width:128px;height:128px;border-radius:18px;border:2px solid #e8e8e8;display:flex;align-items:center;justify-content:center;position:absolute;transition:opacity 0.25s;will-change:transform;background:#fafafa}
+.box-qmark{font-size:50px;font-weight:900;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.reward-box{width:168px;height:168px;border-radius:22px;border:2.5px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;position:absolute;opacity:0;gap:6px;padding:18px;transition:opacity 0.3s}
+.reward-icon{font-size:52px;line-height:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12))}
+.reward-label{font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase}
+.reward-serial{font-size:8.5px;font-weight:500;letter-spacing:1.5px;color:#9E9E9E;font-family:'Inter',monospace;margin-top:2px}
+canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+
+/* ── CTA ── */
+.cta-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.btn-open{background:linear-gradient(135deg,#FF5722 0%,#E91E63 60%,#9C27B0 100%);border:none;border-radius:50px;padding:16px 40px;color:#fff;font-size:15px;font-weight:700;letter-spacing:0.5px;cursor:pointer;font-family:inherit;transition:transform 0.2s,box-shadow 0.2s,opacity 0.4s;box-shadow:0 4px 20px #FF572233;white-space:nowrap}
+.btn-open:hover{transform:scale(1.03);box-shadow:0 6px 28px #FF572266}
+.btn-open:active{transform:scale(0.97)}
+.btn-open:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+.post-btns{display:none;flex-direction:row;gap:10px;width:100%;opacity:0;transition:opacity 0.35s}
+.post-btns.visible{display:flex}.post-btns.faded-in{opacity:1}
+.btn-add{flex:1;background:#fff;border:1.5px solid #FF5722;border-radius:50px;padding:13px 12px;color:#FF5722;font-size:12px;font-weight:700;letter-spacing:0.3px;cursor:pointer;font-family:inherit;transition:background 0.2s,transform 0.15s}
+.btn-add:hover{background:#fff5f2;transform:scale(1.02)}.btn-add:active{transform:scale(0.97)}
+.btn-add:disabled{opacity:0.5;cursor:not-allowed}
+.btn-discard{flex:1;background:transparent;border:1px solid #e0e0e0;border-radius:50px;padding:13px 12px;color:#9E9E9E;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.2s}
+.btn-discard:hover{background:#f5f5f5}
+.btn-list-market{width:100%;background:transparent;border:1px solid #e0e0e0;border-radius:50px;padding:9px;color:#9E9E9E;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:inherit;transition:all 0.2s;text-transform:uppercase;display:none}
+.btn-list-market.show{display:block}
+.btn-list-market:hover{border-color:#FF5722;color:#FF5722}
+.btn-club-enter{width:100%;background:transparent;border:1px solid #FF5252;border-radius:50px;padding:10px;color:#FF5252;font-size:10px;font-weight:700;letter-spacing:2px;cursor:pointer;font-family:inherit;text-transform:uppercase;display:none;animation:neonPulse 2s ease-in-out infinite}
+.btn-club-enter.show{display:block}
+
+/* ── NAV ── */
+.bottom-nav{max-width:380px;margin:0 auto;border-top:1px solid #f0f0f0;display:flex;align-items:center;justify-content:center;padding:0}
+.nav-btn{flex:1;padding:12px 2px;background:none;border:none;font-family:inherit;font-size:9.5px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;cursor:pointer;transition:color 0.2s;text-transform:uppercase;position:relative;white-space:nowrap}
+.nav-btn.active{color:#FF5722}
+.nav-btn.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,#FF5722,#E91E63);border-radius:2px 2px 0 0}
+.nav-btn.club-tab{color:#FF5252;display:none}.nav-btn.club-tab.show{display:block}
+.nav-btn.club-tab.active::after{background:linear-gradient(90deg,#FF5252,#FF8F00)}
+.nav-sep{width:1px;height:16px;background:#f0f0f0;flex-shrink:0}
+
+/* ── PAGES ── */
+.page{display:none;max-width:380px;margin:0 auto;padding:24px 20px 40px;min-height:380px}
+.page.visible{display:block;animation:fadeIn 0.3s ease}
+.page-title{font-size:17px;font-weight:800;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px;margin-bottom:18px}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:50px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform 0.15s,opacity 0.2s;box-shadow:0 4px 14px #FF572233}
+.btn-primary:hover{transform:scale(1.02)}.btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* ── PROFILE ── */
+.avatar-upload-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2.5px solid #FF5722;display:block;margin:0 auto 8px}
+.profile-avatar-row{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;justify-content:center}
+.avatar-opt{font-size:26px;width:48px;height:48px;border-radius:50%;border:2px solid #f0f0f0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:#fafafa}
+.avatar-opt.selected{border-color:#FF5722;background:#fff5f2;transform:scale(1.1)}
+.profile-field{margin-bottom:12px}
+.profile-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:5px}
+.profile-input{width:100%;padding:11px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;transition:border-color 0.2s;background:#fafafa}
+.profile-input:focus{border-color:#FF5722;background:#fff}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.pstat{background:#f7f7f7;border-radius:10px;padding:12px 8px;text-align:center}
+.pstat-val{font-size:18px;font-weight:800;color:#1a1a1a}
+.pstat-label{font-size:9px;color:#B0B0B0;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+
+/* ── COLLECTION ── */
+.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.col-title{font-size:17px;font-weight:800;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px}
+.col-count{font-size:11px;color:#B0B0B0;font-weight:500}
+.dust-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:8px 12px;background:#f7f7f7;border-radius:10px}
+.dust-val{font-size:13px;font-weight:800;color:#FF5722}
+.dust-tip{font-size:10px;color:#C8C8C8;margin-left:auto}
+.filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.filter-btn{padding:5px 12px;border-radius:20px;border:1.5px solid #e8e8e8;background:#fff;font-size:10px;font-weight:700;letter-spacing:1px;color:#B0B0B0;cursor:pointer;font-family:inherit;transition:all 0.2s;text-transform:uppercase}
+.filter-btn.active{border-color:var(--fc);color:var(--fc);background:var(--fb)}
+.bulk-bar{display:flex;gap:8px;align-items:center;margin-bottom:14px;padding:8px 12px;background:#fff5f2;border-radius:10px;border:1px solid #FFE0D5;display:none}
+.bulk-bar.show{display:flex}
+.bulk-count{font-size:11px;color:#FF5722;font-weight:700;flex:1}
+.btn-bulk-dust{padding:7px 16px;background:#FF5722;border:none;border-radius:20px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+.btn-bulk-dust:hover{opacity:0.85}
+.col-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.col-card{border-radius:16px;padding:14px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;border:1.5px solid transparent;transition:transform 0.2s,opacity 0.35s;cursor:default;animation:fadeIn 0.4s ease both;position:relative}
+.col-card:hover{transform:translateY(-2px)}
+.col-card.selected-for-dust{outline:2px solid #FF5722;outline-offset:2px}
+.col-card-icon{font-size:28px;line-height:1}
+.col-card-tier{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.col-card-date{font-size:8.5px;color:#9E9E9E}
+.col-card-serial{font-size:8px;font-weight:500;letter-spacing:1px;color:#B8B8B8;font-family:'Inter',monospace}
+.col-card-actions{display:flex;gap:6px;margin-top:4px}
+.btn-burn,.btn-sell-card{border:none;background:none;cursor:pointer;font-size:13px;opacity:0.4;transition:opacity 0.2s,transform 0.2s;padding:2px;line-height:1}
+.btn-burn:hover,.btn-sell-card:hover{opacity:0.9;transform:scale(1.2)}
+.col-empty{text-align:center;padding:60px 20px;color:#C8C8C8;font-size:13px;line-height:1.7}
+.col-empty-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
+.col-loading{text-align:center;padding:60px 20px}
+.col-spinner{width:24px;height:24px;border:2px solid #f0f0f0;border-top-color:#FF5722;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto}
+
+/* ── FRIENDS ── */
+.search-bar{display:flex;gap:8px;margin-bottom:8px}
+.search-input{flex:1;padding:11px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:13px;outline:none;background:#fafafa;transition:border-color 0.2s}
+.search-input:focus{border-color:#FF5722;background:#fff}
+.btn-search{padding:11px 16px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:12px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.user-card{display:flex;align-items:center;gap:12px;padding:11px;background:#fafafa;border-radius:12px;border:0.5px solid #f0f0f0;margin-bottom:8px}
+.user-card-avatar{font-size:22px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #f0f0f0;flex-shrink:0;overflow:hidden}
+.user-card-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.user-card-info{flex:1;min-width:0}
+.user-card-name{font-size:13px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-card-sub{font-size:10px;color:#B0B0B0;margin-top:1px}
+.btn-friend{padding:6px 14px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;border:1.5px solid #FF5722;color:#FF5722;background:transparent;white-space:nowrap}
+.btn-friend:hover{background:#FF5722;color:#fff}
+.btn-friend.sent{border-color:#e0e0e0;color:#B0B0B0;cursor:default}
+.section-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:10px}
+.search-hint{font-size:11px;color:#C8C8C8;padding:4px 0 12px;line-height:1.5}
+
+/* ── MARKETPLACE ── */
+.market-tabs{display:flex;margin-bottom:16px;border-radius:10px;background:#f7f7f7;padding:3px}
+.market-tab{flex:1;padding:9px;border:none;background:none;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:0.5px;color:#B0B0B0;cursor:pointer;border-radius:8px;transition:all 0.2s;text-transform:uppercase}
+.market-tab.active{background:#fff;color:#FF5722;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.market-card{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;border:1.5px solid transparent;margin-bottom:10px;transition:transform 0.15s}
+.market-card:hover{transform:translateY(-1px)}
+.market-card-icon{font-size:22px;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.market-card-info{flex:1;min-width:0}
+.market-card-tier{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.market-card-serial{font-size:9px;color:#9E9E9E;font-family:monospace;margin-top:1px}
+.market-card-price{font-size:15px;font-weight:800;color:#1a1a1a;text-align:right;white-space:nowrap}
+.btn-buy{display:block;padding:6px 12px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:transform 0.15s,opacity 0.2s}
+.btn-buy:hover{transform:scale(1.05)}.btn-buy:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ── MODALS ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity 0.25s}
+.modal-overlay.show{opacity:1}.modal-overlay.hidden{display:none}
+.modal-card{background:#fff;border-radius:22px;padding:28px 24px;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,0.18);transform:translateY(20px);transition:transform 0.25s}
+.modal-overlay.show .modal-card{transform:translateY(0)}
+.modal-title{font-size:16px;font-weight:800;color:#1a1a1a;margin-bottom:5px}
+.modal-sub{font-size:12px;color:#9E9E9E;margin-bottom:18px;line-height:1.5}
+.modal-input{width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:10px;font-family:inherit;font-size:15px;font-weight:600;color:#1a1a1a;outline:none;transition:border-color 0.2s;background:#fafafa;margin-bottom:12px}
+.modal-input:focus{border-color:#FF5722;background:#fff}
+.modal-btns{display:flex;gap:10px}
+.btn-modal-ok{flex:1;padding:13px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:50px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform 0.15s,opacity 0.2s}
+.btn-modal-ok:hover{transform:scale(1.02)}.btn-modal-ok:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-modal-cancel{flex:1;padding:13px;background:transparent;border:1px solid #e0e0e0;border-radius:50px;color:#9E9E9E;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+.btn-modal-cancel:hover{background:#f5f5f5}
+
+/* ── BANK ── */
+.bank-amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.bank-amt{padding:12px 8px;border-radius:12px;border:1.5px solid #f0f0f0;background:#fafafa;text-align:center;cursor:pointer;transition:all 0.2s;font-family:inherit}
+.bank-amt:hover{border-color:#FF5722}
+.bank-amt.selected{border-color:#FF5722;background:#fff5f2}
+.bank-amt-val{font-size:16px;font-weight:800;color:#1a1a1a}
+.bank-amt-sub{font-size:9px;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.bank-form{background:#f7f7f7;border-radius:16px;padding:16px;margin-bottom:16px}
+.bank-form-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:6px}
+.bank-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bank-input{width:100%;padding:11px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-family:inherit;font-size:13px;color:#1a1a1a;outline:none;background:#fff;transition:border-color 0.2s;margin-bottom:8px}
+.bank-input:focus{border-color:#FF5722}
+.btn-apple-pay{width:100%;padding:14px;background:#000;border:none;border-radius:50px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;transition:transform 0.15s,opacity 0.2s}
+.btn-apple-pay:hover{transform:scale(1.02);opacity:0.88}
+.btn-apple-pay:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.bank-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bank-divider::before,.bank-divider::after{content:'';flex:1;height:1px;background:#e8e8e8}
+.bank-divider span{font-size:11px;color:#B0B0B0;font-weight:600}
+
+/* ── DARK CLUB ── */
+.club-page{display:none;max-width:380px;margin:0 auto;padding:24px 20px 40px;min-height:380px}
+.club-page.visible{display:block;animation:fadeIn 0.4s ease}
+.club-hero{text-align:center;padding:20px 0 16px}
+.club-badge{font-size:44px;margin-bottom:6px}
+.club-title{font-size:20px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#FF5252,#FF8F00,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.club-sub{font-size:10px;color:#555;letter-spacing:2.5px;margin-top:4px;text-transform:uppercase}
+body.dark-club .club-sub{color:#888}
+.club-open-row{display:flex;gap:10px;margin:12px 0}
+.btn-club-open{flex:1;padding:14px 8px;border:none;border-radius:50px;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px;cursor:pointer;font-family:inherit;transition:transform 0.2s,opacity 0.2s}
+.btn-club-open:hover{transform:scale(1.03)}.btn-club-open:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.btn-club-open.one{background:linear-gradient(135deg,#FF5252,#FF8F00)}
+.btn-club-open.five{background:linear-gradient(135deg,#9C27B0,#FF5252)}
+.club-multi-stage{display:flex;gap:8px;justify-content:center;margin:12px 0;min-height:60px}
+.mini-box{width:52px;height:52px;border-radius:10px;border:1.5px solid #2a2a2e;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all 0.35s;background:#16161a;flex-shrink:0}
+.mini-box.revealed{border-color:var(--bc);box-shadow:0 0 14px var(--bc)}
+.club-results{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;min-height:4px}
+.club-result-card{border-radius:8px;padding:5px 10px;border:1px solid transparent;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.club-apply-form{background:#13131a;border-radius:14px;padding:16px;border:0.5px solid #252530;margin-top:14px}
+.club-apply-title{font-size:10px;font-weight:700;letter-spacing:2px;color:#FF5252;text-transform:uppercase;margin-bottom:10px}
+.club-apply-input{width:100%;padding:10px 12px;border:1px solid #2a2a2e;border-radius:8px;font-family:inherit;font-size:13px;background:#0a0a0c;color:#e8e8e8;outline:none;margin-bottom:10px;transition:border-color 0.2s}
+.club-apply-input:focus{border-color:#FF5252}
+.btn-apply{width:100%;padding:11px;background:transparent;border:1px solid #FF5252;border-radius:20px;color:#FF5252;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px;transition:all 0.2s}
+.btn-apply:hover{background:#FF525211}
+.club-feed-wrap{margin-top:20px}
+.feed-input-row{display:flex;gap:8px;margin-bottom:14px}
+.feed-input{flex:1;padding:10px 12px;border:1px solid #2a2a2e;border-radius:10px;font-family:inherit;font-size:13px;background:#13131a;color:#e8e8e8;outline:none;transition:border-color 0.2s}
+.feed-input:focus{border-color:#FF5252}
+.btn-post{padding:10px 14px;background:#FF5252;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+.btn-post:hover{opacity:0.85}
+.feed-item{padding:12px;background:#13131a;border-radius:10px;margin-bottom:8px;border:0.5px solid #252530}
+.feed-author{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.feed-avatar{font-size:15px}
+.feed-username{font-size:11px;font-weight:700;color:#FF5252}
+.feed-time{font-size:9px;color:#444;margin-left:auto}
+.feed-content{font-size:12px;color:#bbb;line-height:1.5}
+.club-locked{text-align:center;padding:48px 20px}
+.club-locked-icon{font-size:48px;margin-bottom:12px}
+.club-locked-text{font-size:13px;color:#9E9E9E;line-height:1.8}
+
+/* ── AUTH ── */
+.auth-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.97);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
+.auth-overlay.hidden{display:none}
+.auth-card{background:#fff;border-radius:24px;padding:36px 28px;width:100%;max-width:340px;box-shadow:0 8px 48px rgba(0,0,0,0.09);display:flex;flex-direction:column;align-items:center}
+.auth-logo{display:flex;align-items:baseline;margin-bottom:6px;user-select:none}
+.auth-l{font-size:36px;font-weight:900;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-x{font-size:52px;font-weight:900;letter-spacing:-3px;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-sub{font-size:11px;color:#B0B0B0;letter-spacing:2px;margin-bottom:24px;text-transform:uppercase}
+.auth-tabs{display:flex;width:100%;margin-bottom:20px;border-radius:12px;background:#f7f7f7;padding:3px}
+.auth-tab{flex:1;padding:10px;border:none;background:none;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:0.5px;color:#B0B0B0;cursor:pointer;border-radius:10px;transition:all 0.2s;text-transform:uppercase}
+.auth-tab.active{background:#fff;color:#FF5722;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.auth-input{width:100%;padding:13px 16px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;transition:border-color 0.2s;margin-bottom:10px;background:#fafafa}
+.auth-input:focus{border-color:#FF5722;background:#fff}
+.auth-input::placeholder{color:#C8C8C8}
+.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);border:none;border-radius:50px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px;transition:transform 0.2s,opacity 0.2s;box-shadow:0 4px 20px #FF572233}
+.auth-btn:hover{transform:scale(1.02)}.auth-btn:active{transform:scale(0.97)}.auth-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.auth-msg{font-size:12px;margin-top:10px;min-height:16px;text-align:center;font-weight:500}
+.auth-msg.error{color:#E91E63}.auth-msg.success{color:#4CAF50}
+
+/* ── USER BAR ── */
+.user-bar{max-width:380px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;gap:8px}
+.user-bar-left{display:flex;align-items:center;gap:8px;min-width:0}
+.user-bar-avatar{font-size:18px;cursor:pointer;transition:transform 0.2s;flex-shrink:0;width:28px;height:28px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.user-bar-avatar:hover{transform:scale(1.12)}
+.user-bar-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.user-email{font-size:10.5px;color:#B0B0B0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.user-username{font-size:11px;font-weight:700;color:#1a1a1a}
+.btn-logout{background:none;border:none;font-family:inherit;font-size:11px;font-weight:600;color:#FF5722;cursor:pointer;padding:4px 0}
+.btn-logout:hover{opacity:0.7}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:0.5px;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;z-index:2000;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- BALANCE BADGE -->
+<div class="balance-badge" id="balanceBadge" onclick="showPage('bank')">$0.00</div>
+
+<!-- AUTH -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-logo"><span class="auth-l">PO</span><span class="auth-x">X</span><span class="auth-l">Y</span></div>
+    <div class="auth-sub">collect the uncollectable</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <input class="auth-input" type="email" id="authEmail" placeholder="Email" autocomplete="email">
+    <input class="auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
+    <button class="auth-btn" id="authSubmitBtn" onclick="handleAuth()">Sign In</button>
+    <div class="auth-msg" id="authMsg"></div>
+  </div>
+</div>
+
+<!-- USER BAR -->
+<div class="user-bar" id="userBar" style="display:none">
+  <div class="user-bar-left">
+    <div class="user-bar-avatar" id="userBarAvatar" onclick="showPage('profile')" title="My Profile">🎭</div>
+    <span class="user-email" id="userEmailEl"></span>
+  </div>
+  <div class="user-bar-right">
+    <span class="user-username" id="userUsernameEl"></span>
+    <button class="btn-logout" onclick="handleLogout()">Sign out</button>
+  </div>
+</div>
+
+<!-- HUNT PAGE -->
+<div id="huntPage" style="display:none">
+  <div class="app">
+    <div class="logo-row" id="logoRow">
+      <span class="l-letter l-p">P</span><span class="l-letter l-o">O</span>
+      <span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span>
+    </div>
+    <div class="fomo" id="fomoText">Mythic POXY claimed this month: 0/10</div>
+    <div class="stage">
+      <canvas class="particles" id="cvs" width="240" height="240"></canvas>
+      <div class="box" id="idleBox"><div class="box-qmark">?</div></div>
+      <div class="box" id="spinBox" style="opacity:0;border-width:2.5px"></div>
+      <div class="reward-box" id="rewardBox">
+        <div class="reward-icon" id="rewardIcon"></div>
+        <div class="reward-label" id="rewardLabel"></div>
+        <div class="reward-serial" id="rewardSerial"></div>
+      </div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-open" id="btnOpen">OPEN FOR $1.00</button>
+      <div class="post-btns" id="postBtns">
+        <button class="btn-add" id="btnAdd">ADD TO COLLECTION</button>
+        <button class="btn-discard" id="btnDiscard">DISCARD</button>
+      </div>
+      <button class="btn-list-market" id="btnListFromHunt">LIST ON MARKET INSTEAD</button>
+      <button class="btn-club-enter" id="btnClubEnter" onclick="showPage('club')">&#9733; ENTER POXY CLUB &#9733;</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div class="page" id="profilePage">
+  <div class="page-title">MY PROFILE</div>
+  <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatar" style="font-size:56px;text-align:center"></div></div>
+  <div class="profile-avatar-row" id="avatarRow"></div>
+  <div style="text-align:center;margin-bottom:14px">
+    <label for="avatarUpload" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1.5px dashed #e0e0e0;border-radius:50px;font-size:10px;font-weight:700;color:#B0B0B0;letter-spacing:1px;cursor:pointer;transition:all 0.2s;text-transform:uppercase" onmouseover="this.style.borderColor='#FF5722';this.style.color='#FF5722'" onmouseout="this.style.borderColor='#e0e0e0';this.style.color='#B0B0B0'">
+      📷 Upload Photo
+    </label>
+    <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+    <div id="uploadStatus" style="font-size:10px;color:#B0B0B0;margin-top:5px;letter-spacing:1px"></div>
+  </div>
+  <div class="profile-field">
+    <div class="profile-label">Username</div>
+    <input class="profile-input" id="profileUsername" placeholder="Choose a username" maxlength="24">
+  </div>
+  <div class="profile-stats">
+    <div class="pstat"><div class="pstat-val" id="statTotal">–</div><div class="pstat-label">Total</div></div>
+    <div class="pstat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
+    <div class="pstat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
+  </div>
+  <button class="btn-primary" id="btnSaveProfile">Save Profile</button>
+</div>
+
+<!-- COLLECTION PAGE -->
+<div class="page" id="collectionPage">
+  <div class="col-header">
+    <div class="col-title">MY COLLECTION</div>
+    <div class="col-count" id="colCount"></div>
+  </div>
+  <div class="dust-bar">
+    <span style="font-size:14px">🔥</span>
+    <span style="font-size:11px;font-weight:600;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-left:4px">Dust:</span>
+    <span class="dust-val" id="dustVal">0</span>
+    <span class="dust-tip">+10 per burn</span>
+  </div>
+  <div class="filter-row" id="filterRow"></div>
+  <div class="bulk-bar" id="bulkBar">
+    <span class="bulk-count" id="bulkCount">0 selected</span>
+    <button class="btn-bulk-dust" id="btnBulkDust">🔥 Dust All Selected</button>
+  </div>
+  <div id="colContent"><div class="col-loading"><div class="col-spinner"></div></div></div>
+</div>
+
+<!-- FRIENDS PAGE -->
+<div class="page" id="friendsPage">
+  <div class="page-title">FRIENDS</div>
+  <div class="search-bar">
+    <input class="search-input" id="friendSearch" placeholder="Search by username..." onkeydown="if(event.key==='Enter')searchUsers()">
+    <button class="btn-search" onclick="searchUsers()">Find</button>
+  </div>
+  <div class="search-hint">Users must have saved a username in Profile to appear.</div>
+  <div style="margin-top:4px;margin-bottom:16px">
+    <div class="section-label">Search results</div>
+    <div id="searchResults"><div style="font-size:12px;color:#C8C8C8;padding:6px 0">Enter a username and press Find</div></div>
+  </div>
+  <div>
+    <div class="section-label">My friends</div>
+    <div id="friendsList"></div>
+  </div>
+</div>
+
+<!-- MARKETPLACE PAGE -->
+<div class="page" id="marketPage">
+  <div class="page-title">MARKETPLACE</div>
+  <div class="market-tabs">
+    <button class="market-tab active" id="mTabBuy" onclick="switchMarketTab('buy')">Buy</button>
+    <button class="market-tab" id="mTabSell" onclick="switchMarketTab('sell')">My Listings</button>
+  </div>
+  <div id="marketContent"><div class="col-loading"><div class="col-spinner"></div></div></div>
+</div>
+
+<!-- BANK PAGE -->
+<div class="page" id="bankPage">
+  <div class="page-title">ADD FUNDS</div>
+  <div style="font-size:12px;color:#B0B0B0;margin-bottom:20px;line-height:1.6">Select amount to add to your POXY balance. Test mode — no real charges.</div>
+  <div class="bank-amounts" id="bankAmounts"></div>
+  <div class="bank-form">
+    <div class="bank-form-label">Card Number</div>
+    <input class="bank-input" id="bankCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+    <div class="bank-form-row">
+      <div>
+        <div class="bank-form-label">Expiry</div>
+        <input class="bank-input" id="bankExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" style="margin-bottom:0">
+      </div>
+      <div>
+        <div class="bank-form-label">CVV</div>
+        <input class="bank-input" id="bankCVV" placeholder="123" maxlength="4" type="password" style="margin-bottom:0">
+      </div>
+    </div>
+  </div>
+  <button class="btn-apple-pay" id="btnApplePay">
+    <span style="font-size:18px">🍎</span> Apple Pay
+  </button>
+  <div class="bank-divider"><span>or pay with card</span></div>
+  <button class="btn-primary" id="btnPayCard">Pay with Card</button>
+  <div style="text-align:center;font-size:10px;color:#C8C8C8;margin-top:12px;letter-spacing:0.5px">TEST MODE — No real money charged</div>
+</div>
+
+<!-- DARK CLUB PAGE -->
+<div class="club-page" id="clubPage">
+  <div id="clubLocked" class="club-locked" style="display:none">
+    <div class="club-locked-icon">🔒</div>
+    <div class="page-title" style="margin-bottom:8px">POXY CLUB</div>
+    <div class="club-locked-text">You need at least one<br><strong>Mythic POXY</strong> to enter.<br>Keep hunting!</div>
+  </div>
+  <div id="clubUnlocked" style="display:none">
+    <div class="club-hero">
+      <div class="club-badge">✸</div>
+      <div class="club-title">POXY CLUB</div>
+      <div class="club-sub">Founders Circle</div>
+    </div>
+    <div class="club-open-row">
+      <button class="btn-club-open one" id="btnClub1">Open 1 Box<br><span style="font-size:10px;opacity:0.8">$1.00</span></button>
+      <button class="btn-club-open five" id="btnClub5">Open 5 Boxes<br><span style="font-size:10px;opacity:0.8">$4.00</span></button>
+    </div>
+    <div class="club-multi-stage" id="clubBoxes"></div>
+    <div class="club-results" id="clubResults"></div>
+    <div class="club-apply-form">
+      <div class="club-apply-title">Club Application</div>
+      <input class="club-apply-input" id="clubNickname" placeholder="Club nickname">
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap" id="clubAvatarRow"></div>
+      <button class="btn-apply" id="btnApplyClub">Submit Application</button>
+    </div>
+    <div class="club-feed-wrap">
+      <div class="section-label" style="color:#555;margin-bottom:10px">CLUB FEED</div>
+      <div class="feed-input-row">
+        <input class="feed-input" id="feedInput" placeholder="Post to the club..." maxlength="140">
+        <button class="btn-post" onclick="postToFeed()">Post</button>
+      </div>
+      <div id="feedItems"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottomNav" style="display:none">
+  <button class="nav-btn active" id="navHunt" onclick="showPage('hunt')">HUNT</button>
+  <div class="nav-sep"></div>
+  <button class="nav-btn" id="navCollection" onclick="showPage('collection')">COLLECT</button>
+  <div class="nav-sep"></div>
+  <button class="nav-btn" id="navFriends" onclick="showPage('friends')">FRIENDS</button>
+  <div class="nav-sep"></div>
+  <button class="nav-btn" id="navMarket" onclick="showPage('market')">MARKET</button>
+  <div class="nav-sep"></div>
+  <button class="nav-btn" id="navBank" onclick="showPage('bank')">BANK</button>
+  <div class="nav-sep" id="clubNavSep" style="display:none"></div>
+  <button class="nav-btn club-tab" id="navClub" onclick="showPage('club')">CLUB</button>
+</div>
+
+<!-- PRICE MODAL -->
+<div class="modal-overlay hidden" id="priceModal">
+  <div class="modal-card">
+    <div class="modal-title" id="modalTitle">List POXY for sale</div>
+    <div class="modal-sub" id="modalSub">Set your price in USD</div>
+    <input class="modal-input" type="number" id="modalPrice" placeholder="$0.00" min="0.01" step="0.01">
+    <div class="modal-btns">
+      <button class="btn-modal-ok" id="modalOk">List Now</button>
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUY CONFIRM MODAL -->
+<div class="modal-overlay hidden" id="buyModal">
+  <div class="modal-card">
+    <div class="modal-title">Confirm Purchase</div>
+    <div class="modal-sub" id="buyModalSub"></div>
+    <div class="modal-btns">
+      <button class="btn-modal-ok" id="buyModalOk">Buy Now</button>
+      <button class="btn-modal-cancel" onclick="closeBuyModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const sb = supabase.createClient(
+  'https://rbrtjkfawdnomvvyxwvp.supabase.co',
+  'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG'
+);
+
+// ── TIERS (updated colors) ──
+const TIERS = [
+  {id:'common',    label:'Common',    icon:'◆', color:'#9E9E9E', glow:'rgba(158,158,158,0.14)', prob:0.604},
+  {id:'uncommon',  label:'Uncommon',  icon:'◈', color:'#4CAF50', glow:'rgba(76,175,80,0.14)',   prob:0.22},
+  {id:'rare',      label:'Rare',      icon:'✦', color:'#29B6F6', glow:'rgba(41,182,246,0.14)',   prob:0.12},
+  {id:'epic',      label:'Epic',      icon:'⬟', color:'#AB47BC', glow:'rgba(171,71,188,0.14)',  prob:0.055},
+  {id:'legendary', label:'Legendary', icon:'★', color:'#FFCA28', glow:'rgba(255,202,40,0.18)',  prob:0.001},
+  {id:'mythic',    label:'Mythic',    icon:'✸', color:'#FF5252', glow:'rgba(255,82,82,0.20)',   prob:0.0001}
+];
+const AVATARS = ['🎭','🦊','🐲','👾','🌀','⚡'];
+const BANK_AMOUNTS = [
+  {val:5,label:'Starter'},{val:10,label:'Hunter'},{val:25,label:'Elite'},
+  {val:50,label:'Whale'},{val:100,label:'Legend'},{val:250,label:'Founder'}
+];
+const CLUB_PRICE_ONE = 1.00;
+const CLUB_PRICE_FIVE = 4.00;
+
+// ── STATE ──
+let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null;
+let mythicCount=0, hasMythic=false, busy=false;
+let spinAnim=null, particleLoop=null, particles=[];
+let selectedAvatar=AVATARS[0], marketTab='buy';
+let pendingListItem=null, pendingBuyItem=null;
+let selectedBankAmt=10;
+let colFilter='all', selectedForDust=new Set();
+
+const $=id=>document.getElementById(id);
+
+// ── AUDIO ──
+let audioCtx=null;
+const getAC=()=>{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;};
+function playTick(){try{const ac=getAC(),o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='square';o.frequency.setValueAtTime(200,ac.currentTime);o.frequency.exponentialRampToValueAtTime(70,ac.currentTime+0.04);g.gain.setValueAtTime(0.15,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.05);o.start();o.stop(ac.currentTime+0.06);}catch(e){}}
+function playMythicChord(){try{const ac=getAC(),freqs=[261.63,329.63,392,523.25,659.25],mg=ac.createGain();mg.gain.setValueAtTime(0,ac.currentTime);mg.gain.linearRampToValueAtTime(0.28,ac.currentTime+0.3);mg.gain.linearRampToValueAtTime(0.15,ac.currentTime+1.5);mg.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+3.5);mg.connect(ac.destination);freqs.forEach((f,i)=>{const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;o2.type='triangle';o2.frequency.value=f*2.005;g.gain.value=1/freqs.length;o.connect(g);o2.connect(g);g.connect(mg);o.start(ac.currentTime+i*0.07);o2.start(ac.currentTime+i*0.07);o.stop(ac.currentTime+4);o2.stop(ac.currentTime+4);});}catch(e){}}
+function playDrop(id){try{const ac=getAC(),freq={common:200,uncommon:280,rare:350,epic:440,legendary:550,mythic:680}[id]||300,o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=id==='epic'||id==='legendary'?'triangle':'sine';o.frequency.setValueAtTime(freq*0.5,ac.currentTime);o.frequency.exponentialRampToValueAtTime(freq,ac.currentTime+0.15);g.gain.setValueAtTime(0.2,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.65);o.start();o.stop(ac.currentTime+0.7);if(id==='mythic')setTimeout(playMythicChord,200);}catch(e){}}
+
+// ── UTILS ──
+function genSerial(){const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';let s='PX-';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function setBodyBg(id){document.body.className='';const map={rare:'bg-rare',epic:'bg-epic',legendary:'bg-legendary',mythic:'bg-mythic'};if(map[id])document.body.classList.add(map[id]);}
+function clearBg(){if(!document.body.classList.contains('dark-club'))document.body.className='';}
+function showToast(msg,dur=2800){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function pickTier(){let r=Math.random(),acc=0;for(const t of TIERS){acc+=t.prob;if(r<acc)return t;}return TIERS[TIERS.length-1];}
+function timeSince(iso){const s=Math.floor((Date.now()-new Date(iso))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+
+// ── BALANCE ──
+function updateBalanceBadge(bal){
+  const b=$('balanceBadge');
+  b.textContent='$'+parseFloat(bal||0).toFixed(2);
+  b.classList.add('visible');
+  b.classList.remove('pop');
+  requestAnimationFrame(()=>b.classList.add('pop'));
+}
+
+// ── AUTH ──
+sb.auth.onAuthStateChange(async(_e,session)=>{
+  currentUser=session?.user??null;
+  if(currentUser){
+    $('authOverlay').classList.add('hidden');
+    $('userBar').style.display='flex';
+    $('userEmailEl').textContent=currentUser.email;
+    $('bottomNav').style.display='flex';
+    $('balanceBadge').classList.add('visible');
+    showPage('hunt');
+    Promise.all([loadProfile(),checkMythic()]).catch(console.error);
+  }else{
+    $('authOverlay').classList.remove('hidden');
+    $('userBar').style.display='none';
+    $('bottomNav').style.display='none';
+    $('balanceBadge').classList.remove('visible');
+    $('huntPage').style.display='none';
+  }
+});
+const authMode={v:'login'};
+window.switchTab=m=>{authMode.v=m;$('tabLogin').classList.toggle('active',m==='login');$('tabSignup').classList.toggle('active',m==='signup');$('authSubmitBtn').textContent=m==='login'?'Sign In':'Create Account';$('authMsg').textContent='';};
+window.handleAuth=async()=>{
+  const email=$('authEmail').value.trim(),pw=$('authPassword').value;
+  const msg=$('authMsg'),btn=$('authSubmitBtn');
+  if(!email||!pw){msg.className='auth-msg error';msg.textContent='Please fill in all fields.';return;}
+  btn.disabled=true;msg.className='auth-msg';msg.textContent='';
+  try{
+    let res;
+    if(authMode.v==='login')res=await sb.auth.signInWithPassword({email,password:pw});
+    else{res=await sb.auth.signUp({email,password:pw});if(!res.error&&res.data.user&&!res.data.session){msg.className='auth-msg success';msg.textContent='Check your email!';btn.disabled=false;return;}}
+    if(res.error)throw res.error;
+  }catch(e){msg.className='auth-msg error';msg.textContent=e.message||'Error.';}
+  btn.disabled=false;
+};
+window.handleLogout=async()=>{await sb.auth.signOut();clearBg();document.body.className='';};
+
+// ── PROFILE ──
+async function loadProfile(){
+  try{
+    const{data}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+    if(data){
+      currentProfile=data;
+      selectedAvatar=data.avatar_url||AVATARS[0];
+      $('userUsernameEl').textContent=data.username||'';
+      setBarAvatar(selectedAvatar);
+      updateBalanceBadge(data.balance||0);
+    }else{
+      currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0};
+      sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).then(({error})=>{if(error&&error.code!=='23505')console.error(error);});
+    }
+  }catch(e){console.error('loadProfile:',e);}
+}
+function setBarAvatar(av){
+  const el=$('userBarAvatar');
+  if(av&&av.startsWith('http')){el.innerHTML='<img src="'+av+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+  else{el.textContent=av||'🎭';}
+}
+function renderProfilePage(){
+  const bigAv=$('profileBigAvatar');
+  if(selectedAvatar&&selectedAvatar.startsWith('http')){bigAv.innerHTML='<img src="'+selectedAvatar+'" class="avatar-upload-preview">';}
+  else{bigAv.innerHTML='<span style="font-size:56px">'+selectedAvatar+'</span>';}
+  $('profileUsername').value=currentProfile?.username||'';
+  const row=$('avatarRow');row.innerHTML='';
+  AVATARS.forEach(av=>{
+    const btn=document.createElement('button');
+    btn.className='avatar-opt'+(av===selectedAvatar?' selected':'');
+    btn.textContent=av;
+    btn.onclick=()=>{selectedAvatar=av;bigAv.innerHTML='<span style="font-size:56px">'+av+'</span>';row.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');setBarAvatar(av);};
+    row.appendChild(btn);
+  });
+}
+async function renderProfileStats(){
+  try{
+    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+    $('statTotal').textContent=data?.length||0;
+    $('statRare').textContent=data?.filter(d=>['rare','epic','legendary','mythic'].includes(d.poxy_tier)).length||0;
+    $('statDust').textContent=currentProfile?.dust||0;
+  }catch(e){}
+}
+$('btnSaveProfile').addEventListener('click',async()=>{
+  const username=$('profileUsername').value.trim();
+  const btn=$('btnSaveProfile');btn.disabled=true;
+  try{
+    const{error}=await sb.from('profiles').upsert({id:currentUser.id,username:username||null,avatar_url:selectedAvatar});
+    if(error)throw error;
+    currentProfile={...currentProfile,username,avatar_url:selectedAvatar};
+    $('userUsernameEl').textContent=username;
+    setBarAvatar(selectedAvatar);
+    showToast('Profile saved!');
+  }catch(e){showToast(e.message||'Save failed.');}
+  btn.disabled=false;
+});
+// Avatar upload
+document.getElementById('avatarUpload').addEventListener('change',async(e)=>{
+  const file=e.target.files[0];if(!file||!currentUser)return;
+  const status=$('uploadStatus');
+  if(!file.type.startsWith('image/')){showToast('Please select an image.');return;}
+  if(file.size>2*1024*1024){showToast('Image must be under 2MB.');return;}
+  status.textContent='Uploading...';
+  try{
+    const ext=file.name.split('.').pop().toLowerCase();
+    const path='avatars/'+currentUser.id+'.'+ext;
+    const{error:upErr}=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type});
+    if(upErr)throw upErr;
+    const{data:urlData}=sb.storage.from('avatars').getPublicUrl(path);
+    const url=urlData.publicUrl;
+    await sb.from('profiles').upsert({id:currentUser.id,avatar_url:url});
+    selectedAvatar=url;currentProfile={...currentProfile,avatar_url:url};
+    $('profileBigAvatar').innerHTML='<img src="'+url+'" class="avatar-upload-preview">';
+    setBarAvatar(url);
+    document.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));
+    status.textContent='Photo saved!';setTimeout(()=>status.textContent='',3000);
+    showToast('Avatar updated!');
+  }catch(err){status.textContent='';showToast('Upload failed. Create "avatars" bucket in Supabase Storage.');}
+});
+
+// ── NAVIGATION ──
+window.showPage=page=>{
+  $('huntPage').style.display=page==='hunt'?'block':'none';
+  ['profile','collection','friends','market','bank'].forEach(p=>{const el=$(p+'Page');if(el)el.classList.toggle('visible',page===p);});
+  const clubEl=$('clubPage');if(clubEl)clubEl.classList.toggle('visible',page==='club');
+  ['navHunt','navCollection','navFriends','navMarket','navBank','navClub'].forEach(id=>{const b=$(id);if(b)b.classList.remove('active');});
+  const navMap={hunt:'navHunt',collection:'navCollection',friends:'navFriends',market:'navMarket',bank:'navBank',club:'navClub',profile:'navHunt'};
+  const nv=$(navMap[page]);if(nv)nv.classList.add('active');
+  if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();}
+  if(page==='friends'){$('friendsList').innerHTML='';loadFriends();}
+  if(page==='market')loadMarket();
+  if(page==='club')renderClub();
+  if(page==='profile'){renderProfilePage();renderProfileStats();}
+  if(page==='bank')renderBank();
+  if(page==='club'){document.body.classList.add('dark-club');}
+  else{document.body.classList.remove('dark-club');if(currentTier&&page==='hunt')setBodyBg(currentTier.id);}
+};
+
+// ── LOGO ──
+$('lX').addEventListener('mouseenter',()=>$('logoRow').classList.add('x-active'));
+$('lX').addEventListener('mouseleave',()=>$('logoRow').classList.remove('x-active'));
+$('lX').addEventListener('touchstart',e=>{e.preventDefault();$('logoRow').classList.toggle('x-active');});
+
+// ── GACHA ──
+const GLITCH_COLORS=TIERS.map(t=>t.color);
+let glitchIdx=0,tickCount=0,spinStartTime=0;
+
+function startSpin(){
+  const sb2=$('spinBox');
+  sb2.style.opacity='1';sb2.style.borderColor=GLITCH_COLORS[0];sb2.style.background='transparent';
+  glitchIdx=0;tickCount=0;let lastTick=0;
+  function frame(now){
+    if(now-lastTick>70){
+      lastTick=now;glitchIdx=(glitchIdx+1)%GLITCH_COLORS.length;
+      const c=GLITCH_COLORS[glitchIdx];
+      sb2.style.borderColor=c;
+      sb2.style.boxShadow='0 0 16px '+c+'88,inset 0 0 10px '+c+'33';
+      tickCount++;if(tickCount%2===0)playTick();
+    }
+    const t=(now-spinStartTime)/1400,ease=t<0.65?t*1.5:1;
+    sb2.style.transform='rotate('+(ease*720)+'deg) scale('+(0.86+0.14*Math.min(t*3,1))+')';
+    if(t<1)spinAnim=requestAnimationFrame(frame);else finishSpin();
+  }
+  spinAnim=requestAnimationFrame(frame);
+}
+function finishSpin(){
+  const sb2=$('spinBox');
+  sb2.style.transform='rotate(0deg) scale(1)';
+  sb2.style.animation='burst 0.4s cubic-bezier(0.25,1,0.5,1)';
+  setTimeout(()=>{sb2.style.animation='';sb2.style.opacity='0';sb2.style.boxShadow='';showReward();},420);
+}
+function launchParticles(color){
+  particles=[];
+  for(let i=0;i<65;i++){const a=Math.random()*Math.PI*2,s=2.5+Math.random()*5.5;particles.push({x:120,y:120,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2,life:1,decay:0.010+Math.random()*0.015,r:2+Math.random()*4,color,shape:Math.random()>0.5?'circle':'rect'});}
+  const c=$('cvs').getContext('2d');
+  function draw(){c.clearRect(0,0,240,240);let alive=false;for(const p of particles){p.x+=p.vx;p.y+=p.vy;p.vy+=0.11;p.vx*=0.98;p.life-=p.decay;if(p.life<=0)continue;alive=true;c.globalAlpha=p.life;c.fillStyle=p.color;c.beginPath();if(p.shape==='circle')c.arc(p.x,p.y,p.r,0,Math.PI*2);else c.rect(p.x-p.r/2,p.y-p.r,p.r,p.r*2);c.fill();}c.globalAlpha=1;if(alive)particleLoop=requestAnimationFrame(draw);else c.clearRect(0,0,240,240);}
+  if(particleLoop)cancelAnimationFrame(particleLoop);
+  particleLoop=requestAnimationFrame(draw);
+}
+function showReward(){
+  currentTier=pickTier();currentSerial=genSerial();
+  launchParticles(currentTier.color);playDrop(currentTier.id);setBodyBg(currentTier.id);
+  $('rewardIcon').textContent=currentTier.icon;$('rewardIcon').style.color=currentTier.color;
+  $('rewardLabel').textContent=currentTier.label;$('rewardLabel').style.color=currentTier.color;
+  $('rewardSerial').textContent=currentSerial;
+  const rb=$('rewardBox');
+  rb.style.borderColor=currentTier.color;
+  rb.style.background=currentTier.glow.replace('rgba','rgba').replace(',0.',',0.08').replace('0.14','0.07').replace('0.18','0.08').replace('0.20','0.09');
+  rb.style.boxShadow='0 0 0 1px '+currentTier.glow+', 0 0 40px '+currentTier.glow+', inset 0 0 24px '+currentTier.glow;
+  rb.style.animation='';
+  if(currentTier.id==='mythic'){rb.style.animation='mythicShimmer 1.5s ease-in-out infinite,floatUp 2s ease-in-out infinite';if(mythicCount<10){mythicCount++;$('fomoText').textContent='Mythic POXY claimed this month: '+mythicCount+'/10';}}
+  else if(currentTier.id==='legendary'){rb.style.animation='legendaryShimmer 1.8s ease-in-out infinite,floatUp 2.5s ease-in-out infinite';}
+  else{rb.style.animation='floatUp 2.5s ease-in-out infinite';}
+  rb.style.opacity='0';rb.style.transform='scale(0.65) rotate(-4deg)';rb.style.transition='none';
+  requestAnimationFrame(()=>{
+    rb.style.transition='opacity 0.5s cubic-bezier(0.25,1,0.5,1),transform 0.5s cubic-bezier(0.25,1,0.5,1)';
+    rb.style.opacity='1';rb.style.transform='scale(1) rotate(0deg)';
+  });
+  $('btnOpen').style.opacity='0';$('btnOpen').style.pointerEvents='none';
+  $('postBtns').classList.add('visible');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>$('postBtns').classList.add('faded-in')));
+  $('btnListFromHunt').classList.add('show');
+}
+function resetAll(){
+  if(spinAnim)cancelAnimationFrame(spinAnim);if(particleLoop)cancelAnimationFrame(particleLoop);
+  $('cvs').getContext('2d').clearRect(0,0,240,240);particles=[];
+  const rb=$('rewardBox');rb.style.transition='opacity 0.3s';rb.style.opacity='0';rb.style.animation='';
+  const sb2=$('spinBox');sb2.style.opacity='0';sb2.style.animation='';sb2.style.boxShadow='';
+  $('idleBox').style.opacity='1';
+  $('postBtns').classList.remove('faded-in');setTimeout(()=>$('postBtns').classList.remove('visible'),400);
+  $('btnOpen').style.opacity='1';$('btnOpen').style.pointerEvents='auto';$('btnOpen').disabled=false;
+  $('btnListFromHunt').classList.remove('show');
+  busy=false;currentTier=null;currentSerial=null;clearBg();
+}
+
+$('btnOpen').addEventListener('click',async()=>{
+  if(busy||!currentUser)return;
+  // Deduct $1 from balance
+  const bal=currentProfile?.balance||0;
+  if(bal<1){showToast('Insufficient balance. Add funds in BANK tab.');return;}
+  busy=true;$('btnOpen').disabled=true;
+  // Optimistic deduct
+  currentProfile.balance=bal-1;
+  updateBalanceBadge(currentProfile.balance);
+  await sb.from('profiles').update({balance:bal-1}).eq('id',currentUser.id);
+  $('idleBox').style.opacity='0';spinStartTime=performance.now();startSpin();
+});
+
+$('btnAdd').addEventListener('click',async()=>{
+  if(!currentTier||!currentUser||!currentSerial)return;
+  const orig=$('btnAdd').textContent;$('btnAdd').disabled=true;$('btnAdd').textContent='Saving...';
+  try{
+    const{error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial});
+    if(error)throw error;
+    showToast('Saved to collection!');
+    if(currentTier.id==='mythic'){hasMythic=true;toggleClubAccess(true);}
+  }catch(e){showToast('Error saving.');}
+  $('btnAdd').disabled=false;$('btnAdd').textContent=orig;resetAll();
+});
+$('btnDiscard').addEventListener('click',()=>{showToast('POXY discarded.');resetAll();});
+$('btnListFromHunt').addEventListener('click',()=>{if(!currentTier||!currentSerial)return;pendingListItem={tier:currentTier,serial:currentSerial,fromHunt:true};openPriceModal();});
+
+// ── MYTHIC ──
+async function checkMythic(){
+  try{const{data}=await sb.from('user_poxy').select('id').eq('user_id',currentUser.id).eq('poxy_tier','mythic').limit(1);hasMythic=!!(data&&data.length);toggleClubAccess(hasMythic);}catch(e){}
+}
+function toggleClubAccess(has){$('btnClubEnter').classList.toggle('show',has);$('navClub').classList.toggle('show',has);$('clubNavSep').style.display=has?'':'none';}
+
+// ── COLLECTION with filters + bulk dust ──
+let colData=[];
+async function loadCollection(){
+  const cont=$('colContent'),cnt=$('colCount');
+  cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
+  selectedForDust=new Set();updateBulkBar();
+  try{
+    const{data,error}=await sb.from('user_poxy').select('*').eq('user_id',currentUser.id).order('dropped_at',{ascending:false});
+    if(error)throw error;
+    colData=data||[];
+    renderFilterButtons();
+    renderCollection();
+    cnt.textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
+  }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
+}
+function renderFilterButtons(){
+  const row=$('filterRow');row.innerHTML='';
+  const tiers=['all',...TIERS.map(t=>t.id)];
+  tiers.forEach(id=>{
+    const tier=TIERS.find(t=>t.id===id);
+    const btn=document.createElement('button');
+    btn.className='filter-btn'+(id===colFilter?' active':'');
+    btn.textContent=id==='all'?'All':tier?.label||id;
+    btn.style.setProperty('--fc',tier?.color||'#FF5722');
+    btn.style.setProperty('--fb',tier?tier.glow:'rgba(255,87,34,0.1)');
+    btn.onclick=()=>{colFilter=id;selectedForDust=new Set();updateBulkBar();renderCollection();document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');};
+    row.appendChild(btn);
+  });
+}
+function renderCollection(){
+  const cont=$('colContent');
+  const filtered=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
+  if(!filtered.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">✸</div>'+(colFilter==='all'?'Your collection is empty.<br>Hunt your first POXY!':'No '+colFilter+' POXY found.')+'</div>';return;}
+  const grid=document.createElement('div');grid.className='col-grid';
+  filtered.forEach((item,i)=>{
+    const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
+    const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+    const card=document.createElement('div');card.className='col-card';card.dataset.id=item.id;
+    if(selectedForDust.has(item.id))card.classList.add('selected-for-dust');
+    card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'55;box-shadow:0 0 18px '+tier.glow+';animation-delay:'+(i*0.04)+'s';
+    const ico=document.createElement('div');ico.className='col-card-icon';ico.textContent=tier.icon;
+    const lbl=document.createElement('div');lbl.className='col-card-tier';lbl.style.color=tier.color;lbl.textContent=tier.label;
+    const dt=document.createElement('div');dt.className='col-card-date';dt.textContent=ds;
+    const ser=document.createElement('div');ser.className='col-card-serial';ser.textContent=item.serial_number||'–';
+    const acts=document.createElement('div');acts.className='col-card-actions';
+    const burnBtn=document.createElement('button');burnBtn.className='btn-burn';burnBtn.title='Burn for +10 dust';burnBtn.textContent='🔥';
+    const sellBtn=document.createElement('button');sellBtn.className='btn-sell-card';sellBtn.title='List on market';sellBtn.textContent='💰';
+    acts.appendChild(burnBtn);acts.appendChild(sellBtn);
+    card.appendChild(ico);card.appendChild(lbl);card.appendChild(dt);card.appendChild(ser);card.appendChild(acts);
+    // Toggle select on card click
+    card.addEventListener('click',e=>{if(e.target===burnBtn||e.target===sellBtn)return;if(selectedForDust.has(item.id)){selectedForDust.delete(item.id);card.classList.remove('selected-for-dust');}else{selectedForDust.add(item.id);card.classList.add('selected-for-dust');}updateBulkBar();});
+    burnBtn.addEventListener('click',e=>{e.stopPropagation();burnPoxySecure(item.id,card);});
+    sellBtn.addEventListener('click',e=>{e.stopPropagation();pendingListItem={poxyId:item.id,tier,serial:item.serial_number||'',fromHunt:false};openPriceModal();});
+    grid.appendChild(card);
+  });
+  cont.innerHTML='';cont.appendChild(grid);
+}
+function updateBulkBar(){
+  const bar=$('bulkBar'),cnt=$('bulkCount');
+  const n=selectedForDust.size;
+  bar.classList.toggle('show',n>0);
+  if(cnt)cnt.textContent=n+' selected (+'+n*10+' dust)';
+}
+// Secure dust via RPC
+async function burnPoxySecure(itemId,cardEl){
+  cardEl.style.pointerEvents='none';
+  cardEl.style.animation='burnOut 0.5s ease forwards';
+  try{
+    const{data,error}=await sb.rpc('dust_poxy',{p_poxy_id:itemId,p_user_id:currentUser.id,p_dust_gain:10});
+    if(error)throw error;
+    if(!data.ok)throw new Error(data.error||'Dust failed');
+    setTimeout(()=>{
+      cardEl.remove();
+      colData=colData.filter(i=>i.id!==itemId);
+      selectedForDust.delete(itemId);updateBulkBar();
+      if(currentProfile){currentProfile.dust=(currentProfile.dust||0)+10;}
+      $('dustVal').textContent=currentProfile?.dust||0;
+      const rem=document.querySelectorAll('.col-card').length;
+      $('colCount').textContent=rem?rem+' item'+(rem!==1?'s':''):'';
+      showToast('+10 Dust 🔥');
+    },520);
+  }catch(e){cardEl.style.pointerEvents='';cardEl.style.animation='';showToast('Burn failed: '+(e.message||'server error'));}
+}
+$('btnBulkDust').addEventListener('click',async()=>{
+  if(!selectedForDust.size)return;
+  const ids=[...selectedForDust];
+  const btn=$('btnBulkDust');btn.disabled=true;btn.textContent='Burning...';
+  try{
+    const{data,error}=await sb.rpc('dust_poxy_bulk',{p_poxy_ids:ids,p_user_id:currentUser.id,p_dust_each:10});
+    if(error)throw error;
+    if(!data.ok)throw new Error(data.error);
+    colData=colData.filter(i=>!ids.includes(i.id));
+    if(currentProfile)currentProfile.dust=(currentProfile.dust||0)+data.dust_gained;
+    $('dustVal').textContent=currentProfile?.dust||0;
+    selectedForDust=new Set();updateBulkBar();
+    renderCollection();
+    $('colCount').textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
+    showToast('+'+data.dust_gained+' Dust for '+data.deleted+' items 🔥');
+  }catch(e){showToast('Bulk dust failed: '+(e.message||'error'));}
+  btn.disabled=false;btn.textContent='🔥 Dust All Selected';
+});
+
+// ── FRIENDS ──
+async function loadFriends(){
+  const cont=$('friendsList');
+  cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
+  try{
+    const{data:reqs}=await sb.from('friend_requests').select('*').or('from_id.eq.'+currentUser.id+',to_id.eq.'+currentUser.id).eq('status','accepted');
+    if(!reqs||!reqs.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">No friends yet.</div>';return;}
+    const ids=reqs.map(r=>r.from_id===currentUser.id?r.to_id:r.from_id);
+    const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',ids);
+    cont.innerHTML='';
+    (profs||[]).forEach(p=>{
+      const card=document.createElement('div');card.className='user-card';
+      const avEl=document.createElement('div');avEl.className='user-card-avatar';
+      if(p.avatar_url&&p.avatar_url.startsWith('http'))avEl.innerHTML='<img src="'+p.avatar_url+'">';else avEl.textContent=p.avatar_url||'👾';
+      const info=document.createElement('div');info.className='user-card-info';
+      info.innerHTML='<div class="user-card-name">'+(p.username||'Anonymous')+'</div><div class="user-card-sub">Friend</div>';
+      const btn=document.createElement('button');btn.className='btn-friend sent';btn.textContent='Friends ✓';
+      card.appendChild(avEl);card.appendChild(info);card.appendChild(btn);cont.appendChild(card);
+    });
+  }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63">Error loading friends.</div>';}
+}
+window.searchUsers=async()=>{
+  const q=$('friendSearch').value.trim();
+  const cont=$('searchResults');
+  if(!q){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">Enter a username above</div>';return;}
+  cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
+  try{
+    const{data,error}=await sb.from('profiles').select('id,username,avatar_url').ilike('username','%'+q+'%').neq('id',currentUser.id).limit(15);
+    if(error)throw error;
+    if(!data||!data.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:10px 0">No users found for "'+q+'".</div>';return;}
+    const ids=data.map(p=>p.id);
+    const orParts=ids.map(id=>'and(from_id.eq.'+currentUser.id+',to_id.eq.'+id+'),and(from_id.eq.'+id+',to_id.eq.'+currentUser.id+')').join(',');
+    const{data:reqs}=await sb.from('friend_requests').select('id,status,from_id,to_id').or(orParts);
+    const reqMap={};(reqs||[]).forEach(r=>{const o=r.from_id===currentUser.id?r.to_id:r.from_id;reqMap[o]=r;});
+    cont.innerHTML='';
+    data.forEach(p=>{
+      const ex=reqMap[p.id];
+      const card=document.createElement('div');card.className='user-card';
+      const avEl=document.createElement('div');avEl.className='user-card-avatar';
+      if(p.avatar_url&&p.avatar_url.startsWith('http'))avEl.innerHTML='<img src="'+p.avatar_url+'">';else avEl.textContent=p.avatar_url||'👾';
+      const info=document.createElement('div');info.className='user-card-info';
+      const nm=document.createElement('div');nm.className='user-card-name';nm.textContent=p.username;
+      const sb2=document.createElement('div');sb2.className='user-card-sub';sb2.textContent='POXY member';
+      info.appendChild(nm);info.appendChild(sb2);
+      const btn=document.createElement('button');
+      if(ex){btn.className='btn-friend sent';btn.textContent=ex.status==='accepted'?'Friends ✓':'Sent';}
+      else{btn.className='btn-friend';btn.textContent='+ Add';btn.addEventListener('click',async function(){this.disabled=true;const{error:ie}=await sb.from('friend_requests').insert({from_id:currentUser.id,to_id:p.id});if(ie){this.disabled=false;showToast(ie.code==='23505'?'Already sent!':'Error.');return;}this.textContent='Sent';this.classList.add('sent');});}
+      card.appendChild(avEl);card.appendChild(info);card.appendChild(btn);cont.appendChild(card);
+    });
+  }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">Error: '+(e.message||'unknown')+'</div>';}
+};
+
+// ── MARKETPLACE ──
+window.switchMarketTab=tab=>{marketTab=tab;$('mTabBuy').classList.toggle('active',tab==='buy');$('mTabSell').classList.toggle('active',tab==='sell');loadMarket();};
+async function loadMarket(){
+  const cont=$('marketContent');
+  cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
+  try{
+    if(marketTab==='buy'){
+      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number)').eq('status','active').neq('seller_id',currentUser.id).order('created_at',{ascending:false});
+      if(error)throw error;
+      if(!data||!data.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">💰</div>No listings yet.</div>';return;}
+      cont.innerHTML='';
+      data.forEach(item=>{
+        const tier=TIERS.find(t=>t.id===item.user_poxy?.poxy_tier)||TIERS[0];
+        const card=document.createElement('div');card.className='market-card';
+        card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
+        const ico=document.createElement('div');ico.className='market-card-icon';ico.style.cssText='background:'+tier.glow+';border:1.5px solid '+tier.color+'44';ico.textContent=tier.icon;
+        const info=document.createElement('div');info.className='market-card-info';
+        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+(item.user_poxy?.serial_number||'–')+'</div>';
+        const right=document.createElement('div');right.style.textAlign='right';
+        const price=document.createElement('div');price.className='market-card-price';price.textContent='$'+parseFloat(item.price).toFixed(2);
+        const buyBtn=document.createElement('button');buyBtn.className='btn-buy';buyBtn.textContent='Buy';
+        buyBtn.addEventListener('click',()=>{pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id};openBuyModal(tier.label,item.price);});
+        right.appendChild(price);right.appendChild(buyBtn);
+        card.appendChild(ico);card.appendChild(info);card.appendChild(right);cont.appendChild(card);
+      });
+    }else{
+      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number)').eq('seller_id',currentUser.id).order('created_at',{ascending:false});
+      if(error)throw error;
+      if(!data||!data.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">📋</div>No listings.<br>List from your collection!</div>';return;}
+      cont.innerHTML='';
+      data.forEach(item=>{
+        const tier=TIERS.find(t=>t.id===item.user_poxy?.poxy_tier)||TIERS[0];
+        const sColor=item.status==='sold'?'#4CAF50':item.status==='active'?'#FF5722':'#9E9E9E';
+        const card=document.createElement('div');card.className='market-card';
+        card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
+        const ico=document.createElement('div');ico.className='market-card-icon';ico.style.cssText='background:'+tier.glow+';border:1.5px solid '+tier.color+'44';ico.textContent=tier.icon;
+        const info=document.createElement('div');info.className='market-card-info';
+        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+(item.user_poxy?.serial_number||'–')+'</div><div style="font-size:9px;font-weight:700;color:'+sColor+';margin-top:2px">'+item.status.toUpperCase()+'</div>';
+        const right=document.createElement('div');right.style.textAlign='right';
+        const price=document.createElement('div');price.className='market-card-price';price.textContent='$'+parseFloat(item.price).toFixed(2);
+        right.appendChild(price);
+        if(item.status==='active'){const cb=document.createElement('button');cb.className='btn-buy';cb.style.cssText='background:#f0f0f0;color:#9E9E9E';cb.textContent='Cancel';cb.addEventListener('click',async()=>{try{await sb.from('marketplace').update({status:'cancelled'}).eq('id',item.id);cb.textContent='Cancelled';cb.disabled=true;showToast('Cancelled.');}catch(e){showToast('Error.');}});right.appendChild(cb);}
+        card.appendChild(ico);card.appendChild(info);card.appendChild(right);cont.appendChild(card);
+      });
+    }
+  }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
+}
+function openPriceModal(){
+  const o=$('priceModal');
+  $('modalTitle').textContent='List POXY for sale';
+  $('modalSub').textContent=(pendingListItem.tier?.label||'')+' · '+(pendingListItem.serial||'');
+  $('modalPrice').value='';
+  o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
+}
+window.closeModal=()=>{const o=$('priceModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingListItem=null;};
+$('modalOk').addEventListener('click',async()=>{
+  const price=parseFloat($('modalPrice').value);
+  if(!price||price<=0){showToast('Enter a valid price.');return;}
+  const btn=$('modalOk');btn.disabled=true;
+  try{
+    let poxyId=pendingListItem.poxyId;
+    if(pendingListItem.fromHunt){
+      const{data,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:pendingListItem.tier.id,serial_number:pendingListItem.serial}).select().single();
+      if(error)throw error;poxyId=data.id;
+    }
+    const{error}=await sb.from('marketplace').insert({poxy_id:poxyId,seller_id:currentUser.id,price});
+    if(error)throw error;
+    showToast('Listed!');closeModal();if(pendingListItem&&pendingListItem.fromHunt)resetAll();
+  }catch(e){showToast(e.message||'Error listing.');}
+  btn.disabled=false;
+});
+function openBuyModal(tierLabel,price){
+  const o=$('buyModal');
+  $('buyModalSub').textContent='Buy '+tierLabel+' for $'+parseFloat(price).toFixed(2)+'? Balance: $'+(currentProfile?.balance||0).toFixed(2);
+  o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
+}
+window.closeBuyModal=()=>{const o=$('buyModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingBuyItem=null;};
+$('buyModalOk').addEventListener('click',async()=>{
+  if(!pendingBuyItem)return;
+  const btn=$('buyModalOk');btn.disabled=true;
+  try{
+    // Use secure RPC
+    const{data,error}=await sb.rpc('purchase_poxy',{p_listing_id:pendingBuyItem.listingId,p_buyer_id:currentUser.id});
+    if(error)throw error;
+    if(!data.ok)throw new Error(data.error);
+    if(currentProfile)currentProfile.balance=(currentProfile.balance||0)-pendingBuyItem.price;
+    updateBalanceBadge(currentProfile?.balance||0);
+    showToast('Purchased! Check your collection.');
+    closeBuyModal();loadMarket();
+  }catch(e){showToast(e.message||'Purchase failed.');}
+  btn.disabled=false;
+});
+
+// ── BANK ──
+function renderBank(){
+  const grid=$('bankAmounts');grid.innerHTML='';
+  BANK_AMOUNTS.forEach(a=>{
+    const div=document.createElement('div');div.className='bank-amt'+(a.val===selectedBankAmt?' selected':'');
+    div.innerHTML='<div class="bank-amt-val">$'+a.val+'</div><div class="bank-amt-sub">'+a.label+'</div>';
+    div.onclick=()=>{selectedBankAmt=a.val;document.querySelectorAll('.bank-amt').forEach(x=>x.classList.remove('selected'));div.classList.add('selected');};
+    grid.appendChild(div);
+  });
+}
+function validateCard(){
+  const card=$('bankCard').value.replace(/\s/g,'');
+  const exp=$('bankExpiry').value;
+  const cvv=$('bankCVV').value;
+  if(card.length<16){showToast('Enter a valid card number.');return false;}
+  if(exp.length<5){showToast('Enter expiry date.');return false;}
+  if(cvv.length<3){showToast('Enter CVV.');return false;}
+  return true;
+}
+async function processTopup(){
+  const{data,error}=await sb.rpc('topup_balance',{p_user_id:currentUser.id,p_amount:selectedBankAmt});
+  if(error)throw error;
+  if(!data.ok)throw new Error(data.error);
+  if(currentProfile)currentProfile.balance=data.new_balance;
+  updateBalanceBadge(data.new_balance);
+  showToast('+$'+selectedBankAmt+' added to your balance! 💰');
+}
+$('btnPayCard').addEventListener('click',async()=>{
+  if(!validateCard())return;
+  const btn=$('btnPayCard');btn.disabled=true;btn.textContent='Processing...';
+  try{await processTopup();}catch(e){showToast(e.message||'Payment failed.');}
+  btn.disabled=false;btn.textContent='Pay with Card';
+});
+$('btnApplePay').addEventListener('click',async()=>{
+  const btn=$('btnApplePay');btn.disabled=true;btn.innerHTML='<span style="font-size:18px">🍎</span> Processing...';
+  await new Promise(r=>setTimeout(r,900));
+  try{await processTopup();}catch(e){showToast(e.message||'Apple Pay failed.');}
+  btn.disabled=false;btn.innerHTML='<span style="font-size:18px">🍎</span> Apple Pay';
+});
+window.formatCard=el=>{let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;};
+window.formatExpiry=el=>{let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
+
+// ── DARK CLUB ──
+function renderClub(){
+  const locked=$('clubLocked'),unlocked=$('clubUnlocked');
+  if(!hasMythic){locked.style.display='block';unlocked.style.display='none';return;}
+  locked.style.display='none';unlocked.style.display='block';
+  const row=$('clubBoxes');row.innerHTML='';
+  for(let i=0;i<5;i++){const b=document.createElement('div');b.className='mini-box';b.id='mbox'+i;b.textContent='?';row.appendChild(b);}
+  const ar=$('clubAvatarRow');ar.innerHTML='';
+  AVATARS.forEach(av=>{const b=document.createElement('button');b.style.cssText='font-size:20px;background:#13131a;border:1px solid #2a2a2e;border-radius:8px;padding:6px;cursor:pointer;transition:border-color 0.2s';b.textContent=av;b.onclick=()=>{ar.querySelectorAll('button').forEach(x=>x.style.borderColor='#2a2a2e');b.style.borderColor='#FF5252';};ar.appendChild(b);});
+  loadFeed();
+}
+async function doClubOpen(count,price){
+  if(!currentUser)return;
+  const bal=currentProfile?.balance||0;
+  if(bal<price){showToast('Insufficient balance. Add funds in BANK.');return;}
+  const btn1=$('btnClub1'),btn5=$('btnClub5');
+  btn1.disabled=true;btn5.disabled=true;
+  // Deduct balance
+  const newBal=bal-price;
+  await sb.from('profiles').update({balance:newBal}).eq('id',currentUser.id);
+  currentProfile.balance=newBal;updateBalanceBadge(newBal);
+  const results=$('clubResults');results.innerHTML='';
+  const row=$('clubBoxes');row.innerHTML='';
+  for(let i=0;i<5;i++){const b=document.createElement('div');b.className='mini-box';b.id='mbox'+i;b.textContent='?';row.appendChild(b);}
+  const drops=[];
+  for(let i=0;i<count;i++){
+    await new Promise(r=>setTimeout(r,i*200));
+    const t=pickTier();drops.push(t);playTick();
+    const b=$('mbox'+i);
+    if(b){b.textContent=t.icon;b.style.setProperty('--bc',t.color);b.classList.add('revealed');b.style.borderColor=t.color;b.style.boxShadow='0 0 16px '+t.color+'88';}
+  }
+  if(drops.some(d=>d.id==='mythic'))playMythicChord();
+  drops.forEach(t=>{const c=document.createElement('div');c.className='club-result-card';c.style.cssText='background:'+t.glow+';border-color:'+t.color+'55;color:'+t.color;c.textContent=t.label;results.appendChild(c);});
+  try{
+    const ins=drops.map(t=>({user_id:currentUser.id,poxy_tier:t.id,serial_number:genSerial()}));
+    await sb.from('user_poxy').insert(ins);
+    if(drops.some(d=>d.id==='mythic')){hasMythic=true;toggleClubAccess(true);}
+    showToast(count+' POXY saved to collection!');
+  }catch(e){showToast('Error saving drops.');}
+  btn1.disabled=false;btn5.disabled=false;
+}
+$('btnClub1').addEventListener('click',()=>doClubOpen(1,CLUB_PRICE_ONE));
+$('btnClub5').addEventListener('click',()=>doClubOpen(5,CLUB_PRICE_FIVE));
+$('btnApplyClub').addEventListener('click',async()=>{
+  const nick=$('clubNickname').value.trim();
+  if(!nick){showToast('Enter a club nickname.');return;}
+  showToast('Application submitted! Welcome to the club ✸');$('clubNickname').value='';
+});
+async function loadFeed(){
+  const cont=$('feedItems');
+  cont.innerHTML='<div class="col-loading"><div class="col-spinner" style="border-top-color:#FF5252"></div></div>';
+  try{
+    const{data}=await sb.from('club_feed').select('*').order('created_at',{ascending:false}).limit(20);
+    cont.innerHTML='';
+    if(!data||!data.length){cont.innerHTML='<div style="font-size:12px;color:#444;padding:8px">No posts yet. Be first!</div>';return;}
+    data.forEach(item=>{
+      const el=document.createElement('div');el.className='feed-item';
+      const auth=document.createElement('div');auth.className='feed-author';
+      const avs=document.createElement('span');avs.className='feed-avatar';avs.textContent=item.author_avatar||'✸';
+      const un=document.createElement('span');un.className='feed-username';un.textContent=item.author_username||'Member';
+      const tm=document.createElement('span');tm.className='feed-time';tm.textContent=timeSince(item.created_at);
+      auth.appendChild(avs);auth.appendChild(un);auth.appendChild(tm);
+      const txt=document.createElement('div');txt.className='feed-content';txt.textContent=item.content;
+      el.appendChild(auth);el.appendChild(txt);cont.appendChild(el);
+    });
+  }catch(e){cont.innerHTML='<div style="font-size:12px;color:#444">Feed unavailable.</div>';}
+}
+window.postToFeed=async()=>{
+  const input=$('feedInput'),content=input.value.trim();
+  if(!content||!currentUser)return;
+  const username=currentProfile?.username||currentUser.email.split('@')[0];
+  const avatar=currentProfile?.avatar_url&&!currentProfile.avatar_url.startsWith('http')?currentProfile.avatar_url:'✸';
+  try{await sb.from('club_feed').insert({author_id:currentUser.id,author_username:username,author_avatar:avatar,content});input.value='';loadFeed();}
+  catch(e){showToast('Post failed.');}
+};
+// Init bank render
+renderBank();
+</script>
+</body>
+</html>
