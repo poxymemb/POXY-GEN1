@@ -1708,11 +1708,17 @@ function updateBulkBar(){
   bar.classList.toggle('show',n>0);
   if(cnt)cnt.textContent=n+' selected (+'+n*10+' dust)';
 }
+const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function burnPoxySecure(itemId,cardEl){
   cardEl.style.pointerEvents='none';
   cardEl.style.animation='burnOut 0.5s ease forwards';
   const item=colData.find(i=>i.id===itemId);
   const tier=item?TIER_BY_ID[item.poxy_tier]:null;
+  if(!itemId||!UUID_RE.test(String(itemId))){
+    cardEl.style.pointerEvents='';cardEl.style.animation='';
+    showToast('Burn blocked: row id is not UUID. Run migration_uuid_fix.sql.');
+    return;
+  }
   try{
     const{data,error}=await sb.rpc('burn_poxy_pc',{p_poxy_id:itemId,p_user_id:currentUser.id});
     if(error)throw error;
@@ -1735,6 +1741,8 @@ async function burnPoxySecure(itemId,cardEl){
 $('btnBulkDust').addEventListener('click',async function(){
   if(!selectedForDust.size)return;
   const ids=[...selectedForDust];
+  const bad=ids.filter(x=>!UUID_RE.test(String(x)));
+  if(bad.length){showToast('Burn blocked: '+bad.length+' selected ids are not UUID. Run migration_uuid_fix.sql.');return;}
   const commonsBeingBurned=colData.filter(i=>ids.includes(i.id)&&i.poxy_tier==='common').length;
   const btn=$('btnBulkDust');btn.disabled=true;btn.textContent='Burning...';
   try{
