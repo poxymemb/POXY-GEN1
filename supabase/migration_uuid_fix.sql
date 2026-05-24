@@ -8,15 +8,19 @@
 --      public.purchase_poxy(p_listing_id => uuid, p_buyer_id => uuid)"
 --   - "column \"updated_at\" of relation \"marketplace\" does not exist"
 --
--- It does four things:
+-- It does five things:
 --   0. Restores every column expected by the canonical schema (in case the
 --      DB was created from an older schema that lacked updated_at, etc).
 --   1. Drops every legacy bigint/int overload of purchase_poxy / dust_poxy /
---      dust_poxy_bulk so PostgREST can resolve the new uuid-typed RPCs.
+--      dust_poxy_bulk / friend RPCs so PostgREST can resolve the uuid-typed RPCs.
 --   2. Converts user_poxy.id and marketplace.id (and their FKs) to uuid
 --      whenever they are still bigint/integer. Existing rows get fresh UUIDs.
 --   3. Re-applies the v2 RPCs that depend on uuid columns so their plans
 --      bind to the converted types.
+--   4. Re-asserts user_poxy / marketplace RLS policies with fully-qualified
+--      column references (so they don't break on future migrations).
+--   5. Converts friend_requests.id (and friendships.id) to uuid whenever they
+--      are still bigint/integer, then re-binds the friend RPCs.
 --
 -- Idempotent — safe to re-run.
 -- =============================================================================
@@ -73,7 +77,9 @@ begin
        and p.proname in (
          'purchase_poxy', 'dust_poxy', 'dust_poxy_bulk',
          'burn_poxy_pc', 'burn_poxy_bulk_pc',
-         'open_standard_case', 'open_vip_case', 'craft_upgrade'
+         'open_standard_case', 'open_vip_case', 'craft_upgrade',
+         'accept_friend_request', 'send_friend_request', 'remove_friend',
+         'decline_friend_request'
        )
   loop
     -- Drop any overload that takes bigint or integer in its signature.
@@ -471,6 +477,187 @@ create policy marketplace_update_own on public.marketplace
   for update to authenticated
   using (seller_id = auth.uid())
   with check (seller_id = auth.uid());
+
+-- -----------------------------------------------------------------------------
+-- 5. Convert friend_requests.id and friendships.id to uuid if still bigint/int
+--    The accept_friend_request RPC takes uuid; if friend_requests.id is bigint
+--    every accept/decline call fails with "invalid input syntax for type uuid".
+-- -----------------------------------------------------------------------------
+do $$
+declare
+  v_fr_id_type text;
+  v_fs_id_type text;
+begin
+  -- ── friend_requests.id
+  select data_type into v_fr_id_type
+    from information_schema.columns
+   where table_schema = 'public'
+     and table_name = 'friend_requests'
+     and column_name = 'id';
+
+  if v_fr_id_type in ('bigint', 'integer', 'smallint') then
+    raise notice 'Converting friend_requests.id from % to uuid', v_fr_id_type;
+
+    drop policy if exists friend_requests_select_self    on public.friend_requests;
+    drop policy if exists friend_requests_insert_self    on public.friend_requests;
+    drop policy if exists friend_requests_update_to_user on public.friend_requests;
+    drop policy if exists friend_requests_delete_either  on public.friend_requests;
+
+    alter table public.friend_requests drop constraint if exists friend_requests_pkey cascade;
+    alter table public.friend_requests
+      add column if not exists id_new uuid not null default gen_random_uuid();
+    alter table public.friend_requests drop column id;
+    alter table public.friend_requests rename column id_new to id;
+    alter table public.friend_requests add primary key (id);
+  end if;
+
+  -- ── friendships.id (only if table exists; created by migration_poxy_world_2.sql)
+  if exists (
+    select 1 from information_schema.tables
+     where table_schema = 'public' and table_name = 'friendships'
+  ) then
+    select data_type into v_fs_id_type
+      from information_schema.columns
+     where table_schema = 'public'
+       and table_name = 'friendships'
+       and column_name = 'id';
+
+    if v_fs_id_type in ('bigint', 'integer', 'smallint') then
+      raise notice 'Converting friendships.id from % to uuid', v_fs_id_type;
+
+      drop policy if exists friendships_select_self on public.friendships;
+      drop policy if exists friendships_delete_self on public.friendships;
+
+      alter table public.friendships drop constraint if exists friendships_pkey cascade;
+      alter table public.friendships
+        add column if not exists id_new uuid not null default gen_random_uuid();
+      alter table public.friendships drop column id;
+      alter table public.friendships rename column id_new to id;
+      alter table public.friendships add primary key (id);
+    end if;
+  end if;
+end $$;
+
+-- Unconditional re-assert of friend_requests + friendships RLS so we never
+-- leave the table without policies after a conversion.
+alter table public.friend_requests enable row level security;
+
+drop policy if exists friend_requests_select_self    on public.friend_requests;
+drop policy if exists friend_requests_insert_self    on public.friend_requests;
+drop policy if exists friend_requests_update_to_user on public.friend_requests;
+drop policy if exists friend_requests_delete_either  on public.friend_requests;
+
+create policy friend_requests_select_self on public.friend_requests
+  for select to authenticated
+  using (from_id = auth.uid() or to_id = auth.uid());
+
+create policy friend_requests_insert_self on public.friend_requests
+  for insert to authenticated
+  with check (from_id = auth.uid() and from_id <> to_id);
+
+create policy friend_requests_update_to_user on public.friend_requests
+  for update to authenticated
+  using (to_id = auth.uid())
+  with check (to_id = auth.uid());
+
+create policy friend_requests_delete_either on public.friend_requests
+  for delete to authenticated
+  using (from_id = auth.uid() or to_id = auth.uid());
+
+do $$
+begin
+  if exists (
+    select 1 from information_schema.tables
+     where table_schema = 'public' and table_name = 'friendships'
+  ) then
+    execute 'alter table public.friendships enable row level security';
+    execute 'drop policy if exists friendships_select_self on public.friendships';
+    execute 'drop policy if exists friendships_delete_self on public.friendships';
+    execute 'create policy friendships_select_self on public.friendships for select to authenticated using (user_a_id = auth.uid() or user_b_id = auth.uid() or public.is_founder())';
+    execute 'create policy friendships_delete_self on public.friendships for delete to authenticated using (user_a_id = auth.uid() or user_b_id = auth.uid())';
+  end if;
+end $$;
+
+-- Re-bind accept_friend_request / remove_friend / send_friend_request to uuid
+-- (CREATE OR REPLACE forces re-planning against the now-uuid friend_requests.id)
+create or replace function public.accept_friend_request(p_request_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  v_req public.friend_requests%rowtype;
+  v_a uuid;
+  v_b uuid;
+begin
+  select * into v_req from public.friend_requests where id = p_request_id for update;
+  if not found then return jsonb_build_object('ok', false, 'error', 'Request not found'); end if;
+  if auth.uid() <> v_req.to_id then return jsonb_build_object('ok', false, 'error', 'Not authorized'); end if;
+  if v_req.status <> 'pending' then return jsonb_build_object('ok', false, 'error', 'Request not pending'); end if;
+
+  v_a := least(v_req.from_id, v_req.to_id);
+  v_b := greatest(v_req.from_id, v_req.to_id);
+
+  insert into public.friendships (user_a_id, user_b_id) values (v_a, v_b)
+    on conflict (user_a_id, user_b_id) do nothing;
+
+  update public.friend_requests set status = 'accepted' where id = p_request_id;
+
+  return jsonb_build_object('ok', true);
+end;
+$$;
+
+grant execute on function public.accept_friend_request(uuid) to authenticated;
+
+create or replace function public.send_friend_request(p_to_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is null then return jsonb_build_object('ok', false, 'error', 'Not authorized'); end if;
+  if p_to_id is null or p_to_id = auth.uid() then
+    return jsonb_build_object('ok', false, 'error', 'Invalid target');
+  end if;
+
+  -- Already friends?
+  if exists (
+    select 1 from public.friendships
+     where (user_a_id = least(auth.uid(), p_to_id) and user_b_id = greatest(auth.uid(), p_to_id))
+  ) then
+    return jsonb_build_object('ok', false, 'error', 'Already friends');
+  end if;
+
+  insert into public.friend_requests (from_id, to_id, status)
+  values (auth.uid(), p_to_id, 'pending')
+  on conflict (from_id, to_id) do update set status = 'pending';
+
+  return jsonb_build_object('ok', true);
+end;
+$$;
+
+grant execute on function public.send_friend_request(uuid) to authenticated;
+
+create or replace function public.remove_friend(p_other_user_id uuid)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  v_a uuid;
+  v_b uuid;
+begin
+  if auth.uid() is null then return jsonb_build_object('ok', false, 'error', 'Not authorized'); end if;
+  if p_other_user_id is null or p_other_user_id = auth.uid() then
+    return jsonb_build_object('ok', false, 'error', 'Invalid target');
+  end if;
+
+  v_a := least(auth.uid(), p_other_user_id);
+  v_b := greatest(auth.uid(), p_other_user_id);
+
+  delete from public.friendships
+   where user_a_id = v_a and user_b_id = v_b;
+
+  delete from public.friend_requests
+   where (from_id = auth.uid() and to_id = p_other_user_id)
+      or (from_id = p_other_user_id and to_id = auth.uid());
+
+  return jsonb_build_object('ok', true);
+end;
+$$;
+
+grant execute on function public.remove_friend(uuid) to authenticated;
 
 -- =============================================================================
 -- END migration_uuid_fix.sql

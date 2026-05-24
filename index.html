@@ -66,6 +66,13 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .hamburger-btn.visible{display:flex}
 .hamburger-line{width:18px;height:2px;background:#fff;border-radius:2px;transition:transform 0.3s ease,opacity 0.3s ease}
 
+/* GLOBAL HOME LOGO — persistent top-left button, Hunt shortcut */
+.poxy-logo-small{position:fixed;top:20px;left:20px;z-index:1000;cursor:pointer;padding:8px 14px;border-radius:10px;background:linear-gradient(45deg,#ff416c,#ff4b2b);color:#fff;font-family:'Inter',system-ui,sans-serif;font-weight:900;font-size:13px;letter-spacing:2px;line-height:1;box-shadow:0 2px 10px rgba(255,65,108,0.3);transition:transform 0.25s ease,box-shadow 0.25s ease;will-change:transform;user-select:none;-webkit-user-select:none;display:none}
+.poxy-logo-small.visible{display:inline-block}
+.poxy-logo-small:hover{transform:scale(1.05);box-shadow:0 6px 22px rgba(255,75,43,0.6),0 0 28px rgba(255,65,108,0.45)}
+.poxy-logo-small:active{transform:scale(0.97)}
+.poxy-logo-small:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
 /* ── SIDEBAR (PHASE 9 — full-screen obsidian overlay) ── */
 .sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 0.4s ease;pointer-events:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .sidebar-backdrop.open{opacity:1;pointer-events:all}
@@ -582,6 +589,9 @@ body.dark-club .club-sub{color:#888}
 </style>
 </head>
 <body>
+
+<!-- GLOBAL HOME LOGO (returns to Hunt tab from anywhere) -->
+<div id="global-home-btn" class="poxy-logo-small" role="button" tabindex="0" aria-label="Return to Hunt">POXY</div>
 
 <!-- HAMBURGER -->
 <button class="hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open Poxy World menu">
@@ -1241,6 +1251,7 @@ sb.auth.onAuthStateChange(async(_e,session)=>{
     $('bottomNav').style.display='flex';
     $('balanceBadge').classList.add('visible');
     $('hamburgerBtn').classList.add('visible');
+    $('global-home-btn').classList.add('visible');
     showPage('hunt');
     Promise.all([loadProfile(),checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]).catch(console.error);
     setupRealtimeSubscriptions();
@@ -1252,6 +1263,7 @@ sb.auth.onAuthStateChange(async(_e,session)=>{
     $('bottomNav').style.display='none';
     $('balanceBadge').classList.remove('visible');
     $('hamburgerBtn').classList.remove('visible');
+    $('global-home-btn').classList.remove('visible');
     $('huntPage').style.display='none';
     teardownRealtimeSubscriptions();
     if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
@@ -3004,6 +3016,31 @@ function renderCraftPool(){
 renderBank();
 updateBalanceBadge(0);
 updateGreatBurnUI();
+
+// ── GLOBAL HOME BUTTON — routes to Hunt via existing tab system ──
+(function(){
+  var homeBtn=document.getElementById('global-home-btn');
+  if(!homeBtn)return;
+  function goHome(){
+    // A) FIRST: simulate click on existing Hunt tab element
+    var huntTab=document.getElementById('navHunt');
+    if(huntTab&&typeof huntTab.click==='function'){huntTab.click();return;}
+    // B) SECOND: call existing tab switching function if already present
+    if(typeof window.showPage==='function'){window.showPage('hunt');return;}
+    if(typeof window.switchTab==='function'){window.switchTab('hunt');return;}
+    if(typeof window.setActiveTab==='function'){window.setActiveTab('hunt');return;}
+    if(typeof window.changeTab==='function'){window.changeTab('hunt');return;}
+    // C) LAST RESORT: manually activate Hunt view via existing DOM
+    var huntPage=document.getElementById('huntPage');
+    if(!huntPage)return;
+    ['profilePage','collectionPage','friendsPage','marketPage','bankPage','clubPage'].forEach(function(id){
+      var el=document.getElementById(id);if(el)el.classList.remove('visible');
+    });
+    huntPage.style.display='block';
+  }
+  homeBtn.addEventListener('click',goHome);
+  homeBtn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();goHome();}});
+})();
 </script>
 </body>
 </html>
