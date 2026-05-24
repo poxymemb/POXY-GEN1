@@ -41,7 +41,10 @@ body[data-theme="mayfair"]{background:#0e0608}
 
 /* ── GPU / MOTION ── */
 .gpu-accel{will-change:transform,opacity;transform:translateZ(0);backface-visibility:hidden}
-.box,.reward-box,#spinBox,.col-card,.market-card{will-change:transform,opacity}
+.box,.reward-box,#spinBox,.col-card,.market-card,.feed-item,.poxychat-msg{will-change:transform,opacity}
+/* PHASE 10 — 3D tilt-card */
+.tilt-3d{transform-style:preserve-3d;transform:perspective(620px) rotateX(0deg) rotateY(0deg);transition:transform 0.18s ease;will-change:transform}
+.tilt-3d-inner{transform:translateZ(20px)}
 body.screen-shake{animation:screenShake 0.45s ease-out}
 body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 
@@ -63,21 +66,22 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .hamburger-btn.visible{display:flex}
 .hamburger-line{width:18px;height:2px;background:#fff;border-radius:2px;transition:transform 0.3s ease,opacity 0.3s ease}
 
-/* ── SIDEBAR ── */
-.sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.72);opacity:0;transition:opacity 0.3s;pointer-events:none;backdrop-filter:blur(4px)}
+/* ── SIDEBAR (PHASE 9 — full-screen obsidian overlay) ── */
+.sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 0.4s ease;pointer-events:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .sidebar-backdrop.open{opacity:1;pointer-events:all}
-.sidebar-panel{position:fixed;top:0;left:0;z-index:401;width:340px;max-width:92vw;height:100vh;background:#0d0d10;border-right:1px solid #1e1e28;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.35s cubic-bezier(0.25,1,0.5,1);will-change:transform;overflow:hidden}
-.sidebar-panel.open{transform:translateX(0)}
-.sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid #1a1a24;flex-shrink:0}
+.sidebar-panel{position:fixed;inset:0;z-index:401;width:100vw;max-width:100vw;height:100vh;background:rgba(10,10,10,0.98);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border-right:none;display:flex;flex-direction:column;opacity:0;transform:scale(1.04) translateY(8px);pointer-events:none;transition:opacity 0.4s cubic-bezier(0.25,1,0.5,1),transform 0.45s cubic-bezier(0.25,1,0.5,1);will-change:transform,opacity;overflow:hidden}
+.sidebar-panel.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
+.sidebar-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(255,65,108,0.06),transparent 55%),radial-gradient(circle at 90% 100%,rgba(171,71,188,0.05),transparent 60%);pointer-events:none}
+.sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid #1a1a24;flex-shrink:0;position:relative;z-index:1}
 .sidebar-logo{font-size:14px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#ff416c,#ff4b2b,#ffab2e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .sidebar-close{width:28px;height:28px;border:none;background:#1a1a24;border-radius:8px;color:#666;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;font-family:inherit}
 .sidebar-close:hover{background:#252530;color:#fff}
-.sidebar-tabs{display:flex;overflow-x:auto;border-bottom:1px solid #1a1a24;flex-shrink:0;scrollbar-width:none}
+.sidebar-tabs{display:flex;overflow-x:auto;border-bottom:1px solid #1a1a24;flex-shrink:0;scrollbar-width:none;position:relative;z-index:1;justify-content:center}
 .sidebar-tabs::-webkit-scrollbar{display:none}
 .sidebar-tab-btn{flex-shrink:0;padding:10px 13px;border:none;background:none;color:#444;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:color 0.2s,border-bottom-color 0.2s;border-bottom:2px solid transparent;font-family:inherit;white-space:nowrap}
 .sidebar-tab-btn.active{color:#ff416c;border-bottom-color:#ff416c}
 .sidebar-tab-btn:hover:not(.active){color:#888}
-.sidebar-content{flex:1;overflow-y:auto;padding:18px 16px;scrollbar-width:thin;scrollbar-color:#2a2a35 transparent}
+.sidebar-content{flex:1;overflow-y:auto;padding:24px 22px 80px;scrollbar-width:thin;scrollbar-color:#2a2a35 transparent;max-width:760px;width:100%;margin:0 auto;position:relative;z-index:1}
 .sidebar-content::-webkit-scrollbar{width:4px}
 .sidebar-content::-webkit-scrollbar-track{background:transparent}
 .sidebar-content::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:4px}
@@ -147,6 +151,33 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .btn-comment-submit{padding:7px 12px;background:#ff416c;border:none;border-radius:8px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;flex-shrink:0}
 .btn-comment-submit:hover{opacity:0.85}
 .news-empty{text-align:center;padding:40px 20px;color:#333;font-size:12px}
+
+/* ── POXY CHAT (global, inside news tab) ── */
+.poxychat-section{margin-top:24px;padding-top:16px;border-top:1px solid #1a1a24}
+.poxychat-title{font-size:9px;font-weight:800;letter-spacing:2.5px;color:#ff416c;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.poxychat-title .chat-dot{width:6px;height:6px;border-radius:50%;background:#4CAF50;box-shadow:0 0 6px #4CAF50;animation:floatUp 1.5s ease-in-out infinite}
+.poxychat-input-row{display:flex;gap:6px;margin-bottom:12px}
+.poxychat-input{flex:1;padding:9px 12px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:12px;outline:none;transition:border-color 0.2s}
+.poxychat-input:focus{border-color:#ff416c}
+.poxychat-input::placeholder{color:#333}
+.btn-poxychat-send{padding:9px 16px;background:linear-gradient(135deg,#ff416c,#ff4b2b);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;flex-shrink:0}
+.btn-poxychat-send:hover{opacity:0.85}
+.btn-poxychat-send:disabled{opacity:0.4;cursor:not-allowed}
+.poxychat-list{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;padding-right:2px}
+.poxychat-list::-webkit-scrollbar{width:3px}
+.poxychat-list::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:3px}
+.poxychat-msg{padding:8px 10px;background:#13131a;border-left:2px solid #1e1e28;border-radius:6px;font-size:11px;color:#a0a0b0;line-height:1.5;animation:fadeIn 0.25s ease}
+.poxychat-msg.founder-msg{border-left-color:#FFCA28;background:linear-gradient(90deg,rgba(255,202,40,0.08),#13131a 80%);box-shadow:0 0 12px rgba(255,202,40,0.18)}
+.poxychat-msg.club-msg{border-left-color:#FF6E40}
+.poxychat-msg .pcm-head{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.poxychat-msg .pcm-name{font-size:10.5px;font-weight:700;color:#ff416c}
+.poxychat-msg.founder-msg .pcm-name{color:#FFCA28}
+.poxychat-msg.club-msg .pcm-name{color:#FF6E40}
+.poxychat-msg .pcm-time{font-size:9px;color:#3a3a4a;margin-left:auto}
+.poxychat-msg .pcm-del{background:none;border:none;color:#444;cursor:pointer;font-size:11px;padding:0 0 0 6px}
+.poxychat-msg .pcm-del:hover{color:#FF5252}
+.poxychat-msg .pcm-text{font-size:11px;color:#bdbdc8;word-break:break-word}
+.poxychat-empty{font-size:10.5px;color:#3a3a4a;text-align:center;padding:14px}
 
 /* ── GEN 1 (TAB C) ── */
 .gen1-season-banner{background:linear-gradient(135deg,#1a0505,#2a0808);border:1px solid #FF525244;border-radius:10px;padding:12px 14px;margin-bottom:16px;text-align:center}
@@ -606,10 +637,18 @@ body.dark-club .club-sub{color:#888}
       </div>
     </div>
 
-    <!-- TAB B: NEWS FEED -->
+    <!-- TAB B: NEWS FEED + POXY CHAT (global) -->
     <div id="sidebarTabNews" class="sidebar-tab-content" style="display:none">
       <div id="newsCreateFormContainer"></div>
       <div id="newsPostsList"><div class="news-empty">Loading news...</div></div>
+      <div class="poxychat-section">
+        <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
+        <div class="poxychat-input-row">
+          <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world..." maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
+          <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
+        </div>
+        <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
+      </div>
     </div>
 
     <!-- TAB C: GEN 1 -->
@@ -715,6 +754,7 @@ body.dark-club .club-sub{color:#888}
       <span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span>
     </div>
     <div class="fomo" id="fomoText">Mythic POXY claimed this month: 0/10</div>
+    <div id="greatBurnCounter" style="font-size:10px;letter-spacing:1.5px;color:#FF5722;font-weight:700;margin-top:-4px;margin-bottom:6px;text-transform:uppercase">🔥 The Great Burn — 0 POXY</div>
     <div class="stage">
       <canvas class="particles" id="cvs" width="240" height="240"></canvas>
       <div class="box" id="idleBox"><div class="box-qmark">?</div></div>
@@ -772,6 +812,10 @@ body.dark-club .club-sub{color:#888}
     <div class="featured-poxy-label">Featured POXY</div>
     <div class="featured-poxy-display" id="featuredPoxyDisplay"><div class="featured-poxy-empty">No POXY featured yet. Select one from your collection.</div></div>
   </div>
+  <div style="margin:14px 0">
+    <div class="featured-poxy-label">Daily Quests</div>
+    <div id="dailyQuestList"><div style="font-size:10.5px;color:#B0B0B0;padding:6px 0">Sign in to load quests…</div></div>
+  </div>
   <div class="pwd-form">
     <div class="pwd-form-label">Change Password</div>
     <input class="profile-input" type="password" id="pwdNewPassword" placeholder="New password" style="margin-bottom:8px">
@@ -791,14 +835,17 @@ body.dark-club .club-sub{color:#888}
     </div>
     <div class="dust-bar">
       <span style="font-size:14px">🔥</span>
-      <span style="font-size:11px;font-weight:600;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-left:4px">Dust:</span>
-      <span class="dust-val" id="dustVal">0</span>
-      <span class="dust-tip">+10 per burn</span>
+      <span style="font-size:11px;font-weight:600;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-left:4px">Burn → PC:</span>
+      <span class="dust-val" id="dustVal" style="display:none">0</span>
+      <span class="dust-tip">Common 0.10 · Mythic 40 · Secret 100</span>
     </div>
     <div class="filter-row" id="filterRow"></div>
     <div class="bulk-bar" id="bulkBar">
       <span class="bulk-count" id="bulkCount">0 selected</span>
-      <button class="btn-bulk-dust" id="btnBulkDust">🔥 Dust All Selected</button>
+      <button class="btn-bulk-dust" id="btnBulkDust">🔥 Burn All Selected</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+      <button class="filter-btn" onclick="openCraftModal()" style="--fc:#9C27B0;--fb:rgba(156,39,176,0.10);background:rgba(156,39,176,0.08);color:#9C27B0;border:1px solid #9C27B055">⚒ Craft (5 Common → 1 Uncommon)</button>
     </div>
   </div>
   <div id="colContent"><div class="col-loading"><div class="col-spinner"></div></div></div>
@@ -879,6 +926,14 @@ body.dark-club .club-sub{color:#888}
     </div>
     <div class="club-multi-stage" id="clubBoxes"></div>
     <div class="club-results" id="clubResults"></div>
+    <div style="margin:18px 0">
+      <div class="section-label" style="color:#FFCA28;margin-bottom:10px;font-weight:800;letter-spacing:1.5px">FOUNDER ANNOUNCEMENTS</div>
+      <div id="founderAnnouncements"></div>
+    </div>
+    <div style="margin:18px 0">
+      <div class="section-label" style="color:#FF6E40;margin-bottom:10px;font-weight:800;letter-spacing:1.5px">⚡ FLASH SALES — VIP ONLY</div>
+      <div id="flashSalesWrap"></div>
+    </div>
     <div class="club-apply-form">
       <div class="club-apply-title">Club Application</div>
       <input class="club-apply-input" id="clubNickname" placeholder="Club nickname">
@@ -936,6 +991,19 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
+<!-- CRAFT MODAL (5 Common → 1 Uncommon) -->
+<div class="modal-overlay hidden" id="craftModal">
+  <div class="modal-card" style="max-width:360px">
+    <div class="modal-title">Craft Upgrade</div>
+    <div class="modal-sub">Pick exactly 5 Common POXY to fuse into 1 Uncommon. <span id="craftSelectCount" style="color:#FF5722;font-weight:800">0 / 5</span></div>
+    <div id="craftPool" style="max-height:300px;overflow-y:auto;margin:14px 0"></div>
+    <div class="modal-btns">
+      <button class="btn-modal-ok" id="btnCraftDoIt" onclick="performCraft()">Craft Now</button>
+      <button class="btn-modal-cancel" onclick="closeCraftModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- PROFILE INSPECTION MODAL -->
 <div class="modal-overlay hidden" id="inspectModal">
   <div class="modal-card" style="max-width:340px">
@@ -962,22 +1030,40 @@ const sb = supabase.createClient(
   'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG'
 );
 
-// ── TIERS ──
+// ── ECONOMY ENGINE (PHASE 2 — deterministic) ──
+// Standard case (1 PC): probabilities + burn payouts (PC).
 const TIERS = [
-  {id:'common',    label:'Common',    icon:'◆', color:'#9E9E9E', glow:'rgba(158,158,158,0.14)', prob:0.604},
-  {id:'uncommon',  label:'Uncommon',  icon:'◈', color:'#4CAF50', glow:'rgba(76,175,80,0.14)',   prob:0.22},
-  {id:'rare',      label:'Rare',      icon:'✦', color:'#29B6F6', glow:'rgba(41,182,246,0.14)',   prob:0.12},
-  {id:'epic',      label:'Epic',      icon:'⬟', color:'#AB47BC', glow:'rgba(171,71,188,0.14)',  prob:0.055},
-  {id:'legendary', label:'Legendary', icon:'★', color:'#FFCA28', glow:'rgba(255,202,40,0.18)',  prob:0.001},
-  {id:'mythic',    label:'Mythic',    icon:'✸', color:'#FF5252', glow:'rgba(255,82,82,0.20)',   prob:0.0001}
+  {id:'common',    label:'Common',    icon:'◆', color:'#9E9E9E', glow:'rgba(158,158,158,0.14)', prob:0.500, burn:0.10},
+  {id:'uncommon',  label:'Uncommon',  icon:'◈', color:'#4CAF50', glow:'rgba(76,175,80,0.14)',   prob:0.300, burn:0.25},
+  {id:'rare',      label:'Rare',      icon:'✦', color:'#29B6F6', glow:'rgba(41,182,246,0.14)',  prob:0.140, burn:0.50},
+  {id:'epic',      label:'Epic',      icon:'⬟', color:'#AB47BC', glow:'rgba(171,71,188,0.14)',  prob:0.050, burn:1.20},
+  {id:'legendary', label:'Legendary', icon:'★', color:'#FFCA28', glow:'rgba(255,202,40,0.18)',  prob:0.009, burn:8.00},
+  {id:'mythic',    label:'Mythic',    icon:'✸', color:'#FF5252', glow:'rgba(255,82,82,0.20)',   prob:0.001, burn:40.00}
 ];
+
+// VIP Club case (5 PC): exclusive ultra-rare pool.
+const VIP_TIERS = [
+  {id:'obsidian', label:'Obsidian', icon:'◇', color:'#37474F', glow:'rgba(55,71,79,0.18)',   prob:0.400, burn:0.50},
+  {id:'cursed',   label:'Cursed',   icon:'☽', color:'#7E57C2', glow:'rgba(126,87,194,0.20)', prob:0.300, burn:1.00},
+  {id:'souvenir', label:'Souvenir', icon:'✺', color:'#26A69A', glow:'rgba(38,166,154,0.20)', prob:0.180, burn:2.00},
+  {id:'stellar',  label:'Stellar',  icon:'✷', color:'#42A5F5', glow:'rgba(66,165,245,0.22)', prob:0.090, burn:4.50},
+  {id:'diamond',  label:'Diamond',  icon:'❖', color:'#80DEEA', glow:'rgba(128,222,234,0.26)',prob:0.025, burn:15.00},
+  {id:'secret',   label:'Secret',   icon:'⟁', color:'#FF6E40', glow:'rgba(255,110,64,0.28)', prob:0.005, burn:100.00}
+];
+
+const ALL_TIERS = TIERS.concat(VIP_TIERS);
+const TIER_BY_ID = {};ALL_TIERS.forEach(t=>{TIER_BY_ID[t.id]=t;});
+
+const STANDARD_CASE_PRICE = 1.00;
+const VIP_CASE_PRICE = 5.00;
+const FOUNDER_EMAIL = 'nikitash0504@gmail.com';
 const AVATARS = ['🎭','🦊','🐲','👾','🌀','⚡'];
 const BANK_AMOUNTS = [
   {val:5,label:'Starter'},{val:10,label:'Hunter'},{val:25,label:'Elite'},
   {val:50,label:'Whale'},{val:100,label:'Legend'},{val:250,label:'Founder'}
 ];
-const CLUB_PRICE_ONE = 1.00;
-const CLUB_PRICE_FIVE = 4.00;
+const CLUB_PRICE_ONE = VIP_CASE_PRICE;
+const CLUB_PRICE_FIVE = VIP_CASE_PRICE * 5;
 
 const GEN1_MODELS = [
   {id:'ash',    name:'Ash',     tier:'common',    icon:'◆', desc:'The first manifestation. Born from digital dust, carrying the foundational code of the POXY universe in its base structure.'},
@@ -1002,7 +1088,7 @@ const CUSTOMIZATION_ITEMS = [
 ];
 const GEN1_SEAL_DATE = new Date('2026-06-22T23:59:59Z');
 
-// ── STATE ──
+// ── STATE (PHASE 1 — synchronized in real-time UI) ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null;
 let mythicCount=0, hasMythic=false, busy=false;
 let spinAnim=null, particleLoop=null, particles=[];
@@ -1012,6 +1098,7 @@ let selectedBankAmt=10;
 let colFilter='all', selectedForDust=new Set();
 let marketSort='newest', hasPremiumFrame=false, pendingSpinTier=null;
 let marketBuyCache=[];
+let marketSearchQuery='', marketRarityFilter='all';
 let sidebarOpen=false, activeSidebarTab='codex';
 let leaderboardMode='balance';
 let friendIncoming=[], friendOutgoing=[], friendAccepted=[];
@@ -1019,6 +1106,17 @@ let inspectTargetUserId=null;
 let realtimeSubs=[];
 let friendPollInterval=null;
 let spinStartTime=0;
+// VIP / club / founder
+let pendingVipTier=null, vipBusy=false;
+let activeFlashSales=[];
+// social
+let chatMessages=[];
+// economy + crafting + quests + global burn
+let craftSelection=new Set();
+let dailyQuests=[];
+let greatBurnTotal=0;
+// notifications queue (Phase 1)
+let notificationQueue=[];
 
 const $=id=>document.getElementById(id);
 
@@ -1070,6 +1168,10 @@ function setBodyBg(id){const cls=document.body.className.replace(/bg-\S+/g,'').t
 function clearBg(){if(!document.body.classList.contains('dark-club')){const cls=document.body.className.replace(/bg-\S+/g,'').trim();document.body.className=cls;}}
 function showToast(msg,dur=2800){const t=$('toast');t.textContent=String(msg||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
 function pickTier(){let r=Math.random(),acc=0;for(const t of TIERS){acc+=t.prob;if(r<acc)return t;}return TIERS[TIERS.length-1];}
+function pickVipTier(){let r=Math.random(),acc=0;for(const t of VIP_TIERS){acc+=t.prob;if(r<acc)return t;}return VIP_TIERS[VIP_TIERS.length-1];}
+function isFounder(){return!!(currentUser&&currentUser.email&&currentUser.email.toLowerCase()===FOUNDER_EMAIL);}
+function isClubMember(){return!!(currentProfile&&(currentProfile.is_club_member||hasMythic));}
+function pushNotification(type,payload){notificationQueue.push({type,payload,t:Date.now()});if(notificationQueue.length>50)notificationQueue.shift();}
 function timeSince(iso){const s=Math.floor((Date.now()-new Date(iso))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
 function maskSerial(serial,showFull){if(showFull)return serial||'–';if(!serial)return'XXXX-XXXX';const s=String(serial);if(s.length<=4)return'XXXX-XXXX';return'XXXX-'+s.slice(-4);}
 
@@ -1099,7 +1201,7 @@ window.openSidebar=function(){
   $('sidebarPanel').classList.add('open');
   $('sidebarBackdrop').classList.add('open');
   document.body.style.overflow='hidden';
-  if(activeSidebarTab==='news')loadNewsFeedTab();
+  if(activeSidebarTab==='news'){loadNewsFeedTab();loadPoxyChat();}
   else if(activeSidebarTab==='leaderboard')loadLeaderboardData();
   else if(activeSidebarTab==='gen1')renderGen1TabContent();
   else if(activeSidebarTab==='appraisal')renderAppraisalTabContent();
@@ -1119,7 +1221,7 @@ window.switchSidebarTab=function(tab){
   const btnId='stab-'+tab;
   const btn=$(btnId);if(btn)btn.classList.add('active');
   const cont=$(tabIdMap[tab]);if(cont){cont.style.display='block';cont.classList.add('active');}
-  if(tab==='news')loadNewsFeedTab();
+  if(tab==='news'){loadNewsFeedTab();loadPoxyChat();}
   else if(tab==='gen1')renderGen1TabContent();
   else if(tab==='appraisal')renderAppraisalTabContent();
   else if(tab==='leaderboard')loadLeaderboardData();
@@ -1137,9 +1239,10 @@ sb.auth.onAuthStateChange(async(_e,session)=>{
     $('balanceBadge').classList.add('visible');
     $('hamburgerBtn').classList.add('visible');
     showPage('hunt');
-    Promise.all([loadProfile(),checkMythic(),refreshPremiumFrame()]).catch(console.error);
+    Promise.all([loadProfile(),checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]).catch(console.error);
     setupRealtimeSubscriptions();
     startFriendPoll();
+    setTimeout(()=>{loadDailyQuests();},800);
   } else {
     $('authOverlay').classList.remove('hidden');
     $('userBar').style.display='none';
@@ -1489,12 +1592,13 @@ function resetAll(){
 $('btnOpen').addEventListener('click',async function(){
   if(busy||!currentUser)return;
   const bal=currentProfile?.balance||0;
-  if(bal<1){showToast('Insufficient Poxy Coins. Add funds in BANK tab.');return;}
+  if(bal<STANDARD_CASE_PRICE){showToast('Insufficient Poxy Coins. Add funds in BANK tab.');return;}
   busy=true;$('btnOpen').disabled=true;
-  currentProfile.balance=bal-1;
+  currentProfile.balance=bal-STANDARD_CASE_PRICE;
   updateBalanceBadge(currentProfile.balance);
-  await sb.from('profiles').update({balance:bal-1}).eq('id',currentUser.id);
+  try{await sb.from('profiles').update({balance:currentProfile.balance}).eq('id',currentUser.id);}catch(e){console.error('debit failed',e);}
   $('idleBox').style.opacity='0';spinStartTime=performance.now();startSpin();
+  bumpQuest('open_3_cases',1);
 });
 $('btnAdd').addEventListener('click',async function(){
   if(!currentTier||!currentUser||!currentSerial)return;
@@ -1511,11 +1615,24 @@ $('btnAdd').addEventListener('click',async function(){
 $('btnDiscard').addEventListener('click',function(){showToast('POXY discarded.');resetAll();});
 $('btnListFromHunt').addEventListener('click',function(){if(!currentTier||!currentSerial)return;pendingListItem={tier:currentTier,serial:currentSerial,fromHunt:true};openPriceModal();});
 
-// ── MYTHIC ──
+// ── MYTHIC + VIP CLUB ACCESS ──
 async function checkMythic(){
-  try{const{data}=await sb.from('user_poxy').select('id').eq('user_id',currentUser.id).eq('poxy_tier','mythic').limit(1);hasMythic=!!(data&&data.length);toggleClubAccess(hasMythic);}catch(e){}
+  try{
+    const{data}=await sb.from('user_poxy').select('id').eq('user_id',currentUser.id).in('poxy_tier',['mythic','diamond','secret']).limit(1);
+    hasMythic=!!(data&&data.length);
+    const has=isClubMember();
+    toggleClubAccess(has);
+    // Auto-promote to is_club_member when they own a mythic and the flag isn't set yet
+    if(hasMythic&&currentProfile&&currentProfile.is_club_member===false){
+      try{await sb.from('profiles').update({is_club_member:true}).eq('id',currentUser.id);currentProfile.is_club_member=true;}catch(e){}
+    }
+  }catch(e){}
 }
-function toggleClubAccess(has){$('btnClubEnter').classList.toggle('show',has);$('navClub').classList.toggle('show',has);$('clubNavSep').style.display=has?'':'none';}
+function toggleClubAccess(has){
+  const btn=$('btnClubEnter');if(btn)btn.classList.toggle('show',has);
+  const nav=$('navClub');if(nav)nav.classList.toggle('show',has);
+  const sep=$('clubNavSep');if(sep)sep.style.display=has?'':'none';
+}
 
 // ── COLLECTION ──
 let colData=[];
@@ -1553,7 +1670,7 @@ function renderCollection(){
   filtered.forEach((item,i)=>{
     const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
     const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
-    const card=document.createElement('div');card.className='col-card';card.dataset.id=item.id;
+    const card=document.createElement('div');card.className='col-card tilt-3d';card.dataset.id=item.id;
     if(selectedForDust.has(item.id))card.classList.add('selected-for-dust');
     card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'55;box-shadow:0 0 18px '+tier.glow+';animation-delay:'+(i*0.04)+'s';
     const ico=document.createElement('div');ico.className='col-card-icon';ico.textContent=tier.icon;
@@ -1594,40 +1711,47 @@ function updateBulkBar(){
 async function burnPoxySecure(itemId,cardEl){
   cardEl.style.pointerEvents='none';
   cardEl.style.animation='burnOut 0.5s ease forwards';
+  const item=colData.find(i=>i.id===itemId);
+  const tier=item?TIER_BY_ID[item.poxy_tier]:null;
   try{
-    const{data,error}=await sb.rpc('dust_poxy',{p_poxy_id:itemId,p_user_id:currentUser.id,p_dust_gain:10});
+    const{data,error}=await sb.rpc('burn_poxy_pc',{p_poxy_id:itemId,p_user_id:currentUser.id});
     if(error)throw error;
-    if(!data.ok)throw new Error(data.error||'Dust failed');
+    if(!data.ok)throw new Error(data.error||'Burn failed');
     setTimeout(()=>{
       cardEl.remove();
       colData=colData.filter(i=>i.id!==itemId);
       selectedForDust.delete(itemId);updateBulkBar();
-      if(currentProfile){currentProfile.dust=(currentProfile.dust||0)+10;}
-      $('dustVal').textContent=currentProfile?.dust||0;
+      if(currentProfile){currentProfile.balance=parseFloat(data.new_balance);}
+      updateBalanceBadge(currentProfile?.balance||0);
       const rem=document.querySelectorAll('.col-card').length;
       $('colCount').textContent=rem?rem+' item'+(rem!==1?'s':''):'';
-      showToast('+10 Dust 🔥');
+      showToast('+'+formatPC(data.payout)+' 🔥');
+      greatBurnTotal++;updateGreatBurnUI();
       refreshPremiumFrame();
+      if(tier&&tier.id==='common')bumpQuest('burn_5_commons',1);
     },520);
   }catch(e){cardEl.style.pointerEvents='';cardEl.style.animation='';showToast('Burn failed: '+(e.message||'server error'));}
 }
 $('btnBulkDust').addEventListener('click',async function(){
   if(!selectedForDust.size)return;
   const ids=[...selectedForDust];
+  const commonsBeingBurned=colData.filter(i=>ids.includes(i.id)&&i.poxy_tier==='common').length;
   const btn=$('btnBulkDust');btn.disabled=true;btn.textContent='Burning...';
   try{
-    const{data,error}=await sb.rpc('dust_poxy_bulk',{p_poxy_ids:ids,p_user_id:currentUser.id,p_dust_each:10});
+    const{data,error}=await sb.rpc('burn_poxy_bulk_pc',{p_poxy_ids:ids,p_user_id:currentUser.id});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);
     colData=colData.filter(i=>!ids.includes(i.id));
-    if(currentProfile)currentProfile.dust=(currentProfile.dust||0)+data.dust_gained;
-    $('dustVal').textContent=currentProfile?.dust||0;
+    if(currentProfile)currentProfile.balance=parseFloat(data.new_balance);
+    updateBalanceBadge(currentProfile?.balance||0);
     selectedForDust=new Set();updateBulkBar();renderCollection();
     $('colCount').textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
-    showToast('+'+data.dust_gained+' Dust for '+data.deleted+' items 🔥');
+    showToast('+'+formatPC(data.payout)+' for '+data.count+' items 🔥');
+    greatBurnTotal+=data.count;updateGreatBurnUI();
     refreshPremiumFrame();
-  }catch(e){showToast('Bulk dust failed: '+(e.message||'error'));}
-  btn.disabled=false;btn.textContent='🔥 Dust All Selected';
+    if(commonsBeingBurned>0)bumpQuest('burn_5_commons',commonsBeingBurned);
+  }catch(e){showToast('Bulk burn failed: '+(e.message||'error'));}
+  btn.disabled=false;btn.textContent='🔥 Burn All Selected';
 });
 
 // ── FRIENDS (rebuilt) ──
@@ -1658,8 +1782,9 @@ async function loadPendingRequests(){
       acceptBtn.addEventListener('click',async function(){
         acceptBtn.disabled=true;declineBtn.disabled=true;
         try{
-          const{error:ae}=await sb.from('friend_requests').update({status:'accepted'}).eq('id',req.id);
+          const{data,error:ae}=await sb.rpc('accept_friend_request',{p_request_id:req.id});
           if(ae)throw ae;
+          if(data&&data.ok===false)throw new Error(data.error||'Could not accept');
           showToast('Friend added: '+sanitizeText(prof.username||'User'));
           await loadPendingRequests();await loadFriends();
         }catch(e){showToast('Error: '+(e.message||'could not accept'));acceptBtn.disabled=false;declineBtn.disabled=false;}
@@ -1684,30 +1809,33 @@ async function loadFriends(){
   if(!cont||!currentUser)return;
   cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
   try{
-    const{data:reqs,error}=await sb.from('friend_requests').select('*').or('from_id.eq.'+currentUser.id+',to_id.eq.'+currentUser.id).eq('status','accepted');
+    const{data:rows,error}=await sb.from('friendships').select('*').or('user_a_id.eq.'+currentUser.id+',user_b_id.eq.'+currentUser.id);
     if(error)throw error;
-    if(!reqs||!reqs.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">No friends yet.</div>';return;}
-    const ids=reqs.map(r=>r.from_id===currentUser.id?r.to_id:r.from_id);
-    const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',ids);
+    if(!rows||!rows.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">No friends yet.</div>';friendAccepted=[];return;}
+    const ids=rows.map(r=>r.user_a_id===currentUser.id?r.user_b_id:r.user_a_id);
+    friendAccepted=ids.slice();
+    const{data:profs}=await sb.from('profiles').select('id,username,avatar_url,is_club_member').in('id',ids);
     const premIds=new Set();
-    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic']);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
+    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic','diamond','secret']);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
     cont.innerHTML='';
     (profs||[]).forEach(p=>{
-      const req=reqs.find(r=>r.from_id===p.id||r.to_id===p.id);
       const card=document.createElement('div');card.className='user-card user-card-clickable';
       const avEl=document.createElement('div');avEl.className='user-card-avatar';
       renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id));
       const info=document.createElement('div');info.className='user-card-info';
-      info.innerHTML='<div class="user-card-name">'+sanitizeText(p.username||'Anonymous')+'</div><div class="user-card-sub">Friend</div>';
+      info.innerHTML='<div class="user-card-name">'+sanitizeText(p.username||'Anonymous')+'</div><div class="user-card-sub">'+(p.is_club_member?'VIP Club Member':'Friend')+'</div>';
       const removeBtn=document.createElement('button');removeBtn.className='btn-remove-friend';removeBtn.textContent='Remove';
       removeBtn.addEventListener('click',async function(e){
         e.stopPropagation();
+        if(!confirm('Remove '+(p.username||'this friend')+'? This is bidirectional.'))return;
         removeBtn.disabled=true;removeBtn.textContent='...';
         try{
-          const{error:re}=await sb.from('friend_requests').delete().eq('id',req.id);
+          const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:p.id});
           if(re)throw re;
+          if(data&&data.ok===false)throw new Error(data.error||'Could not remove');
           showToast('Friend removed.');
           card.remove();
+          friendAccepted=friendAccepted.filter(x=>x!==p.id);
         }catch(e){showToast('Error: '+(e.message||'could not remove'));removeBtn.disabled=false;removeBtn.textContent='Remove';}
       });
       card.addEventListener('click',function(){openInspectModal(p.id);});
@@ -1743,15 +1871,21 @@ window.searchUsers=async function(){
       const sub=document.createElement('div');sub.className='user-card-sub';sub.textContent='POXY member';
       info.appendChild(nm);info.appendChild(sub);
       const btn=document.createElement('button');
-      if(ex){btn.className='btn-friend sent';btn.textContent=ex.status==='accepted'?'Friends ✓':'Sent';}
+      const alreadyFriend=friendAccepted.includes(p.id);
+      if(alreadyFriend||(ex&&ex.status==='accepted')){btn.className='btn-friend sent';btn.textContent='Friends ✓';btn.disabled=true;}
+      else if(ex){btn.className='btn-friend sent';btn.textContent='Sent';btn.disabled=true;}
       else{
         btn.className='btn-friend';btn.textContent='+ Add';
         btn.addEventListener('click',async function(e){
           e.stopPropagation();
           this.disabled=true;
-          const{error:ie}=await sb.from('friend_requests').insert({from_id:currentUser.id,to_id:p.id});
-          if(ie){this.disabled=false;showToast(ie.code==='23505'?'Already sent!':'Error: '+ie.message);return;}
-          this.textContent='Sent';this.classList.add('sent');
+          try{
+            const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:p.id});
+            if(ie)throw ie;
+            if(data&&data.ok===false)throw new Error(data.error||'Could not send');
+            this.textContent='Sent';this.classList.add('sent');
+            showToast('Friend request sent.');
+          }catch(e){this.disabled=false;showToast('Error: '+(e.message||'send failed'));}
         });
       }
       card.addEventListener('click',function(){openInspectModal(p.id);});
@@ -1785,14 +1919,18 @@ async function openInspectModal(userId){
   $('inspectAvatarWrap').className='inspect-avatar-wrap';
   modal.classList.remove('hidden');requestAnimationFrame(()=>modal.classList.add('show'));
   try{
-    const[{data:prof},{data:poxyData},{data:reqs},{data:premData}]=await Promise.all([
+    const a=userId<currentUser.id?userId:currentUser.id;
+    const b=userId<currentUser.id?currentUser.id:userId;
+    const[{data:prof},{data:poxyData},{data:reqs},{data:premData},{data:friendships}]=await Promise.all([
       sb.from('profiles').select('*').eq('id',userId).single(),
       sb.from('user_poxy').select('poxy_tier').eq('user_id',userId),
       sb.from('friend_requests').select('id,status,from_id,to_id').or('and(from_id.eq.'+currentUser.id+',to_id.eq.'+userId+'),and(from_id.eq.'+userId+',to_id.eq.'+currentUser.id+')').limit(1),
-      sb.from('user_poxy').select('id').eq('user_id',userId).in('poxy_tier',['legendary','mythic']).limit(1)
+      sb.from('user_poxy').select('id').eq('user_id',userId).in('poxy_tier',['legendary','mythic','diamond','secret']).limit(1),
+      sb.from('friendships').select('id').eq('user_a_id',a).eq('user_b_id',b).limit(1)
     ]);
     if(!prof){closeInspectModal();showToast('User not found.');return;}
     const isPrem=!!(premData&&premData.length);
+    const isFriend=!!(friendships&&friendships.length);
     const avWrap=$('inspectAvatarWrap');
     if(isPrem)avWrap.classList.add('inspect-prem');
     const avInner=$('inspectAvatarInner');
@@ -1800,8 +1938,14 @@ async function openInspectModal(userId){
     else avInner.textContent=prof.avatar_url||'👾';
     $('inspectUsernameText').textContent=sanitizeText(prof.username||'Anonymous');
     const totalItems=poxyData?.length||0;
-    const rareItems=poxyData?.filter(d=>['rare','epic','legendary','mythic'].includes(d.poxy_tier)).length||0;
-    $('inspectSubText').textContent='POXY Member';
+    const rareItems=poxyData?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
+    const badgesArr=Array.isArray(prof.badges)?prof.badges.slice():[];
+    if(prof.is_verified_employee&&!badgesArr.includes('developer'))badgesArr.push('developer');
+    if(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL&&!badgesArr.includes('founder'))badgesArr.push('founder');
+    if(prof.is_club_member&&!badgesArr.includes('vip_club'))badgesArr.push('vip_club');
+    const badgeIcons={market_baron:'💰',first_drop_set:'🎯',founder:'🏆',developer:'⚡',vip_club:'✸'};
+    const badgeChips=badgesArr.map(b=>'<span class="badge-chip '+b+'" style="font-size:9px;padding:2px 6px">'+(badgeIcons[b]||'⌬')+' '+b.replace(/_/g,' ')+'</span>').join(' ');
+    $('inspectSubText').innerHTML=badgeChips||'POXY Member';
     const grid=$('inspectStatsGrid');
     grid.innerHTML='<div class="inspect-stat"><div class="inspect-stat-val">'+totalItems+'</div><div class="inspect-stat-label">Items</div></div><div class="inspect-stat"><div class="inspect-stat-val">'+rareItems+'</div><div class="inspect-stat-label">Rare+</div></div><div class="inspect-stat"><div class="inspect-stat-val">'+formatPC(prof.balance||0)+'</div><div class="inspect-stat-label">Balance</div></div>';
     const favEl=$('inspectFavPoxy');
@@ -1816,7 +1960,7 @@ async function openInspectModal(userId){
     } else {favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
     const actionsRow=$('inspectActionsRow');
     const existingReq=reqs&&reqs[0];
-    if(existingReq&&existingReq.status==='accepted'){
+    if(isFriend){
       const fb=document.createElement('button');fb.className='btn-friend sent';fb.style.flex='1';fb.textContent='Friends ✓';actionsRow.appendChild(fb);
     } else if(existingReq&&existingReq.status==='pending'){
       const fb=document.createElement('button');fb.className='btn-friend sent';fb.style.flex='1';fb.textContent='Request Sent';actionsRow.appendChild(fb);
@@ -1824,9 +1968,13 @@ async function openInspectModal(userId){
       const addBtn=document.createElement('button');addBtn.className='btn-friend';addBtn.style.flex='1';addBtn.textContent='+ Add Friend';
       addBtn.addEventListener('click',async function(){
         this.disabled=true;
-        const{error:ie}=await sb.from('friend_requests').insert({from_id:currentUser.id,to_id:userId});
-        if(ie){showToast(ie.code==='23505'?'Already sent!':'Error: '+ie.message);this.disabled=false;return;}
-        this.textContent='Sent';this.classList.add('sent');
+        try{
+          const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
+          if(ie)throw ie;
+          if(data&&data.ok===false)throw new Error(data.error||'Could not send');
+          this.textContent='Sent';this.classList.add('sent');
+          showToast('Friend request sent.');
+        }catch(e){showToast('Error: '+(e.message||'send failed'));this.disabled=false;}
       });
       actionsRow.appendChild(addBtn);
     }
@@ -1842,14 +1990,28 @@ window.closeInspectModal=function(){
 };
 
 // ── MARKETPLACE ──
-function sortMarketListings(list){
-  const arr=[...list];
+function applyMarketFilters(list){
+  let arr=list.slice();
+  if(marketRarityFilter&&marketRarityFilter!=='all')arr=arr.filter(i=>(i.user_poxy?.poxy_tier)===marketRarityFilter);
+  if(marketSearchQuery){
+    const q=marketSearchQuery.toLowerCase();
+    arr=arr.filter(i=>{
+      const tier=i.user_poxy?.poxy_tier||'';
+      const serial=(i.user_poxy?.serial_number||'').toLowerCase();
+      const tierMatch=tier.toLowerCase().includes(q);
+      const serialOwner=i.seller_id===currentUser?.id;
+      return tierMatch||(serialOwner&&serial.includes(q));
+    });
+  }
   if(marketSort==='price_asc')arr.sort((a,b)=>parseFloat(a.price)-parseFloat(b.price));
   else if(marketSort==='price_desc')arr.sort((a,b)=>parseFloat(b.price)-parseFloat(a.price));
   return arr;
 }
+function sortMarketListings(list){return applyMarketFilters(list);}
 window.switchMarketTab=function(tab){marketTab=tab;$('mTabBuy').classList.toggle('active',tab==='buy');$('mTabSell').classList.toggle('active',tab==='sell');loadMarket();};
 window.onMarketSortChange=function(){const sel=$('marketSort');if(sel)marketSort=sel.value;loadMarket();};
+window.onMarketSearchChange=function(){const inp=$('marketSearchInput');marketSearchQuery=inp?inp.value.trim():'';loadMarket();};
+window.onMarketRarityChange=function(){const sel=$('marketRarityFilter');marketRarityFilter=sel?sel.value:'all';loadMarket();};
 async function quickBuyListing(item,tier,buyBtn){
   if(!item||!currentUser)return;
   const bal=currentProfile?.balance||0;
@@ -1870,31 +2032,54 @@ async function loadMarket(){
   cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
   try{
     if(marketTab==='buy'){
-      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number)').eq('status','active').neq('seller_id',currentUser.id).order('created_at',{ascending:false});
+      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number,is_vip,vip_serial)').eq('status','active').neq('seller_id',currentUser.id).order('created_at',{ascending:false});
       if(error)throw error;
       marketBuyCache=data||[];
-      const sorted=sortMarketListings(marketBuyCache);
-      if(!sorted.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">💰</div>No listings yet.</div>';return;}
+      const sorted=applyMarketFilters(marketBuyCache);
       cont.innerHTML='';
       const toolbar=document.createElement('div');toolbar.className='market-toolbar';
+      toolbar.style.cssText='display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px';
+      const search=document.createElement('input');search.id='marketSearchInput';search.placeholder='Search tier or your serial...';search.value=marketSearchQuery;
+      search.style.cssText='flex:1;min-width:140px;padding:7px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:11px;outline:none;font-family:inherit';
+      search.oninput=()=>{clearTimeout(window._mktDeb);window._mktDeb=setTimeout(window.onMarketSearchChange,200);};
+      const rarity=document.createElement('select');rarity.id='marketRarityFilter';
+      rarity.style.cssText='padding:7px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:11px;font-family:inherit;background:#fff';
+      rarity.innerHTML='<option value="all">All rarities</option>'+ALL_TIERS.map(t=>'<option value="'+t.id+'">'+t.label+'</option>').join('');
+      rarity.value=marketRarityFilter;rarity.onchange=window.onMarketRarityChange;
       const sel=document.createElement('select');sel.className='market-sort-select';sel.id='marketSort';
       sel.innerHTML='<option value="newest">Newest First</option><option value="price_asc">Price: Lowest First</option><option value="price_desc">Price: Highest First</option>';
       sel.value=marketSort;sel.onchange=window.onMarketSortChange;
-      toolbar.appendChild(sel);cont.appendChild(toolbar);
+      toolbar.appendChild(search);toolbar.appendChild(rarity);toolbar.appendChild(sel);
+      cont.appendChild(toolbar);
+      if(!sorted.length){const emp=document.createElement('div');emp.className='col-empty';emp.innerHTML='<div class="col-empty-icon">💰</div>No matching listings.';cont.appendChild(emp);return;}
       sorted.forEach(item=>{
-        const tier=TIERS.find(t=>t.id===item.user_poxy?.poxy_tier)||TIERS[0];
+        const tier=TIER_BY_ID[item.user_poxy?.poxy_tier]||TIERS[0];
         const isOwner=item.seller_id===currentUser.id;
         const serialDisplay=maskSerial(item.user_poxy?.serial_number,isOwner);
-        const card=document.createElement('div');card.className='market-card gpu-accel';card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
+        const isVip=!!item.user_poxy?.is_vip;
+        const vipLocked=isVip&&!isClubMember();
+        const card=document.createElement('div');card.className='market-card gpu-accel';card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44;position:relative';
+        if(isVip){
+          const vipBadge=document.createElement('div');
+          vipBadge.style.cssText='position:absolute;top:6px;right:6px;background:linear-gradient(135deg,#FF6E40,#FFCA28);color:#1a1a1a;font-size:9px;font-weight:800;letter-spacing:1px;padding:2px 6px;border-radius:6px';
+          vipBadge.textContent=item.user_poxy?.vip_serial?'VIP #'+item.user_poxy.vip_serial:'VIP';
+          card.appendChild(vipBadge);
+        }
+        if(vipLocked){
+          const lockOverlay=document.createElement('div');
+          lockOverlay.style.cssText='position:absolute;inset:0;background:rgba(10,10,10,0.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;border-radius:inherit;color:#fff;font-size:18px;pointer-events:none';
+          lockOverlay.innerHTML='<span style="display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:22px">🔒</span><span style="font-size:9px;letter-spacing:1px;font-weight:700">VIP-ONLY UNLOCK</span></span>';
+          card.appendChild(lockOverlay);
+        }
         const ico=document.createElement('div');ico.className='market-card-icon';ico.style.cssText='background:'+tier.glow+';border:1.5px solid '+tier.color+'44';ico.textContent=tier.icon;
         const info=document.createElement('div');info.className='market-card-info';
-        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+sanitizeText(serialDisplay)+'</div>';
+        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+(isVip?' · VIP':'')+'</div><div class="market-card-serial">'+sanitizeText(serialDisplay)+'</div>';
         const right=document.createElement('div');right.className='market-card-actions';
         const priceEl=document.createElement('div');priceEl.className='market-card-price';priceEl.textContent=formatPC(item.price);
         const quickBtn=document.createElement('button');quickBtn.className='btn-quick-buy';quickBtn.textContent='Quick Buy';
         quickBtn.addEventListener('click',()=>quickBuyListing(item,tier,quickBtn));
         const detailBtn=document.createElement('button');detailBtn.className='btn-buy';detailBtn.textContent='Details';
-        detailBtn.addEventListener('click',()=>{pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id};openBuyModal(tier.label,item.price);});
+        detailBtn.addEventListener('click',()=>{pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id,vipLocked};openBuyModal(tier.label,item.price);});
         right.appendChild(priceEl);right.appendChild(quickBtn);right.appendChild(detailBtn);
         card.appendChild(ico);card.appendChild(info);card.appendChild(right);cont.appendChild(card);
       });
@@ -1950,13 +2135,15 @@ $('modalOk').addEventListener('click',async function(){
     }
     const{error}=await sb.from('marketplace').insert({poxy_id:poxyId,seller_id:currentUser.id,price});
     if(error)throw error;
-    showToast('Listed!');closeModal();if(pendingListItem&&pendingListItem.fromHunt)resetAll();
+    showToast('Listed!');closeModal();bumpQuest('list_1_market',1);if(pendingListItem&&pendingListItem.fromHunt)resetAll();
   }catch(e){showToast(e.message||'Error listing.');}
   btn.disabled=false;
 });
 function openBuyModal(tierLabel,price){
   const o=$('buyModal');
-  $('buyModalSub').textContent='Buy '+tierLabel+' for '+formatPC(price)+'? Your balance: '+formatPC(currentProfile?.balance||0);
+  let extra='';
+  if(pendingBuyItem&&pendingBuyItem.vipLocked)extra=' This is a VIP-locked item — you can purchase it, but core VIP visuals unlock only with Club membership.';
+  $('buyModalSub').textContent='Buy '+tierLabel+' for '+formatPC(price)+'? Your balance: '+formatPC(currentProfile?.balance||0)+extra;
   o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
 }
 window.closeBuyModal=function(){const o=$('buyModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingBuyItem=null;};
@@ -2017,48 +2204,139 @@ $('btnApplePay').addEventListener('click',async function(){
 window.formatCard=function(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;};
 window.formatExpiry=function(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
 
-// ── DARK CLUB ──
+// ── VIP CLUB (PHASE 7 — 5 PC ultra-rare cases with serial minting) ──
 function renderClub(){
   const locked=$('clubLocked'),unlocked=$('clubUnlocked');
-  if(!hasMythic){locked.style.display='block';unlocked.style.display='none';return;}
+  const isMember=isClubMember();
+  if(!isMember){
+    locked.style.display='block';unlocked.style.display='none';
+    renderClubPromo();
+    return;
+  }
   locked.style.display='none';unlocked.style.display='block';
+  const lblOne=$('btnClub1');if(lblOne)lblOne.innerHTML='Open 1 VIP Box<br><span style="font-size:10px;opacity:0.8">'+formatPC(VIP_CASE_PRICE)+'</span>';
+  const lblFive=$('btnClub5');if(lblFive)lblFive.innerHTML='Open 5 VIP Boxes<br><span style="font-size:10px;opacity:0.8">'+formatPC(VIP_CASE_PRICE*5)+'</span>';
   const row=$('clubBoxes');row.innerHTML='';
   for(let i=0;i<5;i++){const b=document.createElement('div');b.className='mini-box';b.id='mbox'+i;b.textContent='?';row.appendChild(b);}
   const ar=$('clubAvatarRow');ar.innerHTML='';
   AVATARS.forEach(av=>{const b=document.createElement('button');b.style.cssText='font-size:20px;background:#13131a;border:1px solid #2a2a2e;border-radius:8px;padding:6px;cursor:pointer;transition:border-color 0.2s';b.textContent=av;b.onclick=()=>{ar.querySelectorAll('button').forEach(x=>x.style.borderColor='#2a2a2e');b.style.borderColor='#FF5252';};ar.appendChild(b);});
   loadFeed();
+  loadFounderAnnouncements();
+  loadFlashSales();
 }
-async function doClubOpen(count,price){
+function renderClubPromo(){
+  const locked=$('clubLocked');if(!locked)return;
+  if(locked.dataset.rendered==='1')return;
+  locked.dataset.rendered='1';
+  locked.innerHTML='<div class="club-locked-icon">✸</div><div class="page-title" style="margin-bottom:8px">POXY VIP CLUB</div><div class="club-locked-text" style="margin-bottom:20px">Exclusive 5 PC ultra-rare boxes.<br>Mint serials #1, #2, #3 across 6 unique tiers.<br>Members-only flash sales &amp; founder broadcasts.</div><div style="background:#13131a;border:1px solid #1e1e28;border-radius:14px;padding:14px;margin:14px 0;text-align:left"><div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#FF6E40;text-transform:uppercase;margin-bottom:10px">VIP Tier Pool</div>'+VIP_TIERS.map(t=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1a1a24"><span style="color:'+t.color+';font-weight:700;font-size:11px">'+t.icon+' '+t.label+'</span><span style="font-size:10px;color:#666">'+(t.prob*100).toFixed(2)+'%</span></div>').join('')+'</div><div style="font-size:11px;color:#666;line-height:1.6;margin-top:12px">Earn membership by collecting any Mythic-tier POXY from the standard hunt — the system promotes you instantly. Or contact the founder for invitation.</div>';
+}
+async function loadFounderAnnouncements(){
+  const wrap=$('founderAnnouncements');if(!wrap)return;
+  wrap.innerHTML='<div style="font-size:10px;color:#444">Loading announcements…</div>';
+  try{
+    const{data:fp}=await sb.from('profiles').select('id').eq('email',FOUNDER_EMAIL).maybeSingle();
+    if(!fp){wrap.innerHTML='';return;}
+    const{data,error}=await sb.from('news_posts').select('*').eq('author_id',fp.id).order('created_at',{ascending:false}).limit(5);
+    if(error)throw error;
+    if(!data||!data.length){wrap.innerHTML='<div style="font-size:10px;color:#444">No founder announcements yet.</div>';return;}
+    wrap.innerHTML='';
+    data.forEach(p=>{
+      const el=document.createElement('div');
+      el.style.cssText='background:linear-gradient(135deg,rgba(255,202,40,0.08),rgba(0,0,0,0.0));border:1px solid rgba(255,202,40,0.35);border-radius:10px;padding:10px 12px;margin-bottom:8px;box-shadow:0 0 18px rgba(255,202,40,0.12)';
+      el.innerHTML='<div style="font-size:10px;font-weight:800;letter-spacing:2px;color:#FFCA28;text-transform:uppercase;margin-bottom:4px">FOUNDER · '+timeSince(p.created_at)+'</div><div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">'+sanitizeText(p.title)+'</div><div style="font-size:11px;color:#aaa;line-height:1.5">'+sanitizeText(p.content)+'</div>';
+      wrap.appendChild(el);
+    });
+  }catch(e){wrap.innerHTML='<div style="font-size:10px;color:#FF5252">Could not load announcements.</div>';}
+}
+async function loadFlashSales(){
+  const wrap=$('flashSalesWrap');if(!wrap)return;
+  wrap.innerHTML='<div style="font-size:10px;color:#444">Loading flash sales…</div>';
+  try{
+    const{data,error}=await sb.from('flash_sales').select('*').gt('ends_at',new Date().toISOString()).order('ends_at',{ascending:true});
+    if(error)throw error;
+    activeFlashSales=data||[];
+    if(!activeFlashSales.length){wrap.innerHTML='<div style="font-size:10px;color:#444">No active flash drops. Check back soon.</div>';return;}
+    wrap.innerHTML='';
+    activeFlashSales.forEach(s=>{
+      const tier=TIER_BY_ID[s.poxy_tier]||TIERS[0];
+      const card=document.createElement('div');
+      card.style.cssText='background:'+tier.glow+';border:1px solid '+tier.color+'55;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px';
+      const left=document.createElement('div');left.style.flex='1';
+      const endsMs=new Date(s.ends_at).getTime()-Date.now();
+      const m=Math.max(0,Math.floor(endsMs/60000));
+      left.innerHTML='<div style="font-size:11px;font-weight:800;color:'+tier.color+';margin-bottom:2px">'+tier.icon+' '+sanitizeText(s.title||tier.label)+'</div><div style="font-size:9px;color:#888;line-height:1.4">'+sanitizeText(s.description||'')+'</div><div style="font-size:9px;color:#FF5252;margin-top:4px;font-weight:700">'+m+' min left · stock '+s.stock+'</div>';
+      const buy=document.createElement('button');buy.className='btn-club-open one';buy.style.cssText='padding:9px 14px;font-size:11px';buy.innerHTML=formatPC(s.price_pc)+'<br>BUY';
+      buy.onclick=()=>buyFlashSale(s,tier,buy);
+      card.appendChild(left);card.appendChild(buy);
+      wrap.appendChild(card);
+    });
+  }catch(e){wrap.innerHTML='<div style="font-size:10px;color:#FF5252">Could not load flash sales.</div>';}
+}
+async function buyFlashSale(sale,tier,btn){
   if(!currentUser)return;
   const bal=currentProfile?.balance||0;
-  if(bal<price){showToast('Insufficient Poxy Coins. Add funds in BANK.');return;}
+  if(bal<parseFloat(sale.price_pc)){showToast('Insufficient Poxy Coins.');return;}
+  if(sale.vip_only&&!isClubMember()){showToast('VIP Club only.');return;}
+  if(sale.stock<=0){showToast('Sold out.');return;}
+  btn.disabled=true;btn.textContent='...';
+  try{
+    // Atomic-ish: debit balance, decrement stock, mint VIP item
+    const newBal=bal-parseFloat(sale.price_pc);
+    await sb.from('profiles').update({balance:newBal}).eq('id',currentUser.id);
+    currentProfile.balance=newBal;updateBalanceBadge(newBal);
+    await sb.from('flash_sales').update({stock:Math.max(0,sale.stock-1)}).eq('id',sale.id);
+    if(VIP_TIERS.find(t=>t.id===sale.poxy_tier)){
+      const{data,error}=await sb.rpc('open_vip_case',{p_user_id:currentUser.id,p_tier:sale.poxy_tier,p_serial:null});
+      if(error)throw error;if(!data.ok)throw new Error(data.error);
+    } else {
+      const serial=genSerial();
+      const{error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:sale.poxy_tier,serial_number:serial,case_origin:'vip'});
+      if(error)throw error;
+    }
+    showToast('Flash drop claimed!');
+    loadFlashSales();
+  }catch(e){showToast('Purchase failed: '+(e.message||'error'));btn.disabled=false;btn.textContent=formatPC(sale.price_pc);}
+}
+async function doClubOpen(count){
+  if(!currentUser)return;
+  if(!isClubMember()){showToast('VIP Club membership required.');return;}
+  const totalPrice=VIP_CASE_PRICE*count;
+  const bal=currentProfile?.balance||0;
+  if(bal<totalPrice){showToast('Insufficient Poxy Coins. Add funds in BANK.');return;}
+  if(vipBusy)return;vipBusy=true;
   const btn1=$('btnClub1'),btn5=$('btnClub5');
-  btn1.disabled=true;btn5.disabled=true;
-  const newBal=bal-price;
-  await sb.from('profiles').update({balance:newBal}).eq('id',currentUser.id);
-  currentProfile.balance=newBal;updateBalanceBadge(newBal);
+  if(btn1)btn1.disabled=true;if(btn5)btn5.disabled=true;
   const results=$('clubResults');results.innerHTML='';
   const row=$('clubBoxes');row.innerHTML='';
   for(let i=0;i<5;i++){const b=document.createElement('div');b.className='mini-box';b.id='mbox'+i;b.textContent='?';row.appendChild(b);}
   const drops=[];
   for(let i=0;i<count;i++){
-    await new Promise(r=>setTimeout(r,i*200));
-    const t=pickTier();drops.push(t);playTick();
-    const b=$('mbox'+i);
-    if(b){b.textContent=t.icon;b.style.setProperty('--bc',t.color);b.classList.add('revealed');b.style.borderColor=t.color;b.style.boxShadow='0 0 16px '+t.color+'88';}
+    await new Promise(r=>setTimeout(r,i*220));
+    const t=pickVipTier();
+    try{
+      const{data,error}=await sb.rpc('open_vip_case',{p_user_id:currentUser.id,p_tier:t.id,p_serial:null});
+      if(error)throw error;if(!data.ok)throw new Error(data.error);
+      if(currentProfile)currentProfile.balance=parseFloat(data.new_balance);
+      updateBalanceBadge(currentProfile?.balance||0);
+      drops.push({tier:t,serial:data.vip_serial});
+      playTick();
+      const b=$('mbox'+i);
+      if(b){b.textContent=t.icon;b.style.setProperty('--bc',t.color);b.classList.add('revealed');b.style.borderColor=t.color;b.style.boxShadow='0 0 16px '+t.color+'88';}
+    }catch(e){showToast('VIP open failed: '+(e.message||'error'));break;}
   }
-  if(drops.some(d=>d.id==='mythic'))playMythicChord();
-  drops.forEach(t=>{const c=document.createElement('div');c.className='club-result-card';c.style.cssText='background:'+t.glow+';border-color:'+t.color+'55;color:'+t.color;c.textContent=t.label;results.appendChild(c);});
-  try{
-    const ins=drops.map(t=>({user_id:currentUser.id,poxy_tier:t.id,serial_number:genSerial()}));
-    await sb.from('user_poxy').insert(ins);
-    if(drops.some(d=>d.id==='mythic')){hasMythic=true;toggleClubAccess(true);}
-    showToast(count+' POXY saved to collection!');
-  }catch(e){showToast('Error saving drops.');}
-  btn1.disabled=false;btn5.disabled=false;
+  if(drops.some(d=>d.tier.id==='secret'||d.tier.id==='diamond'))playMythicChord();
+  drops.forEach(d=>{
+    const c=document.createElement('div');c.className='club-result-card';
+    c.style.cssText='background:'+d.tier.glow+';border-color:'+d.tier.color+'55;color:'+d.tier.color+';flex-direction:column;line-height:1.3';
+    c.innerHTML=d.tier.label+'<span style="display:block;font-size:9px;color:#888;font-weight:600">#'+d.serial+'</span>';
+    results.appendChild(c);
+  });
+  if(drops.length){showToast(drops.length+' VIP POXY minted!');}
+  if(btn1)btn1.disabled=false;if(btn5)btn5.disabled=false;
+  vipBusy=false;
 }
-$('btnClub1').addEventListener('click',()=>doClubOpen(1,CLUB_PRICE_ONE));
-$('btnClub5').addEventListener('click',()=>doClubOpen(5,CLUB_PRICE_FIVE));
+$('btnClub1').addEventListener('click',()=>doClubOpen(1));
+$('btnClub5').addEventListener('click',()=>doClubOpen(5));
 $('btnApplyClub').addEventListener('click',async function(){
   const nick=$('clubNickname').value.trim();
   if(!nick){showToast('Enter a club nickname.');return;}
@@ -2098,9 +2376,10 @@ async function loadNewsFeedTab(){
   const listEl=$('newsPostsList');
   const formEl=$('newsCreateFormContainer');
   if(!listEl)return;
+  const canPost=currentProfile?.is_verified_employee===true||isFounder();
   if(formEl){
-    if(currentProfile?.is_verified_employee===true){
-      formEl.innerHTML='<div class="news-create-form"><div class="news-create-title">Publish News Post</div><input class="news-input" id="newsInputTitle" placeholder="Post title..." maxlength="200"><textarea class="news-textarea" id="newsInputContent" placeholder="Post content..." maxlength="5000"></textarea><input class="news-input" id="newsInputImage" placeholder="Image URL (optional)..." maxlength="1000"><button class="btn-news-publish" id="btnNewsPublish" onclick="submitNewsPost()">Publish Post</button></div>';
+    if(canPost){
+      formEl.innerHTML='<div class="news-create-form"><div class="news-create-title">'+(isFounder()?'Founder Broadcast':'Publish News Post')+'</div><input class="news-input" id="newsInputTitle" placeholder="Post title..." maxlength="200"><textarea class="news-textarea" id="newsInputContent" placeholder="Post content..." maxlength="5000"></textarea><input class="news-input" id="newsInputImage" placeholder="Image URL (optional)..." maxlength="1000"><button class="btn-news-publish" id="btnNewsPublish" onclick="submitNewsPost()">Publish Post</button></div>';
     } else {formEl.innerHTML='';}
   }
   listEl.innerHTML='<div class="news-empty"><div class="col-spinner" style="border-top-color:#ff416c;margin:0 auto 12px"></div></div>';
@@ -2126,7 +2405,8 @@ function renderNewsPostCard(post,container){
   html+='<button class="btn-news-action'+(myLike?' liked':'')+'" onclick="toggleNewsLike('+post.id+',true)">👍 '+((post.likes||[]).length)+'</button>';
   html+='<button class="btn-news-action'+(myDislike?' disliked':'')+'" onclick="toggleNewsLike('+post.id+',false)">👎 '+((post.dislikes||[]).length)+'</button>';
   html+='<button class="btn-toggle-comments" onclick="toggleNewsComments('+post.id+')">💬 Comments</button>';
-  if(currentProfile?.is_verified_employee===true){html+='<button class="btn-news-delete" onclick="deleteNewsPost('+post.id+')">Delete</button>';}
+  const canDelete=currentProfile?.is_verified_employee===true||isFounder()||post.author_id===currentUser?.id;
+  if(canDelete){html+='<button class="btn-news-delete" onclick="deleteNewsPost('+post.id+')">'+(isFounder()&&post.author_id!==currentUser?.id?'Founder Delete':'Delete')+'</button>';}
   html+='</div>';
   html+='<div class="news-comments-section" id="ncs-'+post.id+'">';
   html+='<div class="news-comment-input-row"><input class="news-comment-input" id="nci-'+post.id+'" placeholder="Add a comment..." maxlength="1000"><button class="btn-comment-submit" onclick="submitNewsComment('+post.id+',null)">Post</button></div>';
@@ -2226,7 +2506,14 @@ window.toggleNewsLike=async function(postId,isLike){
   }catch(e){showToast('Error: '+(e.message||'reaction failed'));}
 };
 window.deleteNewsPost=async function(postId){
-  if(!currentProfile?.is_verified_employee)return;
+  if(!currentProfile?.is_verified_employee&&!isFounder()){
+    // owner can also delete own — verify via fetch
+    try{
+      const{data}=await sb.from('news_posts').select('author_id').eq('id',postId).single();
+      if(!data||data.author_id!==currentUser?.id){showToast('Not authorized.');return;}
+    }catch(e){showToast('Not authorized.');return;}
+  }
+  if(!confirm('Delete this post permanently?'))return;
   try{
     const{error}=await sb.from('news_posts').delete().eq('id',postId);
     if(error)throw error;
@@ -2235,7 +2522,7 @@ window.deleteNewsPost=async function(postId){
   }catch(e){showToast('Delete failed: '+(e.message||'error'));}
 };
 window.submitNewsPost=async function(){
-  if(!currentProfile?.is_verified_employee){showToast('Not authorized.');return;}
+  if(!currentProfile?.is_verified_employee&&!isFounder()){showToast('Not authorized.');return;}
   const title=$('newsInputTitle')?.value.trim();
   const content=$('newsInputContent')?.value.trim();
   const imageUrl=$('newsInputImage')?.value.trim();
@@ -2254,6 +2541,76 @@ window.submitNewsPost=async function(){
     await loadNewsFeedTab();
   }catch(e){showToast('Publish failed: '+(e.message||'error'));}
   if(btn)btn.disabled=false;
+};
+
+// ── POXY CHAT (global, realtime) ──
+async function loadPoxyChat(){
+  const list=$('poxyChatList');if(!list)return;
+  list.innerHTML='<div class="poxychat-empty">Loading chat…</div>';
+  try{
+    const{data,error}=await sb.from('poxy_chat').select('*').order('created_at',{ascending:false}).limit(80);
+    if(error)throw error;
+    chatMessages=(data||[]).slice().reverse();
+    if(!chatMessages.length){list.innerHTML='<div class="poxychat-empty">No messages yet. Start the conversation.</div>';return;}
+    const ids=[...new Set(chatMessages.map(m=>m.author_id))];
+    let profMap={};
+    if(ids.length){
+      const{data:profs}=await sb.from('profiles').select('id,username,avatar_url,is_club_member,is_verified_employee,email,badges').in('id',ids);
+      (profs||[]).forEach(p=>{profMap[p.id]=p;});
+    }
+    list.innerHTML='';
+    chatMessages.forEach(m=>renderChatMsg(m,profMap[m.author_id]||{},list));
+    list.scrollTop=list.scrollHeight;
+  }catch(e){list.innerHTML='<div class="poxychat-empty">Could not load chat.</div>';}
+}
+function renderChatMsg(m,prof,list){
+  const isFounderMsg=prof?.email&&prof.email.toLowerCase()===FOUNDER_EMAIL;
+  const isClubMsg=prof?.is_club_member===true;
+  const el=document.createElement('div');el.className='poxychat-msg'+(isFounderMsg?' founder-msg':isClubMsg?' club-msg':'');
+  el.id='pcm-'+m.id;
+  const head=document.createElement('div');head.className='pcm-head';
+  const name=document.createElement('span');name.className='pcm-name';name.textContent=sanitizeText(prof?.username||'Anonymous');
+  head.appendChild(name);
+  if(isFounderMsg){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FFCA28;font-weight:800';f.textContent='FOUNDER';head.appendChild(f);}
+  else if(prof?.is_verified_employee){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FF5252;font-weight:800';f.textContent='STAFF';head.appendChild(f);}
+  else if(isClubMsg){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FF6E40;font-weight:800';f.textContent='VIP';head.appendChild(f);}
+  const t=document.createElement('span');t.className='pcm-time';t.textContent=timeSince(m.created_at);head.appendChild(t);
+  if(m.author_id===currentUser?.id||isFounder()){
+    const del=document.createElement('button');del.className='pcm-del';del.title='Delete';del.textContent='✕';
+    del.addEventListener('click',async function(){
+      if(!confirm('Delete this message?'))return;
+      try{const{error}=await sb.from('poxy_chat').delete().eq('id',m.id);if(error)throw error;el.remove();}
+      catch(e){showToast('Delete failed: '+(e.message||'error'));}
+    });
+    head.appendChild(del);
+  }
+  const body=document.createElement('div');body.className='pcm-text';body.textContent=m.content;
+  el.appendChild(head);el.appendChild(body);
+  list.appendChild(el);
+}
+async function appendChatMessage(m){
+  const list=$('poxyChatList');if(!list)return;
+  const empty=list.querySelector('.poxychat-empty');if(empty)list.innerHTML='';
+  let prof={};
+  try{const{data}=await sb.from('profiles').select('id,username,avatar_url,is_club_member,is_verified_employee,email').eq('id',m.author_id).maybeSingle();if(data)prof=data;}catch(e){}
+  renderChatMsg(m,prof,list);
+  list.scrollTop=list.scrollHeight;
+}
+function removeChatMessage(id){const el=$('pcm-'+id);if(el)el.remove();}
+window.sendPoxyChat=async function(){
+  if(!currentUser)return;
+  const input=$('poxyChatInput');if(!input)return;
+  const content=input.value.trim();
+  if(!content){showToast('Type a message first.');return;}
+  if(content.length>280){showToast('Max 280 chars.');return;}
+  const btn=$('btnPoxyChatSend');btn.disabled=true;
+  try{
+    const{error}=await sb.from('poxy_chat').insert({author_id:currentUser.id,content});
+    if(error)throw error;
+    input.value='';
+    bumpQuest('send_chat',1);
+  }catch(e){showToast('Send failed: '+(e.message||'error'));}
+  btn.disabled=false;
 };
 
 // ── GEN 1 TAB ──
@@ -2405,22 +2762,83 @@ window.purchaseCustomization=async function(itemId){
   }catch(e){showToast('Purchase failed: '+(e.message||'error'));}
 };
 
-// ── REALTIME SUBSCRIPTIONS ──
+// ── REALTIME SUBSCRIPTIONS (PHASE 1) ──
 function setupRealtimeSubscriptions(){
   teardownRealtimeSubscriptions();
+  if(!currentUser)return;
   try{
-    const friendSub=sb.channel('friend-requests-'+currentUser.id)
+    // Incoming friend requests
+    const friendReqSub=sb.channel('friend-requests-'+currentUser.id)
       .on('postgres_changes',{event:'INSERT',schema:'public',table:'friend_requests',filter:'to_id=eq.'+currentUser.id},payload=>{
-        if(payload.new&&payload.new.status==='pending'){showToast('New friend request!');loadPendingRequests();}
+        if(payload.new&&payload.new.status==='pending'){pushNotification('friend_request',payload.new);showToast('New friend request!');loadPendingRequests();}
       })
       .subscribe();
-    realtimeSubs.push(friendSub);
+    realtimeSubs.push(friendReqSub);
+
+    // Friendship insertions/removals (bi-directional)
+    const friendshipSub=sb.channel('friendships-'+currentUser.id)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'friendships'},payload=>{
+        const r=payload.new;if(!r)return;
+        if(r.user_a_id===currentUser.id||r.user_b_id===currentUser.id){
+          if($('friendsPage')?.classList.contains('visible'))loadFriends();
+          loadPendingRequests();
+        }
+      })
+      .on('postgres_changes',{event:'DELETE',schema:'public',table:'friendships'},payload=>{
+        const r=payload.old;if(!r)return;
+        if(r.user_a_id===currentUser.id||r.user_b_id===currentUser.id){
+          if($('friendsPage')?.classList.contains('visible'))loadFriends();
+        }
+      })
+      .subscribe();
+    realtimeSubs.push(friendshipSub);
+
+    // Own balance + profile updates
     const balanceSub=sb.channel('profile-balance-'+currentUser.id)
       .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+currentUser.id},payload=>{
-        if(payload.new&&payload.new.balance!==undefined&&currentProfile){currentProfile.balance=payload.new.balance;updateBalanceBadge(currentProfile.balance);}
+        if(!payload.new||!currentProfile)return;
+        if(payload.new.balance!==undefined){currentProfile.balance=payload.new.balance;updateBalanceBadge(currentProfile.balance);}
+        if(payload.new.is_club_member!==undefined){currentProfile.is_club_member=payload.new.is_club_member;}
+        if(payload.new.badges!==undefined){currentProfile.badges=payload.new.badges;}
       })
       .subscribe();
     realtimeSubs.push(balanceSub);
+
+    // Inventory changes (mine)
+    const invSub=sb.channel('user-poxy-'+currentUser.id)
+      .on('postgres_changes',{event:'*',schema:'public',table:'user_poxy',filter:'user_id=eq.'+currentUser.id},payload=>{
+        if($('collectionPage')?.classList.contains('visible'))loadCollection();
+      })
+      .subscribe();
+    realtimeSubs.push(invSub);
+
+    // Global poxy_chat
+    const chatSub=sb.channel('poxy-chat-global')
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'poxy_chat'},payload=>{
+        if(payload.new)appendChatMessage(payload.new);
+      })
+      .on('postgres_changes',{event:'DELETE',schema:'public',table:'poxy_chat'},payload=>{
+        if(payload.old)removeChatMessage(payload.old.id);
+      })
+      .subscribe();
+    realtimeSubs.push(chatSub);
+
+    // News posts realtime (for sidebar news tab)
+    const newsSub=sb.channel('news-posts-global')
+      .on('postgres_changes',{event:'*',schema:'public',table:'news_posts'},()=>{
+        if(activeSidebarTab==='news'&&sidebarOpen)loadNewsFeedTab();
+      })
+      .subscribe();
+    realtimeSubs.push(newsSub);
+
+    // News comments realtime (per-post refresh on visible open posts)
+    const commentSub=sb.channel('news-comments-global')
+      .on('postgres_changes',{event:'*',schema:'public',table:'news_comments'},payload=>{
+        const pid=payload.new?.post_id||payload.old?.post_id;
+        if(pid){const sec=$('ncs-'+pid);if(sec&&sec.classList.contains('open'))loadNewsComments(pid);}
+      })
+      .subscribe();
+    realtimeSubs.push(commentSub);
   }catch(e){console.warn('Realtime subscription error:',e);}
 }
 function teardownRealtimeSubscriptions(){
@@ -2428,9 +2846,141 @@ function teardownRealtimeSubscriptions(){
   realtimeSubs=[];
 }
 
+// ── PHASE 10 — 3D tilt cards (delegated, RAF-throttled) ──
+(function setupTiltCards(){
+  let raf=null;
+  function onMove(e){
+    const card=e.target.closest('.tilt-3d');if(!card)return;
+    if(raf)cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(()=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width;
+      const py=(e.clientY-r.top)/r.height;
+      const rx=(0.5-py)*10;
+      const ry=(px-0.5)*14;
+      card.style.transform='perspective(620px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg) translateZ(0)';
+    });
+  }
+  function onLeave(e){
+    const card=e.target.closest('.tilt-3d');if(!card)return;
+    card.style.transform='perspective(620px) rotateX(0deg) rotateY(0deg)';
+  }
+  document.addEventListener('mousemove',onMove,{passive:true});
+  document.addEventListener('mouseout',onLeave,{passive:true});
+})();
+
+// ── PHASE 11 — THE GREAT BURN counter (global stat) ──
+async function loadGreatBurnTotal(){
+  try{
+    const{count,error}=await sb.from('burn_log').select('*',{count:'exact',head:true});
+    if(!error&&typeof count==='number')greatBurnTotal=count;
+    updateGreatBurnUI();
+  }catch(e){}
+}
+function updateGreatBurnUI(){
+  const el=$('greatBurnCounter');if(!el)return;
+  el.textContent='🔥 The Great Burn — '+greatBurnTotal.toLocaleString()+' POXY';
+}
+
+// ── PHASE 11 — DAILY QUESTS ──
+async function loadDailyQuests(){
+  if(!currentUser)return;
+  const list=$('dailyQuestList');if(!list)return;
+  list.innerHTML='<div style="font-size:10px;color:#444;padding:8px 0">Loading quests…</div>';
+  try{
+    const{data,error}=await sb.rpc('ensure_daily_quests',{p_user_id:currentUser.id});
+    if(error)throw error;
+    dailyQuests=data||[];
+    if(!dailyQuests.length){list.innerHTML='<div style="font-size:10px;color:#444">No quests today.</div>';return;}
+    const labels={open_3_cases:'Open 3 cases',burn_5_commons:'Burn 5 Commons',list_1_market:'List 1 item on market',send_chat:'Send a chat message'};
+    list.innerHTML='';
+    dailyQuests.forEach(q=>{
+      const pct=Math.min(100,(q.progress/q.goal)*100);
+      const row=document.createElement('div');
+      row.style.cssText='background:#13131a;border:1px solid #1e1e28;border-radius:10px;padding:10px 12px;margin-bottom:8px';
+      row.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:#ccc">'+(labels[q.quest_key]||q.quest_key)+'</span><span style="font-size:10px;color:#888">'+q.progress+' / '+q.goal+'</span></div><div style="height:5px;background:#0d0d10;border-radius:3px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#ff416c,#ffab2e);transition:width 0.4s ease"></div></div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10px;color:#FF6E40;font-weight:700">+ '+formatPC(q.reward_pc)+'</span><button class="btn-claim-q" data-id="'+q.id+'" '+(q.claimed?'disabled':'')+' style="padding:5px 12px;border:1px solid '+(q.claimed?'#2a2a35':'#ff416c')+';border-radius:20px;background:'+(q.claimed?'#13131a':'transparent')+';color:'+(q.claimed?'#444':'#ff416c')+';font-size:9.5px;font-weight:700;cursor:'+(q.claimed?'default':'pointer')+';font-family:inherit">'+(q.claimed?'Claimed':q.progress>=q.goal?'Claim':'In progress')+'</button></div>';
+      list.appendChild(row);
+    });
+    list.querySelectorAll('.btn-claim-q').forEach(b=>b.addEventListener('click',()=>claimQuestReward(b.dataset.id)));
+  }catch(e){list.innerHTML='<div style="font-size:10px;color:#FF5252">Could not load quests.</div>';}
+}
+async function bumpQuest(quest_key,delta){
+  if(!currentUser)return;
+  try{
+    await sb.rpc('increment_quest_progress',{p_user_id:currentUser.id,p_quest_key:quest_key,p_delta:delta||1});
+    if($('dailyQuestList'))loadDailyQuests();
+  }catch(e){}
+}
+async function claimQuestReward(qid){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_quest_reward',{p_user_id:currentUser.id,p_quest_id:qid});
+    if(error)throw error;
+    if(data&&data.ok===false)throw new Error(data.error||'Could not claim');
+    if(currentProfile)currentProfile.balance=parseFloat(data.new_balance);
+    updateBalanceBadge(currentProfile?.balance||0);
+    showToast('Quest reward: +'+formatPC(data.reward));
+    loadDailyQuests();
+  }catch(e){showToast('Claim failed: '+(e.message||'error'));}
+}
+
+// ── PHASE 11 — CRAFTING (5 commons → 1 uncommon) ──
+async function performCraft(){
+  if(!currentUser)return;
+  const ids=[...craftSelection];
+  if(ids.length!==5){showToast('Pick exactly 5 Common POXY.');return;}
+  const allCommon=colData.filter(i=>ids.includes(i.id)).every(i=>i.poxy_tier==='common');
+  if(!allCommon){showToast('All 5 must be Common.');return;}
+  const btn=$('btnCraftDoIt');if(btn){btn.disabled=true;btn.textContent='Crafting...';}
+  try{
+    const{data,error}=await sb.rpc('craft_upgrade',{p_user_id:currentUser.id,p_poxy_ids:ids});
+    if(error)throw error;
+    if(!data.ok)throw new Error(data.error);
+    showToast('Crafted! +1 Uncommon ('+(data.serial||'')+')');
+    craftSelection=new Set();
+    await loadCollection();
+    closeCraftModal();
+  }catch(e){showToast('Craft failed: '+(e.message||'error'));}
+  if(btn){btn.disabled=false;btn.textContent='Craft Now';}
+}
+window.openCraftModal=function(){
+  if(!currentUser)return;
+  const o=$('craftModal');if(!o)return;
+  craftSelection=new Set();
+  renderCraftPool();
+  o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
+};
+window.closeCraftModal=function(){
+  const o=$('craftModal');if(!o)return;
+  o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);
+};
+function renderCraftPool(){
+  const cont=$('craftPool');if(!cont)return;
+  const commons=colData.filter(i=>i.poxy_tier==='common');
+  if(!commons.length){cont.innerHTML='<div style="font-size:11px;color:#B0B0B0;padding:8px 0">You need at least 5 Common POXY in your collection.</div>';return;}
+  cont.innerHTML='';
+  commons.forEach(it=>{
+    const tier=TIERS.find(t=>t.id==='common');
+    const card=document.createElement('div');
+    card.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 10px;background:#f7f7f7;border:1px solid #ececec;border-radius:9px;margin-bottom:6px;cursor:pointer';
+    if(craftSelection.has(it.id)){card.style.borderColor='#FF5722';card.style.background='#fff5f2';}
+    card.innerHTML='<div style="font-size:18px;color:'+tier.color+'">'+tier.icon+'</div><div style="flex:1"><div style="font-size:11px;color:#1a1a1a;font-weight:700">'+sanitizeText(it.serial_number||'–')+'</div><div style="font-size:9px;color:#B0B0B0">Common</div></div><span style="font-size:11px;color:'+(craftSelection.has(it.id)?'#FF5722':'#B0B0B0')+';font-weight:700">'+(craftSelection.has(it.id)?'Selected':'Tap to select')+'</span>';
+    card.addEventListener('click',()=>{
+      if(craftSelection.has(it.id))craftSelection.delete(it.id);
+      else if(craftSelection.size<5)craftSelection.add(it.id);
+      else{showToast('Already 5 selected.');return;}
+      renderCraftPool();
+      const sel=$('craftSelectCount');if(sel)sel.textContent=craftSelection.size+' / 5';
+    });
+    cont.appendChild(card);
+  });
+  const sel=$('craftSelectCount');if(sel)sel.textContent=craftSelection.size+' / 5';
+}
+
 // Init
 renderBank();
 updateBalanceBadge(0);
+updateGreatBurnUI();
 </script>
 </body>
 </html>
