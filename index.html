@@ -1174,6 +1174,9 @@ function isClubMember(){return!!(currentProfile&&(currentProfile.is_club_member|
 function pushNotification(type,payload){notificationQueue.push({type,payload,t:Date.now()});if(notificationQueue.length>50)notificationQueue.shift();}
 function timeSince(iso){const s=Math.floor((Date.now()-new Date(iso))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
 function maskSerial(serial,showFull){if(showFull)return serial||'–';if(!serial)return'XXXX-XXXX';const s=String(serial);if(s.length<=4)return'XXXX-XXXX';return'XXXX-'+s.slice(-4);}
+function isUuid(v){return!!(v&&typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v));}
+function safeUuid(v){return isUuid(v)?v:null;}
+function logAndToast(op,e){console.error('['+op+']',e);showToast('['+op+'] '+(e?.message||'unknown error'));}
 
 // ── PREMIUM FRAME ──
 async function refreshPremiumFrame(){
@@ -1296,6 +1299,7 @@ async function loadProfile(){
   try{
     const{data}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
     if(data){
+      if(data.favorite_poxy_id&&!isUuid(data.favorite_poxy_id))data.favorite_poxy_id=null;
       currentProfile=data;
       selectedAvatar=data.avatar_url||AVATARS[0];
       $('userUsernameEl').textContent=data.username||'';
@@ -1689,14 +1693,16 @@ function renderCollection(){
     sellBtn.addEventListener('click',e=>{e.stopPropagation();pendingListItem={poxyId:item.id,tier,serial:item.serial_number||'',fromHunt:false};openPriceModal();});
     featBtn.addEventListener('click',async e=>{
       e.stopPropagation();
-      const newId=currentProfile?.favorite_poxy_id==item.id?null:item.id;
+      const wantClear=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
+      const newId=wantClear?null:item.id;
+      if(newId!==null&&!isUuid(newId)){showToast('[feature] Item id is not UUID — refresh page or run migration_uuid_fix.sql');return;}
       try{
         const{error}=await sb.from('profiles').update({favorite_poxy_id:newId}).eq('id',currentUser.id);
         if(error)throw error;
         if(currentProfile)currentProfile.favorite_poxy_id=newId;
         showToast(newId?'Featured in profile!':'Removed from profile.');
         renderCollection();
-      }catch(e){showToast('Error: '+(e.message||'update failed'));}
+      }catch(e){logAndToast('feature',e);}
     });
     grid.appendChild(card);
   });
@@ -1789,22 +1795,24 @@ async function loadPendingRequests(){
       const declineBtn=document.createElement('button');declineBtn.className='btn-decline-req';declineBtn.textContent='Decline';
       acceptBtn.addEventListener('click',async function(){
         acceptBtn.disabled=true;declineBtn.disabled=true;
+        if(!isUuid(req.id)){logAndToast('accept-req',new Error('request id not UUID'));acceptBtn.disabled=false;declineBtn.disabled=false;return;}
         try{
           const{data,error:ae}=await sb.rpc('accept_friend_request',{p_request_id:req.id});
           if(ae)throw ae;
           if(data&&data.ok===false)throw new Error(data.error||'Could not accept');
           showToast('Friend added: '+sanitizeText(prof.username||'User'));
           await loadPendingRequests();await loadFriends();
-        }catch(e){showToast('Error: '+(e.message||'could not accept'));acceptBtn.disabled=false;declineBtn.disabled=false;}
+        }catch(e){logAndToast('accept-req',e);acceptBtn.disabled=false;declineBtn.disabled=false;}
       });
       declineBtn.addEventListener('click',async function(){
         acceptBtn.disabled=true;declineBtn.disabled=true;
+        if(!isUuid(req.id)){logAndToast('decline-req',new Error('request id not UUID'));acceptBtn.disabled=false;declineBtn.disabled=false;return;}
         try{
           const{error:de}=await sb.from('friend_requests').delete().eq('id',req.id);
           if(de)throw de;
           showToast('Request declined.');
           await loadPendingRequests();
-        }catch(e){showToast('Error: '+(e.message||'could not decline'));acceptBtn.disabled=false;declineBtn.disabled=false;}
+        }catch(e){logAndToast('decline-req',e);acceptBtn.disabled=false;declineBtn.disabled=false;}
       });
       actions.appendChild(acceptBtn);actions.appendChild(declineBtn);
       card.appendChild(avEl);card.appendChild(info);card.appendChild(actions);
@@ -1836,6 +1844,7 @@ async function loadFriends(){
       removeBtn.addEventListener('click',async function(e){
         e.stopPropagation();
         if(!confirm('Remove '+(p.username||'this friend')+'? This is bidirectional.'))return;
+        if(!isUuid(p.id)){logAndToast('remove-friend',new Error('user id not UUID'));return;}
         removeBtn.disabled=true;removeBtn.textContent='...';
         try{
           const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:p.id});
@@ -1844,7 +1853,7 @@ async function loadFriends(){
           showToast('Friend removed.');
           card.remove();
           friendAccepted=friendAccepted.filter(x=>x!==p.id);
-        }catch(e){showToast('Error: '+(e.message||'could not remove'));removeBtn.disabled=false;removeBtn.textContent='Remove';}
+        }catch(e){logAndToast('remove-friend',e);removeBtn.disabled=false;removeBtn.textContent='Remove';}
       });
       card.addEventListener('click',function(){openInspectModal(p.id);});
       card.appendChild(avEl);card.appendChild(info);card.appendChild(removeBtn);cont.appendChild(card);
@@ -1886,6 +1895,7 @@ window.searchUsers=async function(){
         btn.className='btn-friend';btn.textContent='+ Add';
         btn.addEventListener('click',async function(e){
           e.stopPropagation();
+          if(!isUuid(p.id)){logAndToast('add-friend',new Error('user id not UUID'));return;}
           this.disabled=true;
           try{
             const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:p.id});
@@ -1893,7 +1903,7 @@ window.searchUsers=async function(){
             if(data&&data.ok===false)throw new Error(data.error||'Could not send');
             this.textContent='Sent';this.classList.add('sent');
             showToast('Friend request sent.');
-          }catch(e){this.disabled=false;showToast('Error: '+(e.message||'send failed'));}
+          }catch(e){this.disabled=false;logAndToast('add-friend',e);}
         });
       }
       card.addEventListener('click',function(){openInspectModal(p.id);});
@@ -1975,6 +1985,7 @@ async function openInspectModal(userId){
     } else {
       const addBtn=document.createElement('button');addBtn.className='btn-friend';addBtn.style.flex='1';addBtn.textContent='+ Add Friend';
       addBtn.addEventListener('click',async function(){
+        if(!isUuid(userId)){logAndToast('add-friend-modal',new Error('user id not UUID'));return;}
         this.disabled=true;
         try{
           const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
@@ -1982,7 +1993,7 @@ async function openInspectModal(userId){
           if(data&&data.ok===false)throw new Error(data.error||'Could not send');
           this.textContent='Sent';this.classList.add('sent');
           showToast('Friend request sent.');
-        }catch(e){showToast('Error: '+(e.message||'send failed'));this.disabled=false;}
+        }catch(e){logAndToast('add-friend-modal',e);this.disabled=false;}
       });
       actionsRow.appendChild(addBtn);
     }
@@ -2026,6 +2037,7 @@ async function quickBuyListing(item,tier,buyBtn){
   if(bal<parseFloat(item.price)){showToast('Insufficient Poxy Coins.');return;}
   if(buyBtn){buyBtn.disabled=true;buyBtn.textContent='...';}
   try{
+    if(!isUuid(item.id))throw new Error('listing id not UUID — refresh page');
     const{data,error}=await sb.rpc('purchase_poxy',{p_listing_id:item.id,p_buyer_id:currentUser.id});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);
@@ -2033,7 +2045,7 @@ async function quickBuyListing(item,tier,buyBtn){
     updateBalanceBadge(currentProfile?.balance||0);
     showToast('Purchased! Check your collection.');
     loadMarket();
-  }catch(e){showToast(e.message||'Purchase failed.');if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='Quick Buy';}}
+  }catch(e){logAndToast('quick-buy',e);if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='Quick Buy';}}
 }
 async function loadMarket(){
   const cont=$('marketContent');
@@ -2110,11 +2122,12 @@ async function loadMarket(){
         if(item.status==='active'){
           const cb=document.createElement('button');cb.className='btn-buy';cb.style.cssText='background:#f0f0f0;color:#9E9E9E';cb.textContent='Cancel';
           cb.addEventListener('click',async function(){
+            if(!isUuid(item.id)){logAndToast('market-cancel',new Error('listing id not UUID — refresh + run migration_uuid_fix.sql'));return;}
             try{
               const{error}=await sb.from('marketplace').update({status:'cancelled'}).eq('id',item.id);
               if(error)throw error;
               cb.textContent='Cancelled';cb.disabled=true;showToast('Cancelled.');
-            }catch(e){showToast('Error: '+(e.message||'could not cancel'));}
+            }catch(e){logAndToast('market-cancel',e);}
           });
           right.appendChild(cb);
         }
@@ -2141,10 +2154,11 @@ $('modalOk').addEventListener('click',async function(){
       const{data,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:pendingListItem.tier.id,serial_number:pendingListItem.serial}).select().single();
       if(error)throw error;poxyId=data.id;
     }
+    if(!isUuid(poxyId))throw new Error('poxy id not UUID — refresh page');
     const{error}=await sb.from('marketplace').insert({poxy_id:poxyId,seller_id:currentUser.id,price});
     if(error)throw error;
     showToast('Listed!');closeModal();bumpQuest('list_1_market',1);if(pendingListItem&&pendingListItem.fromHunt)resetAll();
-  }catch(e){showToast(e.message||'Error listing.');}
+  }catch(e){logAndToast('list-market',e);}
   btn.disabled=false;
 });
 function openBuyModal(tierLabel,price){
@@ -2159,6 +2173,7 @@ $('buyModalOk').addEventListener('click',async function(){
   if(!pendingBuyItem)return;
   const btn=$('buyModalOk');btn.disabled=true;
   try{
+    if(!isUuid(pendingBuyItem.listingId))throw new Error('listing id not UUID — refresh page');
     const{data,error}=await sb.rpc('purchase_poxy',{p_listing_id:pendingBuyItem.listingId,p_buyer_id:currentUser.id});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);
@@ -2166,7 +2181,7 @@ $('buyModalOk').addEventListener('click',async function(){
     updateBalanceBadge(currentProfile?.balance||0);
     showToast('Purchased! Check your collection.');
     closeBuyModal();loadMarket();
-  }catch(e){showToast(e.message||'Purchase failed.');}
+  }catch(e){logAndToast('purchase',e);}
   btn.disabled=false;
 });
 
@@ -2489,7 +2504,7 @@ async function toggleCommentLike(commentId,postId){
     const{error}=await sb.from('news_comments').update({likes}).eq('id',commentId);
     if(error)throw error;
     await loadNewsComments(postId);
-  }catch(e){showToast('Error: '+(e.message||'like failed'));}
+  }catch(e){logAndToast('comment-like',e);}
 }
 window.toggleNewsLike=async function(postId,isLike){
   try{
@@ -2511,7 +2526,7 @@ window.toggleNewsLike=async function(postId,isLike){
       if(btns[0]){btns[0].textContent='👍 '+likes.length;btns[0].classList.toggle('liked',likes.includes(uid));}
       if(btns[1]){btns[1].textContent='👎 '+dislikes.length;btns[1].classList.toggle('disliked',dislikes.includes(uid));}
     }
-  }catch(e){showToast('Error: '+(e.message||'reaction failed'));}
+  }catch(e){logAndToast('news-react',e);}
 };
 window.deleteNewsPost=async function(postId){
   if(!currentProfile?.is_verified_employee&&!isFounder()){

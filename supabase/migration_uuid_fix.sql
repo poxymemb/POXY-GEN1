@@ -1,13 +1,16 @@
 -- =============================================================================
--- POXY WORLD 2.0 — UUID CONVERSION + OVERLOAD CLEANUP
+-- POXY WORLD 2.0 — UUID CONVERSION + OVERLOAD CLEANUP + BASELINE COLUMNS
 --
 -- Run this AFTER `migration_poxy_world_2.sql` if you see one of:
 --   - "invalid input syntax for type uuid: '725'"
 --   - "Could not choose the best candidate function between
 --      public.purchase_poxy(p_listing_id => bigint, p_buyer_id => uuid),
 --      public.purchase_poxy(p_listing_id => uuid, p_buyer_id => uuid)"
+--   - "column \"updated_at\" of relation \"marketplace\" does not exist"
 --
--- It does three things:
+-- It does four things:
+--   0. Restores every column expected by the canonical schema (in case the
+--      DB was created from an older schema that lacked updated_at, etc).
 --   1. Drops every legacy bigint/int overload of purchase_poxy / dust_poxy /
 --      dust_poxy_bulk so PostgREST can resolve the new uuid-typed RPCs.
 --   2. Converts user_poxy.id and marketplace.id (and their FKs) to uuid
@@ -17,6 +20,42 @@
 --
 -- Idempotent — safe to re-run.
 -- =============================================================================
+
+-- -----------------------------------------------------------------------------
+-- 0. BASELINE COLUMNS — restore anything missing from the canonical schema.
+-- -----------------------------------------------------------------------------
+alter table public.profiles
+  add column if not exists username        text,
+  add column if not exists avatar_url      text default '🎭',
+  add column if not exists balance         numeric(12, 2) not null default 0,
+  add column if not exists dust            integer        not null default 0,
+  add column if not exists created_at      timestamptz    not null default now(),
+  add column if not exists updated_at      timestamptz    not null default now();
+
+alter table public.user_poxy
+  add column if not exists serial_number   text,
+  add column if not exists dropped_at      timestamptz    not null default now();
+
+alter table public.marketplace
+  add column if not exists price           numeric(12, 2) not null default 1,
+  add column if not exists status          text           not null default 'active',
+  add column if not exists created_at      timestamptz    not null default now(),
+  add column if not exists updated_at      timestamptz    not null default now();
+
+-- updated_at trigger (no-op if it already exists)
+create or replace function public.set_updated_at()
+returns trigger language plpgsql as $$
+begin new.updated_at = now(); return new; end; $$;
+
+drop trigger if exists profiles_updated_at on public.profiles;
+create trigger profiles_updated_at
+  before update on public.profiles
+  for each row execute function public.set_updated_at();
+
+drop trigger if exists marketplace_updated_at on public.marketplace;
+create trigger marketplace_updated_at
+  before update on public.marketplace
+  for each row execute function public.set_updated_at();
 
 -- -----------------------------------------------------------------------------
 -- 1. DROP every old overload that uses bigint / integer ids
@@ -46,7 +85,9 @@ begin
 end $$;
 
 -- -----------------------------------------------------------------------------
--- 2. Convert user_poxy.id (and marketplace.poxy_id FK) from bigint/int → uuid
+-- 2. Convert user_poxy.id, marketplace.id, marketplace.poxy_id from int → uuid
+--    Order matters: marketplace.id MUST be converted first (it's referenced by
+--    unqualified `id` in the legacy user_poxy_select_active_listing policy).
 -- -----------------------------------------------------------------------------
 do $$
 declare
@@ -66,10 +107,37 @@ begin
     from information_schema.columns
    where table_schema = 'public' and table_name = 'marketplace' and column_name = 'id';
 
+  -- ── PRE-DROP every policy on user_poxy / marketplace.
+  -- The legacy `user_poxy_select_active_listing` policy lives on user_poxy
+  -- but silently binds `id` to `marketplace.id` (innermost scope), so it
+  -- blocks any DROP COLUMN on either table. They are recreated unconditionally
+  -- at the bottom of this file.
+  drop policy if exists user_poxy_select_own              on public.user_poxy;
+  drop policy if exists user_poxy_select_recent_public    on public.user_poxy;
+  drop policy if exists user_poxy_select_for_friend_tiers on public.user_poxy;
+  drop policy if exists user_poxy_select_active_listing   on public.user_poxy;
+  drop policy if exists user_poxy_insert_own              on public.user_poxy;
+  drop policy if exists user_poxy_delete_own              on public.user_poxy;
+  drop policy if exists marketplace_select_active         on public.marketplace;
+  drop policy if exists marketplace_insert_own            on public.marketplace;
+  drop policy if exists marketplace_update_own            on public.marketplace;
+
+  -- MARKETPLACE.id  (do FIRST so the recreated RLS policy does not see a
+  -- bigint column on the inner-scope `marketplace.id` after user_poxy is uuid)
+  if v_market_id_type in ('bigint', 'integer', 'smallint') then
+    raise notice 'Converting marketplace.id from % to uuid', v_market_id_type;
+    alter table public.marketplace drop constraint if exists marketplace_pkey cascade;
+    alter table public.marketplace add column if not exists id_new uuid not null default gen_random_uuid();
+    alter table public.marketplace drop column id;
+    alter table public.marketplace rename column id_new to id;
+    alter table public.marketplace add primary key (id);
+  end if;
+
   -- USER_POXY.id  (also pulls marketplace.poxy_id with it via mapping table)
   if v_user_poxy_id_type in ('bigint', 'integer', 'smallint') then
     raise notice 'Converting user_poxy.id from % to uuid', v_user_poxy_id_type;
 
+    -- Policies were already dropped at the top of this DO block.
     -- Drop FK constraints that reference user_poxy.id so we can change its type.
     -- profiles.favorite_poxy_id may reference user_poxy.id.
     alter table public.profiles drop constraint if exists profiles_favorite_poxy_id_fkey;
@@ -146,16 +214,54 @@ begin
         add constraint profiles_favorite_poxy_id_fkey
         foreign key (favorite_poxy_id) references public.user_poxy(id) on delete set null;
     end if;
-  end if;
 
-  -- MARKETPLACE.id (independent — convert if still integer)
-  if v_market_id_type in ('bigint', 'integer', 'smallint') then
-    raise notice 'Converting marketplace.id from % to uuid', v_market_id_type;
-    alter table public.marketplace drop constraint if exists marketplace_pkey cascade;
-    alter table public.marketplace add column if not exists id_new uuid not null default gen_random_uuid();
-    alter table public.marketplace drop column id;
-    alter table public.marketplace rename column id_new to id;
-    alter table public.marketplace add primary key (id);
+    -- 2g. RECREATE every RLS policy we dropped in 2-prep.
+    create policy user_poxy_select_own on public.user_poxy
+      for select to authenticated using (user_id = auth.uid());
+
+    create policy user_poxy_select_recent_public on public.user_poxy
+      for select to authenticated
+      using (dropped_at > now() - interval '7 days');
+
+    create policy user_poxy_select_for_friend_tiers on public.user_poxy
+      for select to authenticated
+      using (poxy_tier in ('legendary', 'mythic'));
+
+    create policy user_poxy_select_active_listing on public.user_poxy
+      for select to authenticated
+      using (
+        exists (
+          select 1 from public.marketplace m
+          where m.poxy_id = public.user_poxy.id and m.status = 'active'
+        )
+      );
+
+    create policy user_poxy_insert_own on public.user_poxy
+      for insert to authenticated
+      with check (user_id = auth.uid());
+
+    create policy user_poxy_delete_own on public.user_poxy
+      for delete to authenticated
+      using (user_id = auth.uid());
+
+    create policy marketplace_select_active on public.marketplace
+      for select to authenticated
+      using (status in ('active', 'sold', 'cancelled'));
+
+    create policy marketplace_insert_own on public.marketplace
+      for insert to authenticated
+      with check (
+        seller_id = auth.uid()
+        and exists (
+          select 1 from public.user_poxy up
+          where up.id = public.marketplace.poxy_id and up.user_id = auth.uid()
+        )
+      );
+
+    create policy marketplace_update_own on public.marketplace
+      for update to authenticated
+      using (seller_id = auth.uid())
+      with check (seller_id = auth.uid());
   end if;
 end $$;
 
@@ -300,6 +406,71 @@ end;
 $$;
 
 grant execute on function public.burn_poxy_bulk_pc(uuid[], uuid) to authenticated;
+
+-- -----------------------------------------------------------------------------
+-- 4. UNCONDITIONAL re-assert of every RLS policy on user_poxy / marketplace.
+--    Safe to run regardless of whether the conversion block did anything —
+--    this guarantees policies exist after a partially-failed previous run.
+-- -----------------------------------------------------------------------------
+alter table public.user_poxy enable row level security;
+alter table public.marketplace enable row level security;
+
+drop policy if exists user_poxy_select_own              on public.user_poxy;
+drop policy if exists user_poxy_select_recent_public    on public.user_poxy;
+drop policy if exists user_poxy_select_for_friend_tiers on public.user_poxy;
+drop policy if exists user_poxy_select_active_listing   on public.user_poxy;
+drop policy if exists user_poxy_insert_own              on public.user_poxy;
+drop policy if exists user_poxy_delete_own              on public.user_poxy;
+drop policy if exists marketplace_select_active         on public.marketplace;
+drop policy if exists marketplace_insert_own            on public.marketplace;
+drop policy if exists marketplace_update_own            on public.marketplace;
+
+create policy user_poxy_select_own on public.user_poxy
+  for select to authenticated using (user_id = auth.uid());
+
+create policy user_poxy_select_recent_public on public.user_poxy
+  for select to authenticated
+  using (dropped_at > now() - interval '7 days');
+
+create policy user_poxy_select_for_friend_tiers on public.user_poxy
+  for select to authenticated
+  using (poxy_tier in ('legendary', 'mythic'));
+
+create policy user_poxy_select_active_listing on public.user_poxy
+  for select to authenticated
+  using (
+    exists (
+      select 1 from public.marketplace m
+      where m.poxy_id = public.user_poxy.id and m.status = 'active'
+    )
+  );
+
+create policy user_poxy_insert_own on public.user_poxy
+  for insert to authenticated
+  with check (user_id = auth.uid());
+
+create policy user_poxy_delete_own on public.user_poxy
+  for delete to authenticated
+  using (user_id = auth.uid());
+
+create policy marketplace_select_active on public.marketplace
+  for select to authenticated
+  using (status in ('active', 'sold', 'cancelled'));
+
+create policy marketplace_insert_own on public.marketplace
+  for insert to authenticated
+  with check (
+    seller_id = auth.uid()
+    and exists (
+      select 1 from public.user_poxy up
+      where up.id = public.marketplace.poxy_id and up.user_id = auth.uid()
+    )
+  );
+
+create policy marketplace_update_own on public.marketplace
+  for update to authenticated
+  using (seller_id = auth.uid())
+  with check (seller_id = auth.uid());
 
 -- =============================================================================
 -- END migration_uuid_fix.sql
