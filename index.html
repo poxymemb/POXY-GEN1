@@ -66,12 +66,15 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .hamburger-btn.visible{display:flex}
 .hamburger-line{width:18px;height:2px;background:#fff;border-radius:2px;transition:transform 0.3s ease,opacity 0.3s ease}
 
-/* GLOBAL HOME LOGO — persistent top-left button, Hunt shortcut */
-.poxy-logo-small{position:fixed;top:20px;left:20px;z-index:1000;cursor:pointer;padding:8px 14px;border-radius:10px;background:linear-gradient(45deg,#ff416c,#ff4b2b);color:#fff;font-family:'Inter',system-ui,sans-serif;font-weight:900;font-size:13px;letter-spacing:2px;line-height:1;box-shadow:0 2px 10px rgba(255,65,108,0.3);transition:transform 0.25s ease,box-shadow 0.25s ease;will-change:transform;user-select:none;-webkit-user-select:none;display:none}
-.poxy-logo-small.visible{display:inline-block}
-.poxy-logo-small:hover{transform:scale(1.05);box-shadow:0 6px 22px rgba(255,75,43,0.6),0 0 28px rgba(255,65,108,0.45)}
-.poxy-logo-small:active{transform:scale(0.97)}
-.poxy-logo-small:focus-visible{outline:2px solid #fff;outline-offset:2px}
+/* GLOBAL HOME LOGO — gradient-text "POXY" placed directly to the right of the
+   hamburger button. Both elements stay independent fixed-positioned siblings;
+   the hamburger occupies left:12px–48px (36px wide), the logo starts at
+   left:60px (12px gap) so they NEVER overlap regardless of viewport. */
+.poxy-text-logo{position:fixed;top:15px;left:60px;z-index:1000;font-family:'Inter',system-ui,sans-serif;font-size:24px;font-weight:900;letter-spacing:2px;line-height:1;background:linear-gradient(45deg,#ff416c,#ff4b2b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;cursor:pointer;transition:transform 0.2s ease,filter 0.2s ease;will-change:transform,filter;user-select:none;-webkit-user-select:none;display:none}
+.poxy-text-logo.visible{display:inline-block}
+.poxy-text-logo:hover{transform:scale(1.05);filter:drop-shadow(0 0 8px rgba(255,65,108,0.6))}
+.poxy-text-logo:active{transform:scale(0.97)}
+.poxy-text-logo:focus-visible{outline:2px solid #ff416c;outline-offset:3px;border-radius:4px}
 
 /* ── SIDEBAR (PHASE 9 — full-screen obsidian overlay) ── */
 .sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 0.4s ease;pointer-events:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -590,15 +593,15 @@ body.dark-club .club-sub{color:#888}
 </head>
 <body>
 
-<!-- GLOBAL HOME LOGO (returns to Hunt tab from anywhere) -->
-<div id="global-home-btn" class="poxy-logo-small" role="button" tabindex="0" aria-label="Return to Hunt">POXY</div>
-
 <!-- HAMBURGER -->
 <button class="hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open Poxy World menu">
   <div class="hamburger-line"></div>
   <div class="hamburger-line"></div>
   <div class="hamburger-line"></div>
 </button>
+
+<!-- GLOBAL HOME LOGO — sits to the right of the hamburger, returns to Hunt tab -->
+<div id="global-home-btn" class="poxy-text-logo" role="button" tabindex="0" aria-label="Return to Hunt">POXY</div>
 
 <!-- SIDEBAR BACKDROP -->
 <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
