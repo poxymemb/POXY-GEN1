@@ -48,74 +48,142 @@ body[data-theme="mayfair"]{background:#0e0608}
 body.screen-shake{animation:screenShake 0.45s ease-out}
 body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 
-/* ── GLOBAL AVATAR FRAME SYSTEM (AAA COSMETIC) ── */
-.avatar-frame-target{position:relative;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:visible;box-sizing:border-box;flex-shrink:0;isolation:isolate}
-.avatar-frame-target::before,.avatar-frame-target::after{content:"";position:absolute;border-radius:50%;pointer-events:none;box-sizing:border-box;z-index:0}
-.avatar-frame-target>*{position:relative;z-index:1;border-radius:50%}
-#profileBigAvatarWrap.avatar-frame-target{width:76px;height:76px}
-.inspect-avatar-wrap.avatar-frame-target{width:52px;height:52px;overflow:visible}
-.pcm-avatar.avatar-frame-target{width:22px;height:22px;font-size:11px;flex-shrink:0}
-.user-card-avatar.avatar-frame-target{overflow:visible}
+/* ── GLOBAL AVATAR FRAME SYSTEM (AAA COSMETIC — PRECISION CENTERED) ── */
+.avatar-frame-target{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  overflow:visible;
+  box-sizing:border-box;
+  flex-shrink:0;
+  isolation:isolate;
+  --af-ring-outer:128%;
+  --af-ring-inner:112%;
+  margin:0;
+  padding:0;
+}
+.avatar-frame-target::before,
+.avatar-frame-target::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  border-radius:50%;
+  pointer-events:none;
+  box-sizing:border-box;
+  z-index:0;
+  transform-origin:center center;
+  transform:translate(-50%,-50%);
+  margin:0;
+  padding:0;
+  inset:auto;
+}
+.avatar-frame-target[data-frame]::before{width:var(--af-ring-outer);height:var(--af-ring-outer)}
+.avatar-frame-target[data-frame]::after{width:var(--af-ring-inner);height:var(--af-ring-inner)}
+.avatar-frame-target>*{
+  position:relative;
+  z-index:1;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  overflow:hidden;
+  line-height:1;
+  text-align:center;
+  transform:none;
+  box-sizing:border-box;
+}
+.avatar-frame-target img,
+.avatar-frame-target .avatar-upload-preview{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
+  object-fit:cover;
+  object-position:center center;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  flex-shrink:0;
+}
+#profileBigAvatarWrap.avatar-frame-target{width:76px;height:76px;--af-ring-outer:132%;--af-ring-inner:118%}
+#profileBigAvatar{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:56px;line-height:1;margin:0;padding:0}
+#profileBigAvatarWrap .avatar-upload-preview{width:100%;height:100%;margin:0;border:2px solid rgba(232,232,232,0.9)}
+.user-bar-avatar.avatar-frame-target{width:28px;height:28px;--af-ring-outer:134%;--af-ring-inner:116%}
+.user-bar-avatar.avatar-frame-target #userBarAvatar{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;margin:0;padding:0}
+.inspect-avatar-wrap.avatar-frame-target{width:52px;height:52px;overflow:visible;--af-ring-outer:130%;--af-ring-inner:116%}
+.inspect-avatar-wrap.avatar-frame-target img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;margin:0}
+.pcm-avatar.avatar-frame-target{width:22px;height:22px;font-size:11px;--af-ring-outer:136%;--af-ring-inner:118%}
+.user-card-avatar.avatar-frame-target{width:38px;height:38px;overflow:visible;--af-ring-outer:130%;--af-ring-inner:116%}
+.frame-slot-preview.avatar-frame-target{width:38px;height:38px;--af-ring-outer:134%;--af-ring-inner:118%}
 
-/* 1 — VENOM: living alien biomass */
-.avatar-frame-target[data-frame="venom-frame"]::before{inset:-14%;background:radial-gradient(circle at 50% 45%,rgba(12,0,28,0.92) 52%,rgba(57,255,20,0.22) 68%,transparent 72%);animation:afVenomBio 4.4s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="venom-frame"]::after{inset:-10%;border:2px solid rgba(57,255,20,0.75);box-shadow:0 0 0 1px rgba(60,0,90,0.9),0 0 10px rgba(57,255,20,0.35);animation:afVenomSpike 4.4s ease-in-out infinite 0.35s;will-change:transform,opacity}
-@keyframes afVenomBio{0%,100%{opacity:0.6;transform:scale(0.93) rotate(0deg)}50%{opacity:1;transform:scale(1.07) rotate(4deg)}}
-@keyframes afVenomSpike{0%,100%{opacity:0.45;transform:scale(1) rotate(0deg)}40%{opacity:1;transform:scale(1.05) rotate(-5deg)}70%{opacity:0.8;transform:scale(0.97) rotate(3deg)}}
+/* 1 — VENOM */
+.avatar-frame-target[data-frame="venom-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(12,0,28,0.92) 52%,rgba(57,255,20,0.22) 68%,transparent 72%);animation:afVenomBio 4.4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="venom-frame"]::after{border:2px solid rgba(57,255,20,0.75);box-shadow:0 0 0 1px rgba(60,0,90,0.9),0 0 10px rgba(57,255,20,0.35);animation:afVenomSpike 4.4s ease-in-out infinite 0.35s;will-change:transform,opacity}
+@keyframes afVenomBio{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.93) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07) rotate(4deg)}}
+@keyframes afVenomSpike{0%,100%{opacity:0.45;transform:translate(-50%,-50%) scale(1) rotate(0deg)}40%{opacity:1;transform:translate(-50%,-50%) scale(1.05) rotate(-5deg)}70%{opacity:0.8;transform:translate(-50%,-50%) scale(0.97) rotate(3deg)}}
 
-/* 2 — MAGMA: molten volcanic armor */
-.avatar-frame-target[data-frame="magma-frame"]::before{inset:-13%;background:radial-gradient(circle at 40% 60%,rgba(255,69,0,0.55) 0%,rgba(120,20,0,0.85) 45%,rgba(40,8,0,0.95) 70%,transparent 74%);animation:afMagmaFlow 3.6s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="magma-frame"]::after{inset:-9%;border:2px solid rgba(255,140,0,0.85);box-shadow:0 0 0 1px rgba(255,60,0,0.5),0 0 12px rgba(255,100,0,0.4);animation:afMagmaHeat 3.6s ease-in-out infinite 0.25s;will-change:transform,opacity}
-@keyframes afMagmaFlow{0%,100%{opacity:0.65;transform:scale(0.95) rotate(0deg)}50%{opacity:1;transform:scale(1.08) rotate(6deg)}}
-@keyframes afMagmaHeat{0%,100%{opacity:0.55;transform:scale(1)}35%{opacity:1;transform:scale(1.06)}65%{opacity:0.75;transform:scale(1.02)}}
+/* 2 — MAGMA */
+.avatar-frame-target[data-frame="magma-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(255,69,0,0.55) 0%,rgba(120,20,0,0.85) 45%,rgba(40,8,0,0.95) 70%,transparent 74%);animation:afMagmaFlow 3.6s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="magma-frame"]::after{border:2px solid rgba(255,140,0,0.85);box-shadow:0 0 0 1px rgba(255,60,0,0.5),0 0 12px rgba(255,100,0,0.4);animation:afMagmaHeat 3.6s ease-in-out infinite 0.25s;will-change:transform,opacity}
+@keyframes afMagmaFlow{0%,100%{opacity:0.65;transform:translate(-50%,-50%) scale(0.95) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08) rotate(6deg)}}
+@keyframes afMagmaHeat{0%,100%{opacity:0.55;transform:translate(-50%,-50%) scale(1)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}65%{opacity:0.75;transform:translate(-50%,-50%) scale(1.02)}}
 
-/* 3 — PRISM: luxury crystal optics */
-.avatar-frame-target[data-frame="prism-frame"]::before{inset:-12%;background:conic-gradient(from 0deg,rgba(255,0,128,0.7),rgba(0,229,255,0.7),rgba(118,255,3,0.7),rgba(255,234,0,0.7),rgba(255,0,128,0.7));animation:afPrismRefract 5s linear infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="prism-frame"]::after{inset:-7%;border:2px solid rgba(255,255,255,0.55);animation:afPrismSpark 5s ease-in-out infinite;will-change:transform,opacity}
-@keyframes afPrismRefract{0%{transform:rotate(0deg);opacity:0.75}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.75}}
-@keyframes afPrismSpark{0%,100%{opacity:0.5;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
+/* 3 — PRISM */
+.avatar-frame-target[data-frame="prism-frame"]::before{background:conic-gradient(from 0deg,rgba(255,0,128,0.7),rgba(0,229,255,0.7),rgba(118,255,3,0.7),rgba(255,234,0,0.7),rgba(255,0,128,0.7));animation:afPrismRefract 5s linear infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="prism-frame"]::after{border:2px solid rgba(255,255,255,0.55);animation:afPrismSpark 5s ease-in-out infinite;will-change:transform,opacity}
+@keyframes afPrismRefract{0%{transform:translate(-50%,-50%) rotate(0deg);opacity:0.75}50%{opacity:1}100%{transform:translate(-50%,-50%) rotate(360deg);opacity:0.75}}
+@keyframes afPrismSpark{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(0.96)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}}
 
-/* 4 — BIO-STORM: cyber-biological storm */
-.avatar-frame-target[data-frame="bio-storm-frame"]::before{inset:-12%;border:2px dashed rgba(0,255,120,0.75);animation:afBioScan 2.8s linear infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="bio-storm-frame"]::after{inset:-9%;background:repeating-conic-gradient(from 0deg,rgba(0,255,120,0.15) 0deg 8deg,transparent 8deg 16deg);animation:afBioMatrix 2.8s linear infinite reverse;will-change:transform,opacity}
-@keyframes afBioScan{0%{transform:rotate(0deg);opacity:0.55}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.55}}
-@keyframes afBioMatrix{0%,100%{opacity:0.45;transform:scale(0.96)}50%{opacity:0.95;transform:scale(1.06)}}
+/* 4 — BIO-STORM */
+.avatar-frame-target[data-frame="bio-storm-frame"]::before{border:2px dashed rgba(0,255,120,0.75);animation:afBioScan 2.8s linear infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="bio-storm-frame"]::after{background:repeating-conic-gradient(from 0deg,rgba(0,255,120,0.15) 0deg 8deg,transparent 8deg 16deg);animation:afBioMatrix 2.8s linear infinite reverse;will-change:transform,opacity}
+@keyframes afBioScan{0%{transform:translate(-50%,-50%) rotate(0deg);opacity:0.55}50%{opacity:1}100%{transform:translate(-50%,-50%) rotate(360deg);opacity:0.55}}
+@keyframes afBioMatrix{0%,100%{opacity:0.45;transform:translate(-50%,-50%) scale(0.96)}50%{opacity:0.95;transform:translate(-50%,-50%) scale(1.06)}}
 
-/* 5 — ETHEREAL FLAME: plasma spirit fire */
-.avatar-frame-target[data-frame="ethereal-flame"]::before{inset:-13%;background:radial-gradient(circle at 50% 80%,rgba(0,255,255,0.45) 0%,rgba(140,0,255,0.35) 40%,rgba(20,0,40,0.2) 65%,transparent 72%);animation:afEtherealRise 3.4s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="ethereal-flame"]::after{inset:-9%;border:2px solid rgba(180,100,255,0.7);animation:afEtherealPulse 3.4s ease-in-out infinite 0.4s;will-change:transform,opacity}
-@keyframes afEtherealRise{0%,100%{opacity:0.55;transform:scale(0.94) translateY(2px)}50%{opacity:1;transform:scale(1.08) translateY(-3px)}}
-@keyframes afEtherealPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
+/* 5 — ETHEREAL FLAME */
+.avatar-frame-target[data-frame="ethereal-flame"]::before{background:radial-gradient(circle at 50% 50%,rgba(0,255,255,0.45) 0%,rgba(140,0,255,0.35) 40%,rgba(20,0,40,0.2) 65%,transparent 72%);animation:afEtherealRise 3.4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ethereal-flame"]::after{border:2px solid rgba(180,100,255,0.7);animation:afEtherealPulse 3.4s ease-in-out infinite 0.4s;will-change:transform,opacity}
+@keyframes afEtherealRise{0%,100%{opacity:0.55;transform:translate(-50%,-50%) scale(0.94)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes afEtherealPulse{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
 
-/* 6 — VOID: deep-space anomaly */
-.avatar-frame-target[data-frame="void-frame"]::before{inset:-14%;background:radial-gradient(circle at 35% 35%,rgba(180,140,255,0.35) 0%,rgba(40,0,80,0.6) 35%,rgba(0,0,0,0.95) 62%,transparent 72%);animation:afVoidGalaxy 6s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="void-frame"]::after{inset:-8%;border:1.5px solid rgba(124,77,255,0.65);box-shadow:0 0 0 2px rgba(0,0,0,0.8);animation:afVoidGravity 6s ease-in-out infinite 0.5s;will-change:transform,opacity}
-@keyframes afVoidGalaxy{0%,100%{opacity:0.6;transform:scale(0.96) rotate(0deg)}50%{opacity:1;transform:scale(1.1) rotate(8deg)}}
-@keyframes afVoidGravity{0%,100%{opacity:0.45;transform:scale(1.04)}50%{opacity:0.95;transform:scale(0.92)}}
+/* 6 — VOID */
+.avatar-frame-target[data-frame="void-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(180,140,255,0.35) 0%,rgba(40,0,80,0.6) 35%,rgba(0,0,0,0.95) 62%,transparent 72%);animation:afVoidGalaxy 6s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="void-frame"]::after{border:1.5px solid rgba(124,77,255,0.65);box-shadow:0 0 0 2px rgba(0,0,0,0.8);animation:afVoidGravity 6s ease-in-out infinite 0.5s;will-change:transform,opacity}
+@keyframes afVoidGalaxy{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.96) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(8deg)}}
+@keyframes afVoidGravity{0%,100%{opacity:0.45;transform:translate(-50%,-50%) scale(1.04)}50%{opacity:0.95;transform:translate(-50%,-50%) scale(0.92)}}
 
-/* 7 — TESLA: high-voltage reactor */
-.avatar-frame-target[data-frame="tesla-frame"]::before{inset:-11%;border:2px solid rgba(64,196,255,0.9);animation:afTeslaArc 2.2s steps(10,end) infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="tesla-frame"]::after{inset:-14%;border:1px solid rgba(255,255,255,0.45);animation:afTeslaCoil 2.2s steps(10,end) infinite 0.08s;will-change:transform,opacity}
-@keyframes afTeslaArc{0%,100%{opacity:0.5;transform:scale(1) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(3deg)}}
-@keyframes afTeslaCoil{0%,100%{opacity:0.35;transform:scale(1.08)}50%{opacity:0.9;transform:scale(0.94)}}
+/* 7 — TESLA */
+.avatar-frame-target[data-frame="tesla-frame"]::before{border:2px solid rgba(64,196,255,0.9);animation:afTeslaArc 2.2s steps(10,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="tesla-frame"]::after{border:1px solid rgba(255,255,255,0.45);width:var(--af-ring-outer);height:var(--af-ring-outer);animation:afTeslaCoil 2.2s steps(10,end) infinite 0.08s;will-change:transform,opacity}
+@keyframes afTeslaArc{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06) rotate(3deg)}}
+@keyframes afTeslaCoil{0%,100%{opacity:0.35;transform:translate(-50%,-50%) scale(1.08)}50%{opacity:0.9;transform:translate(-50%,-50%) scale(0.94)}}
 
-/* 8 — OCEAN: living abyssal ocean */
-.avatar-frame-target[data-frame="ocean-frame"]::before{inset:-13%;background:radial-gradient(circle at 50% 30%,rgba(0,200,255,0.4) 0%,rgba(0,80,160,0.55) 45%,rgba(0,20,60,0.85) 68%,transparent 74%);animation:afOceanCaustic 4s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="ocean-frame"]::after{inset:-9%;border:2px solid rgba(3,169,244,0.75);animation:afOceanBubble 4s ease-in-out infinite 0.3s;will-change:transform,opacity}
-@keyframes afOceanCaustic{0%,100%{opacity:0.6;transform:scale(0.95) translateY(0)}50%{opacity:1;transform:scale(1.07) translateY(-3px)}}
-@keyframes afOceanBubble{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+/* 8 — OCEAN */
+.avatar-frame-target[data-frame="ocean-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(0,200,255,0.4) 0%,rgba(0,80,160,0.55) 45%,rgba(0,20,60,0.85) 68%,transparent 74%);animation:afOceanCaustic 4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ocean-frame"]::after{border:2px solid rgba(3,169,244,0.75);animation:afOceanBubble 4s ease-in-out infinite 0.3s;will-change:transform,opacity}
+@keyframes afOceanCaustic{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.95)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
+@keyframes afOceanBubble{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}}
 
-/* 9 — GLITCH: corrupted hologram */
-.avatar-frame-target[data-frame="glitch-frame"]::before{inset:-10%;border:2px solid rgba(255,23,68,0.85);animation:afGlitchR 2.6s steps(8,end) infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="glitch-frame"]::after{inset:-10%;border:2px solid rgba(0,229,255,0.75);animation:afGlitchB 2.6s steps(8,end) infinite 0.06s;will-change:transform,opacity}
-@keyframes afGlitchR{0%,82%,100%{opacity:0.75;transform:translate(0,0) scale(1)}86%{opacity:1;transform:translate(-3px,1px) scale(1.04)}90%{opacity:0.4;transform:translate(2px,-2px) scale(0.97)}94%{opacity:1;transform:translate(0,0) scale(1.02)}}
-@keyframes afGlitchB{0%,82%,100%{opacity:0.55;transform:translate(0,0) scale(1)}84%{opacity:0.9;transform:translate(3px,-1px) scale(1.03)}88%{opacity:0.3;transform:translate(-2px,2px) scale(0.98)}92%{opacity:0.85;transform:translate(0,0) scale(1.01)}}
+/* 9 — GLITCH */
+.avatar-frame-target[data-frame="glitch-frame"]::before{border:2px solid rgba(255,23,68,0.85);animation:afGlitchR 2.6s steps(8,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="glitch-frame"]::after{border:2px solid rgba(0,229,255,0.75);animation:afGlitchB 2.6s steps(8,end) infinite 0.06s;will-change:transform,opacity}
+@keyframes afGlitchR{0%,82%,100%{opacity:0.75;transform:translate(-50%,-50%) scale(1)}86%{opacity:1;transform:translate(calc(-50% - 3px),calc(-50% + 1px)) scale(1.04)}90%{opacity:0.4;transform:translate(calc(-50% + 2px),calc(-50% - 2px)) scale(0.97)}94%{opacity:1;transform:translate(-50%,-50%) scale(1.02)}}
+@keyframes afGlitchB{0%,82%,100%{opacity:0.55;transform:translate(-50%,-50%) scale(1)}84%{opacity:0.9;transform:translate(calc(-50% + 3px),calc(-50% - 1px)) scale(1.03)}88%{opacity:0.3;transform:translate(calc(-50% - 2px),calc(-50% + 2px)) scale(0.98)}92%{opacity:0.85;transform:translate(-50%,-50%) scale(1.01)}}
 
-/* 10 — RUBY: royal blood crystal */
-.avatar-frame-target[data-frame="ruby-frame"]::before{inset:-13%;background:radial-gradient(circle at 50% 40%,rgba(255,80,80,0.55) 0%,rgba(180,0,30,0.65) 40%,rgba(60,0,10,0.9) 65%,transparent 72%);animation:afRubyCore 3.8s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="ruby-frame"]::after{inset:-8%;border:2.5px solid rgba(229,57,53,0.9);animation:afRubyBlood 3.8s ease-in-out infinite 0.45s;will-change:transform,opacity}
-@keyframes afRubyCore{0%,100%{opacity:0.6;transform:scale(0.94)}50%{opacity:1;transform:scale(1.08)}}
-@keyframes afRubyBlood{0%,100%{opacity:0.5;transform:scale(1.02) rotate(0deg)}50%{opacity:1;transform:scale(0.96) rotate(4deg)}}
+/* 10 — RUBY */
+.avatar-frame-target[data-frame="ruby-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(255,80,80,0.55) 0%,rgba(180,0,30,0.65) 40%,rgba(60,0,10,0.9) 65%,transparent 72%);animation:afRubyCore 3.8s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ruby-frame"]::after{border:2.5px solid rgba(229,57,53,0.9);animation:afRubyBlood 3.8s ease-in-out infinite 0.45s;will-change:transform,opacity}
+@keyframes afRubyCore{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.94)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes afRubyBlood{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1.02) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(0.96) rotate(4deg)}}
 
 /* Legacy premium frame — other users' avatars only */
 .avatar-premium-frame{border-radius:50%;animation:premiumFrameShift 3.5s ease-in-out infinite;padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC,#FFCA28);background-size:300% 300%}
@@ -249,8 +317,8 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .poxychat-msg.founder-msg{border-left-color:#FFCA28;background:linear-gradient(90deg,rgba(255,202,40,0.08),#13131a 80%);box-shadow:0 0 12px rgba(255,202,40,0.18)}
 .poxychat-msg.club-msg{border-left-color:#FF6E40}
 .poxychat-msg .pcm-head{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.pcm-avatar{display:flex;align-items:center;justify-content:center;background:#0d0d10;border-radius:50%;overflow:visible;line-height:1}
-.pcm-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.pcm-avatar{display:flex;align-items:center;justify-content:center;background:#0d0d10;border-radius:50%;overflow:visible;line-height:1;box-sizing:border-box;margin:0;padding:0}
+.pcm-avatar img{width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;margin:0;padding:0}
 .poxychat-msg .pcm-name{font-size:10.5px;font-weight:700;color:#ff416c}
 .poxychat-msg.founder-msg .pcm-name{color:#FFCA28}
 .poxychat-msg.club-msg .pcm-name{color:#FF6E40}
@@ -335,8 +403,8 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 
 /* ── PROFILE INSPECTION MODAL ── */
 .inspect-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.inspect-avatar-wrap{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;background:#f7f7f7;overflow:hidden}
-.inspect-avatar-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.inspect-avatar-wrap{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;background:#f7f7f7;overflow:hidden;box-sizing:border-box;margin:0;padding:0;line-height:1}
+.inspect-avatar-wrap img{width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;margin:0;padding:0}
 .inspect-avatar-wrap.inspect-prem{padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC);animation:premiumFrameShift 3.5s ease-in-out infinite}
 .inspect-header-info{flex:1;min-width:0}
 .inspect-username-text{font-size:15px;font-weight:800;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -514,7 +582,7 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .btn-primary:hover{transform:scale(1.02)}.btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none}
 
 /* ── PROFILE ── */
-.avatar-upload-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2px solid #e8e8e8;display:block;margin:0 auto 8px}
+.avatar-upload-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center center;border:2px solid #e8e8e8;display:block;margin:0}
 .profile-avatar-row{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;justify-content:center}
 .avatar-opt{font-size:26px;width:48px;height:48px;border-radius:50%;border:2px solid #f0f0f0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:#fafafa}
 .avatar-opt.selected{border-color:#FF5722;background:#fff5f2;transform:scale(1.1)}
@@ -540,8 +608,9 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .frame-slot-glass{position:relative;width:100%;aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 20px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 6px 6px;overflow:hidden;transition:transform 0.28s cubic-bezier(0.25,1,0.5,1),box-shadow 0.28s ease,border-color 0.28s ease;transform-style:preserve-3d;will-change:transform}
 .frame-slot-glass::before{content:"";position:absolute;inset:0;border-radius:14px;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,0.18),transparent 40%,rgba(255,255,255,0.08));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.7}
 .frame-slot-emblem{font-size:16px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));position:relative;z-index:2}
-.frame-slot-preview{width:38px;height:38px;font-size:16px;position:relative;z-index:2}
-.frame-slot-face{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 35%,#2a2a32,#121218);font-size:15px;line-height:1;box-shadow:inset 0 2px 6px rgba(0,0,0,0.5)}
+.frame-slot-preview{width:38px;height:38px;font-size:16px;position:relative;z-index:2;display:flex;align-items:center;justify-content:center;margin:0;padding:0}
+.frame-slot-face{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 50%,#2a2a32,#121218);font-size:15px;line-height:1;box-shadow:inset 0 2px 6px rgba(0,0,0,0.5);margin:0;padding:0;overflow:hidden}
+.frame-slot-face img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;margin:0;padding:0;border-radius:50%}
 .frame-slot-shine{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,0.12),transparent);animation:frameSlotShine 4s ease-in-out infinite;pointer-events:none;z-index:3}
 .frame-slot-name{font-size:8px;font-weight:800;color:#ddd;letter-spacing:1.2px;text-transform:uppercase;text-align:center;line-height:1.2;max-width:100%}
 .frame-slot-tier{font-size:7px;font-weight:600;color:#666;letter-spacing:0.8px;text-transform:uppercase;text-align:center}
@@ -733,8 +802,8 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .search-input:focus{border-color:#FF5722;background:#fff}
 .btn-search{padding:11px 16px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:12px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
 .user-card{display:flex;align-items:center;gap:12px;padding:11px;background:#fafafa;border-radius:12px;border:0.5px solid #f0f0f0;margin-bottom:8px;transition:border-color 0.2s}
-.user-card-avatar{font-size:22px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #f0f0f0;flex-shrink:0;overflow:hidden}
-.user-card-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.user-card-avatar{font-size:22px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #f0f0f0;flex-shrink:0;overflow:hidden;box-sizing:border-box;margin:0;padding:0;line-height:1}
+.user-card-avatar img{width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;margin:0;padding:0}
 .user-card-avatar.avatar-premium-frame{padding:2px}
 .user-card-info{flex:1;min-width:0}
 .user-card-name{font-size:13px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color 0.2s}
@@ -870,9 +939,9 @@ body.dark-club .club-sub{color:#888}
 /* ── USER BAR ── */
 .user-bar{max-width:380px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;gap:8px}
 .user-bar-left{display:flex;align-items:center;gap:8px;min-width:0}
-.user-bar-avatar{font-size:18px;cursor:pointer;transition:transform 0.2s;flex-shrink:0;width:28px;height:28px;border-radius:50%;overflow:visible;display:flex;align-items:center;justify-content:center}
+.user-bar-avatar{font-size:18px;cursor:pointer;transition:transform 0.2s;flex-shrink:0;width:28px;height:28px;border-radius:50%;overflow:visible;display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin:0;padding:0}
 .user-bar-avatar:hover{transform:scale(1.12)}
-.user-bar-avatar #userBarAvatar{width:28px;height:28px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.user-bar-avatar #userBarAvatar{width:100%;height:100%;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;margin:0;padding:0;line-height:1}
 .user-email{font-size:10.5px;color:#B0B0B0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .user-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .user-username{font-size:11px;font-weight:700;color:#1a1a1a}
@@ -1085,7 +1154,7 @@ body.dark-club .club-sub{color:#888}
 <!-- PROFILE PAGE -->
 <div class="page" id="profilePage">
   <div class="page-title">MY PROFILE</div>
-  <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target"><div id="profileBigAvatar" style="font-size:56px;text-align:center"></div></div></div>
+  <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target"><div id="profileBigAvatar"></div></div></div>
   <div class="profile-avatar-row" id="avatarRow"></div>
   <div class="frame-cosmetic-panel frame-selector-section">
     <div class="frame-selector-header">
