@@ -219,8 +219,7 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
   margin:0;
   padding:0;
   flex-shrink:0;
-  --af-ring-outer:124%;
-  --af-ring-inner:110%;
+  isolation:isolate;
 }
 #userBar #userBarAvatarWrap.gpu-accel{
   transform:none;
@@ -229,25 +228,65 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 #userBar #userBarAvatarWrap.avatar-frame-target:hover{
   transform:scale(1.12);
 }
-#userBar #userBarAvatarWrap.avatar-frame-target::before,
-#userBar #userBarAvatarWrap.avatar-frame-target::after{
-  top:50%;
-  left:50%;
-  right:auto;
-  bottom:auto;
-  transform:translate(-50%,-50%);
-  transform-origin:center center;
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::before,
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::after{
+  top:-4px;
+  left:-4px;
+  right:-4px;
+  bottom:-4px;
+  width:auto;
+  height:auto;
   margin:0;
   padding:0;
-}
-#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::before{
-  width:var(--af-ring-outer);
-  height:var(--af-ring-outer);
+  transform-origin:center center;
+  transform:none;
 }
 #userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::after{
-  width:var(--af-ring-inner);
-  height:var(--af-ring-inner);
+  top:-2px;
+  left:-2px;
+  right:-2px;
+  bottom:-2px;
 }
+#userBar #userBarAvatarWrap[data-frame="venom-frame"]::before{animation:afUBVenomBio 4.4s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="venom-frame"]::after{animation:afUBVenomSpike 4.4s ease-in-out infinite 0.35s}
+#userBar #userBarAvatarWrap[data-frame="magma-frame"]::before{animation:afUBMagmaFlow 3.6s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="magma-frame"]::after{animation:afUBMagmaHeat 3.6s ease-in-out infinite 0.25s}
+#userBar #userBarAvatarWrap[data-frame="prism-frame"]::before{animation:afUBPrismRefract 5s linear infinite}
+#userBar #userBarAvatarWrap[data-frame="prism-frame"]::after{animation:afUBPrismSpark 5s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="bio-storm-frame"]::before{animation:afUBBioScan 2.8s linear infinite}
+#userBar #userBarAvatarWrap[data-frame="bio-storm-frame"]::after{animation:afUBBioMatrix 2.8s linear infinite reverse}
+#userBar #userBarAvatarWrap[data-frame="ethereal-flame"]::before{animation:afUBEtherealRise 3.4s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="ethereal-flame"]::after{animation:afUBEtherealPulse 3.4s ease-in-out infinite 0.4s}
+#userBar #userBarAvatarWrap[data-frame="void-frame"]::before{animation:afUBVoidGalaxy 6s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="void-frame"]::after{animation:afUBVoidGravity 6s ease-in-out infinite 0.5s}
+#userBar #userBarAvatarWrap[data-frame="tesla-frame"]::before{animation:afUBTeslaArc 2.2s steps(10,end) infinite}
+#userBar #userBarAvatarWrap[data-frame="tesla-frame"]::after{animation:afUBTeslaCoil 2.2s steps(10,end) infinite 0.08s}
+#userBar #userBarAvatarWrap[data-frame="ocean-frame"]::before{animation:afUBOceanCaustic 4s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="ocean-frame"]::after{animation:afUBOceanBubble 4s ease-in-out infinite 0.3s}
+#userBar #userBarAvatarWrap[data-frame="glitch-frame"]::before{animation:afUBGlitchR 2.6s steps(8,end) infinite}
+#userBar #userBarAvatarWrap[data-frame="glitch-frame"]::after{animation:afUBGlitchB 2.6s steps(8,end) infinite 0.06s}
+#userBar #userBarAvatarWrap[data-frame="ruby-frame"]::before{animation:afUBRubyCore 3.8s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="ruby-frame"]::after{animation:afUBRubyBlood 3.8s ease-in-out infinite 0.45s}
+@keyframes afUBVenomBio{0%,100%{opacity:0.6;transform:scale(0.95)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBVenomSpike{0%,100%{opacity:0.45;transform:scale(1)}40%{opacity:1;transform:scale(1.03)}70%{opacity:0.8;transform:scale(0.98)}}
+@keyframes afUBMagmaFlow{0%,100%{opacity:0.65;transform:scale(0.96) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(4deg)}}
+@keyframes afUBMagmaHeat{0%,100%{opacity:0.55;transform:scale(1)}35%{opacity:1;transform:scale(1.04)}65%{opacity:0.75;transform:scale(1.01)}}
+@keyframes afUBPrismRefract{0%{transform:rotate(0deg);opacity:0.75}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.75}}
+@keyframes afUBPrismSpark{0%,100%{opacity:0.5;transform:scale(0.97)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes afUBBioScan{0%{transform:rotate(0deg);opacity:0.55}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.55}}
+@keyframes afUBBioMatrix{0%,100%{opacity:0.45;transform:scale(0.97)}50%{opacity:0.95;transform:scale(1.04)}}
+@keyframes afUBEtherealRise{0%,100%{opacity:0.55;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBEtherealPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes afUBVoidGalaxy{0%,100%{opacity:0.6;transform:scale(0.97) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(6deg)}}
+@keyframes afUBVoidGravity{0%,100%{opacity:0.45;transform:scale(1.02)}50%{opacity:0.95;transform:scale(0.96)}}
+@keyframes afUBTeslaArc{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes afUBTeslaCoil{0%,100%{opacity:0.35;transform:scale(1.05)}50%{opacity:0.9;transform:scale(0.96)}}
+@keyframes afUBOceanCaustic{0%,100%{opacity:0.6;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBOceanBubble{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+@keyframes afUBGlitchR{0%,82%,100%{opacity:0.75;transform:scale(1)}86%{opacity:1;transform:translate(-1px,0) scale(1.02)}90%{opacity:0.4;transform:translate(1px,-1px) scale(0.98)}94%{opacity:1;transform:scale(1.01)}}
+@keyframes afUBGlitchB{0%,82%,100%{opacity:0.55;transform:scale(1)}84%{opacity:0.9;transform:translate(1px,0) scale(1.02)}88%{opacity:0.3;transform:translate(-1px,1px) scale(0.99)}92%{opacity:0.85;transform:scale(1.01)}}
+@keyframes afUBRubyCore{0%,100%{opacity:0.6;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBRubyBlood{0%,100%{opacity:0.5;transform:scale(1.01) rotate(0deg)}50%{opacity:1;transform:scale(0.97) rotate(3deg)}}
 #userBar #userBarAvatarWrap > #userBarAvatar{
   width:28px;
   height:28px;
