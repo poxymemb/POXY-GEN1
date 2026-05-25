@@ -491,14 +491,73 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-card-kebab{position:absolute;top:6px;right:6px;width:26px;height:26px;border:none;border-radius:8px;background:rgba(20,20,28,0.55);color:#fff;font-size:18px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:6;transition:background 0.18s ease,transform 0.18s ease;padding:0;letter-spacing:0}
 .col-card-kebab:hover{background:rgba(20,20,28,0.85);transform:scale(1.08)}
 .col-card-kebab:active{transform:scale(0.92)}
-.col-card-menu{position:absolute;top:36px;right:6px;min-width:170px;background:rgba(15,15,20,0.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.1);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04) inset;padding:6px;z-index:50;opacity:0;transform:translateY(-4px) scale(0.95);transform-origin:top right;pointer-events:none;transition:opacity 0.18s ease,transform 0.18s ease;will-change:transform,opacity;display:flex;flex-direction:column;gap:2px}
-.col-card-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-.col-card-menu-item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:9px 12px;border:none;background:transparent;color:#f1f1f1;font-family:inherit;font-size:11.5px;font-weight:600;letter-spacing:0.4px;border-radius:8px;cursor:pointer;transition:background 0.15s ease,color 0.15s ease;line-height:1.2}
+/* Lift the entire card above its grid siblings while its dropdown is open,
+   otherwise neighboring cards (separate stacking contexts due to .tilt-3d
+   transform) paint over the dropdown regardless of its z-index. */
+.col-card:has(.col-card-menu.open){z-index:9999}
+.col-card-menu{
+  position:absolute;
+  top:36px;
+  right:6px;
+  min-width:170px;
+  background:#111111;
+  background-color:#111111;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px;
+  box-shadow:0 14px 36px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.05) inset;
+  padding:6px;
+  z-index:9999;
+  opacity:0;
+  transform:translateY(-4px) scale(0.95);
+  transform-origin:top right;
+  pointer-events:none;
+  transition:opacity 0.18s ease,transform 0.18s ease;
+  will-change:transform,opacity;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  isolation:isolate;
+  transform-style:flat;
+  -webkit-transform-style:flat;
+  overflow:visible;
+}
+.col-card-menu.open{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+.col-card-menu.open *{pointer-events:auto}
+.col-card-menu-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  min-height:36px;
+  text-align:left;
+  padding:10px 12px;
+  border:none;
+  background:transparent;
+  color:#f1f1f1;
+  font-family:inherit;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:0.4px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:background 0.15s ease,color 0.15s ease;
+  line-height:1.2;
+  pointer-events:auto;
+  user-select:none;
+  -webkit-user-select:none;
+}
 .col-card-menu-item:hover{background:rgba(255,255,255,0.08)}
+.col-card-menu-item:active{background:rgba(255,255,255,0.14)}
 .col-card-menu-item.active{background:rgba(255,180,40,0.18);color:#ffce6a}
 .col-card-menu-item.danger{color:#ff7373}
-.col-card-menu-item.danger:hover{background:rgba(255,80,80,0.14);color:#ff5555}
-.col-card-menu-item .ic{font-size:13px;width:14px;display:inline-flex;justify-content:center}
+.col-card-menu-item.danger:hover{background:rgba(255,80,80,0.16);color:#ff5555}
+.col-card-menu-item .ic{font-size:13px;width:14px;display:inline-flex;justify-content:center;flex-shrink:0;pointer-events:none}
 .col-card.pinned{box-shadow:0 0 22px rgba(255,180,40,0.32),inset 0 0 0 1px rgba(255,180,40,0.45)!important}
 .col-card-pin-badge{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#ffb840,#ff7e36);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,165,40,0.5);z-index:5;pointer-events:none;line-height:1}
 .col-empty{text-align:center;padding:60px 20px;color:#C8C8C8;font-size:13px;line-height:1.7}
