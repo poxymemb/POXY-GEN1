@@ -957,20 +957,22 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .bulk-count{font-size:11px;color:#FF5722;font-weight:700;flex:1}
 .btn-bulk-dust{padding:7px 16px;background:#FF5722;border:none;border-radius:20px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
 .btn-bulk-dust:hover{opacity:0.85}
-.col-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.col-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
 .col-grid-wide{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;gap:14px!important}
-.col-card{border-radius:16px;padding:14px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;border:1.5px solid transparent;transition:transform 0.2s,opacity 0.35s;cursor:default;animation:fadeIn 0.4s ease both;position:relative}
+.col-card{width:100%;box-sizing:border-box}
+.col-card{border-radius:16px;padding:34px 10px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border:1.5px solid transparent;transition:transform 0.2s,opacity 0.35s;cursor:default;animation:fadeIn 0.4s ease both;position:relative;min-height:148px;text-align:center;overflow:visible}
 .col-card:hover{transform:translateY(-2px)}
 .col-card.selected-for-dust{outline:2px solid #FF5722;outline-offset:2px}
-.col-card-icon{font-size:28px;line-height:1}
-.col-card-tier{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
-.col-card-date{font-size:8.5px;color:#9E9E9E}
-.col-card-serial{font-size:8px;font-weight:500;letter-spacing:1px;color:#B8B8B8;font-family:'Inter',monospace}
+.col-card-body{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;gap:5px;text-align:center;position:relative;z-index:2}
+.col-card-icon{font-size:28px;line-height:1;text-align:center}
+.col-card-tier{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;width:100%}
+.col-card-date{font-size:8.5px;color:#9E9E9E;text-align:center;width:100%}
+.col-card-serial{font-size:8px;font-weight:500;letter-spacing:1px;color:#B8B8B8;font-family:'Inter',monospace;text-align:center;width:100%;word-break:break-word}
 .col-card-actions{display:flex;gap:6px;margin-top:4px}
 .btn-burn,.btn-sell-card,.btn-feature-card{border:none;background:none;cursor:pointer;font-size:13px;opacity:0.4;transition:opacity 0.2s,transform 0.2s;padding:2px;line-height:1}
 .btn-burn:hover,.btn-sell-card:hover,.btn-feature-card:hover{opacity:0.9;transform:scale(1.2)}
 /* ── INVENTORY KEBAB MENU + PIN ── */
-.col-card-kebab{position:absolute;top:6px;right:6px;width:26px;height:26px;border:none;border-radius:8px;background:rgba(20,20,28,0.55);color:#fff;font-size:18px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:6;transition:background 0.18s ease,transform 0.18s ease;padding:0;letter-spacing:0}
+.col-card-kebab{position:absolute;top:8px;right:8px;width:26px;height:26px;border:none;border-radius:8px;background:rgba(20,20,28,0.55);color:#fff;font-size:18px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:8;transition:background 0.18s ease,transform 0.18s ease;padding:0;letter-spacing:0;flex-shrink:0}
 .col-card-kebab:hover{background:rgba(20,20,28,0.85);transform:scale(1.08)}
 .col-card-kebab:active{transform:scale(0.92)}
 /* Lift the entire card above its grid siblings while its dropdown is open,
@@ -979,8 +981,8 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-card:has(.col-card-menu.open){z-index:9999}
 .col-card-menu{
   position:absolute;
-  top:36px;
-  right:6px;
+  top:40px;
+  right:8px;
   min-width:170px;
   background:#111111;
   background-color:#111111;
@@ -1041,14 +1043,14 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-card-menu-item.danger:hover{background:rgba(255,80,80,0.16);color:#ff5555}
 .col-card-menu-item .ic{font-size:13px;width:14px;display:inline-flex;justify-content:center;flex-shrink:0;pointer-events:none}
 .col-card.pinned{box-shadow:0 0 22px rgba(255,180,40,0.32),inset 0 0 0 1px rgba(255,180,40,0.45)!important}
-.col-card-pin-badge{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#ffb840,#ff7e36);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,165,40,0.5);z-index:5;pointer-events:none;line-height:1}
+.col-card-pin-badge{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#ffb840,#ff7e36);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,165,40,0.5);z-index:7;pointer-events:none;line-height:1}
 
 /* ────────────────────────────────────────
    POXY CLUB EXCLUSIVES — VIP RARITY SYSTEM
    All animations use transform + opacity ONLY (GPU-friendly, no layout shifts)
    ──────────────────────────────────────── */
 .poxy-vip-obsidian,.poxy-vip-cursed,.poxy-vip-souvenir,.poxy-vip-stellar,.poxy-vip-diamond,.poxy-vip-secret{position:relative;isolation:isolate;overflow:hidden}
-.col-card.col-card-vip > .col-card-icon,.col-card.col-card-vip > .col-card-tier,.col-card.col-card-vip > .col-card-date,.col-card.col-card-vip > .col-card-serial,.col-card.col-card-vip > .col-card-kebab,.col-card.col-card-vip > .col-card-menu,.col-card.col-card-vip > .col-card-pin-badge,.col-card.col-card-vip > .col-card-vip-serial{position:relative;z-index:2}
+.col-card.col-card-vip > .col-card-body{position:relative;z-index:2}
 
 /* OBSIDIAN — slow void breathing pulse */
 .poxy-vip-obsidian{background:radial-gradient(circle at 50% 30%,rgba(70,80,100,0.28),rgba(8,8,16,0.96))!important;border-color:rgba(120,130,160,0.45)!important}
@@ -1083,10 +1085,10 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 @keyframes vipSecretGradient{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 
 /* VIP serial badge — top-center, prominent #X */
-.col-card-vip-serial{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.6);color:#ffce6a;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:1.2px;border:1px solid rgba(255,206,106,0.5);font-family:'Inter',monospace;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:5;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.45);box-shadow:0 4px 14px rgba(255,140,0,0.28),0 0 0 1px rgba(0,0,0,0.4) inset;line-height:1}
+.col-card-vip-serial{position:absolute;top:8px;left:50%;transform:translateX(-50%);max-width:calc(100% - 56px);background:rgba(0,0,0,0.6);color:#ffce6a;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:1.2px;border:1px solid rgba(255,206,106,0.5);font-family:'Inter',monospace;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:6;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.45);box-shadow:0 4px 14px rgba(255,140,0,0.28),0 0 0 1px rgba(0,0,0,0.4) inset;line-height:1;white-space:nowrap}
 
 /* TEASER — non-VIP locked view (blur + grayscale + lock overlay) */
-.col-vip-locked-wrap{position:relative;display:block}
+.col-vip-locked-wrap{position:relative;display:block;width:100%}
 .poxy-club-teaser{filter:blur(11px) grayscale(0.5)!important;opacity:0.7!important;pointer-events:none!important}
 .col-card-locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(0,0,0,0.32);border-radius:16px;color:#fff;font-size:11px;font-weight:900;letter-spacing:3px;pointer-events:none;z-index:10;text-transform:uppercase}
 .col-card-locked-overlay .ic{font-size:24px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6))}
@@ -2664,7 +2666,9 @@ function buildCollectionCard(item,index,lockedView){
   const lbl=document.createElement('div');lbl.className='col-card-tier';lbl.style.color=tier.color;lbl.textContent=tier.label;
   const dt=document.createElement('div');dt.className='col-card-date';dt.textContent=ds;
   const ser=document.createElement('div');ser.className='col-card-serial';ser.textContent=item.serial_number||'–';
-  card.appendChild(ico);card.appendChild(lbl);card.appendChild(dt);card.appendChild(ser);
+  const body=document.createElement('div');body.className='col-card-body';
+  body.appendChild(ico);body.appendChild(lbl);body.appendChild(dt);body.appendChild(ser);
+  card.appendChild(body);
 
   if(isPinned){const pb=document.createElement('div');pb.className='col-card-pin-badge';pb.textContent='📌';card.appendChild(pb);}
 
