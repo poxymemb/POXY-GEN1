@@ -383,6 +383,56 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .nav-btn.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,#FF5722,#E91E63);border-radius:2px 2px 0 0}
 .nav-btn.club-tab{color:#FF5252;display:none}.nav-btn.club-tab.show{display:block}
 .nav-btn.club-tab.active::after{background:linear-gradient(90deg,#FF5252,#FF8F00)}
+
+/* ── PREMIUM CLUB TAB (visual-only, layout unchanged) ── */
+.nav-btn.club-tab{
+  background:linear-gradient(45deg,#FFD700,#FF8C00,#FF4500,#FFD700);
+  background-size:300% 300%;
+  background-position:0% 50%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+  filter:drop-shadow(0 0 8px rgba(255,140,0,0.6));
+  transition:transform 0.25s ease,filter 0.25s ease,background-position 0.6s ease;
+  overflow:visible;
+  will-change:transform,filter,background-position;
+}
+.nav-btn.club-tab:hover{
+  transform:scale(1.15);
+  background-position:100% 50%;
+  filter:drop-shadow(0 0 14px rgba(255,140,0,0.85));
+}
+/* Sparkles only render when the tab is NOT active so the existing
+   .nav-btn.club-tab.active::after underline indicator is preserved. */
+.nav-btn.club-tab:not(.active)::before,
+.nav-btn.club-tab:not(.active)::after{
+  content:"";
+  position:absolute;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#FFD700;
+  pointer-events:none;
+  will-change:transform,opacity;
+  animation:floatSparks 2s ease-in-out infinite;
+}
+.nav-btn.club-tab:not(.active)::before{
+  left:30%;
+  bottom:32%;
+  box-shadow:-10px 1px 0 -1px #FFA500,9px 2px 0 -1px #FF8C00;
+  animation-delay:0s;
+}
+.nav-btn.club-tab:not(.active)::after{
+  left:62%;
+  bottom:32%;
+  box-shadow:8px 4px 0 0 #FFD700,-9px 5px 0 -1px #FF4500;
+  animation-delay:0.7s;
+}
+@keyframes floatSparks {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-15px) scale(0); opacity: 0; }
+}
 .nav-sep{width:1px;height:16px;background:#f0f0f0;flex-shrink:0}
 
 /* ── PAGES ── */
@@ -623,7 +673,6 @@ body.dark-club .club-sub{color:#888}
 <!-- SIDEBAR PANEL -->
 <div class="sidebar-panel" id="sidebarPanel">
   <div class="sidebar-header">
-    <div class="sidebar-logo">POXY WORLD</div>
     <button class="sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <div class="sidebar-tabs">
@@ -800,7 +849,6 @@ body.dark-club .club-sub{color:#888}
         <button class="btn-discard" id="btnDiscard">DISCARD</button>
       </div>
       <button class="btn-list-market" id="btnListFromHunt">LIST ON MARKET INSTEAD</button>
-      <button class="btn-club-enter" id="btnClubEnter" onclick="showPage('club')">&#9733; ENTER POXY CLUB &#9733;</button>
     </div>
   </div>
 </div>
