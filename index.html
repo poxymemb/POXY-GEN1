@@ -1105,18 +1105,24 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-club-grid .col-vip-locked-wrap{aspect-ratio:3/4;min-height:178px;width:100%;display:flex;align-items:stretch}
 .col-club-grid .col-vip-locked-wrap > .col-card{flex:1;width:100%;height:100%;min-height:100%;aspect-ratio:unset}
 .col-club-grid .col-card{aspect-ratio:3/4;min-height:178px;padding:0;gap:0;justify-content:flex-start;align-items:stretch;overflow:hidden}
+.col-club-grid .col-card:has(.col-card-menu.open){overflow:visible;z-index:9999}
+.col-club-grid .col-card[class*="poxy-vip-"]:has(.col-card-menu.open){overflow:visible}
 .col-club-grid .col-card > .col-card-kebab,
 .col-club-grid .col-card > .col-card-menu,
 .col-club-grid .col-card > .col-card-pin-badge,
 .col-club-grid .col-card > .col-card-vip-serial{position:absolute;z-index:8}
 .col-club-grid .col-card > .col-card-vip-serial{z-index:6}
 .col-club-grid .col-card-body{position:absolute;inset:36px 8px 10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:auto;gap:7px;margin:0;padding:0;text-align:center;z-index:2}
+.col-club-grid .col-card:has(.col-card-menu.open) .col-card-body{opacity:0.35;pointer-events:none}
 .col-club-grid .col-card-icon{font-size:30px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;margin:0}
 .col-club-grid .col-card-tier,
 .col-club-grid .col-card-date,
 .col-club-grid .col-card-serial{width:100%;text-align:center;margin:0}
-.col-club-grid .col-card-kebab{top:8px;right:8px}
-.col-club-grid .col-card-menu{top:40px;right:8px}
+.col-club-grid .col-card-kebab{top:8px;right:8px;z-index:12}
+.col-club-grid .col-card-menu{top:38px;left:8px;right:8px;min-width:0;width:auto;max-width:none;z-index:20;transform-origin:top center}
+.col-club-grid .col-card-menu.open{transform:translateY(0) scale(1)}
+.col-club-grid .col-card-menu-item{font-size:10px;padding:7px 8px;min-height:30px;gap:6px;white-space:nowrap}
+.col-club-grid .col-card-menu-item .ic{font-size:11px;width:12px}
 .col-club-grid .col-card-pin-badge{top:8px;left:8px}
 .col-club-grid .col-card-vip-serial{top:8px;left:50%;transform:translateX(-50%)}
 .col-club-cta{width:100%;margin-top:6px;padding:13px 16px;border:1px solid rgba(255,140,0,0.6);border-radius:12px;background:linear-gradient(135deg,rgba(255,180,40,0.15),rgba(255,80,80,0.1));color:#ffce6a;font-family:inherit;font-size:11px;font-weight:900;letter-spacing:2.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;will-change:transform}
