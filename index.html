@@ -1724,6 +1724,7 @@ const sb = supabase.createClient(
   'https://rbrtjkfawdnomvvyxwvp.supabase.co',
   'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG'
 );
+const $=id=>document.getElementById(id);
 
 // ── ECONOMY ENGINE (PHASE 2 — deterministic) ──
 // Standard case (1 PC): probabilities + burn payouts (PC).
@@ -1992,8 +1993,6 @@ let greatBurnTotal=0;
 // notifications queue (Phase 1)
 let notificationQueue=[];
 
-const $=id=>document.getElementById(id);
-
 // ── SANITIZATION ──
 function sanitizeText(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function validateUrl(url){if(!url||typeof url!=='string')return false;try{const u=new URL(url);return['http:','https:'].includes(u.protocol);}catch{return false;}}
@@ -2174,7 +2173,13 @@ window.handleAuth=async function(){
       if(!res.error&&res.data.user&&!res.data.session){msg.className='auth-msg success';msg.textContent='Check your email!';btn.disabled=false;return;}
     }
     if(res.error)throw res.error;
-  }catch(e){msg.className='auth-msg error';msg.textContent=e.message||'Error.';}
+  }catch(e){
+    msg.className='auth-msg error';
+    const em=(e?.message||'').toLowerCase();
+    if(em.includes('invalid login credentials')||em.includes('invalid_credentials'))msg.textContent='Wrong email or password.';
+    else if(em.includes('email not confirmed'))msg.textContent='Confirm your email first, then sign in.';
+    else msg.textContent=e.message||'Sign in failed. Try again.';
+  }
   btn.disabled=false;
 };
 window.handleLogout=async function(){await sb.auth.signOut();clearBg();document.body.className='';document.body.removeAttribute('data-theme');};
