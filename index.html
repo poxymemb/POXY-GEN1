@@ -114,13 +114,12 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
   border-radius:50%;
   flex-shrink:0;
 }
-/* ── PROFILE MENU AVATAR (precision-centered frame + face) ── */
-#profileBigAvatarWrap.avatar-frame-target{
+/* ── MY PROFILE menu avatar — localized alignment only (#profilePage scope) ── */
+#profilePage #profileBigAvatarWrap.avatar-frame-target{
   width:76px;
   height:76px;
   min-width:76px;
   min-height:76px;
-  aspect-ratio:1/1;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -130,36 +129,39 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
   margin:0;
   padding:0;
   flex-shrink:0;
-  --af-ring-outer:126%;
-  --af-ring-inner:112%;
+  --af-ring-outer:124%;
+  --af-ring-inner:110%;
 }
-#profileBigAvatarWrap.avatar-frame-target::before,
-#profileBigAvatarWrap.avatar-frame-target::after{
+#profilePage #profileBigAvatarWrap.gpu-accel{
+  transform:none;
+  will-change:auto;
+}
+#profilePage #profileBigAvatarWrap.avatar-frame-target::before,
+#profilePage #profileBigAvatarWrap.avatar-frame-target::after{
   top:50%;
   left:50%;
   right:auto;
   bottom:auto;
+  transform:translate(-50%,-50%);
   transform-origin:center center;
   margin:0;
   padding:0;
 }
-#profileBigAvatarWrap.avatar-frame-target[data-frame]::before,
-#profileBigAvatarWrap.avatar-frame-target[data-frame]::after{
+#profilePage #profileBigAvatarWrap.avatar-frame-target[data-frame]::before{
   width:var(--af-ring-outer);
   height:var(--af-ring-outer);
 }
-#profileBigAvatarWrap.avatar-frame-target[data-frame]::after{
+#profilePage #profileBigAvatarWrap.avatar-frame-target[data-frame]::after{
   width:var(--af-ring-inner);
   height:var(--af-ring-inner);
 }
-#profileBigAvatarWrap.avatar-frame-target > #profileBigAvatar{
+#profilePage #profileBigAvatarWrap > #profileBigAvatar{
   width:76px;
   height:76px;
   min-width:76px;
   min-height:76px;
   max-width:76px;
   max-height:76px;
-  aspect-ratio:1/1;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -174,8 +176,8 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
   transform:none;
   box-sizing:border-box;
 }
-#profileBigAvatarWrap #profileBigAvatar .profile-menu-avatar-face,
-#profileBigAvatarWrap #profileBigAvatar > span{
+#profilePage #profileBigAvatar .profile-menu-avatar-face,
+#profilePage #profileBigAvatar > span{
   display:flex;
   align-items:center;
   justify-content:center;
@@ -183,18 +185,16 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
   height:100%;
   margin:0;
   padding:0;
-  font-size:42px;
+  font-size:40px;
   line-height:1;
   text-align:center;
   transform:none;
 }
-#profileBigAvatarWrap #profileBigAvatar .avatar-upload-preview,
-#profileBigAvatarWrap #profileBigAvatar img{
+#profilePage #profileBigAvatar img,
+#profilePage #profileBigAvatar .avatar-upload-preview{
   display:block;
   width:100%;
   height:100%;
-  max-width:100%;
-  max-height:100%;
   object-fit:cover;
   object-position:center center;
   margin:0;
