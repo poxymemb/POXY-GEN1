@@ -803,9 +803,17 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .avatar-opt.selected{border-color:#FF5722;background:#fff5f2;transform:scale(1.1)}
 .frame-cosmetic-panel{margin:18px 0 16px;padding:16px 14px 14px;background:linear-gradient(165deg,rgba(12,12,16,0.98),rgba(6,6,10,0.99));border-radius:18px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 16px 44px rgba(0,0,0,0.38),inset 0 1px 0 rgba(255,255,255,0.06);position:relative;overflow:hidden}
 .frame-cosmetic-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 0%,rgba(255,65,108,0.14),transparent 42%),radial-gradient(circle at 88% 100%,rgba(124,77,255,0.12),transparent 48%);pointer-events:none}
-.frame-selector-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1}
-.frame-selector-label{font-size:10px;font-weight:800;letter-spacing:2.5px;color:#e8e8f0;text-transform:uppercase;margin:0}
+.frame-selector-header{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:12px;padding:0;border:none;background:transparent;cursor:pointer;font-family:inherit;text-align:left;position:relative;z-index:1;transition:margin-bottom 0.28s ease}
+.frame-cosmetic-panel.is-collapsed .frame-selector-header{margin-bottom:0}
+.frame-selector-header-text{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
+.frame-selector-label{font-size:10px;font-weight:800;letter-spacing:2.5px;color:#e8e8f0;text-transform:uppercase;margin:0;transition:color 0.2s ease}
 .frame-selector-sub{font-size:9px;color:#666;letter-spacing:1px;text-transform:uppercase}
+.frame-selector-chevron{font-size:13px;color:#777;line-height:1;flex-shrink:0;margin-left:10px;transition:transform 0.32s cubic-bezier(0.25,1,0.5,1),color 0.2s ease}
+.frame-cosmetic-panel.is-collapsed .frame-selector-chevron{transform:rotate(-90deg)}
+.frame-selector-header:hover .frame-selector-label{color:#fff}
+.frame-selector-header:hover .frame-selector-chevron{color:#bbb}
+.frame-selector-body{max-height:360px;overflow:hidden;transition:max-height 0.36s cubic-bezier(0.25,1,0.5,1),opacity 0.28s ease;opacity:1;position:relative;z-index:1}
+.frame-cosmetic-panel.is-collapsed .frame-selector-body{max-height:0;opacity:0;pointer-events:none}
 .frame-selector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;max-height:320px;overflow-y:auto;padding:4px 2px;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
 .frame-selector-grid::-webkit-scrollbar{width:4px}
 .frame-selector-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px}
@@ -1458,12 +1466,17 @@ body.dark-club .club-sub{color:#888}
   <div class="page-title">MY PROFILE</div>
   <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target"><div id="profileBigAvatar"></div></div></div>
   <div class="profile-avatar-row" id="avatarRow"></div>
-  <div class="frame-cosmetic-panel frame-selector-section">
-    <div class="frame-selector-header">
-      <div class="frame-selector-label">Avatar Frames</div>
-      <div class="frame-selector-sub">Premium Cosmetics</div>
+  <div class="frame-cosmetic-panel frame-selector-section" id="frameSelectorSection">
+    <button type="button" class="frame-selector-header" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
+      <span class="frame-selector-header-text">
+        <span class="frame-selector-label">Avatar Frames</span>
+        <span class="frame-selector-sub">Premium Cosmetics</span>
+      </span>
+      <span class="frame-selector-chevron" aria-hidden="true">▾</span>
+    </button>
+    <div class="frame-selector-body" id="frameSelectorBody">
+      <div class="frame-selector-grid" id="frameSelectorGrid"></div>
     </div>
-    <div class="frame-selector-grid" id="frameSelectorGrid"></div>
   </div>
   <div style="text-align:center;margin-bottom:14px">
     <label for="avatarUpload" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1.5px dashed #e0e0e0;border-radius:50px;font-size:10px;font-weight:700;color:#B0B0B0;letter-spacing:1px;cursor:pointer;transition:all 0.2s;text-transform:uppercase" onmouseover="this.style.borderColor='#FF5722';this.style.color='#FF5722'" onmouseout="this.style.borderColor='#e0e0e0';this.style.color='#B0B0B0'">
@@ -1886,6 +1899,24 @@ function mountAvatarFace(el,resolved){
   }
 }
 
+function initFrameSelectorCollapse(){
+  const panel=$('frameSelectorSection');
+  const btn=$('frameSelectorToggle');
+  if(!panel||!btn)return;
+  let collapsed=false;
+  try{collapsed=localStorage.getItem('poxy_frames_collapsed')==='1';}catch(e){}
+  panel.classList.toggle('is-collapsed',collapsed);
+  btn.setAttribute('aria-expanded',collapsed?'false':'true');
+}
+window.toggleFrameSelectorSection=function(){
+  const panel=$('frameSelectorSection');
+  const btn=$('frameSelectorToggle');
+  if(!panel||!btn)return;
+  const collapsed=panel.classList.toggle('is-collapsed');
+  btn.setAttribute('aria-expanded',collapsed?'false':'true');
+  try{localStorage.setItem('poxy_frames_collapsed',collapsed?'1':'0');}catch(e){}
+};
+
 function renderFrameSelector(){
   const grid = $('frameSelectorGrid');
   if(!grid) return;
@@ -1925,6 +1956,11 @@ function renderFrameSelector(){
 }
 
 loadSelectedFrame();
+initFrameSelectorCollapse();
+(function(){
+  const btn=$('frameSelectorToggle');
+  if(btn)btn.addEventListener('click',toggleFrameSelectorSection);
+})();
 
 // ── STATE (PHASE 1 — synchronized in real-time UI) ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null;
