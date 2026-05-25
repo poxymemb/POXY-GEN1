@@ -687,6 +687,14 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .bank-amt.selected{border-color:#FF5722;background:#fff5f2}
 .bank-amt-val{font-size:14px;font-weight:800;color:#1a1a1a}
 .bank-amt-sub{font-size:9px;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.bank-amt-custom{display:flex;align-items:stretch;padding:0;overflow:hidden;cursor:default;min-height:100%}
+.bank-amt-custom:focus-within,.bank-amt-custom.selected{border-color:#FF5722;background:#fff5f2}
+.bank-custom-input{flex:1;min-width:0;border:none;background:transparent;padding:12px 6px;font-family:inherit;font-size:13px;font-weight:800;color:#1a1a1a;text-align:center;outline:none;-moz-appearance:textfield}
+.bank-custom-input::-webkit-outer-spin-button,.bank-custom-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.bank-custom-input::placeholder{font-weight:600;font-size:10px;color:#B0B0B0;letter-spacing:0.5px}
+.bank-custom-add{flex-shrink:0;width:38px;border:none;border-left:1.5px solid #f0f0f0;background:transparent;color:#FF5722;font-family:inherit;font-size:18px;font-weight:900;line-height:1;cursor:pointer;transition:background 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center}
+.bank-custom-add:hover{background:#fff0eb;color:#E64A19}
+.bank-custom-add:disabled{opacity:0.45;cursor:not-allowed}
 .bank-form{background:#f7f7f7;border-radius:16px;padding:16px;margin-bottom:16px}
 .bank-form-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:6px}
 .bank-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -1255,7 +1263,7 @@ const FOUNDER_EMAIL = 'nikitash0504@gmail.com';
 const AVATARS = ['🎭','🦊','🐲','👾','🌀','⚡'];
 const BANK_AMOUNTS = [
   {val:5,label:'Starter'},{val:10,label:'Hunter'},{val:25,label:'Elite'},
-  {val:50,label:'Whale'},{val:100,label:'Legend'},{val:250,label:'Founder'}
+  {val:50,label:'Whale'},{val:100,label:'Legend'}
 ];
 const CLUB_PRICE_ONE = VIP_CASE_PRICE;
 const CLUB_PRICE_FIVE = VIP_CASE_PRICE * 5;
@@ -1933,6 +1941,7 @@ function buildCollectionCard(item,index,lockedView){
     '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?'Unpin':'Pin to top')+'</button>'+
     '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?'Unfeature':'Feature in Profile')+'</button>'+
     '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>List on Market</button>'+
+    '<button type="button" class="col-card-menu-item" data-action="share" data-id="'+item.id+'" role="menuitem"><span class="ic">🔗</span>Share Link</button>'+
     '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>Burn</button>';
   card.appendChild(menu);
 
@@ -2041,6 +2050,29 @@ async function toggleFeaturePoxy(userPoxyId){
   }catch(e){logAndToast('feature',e);}
 }
 
+async function sharePoxy(poxyId,rarity,serialNumber){
+  const text='Check out my unique '+rarity+' Poxy #'+serialNumber+'! 🔥 Join Poxy World: https://poxyworld.com/poxy/'+poxyId;
+  try{
+    if(navigator.clipboard&&typeof navigator.clipboard.writeText==='function'){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    throw new Error('clipboard unavailable');
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=text;
+    ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;left:-9999px;top:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0,text.length);
+    let ok=false;
+    try{ok=document.execCommand('copy');}catch(err){ok=false;}
+    document.body.removeChild(ta);
+    return ok;
+  }
+}
+
 // ── INVENTORY EVENT DELEGATION (single listener, no per-card handlers) ──
 (function wireInventoryDelegation(){
   const root=document.getElementById('colContent');
@@ -2072,8 +2104,27 @@ async function toggleFeaturePoxy(userPoxyId){
       const item=colData.find(i=>String(i.id)===String(id));
       const card=root.querySelector('.col-card[data-id="'+CSS.escape(id)+'"]');
       const menu=mi.closest('.col-card-menu');
-      if(menu)menu.classList.remove('open');
       if(!item)return;
+      if(action==='share'){
+        const tier=TIER_BY_ID[item.poxy_tier];
+        const rarityLabel=tier?tier.label:String(item.poxy_tier||'Poxy');
+        const serialNum=item.vip_serial!=null?item.vip_serial:(item.serial_number||'–');
+        const origHtml=mi.innerHTML;
+        sharePoxy(item.id,rarityLabel,serialNum).then(function(ok){
+          if(ok){
+            mi.innerHTML='<span class="ic">✅</span>Copied! ✅';
+            setTimeout(function(){
+              mi.innerHTML=origHtml;
+              if(menu)menu.classList.remove('open');
+            },2000);
+          }else{
+            showToast('Could not copy link.');
+            if(menu)menu.classList.remove('open');
+          }
+        });
+        return;
+      }
+      if(menu)menu.classList.remove('open');
       if(action==='pin'){togglePinPoxy(item.id,item.pinned_at);return;}
       if(action==='feature'){toggleFeaturePoxy(item.id);return;}
       if(action==='list'){
@@ -2590,9 +2641,45 @@ function renderBank(){
   BANK_AMOUNTS.forEach(a=>{
     const div=document.createElement('div');div.className='bank-amt'+(a.val===selectedBankAmt?' selected':'');
     div.innerHTML='<div class="bank-amt-val">'+a.val+' PC</div><div class="bank-amt-sub">'+a.label+'</div>';
-    div.onclick=()=>{selectedBankAmt=a.val;document.querySelectorAll('.bank-amt').forEach(x=>x.classList.remove('selected'));div.classList.add('selected');};
+    div.onclick=()=>{
+      selectedBankAmt=a.val;
+      document.querySelectorAll('.bank-amt').forEach(x=>x.classList.remove('selected'));
+      const cw=$('bankCustomWrap');if(cw)cw.classList.remove('selected');
+      div.classList.add('selected');
+    };
     grid.appendChild(div);
   });
+  const custom=document.createElement('div');
+  custom.className='bank-amt bank-amt-custom';
+  custom.id='bankCustomWrap';
+  custom.innerHTML='<input type="number" class="bank-custom-input" id="bankCustomAmt" min="1" step="1" placeholder="Custom PC" aria-label="Custom PC amount"><button type="button" class="bank-custom-add" id="bankCustomAdd" aria-label="Add custom amount">+</button>';
+  grid.appendChild(custom);
+  const input=$('bankCustomAmt');
+  const addBtn=$('bankCustomAdd');
+  async function applyCustomBankAmount(){
+    if(!input||!currentUser)return;
+    const val=parseFloat(input.value);
+    if(!val||val<=0){showToast('Enter an amount greater than 0.');input.focus();return;}
+    selectedBankAmt=val;
+    document.querySelectorAll('.bank-amt.selected').forEach(x=>x.classList.remove('selected'));
+    custom.classList.add('selected');
+    if(addBtn){addBtn.disabled=true;addBtn.textContent='…';}
+    try{
+      await processTopup();
+      input.value='';
+    }catch(e){showToast(e.message||'Deposit failed.');}
+    finally{
+      if(addBtn){addBtn.disabled=false;addBtn.textContent='+';}
+      custom.classList.remove('selected');
+    }
+  }
+  if(addBtn)addBtn.onclick=function(e){e.stopPropagation();applyCustomBankAmount();};
+  if(input){
+    input.onclick=function(e){e.stopPropagation();};
+    input.onkeydown=function(e){
+      if(e.key==='Enter'){e.preventDefault();applyCustomBankAmount();}
+    };
+  }
 }
 function validateCard(){
   const card=$('bankCard').value.replace(/\s/g,'');
