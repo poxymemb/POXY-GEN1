@@ -48,53 +48,76 @@ body[data-theme="mayfair"]{background:#0e0608}
 body.screen-shake{animation:screenShake 0.45s ease-out}
 body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 
-/* ── GLOBAL AVATAR FRAME SYSTEM ── */
-.avatar-frame-target{position:relative;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:visible;box-sizing:border-box;flex-shrink:0}
+/* ── GLOBAL AVATAR FRAME SYSTEM (AAA COSMETIC) ── */
+.avatar-frame-target{position:relative;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:visible;box-sizing:border-box;flex-shrink:0;isolation:isolate}
 .avatar-frame-target::before,.avatar-frame-target::after{content:"";position:absolute;border-radius:50%;pointer-events:none;box-sizing:border-box;z-index:0}
-.avatar-frame-target>*{position:relative;z-index:1}
+.avatar-frame-target>*{position:relative;z-index:1;border-radius:50%}
 #profileBigAvatarWrap.avatar-frame-target{width:76px;height:76px}
+.inspect-avatar-wrap.avatar-frame-target{width:52px;height:52px;overflow:visible}
+.pcm-avatar.avatar-frame-target{width:22px;height:22px;font-size:11px;flex-shrink:0}
+.user-card-avatar.avatar-frame-target{overflow:visible}
 
-.avatar-frame-target[data-frame="venom-frame"]::before{inset:-5px;border:2px solid #39ff14;animation:afVenomPulse 3.5s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="venom-frame"]::after{inset:-9px;border:1px solid rgba(57,255,20,0.4);animation:afVenomPulse 3.5s ease-in-out infinite 0.45s;will-change:transform,opacity}
-@keyframes afVenomPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
+/* 1 — VENOM: living alien biomass */
+.avatar-frame-target[data-frame="venom-frame"]::before{inset:-14%;background:radial-gradient(circle at 50% 45%,rgba(12,0,28,0.92) 52%,rgba(57,255,20,0.22) 68%,transparent 72%);animation:afVenomBio 4.4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="venom-frame"]::after{inset:-10%;border:2px solid rgba(57,255,20,0.75);box-shadow:0 0 0 1px rgba(60,0,90,0.9),0 0 10px rgba(57,255,20,0.35);animation:afVenomSpike 4.4s ease-in-out infinite 0.35s;will-change:transform,opacity}
+@keyframes afVenomBio{0%,100%{opacity:0.6;transform:scale(0.93) rotate(0deg)}50%{opacity:1;transform:scale(1.07) rotate(4deg)}}
+@keyframes afVenomSpike{0%,100%{opacity:0.45;transform:scale(1) rotate(0deg)}40%{opacity:1;transform:scale(1.05) rotate(-5deg)}70%{opacity:0.8;transform:scale(0.97) rotate(3deg)}}
 
-.avatar-frame-target[data-frame="magma-frame"]::before{inset:-5px;border:2.5px solid #ff5722;animation:afMagmaPulse 2.8s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="magma-frame"]::after{inset:-9px;border:1.5px solid rgba(255,140,0,0.55);animation:afMagmaPulse 2.8s ease-in-out infinite 0.35s;will-change:transform,opacity}
-@keyframes afMagmaPulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.09)}}
+/* 2 — MAGMA: molten volcanic armor */
+.avatar-frame-target[data-frame="magma-frame"]::before{inset:-13%;background:radial-gradient(circle at 40% 60%,rgba(255,69,0,0.55) 0%,rgba(120,20,0,0.85) 45%,rgba(40,8,0,0.95) 70%,transparent 74%);animation:afMagmaFlow 3.6s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="magma-frame"]::after{inset:-9%;border:2px solid rgba(255,140,0,0.85);box-shadow:0 0 0 1px rgba(255,60,0,0.5),0 0 12px rgba(255,100,0,0.4);animation:afMagmaHeat 3.6s ease-in-out infinite 0.25s;will-change:transform,opacity}
+@keyframes afMagmaFlow{0%,100%{opacity:0.65;transform:scale(0.95) rotate(0deg)}50%{opacity:1;transform:scale(1.08) rotate(6deg)}}
+@keyframes afMagmaHeat{0%,100%{opacity:0.55;transform:scale(1)}35%{opacity:1;transform:scale(1.06)}65%{opacity:0.75;transform:scale(1.02)}}
 
-.avatar-frame-target[data-frame="prism-frame"]::before{inset:-5px;border:2px solid #e040fb;animation:afPrismSpin 4s linear infinite;will-change:transform}
-.avatar-frame-target[data-frame="prism-frame"]::after{inset:-5px;border:2px solid transparent;border-top-color:#00e5ff;border-right-color:#76ff03;border-bottom-color:#ffea00;border-left-color:#ff4081;animation:afPrismSpin 4s linear infinite reverse;will-change:transform}
-@keyframes afPrismSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+/* 3 — PRISM: luxury crystal optics */
+.avatar-frame-target[data-frame="prism-frame"]::before{inset:-12%;background:conic-gradient(from 0deg,rgba(255,0,128,0.7),rgba(0,229,255,0.7),rgba(118,255,3,0.7),rgba(255,234,0,0.7),rgba(255,0,128,0.7));animation:afPrismRefract 5s linear infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="prism-frame"]::after{inset:-7%;border:2px solid rgba(255,255,255,0.55);animation:afPrismSpark 5s ease-in-out infinite;will-change:transform,opacity}
+@keyframes afPrismRefract{0%{transform:rotate(0deg);opacity:0.75}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.75}}
+@keyframes afPrismSpark{0%,100%{opacity:0.5;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
 
-.avatar-frame-target[data-frame="bio-storm-frame"]::before{inset:-5px;border:2px dashed #00e676;animation:afBioStorm 3s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="bio-storm-frame"]::after{inset:-8px;border:1px solid rgba(0,230,118,0.45);animation:afBioStorm 3s ease-in-out infinite 0.3s;will-change:transform,opacity}
-@keyframes afBioStorm{0%,100%{opacity:0.45;transform:scale(1) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(6deg)}}
+/* 4 — BIO-STORM: cyber-biological storm */
+.avatar-frame-target[data-frame="bio-storm-frame"]::before{inset:-12%;border:2px dashed rgba(0,255,120,0.75);animation:afBioScan 2.8s linear infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="bio-storm-frame"]::after{inset:-9%;background:repeating-conic-gradient(from 0deg,rgba(0,255,120,0.15) 0deg 8deg,transparent 8deg 16deg);animation:afBioMatrix 2.8s linear infinite reverse;will-change:transform,opacity}
+@keyframes afBioScan{0%{transform:rotate(0deg);opacity:0.55}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.55}}
+@keyframes afBioMatrix{0%,100%{opacity:0.45;transform:scale(0.96)}50%{opacity:0.95;transform:scale(1.06)}}
 
-.avatar-frame-target[data-frame="ethereal-flame"]::before{inset:-5px;border:2px solid #ffab40;animation:afEtherealFlame 3.2s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="ethereal-flame"]::after{inset:-9px;border:1px solid rgba(255,171,64,0.35);animation:afEtherealFlame 3.2s ease-in-out infinite 0.5s;will-change:transform,opacity}
-@keyframes afEtherealFlame{0%,100%{opacity:0.55;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+/* 5 — ETHEREAL FLAME: plasma spirit fire */
+.avatar-frame-target[data-frame="ethereal-flame"]::before{inset:-13%;background:radial-gradient(circle at 50% 80%,rgba(0,255,255,0.45) 0%,rgba(140,0,255,0.35) 40%,rgba(20,0,40,0.2) 65%,transparent 72%);animation:afEtherealRise 3.4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ethereal-flame"]::after{inset:-9%;border:2px solid rgba(180,100,255,0.7);animation:afEtherealPulse 3.4s ease-in-out infinite 0.4s;will-change:transform,opacity}
+@keyframes afEtherealRise{0%,100%{opacity:0.55;transform:scale(0.94) translateY(2px)}50%{opacity:1;transform:scale(1.08) translateY(-3px)}}
+@keyframes afEtherealPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
 
-.avatar-frame-target[data-frame="void-frame"]::before{inset:-6px;border:2px solid #7c4dff;animation:afVoidExpand 4.5s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="void-frame"]::after{inset:-10px;border:1px solid rgba(124,77,255,0.3);animation:afVoidExpand 4.5s ease-in-out infinite 0.6s;will-change:transform,opacity}
-@keyframes afVoidExpand{0%,100%{opacity:0.4;transform:scale(0.96)}50%{opacity:0.95;transform:scale(1.08)}}
+/* 6 — VOID: deep-space anomaly */
+.avatar-frame-target[data-frame="void-frame"]::before{inset:-14%;background:radial-gradient(circle at 35% 35%,rgba(180,140,255,0.35) 0%,rgba(40,0,80,0.6) 35%,rgba(0,0,0,0.95) 62%,transparent 72%);animation:afVoidGalaxy 6s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="void-frame"]::after{inset:-8%;border:1.5px solid rgba(124,77,255,0.65);box-shadow:0 0 0 2px rgba(0,0,0,0.8);animation:afVoidGravity 6s ease-in-out infinite 0.5s;will-change:transform,opacity}
+@keyframes afVoidGalaxy{0%,100%{opacity:0.6;transform:scale(0.96) rotate(0deg)}50%{opacity:1;transform:scale(1.1) rotate(8deg)}}
+@keyframes afVoidGravity{0%,100%{opacity:0.45;transform:scale(1.04)}50%{opacity:0.95;transform:scale(0.92)}}
 
-.avatar-frame-target[data-frame="tesla-frame"]::before{inset:-5px;border:2px solid #40c4ff;animation:afTeslaZap 2.5s steps(8,end) infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="tesla-frame"]::after{inset:-8px;border:1px solid rgba(64,196,255,0.5);animation:afTeslaZap 2.5s steps(8,end) infinite 0.15s;will-change:transform,opacity}
-@keyframes afTeslaZap{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+/* 7 — TESLA: high-voltage reactor */
+.avatar-frame-target[data-frame="tesla-frame"]::before{inset:-11%;border:2px solid rgba(64,196,255,0.9);animation:afTeslaArc 2.2s steps(10,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="tesla-frame"]::after{inset:-14%;border:1px solid rgba(255,255,255,0.45);animation:afTeslaCoil 2.2s steps(10,end) infinite 0.08s;will-change:transform,opacity}
+@keyframes afTeslaArc{0%,100%{opacity:0.5;transform:scale(1) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(3deg)}}
+@keyframes afTeslaCoil{0%,100%{opacity:0.35;transform:scale(1.08)}50%{opacity:0.9;transform:scale(0.94)}}
 
-.avatar-frame-target[data-frame="ocean-frame"]::before{inset:-5px;border:2px solid #0288d1;animation:afOceanDrift 3.8s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="ocean-frame"]::after{inset:-9px;border:1.5px solid rgba(3,169,244,0.4);animation:afOceanDrift 3.8s ease-in-out infinite 0.4s;will-change:transform,opacity}
-@keyframes afOceanDrift{0%,100%{opacity:0.55;transform:scale(1) translateY(0)}50%{opacity:1;transform:scale(1.06) translateY(-2px)}}
+/* 8 — OCEAN: living abyssal ocean */
+.avatar-frame-target[data-frame="ocean-frame"]::before{inset:-13%;background:radial-gradient(circle at 50% 30%,rgba(0,200,255,0.4) 0%,rgba(0,80,160,0.55) 45%,rgba(0,20,60,0.85) 68%,transparent 74%);animation:afOceanCaustic 4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ocean-frame"]::after{inset:-9%;border:2px solid rgba(3,169,244,0.75);animation:afOceanBubble 4s ease-in-out infinite 0.3s;will-change:transform,opacity}
+@keyframes afOceanCaustic{0%,100%{opacity:0.6;transform:scale(0.95) translateY(0)}50%{opacity:1;transform:scale(1.07) translateY(-3px)}}
+@keyframes afOceanBubble{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
 
-.avatar-frame-target[data-frame="glitch-frame"]::before{inset:-5px;border:2px solid #ff1744;animation:afGlitchShift 3s steps(6,end) infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="glitch-frame"]::after{inset:-5px;border:2px solid #00e5ff;animation:afGlitchShift 3s steps(6,end) infinite 0.1s;will-change:transform,opacity}
-@keyframes afGlitchShift{0%,85%,100%{opacity:0.7;transform:translate(0,0) scale(1)}88%{opacity:1;transform:translate(-2px,1px) scale(1.04)}91%{opacity:0.5;transform:translate(2px,-1px) scale(0.98)}94%{opacity:1;transform:translate(0,0) scale(1.02)}}
+/* 9 — GLITCH: corrupted hologram */
+.avatar-frame-target[data-frame="glitch-frame"]::before{inset:-10%;border:2px solid rgba(255,23,68,0.85);animation:afGlitchR 2.6s steps(8,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="glitch-frame"]::after{inset:-10%;border:2px solid rgba(0,229,255,0.75);animation:afGlitchB 2.6s steps(8,end) infinite 0.06s;will-change:transform,opacity}
+@keyframes afGlitchR{0%,82%,100%{opacity:0.75;transform:translate(0,0) scale(1)}86%{opacity:1;transform:translate(-3px,1px) scale(1.04)}90%{opacity:0.4;transform:translate(2px,-2px) scale(0.97)}94%{opacity:1;transform:translate(0,0) scale(1.02)}}
+@keyframes afGlitchB{0%,82%,100%{opacity:0.55;transform:translate(0,0) scale(1)}84%{opacity:0.9;transform:translate(3px,-1px) scale(1.03)}88%{opacity:0.3;transform:translate(-2px,2px) scale(0.98)}92%{opacity:0.85;transform:translate(0,0) scale(1.01)}}
 
-.avatar-frame-target[data-frame="ruby-frame"]::before{inset:-5px;border:2.5px solid #e53935;animation:afRubyShine 3.6s ease-in-out infinite;will-change:transform,opacity}
-.avatar-frame-target[data-frame="ruby-frame"]::after{inset:-9px;border:1px solid rgba(229,57,53,0.45);animation:afRubyShine 3.6s ease-in-out infinite 0.5s;will-change:transform,opacity}
-@keyframes afRubyShine{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+/* 10 — RUBY: royal blood crystal */
+.avatar-frame-target[data-frame="ruby-frame"]::before{inset:-13%;background:radial-gradient(circle at 50% 40%,rgba(255,80,80,0.55) 0%,rgba(180,0,30,0.65) 40%,rgba(60,0,10,0.9) 65%,transparent 72%);animation:afRubyCore 3.8s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ruby-frame"]::after{inset:-8%;border:2.5px solid rgba(229,57,53,0.9);animation:afRubyBlood 3.8s ease-in-out infinite 0.45s;will-change:transform,opacity}
+@keyframes afRubyCore{0%,100%{opacity:0.6;transform:scale(0.94)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes afRubyBlood{0%,100%{opacity:0.5;transform:scale(1.02) rotate(0deg)}50%{opacity:1;transform:scale(0.96) rotate(4deg)}}
 
-/* Legacy premium frame — other users' avatars only (not global frame targets) */
+/* Legacy premium frame — other users' avatars only */
 .avatar-premium-frame{border-radius:50%;animation:premiumFrameShift 3.5s ease-in-out infinite;padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC,#FFCA28);background-size:300% 300%}
 
 /* ── PC CURRENCY ── */
@@ -226,6 +249,8 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .poxychat-msg.founder-msg{border-left-color:#FFCA28;background:linear-gradient(90deg,rgba(255,202,40,0.08),#13131a 80%);box-shadow:0 0 12px rgba(255,202,40,0.18)}
 .poxychat-msg.club-msg{border-left-color:#FF6E40}
 .poxychat-msg .pcm-head{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.pcm-avatar{display:flex;align-items:center;justify-content:center;background:#0d0d10;border-radius:50%;overflow:visible;line-height:1}
+.pcm-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .poxychat-msg .pcm-name{font-size:10.5px;font-weight:700;color:#ff416c}
 .poxychat-msg.founder-msg .pcm-name{color:#FFCA28}
 .poxychat-msg.club-msg .pcm-name{color:#FF6E40}
@@ -493,15 +518,36 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .profile-avatar-row{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;justify-content:center}
 .avatar-opt{font-size:26px;width:48px;height:48px;border-radius:50%;border:2px solid #f0f0f0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:#fafafa}
 .avatar-opt.selected{border-color:#FF5722;background:#fff5f2;transform:scale(1.1)}
-.frame-selector-section{margin:16px 0}
-.frame-selector-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:10px}
-.frame-selector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px;max-height:240px;overflow-y:auto;padding:2px;-webkit-overflow-scrolling:touch}
-.frame-slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;border:1.5px solid #f0f0f0;border-radius:12px;background:#fafafa;cursor:pointer;transition:border-color 0.2s,transform 0.2s,background 0.2s,box-shadow 0.2s;font-family:inherit}
-.frame-slot:hover{border-color:#FF5722;background:#fff5f2;transform:scale(1.02)}
-.frame-slot.active{border-color:#FF5722;background:#fff5f2;box-shadow:0 0 0 1px rgba(255,87,34,0.25)}
-.frame-slot-preview{width:44px;height:44px;font-size:20px}
-.frame-slot-inner{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:#f7f7f7;line-height:1}
-.frame-slot-label{font-size:7.5px;font-weight:700;color:#888;letter-spacing:0.4px;text-transform:uppercase;text-align:center;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frame-cosmetic-panel{margin:18px 0 16px;padding:16px 14px 14px;background:linear-gradient(165deg,rgba(12,12,16,0.98),rgba(6,6,10,0.99));border-radius:18px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 16px 44px rgba(0,0,0,0.38),inset 0 1px 0 rgba(255,255,255,0.06);position:relative;overflow:hidden}
+.frame-cosmetic-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 0%,rgba(255,65,108,0.14),transparent 42%),radial-gradient(circle at 88% 100%,rgba(124,77,255,0.12),transparent 48%);pointer-events:none}
+.frame-selector-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1}
+.frame-selector-label{font-size:10px;font-weight:800;letter-spacing:2.5px;color:#e8e8f0;text-transform:uppercase;margin:0}
+.frame-selector-sub{font-size:9px;color:#666;letter-spacing:1px;text-transform:uppercase}
+.frame-selector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;max-height:320px;overflow-y:auto;padding:4px 2px;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
+.frame-selector-grid::-webkit-scrollbar{width:4px}
+.frame-selector-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px}
+.frame-cosmetic-slot{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;padding:0;border:none;background:transparent;cursor:pointer;font-family:inherit;perspective:520px;transition:transform 0.28s cubic-bezier(0.25,1,0.5,1);will-change:transform}
+.frame-cosmetic-slot:hover{transform:scale(1.06) translateY(-3px)}
+.frame-cosmetic-slot:hover .frame-slot-glass{box-shadow:0 14px 28px rgba(0,0,0,0.55),0 0 20px var(--frame-accent-glow,rgba(255,65,108,0.25));border-color:rgba(255,255,255,0.22)}
+.frame-cosmetic-slot:hover .frame-slot-glass{transform:rotateX(4deg) rotateY(-4deg)}
+.frame-cosmetic-slot.active .frame-slot-glow{opacity:1;animation:frameSelectPulse 2.4s ease-in-out infinite}
+.frame-cosmetic-slot.active .frame-slot-glass{border-color:var(--frame-accent,#ff416c);box-shadow:0 0 0 1px var(--frame-accent,#ff416c),0 12px 32px rgba(0,0,0,0.5),0 0 24px var(--frame-accent-glow,rgba(255,65,108,0.35))}
+.frame-cosmetic-slot.frame-locked{cursor:not-allowed}
+.frame-cosmetic-slot.frame-locked:hover{transform:none}
+.frame-cosmetic-slot.frame-locked .frame-slot-glass{filter:grayscale(0.85);opacity:0.65}
+.frame-cosmetic-slot.frame-locked .frame-slot-lock{display:flex}
+.frame-slot-glow{position:absolute;top:8px;left:50%;width:70%;height:55%;transform:translateX(-50%);background:radial-gradient(circle,var(--frame-accent-glow,rgba(255,65,108,0.35)) 0%,transparent 70%);opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:0}
+.frame-slot-glass{position:relative;width:100%;aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 20px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 6px 6px;overflow:hidden;transition:transform 0.28s cubic-bezier(0.25,1,0.5,1),box-shadow 0.28s ease,border-color 0.28s ease;transform-style:preserve-3d;will-change:transform}
+.frame-slot-glass::before{content:"";position:absolute;inset:0;border-radius:14px;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,0.18),transparent 40%,rgba(255,255,255,0.08));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.7}
+.frame-slot-emblem{font-size:16px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));position:relative;z-index:2}
+.frame-slot-preview{width:38px;height:38px;font-size:16px;position:relative;z-index:2}
+.frame-slot-face{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 35%,#2a2a32,#121218);font-size:15px;line-height:1;box-shadow:inset 0 2px 6px rgba(0,0,0,0.5)}
+.frame-slot-shine{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,0.12),transparent);animation:frameSlotShine 4s ease-in-out infinite;pointer-events:none;z-index:3}
+.frame-slot-name{font-size:8px;font-weight:800;color:#ddd;letter-spacing:1.2px;text-transform:uppercase;text-align:center;line-height:1.2;max-width:100%}
+.frame-slot-tier{font-size:7px;font-weight:600;color:#666;letter-spacing:0.8px;text-transform:uppercase;text-align:center}
+.frame-slot-lock{position:absolute;inset:0;border-radius:14px;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;font-size:18px;z-index:5;pointer-events:none}
+@keyframes frameSelectPulse{0%,100%{opacity:0.55;transform:translateX(-50%) scale(0.95)}50%{opacity:1;transform:translateX(-50%) scale(1.08)}}
+@keyframes frameSlotShine{0%{transform:translateX(0);opacity:0}30%{opacity:1}100%{transform:translateX(280%);opacity:0}}
 .profile-field{margin-bottom:12px}
 .profile-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:5px}
 .profile-input{width:100%;padding:11px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;transition:border-color 0.2s;background:#fafafa}
@@ -1041,8 +1087,11 @@ body.dark-club .club-sub{color:#888}
   <div class="page-title">MY PROFILE</div>
   <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target"><div id="profileBigAvatar" style="font-size:56px;text-align:center"></div></div></div>
   <div class="profile-avatar-row" id="avatarRow"></div>
-  <div class="frame-selector-section">
-    <div class="frame-selector-label">Avatar Frame</div>
+  <div class="frame-cosmetic-panel frame-selector-section">
+    <div class="frame-selector-header">
+      <div class="frame-selector-label">Avatar Frames</div>
+      <div class="frame-selector-sub">Premium Cosmetics</div>
+    </div>
     <div class="frame-selector-grid" id="frameSelectorGrid"></div>
   </div>
   <div style="text-align:center;margin-bottom:14px">
@@ -1355,12 +1404,27 @@ const SUPPORTED_AVATAR_FRAMES = [
   'none','venom-frame','magma-frame','prism-frame','bio-storm-frame',
   'ethereal-flame','void-frame','tesla-frame','ocean-frame','glitch-frame','ruby-frame'
 ];
-const AVATAR_FRAME_LABELS = {
-  'none':'None','venom-frame':'Venom','magma-frame':'Magma','prism-frame':'Prism',
-  'bio-storm-frame':'Bio Storm','ethereal-flame':'Ethereal','void-frame':'Void',
-  'tesla-frame':'Tesla','ocean-frame':'Ocean','glitch-frame':'Glitch','ruby-frame':'Ruby'
-};
+const AVATAR_FRAME_CATALOG = [
+  {id:'none',label:'Default',subtitle:'Standard',emblem:'◉',accent:'#888888',glow:'rgba(136,136,136,0.2)',locked:false},
+  {id:'venom-frame',label:'Venom',subtitle:'Symbiote',emblem:'☠',accent:'#39ff14',glow:'rgba(57,255,20,0.35)',locked:false},
+  {id:'magma-frame',label:'Magma',subtitle:'Volcanic',emblem:'🌋',accent:'#ff5722',glow:'rgba(255,87,34,0.4)',locked:false},
+  {id:'prism-frame',label:'Prism',subtitle:'Luxury',emblem:'△',accent:'#e040fb',glow:'rgba(224,64,251,0.35)',locked:true},
+  {id:'bio-storm-frame',label:'Bio Storm',subtitle:'Biotech',emblem:'⎈',accent:'#00e676',glow:'rgba(0,230,118,0.35)',locked:true},
+  {id:'ethereal-flame',label:'Ethereal',subtitle:'Plasma',emblem:'✦',accent:'#b388ff',glow:'rgba(179,136,255,0.35)',locked:true},
+  {id:'void-frame',label:'Void',subtitle:'Cosmic',emblem:'◎',accent:'#7c4dff',glow:'rgba(124,77,255,0.4)',locked:true},
+  {id:'tesla-frame',label:'Tesla',subtitle:'Voltage',emblem:'⚡',accent:'#40c4ff',glow:'rgba(64,196,255,0.4)',locked:true},
+  {id:'ocean-frame',label:'Ocean',subtitle:'Abyssal',emblem:'≋',accent:'#0288d1',glow:'rgba(2,136,209,0.35)',locked:false},
+  {id:'glitch-frame',label:'Glitch',subtitle:'Corrupted',emblem:'▣',accent:'#ff1744',glow:'rgba(255,23,68,0.35)',locked:false},
+  {id:'ruby-frame',label:'Ruby',subtitle:'Royal',emblem:'♦',accent:'#e53935',glow:'rgba(229,57,53,0.4)',locked:true}
+];
 const userConfig = { selectedFrame: 'none' };
+
+function isFrameUnlocked(frameId){
+  if(frameId==='none')return true;
+  const cat=AVATAR_FRAME_CATALOG.find(f=>f.id===frameId);
+  if(!cat||!cat.locked)return true;
+  return isClubMember()||hasPremiumFrame||isFounder();
+}
 
 function loadSelectedFrame(){
   let stored = null;
@@ -1372,6 +1436,13 @@ function loadSelectedFrame(){
   }
 }
 
+function validateSelectedFrameUnlock(){
+  if(userConfig.selectedFrame!=='none'&&!isFrameUnlocked(userConfig.selectedFrame)){
+    userConfig.selectedFrame='none';
+    persistSelectedFrame('none');
+  }
+}
+
 function persistSelectedFrame(frameId){
   try{ localStorage.setItem(AVATAR_FRAME_STORAGE_KEY, frameId); }catch(e){}
 }
@@ -1380,8 +1451,9 @@ function updateGlobalFrames(frameClass){
   const frame = (frameClass && SUPPORTED_AVATAR_FRAMES.includes(frameClass))
     ? frameClass
     : (userConfig.selectedFrame && SUPPORTED_AVATAR_FRAMES.includes(userConfig.selectedFrame) ? userConfig.selectedFrame : 'none');
+  if(frame!=='none'&&!isFrameUnlocked(frame))frame='none';
   userConfig.selectedFrame = frame;
-  document.querySelectorAll('.avatar-frame-target').forEach(function(el){
+  document.querySelectorAll('.avatar-frame-target:not(.frame-slot-preview)').forEach(function(el){
     el.classList.remove('avatar-premium-frame');
     if(frame && frame !== 'none'){
       el.setAttribute('data-frame', frame);
@@ -1392,6 +1464,10 @@ function updateGlobalFrames(frameClass){
 }
 
 function selectAvatarFrame(frameId){
+  if(frameId!=='none'&&!isFrameUnlocked(frameId)){
+    showToast('Unlock VIP Club or collect Legendary/Mythic to equip premium frames.');
+    return;
+  }
   const next = SUPPORTED_AVATAR_FRAMES.includes(frameId) ? frameId : 'none';
   userConfig.selectedFrame = next;
   persistSelectedFrame(next);
@@ -1399,28 +1475,46 @@ function selectAvatarFrame(frameId){
   renderFrameSelector();
 }
 
+function getSelfAvatarEmoji(){
+  const av=selectedAvatar||currentProfile?.avatar_url||'🎭';
+  if(av&&String(av).startsWith('http'))return null;
+  return av||'🎭';
+}
+
 function renderFrameSelector(){
   const grid = $('frameSelectorGrid');
   if(!grid) return;
   grid.innerHTML = '';
-  SUPPORTED_AVATAR_FRAMES.forEach(function(fid){
-    const slot = document.createElement('button');
-    slot.type = 'button';
-    slot.className = 'frame-slot' + (userConfig.selectedFrame === fid ? ' active' : '');
-    slot.dataset.frame = fid;
-    const preview = document.createElement('div');
-    preview.className = 'frame-slot-preview avatar-frame-target';
-    if(fid !== 'none') preview.setAttribute('data-frame', fid);
-    const inner = document.createElement('span');
-    inner.className = 'frame-slot-inner';
-    inner.textContent = selectedAvatar && !String(selectedAvatar).startsWith('http') ? selectedAvatar : '🎭';
-    preview.appendChild(inner);
-    slot.appendChild(preview);
-    const lbl = document.createElement('span');
-    lbl.className = 'frame-slot-label';
-    lbl.textContent = AVATAR_FRAME_LABELS[fid] || fid;
-    slot.appendChild(lbl);
-    slot.onclick = function(){ selectAvatarFrame(fid); };
+  AVATAR_FRAME_CATALOG.forEach(function(cat){
+    const locked=cat.locked&&!isFrameUnlocked(cat.id);
+    const slot=document.createElement('button');
+    slot.type='button';
+    slot.className='frame-cosmetic-slot'+(userConfig.selectedFrame===cat.id?' active':'')+(locked?' frame-locked':'');
+    slot.dataset.frame=cat.id;
+    slot.style.setProperty('--frame-accent',cat.accent);
+    slot.style.setProperty('--frame-accent-glow',cat.glow);
+    const glow=document.createElement('div');glow.className='frame-slot-glow';
+    const glass=document.createElement('div');glass.className='frame-slot-glass';
+    const emblem=document.createElement('div');emblem.className='frame-slot-emblem';emblem.textContent=cat.emblem;
+    const preview=document.createElement('div');
+    preview.className='frame-slot-preview avatar-frame-target';
+    if(cat.id!=='none')preview.setAttribute('data-frame',cat.id);
+    const face=document.createElement('span');face.className='frame-slot-face';
+    const emoji=getSelfAvatarEmoji();
+    if(emoji){face.textContent=emoji;}
+    else{face.innerHTML='<img src="'+sanitizeText(selectedAvatar)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+    preview.appendChild(face);
+    const shine=document.createElement('div');shine.className='frame-slot-shine';
+    const lock=document.createElement('div');lock.className='frame-slot-lock';lock.textContent='🔒';
+    glass.appendChild(emblem);glass.appendChild(preview);glass.appendChild(shine);glass.appendChild(lock);
+    slot.appendChild(glow);slot.appendChild(glass);
+    const name=document.createElement('span');name.className='frame-slot-name';name.textContent=cat.label;
+    const tier=document.createElement('span');tier.className='frame-slot-tier';tier.textContent=cat.subtitle;
+    slot.appendChild(name);slot.appendChild(tier);
+    slot.onclick=function(){
+      if(locked){showToast('Premium frame locked — join VIP Club or earn Legendary/Mythic.');return;}
+      selectAvatarFrame(cat.id);
+    };
     grid.appendChild(slot);
   });
 }
@@ -1519,20 +1613,31 @@ function logAndToast(op,e){console.error('['+op+']',e);showToast('['+op+'] '+(e?
 
 // ── PREMIUM FRAME (other users) + GLOBAL FRAME (self) ──
 async function refreshPremiumFrame(){
-  if(!currentUser){hasPremiumFrame=false;return;}
+  if(!currentUser){hasPremiumFrame=false;updateGlobalFrames();return;}
   try{
     const{data}=await sb.from('user_poxy').select('id').eq('user_id',currentUser.id).in('poxy_tier',['legendary','mythic']).limit(1);
     hasPremiumFrame=!!(data&&data.length);
   }catch(e){hasPremiumFrame=false;}
+  validateSelectedFrameUnlock();
   updateGlobalFrames();
+  if($('frameSelectorGrid')&&$('profilePage')?.classList.contains('visible'))renderFrameSelector();
 }
 function applyPremiumFrameUI(){
   updateGlobalFrames();
 }
-function renderUserCardAvatar(avEl,avatarUrl,premium){
+function renderUserCardAvatar(avEl,avatarUrl,premium,userId){
   if(avatarUrl&&avatarUrl.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(avatarUrl)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
   else avEl.textContent=avatarUrl||'👾';
-  if(premium)avEl.classList.add('avatar-premium-frame');else avEl.classList.remove('avatar-premium-frame');
+  if(userId&&String(userId)===String(currentUser?.id)){
+    avEl.classList.add('avatar-frame-target');
+    avEl.classList.remove('avatar-premium-frame');
+  }else if(premium){
+    avEl.classList.add('avatar-premium-frame');
+    avEl.classList.remove('avatar-frame-target');
+  }else{
+    avEl.classList.remove('avatar-premium-frame','avatar-frame-target');
+    avEl.removeAttribute('data-frame');
+  }
 }
 
 // ── SIDEBAR ──
@@ -2423,7 +2528,7 @@ async function loadFriends(){
     (profs||[]).forEach(p=>{
       const card=document.createElement('div');card.className='user-card user-card-clickable';
       const avEl=document.createElement('div');avEl.className='user-card-avatar';
-      renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id));
+      renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id),p.id);
       const info=document.createElement('div');info.className='user-card-info';
       info.innerHTML='<div class="user-card-name">'+sanitizeText(p.username||'Anonymous')+'</div><div class="user-card-sub">'+(p.is_club_member?'VIP Club Member':'Friend')+'</div>';
       const removeBtn=document.createElement('button');removeBtn.className='btn-remove-friend';removeBtn.textContent='Remove';
@@ -2444,6 +2549,7 @@ async function loadFriends(){
       card.addEventListener('click',function(){openInspectModal(p.id);});
       card.appendChild(avEl);card.appendChild(info);card.appendChild(removeBtn);cont.appendChild(card);
     });
+    updateGlobalFrames();
   }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63">Error loading friends.</div>';}
 }
 window.searchUsers=async function(){
@@ -2468,7 +2574,7 @@ window.searchUsers=async function(){
       const ex=reqMap[p.id];
       const card=document.createElement('div');card.className='user-card user-card-clickable';
       const avEl=document.createElement('div');avEl.className='user-card-avatar';
-      renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id));
+      renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id),p.id);
       const info=document.createElement('div');info.className='user-card-info';
       const nm=document.createElement('div');nm.className='user-card-name';nm.textContent=sanitizeText(p.username||'');
       const sub=document.createElement('div');sub.className='user-card-sub';sub.textContent='POXY member';
@@ -2523,6 +2629,7 @@ async function openInspectModal(userId){
   $('inspectAvatarWrap').className='inspect-avatar-wrap';
   modal.classList.remove('hidden');requestAnimationFrame(()=>modal.classList.add('show'));
   try{
+    const isSelfInspect=String(userId)===String(currentUser?.id);
     const a=userId<currentUser.id?userId:currentUser.id;
     const b=userId<currentUser.id?currentUser.id:userId;
     const[{data:prof},{data:poxyData},{data:reqs},{data:premData},{data:friendships}]=await Promise.all([
@@ -2536,10 +2643,11 @@ async function openInspectModal(userId){
     const isPrem=!!(premData&&premData.length);
     const isFriend=!!(friendships&&friendships.length);
     const avWrap=$('inspectAvatarWrap');
-    if(isPrem)avWrap.classList.add('inspect-prem');
-    const avInner=$('inspectAvatarInner');
+    avWrap.className='inspect-avatar-wrap'+(isSelfInspect?' avatar-frame-target':'');
+    if(isPrem&&!isSelfInspect)avWrap.classList.add('inspect-prem');
     if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(prof.avatar_url)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-    else avInner.textContent=prof.avatar_url||'👾';
+    else avWrap.innerHTML='<span id="inspectAvatarInner">'+sanitizeText(prof.avatar_url||'👾')+'</span>';
+    if(isSelfInspect)updateGlobalFrames();
     $('inspectUsernameText').textContent=sanitizeText(prof.username||'Anonymous');
     const totalItems=poxyData?.length||0;
     const rareItems=poxyData?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
@@ -3206,14 +3314,21 @@ async function loadPoxyChat(){
     list.innerHTML='';
     chatMessages.forEach(m=>renderChatMsg(m,profMap[m.author_id]||{},list));
     list.scrollTop=list.scrollHeight;
+    updateGlobalFrames();
   }catch(e){list.innerHTML='<div class="poxychat-empty">Could not load chat.</div>';}
 }
 function renderChatMsg(m,prof,list){
   const isFounderMsg=prof?.email&&prof.email.toLowerCase()===FOUNDER_EMAIL;
   const isClubMsg=prof?.is_club_member===true;
+  const isSelf=m.author_id===currentUser?.id;
   const el=document.createElement('div');el.className='poxychat-msg'+(isFounderMsg?' founder-msg':isClubMsg?' club-msg':'');
   el.id='pcm-'+m.id;
   const head=document.createElement('div');head.className='pcm-head';
+  const avWrap=document.createElement('div');
+  avWrap.className='pcm-avatar'+(isSelf?' avatar-frame-target':'');
+  if(prof?.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(prof.avatar_url)+'" alt="">';
+  else avWrap.textContent=prof?.avatar_url||'✸';
+  head.appendChild(avWrap);
   const name=document.createElement('span');name.className='pcm-name';name.textContent=sanitizeText(prof?.username||'Anonymous');
   head.appendChild(name);
   if(isFounderMsg){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FFCA28;font-weight:800';f.textContent='FOUNDER';head.appendChild(f);}
@@ -3240,6 +3355,7 @@ async function appendChatMessage(m){
   try{const{data}=await sb.from('profiles').select('id,username,avatar_url,is_club_member,is_verified_employee,email').eq('id',m.author_id).maybeSingle();if(data)prof=data;}catch(e){}
   renderChatMsg(m,prof,list);
   list.scrollTop=list.scrollHeight;
+  updateGlobalFrames();
 }
 function removeChatMessage(id){const el=$('pcm-'+id);if(el)el.remove();}
 window.sendPoxyChat=async function(){
