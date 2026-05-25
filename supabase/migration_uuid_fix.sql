@@ -8,7 +8,7 @@
 --      public.purchase_poxy(p_listing_id => uuid, p_buyer_id => uuid)"
 --   - "column \"updated_at\" of relation \"marketplace\" does not exist"
 --
--- It does five things:
+-- It does six things:
 --   0. Restores every column expected by the canonical schema (in case the
 --      DB was created from an older schema that lacked updated_at, etc).
 --   1. Drops every legacy bigint/int overload of purchase_poxy / dust_poxy /
@@ -21,6 +21,9 @@
 --      column references (so they don't break on future migrations).
 --   5. Converts friend_requests.id (and friendships.id) to uuid whenever they
 --      are still bigint/integer, then re-binds the friend RPCs.
+--   6. Relaxes marketplace.poxy_id FK from "on delete restrict" → "on delete
+--      cascade" so burn / craft can delete the parent user_poxy row even when
+--      historical (sold / cancelled) marketplace rows still reference it.
 --
 -- Idempotent — safe to re-run.
 -- =============================================================================
@@ -38,7 +41,11 @@ alter table public.profiles
 
 alter table public.user_poxy
   add column if not exists serial_number   text,
-  add column if not exists dropped_at      timestamptz    not null default now();
+  add column if not exists dropped_at      timestamptz    not null default now(),
+  add column if not exists pinned_at       timestamptz    default null;
+
+create index if not exists user_poxy_pinned_idx
+  on public.user_poxy (user_id, pinned_at desc nulls last);
 
 alter table public.marketplace
   add column if not exists price           numeric(12, 2) not null default 1,
@@ -206,7 +213,7 @@ begin
     alter table public.marketplace alter column poxy_id set not null;
     alter table public.marketplace
       add constraint marketplace_poxy_id_fkey
-      foreign key (poxy_id) references public.user_poxy(id) on delete restrict;
+      foreign key (poxy_id) references public.user_poxy(id) on delete cascade;
 
     -- 2f. Swap profile FK if it existed.
     if exists (
@@ -658,6 +665,71 @@ end;
 $$;
 
 grant execute on function public.remove_friend(uuid) to authenticated;
+
+-- -----------------------------------------------------------------------------
+-- 6. Relax marketplace.poxy_id FK so burn / craft can delete the parent POXY
+--    The legacy FK is `on delete restrict`, which means a historical marketplace
+--    row (status='sold' or 'cancelled') keeps the user_poxy row alive forever.
+--    craft_upgrade / burn_poxy_pc / burn_poxy_bulk_pc all delete user_poxy
+--    rows after asserting no *active* listings exist — but inactive (sold,
+--    cancelled) rows still trigger:
+--      "update or delete on table user_poxy violates foreign key constraint
+--       marketplace_poxy_id_fkey on table marketplace"
+--    Switching the FK to `on delete cascade` is the correct semantic: a sold
+--    or cancelled listing pointing at a non-existent POXY has no asset to
+--    refer back to, so the historical row is cleaned up automatically.
+-- -----------------------------------------------------------------------------
+do $$
+declare
+  r record;
+begin
+  -- Drop EVERY foreign-key constraint on marketplace.poxy_id, regardless of
+  -- the constraint name (schema.sql created it as "restrict", the app's
+  -- previous patches re-added it; old DBs may have it under a different name).
+  for r in
+    select tc.constraint_name
+      from information_schema.table_constraints tc
+      join information_schema.key_column_usage kcu
+        on kcu.constraint_name = tc.constraint_name
+       and kcu.table_schema    = tc.table_schema
+       and kcu.table_name      = tc.table_name
+     where tc.table_schema = 'public'
+       and tc.table_name   = 'marketplace'
+       and tc.constraint_type = 'FOREIGN KEY'
+       and kcu.column_name = 'poxy_id'
+  loop
+    raise notice 'Dropping FK %.% on marketplace.poxy_id', 'public', r.constraint_name;
+    execute format('alter table public.marketplace drop constraint %I', r.constraint_name);
+  end loop;
+end $$;
+
+alter table public.marketplace
+  add constraint marketplace_poxy_id_fkey
+  foreign key (poxy_id) references public.user_poxy(id) on delete cascade;
+
+-- Verify cascade is now in place. If this raises, the conversion didn't
+-- take effect and the next craft / burn will still fail.
+do $$
+declare
+  v_action text;
+begin
+  select rc.delete_rule into v_action
+    from information_schema.referential_constraints rc
+    join information_schema.table_constraints      tc
+      on tc.constraint_name = rc.constraint_name
+     and tc.table_schema    = rc.constraint_schema
+   where tc.table_schema    = 'public'
+     and tc.table_name      = 'marketplace'
+     and tc.constraint_name = 'marketplace_poxy_id_fkey';
+
+  if v_action is null then
+    raise exception 'marketplace_poxy_id_fkey was not created';
+  end if;
+  if v_action <> 'CASCADE' then
+    raise exception 'marketplace_poxy_id_fkey is %, expected CASCADE', v_action;
+  end if;
+  raise notice 'marketplace_poxy_id_fkey delete rule = % ✓', v_action;
+end $$;
 
 -- =============================================================================
 -- END migration_uuid_fix.sql

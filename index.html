@@ -437,6 +437,20 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-card-actions{display:flex;gap:6px;margin-top:4px}
 .btn-burn,.btn-sell-card,.btn-feature-card{border:none;background:none;cursor:pointer;font-size:13px;opacity:0.4;transition:opacity 0.2s,transform 0.2s;padding:2px;line-height:1}
 .btn-burn:hover,.btn-sell-card:hover,.btn-feature-card:hover{opacity:0.9;transform:scale(1.2)}
+/* ── INVENTORY KEBAB MENU + PIN ── */
+.col-card-kebab{position:absolute;top:6px;right:6px;width:26px;height:26px;border:none;border-radius:8px;background:rgba(20,20,28,0.55);color:#fff;font-size:18px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:6;transition:background 0.18s ease,transform 0.18s ease;padding:0;letter-spacing:0}
+.col-card-kebab:hover{background:rgba(20,20,28,0.85);transform:scale(1.08)}
+.col-card-kebab:active{transform:scale(0.92)}
+.col-card-menu{position:absolute;top:36px;right:6px;min-width:170px;background:rgba(15,15,20,0.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.1);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.04) inset;padding:6px;z-index:50;opacity:0;transform:translateY(-4px) scale(0.95);transform-origin:top right;pointer-events:none;transition:opacity 0.18s ease,transform 0.18s ease;will-change:transform,opacity;display:flex;flex-direction:column;gap:2px}
+.col-card-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.col-card-menu-item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:9px 12px;border:none;background:transparent;color:#f1f1f1;font-family:inherit;font-size:11.5px;font-weight:600;letter-spacing:0.4px;border-radius:8px;cursor:pointer;transition:background 0.15s ease,color 0.15s ease;line-height:1.2}
+.col-card-menu-item:hover{background:rgba(255,255,255,0.08)}
+.col-card-menu-item.active{background:rgba(255,180,40,0.18);color:#ffce6a}
+.col-card-menu-item.danger{color:#ff7373}
+.col-card-menu-item.danger:hover{background:rgba(255,80,80,0.14);color:#ff5555}
+.col-card-menu-item .ic{font-size:13px;width:14px;display:inline-flex;justify-content:center}
+.col-card.pinned{box-shadow:0 0 22px rgba(255,180,40,0.32),inset 0 0 0 1px rgba(255,180,40,0.45)!important}
+.col-card-pin-badge{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#ffb840,#ff7e36);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,165,40,0.5);z-index:5;pointer-events:none;line-height:1}
 .col-empty{text-align:center;padding:60px 20px;color:#C8C8C8;font-size:13px;line-height:1.7}
 .col-empty-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
 .col-loading{text-align:center;padding:60px 20px}
@@ -1681,48 +1695,157 @@ function renderFilterButtons(){
     row.appendChild(btn);
   });
 }
+function applyPinSort(arr){
+  // Stable partition: pinned first (sorted by pinned_at DESC), then unpinned
+  // in their existing order (server returned dropped_at DESC). We do NOT touch
+  // the unpinned ordering — it follows whatever the rest of the app produced.
+  const pinned=[];const rest=[];
+  for(const it of arr){if(it&&it.pinned_at)pinned.push(it);else rest.push(it);}
+  pinned.sort((a,b)=>new Date(b.pinned_at).getTime()-new Date(a.pinned_at).getTime());
+  return pinned.concat(rest);
+}
 function renderCollection(){
   const cont=$('colContent');
-  const filtered=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
+  // Close any dangling dropdowns before re-render (cards are about to be replaced).
+  document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
+  const filtered=applyPinSort(colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter));
   if(!filtered.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">✸</div>'+(colFilter==='all'?'Your collection is empty.<br>Hunt your first POXY!':'No '+colFilter+' POXY found.')+'</div>';return;}
   const grid=document.createElement('div');grid.className='col-grid col-grid-wide';
+  grid.id='colGrid';
   filtered.forEach((item,i)=>{
     const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
     const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
-    const card=document.createElement('div');card.className='col-card tilt-3d';card.dataset.id=item.id;
+    const isPinned=!!item.pinned_at;
+    const isFeatured=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
+    const card=document.createElement('div');
+    card.className='col-card tilt-3d'+(isPinned?' pinned':'');
+    card.dataset.id=item.id;
+    card.dataset.pinnedAt=item.pinned_at||'';
     if(selectedForDust.has(item.id))card.classList.add('selected-for-dust');
     card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'55;box-shadow:0 0 18px '+tier.glow+';animation-delay:'+(i*0.04)+'s';
     const ico=document.createElement('div');ico.className='col-card-icon';ico.textContent=tier.icon;
     const lbl=document.createElement('div');lbl.className='col-card-tier';lbl.style.color=tier.color;lbl.textContent=tier.label;
     const dt=document.createElement('div');dt.className='col-card-date';dt.textContent=ds;
     const ser=document.createElement('div');ser.className='col-card-serial';ser.textContent=item.serial_number||'–';
-    const acts=document.createElement('div');acts.className='col-card-actions';
-    const burnBtn=document.createElement('button');burnBtn.className='btn-burn';burnBtn.title='Burn for +10 dust';burnBtn.textContent='🔥';
-    const sellBtn=document.createElement('button');sellBtn.className='btn-sell-card';sellBtn.title='List on market';sellBtn.textContent='💰';
-    const featBtn=document.createElement('button');featBtn.className='btn-feature-card';featBtn.title='Feature in profile';
-    featBtn.textContent=currentProfile?.favorite_poxy_id==item.id?'⭐':'☆';
-    acts.appendChild(burnBtn);acts.appendChild(sellBtn);acts.appendChild(featBtn);
-    card.appendChild(ico);card.appendChild(lbl);card.appendChild(dt);card.appendChild(ser);card.appendChild(acts);
-    card.addEventListener('click',e=>{if(e.target===burnBtn||e.target===sellBtn||e.target===featBtn)return;if(selectedForDust.has(item.id)){selectedForDust.delete(item.id);card.classList.remove('selected-for-dust');}else{selectedForDust.add(item.id);card.classList.add('selected-for-dust');}updateBulkBar();});
-    burnBtn.addEventListener('click',e=>{e.stopPropagation();burnPoxySecure(item.id,card);});
-    sellBtn.addEventListener('click',e=>{e.stopPropagation();pendingListItem={poxyId:item.id,tier,serial:item.serial_number||'',fromHunt:false};openPriceModal();});
-    featBtn.addEventListener('click',async e=>{
-      e.stopPropagation();
-      const wantClear=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
-      const newId=wantClear?null:item.id;
-      if(newId!==null&&!isUuid(newId)){showToast('[feature] Item id is not UUID — refresh page or run migration_uuid_fix.sql');return;}
-      try{
-        const{error}=await sb.from('profiles').update({favorite_poxy_id:newId}).eq('id',currentUser.id);
-        if(error)throw error;
-        if(currentProfile)currentProfile.favorite_poxy_id=newId;
-        showToast(newId?'Featured in profile!':'Removed from profile.');
-        renderCollection();
-      }catch(e){logAndToast('feature',e);}
-    });
+    card.appendChild(ico);card.appendChild(lbl);card.appendChild(dt);card.appendChild(ser);
+    // Pin badge (visual only — kebab menu owns the toggle).
+    if(isPinned){const pb=document.createElement('div');pb.className='col-card-pin-badge';pb.textContent='📌';card.appendChild(pb);}
+    // Top-right kebab — opens the per-card actions dropdown.
+    const kebab=document.createElement('button');
+    kebab.type='button';kebab.className='col-card-kebab';kebab.textContent='⋮';
+    kebab.setAttribute('aria-label','Open actions menu');
+    kebab.dataset.action='kebab';kebab.dataset.id=item.id;
+    card.appendChild(kebab);
+    // Glassmorphic dropdown — hidden until the kebab is clicked.
+    const menu=document.createElement('div');
+    menu.className='col-card-menu';menu.dataset.menuFor=item.id;menu.setAttribute('role','menu');
+    menu.innerHTML=
+      '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?'Unpin':'Pin to top')+'</button>'+
+      '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?'Unfeature':'Feature in Profile')+'</button>'+
+      '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>List on Market</button>'+
+      '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>Burn</button>';
+    card.appendChild(menu);
     grid.appendChild(card);
   });
   cont.innerHTML='';cont.appendChild(grid);
 }
+
+// ── PIN TOGGLE ──
+async function togglePinPoxy(userPoxyId,currentPinnedAt){
+  if(!isUuid(userPoxyId)){logAndToast('pin',new Error('id not UUID — run migration_uuid_fix.sql then refresh'));return;}
+  const newVal=currentPinnedAt?null:new Date().toISOString();
+  try{
+    const{error}=await sb.from('user_poxy').update({pinned_at:newVal}).eq('id',userPoxyId);
+    if(error)throw error;
+    const it=colData.find(i=>String(i.id)===String(userPoxyId));
+    if(it)it.pinned_at=newVal;
+    showToast(newVal?'Pinned to top.':'Unpinned.');
+    renderCollection();
+  }catch(e){logAndToast('pin',e);}
+}
+
+// ── FEATURE TOGGLE (relocated from inline card listener) ──
+async function toggleFeaturePoxy(userPoxyId){
+  const item=colData.find(i=>String(i.id)===String(userPoxyId));
+  if(!item)return;
+  const wantClear=String(currentProfile?.favorite_poxy_id||'')===String(userPoxyId);
+  const newId=wantClear?null:userPoxyId;
+  if(newId!==null&&!isUuid(newId)){showToast('[feature] Item id is not UUID — refresh page or run migration_uuid_fix.sql');return;}
+  try{
+    const{error}=await sb.from('profiles').update({favorite_poxy_id:newId}).eq('id',currentUser.id);
+    if(error)throw error;
+    if(currentProfile)currentProfile.favorite_poxy_id=newId;
+    showToast(newId?'Featured in profile!':'Removed from profile.');
+    renderCollection();
+  }catch(e){logAndToast('feature',e);}
+}
+
+// ── INVENTORY EVENT DELEGATION (single listener, no per-card handlers) ──
+(function wireInventoryDelegation(){
+  const root=document.getElementById('colContent');
+  if(!root||root.dataset.delegated==='1')return;
+  root.dataset.delegated='1';
+  function closeAllMenusExcept(keepId){
+    root.querySelectorAll('.col-card-menu.open').forEach(m=>{
+      if(!keepId||m.dataset.menuFor!==keepId)m.classList.remove('open');
+    });
+  }
+  root.addEventListener('click',function(e){
+    // Kebab → toggle this card's menu, close any other open ones
+    const kebab=e.target.closest('.col-card-kebab');
+    if(kebab&&root.contains(kebab)){
+      e.stopPropagation();
+      const id=kebab.dataset.id;
+      const menu=root.querySelector('.col-card-menu[data-menu-for="'+CSS.escape(id)+'"]');
+      const willOpen=menu&&!menu.classList.contains('open');
+      closeAllMenusExcept(willOpen?id:null);
+      if(menu)menu.classList.toggle('open',willOpen);
+      return;
+    }
+    // Menu item → dispatch on data-action, then close
+    const mi=e.target.closest('.col-card-menu-item');
+    if(mi&&root.contains(mi)){
+      e.stopPropagation();
+      const id=mi.dataset.id;
+      const action=mi.dataset.action;
+      const item=colData.find(i=>String(i.id)===String(id));
+      const card=root.querySelector('.col-card[data-id="'+CSS.escape(id)+'"]');
+      const menu=mi.closest('.col-card-menu');
+      if(menu)menu.classList.remove('open');
+      if(!item)return;
+      if(action==='pin'){togglePinPoxy(item.id,item.pinned_at);return;}
+      if(action==='feature'){toggleFeaturePoxy(item.id);return;}
+      if(action==='list'){
+        const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
+        pendingListItem={poxyId:item.id,tier,serial:item.serial_number||'',fromHunt:false};
+        openPriceModal();
+        return;
+      }
+      if(action==='burn'){burnPoxySecure(item.id,card);return;}
+      return;
+    }
+    // Click inside the menu but not on an item — eat it (don't toggle dust select)
+    if(e.target.closest('.col-card-menu')){e.stopPropagation();return;}
+    // Plain card body click → existing select-for-dust toggle (unchanged behavior)
+    const card=e.target.closest('.col-card');
+    if(card&&root.contains(card)){
+      closeAllMenusExcept(null);
+      const id=card.dataset.id;
+      if(selectedForDust.has(id)){selectedForDust.delete(id);card.classList.remove('selected-for-dust');}
+      else{selectedForDust.add(id);card.classList.add('selected-for-dust');}
+      updateBulkBar();
+    }
+  });
+  // Outside-click: close every open dropdown anywhere on the page
+  document.addEventListener('click',function(e){
+    if(e.target.closest('.col-card-kebab')||e.target.closest('.col-card-menu'))return;
+    document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
+  });
+  // ESC closes any open dropdown
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape')document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
+  });
+})();
 function updateBulkBar(){
   const bar=$('bulkBar'),cnt=$('bulkCount');
   const n=selectedForDust.size;
