@@ -48,7 +48,53 @@ body[data-theme="mayfair"]{background:#0e0608}
 body.screen-shake{animation:screenShake 0.45s ease-out}
 body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 
-/* ── PREMIUM AVATAR FRAME ── */
+/* ── GLOBAL AVATAR FRAME SYSTEM ── */
+.avatar-frame-target{position:relative;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:visible;box-sizing:border-box;flex-shrink:0}
+.avatar-frame-target::before,.avatar-frame-target::after{content:"";position:absolute;border-radius:50%;pointer-events:none;box-sizing:border-box;z-index:0}
+.avatar-frame-target>*{position:relative;z-index:1}
+#profileBigAvatarWrap.avatar-frame-target{width:76px;height:76px}
+
+.avatar-frame-target[data-frame="venom-frame"]::before{inset:-5px;border:2px solid #39ff14;animation:afVenomPulse 3.5s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="venom-frame"]::after{inset:-9px;border:1px solid rgba(57,255,20,0.4);animation:afVenomPulse 3.5s ease-in-out infinite 0.45s;will-change:transform,opacity}
+@keyframes afVenomPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
+
+.avatar-frame-target[data-frame="magma-frame"]::before{inset:-5px;border:2.5px solid #ff5722;animation:afMagmaPulse 2.8s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="magma-frame"]::after{inset:-9px;border:1.5px solid rgba(255,140,0,0.55);animation:afMagmaPulse 2.8s ease-in-out infinite 0.35s;will-change:transform,opacity}
+@keyframes afMagmaPulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.09)}}
+
+.avatar-frame-target[data-frame="prism-frame"]::before{inset:-5px;border:2px solid #e040fb;animation:afPrismSpin 4s linear infinite;will-change:transform}
+.avatar-frame-target[data-frame="prism-frame"]::after{inset:-5px;border:2px solid transparent;border-top-color:#00e5ff;border-right-color:#76ff03;border-bottom-color:#ffea00;border-left-color:#ff4081;animation:afPrismSpin 4s linear infinite reverse;will-change:transform}
+@keyframes afPrismSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+.avatar-frame-target[data-frame="bio-storm-frame"]::before{inset:-5px;border:2px dashed #00e676;animation:afBioStorm 3s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="bio-storm-frame"]::after{inset:-8px;border:1px solid rgba(0,230,118,0.45);animation:afBioStorm 3s ease-in-out infinite 0.3s;will-change:transform,opacity}
+@keyframes afBioStorm{0%,100%{opacity:0.45;transform:scale(1) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(6deg)}}
+
+.avatar-frame-target[data-frame="ethereal-flame"]::before{inset:-5px;border:2px solid #ffab40;animation:afEtherealFlame 3.2s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ethereal-flame"]::after{inset:-9px;border:1px solid rgba(255,171,64,0.35);animation:afEtherealFlame 3.2s ease-in-out infinite 0.5s;will-change:transform,opacity}
+@keyframes afEtherealFlame{0%,100%{opacity:0.55;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+
+.avatar-frame-target[data-frame="void-frame"]::before{inset:-6px;border:2px solid #7c4dff;animation:afVoidExpand 4.5s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="void-frame"]::after{inset:-10px;border:1px solid rgba(124,77,255,0.3);animation:afVoidExpand 4.5s ease-in-out infinite 0.6s;will-change:transform,opacity}
+@keyframes afVoidExpand{0%,100%{opacity:0.4;transform:scale(0.96)}50%{opacity:0.95;transform:scale(1.08)}}
+
+.avatar-frame-target[data-frame="tesla-frame"]::before{inset:-5px;border:2px solid #40c4ff;animation:afTeslaZap 2.5s steps(8,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="tesla-frame"]::after{inset:-8px;border:1px solid rgba(64,196,255,0.5);animation:afTeslaZap 2.5s steps(8,end) infinite 0.15s;will-change:transform,opacity}
+@keyframes afTeslaZap{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+
+.avatar-frame-target[data-frame="ocean-frame"]::before{inset:-5px;border:2px solid #0288d1;animation:afOceanDrift 3.8s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ocean-frame"]::after{inset:-9px;border:1.5px solid rgba(3,169,244,0.4);animation:afOceanDrift 3.8s ease-in-out infinite 0.4s;will-change:transform,opacity}
+@keyframes afOceanDrift{0%,100%{opacity:0.55;transform:scale(1) translateY(0)}50%{opacity:1;transform:scale(1.06) translateY(-2px)}}
+
+.avatar-frame-target[data-frame="glitch-frame"]::before{inset:-5px;border:2px solid #ff1744;animation:afGlitchShift 3s steps(6,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="glitch-frame"]::after{inset:-5px;border:2px solid #00e5ff;animation:afGlitchShift 3s steps(6,end) infinite 0.1s;will-change:transform,opacity}
+@keyframes afGlitchShift{0%,85%,100%{opacity:0.7;transform:translate(0,0) scale(1)}88%{opacity:1;transform:translate(-2px,1px) scale(1.04)}91%{opacity:0.5;transform:translate(2px,-1px) scale(0.98)}94%{opacity:1;transform:translate(0,0) scale(1.02)}}
+
+.avatar-frame-target[data-frame="ruby-frame"]::before{inset:-5px;border:2.5px solid #e53935;animation:afRubyShine 3.6s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ruby-frame"]::after{inset:-9px;border:1px solid rgba(229,57,53,0.45);animation:afRubyShine 3.6s ease-in-out infinite 0.5s;will-change:transform,opacity}
+@keyframes afRubyShine{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+
+/* Legacy premium frame — other users' avatars only (not global frame targets) */
 .avatar-premium-frame{border-radius:50%;animation:premiumFrameShift 3.5s ease-in-out infinite;padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC,#FFCA28);background-size:300% 300%}
 
 /* ── PC CURRENCY ── */
@@ -443,10 +489,19 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .btn-primary:hover{transform:scale(1.02)}.btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none}
 
 /* ── PROFILE ── */
-.avatar-upload-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2.5px solid #FF5722;display:block;margin:0 auto 8px}
+.avatar-upload-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2px solid #e8e8e8;display:block;margin:0 auto 8px}
 .profile-avatar-row{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;justify-content:center}
 .avatar-opt{font-size:26px;width:48px;height:48px;border-radius:50%;border:2px solid #f0f0f0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:#fafafa}
 .avatar-opt.selected{border-color:#FF5722;background:#fff5f2;transform:scale(1.1)}
+.frame-selector-section{margin:16px 0}
+.frame-selector-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:10px}
+.frame-selector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px;max-height:240px;overflow-y:auto;padding:2px;-webkit-overflow-scrolling:touch}
+.frame-slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;border:1.5px solid #f0f0f0;border-radius:12px;background:#fafafa;cursor:pointer;transition:border-color 0.2s,transform 0.2s,background 0.2s,box-shadow 0.2s;font-family:inherit}
+.frame-slot:hover{border-color:#FF5722;background:#fff5f2;transform:scale(1.02)}
+.frame-slot.active{border-color:#FF5722;background:#fff5f2;box-shadow:0 0 0 1px rgba(255,87,34,0.25)}
+.frame-slot-preview{width:44px;height:44px;font-size:20px}
+.frame-slot-inner{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:#f7f7f7;line-height:1}
+.frame-slot-label{font-size:7.5px;font-weight:700;color:#888;letter-spacing:0.4px;text-transform:uppercase;text-align:center;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .profile-field{margin-bottom:12px}
 .profile-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:5px}
 .profile-input{width:100%;padding:11px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;transition:border-color 0.2s;background:#fafafa}
@@ -941,7 +996,7 @@ body.dark-club .club-sub{color:#888}
 <!-- USER BAR -->
 <div class="user-bar" id="userBar" style="display:none">
   <div class="user-bar-left">
-    <div class="user-bar-avatar gpu-accel" id="userBarAvatarWrap" onclick="showPage('profile')" title="My Profile"><span id="userBarAvatar">🎭</span></div>
+    <div class="user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap" onclick="showPage('profile')" title="My Profile"><span id="userBarAvatar">🎭</span></div>
     <span class="user-email" id="userEmailEl"></span>
   </div>
   <div class="user-bar-right">
@@ -984,8 +1039,12 @@ body.dark-club .club-sub{color:#888}
 <!-- PROFILE PAGE -->
 <div class="page" id="profilePage">
   <div class="page-title">MY PROFILE</div>
-  <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel"><div id="profileBigAvatar" style="font-size:56px;text-align:center"></div></div></div>
+  <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target"><div id="profileBigAvatar" style="font-size:56px;text-align:center"></div></div></div>
   <div class="profile-avatar-row" id="avatarRow"></div>
+  <div class="frame-selector-section">
+    <div class="frame-selector-label">Avatar Frame</div>
+    <div class="frame-selector-grid" id="frameSelectorGrid"></div>
+  </div>
   <div style="text-align:center;margin-bottom:14px">
     <label for="avatarUpload" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1.5px dashed #e0e0e0;border-radius:50px;font-size:10px;font-weight:700;color:#B0B0B0;letter-spacing:1px;cursor:pointer;transition:all 0.2s;text-transform:uppercase" onmouseover="this.style.borderColor='#FF5722';this.style.color='#FF5722'" onmouseout="this.style.borderColor='#e0e0e0';this.style.color='#B0B0B0'">
       📷 Upload Photo
@@ -1291,6 +1350,83 @@ const CUSTOMIZATION_ITEMS = [
 ];
 const GEN1_SEAL_DATE = new Date('2026-06-22T23:59:59Z');
 
+const AVATAR_FRAME_STORAGE_KEY = 'poxy_selected_frame';
+const SUPPORTED_AVATAR_FRAMES = [
+  'none','venom-frame','magma-frame','prism-frame','bio-storm-frame',
+  'ethereal-flame','void-frame','tesla-frame','ocean-frame','glitch-frame','ruby-frame'
+];
+const AVATAR_FRAME_LABELS = {
+  'none':'None','venom-frame':'Venom','magma-frame':'Magma','prism-frame':'Prism',
+  'bio-storm-frame':'Bio Storm','ethereal-flame':'Ethereal','void-frame':'Void',
+  'tesla-frame':'Tesla','ocean-frame':'Ocean','glitch-frame':'Glitch','ruby-frame':'Ruby'
+};
+const userConfig = { selectedFrame: 'none' };
+
+function loadSelectedFrame(){
+  let stored = null;
+  try{ stored = localStorage.getItem(AVATAR_FRAME_STORAGE_KEY); }catch(e){}
+  if(stored && SUPPORTED_AVATAR_FRAMES.includes(stored)){
+    userConfig.selectedFrame = stored;
+  } else {
+    userConfig.selectedFrame = 'none';
+  }
+}
+
+function persistSelectedFrame(frameId){
+  try{ localStorage.setItem(AVATAR_FRAME_STORAGE_KEY, frameId); }catch(e){}
+}
+
+function updateGlobalFrames(frameClass){
+  const frame = (frameClass && SUPPORTED_AVATAR_FRAMES.includes(frameClass))
+    ? frameClass
+    : (userConfig.selectedFrame && SUPPORTED_AVATAR_FRAMES.includes(userConfig.selectedFrame) ? userConfig.selectedFrame : 'none');
+  userConfig.selectedFrame = frame;
+  document.querySelectorAll('.avatar-frame-target').forEach(function(el){
+    el.classList.remove('avatar-premium-frame');
+    if(frame && frame !== 'none'){
+      el.setAttribute('data-frame', frame);
+    } else {
+      el.removeAttribute('data-frame');
+    }
+  });
+}
+
+function selectAvatarFrame(frameId){
+  const next = SUPPORTED_AVATAR_FRAMES.includes(frameId) ? frameId : 'none';
+  userConfig.selectedFrame = next;
+  persistSelectedFrame(next);
+  updateGlobalFrames(next);
+  renderFrameSelector();
+}
+
+function renderFrameSelector(){
+  const grid = $('frameSelectorGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  SUPPORTED_AVATAR_FRAMES.forEach(function(fid){
+    const slot = document.createElement('button');
+    slot.type = 'button';
+    slot.className = 'frame-slot' + (userConfig.selectedFrame === fid ? ' active' : '');
+    slot.dataset.frame = fid;
+    const preview = document.createElement('div');
+    preview.className = 'frame-slot-preview avatar-frame-target';
+    if(fid !== 'none') preview.setAttribute('data-frame', fid);
+    const inner = document.createElement('span');
+    inner.className = 'frame-slot-inner';
+    inner.textContent = selectedAvatar && !String(selectedAvatar).startsWith('http') ? selectedAvatar : '🎭';
+    preview.appendChild(inner);
+    slot.appendChild(preview);
+    const lbl = document.createElement('span');
+    lbl.className = 'frame-slot-label';
+    lbl.textContent = AVATAR_FRAME_LABELS[fid] || fid;
+    slot.appendChild(lbl);
+    slot.onclick = function(){ selectAvatarFrame(fid); };
+    grid.appendChild(slot);
+  });
+}
+
+loadSelectedFrame();
+
 // ── STATE (PHASE 1 — synchronized in real-time UI) ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null;
 let mythicCount=0, hasMythic=false, busy=false;
@@ -1381,19 +1517,17 @@ function isUuid(v){return!!(v&&typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0
 function safeUuid(v){return isUuid(v)?v:null;}
 function logAndToast(op,e){console.error('['+op+']',e);showToast('['+op+'] '+(e?.message||'unknown error'));}
 
-// ── PREMIUM FRAME ──
+// ── PREMIUM FRAME (other users) + GLOBAL FRAME (self) ──
 async function refreshPremiumFrame(){
-  if(!currentUser){hasPremiumFrame=false;applyPremiumFrameUI();return;}
+  if(!currentUser){hasPremiumFrame=false;return;}
   try{
     const{data}=await sb.from('user_poxy').select('id').eq('user_id',currentUser.id).in('poxy_tier',['legendary','mythic']).limit(1);
     hasPremiumFrame=!!(data&&data.length);
   }catch(e){hasPremiumFrame=false;}
-  applyPremiumFrameUI();
+  updateGlobalFrames();
 }
 function applyPremiumFrameUI(){
-  const wrap=$('userBarAvatarWrap'),pw=$('profileBigAvatarWrap');
-  if(wrap)wrap.classList.toggle('avatar-premium-frame',hasPremiumFrame);
-  if(pw)pw.classList.toggle('avatar-premium-frame',hasPremiumFrame);
+  updateGlobalFrames();
 }
 function renderUserCardAvatar(avEl,avatarUrl,premium){
   if(avatarUrl&&avatarUrl.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(avatarUrl)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
@@ -1552,9 +1686,11 @@ function renderProfilePage(){
     const btn=document.createElement('button');
     btn.className='avatar-opt'+(av===selectedAvatar?' selected':'');
     btn.textContent=av;
-    btn.onclick=()=>{selectedAvatar=av;bigAv.innerHTML='<span style="font-size:56px">'+av+'</span>';row.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');setBarAvatar(av);};
+    btn.onclick=()=>{selectedAvatar=av;bigAv.innerHTML='<span style="font-size:56px">'+av+'</span>';row.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');setBarAvatar(av);renderFrameSelector();};
     row.appendChild(btn);
   });
+  renderFrameSelector();
+  updateGlobalFrames();
 }
 async function renderProfileStats(){
   try{
@@ -3515,6 +3651,8 @@ updateGreatBurnUI();
   homeBtn.addEventListener('click',goHome);
   homeBtn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();goHome();}});
 })();
+
+updateGlobalFrames();
 </script>
 </body>
 </html>
