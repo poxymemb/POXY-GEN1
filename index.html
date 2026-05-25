@@ -560,6 +560,67 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-card-menu-item .ic{font-size:13px;width:14px;display:inline-flex;justify-content:center;flex-shrink:0;pointer-events:none}
 .col-card.pinned{box-shadow:0 0 22px rgba(255,180,40,0.32),inset 0 0 0 1px rgba(255,180,40,0.45)!important}
 .col-card-pin-badge{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#ffb840,#ff7e36);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,165,40,0.5);z-index:5;pointer-events:none;line-height:1}
+
+/* ────────────────────────────────────────
+   POXY CLUB EXCLUSIVES — VIP RARITY SYSTEM
+   All animations use transform + opacity ONLY (GPU-friendly, no layout shifts)
+   ──────────────────────────────────────── */
+.poxy-vip-obsidian,.poxy-vip-cursed,.poxy-vip-souvenir,.poxy-vip-stellar,.poxy-vip-diamond,.poxy-vip-secret{position:relative;isolation:isolate;overflow:hidden}
+.col-card.col-card-vip > .col-card-icon,.col-card.col-card-vip > .col-card-tier,.col-card.col-card-vip > .col-card-date,.col-card.col-card-vip > .col-card-serial,.col-card.col-card-vip > .col-card-kebab,.col-card.col-card-vip > .col-card-menu,.col-card.col-card-vip > .col-card-pin-badge,.col-card.col-card-vip > .col-card-vip-serial{position:relative;z-index:2}
+
+/* OBSIDIAN — slow void breathing pulse */
+.poxy-vip-obsidian{background:radial-gradient(circle at 50% 30%,rgba(70,80,100,0.28),rgba(8,8,16,0.96))!important;border-color:rgba(120,130,160,0.45)!important}
+.poxy-vip-obsidian::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle,rgba(180,200,255,0.22) 0%,transparent 60%);pointer-events:none;will-change:opacity,transform;animation:vipObsidianPulse 5.5s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
+@keyframes vipObsidianPulse{0%,100%{opacity:0.25;transform:scale(0.85)}50%{opacity:0.7;transform:scale(1.12)}}
+
+/* CURSED — low-frequency glitch flicker */
+.poxy-vip-cursed{background:radial-gradient(circle at 50% 35%,rgba(126,87,194,0.28),rgba(36,18,54,0.96))!important;border-color:rgba(170,110,230,0.55)!important}
+.poxy-vip-cursed::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(180,80,255,0.18) 50%,transparent 100%);pointer-events:none;will-change:opacity,transform;animation:vipCursedFlicker 4.5s steps(20,end) infinite;z-index:0;mix-blend-mode:screen}
+@keyframes vipCursedFlicker{0%,87%,93%,98%,100%{opacity:0.45;transform:translateY(0) scaleY(1)}89%{opacity:0.95;transform:translateY(-3px) scaleY(1.04)}91%{opacity:0.1;transform:translateY(2px) scaleY(0.96)}95%{opacity:0.85;transform:translateY(0) scaleY(1.06)}}
+
+/* SOUVENIR — bronze/gold shimmer sweep */
+.poxy-vip-souvenir{background:linear-gradient(135deg,rgba(180,120,40,0.22),rgba(220,180,80,0.12))!important;border-color:rgba(255,170,60,0.6)!important}
+.poxy-vip-souvenir::before{content:"";position:absolute;top:0;left:-50%;width:200%;height:100%;background:linear-gradient(110deg,transparent 38%,rgba(255,210,120,0.55) 50%,transparent 62%);pointer-events:none;will-change:transform;animation:vipSouvenirShimmer 4s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
+@keyframes vipSouvenirShimmer{0%{transform:translateX(-50%)}100%{transform:translateX(50%)}}
+
+/* STELLAR — nebula bloom + 6 star particles (1 dot + 5 box-shadow ghosts) */
+.poxy-vip-stellar{background:radial-gradient(ellipse at 30% 50%,rgba(100,80,200,0.32),rgba(20,20,60,0.96))!important;border-color:rgba(140,120,255,0.55)!important}
+.poxy-vip-stellar::before{content:"";position:absolute;inset:-15%;background:radial-gradient(circle at 70% 30%,rgba(220,180,255,0.4),transparent 45%),radial-gradient(circle at 30% 70%,rgba(140,200,255,0.32),transparent 55%);pointer-events:none;will-change:opacity,transform;animation:vipStellarPulse 5s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
+.poxy-vip-stellar::after{content:"";position:absolute;top:30%;left:30%;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:22px -10px 0 0 rgba(255,255,255,0.95),-12px 18px 0 0 rgba(255,255,255,0.85),32px 16px 0 0 rgba(200,220,255,0.9),-18px -14px 0 0 #fff,10px 26px 0 0 rgba(180,200,255,0.85);pointer-events:none;will-change:opacity,transform;animation:vipStellarTwinkle 3.2s ease-in-out infinite;z-index:1}
+@keyframes vipStellarPulse{0%,100%{opacity:0.5;transform:scale(0.95)}50%{opacity:0.95;transform:scale(1.08)}}
+@keyframes vipStellarTwinkle{0%,100%{opacity:0.45;transform:scale(0.7)}50%{opacity:1;transform:scale(1.4)}}
+
+/* DIAMOND — single light sweep left → right */
+.poxy-vip-diamond{background:linear-gradient(135deg,rgba(180,220,255,0.22),rgba(220,240,255,0.12))!important;border-color:rgba(180,220,255,0.65)!important}
+.poxy-vip-diamond::before{content:"";position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.7),transparent);pointer-events:none;will-change:transform,opacity;animation:vipDiamondSweep 3.6s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
+@keyframes vipDiamondSweep{0%{transform:translateX(0);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateX(320%);opacity:0}}
+
+/* SECRET — slow conic gradient shift (rotation = transform-only) */
+.poxy-vip-secret{background:linear-gradient(135deg,#2a0a3a,#0a0a2a)!important;border-color:rgba(233,30,99,0.7)!important}
+.poxy-vip-secret::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg,#ff5722,#e91e63,#9c27b0,#3f51b5,#00bcd4,#ff5722);pointer-events:none;opacity:0.3;will-change:transform;animation:vipSecretGradient 6s linear infinite;z-index:0;mix-blend-mode:screen}
+@keyframes vipSecretGradient{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+/* VIP serial badge — top-center, prominent #X */
+.col-card-vip-serial{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.6);color:#ffce6a;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:1.2px;border:1px solid rgba(255,206,106,0.5);font-family:'Inter',monospace;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:5;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.45);box-shadow:0 4px 14px rgba(255,140,0,0.28),0 0 0 1px rgba(0,0,0,0.4) inset;line-height:1}
+
+/* TEASER — non-VIP locked view (blur + grayscale + lock overlay) */
+.col-vip-locked-wrap{position:relative;display:block}
+.poxy-club-teaser{filter:blur(11px) grayscale(0.5)!important;opacity:0.7!important;pointer-events:none!important}
+.col-card-locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(0,0,0,0.32);border-radius:16px;color:#fff;font-size:11px;font-weight:900;letter-spacing:3px;pointer-events:none;z-index:10;text-transform:uppercase}
+.col-card-locked-overlay .ic{font-size:24px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6))}
+.col-card-locked-overlay .lbl{text-shadow:0 2px 8px rgba(0,0,0,0.7),0 0 14px rgba(255,206,106,0.4)}
+
+/* POXY CLUB EXCLUSIVES section header + CTA */
+.col-club-section{margin-top:28px;padding-top:18px;border-top:1px solid rgba(255,206,106,0.18);position:relative}
+.col-club-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:9px 12px;background:linear-gradient(135deg,rgba(255,180,40,0.1),rgba(255,80,120,0.08));border-radius:12px;border:1px solid rgba(255,180,40,0.25)}
+.col-club-bullet{font-size:14px;color:#ffce6a;will-change:opacity,transform;animation:vipObsidianPulse 4s ease-in-out infinite}
+.col-club-title{flex:1;font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;background:linear-gradient(90deg,#FFD700,#FF8C00,#FF4500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.col-club-count{font-size:10px;font-weight:800;color:#ffce6a;background:rgba(255,206,106,0.12);padding:3px 9px;border-radius:999px;border:1px solid rgba(255,206,106,0.25)}
+.col-club-grid{margin-bottom:14px}
+.col-club-cta{width:100%;margin-top:6px;padding:13px 16px;border:1px solid rgba(255,140,0,0.6);border-radius:12px;background:linear-gradient(135deg,rgba(255,180,40,0.15),rgba(255,80,80,0.1));color:#ffce6a;font-family:inherit;font-size:11px;font-weight:900;letter-spacing:2.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;will-change:transform}
+.col-club-cta:hover{transform:scale(1.02);background:linear-gradient(135deg,rgba(255,180,40,0.25),rgba(255,80,80,0.18));box-shadow:0 6px 18px rgba(255,140,0,0.35)}
+.col-club-cta:active{transform:scale(0.98)}
+.col-club-cta .ic{font-size:13px}
 .col-empty{text-align:center;padding:60px 20px;color:#C8C8C8;font-size:13px;line-height:1.7}
 .col-empty-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
 .col-loading{text-align:center;padding:60px 20px}
@@ -1811,50 +1872,143 @@ function applyPinSort(arr){
   pinned.sort((a,b)=>new Date(b.pinned_at).getTime()-new Date(a.pinned_at).getTime());
   return pinned.concat(rest);
 }
+// VIP rarity → CSS class mapping (Phase 1 / Phase 3 spec)
+const VIP_TIER_IDS=new Set(VIP_TIERS.map(t=>t.id));
+function isVipPoxyItem(it){return!!it&&(it.is_vip===true||VIP_TIER_IDS.has(it.poxy_tier));}
+function vipClassFor(item){
+  const tier=item&&item.poxy_tier;
+  if(!tier||!VIP_TIER_IDS.has(tier))return'';
+  return'poxy-vip-'+tier;
+}
+
+// Single card builder — used by both the regular grid and the Poxy Club
+// Exclusives grid. `lockedView` adds the .poxy-club-teaser blur + LOCKED
+// overlay for non-members. No event listeners are attached: the existing
+// delegated handler on #colContent (kebab + menu items + body select) keeps
+// owning every interaction.
+function buildCollectionCard(item,index,lockedView){
+  const tier=TIER_BY_ID[item.poxy_tier]||TIERS[0];
+  const vipTier=VIP_TIERS.find(t=>t.id===item.poxy_tier);
+  const isVip=!!vipTier||item.is_vip===true;
+  const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+  const isPinned=!!item.pinned_at;
+  const isFeatured=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
+
+  const card=document.createElement('div');
+  card.className='col-card tilt-3d'+
+    (isPinned?' pinned':'')+
+    (isVip?' col-card-vip':'')+
+    (vipTier?' '+vipClassFor(item):'')+
+    (lockedView?' poxy-club-teaser':'');
+  card.dataset.id=item.id;
+  card.dataset.pinnedAt=item.pinned_at||'';
+  if(selectedForDust.has(item.id))card.classList.add('selected-for-dust');
+  card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'55;box-shadow:0 0 18px '+tier.glow+';animation-delay:'+(index*0.04)+'s';
+
+  const ico=document.createElement('div');ico.className='col-card-icon';ico.textContent=tier.icon;
+  const lbl=document.createElement('div');lbl.className='col-card-tier';lbl.style.color=tier.color;lbl.textContent=tier.label;
+  const dt=document.createElement('div');dt.className='col-card-date';dt.textContent=ds;
+  const ser=document.createElement('div');ser.className='col-card-serial';ser.textContent=item.serial_number||'–';
+  card.appendChild(ico);card.appendChild(lbl);card.appendChild(dt);card.appendChild(ser);
+
+  if(isPinned){const pb=document.createElement('div');pb.className='col-card-pin-badge';pb.textContent='📌';card.appendChild(pb);}
+
+  // Prominent VIP serial — top-center (#1, #2, #X). Only when item is VIP and
+  // a vip_serial counter value exists from open_vip_case minting.
+  if(isVip&&item.vip_serial!=null){
+    const vb=document.createElement('div');vb.className='col-card-vip-serial';
+    vb.textContent='#'+item.vip_serial;
+    card.appendChild(vb);
+  }
+
+  const kebab=document.createElement('button');
+  kebab.type='button';kebab.className='col-card-kebab';kebab.textContent='⋮';
+  kebab.setAttribute('aria-label','Open actions menu');
+  kebab.dataset.action='kebab';kebab.dataset.id=item.id;
+  card.appendChild(kebab);
+
+  const menu=document.createElement('div');
+  menu.className='col-card-menu';menu.dataset.menuFor=item.id;menu.setAttribute('role','menu');
+  menu.innerHTML=
+    '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?'Unpin':'Pin to top')+'</button>'+
+    '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?'Unfeature':'Feature in Profile')+'</button>'+
+    '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>List on Market</button>'+
+    '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>Burn</button>';
+  card.appendChild(menu);
+
+  if(lockedView){
+    // Wrap so the LOCKED overlay sits OUTSIDE the blurred card and stays sharp.
+    const wrap=document.createElement('div');
+    wrap.className='col-vip-locked-wrap';
+    wrap.appendChild(card);
+    const overlay=document.createElement('div');
+    overlay.className='col-card-locked-overlay';
+    overlay.innerHTML='<span class="ic">🔒</span><span class="lbl">LOCKED</span>';
+    wrap.appendChild(overlay);
+    return wrap;
+  }
+  return card;
+}
+
 function renderCollection(){
   const cont=$('colContent');
-  // Close any dangling dropdowns before re-render (cards are about to be replaced).
   document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
   const filtered=applyPinSort(colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter));
-  if(!filtered.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">✸</div>'+(colFilter==='all'?'Your collection is empty.<br>Hunt your first POXY!':'No '+colFilter+' POXY found.')+'</div>';return;}
-  const grid=document.createElement('div');grid.className='col-grid col-grid-wide';
-  grid.id='colGrid';
-  filtered.forEach((item,i)=>{
-    const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
-    const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
-    const isPinned=!!item.pinned_at;
-    const isFeatured=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
-    const card=document.createElement('div');
-    card.className='col-card tilt-3d'+(isPinned?' pinned':'');
-    card.dataset.id=item.id;
-    card.dataset.pinnedAt=item.pinned_at||'';
-    if(selectedForDust.has(item.id))card.classList.add('selected-for-dust');
-    card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'55;box-shadow:0 0 18px '+tier.glow+';animation-delay:'+(i*0.04)+'s';
-    const ico=document.createElement('div');ico.className='col-card-icon';ico.textContent=tier.icon;
-    const lbl=document.createElement('div');lbl.className='col-card-tier';lbl.style.color=tier.color;lbl.textContent=tier.label;
-    const dt=document.createElement('div');dt.className='col-card-date';dt.textContent=ds;
-    const ser=document.createElement('div');ser.className='col-card-serial';ser.textContent=item.serial_number||'–';
-    card.appendChild(ico);card.appendChild(lbl);card.appendChild(dt);card.appendChild(ser);
-    // Pin badge (visual only — kebab menu owns the toggle).
-    if(isPinned){const pb=document.createElement('div');pb.className='col-card-pin-badge';pb.textContent='📌';card.appendChild(pb);}
-    // Top-right kebab — opens the per-card actions dropdown.
-    const kebab=document.createElement('button');
-    kebab.type='button';kebab.className='col-card-kebab';kebab.textContent='⋮';
-    kebab.setAttribute('aria-label','Open actions menu');
-    kebab.dataset.action='kebab';kebab.dataset.id=item.id;
-    card.appendChild(kebab);
-    // Glassmorphic dropdown — hidden until the kebab is clicked.
-    const menu=document.createElement('div');
-    menu.className='col-card-menu';menu.dataset.menuFor=item.id;menu.setAttribute('role','menu');
-    menu.innerHTML=
-      '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?'Unpin':'Pin to top')+'</button>'+
-      '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?'Unfeature':'Feature in Profile')+'</button>'+
-      '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>List on Market</button>'+
-      '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>Burn</button>';
-    card.appendChild(menu);
-    grid.appendChild(card);
-  });
-  cont.innerHTML='';cont.appendChild(grid);
+
+  // Phase 2 partition — VIP items go to the Poxy Club Exclusives section.
+  // Only partition when no specific tier filter is applied; otherwise the
+  // user explicitly asked for one tier and we keep the existing flat behavior.
+  const splitClubSection=colFilter==='all';
+  const normalItems=splitClubSection?filtered.filter(i=>!isVipPoxyItem(i)):filtered;
+  const vipItems=splitClubSection?filtered.filter(i=> isVipPoxyItem(i)):[];
+
+  cont.innerHTML='';
+
+  if(!normalItems.length&&!vipItems.length){
+    cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">✸</div>'+(colFilter==='all'?'Your collection is empty.<br>Hunt your first POXY!':'No '+colFilter+' POXY found.')+'</div>';
+    return;
+  }
+
+  // Standard inventory grid (non-VIP items, or whatever the filter selected).
+  if(normalItems.length){
+    const grid=document.createElement('div');grid.className='col-grid col-grid-wide';grid.id='colGrid';
+    normalItems.forEach((item,i)=>grid.appendChild(buildCollectionCard(item,i,false)));
+    cont.appendChild(grid);
+  }
+
+  // POXY CLUB EXCLUSIVES — only when no tier filter is active and the user
+  // owns at least one VIP item. Member view = full rarity; non-member view =
+  // teaser + LOCKED overlay + JOIN CLUB CTA.
+  if(splitClubSection&&vipItems.length){
+    const member=isClubMember();
+    const section=document.createElement('div');
+    section.id='colClubSection';
+    section.className='col-club-section';
+
+    const header=document.createElement('div');
+    header.className='col-club-header';
+    header.innerHTML='<span class="col-club-bullet">✸</span><span class="col-club-title">Poxy Club Exclusives</span><span class="col-club-count">'+vipItems.length+'</span>';
+    section.appendChild(header);
+
+    const vipGrid=document.createElement('div');
+    vipGrid.className='col-grid col-grid-wide col-club-grid';
+    vipGrid.id='colClubGrid';
+    vipItems.forEach((item,i)=>vipGrid.appendChild(buildCollectionCard(item,i,!member)));
+    section.appendChild(vipGrid);
+
+    if(!member){
+      const cta=document.createElement('button');
+      cta.type='button';
+      cta.className='col-club-cta';
+      cta.innerHTML='<span class="ic">🔓</span><span>JOIN CLUB TO UNLOCK</span>';
+      cta.addEventListener('click',function(){
+        if(typeof window.showPage==='function')window.showPage('club');
+      });
+      section.appendChild(cta);
+    }
+
+    cont.appendChild(section);
+  }
 }
 
 // ── PIN TOGGLE ──
