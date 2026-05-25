@@ -204,8 +204,98 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
   box-sizing:border-box;
   transform:none;
 }
-.user-bar-avatar.avatar-frame-target{width:28px;height:28px;--af-ring-outer:134%;--af-ring-inner:116%}
-.user-bar-avatar.avatar-frame-target #userBarAvatar{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;margin:0;padding:0}
+/* ── USER BAR header avatar — localized alignment only (#userBar scope) ── */
+#userBar #userBarAvatarWrap.avatar-frame-target{
+  width:28px;
+  height:28px;
+  min-width:28px;
+  min-height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:visible;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  flex-shrink:0;
+  --af-ring-outer:124%;
+  --af-ring-inner:110%;
+}
+#userBar #userBarAvatarWrap.gpu-accel{
+  transform:none;
+  will-change:auto;
+}
+#userBar #userBarAvatarWrap.avatar-frame-target:hover{
+  transform:scale(1.12);
+}
+#userBar #userBarAvatarWrap.avatar-frame-target::before,
+#userBar #userBarAvatarWrap.avatar-frame-target::after{
+  top:50%;
+  left:50%;
+  right:auto;
+  bottom:auto;
+  transform:translate(-50%,-50%);
+  transform-origin:center center;
+  margin:0;
+  padding:0;
+}
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::before{
+  width:var(--af-ring-outer);
+  height:var(--af-ring-outer);
+}
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::after{
+  width:var(--af-ring-inner);
+  height:var(--af-ring-inner);
+}
+#userBar #userBarAvatarWrap > #userBarAvatar{
+  width:28px;
+  height:28px;
+  min-width:28px;
+  min-height:28px;
+  max-width:28px;
+  max-height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  overflow:hidden;
+  line-height:0;
+  flex-shrink:0;
+  transform:none;
+  box-sizing:border-box;
+}
+#userBar #userBarAvatar .user-bar-avatar-face,
+#userBar #userBarAvatar > span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  font-size:16px;
+  line-height:1;
+  text-align:center;
+  transform:none;
+}
+#userBar #userBarAvatar img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  margin:0;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  box-sizing:border-box;
+  transform:none;
+}
 .inspect-avatar-wrap.avatar-frame-target{width:52px;height:52px;overflow:visible;--af-ring-outer:130%;--af-ring-inner:116%}
 .inspect-avatar-wrap.avatar-frame-target img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;margin:0}
 .pcm-avatar.avatar-frame-target{width:22px;height:22px;font-size:11px;--af-ring-outer:136%;--af-ring-inner:118%}
@@ -1027,8 +1117,6 @@ body.dark-club .club-sub{color:#888}
 .user-bar{max-width:380px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;gap:8px}
 .user-bar-left{display:flex;align-items:center;gap:8px;min-width:0}
 .user-bar-avatar{font-size:18px;cursor:pointer;transition:transform 0.2s;flex-shrink:0;width:28px;height:28px;border-radius:50%;overflow:visible;display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin:0;padding:0}
-.user-bar-avatar:hover{transform:scale(1.12)}
-.user-bar-avatar #userBarAvatar{width:100%;height:100%;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;margin:0;padding:0;line-height:1}
 .user-email{font-size:10.5px;color:#B0B0B0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .user-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .user-username{font-size:11px;font-weight:700;color:#1a1a1a}
@@ -1933,8 +2021,8 @@ function applyTheme(theme){
 function setBarAvatar(av){
   const el=$('userBarAvatar');
   if(!el)return;
-  if(av&&av.startsWith('http')){el.innerHTML='<img src="'+sanitizeText(av)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
-  else{el.innerHTML='';el.textContent=av||'🎭';}
+  if(av&&av.startsWith('http')){el.innerHTML='<img src="'+sanitizeText(av)+'" alt="">';}
+  else{el.innerHTML='<span class="user-bar-avatar-face">'+(av||'🎭')+'</span>';}
   applyPremiumFrameUI();
 }
 function renderProfilePage(){
