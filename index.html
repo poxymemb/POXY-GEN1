@@ -114,9 +114,96 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
   border-radius:50%;
   flex-shrink:0;
 }
-#profileBigAvatarWrap.avatar-frame-target{width:76px;height:76px;--af-ring-outer:132%;--af-ring-inner:118%}
-#profileBigAvatar{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:56px;line-height:1;margin:0;padding:0}
-#profileBigAvatarWrap .avatar-upload-preview{width:100%;height:100%;margin:0;border:2px solid rgba(232,232,232,0.9)}
+/* ── PROFILE MENU AVATAR (precision-centered frame + face) ── */
+#profileBigAvatarWrap.avatar-frame-target{
+  width:76px;
+  height:76px;
+  min-width:76px;
+  min-height:76px;
+  aspect-ratio:1/1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:visible;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  flex-shrink:0;
+  --af-ring-outer:126%;
+  --af-ring-inner:112%;
+}
+#profileBigAvatarWrap.avatar-frame-target::before,
+#profileBigAvatarWrap.avatar-frame-target::after{
+  top:50%;
+  left:50%;
+  right:auto;
+  bottom:auto;
+  transform-origin:center center;
+  margin:0;
+  padding:0;
+}
+#profileBigAvatarWrap.avatar-frame-target[data-frame]::before,
+#profileBigAvatarWrap.avatar-frame-target[data-frame]::after{
+  width:var(--af-ring-outer);
+  height:var(--af-ring-outer);
+}
+#profileBigAvatarWrap.avatar-frame-target[data-frame]::after{
+  width:var(--af-ring-inner);
+  height:var(--af-ring-inner);
+}
+#profileBigAvatarWrap.avatar-frame-target > #profileBigAvatar{
+  width:76px;
+  height:76px;
+  min-width:76px;
+  min-height:76px;
+  max-width:76px;
+  max-height:76px;
+  aspect-ratio:1/1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  overflow:hidden;
+  line-height:0;
+  flex-shrink:0;
+  transform:none;
+  box-sizing:border-box;
+}
+#profileBigAvatarWrap #profileBigAvatar .profile-menu-avatar-face,
+#profileBigAvatarWrap #profileBigAvatar > span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  font-size:42px;
+  line-height:1;
+  text-align:center;
+  transform:none;
+}
+#profileBigAvatarWrap #profileBigAvatar .avatar-upload-preview,
+#profileBigAvatarWrap #profileBigAvatar img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
+  object-fit:cover;
+  object-position:center center;
+  margin:0;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  box-sizing:border-box;
+  transform:none;
+}
 .user-bar-avatar.avatar-frame-target{width:28px;height:28px;--af-ring-outer:134%;--af-ring-inner:116%}
 .user-bar-avatar.avatar-frame-target #userBarAvatar{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;margin:0;padding:0}
 .inspect-avatar-wrap.avatar-frame-target{width:52px;height:52px;overflow:visible;--af-ring-outer:130%;--af-ring-inner:116%}
@@ -1853,14 +1940,14 @@ function setBarAvatar(av){
 function renderProfilePage(){
   const bigAv=$('profileBigAvatar');
   if(selectedAvatar&&selectedAvatar.startsWith('http')){bigAv.innerHTML='<img src="'+sanitizeText(selectedAvatar)+'" class="avatar-upload-preview">';}
-  else{bigAv.innerHTML='<span style="font-size:56px">'+selectedAvatar+'</span>';}
+  else{bigAv.innerHTML='<span class="profile-menu-avatar-face">'+selectedAvatar+'</span>';}
   $('profileUsername').value=currentProfile?.username||'';
   const row=$('avatarRow');row.innerHTML='';
   AVATARS.forEach(av=>{
     const btn=document.createElement('button');
     btn.className='avatar-opt'+(av===selectedAvatar?' selected':'');
     btn.textContent=av;
-    btn.onclick=()=>{selectedAvatar=av;bigAv.innerHTML='<span style="font-size:56px">'+av+'</span>';row.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');setBarAvatar(av);renderFrameSelector();};
+    btn.onclick=()=>{selectedAvatar=av;bigAv.innerHTML='<span class="profile-menu-avatar-face">'+av+'</span>';row.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');setBarAvatar(av);renderFrameSelector();};
     row.appendChild(btn);
   });
   renderFrameSelector();
