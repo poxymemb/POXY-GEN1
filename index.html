@@ -825,7 +825,8 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .frame-slot-emblem{font-size:16px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));position:relative;z-index:2}
 .frame-slot-preview{width:38px;height:38px;font-size:16px;position:relative;z-index:2;display:flex;align-items:center;justify-content:center;margin:0;padding:0}
 .frame-slot-face{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 50%,#2a2a32,#121218);font-size:15px;line-height:1;box-shadow:inset 0 2px 6px rgba(0,0,0,0.5);margin:0;padding:0;overflow:hidden}
-.frame-slot-face img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;margin:0;padding:0;border-radius:50%}
+.frame-slot-face img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;margin:0;padding:0;border-radius:50%;font-size:0;color:transparent}
+.frame-slot-emoji-fallback{font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
 /* ── Frame selector preview rings — localized inset alignment (#frameSelectorGrid only) ── */
 #frameSelectorGrid .frame-slot-preview.avatar-frame-target{
   width:38px;
@@ -1846,14 +1847,50 @@ function selectAvatarFrame(frameId){
 }
 
 function getSelfAvatarEmoji(){
-  const av=selectedAvatar||currentProfile?.avatar_url||'🎭';
-  if(av&&String(av).startsWith('http'))return null;
+  const av=currentProfile?.avatar_url||selectedAvatar||'🎭';
+  if(av&&String(av).startsWith('http')){
+    if(isBrokenAvatarUrl(av))return '🎭';
+    return null;
+  }
   return av||'🎭';
+}
+function resolveSelfAvatar(){
+  const av=currentProfile?.avatar_url||selectedAvatar||'🎭';
+  if(av&&String(av).startsWith('http')&&!isBrokenAvatarUrl(av)){
+    return {type:'photo',url:avatarImgUrl(av)};
+  }
+  const emoji=(av&&String(av).startsWith('http'))?'🎭':(av||'🎭');
+  return {type:'emoji',emoji:emoji};
+}
+function mountAvatarFace(el,resolved){
+  el.innerHTML='';
+  if(resolved.type==='photo'){
+    const img=document.createElement('img');
+    img.src=resolved.url;
+    img.alt='';
+    img.decoding='async';
+    img.referrerPolicy='no-referrer';
+    img.onerror=function(){
+      const fb=document.createElement('span');
+      fb.className='frame-slot-emoji-fallback';
+      fb.textContent=getSelfAvatarEmoji()||'🎭';
+      el.innerHTML='';
+      el.appendChild(fb);
+    };
+    el.appendChild(img);
+  } else {
+    const fb=document.createElement('span');
+    fb.className='frame-slot-emoji-fallback';
+    fb.textContent=resolved.emoji;
+    el.appendChild(fb);
+  }
 }
 
 function renderFrameSelector(){
   const grid = $('frameSelectorGrid');
   if(!grid) return;
+  if(currentProfile?.avatar_url&&!isBrokenAvatarUrl(currentProfile.avatar_url))selectedAvatar=currentProfile.avatar_url;
+  const selfAv=resolveSelfAvatar();
   grid.innerHTML = '';
   AVATAR_FRAME_CATALOG.forEach(function(cat){
     const locked=cat.locked&&!isFrameUnlocked(cat.id);
@@ -1870,9 +1907,7 @@ function renderFrameSelector(){
     preview.className='frame-slot-preview avatar-frame-target';
     if(cat.id!=='none')preview.setAttribute('data-frame',cat.id);
     const face=document.createElement('span');face.className='frame-slot-face';
-    const emoji=getSelfAvatarEmoji();
-    if(emoji){face.textContent=emoji;}
-    else{face.innerHTML='<img src="'+sanitizeText(selectedAvatar)+'" alt="">';}
+    mountAvatarFace(face,selfAv);
     preview.appendChild(face);
     const shine=document.createElement('div');shine.className='frame-slot-shine';
     const lock=document.createElement('div');lock.className='frame-slot-lock';lock.textContent='🔒';
@@ -2184,8 +2219,22 @@ function setBarAvatar(av){
   applyPremiumFrameUI();
 }
 function renderProfilePage(){
+  if(currentProfile?.avatar_url&&!isBrokenAvatarUrl(currentProfile.avatar_url))selectedAvatar=currentProfile.avatar_url;
   const bigAv=$('profileBigAvatar');
-  if(selectedAvatar&&selectedAvatar.startsWith('http')){bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(selectedAvatar))+'" class="avatar-upload-preview">';}
+  if(selectedAvatar&&selectedAvatar.startsWith('http')&&!isBrokenAvatarUrl(selectedAvatar)){bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(selectedAvatar))+'" class="avatar-upload-preview">';}
+  else if(isBrokenAvatarUrl(selectedAvatar||currentProfile?.avatar_url)){
+    bigAv.innerHTML='<span class="profile-menu-avatar-face">🎭</span>';
+    syncAvatarFromStorage().then(function(repaired){
+      if(!repaired)return;
+      selectedAvatar=repaired;
+      if(currentProfile)currentProfile.avatar_url=repaired;
+      window._avatarCacheV=Date.now();
+      bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(repaired))+'" class="avatar-upload-preview">';
+      setBarAvatar(repaired);
+      renderFrameSelector();
+      updateGlobalFrames();
+    });
+  }
   else{bigAv.innerHTML='<span class="profile-menu-avatar-face">'+selectedAvatar+'</span>';}
   $('profileUsername').value=currentProfile?.username||'';
   const row=$('avatarRow');row.innerHTML='';
