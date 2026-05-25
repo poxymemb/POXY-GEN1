@@ -2115,7 +2115,12 @@ async function loadProfile(){
     if(data){
       if(data.favorite_poxy_id&&!isUuid(data.favorite_poxy_id))data.favorite_poxy_id=null;
       currentProfile=data;
-      selectedAvatar=data.avatar_url||AVATARS[0];
+      let av=data.avatar_url||AVATARS[0];
+      if(isBrokenAvatarUrl(av)){
+        const repaired=await syncAvatarFromStorage();
+        if(repaired){av=repaired;currentProfile.avatar_url=repaired;}
+      }
+      selectedAvatar=av;
       $('userUsernameEl').textContent=data.username||'';
       applyNameGradientUI(data.name_gradient);
       applyTheme(data.profile_theme);
@@ -2144,16 +2149,43 @@ function applyTheme(theme){
     document.body.removeAttribute('data-theme');
   }
 }
+function avatarImgUrl(url){
+  if(!url||typeof url!=='string'||!url.startsWith('http'))return url;
+  const base=url.split('#')[0].replace(/([?&])v=\d+/g,'').replace(/[?&]$/,'');
+  return base+(base.includes('?')?'&':'?')+'v='+(window._avatarCacheV||1);
+}
+function isBrokenAvatarUrl(url){
+  if(!url||typeof url!=='string'||!url.startsWith('http'))return false;
+  if(/\/avatars\/avatar(?:[?#]|$)/.test(url))return true;
+  if(currentUser&&!url.includes(currentUser.id))return true;
+  return false;
+}
+async function syncAvatarFromStorage(){
+  if(!currentUser)return null;
+  try{
+    const{data:files,error}=await sb.storage.from('avatars').list('avatars',{limit:20,sortBy:{column:'created_at',order:'desc'}});
+    if(error||!files?.length)return null;
+    const match=files.find(f=>f.name&&f.name.startsWith(currentUser.id+'.'));
+    if(!match)return null;
+    const path='avatars/'+match.name;
+    const{data:urlData}=sb.storage.from('avatars').getPublicUrl(path);
+    const url=urlData?.publicUrl;
+    if(!url)return null;
+    const{error:updErr}=await sb.from('profiles').update({avatar_url:url}).eq('id',currentUser.id);
+    if(updErr){console.error('syncAvatarFromStorage:',updErr);return null;}
+    return url;
+  }catch(e){console.error('syncAvatarFromStorage:',e);return null;}
+}
 function setBarAvatar(av){
   const el=$('userBarAvatar');
   if(!el)return;
-  if(av&&av.startsWith('http')){el.innerHTML='<img src="'+sanitizeText(av)+'" alt="">';}
+  if(av&&av.startsWith('http')){el.innerHTML='<img src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';}
   else{el.innerHTML='<span class="user-bar-avatar-face">'+(av||'🎭')+'</span>';}
   applyPremiumFrameUI();
 }
 function renderProfilePage(){
   const bigAv=$('profileBigAvatar');
-  if(selectedAvatar&&selectedAvatar.startsWith('http')){bigAv.innerHTML='<img src="'+sanitizeText(selectedAvatar)+'" class="avatar-upload-preview">';}
+  if(selectedAvatar&&selectedAvatar.startsWith('http')){bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(selectedAvatar))+'" class="avatar-upload-preview">';}
   else{bigAv.innerHTML='<span class="profile-menu-avatar-face">'+selectedAvatar+'</span>';}
   $('profileUsername').value=currentProfile?.username||'';
   const row=$('avatarRow');row.innerHTML='';
@@ -2262,24 +2294,41 @@ $('btnChangePassword').addEventListener('click',async function(){
 document.getElementById('avatarUpload').addEventListener('change',async function(e){
   const file=e.target.files[0];if(!file||!currentUser)return;
   const status=$('uploadStatus');
-  if(!file.type.startsWith('image/')){showToast('Please select an image.');return;}
-  if(file.size>2*1024*1024){showToast('Image must be under 2MB.');return;}
+  const input=e.target;
+  if(!file.type.startsWith('image/')){showToast('Please select an image.');input.value='';return;}
+  if(file.size>2*1024*1024){showToast('Image must be under 2MB.');input.value='';return;}
   status.textContent='Uploading...';
   try{
-    const ext=file.name.split('.').pop().toLowerCase();
+    const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
     const path='avatars/'+currentUser.id+'.'+ext;
-    const{error:upErr}=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type});
+    const contentType=file.type||('image/'+(ext==='jpg'?'jpeg':ext));
+    const{error:upErr}=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:contentType});
     if(upErr)throw upErr;
     const{data:urlData}=sb.storage.from('avatars').getPublicUrl(path);
     const url=urlData.publicUrl;
-    await sb.from('profiles').upsert({id:currentUser.id,avatar_url:url});
-    selectedAvatar=url;currentProfile={...currentProfile,avatar_url:url};
-    $('profileBigAvatar').innerHTML='<img src="'+sanitizeText(url)+'" class="avatar-upload-preview">';
+    const{data:prof,error:profErr}=await sb.from('profiles').update({avatar_url:url}).eq('id',currentUser.id).select('avatar_url').maybeSingle();
+    if(profErr)throw profErr;
+    if(!prof){
+      const{error:insErr}=await sb.from('profiles').insert({id:currentUser.id,avatar_url:url,balance:0,dust:0});
+      if(insErr)throw insErr;
+    }
+    window._avatarCacheV=Date.now();
+    selectedAvatar=url;currentProfile={...(currentProfile||{id:currentUser.id}),avatar_url:url};
+    $('profileBigAvatar').innerHTML='<img src="'+sanitizeText(avatarImgUrl(url))+'" class="avatar-upload-preview">';
     setBarAvatar(url);
+    renderFrameSelector();
     document.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));
     status.textContent='Photo saved!';setTimeout(()=>status.textContent='',3000);
     showToast('Avatar updated!');
-  }catch(err){status.textContent='';showToast('Upload failed. Create "avatars" bucket in Supabase Storage.');}
+  }catch(err){
+    console.error('avatar upload:',err);
+    status.textContent='';
+    const msg=(err?.message||String(err)).toLowerCase();
+    if(msg.includes('bucket')||msg.includes('not found'))showToast('Upload failed — enable the avatars storage bucket in Supabase.');
+    else if(msg.includes('policy')||msg.includes('row-level')||msg.includes('permission')||msg.includes('denied'))showToast('Upload blocked — check Storage policies for avatars.');
+    else showToast('Upload failed: '+(err?.message||'Unknown error'));
+  }
+  input.value='';
 });
 
 // ── NAVIGATION ──
