@@ -1335,6 +1335,18 @@ body.dark-club .club-sub{color:#888}
         </section>
       </div>
     </main>
+    <div class="st-win-reveal" id="stWinReveal" aria-hidden="true" role="dialog" aria-labelledby="stWinRevealTitle">
+      <div class="st-win-reveal-backdrop" aria-hidden="true"></div>
+      <div class="st-win-reveal-card" id="stWinRevealCard">
+        <div class="st-win-reveal-flare" id="stWinFlare" aria-hidden="true"></div>
+        <div class="st-win-reveal-kicker" id="stWinRevealTitle">Win Reveal</div>
+        <div class="st-win-reveal-icon" id="stWinIcon"></div>
+        <div class="st-win-reveal-name" id="stWinName"></div>
+        <div class="st-win-reveal-rarity" id="stWinRarity"></div>
+        <div class="st-win-reveal-serial" id="stWinSerial"></div>
+        <button type="button" class="st-win-reveal-btn" id="stWinContinue">Continue</button>
+      </div>
+    </div>
     <footer class="st-footer">
       <span>© 2026 POXY WORLD. IMMUTABLE EXCLUSIVITY.</span>
       <div class="st-footer-links">
@@ -2372,26 +2384,56 @@ $('lX').addEventListener('mouseleave',()=>$('logoRow').classList.remove('x-activ
 $('lX').addEventListener('touchstart',e=>{e.preventDefault();$('logoRow').classList.toggle('x-active');});
 
 // ── GACHA ──
-const SPIN_MS=2400;
+const SPIN_MS=7500;
 const ROULETTE_SLOT_W=102;
-let spinNearMissTier=null,rouletteWinIndex=0;
+const ROULETTE_SLOT_HALF=45;
+const ROULETTE_WIN_INDEX=50;
+const ROULETTE_TRAIL_SLOTS=19;
+let spinNearMissTier=null,rouletteWinIndex=ROULETTE_WIN_INDEX;
+let spinTickTimer=null,spinSlowTickTimer=null,spinSettleTimer=null;
 function tierBgStyle(tier){return{background:tier.glow,borderColor:tier.color,boxShadow:'0 0 22px '+tier.color+'99,inset 0 0 16px '+tier.glow};}
-function flashSpinTier(tier,sb2){Object.assign(sb2.style,tierBgStyle(tier));sb2.style.opacity='1';}
+function tierGlowVar(tier){return tier.color+'88';}
+function clearSpinTimers(){
+  if(spinTickTimer){clearInterval(spinTickTimer);spinTickTimer=null;}
+  if(spinSlowTickTimer){clearInterval(spinSlowTickTimer);spinSlowTickTimer=null;}
+  if(spinSettleTimer){clearTimeout(spinSettleTimer);spinSettleTimer=null;}
+}
 function buildRouletteTrack(winTier){
   const track=$('stRouletteTrack');
   if(!track)return;
+  const winner=winTier||pickTier();
   const slots=[];
-  const loops=5;
-  const perLoop=TIERS.length*3;
-  for(let L=0;L<loops;L++){
-    for(let i=0;i<perLoop;i++)slots.push(TIERS[i%TIERS.length]);
-  }
-  rouletteWinIndex=slots.length;
-  slots.push(winTier||pickTier());
-  slots.push(TIERS[Math.floor(Math.random()*TIERS.length)]);
-  track.innerHTML=slots.map((t,i)=>'<div class="st-slot'+(i===rouletteWinIndex?' st-slot--winner':'')+'" data-tier="'+t.id+'" style="color:'+t.color+'">'+t.icon+'</div>').join('');
-  track.classList.remove('is-spinning');
+  for(let i=0;i<ROULETTE_WIN_INDEX;i++)slots.push(pickTier());
+  slots.push(winner);
+  rouletteWinIndex=ROULETTE_WIN_INDEX;
+  for(let i=0;i<ROULETTE_TRAIL_SLOTS;i++)slots.push(pickTier());
+  track.innerHTML=slots.map((t,i)=>{
+    const win=i===rouletteWinIndex;
+    return '<div class="st-slot'+(win?' st-slot--winner':'')+'" data-tier="'+t.id+'" style="color:'+t.color+';--prize-glow:'+tierGlowVar(t)+'">'+t.icon+'</div>';
+  }).join('');
+  track.classList.remove('is-spinning','is-settling','is-landed');
+  track.style.transition='none';
   track.style.transform='translateX(0)';
+  void track.offsetWidth;
+}
+function detachRouletteEnd(track){
+  if(track&&track._spinEndHandler){
+    track.removeEventListener('transitionend',track._spinEndHandler);
+    track._spinEndHandler=null;
+  }
+}
+function onRouletteLand(tier){
+  const track=$('stRouletteTrack');
+  clearSpinTimers();
+  if(track){
+    track.classList.remove('is-spinning','is-settling');
+    track.classList.add('is-landed');
+    const winSlot=track.querySelector('.st-slot--winner');
+    if(winSlot)winSlot.classList.add('st-slot--landed');
+  }
+  const t=tier||pendingSpinTier||TIERS[0];
+  playDrop(t.id);
+  openWinRevealModal(t);
 }
 function runRouletteCarousel(winTier){
   buildRouletteTrack(winTier);
@@ -2399,68 +2441,79 @@ function runRouletteCarousel(winTier){
   const idle=$('stRouletteIdle');
   const mount=$('stSpinMount');
   if(!track)return;
+  detachRouletteEnd(track);
   if(idle)idle.classList.add('is-hidden');
   if(mount)mount.classList.add('is-rolling');
-  const target=-(rouletteWinIndex*ROULETTE_SLOT_W);
+  const target=-(rouletteWinIndex*ROULETTE_SLOT_W+ROULETTE_SLOT_HALF);
+  track._spinEndHandler=function(e){
+    if(e.target!==track||e.propertyName!=='transform')return;
+    detachRouletteEnd(track);
+    onRouletteLand(winTier);
+  };
+  track.addEventListener('transitionend',track._spinEndHandler);
+  spinTickTimer=setInterval(()=>playTick(),110);
+  spinSettleTimer=setTimeout(()=>{
+    track.classList.add('is-settling');
+    if(spinTickTimer){clearInterval(spinTickTimer);spinTickTimer=null;}
+    spinSlowTickTimer=setInterval(()=>playTick(),260);
+    setTimeout(()=>{if(spinSlowTickTimer){clearInterval(spinSlowTickTimer);spinSlowTickTimer=null;}},2800);
+  },5000);
   requestAnimationFrame(()=>{
-    track.classList.add('is-spinning');
-    track.style.transform='translateX('+target+'px)';
+    requestAnimationFrame(()=>{
+      track.style.transition='';
+      track.classList.add('is-spinning');
+      track.style.transform='translateX('+target+'px)';
+    });
   });
 }
 function resetRouletteCarousel(){
   const track=$('stRouletteTrack');
   const idle=$('stRouletteIdle');
   const mount=$('stSpinMount');
-  if(track){track.classList.remove('is-spinning');track.style.transform='translateX(0)';track.innerHTML='';}
+  clearSpinTimers();
+  detachRouletteEnd(track);
+  if(track){
+    track.classList.remove('is-spinning','is-settling','is-landed');
+    track.style.transition='none';
+    track.style.transform='translateX(0)';
+    track.innerHTML='';
+  }
   if(idle)idle.classList.remove('is-hidden');
   if(mount)mount.classList.remove('is-rolling');
+}
+function openWinRevealModal(tier){
+  const t=tier||pendingSpinTier||TIERS[0];
+  currentTier=t;
+  currentSerial=genSerial();
+  const modal=$('stWinReveal');
+  const flare=$('stWinFlare');
+  if(flare)flare.style.setProperty('--flare-color',t.color+'44');
+  $('stWinIcon').textContent=t.icon;
+  $('stWinIcon').style.color=t.color;
+  $('stWinName').textContent='POXY '+t.label;
+  $('stWinRarity').textContent=t.label;
+  $('stWinRarity').style.color=t.color;
+  $('stWinRarity').className='st-win-reveal-rarity st-rarity-'+t.id;
+  $('stWinSerial').textContent=currentSerial;
+  if(modal){modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');}
+  triggerRevealFX(t.id);
+  setBodyBg(t.id);
+}
+function closeWinRevealModal(){
+  const modal=$('stWinReveal');
+  if(modal){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');}
+  finishSpin();
 }
 function startSpin(){
   pendingSpinTier=pickTier();
   spinNearMissTier=null;
-  if(Math.random()<0.72){spinNearMissTier=Math.random()<0.35?TIERS.find(t=>t.id==='mythic'):TIERS.find(t=>t.id==='legendary');}
-  runRouletteCarousel(pendingSpinTier);
+  if(spinAnim)cancelAnimationFrame(spinAnim);
   const sb2=$('spinBox');
-  sb2.classList.add('spin-rapid');
-  sb2.style.opacity='1';
-  sb2.style.transform='scale(0.92)';
-  let glitchIdx=0,tickCount=0,lastTick=0,lastNearMiss=0;
-  function frame(now){
-    const elapsed=now-spinStartTime;
-    const t=Math.min(elapsed/SPIN_MS,1);
-    let interval=28;
-    if(t>0.55)interval=28+(t-0.55)*320;
-    if(t>0.82)interval=interval+80;
-    if(now-lastTick>interval){
-      lastTick=now;
-      glitchIdx=(glitchIdx+1)%TIERS.length;
-      const flashTier=TIERS[glitchIdx];
-      flashSpinTier(flashTier,sb2);
-      tickCount++;
-      if(tickCount%2===0)playTick();
-      if(spinNearMissTier&&t>0.5&&t<0.78&&now-lastNearMiss>180){lastNearMiss=now;flashSpinTier(spinNearMissTier,sb2);playTick();}
-    }
-    const wobble=Math.sin(elapsed*0.02)*(1-t)*6;
-    const rot=(t<0.85?t*1.4:0.85*1.4)*540+wobble;
-    const scale=0.88+0.12*Math.min(t*2.5,1);
-    sb2.style.transform='rotate('+rot+'deg) scale('+scale+')';
-    if(t<1)spinAnim=requestAnimationFrame(frame);
-    else finishSpin();
-  }
-  spinAnim=requestAnimationFrame(frame);
+  if(sb2){sb2.classList.remove('spin-rapid');sb2.style.opacity='0';}
+  runRouletteCarousel(pendingSpinTier);
 }
 function finishSpin(){
-  const sb2=$('spinBox');
-  const tier=pendingSpinTier||TIERS[0];
-  sb2.classList.remove('spin-rapid');
-  Object.assign(sb2.style,tierBgStyle(tier));
-  sb2.style.transform='rotate(0deg) scale(1.08)';
-  sb2.style.transition='transform 0.35s cubic-bezier(0.1,1,0.1,1),opacity 0.3s ease,box-shadow 0.35s ease';
-  setTimeout(()=>{
-    sb2.style.opacity='0';
-    sb2.style.transform='scale(0.85)';
-    showReward(pendingSpinTier);
-  },320);
+  showReward(pendingSpinTier,true);
 }
 function launchParticles(color){
   particles=[];
@@ -2475,11 +2528,12 @@ function triggerRevealFX(tierId){
   if(tierId==='legendary'||tierId==='mythic'){document.body.classList.add('screen-shake-heavy');setTimeout(()=>document.body.classList.remove('screen-shake-heavy'),700);}
   else if(tierId==='rare'||tierId==='epic'){document.body.classList.add('screen-shake');setTimeout(()=>document.body.classList.remove('screen-shake'),500);}
 }
-function showReward(tier){
+function showReward(tier,fromModal){
   currentTier=tier||pendingSpinTier||pickTier();
-  currentSerial=genSerial();
+  if(!currentSerial)currentSerial=genSerial();
   const tid=currentTier.id;
-  launchParticles(currentTier.color);playDrop(tid);setBodyBg(tid);triggerRevealFX(tid);
+  launchParticles(currentTier.color);
+  if(!fromModal){playDrop(tid);setBodyBg(tid);triggerRevealFX(tid);}
   $('rewardIcon').textContent=currentTier.icon;$('rewardIcon').style.color=currentTier.color;
   $('rewardLabel').textContent=currentTier.label;$('rewardLabel').style.color=currentTier.color;
   $('rewardSerial').textContent=currentSerial;
@@ -2505,6 +2559,9 @@ function showReward(tier){
 }
 function resetAll(){
   if(spinAnim)cancelAnimationFrame(spinAnim);if(particleLoop)cancelAnimationFrame(particleLoop);
+  clearSpinTimers();
+  const winModal=$('stWinReveal');
+  if(winModal){winModal.classList.remove('is-open');winModal.setAttribute('aria-hidden','true');}
   resetRouletteCarousel();
   $('cvs').getContext('2d').clearRect(0,0,240,240);particles=[];
   const rb=$('rewardBox');rb.style.transition='opacity 0.3s';rb.style.opacity='0';rb.style.animation='';rb.className='reward-box gpu-accel';
@@ -2524,9 +2581,11 @@ $('btnOpen').addEventListener('click',async function(){
   currentProfile.balance=bal-STANDARD_CASE_PRICE;
   updateBalanceBadge(currentProfile.balance);
   try{await sb.from('profiles').update({balance:currentProfile.balance}).eq('id',currentUser.id);}catch(e){console.error('debit failed',e);}
-  $('idleBox').style.opacity='0';spinStartTime=performance.now();startSpin();
+  $('idleBox').style.opacity='0';startSpin();
   bumpQuest('open_3_cases',1);
 });
+const stWinContinue=$('stWinContinue');
+if(stWinContinue)stWinContinue.addEventListener('click',closeWinRevealModal);
 $('btnAdd').addEventListener('click',async function(){
   if(!currentTier||!currentUser||!currentSerial)return;
   const orig=$('btnAdd').textContent;$('btnAdd').disabled=true;$('btnAdd').textContent='Saving...';
