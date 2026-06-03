@@ -61,13 +61,16 @@
   font-size:14px;font-weight:500;
   color:var(--st-on-surface-variant);
   cursor:pointer;padding:0;
-  border-bottom:2px solid transparent;
   line-height:1;
-  transition:color 0.3s ease,transform 0.3s cubic-bezier(0.1,1,0.1,1),border-color 0.3s ease;
+  text-shadow:none;
+  transition:color 0.3s ease,transform 0.3s cubic-bezier(0.1,1,0.1,1),text-shadow 0.3s ease;
 }
-.st-brand-link{line-height:1;padding-bottom:2px;border-bottom:2px solid transparent;box-sizing:border-box}
+.st-brand-link{line-height:1}
 .st-nav-link:hover{color:var(--st-primary);transform:scale(1.02)}
-.st-nav-link.active{color:var(--st-primary);font-weight:700;border-bottom-color:var(--st-primary)}
+.st-nav-link.active{
+  color:var(--st-primary);font-weight:700;
+  text-shadow:0 0 12px rgba(249,171,255,0.55),0 0 24px rgba(249,171,255,0.28);
+}
 .st-nav-secondary{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;max-width:100%}
 .st-nav-secondary::-webkit-scrollbar{display:none}
 .st-nav-pills{display:flex;gap:4px;background:var(--st-surface-low);border:1px solid var(--st-glass);border-radius:999px;padding:4px 6px;overflow-x:auto;scrollbar-width:none}
