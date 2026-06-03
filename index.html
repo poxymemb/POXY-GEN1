@@ -1255,24 +1255,36 @@ body.dark-club .club-sub{color:#888}
 .club-locked-icon{font-size:48px;margin-bottom:12px}
 .club-locked-text{font-size:13px;color:#9E9E9E;line-height:1.8}
 
-/* ── AUTH ── */
-.auth-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.97);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
+/* ── AUTH (Stitch Coral Blaze) ── */
+.auth-overlay,.poxy-auth-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(248,249,250,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);overflow:hidden}
 .auth-overlay.hidden{display:none}
-.auth-card{background:#fff;border-radius:24px;padding:36px 28px;width:100%;max-width:340px;box-shadow:0 8px 48px rgba(0,0,0,0.09);display:flex;flex-direction:column;align-items:center}
-.auth-logo{display:flex;align-items:baseline;margin-bottom:6px;user-select:none}
-.auth-l{font-size:36px;font-weight:900;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.auth-x{font-size:52px;font-weight:900;letter-spacing:-3px;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.auth-sub{font-size:11px;color:#B0B0B0;letter-spacing:2px;margin-bottom:24px;text-transform:uppercase}
-.auth-tabs{display:flex;width:100%;margin-bottom:20px;border-radius:12px;background:#f7f7f7;padding:3px}
-.auth-tab{flex:1;padding:10px;border:none;background:none;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:0.5px;color:#B0B0B0;cursor:pointer;border-radius:10px;transition:all 0.2s;text-transform:uppercase}
-.auth-tab.active{background:#fff;color:#FF5722;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.auth-input{width:100%;padding:13px 16px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;transition:border-color 0.2s;margin-bottom:10px;background:#fafafa}
-.auth-input:focus{border-color:#FF5722;background:#fff}
-.auth-input::placeholder{color:#C8C8C8}
-.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);border:none;border-radius:50px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:6px;transition:transform 0.2s,opacity 0.2s;box-shadow:0 4px 20px #FF572233}
-.auth-btn:hover{transform:scale(1.02)}.auth-btn:active{transform:scale(0.97)}.auth-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-.auth-msg{font-size:12px;margin-top:10px;min-height:16px;text-align:center;font-weight:500}
-.auth-msg.error{color:#E91E63}.auth-msg.success{color:#4CAF50}
+.poxy-auth-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.poxy-auth-bg-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.1}
+.poxy-auth-bg-blob--tr{top:-10%;right:-10%;width:50vw;height:50vw;background:linear-gradient(90deg,#ff416c,#ff4b2b)}
+.poxy-auth-bg-blob--bl{bottom:-10%;left:-10%;width:60vw;height:60vw;background:#8429c8}
+.auth-card,.poxy-auth-card{position:relative;z-index:10;width:100%;max-width:400px;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;padding:24px;box-shadow:0 10px 30px rgba(255,65,108,0.08);border:1px solid rgba(255,255,255,0.5);display:flex;flex-direction:column}
+.poxy-auth-logo{text-align:center;margin-bottom:40px}
+.auth-logo{display:flex;align-items:baseline;justify-content:center;margin-bottom:8px;user-select:none}
+.auth-l,.auth-x{font-size:48px;font-weight:800;line-height:1;letter-spacing:-0.02em;color:#191c1d}
+.auth-x{font-size:52px;letter-spacing:-0.04em;background:linear-gradient(90deg,#ff416c,#ff4b2b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-sub{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5b4042}
+.auth-tabs,.poxy-auth-tabs{display:flex;background:#f3f4f5;border-radius:999px;padding:4px;margin-bottom:40px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06)}
+.auth-tab,.poxy-auth-tab{flex:1;padding:8px 16px;border:none;background:none;font-family:inherit;font-size:14px;font-weight:600;color:#5b4042;border-radius:999px;cursor:pointer;transition:all 0.3s}
+.auth-tab.active,.poxy-auth-tab.active{background:#de2656;color:#fffbff;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.poxy-auth-fields{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+.poxy-auth-field-wrap{position:relative}
+.poxy-auth-field-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:#5b4042;pointer-events:none;transition:color 0.3s}
+.poxy-auth-field-wrap:focus-within .poxy-auth-field-icon{color:#ff416c}
+.auth-input,.poxy-auth-input{width:100%;padding:12px 16px 12px 48px;border:1px solid #e3bdc0;border-radius:12px;background:#f8f9fa;font-family:inherit;font-size:16px;color:#191c1d;outline:none;transition:all 0.3s}
+.auth-input:focus,.poxy-auth-input:focus{border-color:#ff416c;box-shadow:0 0 0 1px #ff416c;background:#fff}
+.auth-input::placeholder{color:rgba(91,64,66,0.5)}
+.auth-btn,.poxy-auth-btn{width:100%;height:48px;background:linear-gradient(90deg,#ff416c,#ff4b2b);border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(255,65,108,0.39);transition:transform 0.3s,box-shadow 0.3s,opacity 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.poxy-auth-btn::after{content:'';width:18px;height:18px;flex-shrink:0;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat}
+.auth-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,65,108,0.23)}
+.auth-btn:active{transform:scale(0.95)}
+.auth-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.auth-msg{font-size:14px;margin-top:16px;min-height:20px;text-align:center;font-weight:400}
+.auth-msg.error{color:#ba1a1a}.auth-msg.success{color:#4CAF50}
 
 /* ── USER BAR ── */
 .user-bar{max-width:380px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;gap:8px}
@@ -1429,17 +1441,31 @@ body.dark-club .club-sub{color:#888}
 <div class="balance-badge gpu-accel" id="balanceBadge" onclick="showPage('bank')">0 PC</div>
 
 <!-- AUTH -->
-<div class="auth-overlay" id="authOverlay">
-  <div class="auth-card">
-    <div class="auth-logo"><span class="auth-l">PO</span><span class="auth-x">X</span><span class="auth-l">Y</span></div>
-    <div class="auth-sub">collect the uncollectable</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-      <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+<div class="auth-overlay poxy-auth-overlay" id="authOverlay">
+  <div class="poxy-auth-bg" aria-hidden="true">
+    <div class="poxy-auth-bg-blob poxy-auth-bg-blob--tr"></div>
+    <div class="poxy-auth-bg-blob poxy-auth-bg-blob--bl"></div>
+  </div>
+  <div class="auth-card poxy-auth-card">
+    <div class="poxy-auth-logo">
+      <div class="auth-logo"><span class="auth-l">PO</span><span class="auth-x">X</span><span class="auth-l">Y</span></div>
+      <p class="auth-sub">collect the uncollectable</p>
     </div>
-    <input class="auth-input" type="text" id="authEmail" placeholder="Email or Username" autocomplete="email">
-    <input class="auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
-    <button type="button" class="auth-btn" id="authSubmitBtn">Sign In</button>
+    <div class="auth-tabs poxy-auth-tabs">
+      <button type="button" class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button type="button" class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div class="poxy-auth-fields">
+      <div class="poxy-auth-field-wrap">
+        <svg class="poxy-auth-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16v16H4z" stroke="none"/><path d="M4 8l8 5 8-5"/><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+        <input class="auth-input poxy-auth-input" type="text" id="authEmail" placeholder="Email or Username" autocomplete="email">
+      </div>
+      <div class="poxy-auth-field-wrap">
+        <svg class="poxy-auth-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <input class="auth-input poxy-auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
+      </div>
+    </div>
+    <button type="button" class="auth-btn poxy-auth-btn" id="authSubmitBtn">Sign In</button>
     <div class="auth-msg" id="authMsg"></div>
   </div>
 </div>
