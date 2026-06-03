@@ -294,8 +294,6 @@ body.ranks-tab-active #huntPage .st-spa-viewport{
     min-height:280px;
   }
 }
-.ranks-podium-card--hero .ranks-podium-badge,
-.ranks-podium-card--hero .ranks-podium-crown,
 .ranks-podium-card--hero .ranks-podium-avatar-ring,
 .ranks-podium-card--hero .ranks-podium-name,
 .ranks-podium-card--hero .ranks-podium-value{
@@ -303,15 +301,18 @@ body.ranks-tab-active #huntPage .st-spa-viewport{
   z-index:10;
 }
 .ranks-podium-crown{
-  position:absolute;
-  top:-44px;
-  left:50%;
-  transform:translateX(-50%);
   font-size:32px;
   color:var(--rk-primary);
   font-variation-settings:'FILL' 1;
-  z-index:12;
   filter:drop-shadow(0 0 12px rgba(249,171,255,0.55));
+}
+.ranks-podium-card--hero .ranks-podium-crown{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translate(-50%,-100%);
+  margin-top:-8px;
+  z-index:12;
 }
 .ranks-podium-badge{
   position:absolute;
@@ -325,6 +326,12 @@ body.ranks-tab-active #huntPage .st-spa-viewport{
   border:1px solid var(--rk-glass);
   color:var(--rk-on);
   z-index:3;
+}
+.ranks-podium-card--hero .ranks-podium-badge{
+  top:0;
+  left:0;
+  transform:translate(-50%,-50%);
+  z-index:12;
 }
 .ranks-podium-card--hero:hover{
   background:rgba(26,26,34,0.62);
