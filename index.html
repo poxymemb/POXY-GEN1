@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
-<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=4">
+<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=5">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-club-gold.css">
@@ -7024,6 +7024,15 @@ function buildRanksPodiumCard(item,rank,mode,slotClass){
   val.className='ranks-podium-value';
   val.textContent=formatLbValue(item,mode);
   card.append(badge,ring,name,val);
+  if(rank===1){
+    const slot=document.createElement('div');
+    slot.className='ranks-podium-hero-slot';
+    const glow=document.createElement('div');
+    glow.className='ranks-podium-glow';
+    glow.setAttribute('aria-hidden','true');
+    slot.append(glow,card);
+    return slot;
+  }
   return card;
 }
 function buildRanksListRow(item,rank,mode,delayMs){
