@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="assets/frames.css">
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
+<link rel="stylesheet" href="assets/poxy-spa-nav.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1073,9 +1074,9 @@ body.dark-club .club-sub{color:#888}
     <div class="poxy-sidebar-tabs-track">
     <button type="button" class="sidebar-tab-btn active" id="stab-codex" onclick="switchSidebarTab('codex')">Codex</button>
     <button type="button" class="sidebar-tab-btn" id="stab-news" onclick="switchSidebarTab('news')">News</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-gen1" onclick="switchSidebarTab('gen1')">Gen 1</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-gen1" onclick="closeSidebar();showStitchTab('tierlist')">Tier List</button>
     <button type="button" class="sidebar-tab-btn" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-leaderboard" onclick="switchSidebarTab('leaderboard')">Ranks</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-leaderboard" onclick="closeSidebar();showStitchTab('ranks')">Player Ranks</button>
     <button type="button" class="sidebar-tab-btn" id="stab-support" onclick="switchSidebarTab('support')">Legal</button>
     <button type="button" class="sidebar-tab-btn" id="stab-customize" onclick="switchSidebarTab('customize')">Store</button>
     </div>
@@ -1225,9 +1226,11 @@ body.dark-club .club-sub{color:#888}
         <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
         <span class="st-brand">POXY WORLD</span>
         <div class="st-nav-pills" aria-label="Main">
-          <button type="button" class="st-nav-pill active" id="psdNavDashboard" onclick="showPage('hunt')"><span class="material-symbols-outlined">home</span> Dashboard</button>
-          <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showPage('market')"><span class="material-symbols-outlined">storefront</span> Marketplace</button>
-          <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showPage('club')"><span class="material-symbols-outlined">local_play</span> Club Entry</button>
+          <button type="button" class="st-nav-pill active" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span> Dashboard</button>
+          <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span> Marketplace</button>
+          <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span> Club Entry</button>
+          <button type="button" class="st-nav-pill st-nav-pill--tier" id="psdNavTierList" onclick="showStitchTab('tierlist')"><span class="material-symbols-outlined">layers</span> Tier List</button>
+          <button type="button" class="st-nav-pill st-nav-pill--ranks" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span> Player Ranks</button>
         </div>
         <div class="st-nav-right">
           <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">monetization_on</span> 0 PC</button>
@@ -1243,6 +1246,8 @@ body.dark-club .club-sub{color:#888}
         </div>
       </div>
     </nav>
+    <div class="st-spa-viewport" id="stSpaViewport">
+    <section class="st-spa-panel st-spa-panel--active" id="stPanelDashboard" data-st-tab="dashboard">
     <main class="st-main">
       <section class="st-hero">
         <div class="st-hero-glow" aria-hidden="true"></div>
@@ -1350,6 +1355,42 @@ body.dark-club .club-sub{color:#888}
         </div>
       </div>
     </div>
+    </section>
+
+    <section class="st-spa-panel" id="stPanelTierList" data-st-tab="tierlist" hidden>
+      <div class="st-main tier-list-panel">
+        <div class="tier-list-hero">
+          <h2>Asset Tier List</h2>
+          <p>Immutable rarity hierarchy with live global unbox telemetry. Scarcity is permanent — totals only increase.</p>
+        </div>
+        <div class="tier-list-grid" id="tierListGrid"></div>
+        <div class="tier-list-gen1">
+          <div class="tier-list-gen1-hdr"><span class="material-symbols-outlined">auto_awesome</span> Generation 1 Archive</div>
+          <div class="tier-list-gen1-grid" id="tierListGen1Grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="st-spa-panel ranks-panel" id="stPanelRanks" data-st-tab="ranks" hidden>
+      <div class="st-main">
+        <div class="ranks-panel-hdr">
+          <div>
+            <h2>Player Ranks</h2>
+            <p>Tap any player to open their expanded profile, message, or trade.</p>
+          </div>
+        </div>
+        <div class="lb-toggle">
+          <button type="button" class="lb-toggle-btn active" id="spaLbBtnBalance" onclick="switchLeaderboard('balance')">PC Balance</button>
+          <button type="button" class="lb-toggle-btn" id="spaLbBtnCollection" onclick="switchLeaderboard('collection')">Rare+ Count</button>
+        </div>
+        <div id="spaLeaderboardList"><div class="lb-loading"><div class="col-spinner"></div></div></div>
+      </div>
+    </section>
+
+    <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
+    <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
+    </div>
+
     <footer class="st-footer">
       <span>© 2026 POXY WORLD. IMMUTABLE EXCLUSIVITY.</span>
       <div class="st-footer-links">
@@ -1578,20 +1619,60 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- PROFILE INSPECTION MODAL -->
-<div class="modal-overlay hidden" id="inspectModal">
-  <div class="modal-card" style="max-width:340px">
-    <div class="inspect-header">
-      <div class="inspect-avatar-wrap" id="inspectAvatarWrap"><span id="inspectAvatarInner">👾</span></div>
-      <div class="inspect-header-info">
-        <div class="inspect-username-text" id="inspectUsernameText">–</div>
-        <div class="inspect-sub-text" id="inspectSubText">POXY Member</div>
+<!-- EXPANDED PLAYER PROFILE MODAL -->
+<div class="modal-overlay hidden profile-expanded-backdrop" id="inspectModal" role="dialog" aria-modal="true" aria-labelledby="inspectUsernameText">
+  <div class="modal-card profile-expanded-card">
+    <button type="button" class="profile-expanded-close" onclick="closeInspectModal()" aria-label="Close profile">✕</button>
+    <div class="profile-expanded-banner" aria-hidden="true"></div>
+    <div class="profile-expanded-body">
+      <div class="profile-expanded-avatar-row">
+        <div class="profile-expanded-avatar-wrap" id="inspectAvatarWrap"><span id="inspectAvatarInner">👾</span></div>
+        <div class="profile-expanded-meta">
+          <div class="inspect-username-text profile-expanded-name" id="inspectUsernameText">–</div>
+          <div class="profile-expanded-rank" id="inspectRankText">POXY Member</div>
+          <div class="profile-expanded-badges inspect-sub-text" id="inspectSubText"></div>
+        </div>
       </div>
-      <button class="btn-modal-cancel" style="flex-shrink:0;padding:8px 12px;font-size:14px" onclick="closeInspectModal()">✕</button>
+      <div class="inspect-stats-grid" id="inspectStatsGrid"></div>
+      <div class="inspect-fav-poxy" id="inspectFavPoxy"><div class="inspect-fav-none">No featured POXY set.</div></div>
+      <div class="profile-expanded-actions" id="inspectActionsRow"></div>
     </div>
-    <div class="inspect-stats-grid" id="inspectStatsGrid"></div>
-    <div class="inspect-fav-poxy" id="inspectFavPoxy"><div class="inspect-fav-none">No featured POXY set.</div></div>
-    <div class="inspect-actions-row" id="inspectActionsRow"></div>
+  </div>
+</div>
+
+<!-- DIRECT MESSAGE SLIDE-OVER -->
+<div class="dm-overlay hidden" id="dmOverlay" role="dialog" aria-modal="true" aria-labelledby="dmHeaderName">
+  <div class="dm-panel">
+    <div class="dm-header">
+      <div class="dm-header-avatar" id="dmHeaderAvatar">👾</div>
+      <div class="dm-header-info">
+        <div class="dm-header-name" id="dmHeaderName">Player</div>
+        <div class="dm-header-sub">Direct Message</div>
+      </div>
+      <button type="button" class="dm-close" onclick="closeDmOverlay()" aria-label="Close messages">✕</button>
+    </div>
+    <div class="dm-messages" id="dmMessages"></div>
+    <div class="dm-compose">
+      <input type="text" class="dm-input" id="dmInput" placeholder="Type a message…" maxlength="500" onkeydown="if(event.key==='Enter')sendDmMessage()">
+      <button type="button" class="dm-send" onclick="sendDmMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- PEER-TO-PEER TRADE MODAL -->
+<div class="modal-overlay hidden" id="tradeModal" role="dialog" aria-modal="true" aria-labelledby="tradeModalTitle">
+  <div class="modal-card trade-modal-card">
+    <div class="trade-modal-hdr">
+      <h3 id="tradeModalTitle">Initiate Poxy Trade</h3>
+      <p id="tradeModalSub">Select POXY from your inventory to offer.</p>
+    </div>
+    <input type="text" class="trade-msg-input" id="tradeMsgInput" placeholder="Optional trade note…" maxlength="140">
+    <div class="trade-inv-grid" id="tradeInvGrid"></div>
+    <div class="trade-modal-foot">
+      <span class="trade-selected-count" id="tradeSelectedCount">0 selected</span>
+      <button type="button" class="btn-modal-cancel" onclick="closeTradeModal()">Cancel</button>
+      <button type="button" class="btn-modal-ok" id="btnSubmitTrade" onclick="submitTradeOffer()">Send Offer</button>
+    </div>
   </div>
 </div>
 
@@ -2358,16 +2439,155 @@ document.getElementById('avatarUpload').addEventListener('change',async function
 // ── STITCH DASHBOARD helpers ──
 const DASH_COL_GOAL=20;
 window.scrollToTreasury=function(){
-  showPage('hunt');
+  showStitchTab('dashboard');
   const el=$('psdTreasury');
   if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'start'}));
 };
+let activeStitchTab='dashboard';
+let globalTierCounts={};
+let dmTargetUserId=null;
+let tradeTargetUserId=null;
+const tradeSelectedIds=new Set();
+let leaderboardRankByUser={};
+
+const STITCH_TAB_MAP={
+  dashboard:'psdNavDashboard',hunt:'psdNavDashboard',
+  market:'psdNavMarket',club:'psdNavClub',
+  tierlist:'psdNavTierList',ranks:'psdNavRanks'
+};
+
 function syncPsdTopNav(page){
   document.querySelectorAll('.st-nav-pill').forEach(b=>b.classList.remove('active'));
-  const map={hunt:'psdNavDashboard',market:'psdNavMarket',club:'psdNavClub'};
-  const id=map[page]||(page==='bank'?'psdNavDashboard':null);
+  const tab=page==='hunt'?'dashboard':(page==='tierlist'||page==='ranks'?page:page);
+  const id=STITCH_TAB_MAP[tab]||(page==='bank'?'psdNavDashboard':null);
   const btn=id?$(id):null;
   if(btn)btn.classList.add('active');
+}
+
+function mountSpaPanels(){
+  const mPanel=$('stPanelMarket');
+  const cPanel=$('stPanelClub');
+  const mPage=$('marketPage');
+  const cPage=$('clubPage');
+  if(mPanel&&mPage&&mPage.parentElement!==mPanel){
+    mPage.classList.add('st-spa-panel-inner','page');
+    mPage.classList.remove('visible');
+    mPanel.appendChild(mPage);
+  }
+  if(cPanel&&cPage&&cPage.parentElement!==cPanel){
+    cPage.classList.add('st-spa-panel-inner','club-page');
+    cPage.classList.remove('visible');
+    cPanel.appendChild(cPage);
+  }
+}
+
+window.showStitchTab=function(tab){
+  if(!currentUser){showToast('Sign in first.');return;}
+  const next=tab==='hunt'?'dashboard':tab;
+  const prev=activeStitchTab;
+  activeStitchTab=next;
+  mountSpaPanels();
+  document.body.classList.add('poxy-stitch-dash');
+  $('huntPage').style.display='block';
+  $('bottomNav').style.display='none';
+  ['profile','collection','friends','market','bank'].forEach(p=>{
+    const el=$(p+'Page');
+    if(el&&el.parentElement&&el.id!=='marketPage')el.classList.remove('visible');
+  });
+  const prevPanel=document.querySelector('.st-spa-panel[data-st-tab="'+prev+'"]');
+  const nextPanel=document.querySelector('.st-spa-panel[data-st-tab="'+next+'"]');
+  document.querySelectorAll('.st-spa-panel').forEach(p=>{
+    const isNext=p===nextPanel;
+    p.hidden=!isNext;
+    p.classList.remove('st-spa-panel--active','st-spa-panel--leaving');
+    if(p===prevPanel&&prev!==next){p.classList.add('st-spa-panel--leaving');setTimeout(()=>p.classList.remove('st-spa-panel--leaving'),320);}
+    if(isNext)p.classList.add('st-spa-panel--active');
+  });
+  syncPsdTopNav(next);
+  document.body.classList.remove('dark-club');
+  if(next==='club'){document.body.classList.add('dark-club');renderClub();}
+  if(next==='dashboard'){
+    refreshStitchDashboardChrome();
+    if(!colData.length)loadCollection().catch(console.error);
+    else renderDashColPreview();
+    renderBank();
+  }
+  if(next==='market')loadMarket();
+  if(next==='tierlist')loadTierListPanel();
+  if(next==='ranks')loadLeaderboardData();
+};
+
+async function loadGlobalTierCounts(){
+  globalTierCounts={};
+  try{
+    const{data,error}=await sb.rpc('get_global_tier_counts');
+    if(!error&&data){
+      if(typeof data==='string'){try{globalTierCounts=JSON.parse(data);}catch(e){}}
+      else if(typeof data==='object')globalTierCounts=data;
+    }
+  }catch(e){}
+  if(!Object.keys(globalTierCounts).length){
+    try{
+      const{data}=await sb.from('user_poxy').select('poxy_tier');
+      (data||[]).forEach(r=>{globalTierCounts[r.poxy_tier]=(globalTierCounts[r.poxy_tier]||0)+1;});
+    }catch(e){}
+  }
+}
+
+function renderTierListPanel(){
+  const grid=$('tierListGrid');
+  const gen1=$('tierListGen1Grid');
+  if(!grid)return;
+  grid.innerHTML='';
+  TIERS.forEach(t=>{
+    const total=globalTierCounts[t.id]!=null?globalTierCounts[t.id]:0;
+    const card=document.createElement('article');
+    card.className='tier-list-card gpu-accel';
+    card.style.setProperty('--tl-color',t.color);
+    card.style.setProperty('--tl-glow',t.glow);
+    card.innerHTML=
+      '<div class="tier-list-card-icon" style="color:'+t.color+'">'+t.icon+'</div>'+
+      '<div class="tier-list-card-label" style="color:'+t.color+'">'+t.label+'</div>'+
+      '<div class="tier-list-card-prob">'+(t.prob*100).toFixed(t.prob<0.01?3:1)+'% drop rate</div>'+
+      '<div class="tier-list-counter">'+
+        '<div class="tier-list-counter-label">Total Unboxed</div>'+
+        '<div class="tier-list-counter-val">'+Number(total).toLocaleString()+'</div>'+
+      '</div>';
+    grid.appendChild(card);
+  });
+  if(gen1){
+    gen1.innerHTML='';
+    GEN1_MODELS.forEach(model=>{
+      const tier=TIERS.find(x=>x.id===model.tier)||TIERS[0];
+      const card=document.createElement('div');
+      card.className='tier-list-gen1-card';
+      card.innerHTML=
+        '<div style="font-size:26px;color:'+tier.color+'">'+model.icon+'</div>'+
+        '<div style="font-size:12px;font-weight:800;color:#e5e2e1;margin-top:6px">'+model.name+'</div>'+
+        '<div style="font-size:9px;color:'+tier.color+';letter-spacing:0.1em;text-transform:uppercase;margin-top:4px">'+tier.label+'</div>';
+      gen1.appendChild(card);
+    });
+  }
+}
+
+async function loadTierListPanel(){
+  const grid=$('tierListGrid');
+  if(!grid)return;
+  grid.innerHTML='<div class="lb-loading" style="grid-column:1/-1"><div class="col-spinner"></div></div>';
+  await loadGlobalTierCounts();
+  renderTierListPanel();
+}
+
+function syncLeaderboardToggleUI(){
+  const bal=leaderboardMode==='balance';
+  ['lbBtnBalance','spaLbBtnBalance'].forEach(id=>{const b=$(id);if(b)b.classList.toggle('active',bal);});
+  ['lbBtnCollection','spaLbBtnCollection'].forEach(id=>{const b=$(id);if(b)b.classList.toggle('active',!bal);});
+}
+
+function getLeaderboardListEl(){
+  const spa=$('spaLeaderboardList');
+  if(spa&&$('huntPage')&&$('huntPage').style.display!=='none'&&activeStitchTab==='ranks')return spa;
+  return $('leaderboardList');
 }
 const STITCH_TIER_ICON={mythic:'diamond',legendary:'grade',epic:'auto_awesome',rare:'stars',uncommon:'eco',common:'view_in_ar'};
 function renderDashColPreview(){
@@ -2417,29 +2637,30 @@ function refreshStitchDashboardChrome(){
 // ── NAVIGATION ──
 window.showPage=function(page){
   if(page==='bank'){scrollToTreasury();return;}
+  if(['hunt','market','club','tierlist','ranks'].includes(page)&&currentUser){
+    showStitchTab(page==='hunt'?'dashboard':page);
+    return;
+  }
   const isHunt=page==='hunt';
   document.body.classList.toggle('poxy-stitch-dash',isHunt);
   $('huntPage').style.display=isHunt?'block':'none';
-  ['profile','collection','friends','market','bank'].forEach(p=>{const el=$(p+'Page');if(el)el.classList.toggle('visible',page===p);});
-  const clubEl=$('clubPage');if(clubEl)clubEl.classList.toggle('visible',page==='club');
+  if(isHunt&&currentUser)showStitchTab('dashboard');
+  ['profile','collection','friends','market','bank'].forEach(p=>{
+    const el=$(p+'Page');
+    if(!el)return;
+    if(el.id==='marketPage'||el.id==='clubPage'){if(!isHunt)el.classList.toggle('visible',page===p);return;}
+    el.classList.toggle('visible',page===p);
+  });
   $('bottomNav').style.display=isHunt?'none':'flex';
   syncPsdTopNav(page);
   ['navHunt','navCollection','navFriends','navMarket','navBank','navClub'].forEach(id=>{const b=$(id);if(b)b.classList.remove('active');});
   const navMap={hunt:'navHunt',collection:'navCollection',friends:'navFriends',market:'navMarket',bank:'navBank',club:'navClub',profile:'navHunt'};
   const nv=$(navMap[page]);if(nv)nv.classList.add('active');
-  if(isHunt){
-    refreshStitchDashboardChrome();
-    if(currentUser&&!colData.length)loadCollection().catch(console.error);
-    else renderDashColPreview();
-    renderBank();
-  }
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
   if(page==='friends'){loadFriends();loadPendingRequests();}
-  if(page==='market')loadMarket();
-  if(page==='club')renderClub();
   if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();}
-  if(page==='club'){document.body.classList.add('dark-club');}
-  else{document.body.classList.remove('dark-club');if(currentTier&&isHunt)setBodyBg(currentTier.id);}
+  document.body.classList.remove('dark-club');
+  if(currentTier&&isHunt)setBodyBg(currentTier.id);
 };
 
 // ── LOGO ──
@@ -3242,18 +3463,20 @@ function startFriendPoll(){
   },60000);
 }
 
-// ── PROFILE INSPECTION MODAL ──
+// ── EXPANDED PLAYER PROFILE ──
+window.openExpandedProfile=openInspectModal;
 async function openInspectModal(userId){
   if(!userId)return;
   inspectTargetUserId=userId;
   const modal=$('inspectModal');
   $('inspectUsernameText').textContent='Loading...';
-  $('inspectSubText').textContent='';
+  const rankEl=$('inspectRankText');if(rankEl)rankEl.textContent='Loading rank…';
+  $('inspectSubText').innerHTML='';
   $('inspectStatsGrid').innerHTML='';
   $('inspectFavPoxy').innerHTML='<div class="inspect-fav-none">Loading...</div>';
   $('inspectActionsRow').innerHTML='';
-  $('inspectAvatarInner').textContent='👾';
-  $('inspectAvatarWrap').className='inspect-avatar-wrap';
+  const avWrap=$('inspectAvatarWrap');
+  if(avWrap){avWrap.className='profile-expanded-avatar-wrap';avWrap.innerHTML='<span id="inspectAvatarInner">👾</span>';}
   modal.classList.remove('hidden');requestAnimationFrame(()=>modal.classList.add('show'));
   try{
     const isSelfInspect=String(userId)===String(currentUser?.id);
@@ -3270,12 +3493,16 @@ async function openInspectModal(userId){
     const isPrem=!!(premData&&premData.length);
     const isFriend=!!(friendships&&friendships.length);
     const avWrap=$('inspectAvatarWrap');
-    avWrap.className='inspect-avatar-wrap'+(isSelfInspect?' avatar-frame-target':'');
-    if(isPrem&&!isSelfInspect)avWrap.classList.add('inspect-prem');
-    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(prof.avatar_url)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    avWrap.className='profile-expanded-avatar-wrap'+(isSelfInspect?' avatar-frame-target':'')+(isPrem&&!isSelfInspect?' inspect-prem':'');
+    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="">';
     else avWrap.innerHTML='<span id="inspectAvatarInner">'+sanitizeText(prof.avatar_url||'👾')+'</span>';
     if(isSelfInspect)updateGlobalFrames();
     $('inspectUsernameText').textContent=sanitizeText(prof.username||'Anonymous');
+    const rankEl=$('inspectRankText');
+    if(rankEl){
+      const rk=leaderboardRankByUser[userId];
+      rankEl.textContent=rk?'Global Rank #'+rk:'Unranked Player';
+    }
     const totalItems=poxyData?.length||0;
     const rareItems=poxyData?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
     const badgesArr=Array.isArray(prof.badges)?prof.badges.slice():[];
@@ -3298,35 +3525,167 @@ async function openInspectModal(userId){
       }catch(e){favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
     } else {favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
     const actionsRow=$('inspectActionsRow');
-    const existingReq=reqs&&reqs[0];
-    if(isFriend){
-      const fb=document.createElement('button');fb.className='btn-friend sent';fb.style.flex='1';fb.textContent='Friends ✓';actionsRow.appendChild(fb);
-    } else if(existingReq&&existingReq.status==='pending'){
-      const fb=document.createElement('button');fb.className='btn-friend sent';fb.style.flex='1';fb.textContent='Request Sent';actionsRow.appendChild(fb);
-    } else {
-      const addBtn=document.createElement('button');addBtn.className='btn-friend';addBtn.style.flex='1';addBtn.textContent='+ Add Friend';
-      addBtn.addEventListener('click',async function(){
-        if(!isUuid(userId)){logAndToast('add-friend-modal',new Error('user id not UUID'));return;}
-        this.disabled=true;
-        try{
-          const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
-          if(ie)throw ie;
-          if(data&&data.ok===false)throw new Error(data.error||'Could not send');
-          this.textContent='Sent';this.classList.add('sent');
-          showToast('Friend request sent.');
-        }catch(e){logAndToast('add-friend-modal',e);this.disabled=false;}
-      });
-      actionsRow.appendChild(addBtn);
+    if(!isSelfInspect){
+      const dmBtn=document.createElement('button');
+      dmBtn.className='btn-profile-action btn-profile-dm';
+      dmBtn.innerHTML='<span class="material-symbols-outlined">chat</span> Send Message';
+      dmBtn.onclick=()=>{closeInspectModal();openDmOverlay(userId,prof.username,prof.avatar_url);};
+      actionsRow.appendChild(dmBtn);
+      const tradeBtn=document.createElement('button');
+      tradeBtn.className='btn-profile-action btn-profile-trade';
+      tradeBtn.innerHTML='<span class="material-symbols-outlined">swap_horiz</span> Initiate Poxy Trade';
+      tradeBtn.onclick=()=>{closeInspectModal();openTradeModal(userId,prof.username);};
+      actionsRow.appendChild(tradeBtn);
     }
-    const closeBtn=document.createElement('button');closeBtn.className='btn-modal-cancel';closeBtn.style.flex='1';closeBtn.textContent='Close';closeBtn.onclick=closeInspectModal;
-    actionsRow.appendChild(closeBtn);
+    const existingReq=reqs&&reqs[0];
+    if(!isSelfInspect){
+      if(isFriend){
+        const fb=document.createElement('button');fb.className='btn-profile-action btn-profile-friend sent';fb.textContent='Friends ✓';fb.disabled=true;actionsRow.appendChild(fb);
+      } else if(existingReq&&existingReq.status==='pending'){
+        const fb=document.createElement('button');fb.className='btn-profile-action btn-profile-friend sent';fb.textContent='Request Sent';fb.disabled=true;actionsRow.appendChild(fb);
+      } else {
+        const addBtn=document.createElement('button');addBtn.className='btn-profile-action btn-profile-friend';addBtn.textContent='+ Add Friend';
+        addBtn.addEventListener('click',async function(){
+          if(!isUuid(userId)){logAndToast('add-friend-modal',new Error('user id not UUID'));return;}
+          this.disabled=true;
+          try{
+            const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
+            if(ie)throw ie;
+            if(data&&data.ok===false)throw new Error(data.error||'Could not send');
+            this.textContent='Sent';this.classList.add('sent');
+            showToast('Friend request sent.');
+          }catch(e){logAndToast('add-friend-modal',e);this.disabled=false;}
+        });
+        actionsRow.appendChild(addBtn);
+      }
+    }
   }catch(e){closeInspectModal();showToast('Could not load profile.');}
 }
 window.closeInspectModal=function(){
   const modal=$('inspectModal');
   modal.classList.remove('show');
-  setTimeout(()=>modal.classList.add('hidden'),250);
+  setTimeout(()=>modal.classList.add('hidden'),280);
   inspectTargetUserId=null;
+};
+
+// ── DIRECT MESSAGES ──
+window.openDmOverlay=async function(userId,username,avatarUrl){
+  if(!currentUser||!userId||String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
+  dmTargetUserId=userId;
+  $('dmHeaderName').textContent=sanitizeText(username||'Player');
+  const av=$('dmHeaderAvatar');
+  if(avatarUrl&&avatarUrl.startsWith('http'))av.innerHTML='<img src="'+sanitizeText(avatarImgUrl(avatarUrl))+'" alt="">';
+  else av.textContent=avatarUrl||'👾';
+  $('dmMessages').innerHTML='<div class="poxychat-empty">Loading…</div>';
+  $('dmOverlay').classList.remove('hidden');
+  requestAnimationFrame(()=>$('dmOverlay').classList.add('show'));
+  await loadDmThread();
+  setTimeout(()=>$('dmInput')?.focus(),400);
+};
+window.closeDmOverlay=function(){
+  const o=$('dmOverlay');
+  o.classList.remove('show');
+  setTimeout(()=>{o.classList.add('hidden');dmTargetUserId=null;},380);
+};
+async function loadDmThread(){
+  const box=$('dmMessages');
+  if(!box||!dmTargetUserId||!currentUser)return;
+  try{
+    const{data,error}=await sb.from('poxy_dm').select('*')
+      .or('and(from_id.eq.'+currentUser.id+',to_id.eq.'+dmTargetUserId+'),and(from_id.eq.'+dmTargetUserId+',to_id.eq.'+currentUser.id+')')
+      .order('created_at',{ascending:true}).limit(80);
+    if(error)throw error;
+    if(!data||!data.length){box.innerHTML='<div class="poxychat-empty">No messages yet. Say hello.</div>';return;}
+    box.innerHTML='';
+    data.forEach(m=>{
+      const mine=m.from_id===currentUser.id;
+      const b=document.createElement('div');
+      b.className='dm-bubble '+(mine?'dm-bubble--mine':'dm-bubble--theirs');
+      b.textContent=m.content;
+      box.appendChild(b);
+    });
+    box.scrollTop=box.scrollHeight;
+  }catch(e){
+    box.innerHTML='<div class="poxychat-empty">DM unavailable. Run supabase/migration_social_spa.sql on your project.</div>';
+  }
+}
+window.sendDmMessage=async function(){
+  const input=$('dmInput');
+  const content=input?.value.trim();
+  if(!content||!dmTargetUserId||!currentUser)return;
+  input.disabled=true;
+  try{
+    const{error}=await sb.from('poxy_dm').insert({from_id:currentUser.id,to_id:dmTargetUserId,content});
+    if(error)throw error;
+    input.value='';
+    await loadDmThread();
+    bumpQuest('send_chat',1);
+  }catch(e){showToast('Message failed: '+(e.message||'error'));}
+  input.disabled=false;
+  input.focus();
+};
+
+// ── PEER-TO-PEER TRADE ──
+window.openTradeModal=async function(userId,username){
+  if(!currentUser||!userId||String(userId)===String(currentUser.id)){showToast('Invalid trade target.');return;}
+  tradeTargetUserId=userId;
+  tradeSelectedIds.clear();
+  $('tradeModalTitle').textContent='Trade with '+sanitizeText(username||'Player');
+  $('tradeModalSub').textContent='Select POXY to offer. Listed items are excluded.';
+  $('tradeMsgInput').value='';
+  $('tradeSelectedCount').textContent='0 selected';
+  $('tradeInvGrid').innerHTML='<div class="lb-loading" style="grid-column:1/-1"><div class="col-spinner"></div></div>';
+  $('tradeModal').classList.remove('hidden');
+  requestAnimationFrame(()=>$('tradeModal').classList.add('show'));
+  if(!colData.length)await loadCollection();
+  await renderTradeInventory();
+};
+window.closeTradeModal=function(){
+  const m=$('tradeModal');
+  m.classList.remove('show');
+  setTimeout(()=>{m.classList.add('hidden');tradeTargetUserId=null;tradeSelectedIds.clear();},250);
+};
+async function renderTradeInventory(){
+  const grid=$('tradeInvGrid');
+  if(!grid)return;
+  const listed=new Set();
+  try{
+    const{data}=await sb.from('marketplace').select('poxy_id').eq('seller_id',currentUser.id).eq('status','active');
+    (data||[]).forEach(r=>listed.add(r.poxy_id));
+  }catch(e){}
+  grid.innerHTML='';
+  const items=(colData||[]).filter(it=>it&&!listed.has(it.id));
+  if(!items.length){grid.innerHTML='<div class="col-empty" style="grid-column:1/-1">No tradable items in inventory.</div>';return;}
+  items.forEach(item=>{
+    const tier=TIER_BY_ID[item.poxy_tier]||TIERS[0];
+    const el=document.createElement('button');
+    el.type='button';
+    el.className='trade-inv-item'+(tradeSelectedIds.has(item.id)?' selected':'');
+    el.innerHTML='<div class="trade-inv-icon" style="color:'+tier.color+'">'+tier.icon+'</div><div class="trade-inv-tier" style="color:'+tier.color+'">'+tier.label+'</div><div style="font-size:8px;color:#888;font-family:monospace;margin-top:4px">'+sanitizeText(item.serial_number||'')+'</div>';
+    el.onclick=()=>{
+      if(tradeSelectedIds.has(item.id))tradeSelectedIds.delete(item.id);
+      else{if(tradeSelectedIds.size>=12){showToast('Maximum 12 items per offer.');return;}tradeSelectedIds.add(item.id);}
+      renderTradeInventory();
+      $('tradeSelectedCount').textContent=tradeSelectedIds.size+' selected';
+    };
+    grid.appendChild(el);
+  });
+  $('tradeSelectedCount').textContent=tradeSelectedIds.size+' selected';
+}
+window.submitTradeOffer=async function(){
+  if(!tradeTargetUserId||!tradeSelectedIds.size){showToast('Select at least one POXY.');return;}
+  const btn=$('btnSubmitTrade');
+  if(btn)btn.disabled=true;
+  const ids=[...tradeSelectedIds];
+  const msg=$('tradeMsgInput')?.value.trim()||null;
+  try{
+    const{data,error}=await sb.rpc('create_trade_offer',{p_to_id:tradeTargetUserId,p_poxy_ids:ids,p_message:msg});
+    if(error)throw error;
+    if(data&&data.ok===false)throw new Error(data.error||'Trade failed');
+    showToast('Trade offer sent!');
+    closeTradeModal();
+  }catch(e){showToast(e.message||'Trade offer failed. Apply migration_social_spa.sql if needed.');}
+  if(btn)btn.disabled=false;
 };
 
 // ── MARKETPLACE ──
@@ -3954,8 +4313,13 @@ function renderChatMsg(m,prof,list){
   avWrap.className='pcm-avatar'+(isSelf?' avatar-frame-target':'');
   if(prof?.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(prof.avatar_url)+'" alt="">';
   else avWrap.textContent=prof?.avatar_url||'✸';
+  const openAuthorProfile=()=>{if(m.author_id&&m.author_id!==currentUser?.id)openInspectModal(m.author_id);};
+  avWrap.style.cursor='pointer';
+  avWrap.addEventListener('click',e=>{e.stopPropagation();openAuthorProfile();});
   head.appendChild(avWrap);
   const name=document.createElement('span');name.className='pcm-name';name.textContent=sanitizeText(prof?.username||'Anonymous');
+  name.style.cursor='pointer';
+  name.addEventListener('click',e=>{e.stopPropagation();openAuthorProfile();});
   head.appendChild(name);
   if(isFounderMsg){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FFCA28;font-weight:800';f.textContent='FOUNDER';head.appendChild(f);}
   else if(prof?.is_verified_employee){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FF5252;font-weight:800';f.textContent='STAFF';head.appendChild(f);}
@@ -4062,12 +4426,11 @@ function renderAppraisalTabContent(){
 // ── LEADERBOARDS ──
 window.switchLeaderboard=function(mode){
   leaderboardMode=mode;
-  $('lbBtnBalance').classList.toggle('active',mode==='balance');
-  $('lbBtnCollection').classList.toggle('active',mode==='collection');
+  syncLeaderboardToggleUI();
   loadLeaderboardData();
 };
 async function loadLeaderboardData(){
-  const listEl=$('leaderboardList');if(!listEl)return;
+  const listEl=getLeaderboardListEl();if(!listEl)return;
   listEl.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
   try{
     if(leaderboardMode==='balance'){
@@ -4090,16 +4453,25 @@ async function loadLeaderboardData(){
   }catch(e){listEl.innerHTML='<div class="lb-empty">Error loading leaderboard.</div>';}
 }
 function renderLeaderboardList(data,mode){
-  const listEl=$('leaderboardList');if(!listEl)return;
+  const listEl=getLeaderboardListEl();if(!listEl)return;
   if(!data.length){listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;}
   listEl.innerHTML='';
+  leaderboardRankByUser={};
   data.forEach((item,i)=>{
     const rank=i+1;
-    const row=document.createElement('div');row.className='lb-row';
+    if(item.id)leaderboardRankByUser[item.id]=rank;
+    const row=document.createElement('div');
+    row.className='lb-row lb-row--clickable gpu-accel';
+    row.setAttribute('role','button');
+    row.setAttribute('tabindex','0');
+    const uid=item.id;
+    const openProfile=()=>{if(uid)openInspectModal(uid);};
+    row.addEventListener('click',openProfile);
+    row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProfile();}});
     const rankEl=document.createElement('div');rankEl.className='lb-rank'+(rank===1?' gold':rank===2?' silver':rank===3?' bronze':'');rankEl.textContent='#'+rank;
     const avEl=document.createElement('div');avEl.className='lb-avatar';
     const av=item.avatar_url||item.avatar||'';
-    if(av&&av.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(av)+'" alt="">';else avEl.textContent=av||'👾';
+    if(av&&av.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';else avEl.textContent=av||'👾';
     const nameEl=document.createElement('div');nameEl.className='lb-username';nameEl.textContent=sanitizeText(item.username||'Anonymous');
     const valEl=document.createElement('div');valEl.className='lb-value';
     valEl.textContent=mode==='balance'?formatPC(item.balance||0):(item.count||0)+' items';
@@ -4369,7 +4741,27 @@ renderBank();
 updateBalanceBadge(0);
 updateGreatBurnUI();
 
+function setupGlobalEscapeClose(){
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape')return;
+    if($('tradeModal')&&!$('tradeModal').classList.contains('hidden')){closeTradeModal();return;}
+    if($('dmOverlay')&&!$('dmOverlay').classList.contains('hidden')){closeDmOverlay();return;}
+    if($('inspectModal')&&!$('inspectModal').classList.contains('hidden')){closeInspectModal();return;}
+    if($('craftModal')&&!$('craftModal').classList.contains('hidden')){closeCraftModal();return;}
+    if($('priceModal')&&!$('priceModal').classList.contains('hidden')){closeModal();return;}
+    if(sidebarOpen)closeSidebar();
+  });
+  const dmOv=$('dmOverlay');
+  if(dmOv)dmOv.addEventListener('click',function(e){if(e.target===dmOv)closeDmOverlay();});
+  const insp=$('inspectModal');
+  if(insp)insp.addEventListener('click',function(e){if(e.target===insp)closeInspectModal();});
+  const tr=$('tradeModal');
+  if(tr)tr.addEventListener('click',function(e){if(e.target===tr)closeTradeModal();});
+}
+
 function bootApp(){
+  mountSpaPanels();
+  setupGlobalEscapeClose();
   loadSelectedFrame();
   initFrameSelectorCollapse();
   const frameToggle=$('frameSelectorToggle');
