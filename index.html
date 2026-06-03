@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
 <link rel="stylesheet" href="assets/poxy-profile-page.css">
+<link rel="stylesheet" href="assets/poxy-auth-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1009,36 +1010,7 @@ body.dark-club .club-sub{color:#888}
 .club-locked-icon{font-size:48px;margin-bottom:12px}
 .club-locked-text{font-size:13px;color:#9E9E9E;line-height:1.8}
 
-/* ── AUTH (Stitch Coral Blaze) ── */
-.auth-overlay,.poxy-auth-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(248,249,250,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);overflow:hidden}
-.auth-overlay.hidden{display:none!important;visibility:hidden!important;pointer-events:none!important}
-.poxy-auth-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.poxy-auth-bg-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.1}
-.poxy-auth-bg-blob--tr{top:-10%;right:-10%;width:50vw;height:50vw;background:linear-gradient(90deg,#ff416c,#ff4b2b)}
-.poxy-auth-bg-blob--bl{bottom:-10%;left:-10%;width:60vw;height:60vw;background:#8429c8}
-.auth-card,.poxy-auth-card{position:relative;z-index:10;width:100%;max-width:400px;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;padding:24px;box-shadow:0 10px 30px rgba(255,65,108,0.08);border:1px solid rgba(255,255,255,0.5);display:flex;flex-direction:column}
-.poxy-auth-logo{text-align:center;margin-bottom:40px}
-.auth-logo{display:flex;align-items:baseline;justify-content:center;margin-bottom:8px;user-select:none}
-.auth-l,.auth-x{font-size:48px;font-weight:800;line-height:1;letter-spacing:-0.02em;color:#191c1d}
-.auth-x{font-size:52px;letter-spacing:-0.04em;background:linear-gradient(90deg,#ff416c,#ff4b2b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.auth-sub{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5b4042}
-.auth-tabs,.poxy-auth-tabs{display:flex;background:#f3f4f5;border-radius:999px;padding:4px;margin-bottom:40px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.06)}
-.auth-tab,.poxy-auth-tab{flex:1;padding:8px 16px;border:none;background:none;font-family:inherit;font-size:14px;font-weight:600;color:#5b4042;border-radius:999px;cursor:pointer;transition:all 0.3s}
-.auth-tab.active,.poxy-auth-tab.active{background:#de2656;color:#fffbff;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
-.poxy-auth-fields{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
-.poxy-auth-field-wrap{position:relative}
-.poxy-auth-field-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:#5b4042;pointer-events:none;transition:color 0.3s}
-.poxy-auth-field-wrap:focus-within .poxy-auth-field-icon{color:#ff416c}
-.auth-input,.poxy-auth-input{width:100%;padding:12px 16px 12px 48px;border:1px solid #e3bdc0;border-radius:12px;background:#f8f9fa;font-family:inherit;font-size:16px;color:#191c1d;outline:none;transition:all 0.3s}
-.auth-input:focus,.poxy-auth-input:focus{border-color:#ff416c;box-shadow:0 0 0 1px #ff416c;background:#fff}
-.auth-input::placeholder{color:rgba(91,64,66,0.5)}
-.auth-btn,.poxy-auth-btn{width:100%;height:48px;background:linear-gradient(90deg,#ff416c,#ff4b2b);border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(255,65,108,0.39);transition:transform 0.3s,box-shadow 0.3s,opacity 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
-.poxy-auth-btn::after{content:'';width:18px;height:18px;flex-shrink:0;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat}
-.auth-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,65,108,0.23)}
-.auth-btn:active{transform:scale(0.95)}
-.auth-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-.auth-msg{font-size:14px;margin-top:16px;min-height:20px;text-align:center;font-weight:400}
-.auth-msg.error{color:#ba1a1a}.auth-msg.success{color:#4CAF50}
+/* Auth layout → assets/poxy-auth-page.css */
 
 /* ── USER BAR ── */
 .user-bar{max-width:380px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;gap:8px}
@@ -1124,34 +1096,54 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- AUTH -->
-<div class="auth-overlay poxy-auth-overlay" id="authOverlay">
-  <div class="poxy-auth-bg" aria-hidden="true">
-    <div class="poxy-auth-bg-blob poxy-auth-bg-blob--tr"></div>
-    <div class="poxy-auth-bg-blob poxy-auth-bg-blob--bl"></div>
-  </div>
-  <div class="auth-card poxy-auth-card">
-    <div class="poxy-auth-logo">
-      <div class="auth-logo"><span class="auth-l">PO</span><span class="auth-x">X</span><span class="auth-l">Y</span></div>
-      <p class="auth-sub">collect the uncollectable</p>
-    </div>
-    <div class="auth-tabs poxy-auth-tabs">
-      <button type="button" class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-      <button type="button" class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
-    </div>
-    <div class="poxy-auth-fields">
-      <div class="poxy-auth-field-wrap">
-        <svg class="poxy-auth-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16v16H4z" stroke="none"/><path d="M4 8l8 5 8-5"/><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-        <input class="auth-input poxy-auth-input" type="text" id="authEmail" placeholder="Email or Username" autocomplete="email">
+<!-- AUTH — X-style split (POXY dark) -->
+<div class="auth-overlay poxy-auth-overlay" id="authOverlay" role="dialog" aria-labelledby="authHeadline">
+  <div class="poxy-auth-shell">
+    <section class="poxy-auth-panel">
+      <div class="poxy-auth-panel-logo-mobile" aria-hidden="true">
+        <span class="auth-hero-l">PO</span><span class="auth-hero-x">X</span><span class="auth-hero-y">Y</span>
       </div>
-      <div class="poxy-auth-field-wrap">
-        <svg class="poxy-auth-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        <input class="auth-input poxy-auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
+      <h1 class="poxy-auth-headline" id="authHeadline">Enter POXY WORLD.</h1>
+      <div class="poxy-auth-oauth-stack">
+        <button type="button" class="poxy-auth-oauth poxy-auth-oauth--google" onclick="handleAuthOAuth('google')">
+          <span class="poxy-auth-oauth-icon" aria-hidden="true"></span>
+          Continue with Google
+        </button>
+        <button type="button" class="poxy-auth-oauth poxy-auth-oauth--apple" onclick="handleAuthOAuth('apple')">
+          <span class="poxy-auth-oauth-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg></span>
+          Continue with Apple
+        </button>
+        <button type="button" class="poxy-auth-oauth poxy-auth-oauth--phone" onclick="showToast('Phone login — coming soon.')">
+          <span class="poxy-auth-oauth-icon material-symbols-outlined" style="font-size:18px">phone_iphone</span>
+          Continue with phone
+        </button>
       </div>
-    </div>
-    <button type="button" class="auth-btn poxy-auth-btn" id="authSubmitBtn">Sign In</button>
-    <div class="auth-msg" id="authMsg"></div>
+      <div class="poxy-auth-sep" aria-hidden="true"><span>or</span></div>
+      <label class="visually-hidden" for="authEmail">Email or username</label>
+      <input class="poxy-auth-field auth-input" type="text" id="authEmail" placeholder="Email or username" autocomplete="username">
+      <label class="visually-hidden" for="authPassword">Password</label>
+      <input class="poxy-auth-field auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
+      <button type="button" class="poxy-auth-continue is-primary auth-btn" id="authSubmitBtn">Continue</button>
+      <button type="button" class="poxy-auth-mode-switch" id="authModeSwitch">Create account</button>
+      <div class="auth-msg poxy-auth-msg" id="authMsg" role="status"></div>
+      <p class="poxy-auth-legal">By continuing, you agree to the <a href="#" onclick="event.preventDefault()">Terms of Service</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>, including cookie use.</p>
+    </section>
+    <aside class="poxy-auth-hero" aria-hidden="true">
+      <div class="poxy-auth-hero-glow"></div>
+      <div class="poxy-auth-hero-logo">
+        <span class="auth-hero-l">PO</span><span class="auth-hero-x">X</span><span class="auth-hero-y">Y</span>
+      </div>
+    </aside>
   </div>
+  <footer class="poxy-auth-footer">
+    <nav aria-label="Auth footer">
+      <a href="#" onclick="event.preventDefault()">About</a>
+      <a href="#" onclick="event.preventDefault()">POXY CLUB</a>
+      <a href="#" onclick="event.preventDefault()">Help</a>
+      <a href="#" onclick="event.preventDefault()">Terms</a>
+      <a href="#" onclick="event.preventDefault()">Privacy</a>
+    </nav>
+  </footer>
 </div>
 
 <!-- STITCH app shell: global top nav stays on every page -->
@@ -2853,12 +2845,36 @@ let authSessionBootstrapped=false;
 function resetAuthBtn(btn){
   if(!btn)return;
   btn.disabled=false;
-  btn.textContent=authMode.v==='login'?'Sign In':'Create Account';
+  btn.textContent=authMode.v==='login'?'Continue':'Create account';
+  btn.classList.add('is-primary');
+  syncAuthContinueState();
+}
+function syncAuthContinueState(){
+  const btn=$('authSubmitBtn');
+  const email=$('authEmail'),pw=$('authPassword');
+  if(!btn)return;
+  const ok=!!(email?.value.trim()&&pw?.value);
+  btn.disabled=!ok;
+}
+function updateAuthModeUI(){
+  const m=authMode.v;
+  const headline=$('authHeadline'),modeBtn=$('authModeSwitch'),btn=$('authSubmitBtn');
+  const email=$('authEmail');
+  if(headline)headline.textContent=m==='login'?'Enter POXY WORLD.':'Join the hunt.';
+  if(modeBtn)modeBtn.textContent=m==='login'?'Create account':'Already have an account? Sign in';
+  if(btn){btn.textContent=m==='login'?'Continue':'Create account';btn.classList.add('is-primary');}
+  if(email){
+    email.placeholder=m==='login'?'Email or username':'Email';
+    email.type=m==='login'?'text':'email';
+    email.autocomplete=m==='login'?'username':'email';
+  }
+  syncAuthContinueState();
 }
 function setLoggedOutUI(){
   authSessionBootstrapped=false;
   const overlay=$('authOverlay');
   if(overlay){overlay.classList.remove('hidden');overlay.style.display='flex';overlay.setAttribute('aria-hidden','false');}
+  updateAuthModeUI();
   document.body.classList.remove('poxy-app-dark','poxy-stitch-dash');
   const ub=$('userBar');
   if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
@@ -2927,21 +2943,31 @@ function setupAuthStateListener(){
 }
 const authMode={v:'login'};
 window.switchTab=function(m){
-  authMode.v=m;
-  $('tabLogin').classList.toggle('active',m==='login');
-  $('tabSignup').classList.toggle('active',m==='signup');
-  $('authSubmitBtn').textContent=m==='login'?'Sign In':'Create Account';
-  $('authMsg').textContent='';
-  $('authEmail').placeholder=m==='login'?'Email or Username':'Email';
-  $('authEmail').type=m==='login'?'text':'email';
+  authMode.v=m==='signup'?'signup':'login';
+  const msg=$('authMsg');if(msg){msg.textContent='';msg.className='auth-msg poxy-auth-msg';}
+  updateAuthModeUI();
+};
+window.handleAuthOAuth=async function(provider){
+  const msg=$('authMsg');
+  try{
+    const{error}=await sb.auth.signInWithOAuth({
+      provider,
+      options:{redirectTo:window.location.origin+window.location.pathname}
+    });
+    if(error)throw error;
+  }catch(e){
+    const hint=(e?.message||'').includes('provider')?' Enable '+provider+' in Supabase Auth.':'';
+    if(msg){msg.className='auth-msg poxy-auth-msg error';msg.textContent=(e?.message||provider+' sign-in failed.')+hint;}
+    else showToast(provider+' sign-in unavailable.'+hint);
+  }
 };
 window.handleAuth=async function(){
   let identifier=$('authEmail').value.trim();
   const pw=$('authPassword').value;
   const msg=$('authMsg'),btn=$('authSubmitBtn');
-  if(!identifier||!pw){msg.className='auth-msg error';msg.textContent='Please fill in all fields.';return;}
-  btn.disabled=true;msg.className='auth-msg';msg.textContent='';
-  btn.textContent=authMode.v==='login'?'Signing in...':'Creating account...';
+  if(!identifier||!pw){msg.className='auth-msg poxy-auth-msg error';msg.textContent='Please fill in all fields.';return;}
+  btn.disabled=true;msg.className='auth-msg poxy-auth-msg';msg.textContent='';
+  btn.textContent=authMode.v==='login'?'Signing in…':'Creating account…';
   try{
     let res;
     if(authMode.v==='login'){
@@ -2949,7 +2975,7 @@ window.handleAuth=async function(){
       if(!identifier.includes('@')){
         const{data:emailData,error:lookupErr}=await sb.rpc('get_email_by_username',{p_username:identifier});
         if(lookupErr||!emailData){
-          msg.className='auth-msg error';
+          msg.className='auth-msg poxy-auth-msg error';
           msg.textContent=lookupErr?(lookupErr.message||'Username lookup failed.'):'Username not found.';
           resetAuthBtn(btn);
           return;
@@ -2960,7 +2986,7 @@ window.handleAuth=async function(){
     } else {
       res=await sb.auth.signUp({email:identifier,password:pw});
       if(!res.error&&res.data?.user&&!res.data?.session){
-        msg.className='auth-msg success';
+        msg.className='auth-msg poxy-auth-msg success';
         msg.textContent='Check your email to confirm, then sign in.';
         resetAuthBtn(btn);
         return;
@@ -7340,18 +7366,25 @@ function bootApp(){
   if(frameToggle)frameToggle.addEventListener('click',toggleFrameSelectorSection);
   const authBtn=$('authSubmitBtn');
   if(authBtn)authBtn.addEventListener('click',handleAuth);
+  const authModeSwitch=$('authModeSwitch');
+  if(authModeSwitch){
+    authModeSwitch.addEventListener('click',function(){
+      switchTab(authMode.v==='login'?'signup':'login');
+    });
+  }
   const authEmail=$('authEmail');
   const authPassword=$('authPassword');
+  const onAuthInput=()=>syncAuthContinueState();
+  if(authEmail){authEmail.addEventListener('input',onAuthInput);authEmail.addEventListener('keydown',function(e){
+      if(e.key==='Enter'){e.preventDefault();if(authPassword)authPassword.focus();}
+    });}
   if(authPassword){
+    authPassword.addEventListener('input',onAuthInput);
     authPassword.addEventListener('keydown',function(e){
       if(e.key==='Enter'){e.preventDefault();handleAuth();}
     });
   }
-  if(authEmail){
-    authEmail.addEventListener('keydown',function(e){
-      if(e.key==='Enter'){e.preventDefault();if(authPassword)authPassword.focus();}
-    });
-  }
+  updateAuthModeUI();
   setupAuthStateListener();
   updateGlobalFrames();
 }
