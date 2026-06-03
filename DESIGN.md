@@ -61,7 +61,8 @@ Screen: [AUTH CARD | COLLECTION GRID | SIDEBAR TAB | ...]
 
 ## Pilot screens (apply one at a time)
 
-1. Auth overlay card (`#authOverlay`) — lowest risk  
-2. Sidebar header + tabs — medium  
-3. Collection card chrome — high (test club menu + kebab)  
+1. Auth overlay card (`#authOverlay`) — **done**  
+2. Sidebar header + tabs (`#sidebarPanel`) — done  
+3. **Stitch full Dashboard** (`#poxyStitchDashboard` / `#huntPage`) — **done** (Spin & Win, collection preview, treasury)  
+4. Collection page card chrome — high (test club menu + kebab) — **next**  
 4. Case opening UI — highest (animations + economy)

@@ -2,3 +2,5 @@
 .env
 .env.*
 *.local
+stitch-export/cli-out.txt
+stitch-export/dashboard-hub.raw.json

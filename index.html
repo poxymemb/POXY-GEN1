@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>POXY WORLD</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link rel="stylesheet" href="assets/stitch-dashboard.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#fff;font-family:'Inter',system-ui,sans-serif;min-height:100vh;transition:background 1s ease}
 body.bg-rare{background:linear-gradient(135deg,rgba(41,182,246,0.07) 0%,#fff 70%)}
@@ -409,6 +412,94 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .balance-badge:hover{transform:scale(1.05)}
 .balance-badge.visible{display:block}
 .balance-badge.pop{animation:balancePop 0.3s ease}
+body.poxy-stitch-dash .balance-badge{position:static;display:none}
+body.poxy-stitch-dash .balance-badge.visible{display:inline-flex}
+body.poxy-stitch-dash .hamburger-btn.visible{display:none}
+body.poxy-stitch-dash .poxy-text-logo.visible{display:none}
+body.poxy-stitch-dash{background:#0a0a0e;color:#e8e8ec}
+body.poxy-stitch-dash .page{background:#0a0a0e;color:#e8e8ec}
+/* ── STITCH DASHBOARD (main logged-in home) ── */
+.poxy-stitch-dash{min-height:100vh;background:#0a0a0e;color:#e8e8ec;padding-bottom:32px}
+.psd-header{display:flex;align-items:center;gap:12px;padding:14px 20px 12px;border-bottom:1px solid rgba(255,255,255,0.06);flex-wrap:wrap;position:sticky;top:0;z-index:120;background:rgba(10,10,14,0.92);backdrop-filter:blur(16px)}
+.psd-menu{width:40px;height:40px;border:1px solid rgba(255,255,255,0.08);background:rgba(19,19,26,0.9);border-radius:12px;color:#ccc;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0;flex-shrink:0}
+.psd-menu span{display:block;width:16px;height:2px;background:currentColor;border-radius:1px}
+.psd-brand{font-size:15px;font-weight:900;letter-spacing:0.12em;color:#fff;flex-shrink:0}
+.psd-brand span{font-weight:700;color:rgba(255,255,255,0.55);margin-left:4px}
+.psd-nav{display:flex;gap:4px;background:rgba(19,19,26,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:999px;padding:4px;flex:1;justify-content:center;min-width:0;overflow-x:auto;scrollbar-width:none}
+.psd-nav::-webkit-scrollbar{display:none}
+.psd-nav-btn{flex-shrink:0;padding:8px 16px;border:none;background:transparent;color:#6a6a7a;font-size:11px;font-weight:700;letter-spacing:0.06em;border-radius:999px;cursor:pointer;font-family:inherit;transition:all 0.25s;white-space:nowrap}
+.psd-nav-btn.active{color:#fff;background:rgba(255,255,255,0.08)}
+.psd-nav-btn:hover:not(.active){color:#b0b0bc}
+.psd-nav-club{display:none}.psd-nav-club.show{display:inline-block}
+.psd-header-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.psd-balance{display:none;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid rgba(0,229,200,0.35);background:rgba(0,229,200,0.08);color:#00e5c8;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform 0.15s}
+.psd-balance::before{content:'';width:8px;height:8px;border-radius:50%;background:#00e5c8;box-shadow:0 0 10px #00e5c8}
+.psd-balance:hover{transform:scale(1.04)}
+.psd-user{display:none;align-items:center;gap:10px}
+.psd-user-meta{text-align:right;min-width:0}
+.psd-user-name{font-size:12px;font-weight:700;color:#fff;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.psd-user-badge{font-size:8px;font-weight:800;letter-spacing:0.1em;color:#ff416c;text-transform:uppercase;margin-top:2px}
+.psd-main{max-width:1100px;margin:0 auto;padding:16px 16px 0}
+.psd-hero{background:linear-gradient(145deg,rgba(19,19,28,0.95),rgba(12,12,18,0.98));border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:28px 24px 24px;margin-bottom:20px;position:relative;overflow:hidden}
+.psd-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,rgba(255,65,108,0.12),transparent 50%);pointer-events:none}
+.psd-hero-title{font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:8px;position:relative}
+.psd-hero-sub{font-size:14px;color:#8a8a9a;margin-bottom:24px;line-height:1.5;position:relative;max-width:420px}
+.psd-carousel{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px;position:relative;min-height:200px}
+.psd-carousel-slot{width:72px;height:72px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;font-size:28px;color:#444;flex-shrink:0;opacity:0.5}
+.psd-carousel-slot--active{width:88px;height:88px;border-color:rgba(0,229,200,0.5);box-shadow:0 0 24px rgba(0,229,200,0.25);opacity:1;color:#00e5c8;font-size:10px;font-weight:800;letter-spacing:0.05em;flex-direction:column;gap:4px}
+.psd-carousel-center{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.psd-carousel-center .stage{width:200px;height:200px;margin:0}
+.psd-carousel-center .box{width:110px;height:110px;border-radius:16px;border-color:rgba(255,255,255,0.12);background:rgba(19,19,26,0.9)}
+.psd-carousel-center .reward-box{width:150px;height:150px}
+.psd-cta-wrap{display:flex;justify-content:center;position:relative}
+.psd-open-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:none;border-radius:999px;background:linear-gradient(90deg,#ff416c,#c026d3);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 8px 32px rgba(255,65,108,0.35);transition:transform 0.2s,box-shadow 0.2s,opacity 0.3s}
+.psd-open-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,65,108,0.45)}
+.psd-open-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+.psd-open-price{padding:4px 10px;border-radius:999px;background:rgba(0,0,0,0.25);font-size:12px;font-weight:800}
+.psd-hero .fomo,.psd-hero #greatBurnCounter{text-align:center;margin-bottom:8px}
+.psd-hero .cta-wrap{width:100%}
+.psd-hero .post-btns,.psd-hero .btn-list-market{max-width:360px;margin:8px auto 0}
+.psd-collection-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.psd-collection-title{font-size:20px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px}
+.psd-collection-sub{font-size:12px;color:#6a6a7a;margin-top:4px}
+.psd-completion{text-align:right;min-width:100px}
+.psd-completion-label{font-size:9px;font-weight:700;letter-spacing:0.12em;color:#6a6a7a;text-transform:uppercase}
+.psd-completion-val{font-size:14px;font-weight:800;color:#ff416c}
+.psd-completion-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-top:6px;overflow:hidden}
+.psd-completion-fill{height:100%;background:linear-gradient(90deg,#ff416c,#ff4b2b);border-radius:4px;transition:width 0.4s}
+.psd-dash-col-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:12px}
+@media(max-width:720px){.psd-dash-col-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.psd-dash-card{aspect-ratio:0.85;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(19,19,26,0.85);padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:transform 0.2s,border-color 0.2s;position:relative}
+.psd-dash-card:hover{transform:translateY(-3px)}
+.psd-dash-card-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;letter-spacing:0.06em;padding:2px 5px;border-radius:4px;text-transform:uppercase}
+.psd-dash-card-icon{font-size:28px;line-height:1}
+.psd-dash-card-name{font-size:9px;font-weight:700;color:#ccc;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.psd-dash-card-serial{font-size:8px;color:#555;font-family:monospace}
+.psd-dash-card--empty{border-style:dashed;color:#444;cursor:default}
+.psd-dash-card--empty:hover{transform:none}
+.psd-view-all{display:block;width:100%;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:transparent;color:#8a8a9a;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;font-family:inherit;margin-bottom:24px;transition:border-color 0.2s,color 0.2s}
+.psd-view-all:hover{border-color:rgba(255,65,108,0.4);color:#ff416c}
+.psd-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:800px){.psd-bottom{grid-template-columns:1fr}}
+.psd-panel{background:rgba(19,19,26,0.9);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px}
+.psd-panel-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.psd-panel-title{font-size:16px;font-weight:800;color:#fff}
+.psd-test-tag{font-size:8px;font-weight:800;letter-spacing:0.1em;padding:3px 8px;border-radius:6px;background:rgba(255,65,108,0.2);color:#ff416c}
+.psd-panel-desc{font-size:12px;color:#6a6a7a;line-height:1.5;margin-bottom:16px}
+.psd-treasury .bank-form-label{color:#8a8a9a}
+.psd-treasury .bank-input{background:#0d0d12;border-color:rgba(255,255,255,0.1);color:#e8e8ec}
+.psd-treasury .btn-primary{background:linear-gradient(90deg,#2a2a35,#1a1a24);border:1px solid rgba(255,255,255,0.1);box-shadow:none}
+.psd-treasury .bank-amounts{display:none}
+.psd-legal-block{margin-bottom:14px}
+.psd-legal-block h4{font-size:12px;font-weight:800;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.psd-legal-block p{font-size:11px;color:#6a6a7a;line-height:1.6}
+.psd-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06);font-size:10px;color:#444}
+.psd-footer-links{display:flex;gap:16px}
+.psd-footer-links button{background:none;border:none;color:#555;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;padding:0}
+.psd-footer-links button:hover{color:#ff416c}
+.psd-subpages-hint{text-align:center;padding:12px;font-size:11px;color:#555}
+#huntPage .user-bar{display:none!important}
+#huntPage .user-bar.psd-user-active{display:flex!important}
 
 /* ── USERNAME GRADIENT ── */
 .username-gradient-active{background:var(--ug);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 100%;animation:gradientShift 3s linear infinite}
@@ -428,27 +519,38 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .poxy-text-logo:active{transform:scale(0.97)}
 .poxy-text-logo:focus-visible{outline:2px solid #ff416c;outline-offset:3px;border-radius:4px}
 
-/* ── SIDEBAR (PHASE 9 — full-screen obsidian overlay) ── */
-.sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 0.4s ease;pointer-events:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+/* ── SIDEBAR (Stitch Coral Blaze — obsidian overlay) ── */
+.sidebar-backdrop,.poxy-sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(10,10,12,0.72);opacity:0;transition:opacity 0.4s ease;pointer-events:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .sidebar-backdrop.open{opacity:1;pointer-events:all}
-.sidebar-panel{position:fixed;inset:0;z-index:401;width:100vw;max-width:100vw;height:100vh;background:rgba(10,10,10,0.98);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border-right:none;display:flex;flex-direction:column;opacity:0;transform:scale(1.04) translateY(8px);pointer-events:none;transition:opacity 0.4s cubic-bezier(0.25,1,0.5,1),transform 0.45s cubic-bezier(0.25,1,0.5,1);will-change:transform,opacity;overflow:hidden}
+.sidebar-panel,.poxy-sidebar-panel{position:fixed;inset:0;z-index:401;width:100vw;max-width:100vw;height:100vh;background:rgba(10,10,12,0.97);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-right:none;display:flex;flex-direction:column;opacity:0;transform:scale(1.03) translateY(10px);pointer-events:none;transition:opacity 0.4s cubic-bezier(0.25,1,0.5,1),transform 0.45s cubic-bezier(0.25,1,0.5,1);will-change:transform,opacity;overflow:hidden}
 .sidebar-panel.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
-.sidebar-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(255,65,108,0.06),transparent 55%),radial-gradient(circle at 90% 100%,rgba(171,71,188,0.05),transparent 60%);pointer-events:none}
-.sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid #1a1a24;flex-shrink:0;position:relative;z-index:1}
-.sidebar-logo{font-size:14px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#ff416c,#ff4b2b,#ffab2e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sidebar-close{width:28px;height:28px;border:none;background:#1a1a24;border-radius:8px;color:#666;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;font-family:inherit}
-.sidebar-close:hover{background:#252530;color:#fff}
-.sidebar-tabs{display:flex;overflow-x:auto;border-bottom:1px solid #1a1a24;flex-shrink:0;scrollbar-width:none;position:relative;z-index:1;justify-content:center}
-.sidebar-tabs::-webkit-scrollbar{display:none}
-.sidebar-tab-btn{flex-shrink:0;padding:10px 13px;border:none;background:none;color:#444;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:color 0.2s,border-bottom-color 0.2s;border-bottom:2px solid transparent;font-family:inherit;white-space:nowrap}
-.sidebar-tab-btn.active{color:#ff416c;border-bottom-color:#ff416c}
-.sidebar-tab-btn:hover:not(.active){color:#888}
-.sidebar-content{flex:1;overflow-y:auto;padding:24px 22px 80px;scrollbar-width:thin;scrollbar-color:#2a2a35 transparent;max-width:760px;width:100%;margin:0 auto;position:relative;z-index:1}
+.sidebar-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 18% 0%,rgba(255,65,108,0.09),transparent 52%),radial-gradient(circle at 88% 100%,rgba(132,41,200,0.07),transparent 58%);pointer-events:none;z-index:0}
+.poxy-sidebar-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.poxy-sidebar-bg-blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.14}
+.poxy-sidebar-bg-blob--tr{top:-8%;right:-12%;width:45vw;height:45vw;background:linear-gradient(90deg,#ff416c,#ff4b2b)}
+.poxy-sidebar-bg-blob--bl{bottom:-12%;left:-8%;width:55vw;height:55vw;background:#8429c8}
+.sidebar-header,.poxy-sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;position:relative;z-index:2}
+.sidebar-logo,.poxy-sidebar-logo{display:flex;align-items:baseline;gap:0;user-select:none}
+.poxy-sidebar-logo-p{font-size:18px;font-weight:900;letter-spacing:2px;color:#f0f0f2}
+.poxy-sidebar-logo-x{font-size:20px;font-weight:900;letter-spacing:-0.04em;background:linear-gradient(90deg,#ff416c,#ff4b2b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sidebar-close,.poxy-sidebar-close{width:36px;height:36px;border:1px solid rgba(255,255,255,0.08);background:rgba(19,19,26,0.85);backdrop-filter:blur(12px);border-radius:12px;color:#9a9aad;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s,color 0.2s,transform 0.2s;font-family:inherit;flex-shrink:0;padding:0}
+.sidebar-close svg,.poxy-sidebar-close svg{width:18px;height:18px;display:block}
+.sidebar-close:hover,.poxy-sidebar-close:hover{background:rgba(37,37,48,0.95);border-color:rgba(255,65,108,0.35);color:#fff;transform:scale(1.04)}
+.sidebar-tabs,.poxy-sidebar-tabs{flex-shrink:0;position:relative;z-index:2;padding:10px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.poxy-sidebar-tabs-track{display:flex;gap:4px;overflow-x:auto;padding:4px;background:rgba(19,19,26,0.75);border:1px solid #1e1e28;border-radius:999px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.poxy-sidebar-tabs-track::-webkit-scrollbar{display:none}
+.sidebar-tab-btn{flex-shrink:0;padding:8px 14px;border:none;background:none;color:#6a6a7a;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.25s;border-radius:999px;border-bottom:none;font-family:inherit;white-space:nowrap}
+.sidebar-tab-btn.active{color:#fffbff;background:linear-gradient(90deg,#ff416c,#ff4b2b);box-shadow:0 2px 10px rgba(255,65,108,0.35)}
+.sidebar-tab-btn:hover:not(.active){color:#b8b8c8;background:rgba(255,255,255,0.04)}
+.sidebar-content{flex:1;overflow-y:auto;padding:20px 18px 88px;scrollbar-width:thin;scrollbar-color:#2a2a35 transparent;max-width:760px;width:100%;margin:0 auto;position:relative;z-index:2}
 .sidebar-content::-webkit-scrollbar{width:4px}
 .sidebar-content::-webkit-scrollbar-track{background:transparent}
-.sidebar-content::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:4px}
+.sidebar-content::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#ff416c55,#8429c855);border-radius:4px}
 .sidebar-tab-content{display:none}
 .sidebar-tab-content.active{display:block;animation:fadeIn 0.25s ease}
+.poxy-sidebar-panel .codex-hero{background:rgba(19,19,26,0.65);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px 16px;margin-bottom:18px;border-bottom:none}
+.poxy-sidebar-panel .codex-amenity{background:rgba(19,19,26,0.8);border:1px solid rgba(255,255,255,0.05);border-left:3px solid rgba(255,65,108,0.55);border-radius:12px}
+.poxy-sidebar-panel .news-create-form,.poxy-sidebar-panel .news-post-card{border-radius:14px;border-color:rgba(255,255,255,0.06)}
 
 /* ── CODEX (TAB A) ── */
 .codex-hero{text-align:center;margin-bottom:22px;padding:18px 0 16px;border-bottom:1px solid #1a1a24}
@@ -1303,32 +1405,34 @@ body.dark-club .club-sub{color:#888}
 </head>
 <body>
 
-<!-- HAMBURGER -->
-<button class="hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open Poxy World menu">
-  <div class="hamburger-line"></div>
-  <div class="hamburger-line"></div>
-  <div class="hamburger-line"></div>
-</button>
-
-<!-- GLOBAL HOME LOGO — sits to the right of the hamburger, returns to Hunt tab -->
-<div id="global-home-btn" class="poxy-text-logo" role="button" tabindex="0" aria-label="Return to Hunt">POXY</div>
+<!-- GLOBAL HOME LOGO — sub-pages only (dashboard has its own header) -->
+<div id="global-home-btn" class="poxy-text-logo" role="button" tabindex="0" aria-label="Return to Dashboard" onclick="showPage('hunt')">POXY</div>
 
 <!-- SIDEBAR BACKDROP -->
 <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR PANEL -->
-<div class="sidebar-panel" id="sidebarPanel">
-  <div class="sidebar-header">
-    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+<!-- SIDEBAR PANEL (Stitch Coral Blaze) -->
+<div class="sidebar-panel poxy-sidebar-panel" id="sidebarPanel">
+  <div class="poxy-sidebar-bg" aria-hidden="true">
+    <div class="poxy-sidebar-bg-blob poxy-sidebar-bg-blob--tr"></div>
+    <div class="poxy-sidebar-bg-blob poxy-sidebar-bg-blob--bl"></div>
   </div>
-  <div class="sidebar-tabs">
-    <button class="sidebar-tab-btn active" id="stab-codex" onclick="switchSidebarTab('codex')">Codex</button>
-    <button class="sidebar-tab-btn" id="stab-news" onclick="switchSidebarTab('news')">News</button>
-    <button class="sidebar-tab-btn" id="stab-gen1" onclick="switchSidebarTab('gen1')">Gen 1</button>
-    <button class="sidebar-tab-btn" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
-    <button class="sidebar-tab-btn" id="stab-leaderboard" onclick="switchSidebarTab('leaderboard')">Ranks</button>
-    <button class="sidebar-tab-btn" id="stab-support" onclick="switchSidebarTab('support')">Legal</button>
-    <button class="sidebar-tab-btn" id="stab-customize" onclick="switchSidebarTab('customize')">Store</button>
+  <div class="sidebar-header poxy-sidebar-header">
+    <div class="sidebar-logo poxy-sidebar-logo" aria-hidden="true"><span class="poxy-sidebar-logo-p">POXY</span><span class="poxy-sidebar-logo-x">X</span></div>
+    <button type="button" class="sidebar-close poxy-sidebar-close" onclick="closeSidebar()" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sidebar-tabs poxy-sidebar-tabs">
+    <div class="poxy-sidebar-tabs-track">
+    <button type="button" class="sidebar-tab-btn active" id="stab-codex" onclick="switchSidebarTab('codex')">Codex</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-news" onclick="switchSidebarTab('news')">News</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-gen1" onclick="switchSidebarTab('gen1')">Gen 1</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-leaderboard" onclick="switchSidebarTab('leaderboard')">Ranks</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-support" onclick="switchSidebarTab('support')">Legal</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-customize" onclick="switchSidebarTab('customize')">Store</button>
+    </div>
   </div>
   <div class="sidebar-content">
 
@@ -1437,9 +1541,6 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- BALANCE BADGE -->
-<div class="balance-badge gpu-accel" id="balanceBadge" onclick="showPage('bank')">0 PC</div>
-
 <!-- AUTH -->
 <div class="auth-overlay poxy-auth-overlay" id="authOverlay">
   <div class="poxy-auth-bg" aria-hidden="true">
@@ -1470,46 +1571,129 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- USER BAR -->
-<div class="user-bar" id="userBar" style="display:none">
-  <div class="user-bar-left">
-    <div class="user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap" onclick="showPage('profile')" title="My Profile"><span id="userBarAvatar">🎭</span></div>
-    <span class="user-email" id="userEmailEl"></span>
-  </div>
-  <div class="user-bar-right">
-    <span class="user-username" id="userUsernameEl"></span>
-    <button class="btn-logout" onclick="handleLogout()">Sign out</button>
-  </div>
-</div>
-
-<!-- HUNT PAGE -->
+<!-- STITCH: POXY Gaming Dashboard - Hub (project 3452513058897199540) -->
 <div id="huntPage" style="display:none">
-  <div class="app">
-    <div class="logo-row" id="logoRow">
-      <span class="l-letter l-p">P</span><span class="l-letter l-o">O</span>
-      <span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span>
-    </div>
-    <div class="fomo" id="fomoText">Mythic POXY claimed this month: 0/10</div>
-    <div id="greatBurnCounter" style="font-size:10px;letter-spacing:1.5px;color:#FF5722;font-weight:700;margin-top:-4px;margin-bottom:6px;text-transform:uppercase">🔥 The Great Burn — 0 POXY</div>
-    <div class="stage">
-      <canvas class="particles" id="cvs" width="240" height="240"></canvas>
-      <div class="box" id="idleBox"><div class="box-qmark">?</div></div>
-      <div class="box gpu-accel spin-rapid" id="spinBox" style="opacity:0;border-width:2.5px"></div>
-      <div class="reward-aura" id="rewardAura"></div>
-      <div class="reward-box gpu-accel" id="rewardBox">
-        <div class="reward-icon" id="rewardIcon"></div>
-        <div class="reward-label" id="rewardLabel"></div>
-        <div class="reward-serial" id="rewardSerial"></div>
+  <div class="poxy-stitch-dash" id="poxyStitchDashboard">
+    <nav class="st-nav">
+      <div class="st-nav-inner">
+        <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
+        <span class="st-brand">POXY WORLD</span>
+        <div class="st-nav-pills" aria-label="Main">
+          <button type="button" class="st-nav-pill active" id="psdNavDashboard" onclick="showPage('hunt')"><span class="material-symbols-outlined">home</span> Dashboard</button>
+          <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showPage('market')"><span class="material-symbols-outlined">storefront</span> Marketplace</button>
+          <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showPage('club')"><span class="material-symbols-outlined">local_play</span> Club Entry</button>
+        </div>
+        <div class="st-nav-right">
+          <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">monetization_on</span> 0 PC</button>
+          <div class="user-bar st-user" id="userBar">
+            <div class="st-user-meta">
+              <div class="st-user-name user-username" id="userUsernameEl">Player</div>
+              <div class="st-user-badge" id="psdMemberBadge" style="display:none">POXY MEMBER</div>
+            </div>
+            <div class="st-matrix-frame user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap" onclick="showPage('profile')" title="My Profile"><span id="userBarAvatar">🎭</span></div>
+            <button type="button" class="btn-logout" onclick="handleLogout()">Sign out</button>
+            <span class="user-email" id="userEmailEl" style="display:none"></span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="cta-wrap">
-      <button class="btn-open gpu-accel" id="btnOpen">OPEN FOR 1 PC</button>
-      <div class="post-btns" id="postBtns">
-        <button class="btn-add" id="btnAdd">ADD TO COLLECTION</button>
-        <button class="btn-discard" id="btnDiscard">DISCARD</button>
+    </nav>
+    <main class="st-main">
+      <section class="st-hero">
+        <div class="st-hero-glow" aria-hidden="true"></div>
+        <div class="st-hero-inner">
+          <div class="logo-row" id="logoRow" style="display:none" aria-hidden="true"><span class="l-letter l-p">P</span><span class="l-letter l-o">O</span><span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span></div>
+          <h1>Spin &amp; Win</h1>
+          <p>Unlock immutable digital heritage. What will you reveal today?</p>
+          <div class="fomo" id="fomoText">Mythic POXY claimed this month: 0/10</div>
+          <div id="greatBurnCounter">🔥 The Great Burn — 0 POXY</div>
+          <div class="st-roulette-wrap">
+            <div class="st-roulette-mask">
+              <div class="st-roulette-deco" aria-hidden="true">
+                <div class="st-slot"><span class="material-symbols-outlined">view_in_ar</span></div>
+                <div class="st-slot"><span class="material-symbols-outlined">diamond</span></div>
+                <div class="st-slot"><span class="material-symbols-outlined">view_in_ar</span></div>
+                <div class="st-slot st-slot--center"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">stars</span> RARE DROP</div>
+                <div class="st-slot"><span class="material-symbols-outlined">token</span></div>
+                <div class="st-slot"><span class="material-symbols-outlined">view_in_ar</span></div>
+              </div>
+              <div class="st-spin-mount app">
+                <div class="stage">
+                  <canvas class="particles" id="cvs" width="240" height="240"></canvas>
+                  <div class="box" id="idleBox"><div class="box-qmark">?</div></div>
+                  <div class="box gpu-accel spin-rapid" id="spinBox" style="opacity:0;border-width:2.5px"></div>
+                  <div class="reward-aura" id="rewardAura"></div>
+                  <div class="reward-box gpu-accel" id="rewardBox">
+                    <div class="reward-icon" id="rewardIcon"></div>
+                    <div class="reward-label" id="rewardLabel"></div>
+                    <div class="reward-serial" id="rewardSerial"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cta-wrap">
+            <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> OPEN BOX <span class="st-open-price" id="btnOpenPrice">1 PC</span></button>
+            <div class="post-btns" id="postBtns">
+              <button type="button" class="btn-add" id="btnAdd">ADD TO COLLECTION</button>
+              <button type="button" class="btn-discard" id="btnDiscard">DISCARD</button>
+            </div>
+            <button type="button" class="btn-list-market" id="btnListFromHunt">LIST ON MARKET INSTEAD</button>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="st-col-hdr">
+          <div>
+            <h2><span class="material-symbols-outlined">inventory_2</span> My Collection</h2>
+            <p class="st-col-sub">Manage your digital heritage.</p>
+          </div>
+          <div class="st-completion">
+            <div class="st-completion-label">COMPLETION</div>
+            <div class="st-completion-row">
+              <div class="st-completion-bar"><div class="st-completion-fill" id="dashColCompletionBar" style="width:0%"></div></div>
+              <span class="st-completion-val" id="dashColCompletionPct">0%</span>
+            </div>
+          </div>
+        </div>
+        <div class="st-col-grid" id="dashColGrid"></div>
+        <button type="button" class="st-view-all" onclick="showPage('collection')">View full collection →</button>
+      </section>
+      <div class="st-bottom">
+        <section class="st-panel" id="psdTreasury">
+          <span class="st-test-tag">TEST MODE</span>
+          <h3><span class="material-symbols-outlined">account_balance_wallet</span> Treasury &amp; Funds</h3>
+          <p class="st-col-sub" style="margin-bottom:16px">Deposit Poxy Coins (PC) — 1 PC per unit deposited.</p>
+          <div class="bank-amounts" id="bankAmounts"></div>
+          <div class="bank-form">
+            <div class="bank-form-label">Card Number</div>
+            <input class="bank-input" id="bankCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+            <div class="bank-form-row">
+              <div><div class="bank-form-label">Expiry</div><input class="bank-input" id="bankExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" style="margin-bottom:0"></div>
+              <div><div class="bank-form-label">CVV</div><input class="bank-input" id="bankCVV" placeholder="123" maxlength="4" type="password" style="margin-bottom:0"></div>
+            </div>
+          </div>
+          <button type="button" class="btn-apple-pay" id="btnApplePay" style="display:none"></button>
+          <button type="button" class="btn-primary" id="btnPayCard" style="margin-top:12px"><span class="material-symbols-outlined">lock</span> Add Funds (Test)</button>
+        </section>
+        <section class="st-panel st-legal">
+          <h3><span class="material-symbols-outlined">policy</span> Protocols &amp; Terms</h3>
+          <h4><span class="material-symbols-outlined">security</span> Privacy Policy</h4>
+          <p><strong>Data Collection:</strong> POXY World collects email, username, avatar URL, and usage metadata strictly for platform operation. No personal data is sold to third parties.</p>
+          <hr>
+          <h4><span class="material-symbols-outlined">gavel</span> Terms of Service</h4>
+          <p><strong>Platform Utilisation:</strong> Access requires acceptance of these terms. PC has no cash value. Automated bots and market manipulation are prohibited.</p>
+          <button type="button" class="st-view-all" onclick="openSidebar();switchSidebarTab('support')">Full legal docs in menu →</button>
+        </section>
       </div>
-      <button class="btn-list-market" id="btnListFromHunt">LIST ON MARKET INSTEAD</button>
-    </div>
+    </main>
+    <footer class="st-footer">
+      <span>© 2026 POXY WORLD. IMMUTABLE EXCLUSIVITY.</span>
+      <div class="st-footer-links">
+        <button type="button" onclick="showPage('friends')">Friends</button>
+        <button type="button" onclick="openSidebar();switchSidebarTab('support')">Support</button>
+        <button type="button" onclick="showPage('profile')">Profile</button>
+      </div>
+    </footer>
   </div>
 </div>
 
@@ -1627,31 +1811,11 @@ body.dark-club .club-sub{color:#888}
   <div id="marketContent"><div class="col-loading"><div class="col-spinner"></div></div></div>
 </div>
 
-<!-- BANK PAGE -->
+<!-- BANK PAGE (treasury lives on dashboard; this redirects) -->
 <div class="page" id="bankPage">
   <div class="page-title">ADD FUNDS</div>
-  <div style="font-size:12px;color:#B0B0B0;margin-bottom:20px;line-height:1.6">Deposit Poxy Coins (PC) — 1 PC per unit deposited. Test mode — no real charges.</div>
-  <div class="bank-amounts" id="bankAmounts"></div>
-  <div class="bank-form">
-    <div class="bank-form-label">Card Number</div>
-    <input class="bank-input" id="bankCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
-    <div class="bank-form-row">
-      <div>
-        <div class="bank-form-label">Expiry</div>
-        <input class="bank-input" id="bankExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" style="margin-bottom:0">
-      </div>
-      <div>
-        <div class="bank-form-label">CVV</div>
-        <input class="bank-input" id="bankCVV" placeholder="123" maxlength="4" type="password" style="margin-bottom:0">
-      </div>
-    </div>
-  </div>
-  <button class="btn-apple-pay" id="btnApplePay">
-    <span style="font-size:18px">🍎</span> Apple Pay
-  </button>
-  <div class="bank-divider"><span>or pay with card</span></div>
-  <button class="btn-primary" id="btnPayCard">Pay with Card</button>
-  <div style="text-align:center;font-size:10px;color:#C8C8C8;margin-top:12px;letter-spacing:0.5px">TEST MODE — No real money charged</div>
+  <p class="psd-subpages-hint">Treasury &amp; card form are on the Dashboard.</p>
+  <button type="button" class="btn-primary" onclick="showPage('hunt');scrollToTreasury()">Go to Dashboard Treasury</button>
 </div>
 
 <!-- DARK CLUB PAGE -->
@@ -2051,7 +2215,7 @@ function formatPC(amount){
 }
 function updateBalanceBadge(bal){
   const b=$('balanceBadge');
-  b.textContent=formatPC(bal);
+  if(b)b.innerHTML='<span class="material-symbols-outlined">monetization_on</span> '+formatPC(bal);
   b.classList.add('visible');
   b.classList.remove('pop');
   requestAnimationFrame(()=>b.classList.add('pop'));
@@ -2165,11 +2329,9 @@ function setupAuthStateListener(){
     if(currentUser){
       $('authOverlay').classList.add('hidden');
       $('userBar').style.display='flex';
+      $('userBar').classList.add('psd-user-active');
       $('userEmailEl').textContent=currentUser.email;
-      $('bottomNav').style.display='flex';
       $('balanceBadge').classList.add('visible');
-      $('hamburgerBtn').classList.add('visible');
-      $('global-home-btn').classList.add('visible');
       showPage('hunt');
       Promise.all([loadProfile(),checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]).catch(console.error);
       setupRealtimeSubscriptions();
@@ -2178,10 +2340,11 @@ function setupAuthStateListener(){
     } else {
       $('authOverlay').classList.remove('hidden');
       $('userBar').style.display='none';
+      $('userBar').classList.remove('psd-user-active');
       $('bottomNav').style.display='none';
       $('balanceBadge').classList.remove('visible');
-      $('hamburgerBtn').classList.remove('visible');
       $('global-home-btn').classList.remove('visible');
+      document.body.classList.remove('poxy-stitch-dash');
       $('huntPage').style.display='none';
       teardownRealtimeSubscriptions();
       if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
@@ -2251,6 +2414,7 @@ async function loadProfile(){
       applyTheme(data.profile_theme);
       setBarAvatar(selectedAvatar);
       updateBalanceBadge(data.balance||0);
+      updatePsdMemberBadge();
     } else {
       currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null};
       sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).then(({error})=>{if(error&&error.code!=='23505')console.error(error);});
@@ -2470,22 +2634,92 @@ document.getElementById('avatarUpload').addEventListener('change',async function
   input.value='';
 });
 
+// ── STITCH DASHBOARD helpers ──
+const DASH_COL_GOAL=20;
+window.scrollToTreasury=function(){
+  showPage('hunt');
+  const el=$('psdTreasury');
+  if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'start'}));
+};
+function syncPsdTopNav(page){
+  document.querySelectorAll('.st-nav-pill').forEach(b=>b.classList.remove('active'));
+  const map={hunt:'psdNavDashboard',market:'psdNavMarket',club:'psdNavClub'};
+  const id=map[page]||(page==='bank'?'psdNavDashboard':null);
+  const btn=id?$(id):null;
+  if(btn)btn.classList.add('active');
+}
+const STITCH_TIER_ICON={mythic:'diamond',legendary:'grade',epic:'auto_awesome',rare:'stars',uncommon:'eco',common:'view_in_ar'};
+function renderDashColPreview(){
+  const grid=$('dashColGrid');
+  if(!grid)return;
+  grid.innerHTML='';
+  const items=applyPinSort(colData||[]).slice(0,5);
+  const pct=Math.min(100,Math.round((colData.length/DASH_COL_GOAL)*100));
+  const pctEl=$('dashColCompletionPct'),barEl=$('dashColCompletionBar');
+  if(pctEl)pctEl.textContent=pct+'%';
+  if(barEl)barEl.style.width=pct+'%';
+  for(let i=0;i<5;i++){
+    const item=items[i];
+    const card=document.createElement('div');
+    if(!item){
+      card.className='st-col-card st-col-card--empty';
+      card.innerHTML='<span class="material-symbols-outlined">add</span><span class="st-col-serial">SPIN TO FILL</span>';
+    }else{
+      const tier=TIER_BY_ID[item.poxy_tier]||TIERS[0];
+      const name=(item.character_name||tier.label||'POXY').slice(0,18);
+      const sym=STITCH_TIER_ICON[tier.id]||'view_in_ar';
+      const border=tier.id==='mythic'||tier.id==='legendary'?'#FFD700':(tier.id==='rare'?'#00E5FF':null);
+      card.className='st-col-card';
+      if(border)card.style.borderColor=border+'55';
+      else{card.style.borderColor=tier.color+'44';card.style.boxShadow='0 0 14px '+tier.glow;}
+      card.onclick=()=>showPage('collection');
+      card.innerHTML=
+        '<span class="st-col-tag" style="background:'+tier.glow+';color:'+(border||tier.color)+'"><span class="material-symbols-outlined" style="font-size:12px">'+(tier.id==='mythic'?'grade':'stars')+'</span> '+tier.label.toUpperCase()+'</span>'+
+        '<div class="st-col-icon"><span class="material-symbols-outlined" style="color:'+(border||tier.color)+';font-variation-settings:\'FILL\' 1">'+sym+'</span></div>'+
+        '<div class="st-col-name">'+sanitizeText(name)+'</div>'+
+        '<div class="st-col-serial">'+(item.serial_number||'–')+'</div>';
+    }
+    grid.appendChild(card);
+  }
+}
+function updatePsdMemberBadge(){
+  const badge=$('psdMemberBadge');
+  if(badge)badge.style.display=isClubMember()?'block':'none';
+}
+function refreshStitchDashboardChrome(){
+  const price=$('btnOpenPrice');
+  if(price)price.textContent=formatPC(STANDARD_CASE_PRICE).replace(' PC','')+' PC';
+  updatePsdMemberBadge();
+  renderDashColPreview();
+}
+
 // ── NAVIGATION ──
 window.showPage=function(page){
-  $('huntPage').style.display=page==='hunt'?'block':'none';
+  if(page==='bank'){scrollToTreasury();return;}
+  const isHunt=page==='hunt';
+  document.body.classList.toggle('poxy-stitch-dash',isHunt);
+  $('huntPage').style.display=isHunt?'block':'none';
   ['profile','collection','friends','market','bank'].forEach(p=>{const el=$(p+'Page');if(el)el.classList.toggle('visible',page===p);});
   const clubEl=$('clubPage');if(clubEl)clubEl.classList.toggle('visible',page==='club');
+  $('bottomNav').style.display=isHunt?'none':'flex';
+  if(currentUser)$('global-home-btn').classList.toggle('visible',!isHunt);
+  syncPsdTopNav(page);
   ['navHunt','navCollection','navFriends','navMarket','navBank','navClub'].forEach(id=>{const b=$(id);if(b)b.classList.remove('active');});
   const navMap={hunt:'navHunt',collection:'navCollection',friends:'navFriends',market:'navMarket',bank:'navBank',club:'navClub',profile:'navHunt'};
   const nv=$(navMap[page]);if(nv)nv.classList.add('active');
+  if(isHunt){
+    refreshStitchDashboardChrome();
+    if(currentUser&&!colData.length)loadCollection().catch(console.error);
+    else renderDashColPreview();
+    renderBank();
+  }
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
   if(page==='friends'){loadFriends();loadPendingRequests();}
   if(page==='market')loadMarket();
   if(page==='club')renderClub();
   if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();}
-  if(page==='bank')renderBank();
   if(page==='club'){document.body.classList.add('dark-club');}
-  else{document.body.classList.remove('dark-club');if(currentTier&&page==='hunt')setBodyBg(currentTier.id);}
+  else{document.body.classList.remove('dark-club');if(currentTier&&isHunt)setBodyBg(currentTier.id);}
 };
 
 // ── LOGO ──
@@ -2600,7 +2834,7 @@ function resetAll(){
 $('btnOpen').addEventListener('click',async function(){
   if(busy||!currentUser)return;
   const bal=currentProfile?.balance||0;
-  if(bal<STANDARD_CASE_PRICE){showToast('Insufficient Poxy Coins. Add funds in BANK tab.');return;}
+  if(bal<STANDARD_CASE_PRICE){showToast('Insufficient Poxy Coins. Add funds in Treasury.');scrollToTreasury();return;}
   busy=true;$('btnOpen').disabled=true;
   currentProfile.balance=bal-STANDARD_CASE_PRICE;
   updateBalanceBadge(currentProfile.balance);
@@ -2617,6 +2851,7 @@ $('btnAdd').addEventListener('click',async function(){
     showToast('Saved to collection!');
     if(currentTier.id==='mythic'){hasMythic=true;toggleClubAccess(true);}
     if(['legendary','mythic'].includes(currentTier.id))refreshPremiumFrame();
+    loadCollection().catch(console.error);
   }catch(e){showToast('Error saving.');}
   $('btnAdd').disabled=false;$('btnAdd').textContent=orig;resetAll();
 });
@@ -2640,6 +2875,8 @@ function toggleClubAccess(has){
   const btn=$('btnClubEnter');if(btn)btn.classList.toggle('show',has);
   const nav=$('navClub');if(nav)nav.classList.toggle('show',has);
   const sep=$('clubNavSep');if(sep)sep.style.display=has?'':'none';
+  const psdClub=$('psdNavClub');if(psdClub)psdClub.classList.toggle('show',has);
+  updatePsdMemberBadge();
 }
 
 // ── COLLECTION ──
@@ -2653,6 +2890,7 @@ async function loadCollection(){
     if(error)throw error;
     colData=data||[];
     renderFilterButtons();renderCollection();
+    renderDashColPreview();
     cnt.textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
   }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
 }

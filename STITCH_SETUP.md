@@ -91,7 +91,16 @@ node -v
 Не трогай Supabase и скрипты. Потом внедри только CSS + разметку #authOverlay.
 ```
 
-Порядок пилотов: Auth → Sidebar → Collection → Cases (см. `DESIGN.md`).
+Порядок пилотов: Auth → Sidebar → **Stitch Dashboard** → Collection page → Cases (см. `DESIGN.md`).
+
+### Экспорт HTML из Stitch (для точного совпадения)
+
+Если есть готовый экран в Stitch, в чате с MCP:
+
+```
+get_screen_code для экрана Dashboard — только HTML/CSS фрагмент.
+Внедрить в #poxyStitchDashboard, ids не менять.
+```
 
 ## Шаг 6 — Проверка после любого дизайна
 
