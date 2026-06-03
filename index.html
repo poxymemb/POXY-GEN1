@@ -1769,8 +1769,12 @@ body.dark-club .club-sub{color:#888}
                   <span class="poxy-club-btn-price" id="btnClub5Price">25 PC</span>
                 </button>
               </div>
-              <div class="poxy-club-mystery-row" id="clubBoxes"></div>
+              <div class="poxy-club-reveal-row poxy-club-mystery-row" id="clubRevealRow"></div>
               <div class="poxy-club-results" id="clubResults"></div>
+              <div class="poxy-club-vault-section">
+                <p class="poxy-club-muted" id="clubVaultHint">Mystery vaults — 1 unlock per 10 VIP opens</p>
+                <div class="poxy-club-mystery-row" id="clubBoxes"></div>
+              </div>
             </div>
             <div class="poxy-club-glass poxy-club-extraction-block">
               <h2 class="poxy-club-kicker">Feature 3 · Extraction Matrix</h2>
@@ -1792,21 +1796,37 @@ body.dark-club .club-sub{color:#888}
             <div class="poxy-club-heatmap-legend" id="clubHeatmapLegend"></div>
           </div>
           <div class="poxy-club-glass poxy-club-status-dock" aria-label="Personal status">
-            <h2 class="poxy-club-kicker">Member credentials</h2>
+            <h2 class="poxy-club-kicker">Founders status</h2>
+            <div class="poxy-club-xp-block">
+              <div class="poxy-club-xp-head">
+                <span class="poxy-club-xp-label">Club rank</span>
+                <span class="poxy-club-xp-level" id="clubLevelDisplay">Level 1</span>
+              </div>
+              <div class="poxy-club-xp-bar"><div class="poxy-club-xp-fill" id="clubXpFill"></div></div>
+              <p class="poxy-club-xp-sub" id="clubXpSub">0 / 100 XP</p>
+            </div>
             <div class="poxy-club-vault-item">
               <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">vpn_key</span></div>
               <div>
                 <div class="poxy-club-vault-label">London Club Keycard</div>
-                <p class="poxy-club-vault-value" id="clubKeycardLevel">Active · Level 4</p>
+                <p class="poxy-club-vault-value" id="clubKeycardLevel">Active · Level 1</p>
               </div>
             </div>
             <div class="poxy-club-vault-item">
               <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">percent</span></div>
               <div>
-                <div class="poxy-club-vault-label">Passive case discount</div>
-                <p class="poxy-club-vault-value" id="clubDiscountVal">15% applied</p>
+                <div class="poxy-club-vault-label">VIP case discount</div>
+                <p class="poxy-club-vault-value" id="clubDiscountVal">5% off</p>
               </div>
             </div>
+            <div class="poxy-club-vault-item">
+              <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">token</span></div>
+              <div>
+                <div class="poxy-club-vault-label">Atelier tokens</div>
+                <p class="poxy-club-vault-value" id="clubTokenVal">0</p>
+              </div>
+            </div>
+            <p class="poxy-club-stat-line" id="clubVipOpensStat">VIP opens: 0</p>
           </div>
         </div>
         <div class="poxy-club-glass poxy-club-ledger">
@@ -1886,8 +1906,8 @@ body.dark-club .club-sub{color:#888}
               <h3>Proposal #042: Increase Case Drop Rate</h3>
               <p>Voting ends in 24h. VIP members only.</p>
               <div class="poxy-club-proposal-btns">
-                <button type="button" class="poxy-club-vote-for" onclick="showToast('Vote recorded: FOR.')">Vote for</button>
-                <button type="button" class="poxy-club-vote-abstain" onclick="showToast('Vote recorded: ABSTAIN.')">Abstain</button>
+                <button type="button" class="poxy-club-vote-for" onclick="clubDaoVote('for')">Vote for</button>
+                <button type="button" class="poxy-club-vote-abstain" onclick="clubDaoVote('abstain')">Abstain</button>
               </div>
             </div>
           </div>
@@ -1899,6 +1919,11 @@ body.dark-club .club-sub{color:#888}
             <div class="poxy-club-badge-row" id="clubAvatarRow"></div>
             <button type="button" class="poxy-club-submit" id="btnApplyClub">Submit application</button>
           </div>
+        </div>
+        <div class="poxy-club-glass poxy-club-bounties-block">
+          <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">task_alt</span> Elite bounties</h2>
+          <p class="poxy-club-muted">Daily club contracts — earn Atelier tokens &amp; Club XP.</p>
+          <div id="clubBountiesList" class="poxy-club-bounties-list"></div>
         </div>
         <div class="poxy-club-glass poxy-club-feed-wrap">
           <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">forum</span> Syndicate comms</h2>
@@ -4653,6 +4678,25 @@ window.formatExpiry=function(el){let v=el.value.replace(/\D/g,'').substring(0,4)
 let activeClubSubTab='terminal';
 let clubFlashBuffEnd=0;
 let clubFlashRadarIv=null;
+let clubStatusCache=null;
+let clubBounties=[];
+const CLUB_XP_THRESHOLDS=[0,100,250,500,800,1200,1700,2300,3000,3800];
+const CLUB_BOUNTY_LABELS={
+  club_open_5_vip:'Open 5 VIP boxes',
+  club_post_2_feed:'Post 2 club messages',
+  club_vote_1_dao:'Cast a DAO vote',
+  club_visit_terminal:'Visit the lounge terminal'
+};
+function clubDiscountedVipPrice(){
+  const pct=clubStatusCache?.discount_pct??clubDiscountPct(currentProfile?.club_level||1);
+  return Math.max(0.01,Math.round(VIP_CASE_PRICE*(1-pct/100)*100)/100);
+}
+function clubDiscountPct(level){
+  return Math.min(25,5+Math.max(0,(level||1)-1)*2);
+}
+function clubXpPrevThreshold(level){
+  return CLUB_XP_THRESHOLDS[Math.max(0,Math.min(9,(level||1)-1))]||0;
+}
 const CLUB_ALPHA_DECKS=[
   {title:'Mythic drop reel',sub:'Preview · upcoming case animation'},
   {title:'Dev log #12',sub:'Syndicate vault & OTC desk polish'},
@@ -4687,11 +4731,42 @@ window.switchClubSubTab=function(tab){
     requestAnimationFrame(()=>{next.classList.add('active');});
   }
   activeClubSubTab=tab;
+  if(tab==='terminal'&&currentUser)bumpClubBounty('club_visit_terminal',1);
   if(tab==='intel')renderClubIntelModules();
   if(tab==='market')renderClubMarketModules();
-  if(tab==='syndicate')renderClubSyndicateModules();
+  if(tab==='syndicate'){renderClubSyndicateModules();loadClubBounties();}
 };
-function initClubFlashRadar(){
+async function loadClubFlashFromServer(){
+  const mod=$('clubTerminalModule');
+  const timerEl=$('clubFlashRadarTimer');
+  const statusEl=$('clubFlashRadarStatus');
+  if(!mod||!timerEl||!currentUser)return;
+  try{
+    let st=null;
+    try{
+      const{data,error}=await sb.rpc('get_club_flash_status');
+      if(!error&&data)st=typeof data==='string'?JSON.parse(data):data;
+    }catch(e){}
+    if(!st?.active){
+      try{
+        const{data}=await sb.rpc('spawn_club_flash_if_due');
+        if(data)st=typeof data==='string'?JSON.parse(data):data;
+      }catch(e){}
+    }
+    if(st?.active&&st.ends_at){
+      clubFlashBuffEnd=new Date(st.ends_at).getTime();
+      if(statusEl)statusEl.textContent='FLASH EVENT LIVE — Diamond & Secret drop vectors ×'+(st.tier_boost_multiplier||3);
+    }else{
+      clubFlashBuffEnd=0;
+      if(statusEl)statusEl.textContent='Scanning for Mythic buff windows…';
+    }
+  }catch(e){
+    clubFlashBuffEnd=0;
+    if(statusEl)statusEl.textContent='Radar standby — awaiting next pulse';
+  }
+  initClubFlashRadarTick();
+}
+function initClubFlashRadarTick(){
   const mod=$('clubTerminalModule');
   const timerEl=$('clubFlashRadarTimer');
   const statusEl=$('clubFlashRadarStatus');
@@ -4699,30 +4774,131 @@ function initClubFlashRadar(){
   if(clubFlashRadarIv)clearInterval(clubFlashRadarIv);
   const tick=()=>{
     const now=Date.now();
-    if(!clubFlashBuffEnd||now>=clubFlashBuffEnd){
-      if(activeFlashSales&&activeFlashSales.length){
-        clubFlashBuffEnd=now+15*60*1000;
-        statusEl.textContent='MYTHIC BUFF ACTIVE — +15 min elevated drop vectors';
-      }else if(!clubFlashBuffEnd){
-        const mins=8+Math.floor(Math.random()*7);
-        clubFlashBuffEnd=now+mins*60*1000;
-        statusEl.textContent='Radar locked — scheduled Mythic window';
-      }
-    }
-    const left=Math.max(0,clubFlashBuffEnd-now);
+    const left=clubFlashBuffEnd?Math.max(0,clubFlashBuffEnd-now):0;
     const m=Math.floor(left/60000);
     const s=Math.floor((left%60000)/1000);
-    timerEl.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-    const active=left>0&&(activeFlashSales?.length||left<16*60*1000);
-    mod.classList.toggle('flash-active',active);
-    if(left<=0&&!activeFlashSales?.length){
-      clubFlashBuffEnd=0;
-      statusEl.textContent='Scanning for Mythic buff windows…';
-      mod.classList.remove('flash-active');
+    timerEl.textContent=left>0?String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):'--:--';
+    mod.classList.toggle('flash-active',left>0);
+    if(left<=0&&statusEl&&!statusEl.textContent.includes('Scanning')){
+      if(statusEl)statusEl.textContent='Scanning for Mythic buff windows…';
     }
   };
   tick();
   clubFlashRadarIv=setInterval(tick,1000);
+}
+async function loadClubStatus(){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('get_club_status',{p_user_id:currentUser.id});
+    if(error)throw error;
+    const st=typeof data==='string'?JSON.parse(data):data;
+    if(st?.ok){
+      clubStatusCache=st;
+      if(currentProfile){
+        currentProfile.club_xp=st.club_xp;
+        currentProfile.club_level=st.club_level;
+        currentProfile.total_vip_opens=st.total_vip_opens;
+        currentProfile.club_cosmetic_tokens=st.club_cosmetic_tokens;
+        currentProfile.club_vault_progress=st.club_vault_progress;
+        currentProfile.club_vault_claimed=st.club_vault_claimed;
+      }
+      renderClubStatusDock(st);
+      updateClubPriceLabels();
+      renderClubVaultSlots();
+    }
+  }catch(e){
+    renderClubStatusDock({
+      club_xp:currentProfile?.club_xp||0,
+      club_level:currentProfile?.club_level||1,
+      club_xp_next:100,
+      discount_pct:clubDiscountPct(currentProfile?.club_level||1),
+      total_vip_opens:currentProfile?.total_vip_opens||0,
+      club_cosmetic_tokens:currentProfile?.club_cosmetic_tokens||0,
+      club_vault_progress:currentProfile?.club_vault_progress||0,
+      club_vault_claimed:currentProfile?.club_vault_claimed||0
+    });
+  }
+}
+function renderClubStatusDock(st){
+  const lvl=st.club_level||1;
+  const xp=st.club_xp||0;
+  const next=st.club_xp_next||100;
+  const prev=clubXpPrevThreshold(lvl);
+  const pct=next>prev?Math.min(100,((xp-prev)/(next-prev))*100):100;
+  const elL=$('clubLevelDisplay');if(elL)elL.textContent='Level '+lvl;
+  const elK=$('clubKeycardLevel');if(elK)elK.textContent='Active · Tier '+lvl;
+  const elD=$('clubDiscountVal');if(elD)elD.textContent=(st.discount_pct||clubDiscountPct(lvl))+'% off VIP opens';
+  const elT=$('clubTokenVal');if(elT)elT.textContent=String(st.club_cosmetic_tokens||0);
+  const elV=$('clubVipOpensStat');if(elV)elV.textContent='VIP opens: '+(st.total_vip_opens||0)+' · Vault '+Math.min(5,Math.floor((st.club_vault_progress||0)/10))+'/5';
+  const fill=$('clubXpFill');if(fill)fill.style.width=pct+'%';
+  const sub=$('clubXpSub');if(sub)sub.textContent=xp+' / '+next+' XP';
+}
+async function loadClubBounties(){
+  const list=$('clubBountiesList');if(!list||!currentUser)return;
+  list.innerHTML='<div class="poxy-club-muted">Loading bounties…</div>';
+  try{
+    const{data,error}=await sb.rpc('ensure_club_bounties',{p_user_id:currentUser.id});
+    if(error)throw error;
+    clubBounties=data||[];
+    if(!clubBounties.length){list.innerHTML='<div class="poxy-club-muted">No bounties today.</div>';return;}
+    list.innerHTML='';
+    clubBounties.forEach(q=>{
+      const pct=Math.min(100,(q.progress/q.goal)*100);
+      const row=document.createElement('div');
+      row.className='poxy-club-bounty-row';
+      row.innerHTML='<div class="poxy-club-bounty-head"><span class="poxy-club-bounty-title">'+(CLUB_BOUNTY_LABELS[q.quest_key]||q.quest_key)+'</span><span class="poxy-club-bounty-progress">'+q.progress+' / '+q.goal+'</span></div>'
+        +'<div class="poxy-club-bounty-bar"><div style="width:'+pct+'%"></div></div>'
+        +'<div class="poxy-club-bounty-foot"><span class="poxy-club-bounty-reward">+'+q.reward_tokens+' token'+(q.reward_tokens!==1?'s':'')+' · +'+q.reward_xp+' XP</span>'
+        +'<button type="button" class="poxy-club-bounty-claim" data-id="'+q.id+'">'+(q.claimed?'Claimed':q.progress>=q.goal?'Claim':'In progress')+'</button></div>';
+      const btn=row.querySelector('.poxy-club-bounty-claim');
+      btn.disabled=q.claimed||q.progress<q.goal;
+      btn.addEventListener('click',()=>claimClubBounty(q.id));
+      list.appendChild(row);
+    });
+  }catch(e){list.innerHTML='<div class="poxy-club-muted">Bounties unavailable. Apply migration_club_p0.sql</div>';}
+}
+async function bumpClubBounty(key,delta){
+  if(!currentUser)return;
+  try{
+    await sb.rpc('increment_club_bounty_progress',{p_user_id:currentUser.id,p_quest_key:key,p_delta:delta||1});
+    if($('clubBountiesList'))loadClubBounties();
+  }catch(e){}
+}
+async function claimClubBounty(bid){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_club_bounty_reward',{p_user_id:currentUser.id,p_bounty_id:bid});
+    if(error)throw error;
+    if(data?.ok===false)throw new Error(data.error||'Claim failed');
+    if(currentProfile){
+      currentProfile.club_cosmetic_tokens=(currentProfile.club_cosmetic_tokens||0)+(data.reward_tokens||0);
+      currentProfile.club_xp=data.club_xp;
+      currentProfile.club_level=data.club_level;
+    }
+    showToast('Bounty claimed: +'+data.reward_tokens+' tokens, +'+data.reward_xp+' XP');
+    await loadClubStatus();
+    loadClubBounties();
+  }catch(e){showToast('Claim failed: '+(e.message||'error'));}
+}
+window.clubDaoVote=function(){
+  bumpClubBounty('club_vote_1_dao',1);
+  showToast('Vote recorded — influence logged for DAO tally.');
+};
+async function claimClubVaultSlot(slot){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_club_vault_slot',{p_user_id:currentUser.id,p_slot:slot});
+    if(error)throw error;
+    if(data?.ok===false)throw new Error(data.error||'Claim failed');
+    const t=TIER_BY_ID[data.tier]||VIP_TIERS[0];
+    showToast('Vault unlocked: '+t.label+' minted!');
+    playTick();
+    await loadClubStatus();
+    await loadCollection();
+    renderClubVaultSlots();
+    renderClubExtraction();
+    renderClubArmory();
+  }catch(e){showToast('Vault: '+(e.message||'error'));}
 }
 function renderClubExtraction(){
   const row=$('clubExtractionRow');if(!row)return;
@@ -4854,10 +5030,24 @@ function renderClubAtelier(){
       +'<div class="poxy-club-atelier-body"><div class="poxy-club-atelier-name">'+sanitizeText(it.name)+'</div>'
       +'<div class="poxy-club-atelier-desc">'+sanitizeText(it.desc)+'</div>'
       +'<button type="button" class="poxy-club-atelier-btn">'+formatPC(it.cost)+' · Equip</button></div>';
-    card.querySelector('.poxy-club-atelier-btn').onclick=function(){
-      this.classList.add('equipped');
-      this.textContent='Equipped';
-      showToast(sanitizeText(it.name)+' applied to profile.');
+    const tokenCost=Math.max(1,Math.ceil(it.cost/15));
+    const btn=card.querySelector('.poxy-club-atelier-btn');
+    btn.textContent=tokenCost+' token'+(tokenCost!==1?'s':'')+' · Equip';
+    btn.onclick=async function(){
+      const bal=currentProfile?.club_cosmetic_tokens||0;
+      if(bal<tokenCost){showToast('Need '+tokenCost+' Atelier tokens. Complete Elite Bounties.');return;}
+      try{
+        await sb.from('profiles').update({club_cosmetic_tokens:bal-tokenCost}).eq('id',currentUser.id);
+        currentProfile.club_cosmetic_tokens=bal-tokenCost;
+        if(it.type==='theme'&&it.themeVal)await sb.from('profiles').update({profile_theme:it.themeVal}).eq('id',currentUser.id);
+        if(it.type==='gradient'&&it.gradientVal)await sb.from('profiles').update({name_gradient:it.gradientVal}).eq('id',currentUser.id);
+        applyTheme(it.themeVal||currentProfile.profile_theme);
+        if(it.gradientVal)applyNameGradientUI(it.gradientVal);
+        this.classList.add('equipped');
+        this.textContent='Equipped';
+        renderClubStatusDock(clubStatusCache||{club_cosmetic_tokens:currentProfile.club_cosmetic_tokens});
+        showToast(sanitizeText(it.name)+' equipped.');
+      }catch(e){showToast('Equip failed.');}
     };
     grid.appendChild(card);
   });
@@ -4904,26 +5094,43 @@ window.cycleClubAlpha=function(dir){
   screen.innerHTML='<span class="material-symbols-outlined">play_circle</span><p><strong>'+sanitizeText(deck.title)+'</strong><br>'+sanitizeText(deck.sub)+'</p>';
   document.querySelectorAll('.poxy-club-alpha-ctrl').forEach((b,i)=>b.classList.toggle('active',i===1));
 };
-function initClubLuxuryModules(){
-  initClubFlashRadar();
+async function initClubLuxuryModules(){
+  await loadClubStatus();
+  await loadClubFlashFromServer();
+  bumpClubBounty('club_visit_terminal',1);
+  renderClubVaultSlots();
   renderClubExtraction();
   renderClubIntelModules();
   renderClubMarketModules();
   renderClubSyndicateModules();
+  loadClubBounties();
   cycleClubAlpha(1);
   switchClubSubTab(activeClubSubTab||'terminal');
 }
-function renderClubMysterySlots(){
+function renderClubVaultSlots(){
   const row=$('clubBoxes');if(!row)return;
+  const prog=clubStatusCache?.club_vault_progress??currentProfile?.club_vault_progress??0;
+  const claimed=clubStatusCache?.club_vault_claimed??currentProfile?.club_vault_claimed??0;
+  const hint=$('clubVaultHint');
+  if(hint)hint.textContent='Mystery vaults — '+prog+' VIP opens · claim every 10';
   row.innerHTML='';
   for(let i=0;i<5;i++){
+    const required=(i+1)*10;
+    const isClaimed=(claimed&(1<<i))>0;
+    const canClaim=prog>=required&&!isClaimed;
     const b=document.createElement('div');
-    b.className='poxy-club-mystery-slot mini-box';
+    b.className='poxy-club-mystery-slot mini-box'+(isClaimed?' vault-claimed':canClaim?' vault-ready':'');
     b.id='mbox'+i;
-    b.innerHTML='<span class="material-symbols-outlined">lock</span>';
+    if(isClaimed)b.innerHTML='<span class="material-symbols-outlined" style="color:#5dffb0">verified</span>';
+    else if(canClaim){
+      b.innerHTML='<span class="material-symbols-outlined">redeem</span>';
+      b.title='Claim free vault POXY';
+      b.onclick=()=>claimClubVaultSlot(i);
+    }else b.innerHTML='<span class="material-symbols-outlined">lock</span><span style="font-size:8px;font-family:JetBrains Mono,monospace;color:#9A9AA8;margin-top:4px">'+required+'</span>';
     row.appendChild(b);
   }
 }
+function renderClubMysterySlots(){renderClubVaultSlots();}
 function renderClubAvatarPicker(){
   const ar=$('clubAvatarRow');if(!ar)return;
   ar.innerHTML='';
@@ -4938,8 +5145,9 @@ function renderClubAvatarPicker(){
   });
 }
 function updateClubPriceLabels(){
-  const p1=$('btnClub1Price');if(p1)p1.textContent=formatPC(VIP_CASE_PRICE);
-  const p5=$('btnClub5Price');if(p5)p5.textContent=formatPC(VIP_CASE_PRICE*5);
+  const unit=clubDiscountedVipPrice();
+  const p1=$('btnClub1Price');if(p1)p1.textContent=formatPC(unit);
+  const p5=$('btnClub5Price');if(p5)p5.textContent=formatPC(unit*5);
 }
 function renderClub(){
   const locked=$('clubLocked'),unlocked=$('clubUnlocked');
@@ -4951,7 +5159,7 @@ function renderClub(){
   }
   locked.style.display='none';unlocked.style.display='flex';
   updateClubPriceLabels();
-  renderClubMysterySlots();
+  renderClubVaultSlots();
   renderClubAvatarPicker();
   loadFeed();
   loadFounderAnnouncements();
@@ -4995,7 +5203,7 @@ async function loadFlashSales(){
     const{data,error}=await sb.from('flash_sales').select('*').gt('ends_at',new Date().toISOString()).order('ends_at',{ascending:true});
     if(error)throw error;
     activeFlashSales=data||[];
-    if(!activeFlashSales.length){wrap.innerHTML='<div class="poxy-club-glass poxy-club-flash-empty">No active flash drops. Check back soon.</div>';updateClubFlashRadarState();return;}
+    if(!activeFlashSales.length){wrap.innerHTML='<div class="poxy-club-glass poxy-club-flash-empty">No active flash drops. Check back soon.</div>';return;}
     wrap.innerHTML='';
     activeFlashSales.forEach(s=>{
       const tier=TIER_BY_ID[s.poxy_tier]||TIERS[0];
@@ -5012,13 +5220,7 @@ async function loadFlashSales(){
       card.appendChild(left);card.appendChild(buy);
       wrap.appendChild(card);
     });
-    updateClubFlashRadarState();
   }catch(e){wrap.innerHTML='<div class="poxy-club-muted" style="color:#c44">Could not load flash sales.</div>';}
-}
-function updateClubFlashRadarState(){
-  if(activeFlashSales?.length)clubFlashBuffEnd=Date.now()+15*60*1000;
-  const mod=$('clubTerminalModule');
-  if(mod&&activeFlashSales?.length)mod.classList.add('flash-active');
 }
 async function buyFlashSale(sale,tier,btn){
   if(!currentUser)return;
@@ -5048,37 +5250,54 @@ async function buyFlashSale(sale,tier,btn){
 async function doClubOpen(count){
   if(!currentUser)return;
   if(!isClubMember()){showToast('VIP Club membership required.');return;}
-  const totalPrice=VIP_CASE_PRICE*count;
+  const unit=clubDiscountedVipPrice();
+  const totalPrice=unit*count;
   const bal=currentProfile?.balance||0;
   if(bal<totalPrice){showToast('Insufficient Poxy Coins. Add funds in BANK.');return;}
   if(vipBusy)return;vipBusy=true;
   const btn1=$('btnClub1'),btn5=$('btnClub5');
   if(btn1)btn1.disabled=true;if(btn5)btn5.disabled=true;
   const results=$('clubResults');results.innerHTML='';
-  renderClubMysterySlots();
+  const reveal=$('clubRevealRow');
+  if(reveal){
+    reveal.innerHTML='';
+    for(let i=0;i<count;i++){
+      const b=document.createElement('div');
+      b.className='poxy-club-mystery-slot mini-box';
+      b.innerHTML='<span class="material-symbols-outlined">lock</span>';
+      reveal.appendChild(b);
+    }
+  }
   const drops=[];
   for(let i=0;i<count;i++){
     await new Promise(r=>setTimeout(r,i*220));
-    const t=pickVipTier();
     try{
-      const{data,error}=await sb.rpc('open_vip_case',{p_user_id:currentUser.id,p_tier:t.id,p_serial:null});
+      const{data,error}=await sb.rpc('open_vip_case',{p_user_id:currentUser.id,p_tier:null,p_serial:null});
       if(error)throw error;if(!data.ok)throw new Error(data.error);
+      const t=TIER_BY_ID[data.tier]||VIP_TIERS.find(x=>x.id===data.tier)||VIP_TIERS[0];
       if(currentProfile)currentProfile.balance=parseFloat(data.new_balance);
       updateBalanceBadge(currentProfile?.balance||0);
-      drops.push({tier:t,serial:data.vip_serial});
+      drops.push({tier:t,serial:data.vip_serial,flash:!!data.flash_active});
       playTick();
-      const b=$('mbox'+i);
-      if(b){b.innerHTML=t.icon;b.style.setProperty('--bc',t.color);b.classList.add('revealed');b.style.borderColor=t.color;b.style.color=t.color;}
+      const box=reveal?.children[i];
+      if(box){box.innerHTML=t.icon;box.style.setProperty('--bc',t.color);box.classList.add('revealed');box.style.borderColor=t.color;box.style.color=t.color;}
     }catch(e){showToast('VIP open failed: '+(e.message||'error'));break;}
   }
   if(drops.some(d=>d.tier.id==='secret'||d.tier.id==='diamond'))playMythicChord();
   drops.forEach(d=>{
     const c=document.createElement('div');c.className='club-result-card';
     c.style.cssText='background:'+d.tier.glow+';border-color:'+d.tier.color+'55;color:'+d.tier.color+';flex-direction:column;line-height:1.3';
-    c.innerHTML=d.tier.label+'<span style="display:block;font-size:9px;color:#888;font-weight:600">#'+d.serial+'</span>';
+    c.innerHTML=d.tier.label+(d.flash?' <span style="opacity:0.7">⚡</span>':'')+'<span style="display:block;font-size:9px;color:#888;font-weight:600">#'+d.serial+'</span>';
     results.appendChild(c);
   });
-  if(drops.length){showToast(drops.length+' VIP POXY minted!');showStitchTab('club');loadCollection().then(()=>{renderClubExtraction();renderClubArmory();});}
+  if(drops.length){
+    const xp=drops.length*25;
+    showToast(drops.length+' VIP POXY · +'+xp+' Club XP');
+    await loadClubStatus();
+    renderClubVaultSlots();
+    loadCollection().then(()=>{renderClubExtraction();renderClubArmory();});
+    loadClubBounties();
+  }
   if(btn1)btn1.disabled=false;if(btn5)btn5.disabled=false;
   vipBusy=false;
 }
@@ -5120,8 +5339,13 @@ window.postToFeed=async function(){
   if(!content||!currentUser)return;
   const username=currentProfile?.username||currentUser.email.split('@')[0];
   const avatar=currentProfile?.avatar_url&&!currentProfile.avatar_url.startsWith('http')?currentProfile.avatar_url:'✸';
-  try{await sb.from('club_feed').insert({author_id:currentUser.id,author_username:username,author_avatar:avatar,content});input.value='';loadFeed();}
-  catch(e){showToast('Post failed.');}
+  try{
+    await sb.from('club_feed').insert({author_id:currentUser.id,author_username:username,author_avatar:avatar,content});
+    input.value='';
+    loadFeed();
+    bumpClubBounty('club_post_2_feed',1);
+    try{await sb.rpc('grant_club_xp',{p_user_id:currentUser.id,p_amount:10});await loadClubStatus();}catch(e){}
+  }catch(e){showToast('Post failed.');}
 };
 
 // ── NEWS FEED ──

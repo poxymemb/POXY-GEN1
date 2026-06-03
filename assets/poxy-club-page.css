@@ -712,6 +712,32 @@ body.dark-club .poxy-club-page{
   border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;color:var(--club-silver);
 }
 
+.poxy-club-xp-block{margin-bottom:20px;padding:14px;border-radius:12px;background:rgba(18,18,24,0.5);border:1px solid rgba(243,198,111,0.15)}
+.poxy-club-xp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.poxy-club-xp-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--club-silver)}
+.poxy-club-xp-level{font-size:1.25rem;font-weight:700;color:var(--club-gold-bright);text-shadow:0 0 16px rgba(243,198,111,0.4)}
+.poxy-club-xp-bar{height:8px;border-radius:999px;background:rgba(0,0,0,0.35);overflow:hidden;margin-bottom:8px}
+.poxy-club-xp-fill{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#C9A04A,#F3C66F,#FFE9A8);box-shadow:0 0 12px rgba(243,198,111,0.5);transition:width 0.4s var(--club-ease)}
+.poxy-club-xp-sub{font-size:11px;color:var(--club-silver);margin:0;font-family:'JetBrains Mono',monospace}
+.poxy-club-stat-line{font-size:12px;color:var(--club-silver-dim);margin:8px 0 0;font-family:'JetBrains Mono',monospace}
+.poxy-club-bounties-list{display:flex;flex-direction:column;gap:10px}
+.poxy-club-bounty-row{padding:14px;border-radius:12px;background:rgba(26,26,32,0.55);border:1px solid rgba(243,198,111,0.12);border-top-color:rgba(243,198,111,0.28);transition:all 0.3s var(--club-ease)}
+.poxy-club-bounty-row:hover{transform:translateY(-3px)}
+.poxy-club-bounty-head{display:flex;justify-content:space-between;margin-bottom:8px}
+.poxy-club-bounty-title{font-size:13px;font-weight:600;color:var(--club-white)}
+.poxy-club-bounty-progress{font-size:10px;color:var(--club-silver);font-family:'JetBrains Mono',monospace}
+.poxy-club-bounty-bar{height:5px;background:rgba(0,0,0,0.3);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.poxy-club-bounty-bar div{height:100%;background:linear-gradient(90deg,#7c4dff,#F3C66F);transition:width 0.35s var(--club-ease)}
+.poxy-club-bounty-foot{display:flex;justify-content:space-between;align-items:center}
+.poxy-club-bounty-reward{font-size:10px;color:var(--club-gold-bright);font-family:'JetBrains Mono',monospace;font-weight:700}
+.poxy-club-bounty-claim{padding:8px 14px;border-radius:999px;border:1px solid rgba(243,198,111,0.45);background:rgba(243,198,111,0.1);color:var(--club-gold-bright);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.3s var(--club-ease)}
+.poxy-club-bounty-claim:hover:not(:disabled){background:rgba(243,198,111,0.22);transform:translateY(-2px)}
+.poxy-club-bounty-claim:disabled{opacity:0.45;cursor:default}
+.poxy-club-mystery-slot.vault-ready{cursor:pointer;animation:poxyClubVaultPulse 1.5s ease-in-out infinite}
+.poxy-club-mystery-slot.vault-claimed{border-color:rgba(93,255,176,0.45)!important}
+@keyframes poxyClubVaultPulse{0%,100%{box-shadow:0 0 12px rgba(243,198,111,0.2)}50%{box-shadow:0 0 28px rgba(243,198,111,0.45)}}
+.poxy-club-vault-section{margin-top:12px}
+
 body.dark-club{overflow-x:hidden}
 body.dark-club #poxyAppShell,
 body.dark-club #huntPage,
