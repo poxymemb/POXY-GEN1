@@ -967,9 +967,9 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .bank-divider::before,.bank-divider::after{content:'';flex:1;height:1px;background:#e8e8e8}
 .bank-divider span{font-size:11px;color:#B0B0B0;font-weight:600}
 
-/* ── DARK CLUB ── */
-.club-page{display:none;max-width:380px;margin:0 auto;padding:24px 20px 40px;min-height:380px}
-.club-page.visible{display:block;animation:fadeIn 0.4s ease}
+/* ── DARK CLUB (legacy pages; SPA uses .poxy-club-page) ── */
+.club-page:not(.poxy-club-page){display:none;max-width:380px;margin:0 auto;padding:24px 20px 40px;min-height:380px}
+.club-page:not(.poxy-club-page).visible{display:block;animation:fadeIn 0.4s ease}
 .club-hero{text-align:center;padding:20px 0 16px}
 .club-badge{font-size:44px;margin-bottom:6px}
 .club-title{font-size:20px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#FF5252,#FF8F00,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
