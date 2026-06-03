@@ -1729,64 +1729,6 @@ body.dark-club .club-sub{color:#888}
 <!-- POXY CLUB v2 — Founders Circle Ecosystem (fragment for index.html) -->
 <div class="club-page poxy-club-page" id="clubPage">
   <div id="clubLocked" class="poxy-club-locked" style="display:none"></div>
-  <div id="clubAwakening" class="club-awakening club-stitch-awake" hidden aria-hidden="true">
-    <div class="club-awakening-backdrop"></div>
-    <header class="club-awake-top">
-      <div class="club-awake-brand"><span class="material-symbols-outlined">diamond</span> POXY CLUB</div>
-      <div class="club-awake-top-actions">
-        <button type="button" class="club-replay-intel club-awake-replay" id="clubAwakeningReplay" title="Replay Intel"><span class="material-symbols-outlined">replay</span></button>
-        <button type="button" class="club-awakening-skip" id="clubAwakeningSkip">Skip Intel</button>
-      </div>
-    </header>
-    <div class="club-awakening-stage">
-      <div class="club-awakening-progress"><span id="clubAwakeningProgress"></span></div>
-      <div class="club-awakening-slide active" data-slide="0">
-        <p class="club-awakening-kicker">System Override</p>
-        <h2 class="club-awakening-title gold-shimmer">INITIATION</h2>
-        <p class="club-awakening-body">Choice made. Mythic asset detected in your inventory. Commencing secure protocol.</p>
-      </div>
-      <div class="club-awakening-slide" data-slide="1">
-        <div class="club-awakening-split">
-          <div>
-            <p class="club-awakening-kicker">Asset Parameter 01</p>
-            <h2 class="club-awakening-title">SCARCITY PHILOSOPHY</h2>
-            <p class="club-awakening-body">Absolute provenance guaranteed by cryptographic enforcement. Only <strong>100</strong> members will ever hold the genesis keycard. The club remains sealed.</p>
-            <div class="club-awakening-mint"><span>MINT STATUS:</span><strong>100 / 100 CLOSED</strong></div>
-          </div>
-          <div class="club-awakening-keycard obsidian-glass-mini" aria-hidden="true">
-            <div class="club-keycard-top"><span class="material-symbols-outlined">contactless</span><span>NO. 001/100</span></div>
-            <div class="club-keycard-mid"><span class="material-symbols-outlined">token</span><span class="club-keycard-brand">POXY</span><span>FOUNDER EDITION</span></div>
-            <span class="club-keycard-foot">0x7a…9f2b · SECURE ENCLAVE</span>
-          </div>
-        </div>
-      </div>
-      <div class="club-awakening-slide" data-slide="2">
-        <p class="club-awakening-kicker">Asset Parameter 02</p>
-        <h2 class="club-awakening-title">OWNERSHIP RIGHTS</h2>
-        <div class="club-awakening-rights">
-          <div class="club-right-card obsidian-glass-mini"><span class="material-symbols-outlined">currency_exchange</span><h3>OTC BRIDGE</h3><p>Direct, zero-slippage liquidity access through dark pool routing.</p></div>
-          <div class="club-right-card obsidian-glass-mini"><span class="material-symbols-outlined">account_balance</span><h3>DAO INFLUENCE</h3><p>Proportional voting rights on treasury deployment and protocol upgrades.</p></div>
-          <div class="club-right-card obsidian-glass-mini"><span class="material-symbols-outlined">local_activity</span><h3>PRIVATE EVENTS</h3><p>Encrypted coordinates for IRL meetups and closed-door alpha sessions.</p></div>
-        </div>
-      </div>
-      <div class="club-awakening-slide" data-slide="3">
-        <p class="club-awakening-kicker">Finalizing Sequence</p>
-        <h2 class="club-awakening-title gold-shimmer">PASSPORT GENERATION</h2>
-        <p class="club-awakening-body">Compiling identity vectors. Establishing secure connection to the enclave.</p>
-        <div class="club-awakening-scan" aria-hidden="true"><span class="material-symbols-outlined">badge</span></div>
-        <p class="club-awakening-verify">VERIFYING…</p>
-        <div class="club-awakening-pass-preview" id="clubAwakeningPassPreview" hidden></div>
-      </div>
-      <div class="club-awakening-actions">
-        <button type="button" class="club-awakening-next" id="clubAwakeningNext">Continue</button>
-      </div>
-    </div>
-    <footer class="club-awake-progress-foot">
-      <span id="clubAwakeStep">01/04</span>
-      <div class="club-awake-progress-track"><span id="clubAwakeningProgressFoot"></span></div>
-      <span class="club-awake-sync">SYNC</span>
-    </footer>
-  </div>
   <div id="clubUnlocked" class="poxy-club-app club-shell" style="display:none">
     <div class="poxy-club-ambient" aria-hidden="true"></div>
     <aside class="club-sidebar" aria-label="POXY CLUB navigation">
@@ -2056,6 +1998,69 @@ body.dark-club .club-sub{color:#888}
     <div class="club-passport-modal-backdrop" onclick="closeClubPassportModal()"></div>
     <div class="club-passport-modal-card" id="clubPassportModalCard"></div>
   </div>
+</div>
+
+<!-- POXY CLUB intro (viewport overlay — outside SPA panel so position:fixed centers correctly) -->
+<div id="clubAwakening" class="club-awakening club-stitch-awake" hidden aria-hidden="true">
+  <div class="club-awakening-backdrop" aria-hidden="true"></div>
+  <header class="club-awake-top">
+    <div class="club-awake-brand"><span class="material-symbols-outlined">diamond</span> POXY CLUB</div>
+    <div class="club-awake-top-actions">
+      <button type="button" class="club-replay-intel club-awake-replay" id="clubAwakeningReplay" title="Replay Intel"><span class="material-symbols-outlined">replay</span></button>
+      <button type="button" class="club-awakening-skip" id="clubAwakeningSkip">Skip Intel</button>
+    </div>
+  </header>
+  <div class="club-awakening-stage">
+    <div class="club-awakening-progress" aria-hidden="true"><span id="clubAwakeningProgress"></span></div>
+    <div class="club-awakening-content">
+      <div class="club-awakening-slide active" data-slide="0">
+        <p class="club-awakening-kicker">System Override</p>
+        <h2 class="club-awakening-title gold-shimmer">INITIATION</h2>
+        <p class="club-awakening-body">Choice made. Mythic asset detected in your inventory. Commencing secure protocol.</p>
+        <span class="material-symbols-outlined club-awakening-fingerprint">fingerprint</span>
+      </div>
+      <div class="club-awakening-slide" data-slide="1">
+        <div class="club-awakening-split">
+          <div class="club-awakening-split-copy">
+            <p class="club-awakening-kicker">Asset Parameter 01</p>
+            <h2 class="club-awakening-title">SCARCITY PHILOSOPHY</h2>
+            <p class="club-awakening-body">Absolute provenance guaranteed by cryptographic enforcement. Only <strong>100</strong> members will ever hold the genesis keycard. The club remains sealed.</p>
+            <div class="club-awakening-mint"><span>MINT STATUS:</span><strong>100 / 100 CLOSED</strong></div>
+          </div>
+          <div class="club-awakening-keycard obsidian-glass-mini" aria-hidden="true">
+            <div class="club-keycard-top"><span class="material-symbols-outlined">contactless</span><span>NO. 001/100</span></div>
+            <div class="club-keycard-mid"><span class="material-symbols-outlined">token</span><span class="club-keycard-brand">POXY</span><span>FOUNDER EDITION</span></div>
+            <span class="club-keycard-foot">0x7a…9f2b · SECURE ENCLAVE</span>
+          </div>
+        </div>
+      </div>
+      <div class="club-awakening-slide" data-slide="2">
+        <p class="club-awakening-kicker">Asset Parameter 02</p>
+        <h2 class="club-awakening-title">OWNERSHIP RIGHTS</h2>
+        <div class="club-awakening-rights">
+          <div class="club-right-card obsidian-glass-mini"><span class="material-symbols-outlined">currency_exchange</span><h3>OTC BRIDGE</h3><p>Direct, zero-slippage liquidity access through dark pool routing.</p></div>
+          <div class="club-right-card obsidian-glass-mini"><span class="material-symbols-outlined">account_balance</span><h3>DAO INFLUENCE</h3><p>Proportional voting rights on treasury deployment and protocol upgrades.</p></div>
+          <div class="club-right-card obsidian-glass-mini"><span class="material-symbols-outlined">local_activity</span><h3>PRIVATE EVENTS</h3><p>Encrypted coordinates for IRL meetups and closed-door alpha sessions.</p></div>
+        </div>
+      </div>
+      <div class="club-awakening-slide" data-slide="3">
+        <p class="club-awakening-kicker">Finalizing Sequence</p>
+        <h2 class="club-awakening-title gold-shimmer">PASSPORT GENERATION</h2>
+        <p class="club-awakening-body">Compiling identity vectors. Establishing secure connection to the enclave.</p>
+        <div class="club-awakening-scan" aria-hidden="true"><span class="material-symbols-outlined">badge</span></div>
+        <p class="club-awakening-verify">VERIFYING…</p>
+        <div class="club-awakening-pass-preview" id="clubAwakeningPassPreview" hidden></div>
+      </div>
+    </div>
+    <div class="club-awakening-actions">
+      <button type="button" class="club-awakening-next" id="clubAwakeningNext">Continue</button>
+    </div>
+  </div>
+  <footer class="club-awake-progress-foot">
+    <span id="clubAwakeStep">01/04</span>
+    <div class="club-awake-progress-track"><span id="clubAwakeningProgressFoot"></span></div>
+    <span class="club-awake-sync">SYNC</span>
+  </footer>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -4885,7 +4890,7 @@ function showClubAwakening(onDone){
   const el=$('clubAwakening');if(!el){if(onDone)onDone();return;}
   clubAwakeningSlide=0;
   el.hidden=false;el.setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';
+  document.body.classList.add('club-awakening-open');
   updateClubAwakeningSlide();
   const nextBtn=$('clubAwakeningNext'),skipBtn=$('clubAwakeningSkip');
   const advance=()=>{
@@ -4899,7 +4904,7 @@ function showClubAwakening(onDone){
 }
 function closeClubAwakening(onDone){
   const el=$('clubAwakening');if(el){el.hidden=true;el.setAttribute('aria-hidden','true');}
-  document.body.style.overflow='';
+  document.body.classList.remove('club-awakening-open');
   if(onDone)onDone();
 }
 function updateClubAwakeningSlide(){
