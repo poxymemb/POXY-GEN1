@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-market-page.css">
+<link rel="stylesheet" href="assets/poxy-collection-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1494,29 +1495,53 @@ body.dark-club .club-sub{color:#888}
   <button class="btn-primary" id="btnSaveProfile" style="margin-top:8px">Save Profile</button>
 </div>
 
-<!-- COLLECTION PAGE (Stitch Archive) -->
-<div class="page page-collection-wide poxy-page-collection" id="collectionPage">
-  <div class="col-sticky-bar gpu-accel" id="colStickyBar">
-    <div class="col-header">
-      <div class="col-title">MY COLLECTION</div>
-      <div class="col-count" id="colCount"></div>
-    </div>
-    <div class="dust-bar">
-      <span style="font-size:14px">🔥</span>
-      <span style="font-size:11px;font-weight:600;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-left:4px">Burn → PC:</span>
-      <span class="dust-val" id="dustVal" style="display:none">0</span>
-      <span class="dust-tip">Common 0.10 · Mythic 40 · Secret 100</span>
-    </div>
-    <div class="filter-row" id="filterRow"></div>
-    <div class="bulk-bar" id="bulkBar">
-      <span class="bulk-count" id="bulkCount">0 selected</span>
-      <button class="btn-bulk-dust" id="btnBulkDust">🔥 Burn All Selected</button>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
-      <button class="filter-btn" onclick="openCraftModal()" style="--fc:#9C27B0;--fb:rgba(156,39,176,0.10);background:rgba(156,39,176,0.08);color:#9C27B0;border:1px solid #9C27B055">⚒ Craft (5 Common → 1 Uncommon)</button>
+<!-- COLLECTION PAGE (Stitch Tactical Archive) -->
+<div class="page poxy-collection-page" id="collectionPage">
+  <div class="poxy-col-shell">
+    <header class="poxy-col-header">
+      <h1 class="poxy-col-title">Inventory &amp; Collections</h1>
+      <div class="poxy-col-meta">
+        <span>Current assets:</span>
+        <span class="poxy-col-meta-count" id="colCount">0 items</span>
+      </div>
+      <p class="poxy-col-desc">Manage your classified assets. Track rarities, burn for PC balance, and forge upgrades in the POXY ecosystem.</p>
+    </header>
+    <div class="poxy-col-layout">
+      <aside class="poxy-col-sidebar" aria-label="Collection stats">
+        <div class="poxy-col-panel" id="colProgressPanel">
+          <h2>Collection progress</h2>
+          <div class="poxy-col-progress-placeholder" style="font-size:13px;color:#9d8b9b">Loading…</div>
+        </div>
+        <div class="poxy-col-panel" id="colRarityPanel">
+          <h2>Rarity distribution</h2>
+          <div class="poxy-col-progress-placeholder" style="font-size:13px;color:#9d8b9b">Loading…</div>
+        </div>
+      </aside>
+      <section class="poxy-col-main">
+        <div class="poxy-col-controls gpu-accel">
+          <div class="poxy-col-filter-dock">
+            <div class="poxy-col-filters" id="filterRow" role="tablist" aria-label="Rarity filters"></div>
+            <button type="button" class="poxy-col-forge" onclick="openCraftModal()">
+              <span class="material-symbols-outlined" aria-hidden="true">auto_fix_high</span>
+              Syndicate Forge
+            </button>
+          </div>
+          <div class="poxy-col-burn obsidian-well">
+            <div class="poxy-col-burn-label">
+              <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+              <span>Burn assets → PC balance</span>
+            </div>
+            <div class="poxy-col-burn-rates" id="colBurnRates"></div>
+          </div>
+          <div class="poxy-col-bulk" id="bulkBar">
+            <span class="poxy-col-bulk-count" id="bulkCount">0 selected</span>
+            <button type="button" class="poxy-col-bulk-btn" id="btnBulkDust">Burn selected</button>
+          </div>
+        </div>
+        <div id="colContent"><div class="poxy-col-loading"><div class="col-spinner"></div></div></div>
+      </section>
     </div>
   </div>
-  <div id="colContent"><div class="col-loading"><div class="col-spinner"></div></div></div>
 </div>
 
 <!-- FRIENDS PAGE -->
@@ -1716,7 +1741,7 @@ body.dark-club .club-sub{color:#888}
 <div class="modal-overlay hidden" id="craftModal">
   <div class="modal-card" style="max-width:360px">
     <div class="modal-title">Craft Upgrade</div>
-    <div class="modal-sub">Pick exactly 5 Common POXY to fuse into 1 Uncommon. <span id="craftSelectCount" style="color:#FF5722;font-weight:800">0 / 5</span></div>
+    <div class="modal-sub">Pick exactly 5 Common POXY to fuse into 1 Uncommon. <span id="craftSelectCount" style="color:#f9abff;font-weight:800">0 / 5</span></div>
     <div id="craftPool" style="max-height:300px;overflow-y:auto;margin:14px 0"></div>
     <div class="modal-btns">
       <button class="btn-modal-ok" id="btnCraftDoIt" onclick="performCraft()">Craft Now</button>
@@ -3198,30 +3223,72 @@ function toggleClubAccess(has){
 
 // ── COLLECTION ──
 let colData=[];
+const STITCH_TIER_ICON={common:'hexagon',uncommon:'diamond',rare:'stars',epic:'auto_awesome',legendary:'grade',mythic:'workspace_premium'};
+const STITCH_TIER_COLOR={common:'#9d8b9b',uncommon:'#b0aeb8',rare:'#00E5FF',epic:'#9c27b0',legendary:'#ffb5a0',mythic:'#f9abff'};
+function stitchTierColor(id){return STITCH_TIER_COLOR[id]||(TIER_BY_ID[id]?.color||'#9d8b9b');}
+function stitchTierIcon(id){return STITCH_TIER_ICON[id]||'hexagon';}
+
+function renderBurnRates(){
+  const el=$('colBurnRates');if(!el)return;
+  const chips=TIERS.map(t=>'['+t.label.slice(0,3).toUpperCase()+': '+t.burn.toFixed(2)+']');
+  VIP_TIERS.forEach(t=>{if(t.id==='secret')chips.push('[SEC: '+t.burn.toFixed(2)+']');});
+  el.innerHTML=chips.map(c=>'<span class="poxy-col-burn-chip">'+c+'</span>').join('');
+}
+
+function renderCollectionSidebar(){
+  const prog=$('colProgressPanel'),rar=$('colRarityPanel');
+  if(!prog||!rar)return;
+  const tierIds=TIERS.map(t=>t.id);
+  const owned=new Set(colData.map(i=>i.poxy_tier).filter(id=>tierIds.includes(id)));
+  const coverage=tierIds.length?Math.round(owned.size/tierIds.length*100):0;
+  const vipN=colData.filter(i=>isVipPoxyItem(i)).length;
+  const vipPct=vipN?Math.min(100,Math.round(vipN/Math.max(colData.length,1)*100)):0;
+  const pinnedN=colData.filter(i=>i.pinned_at).length;
+  const pinPct=colData.length?Math.min(100,Math.round(pinnedN/colData.length*100)):0;
+  prog.innerHTML='<h2>Collection progress</h2>'+
+    '<div class="poxy-col-progress-row"><div class="poxy-col-progress-head"><span>Tier coverage</span><span class="poxy-col-progress-pct primary">'+coverage+'%</span></div><div class="poxy-col-progress-bar"><div class="poxy-col-progress-fill primary" style="width:'+coverage+'%"></div></div></div>'+
+    '<div class="poxy-col-progress-row"><div class="poxy-col-progress-head"><span>VIP holdings</span><span class="poxy-col-progress-pct cyan">'+vipPct+'%</span></div><div class="poxy-col-progress-bar"><div class="poxy-col-progress-fill cyan" style="width:'+vipPct+'%"></div></div></div>'+
+    '<div class="poxy-col-progress-row"><div class="poxy-col-progress-head"><span>Pinned assets</span><span class="poxy-col-progress-pct epic">'+pinPct+'%</span></div><div class="poxy-col-progress-bar"><div class="poxy-col-progress-fill epic" style="width:'+pinPct+'%"></div></div></div>';
+  const dist=[
+    {id:'common',label:'Common',dot:'#9d8b9b'},
+    {id:'rare',label:'Rare',dot:'#00E5FF'},
+    {id:'epic',label:'Epic',dot:'#9c27b0'},
+    {id:'legendary',label:'Legendary',dot:'#ffb5a0'},
+    {id:'mythic',label:'Mythic',dot:'#f9abff'}
+  ];
+  const counts={};
+  colData.forEach(i=>{counts[i.poxy_tier]=(counts[i.poxy_tier]||0)+1;});
+  rar.innerHTML='<h2>Rarity distribution</h2><ul class="poxy-col-rarity-list">'+dist.map(d=>
+    '<li><div class="lbl"><span class="poxy-col-rarity-dot" style="background:'+d.dot+'"></span><span>'+d.label+'</span></div><span class="cnt">'+(counts[d.id]||0)+'</span></li>'
+  ).join('')+'</ul>';
+}
+
 async function loadCollection(){
   const cont=$('colContent'),cnt=$('colCount');
-  cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
+  cont.innerHTML='<div class="poxy-col-loading"><div class="col-spinner"></div></div>';
   selectedForDust=new Set();updateBulkBar();
+  renderBurnRates();
   try{
     const{data,error}=await sb.from('user_poxy').select('*').eq('user_id',currentUser.id).order('dropped_at',{ascending:false});
     if(error)throw error;
     colData=data||[];
-    renderFilterButtons();renderCollection();
+    renderFilterButtons();renderCollectionSidebar();renderCollection();
     renderDashColPreview();
-    cnt.textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
-  }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
+    if(cnt)cnt.textContent=(colData.length||0)+' item'+(colData.length===1?'':'s');
+  }catch(e){cont.innerHTML='<div class="poxy-col-empty"><p>Failed to load collection.</p></div>';}
 }
 function renderFilterButtons(){
-  const row=$('filterRow');row.innerHTML='';
+  const row=$('filterRow');if(!row)return;
+  row.innerHTML='';
   const tiers=['all',...TIERS.map(t=>t.id)];
   tiers.forEach(id=>{
     const tier=TIERS.find(t=>t.id===id);
     const btn=document.createElement('button');
-    btn.className='filter-btn'+(id===colFilter?' active':'');
-    btn.textContent=id==='all'?'All':tier?.label||id;
-    btn.style.setProperty('--fc',tier?.color||'#f9abff');
-    btn.style.setProperty('--fb',tier?tier.glow:'rgba(249,171,255,0.12)');
-    btn.onclick=()=>{colFilter=id;selectedForDust=new Set();updateBulkBar();renderCollection();document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');};
+    btn.type='button';
+    btn.role='tab';
+    btn.className='poxy-col-filter-tab'+(id===colFilter?' active':'');
+    btn.textContent=id==='all'?'All items':(tier?.label||id);
+    btn.onclick=()=>{colFilter=id;selectedForDust=new Set();updateBulkBar();renderCollection();document.querySelectorAll('.poxy-col-filter-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');};
     row.appendChild(btn);
   });
 }
@@ -3255,25 +3322,55 @@ function buildCollectionCard(item,index,lockedView){
   const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
   const isPinned=!!item.pinned_at;
   const isFeatured=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
+  const tColor=stitchTierColor(item.poxy_tier);
+  const tIcon=stitchTierIcon(item.poxy_tier);
 
   const card=document.createElement('div');
-  card.className='col-card tilt-3d'+
+  card.className='col-card poxy-col-card tilt-3d'+
     (isPinned?' pinned':'')+
     (isVip?' col-card-vip':'')+
     (vipTier?' '+vipClassFor(item):'')+
-    (lockedView?' poxy-club-teaser':'');
+    (lockedView?' poxy-club-teaser':'')+
+    (item.poxy_tier==='legendary'?' poxy-col-card-legendary':'');
   card.dataset.id=item.id;
   card.dataset.pinnedAt=item.pinned_at||'';
   if(selectedForDust.has(item.id))card.classList.add('selected-for-dust');
-  card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'55;box-shadow:0 0 18px '+tier.glow+';animation-delay:'+(index*0.04)+'s';
+  card.style.animationDelay=(index*0.04)+'s';
+  card.style.borderColor=tColor+'44';
 
-  const ico=document.createElement('div');ico.className='col-card-icon';ico.textContent=tier.icon;
-  const lbl=document.createElement('div');lbl.className='col-card-tier';lbl.style.color=tier.color;lbl.textContent=tier.label;
-  const dt=document.createElement('div');dt.className='col-card-date';dt.textContent=ds;
-  const ser=document.createElement('div');ser.className='col-card-serial';ser.textContent=item.serial_number||'–';
-  const body=document.createElement('div');body.className='col-card-body';
-  body.appendChild(ico);body.appendChild(lbl);body.appendChild(dt);body.appendChild(ser);
-  card.appendChild(body);
+  const badge=document.createElement('div');
+  badge.className='poxy-col-badge';
+  badge.style.color=tColor;
+  badge.style.background=tColor+'18';
+  badge.style.borderColor=tColor+'44';
+  badge.innerHTML='<span class="material-symbols-outlined" aria-hidden="true">'+tIcon+'</span> '+(tier.label||'').toUpperCase();
+
+  const preview=document.createElement('div');
+  preview.className='poxy-col-preview';
+  if(STITCH_TIER_ICON[item.poxy_tier]){
+    const sym=document.createElement('span');
+    sym.className='material-symbols-outlined poxy-col-preview-icon';
+    sym.style.color=tColor;
+    sym.textContent=tIcon;
+    preview.appendChild(sym);
+  }else{
+    const em=document.createElement('span');
+    em.className='poxy-col-preview-emoji';
+    em.textContent=tier.icon;
+    preview.appendChild(em);
+  }
+
+  const foot=document.createElement('div');
+  foot.className='poxy-col-foot';
+  const title=document.createElement('h3');
+  title.textContent=sanitizeText(item.serial_number||tier.label+' POXY');
+  const meta=document.createElement('p');
+  meta.textContent='ID: '+sanitizeText(item.serial_number||'–')+' · '+ds;
+  foot.appendChild(title);foot.appendChild(meta);
+
+  card.appendChild(badge);
+  card.appendChild(preview);
+  card.appendChild(foot);
 
   if(isPinned){const pb=document.createElement('div');pb.className='col-card-pin-badge';pb.textContent='📌';card.appendChild(pb);}
 
@@ -3330,13 +3427,14 @@ function renderCollection(){
   cont.innerHTML='';
 
   if(!normalItems.length&&!vipItems.length){
-    cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">✸</div>'+(colFilter==='all'?'Your collection is empty.<br>Hunt your first POXY!':'No '+colFilter+' POXY found.')+'</div>';
+    const msg=colFilter==='all'?'No assets in your vault yet. Open cases on the Dashboard to begin.':'No matching '+colFilter+' assets for this filter.';
+    cont.innerHTML='<div class="poxy-col-empty"><div class="poxy-col-empty-icon"><span class="material-symbols-outlined">inventory_2</span></div><h2>Vault empty</h2><p>'+msg+'</p></div>';
     return;
   }
 
   // Standard inventory grid (non-VIP items, or whatever the filter selected).
   if(normalItems.length){
-    const grid=document.createElement('div');grid.className='col-grid col-grid-wide';grid.id='colGrid';
+    const grid=document.createElement('div');grid.className='poxy-col-grid';grid.id='colGrid';
     normalItems.forEach((item,i)=>grid.appendChild(buildCollectionCard(item,i,false)));
     cont.appendChild(grid);
   }
@@ -3356,7 +3454,7 @@ function renderCollection(){
     section.appendChild(header);
 
     const vipGrid=document.createElement('div');
-    vipGrid.className='col-grid col-grid-wide col-club-grid';
+    vipGrid.className='poxy-col-grid col-club-grid';
     vipGrid.id='colClubGrid';
     vipItems.forEach((item,i)=>vipGrid.appendChild(buildCollectionCard(item,i,!member)));
     section.appendChild(vipGrid);
@@ -3386,6 +3484,7 @@ async function togglePinPoxy(userPoxyId,currentPinnedAt){
     const it=colData.find(i=>String(i.id)===String(userPoxyId));
     if(it)it.pinned_at=newVal;
     showToast(newVal?'Pinned to top.':'Unpinned.');
+    renderCollectionSidebar();
     renderCollection();
   }catch(e){logAndToast('pin',e);}
 }
@@ -3517,8 +3616,8 @@ async function sharePoxy(poxyId,rarity,serialNumber){
 function updateBulkBar(){
   const bar=$('bulkBar'),cnt=$('bulkCount');
   const n=selectedForDust.size;
-  bar.classList.toggle('show',n>0);
-  if(cnt)cnt.textContent=n+' selected (+'+n*10+' dust)';
+  if(bar)bar.classList.toggle('show',n>0);
+  if(cnt)cnt.textContent=n+' selected';
 }
 const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function burnPoxySecure(itemId,cardEl){
@@ -3542,7 +3641,8 @@ async function burnPoxySecure(itemId,cardEl){
       if(currentProfile){currentProfile.balance=parseFloat(data.new_balance);}
       updateBalanceBadge(currentProfile?.balance||0);
       const rem=document.querySelectorAll('.col-card').length;
-      $('colCount').textContent=rem?rem+' item'+(rem!==1?'s':''):'';
+      if($('colCount'))$('colCount').textContent=(rem||0)+' item'+(rem===1?'':'s');
+      renderCollectionSidebar();
       showToast('+'+formatPC(data.payout)+' 🔥');
       greatBurnTotal++;updateGreatBurnUI();
       refreshPremiumFrame();
@@ -3565,7 +3665,8 @@ $('btnBulkDust').addEventListener('click',async function(){
     if(currentProfile)currentProfile.balance=parseFloat(data.new_balance);
     updateBalanceBadge(currentProfile?.balance||0);
     selectedForDust=new Set();updateBulkBar();renderCollection();
-    $('colCount').textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
+    if($('colCount'))$('colCount').textContent=(colData.length||0)+' item'+(colData.length===1?'':'s');
+    renderCollectionSidebar();
     showToast('+'+formatPC(data.payout)+' for '+data.count+' items 🔥');
     greatBurnTotal+=data.count;updateGreatBurnUI();
     refreshPremiumFrame();
@@ -5110,9 +5211,9 @@ function renderCraftPool(){
   commons.forEach(it=>{
     const tier=TIERS.find(t=>t.id==='common');
     const card=document.createElement('div');
-    card.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 10px;background:#f7f7f7;border:1px solid #ececec;border-radius:9px;margin-bottom:6px;cursor:pointer';
-    if(craftSelection.has(it.id)){card.style.borderColor='#FF5722';card.style.background='#fff5f2';}
-    card.innerHTML='<div style="font-size:18px;color:'+tier.color+'">'+tier.icon+'</div><div style="flex:1"><div style="font-size:11px;color:#1a1a1a;font-weight:700">'+sanitizeText(it.serial_number||'–')+'</div><div style="font-size:9px;color:#B0B0B0">Common</div></div><span style="font-size:11px;color:'+(craftSelection.has(it.id)?'#FF5722':'#B0B0B0')+';font-weight:700">'+(craftSelection.has(it.id)?'Selected':'Tap to select')+'</span>';
+    card.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 10px;background:#1c1b1b;border:1px solid rgba(255,255,255,0.08);border-radius:9px;margin-bottom:6px;cursor:pointer';
+    if(craftSelection.has(it.id)){card.style.borderColor='#f9abff';card.style.background='rgba(249,171,255,0.08)';}
+    card.innerHTML='<div style="font-size:18px;color:'+stitchTierColor('common')+'">'+tier.icon+'</div><div style="flex:1"><div style="font-size:11px;color:#e5e2e1;font-weight:700">'+sanitizeText(it.serial_number||'–')+'</div><div style="font-size:9px;color:#9d8b9b">Common</div></div><span style="font-size:11px;color:'+(craftSelection.has(it.id)?'#f9abff':'#9d8b9b')+';font-weight:700">'+(craftSelection.has(it.id)?'Selected':'Tap to select')+'</span>';
     card.addEventListener('click',()=>{
       if(craftSelection.has(it.id))craftSelection.delete(it.id);
       else if(craftSelection.size<5)craftSelection.add(it.id);
@@ -5127,6 +5228,7 @@ function renderCraftPool(){
 
 // Init
 renderBank();
+renderBurnRates();
 updateBalanceBadge(0);
 updateGreatBurnUI();
 

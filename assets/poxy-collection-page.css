@@ -1,0 +1,420 @@
+/* POXY Collection — Stitch Tactical Archive */
+body.poxy-stitch-dash #collectionPage.page,
+body.poxy-stitch-dash .poxy-collection-page.page{
+  max-width:100%;
+  width:100%;
+  min-height:0;
+  padding:0;
+  margin:0 auto;
+}
+.poxy-collection-page{
+  display:none;
+  width:100%;
+  max-width:100%;
+  margin:0 auto;
+  padding:20px 16px 48px;
+  box-sizing:border-box;
+  overflow-x:hidden;
+  color:#e5e2e1;
+  font-family:Inter,system-ui,sans-serif;
+}
+.poxy-collection-page.visible{display:block}
+@media(min-width:768px){.poxy-collection-page{padding:24px 24px 56px}}
+@media(min-width:1280px){.poxy-collection-page{padding:28px 32px 64px}}
+
+.poxy-col-shell{width:100%;max-width:min(1280px,100%);margin:0 auto;min-width:0}
+
+.poxy-col-header{margin-bottom:28px}
+.poxy-col-title{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:clamp(1.75rem,4vw,2.5rem);
+  font-weight:700;
+  letter-spacing:-0.02em;
+  color:#e5e2e1;
+  margin:0 0 12px;
+  line-height:1.15;
+}
+.poxy-col-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#9d8b9b;
+  margin-bottom:12px;
+}
+.poxy-col-meta-count{color:#00E5FF;font-size:16px;font-weight:700}
+.poxy-col-desc{
+  font-size:16px;
+  line-height:1.55;
+  color:#9d8b9b;
+  max-width:36rem;
+  margin:0;
+}
+
+.poxy-col-layout{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:24px;
+  align-items:start;
+}
+@media(min-width:1024px){
+  .poxy-col-layout{grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:24px}
+}
+
+.poxy-col-sidebar{display:flex;flex-direction:column;gap:20px;min-width:0}
+.poxy-col-panel{
+  background:#1c1b1b;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:24px;
+  backdrop-filter:blur(12px);
+}
+.poxy-col-panel h2{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#9d8b9b;
+  margin:0 0 20px;
+}
+.poxy-col-progress-row{margin-bottom:20px}
+.poxy-col-progress-row:last-child{margin-bottom:0}
+.poxy-col-progress-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:8px;
+  font-size:14px;
+}
+.poxy-col-progress-head span:first-child{color:#e5e2e1}
+.poxy-col-progress-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  font-weight:500;
+}
+.poxy-col-progress-pct.primary{color:#f9abff}
+.poxy-col-progress-pct.cyan{color:#00E5FF}
+.poxy-col-progress-pct.epic{color:#9c27b0}
+.poxy-col-progress-bar{
+  height:4px;
+  background:#353535;
+  border-radius:999px;
+  overflow:hidden;
+}
+.poxy-col-progress-fill{height:100%;border-radius:999px;transition:width 0.6s cubic-bezier(0.16,1,0.3,1)}
+.poxy-col-progress-fill.primary{background:#f9abff}
+.poxy-col-progress-fill.cyan{background:#00E5FF}
+.poxy-col-progress-fill.epic{background:#9c27b0}
+
+.poxy-col-rarity-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.poxy-col-rarity-list li{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:14px;
+}
+.poxy-col-rarity-list .lbl{display:flex;align-items:center;gap:8px;color:#9d8b9b}
+.poxy-col-rarity-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.poxy-col-rarity-list .cnt{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:#e5e2e1;
+}
+
+.poxy-col-main{min-width:0}
+.poxy-col-controls{display:flex;flex-direction:column;gap:20px;margin-bottom:28px}
+
+.poxy-col-filter-dock{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  padding-bottom:8px;
+}
+.poxy-col-filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:24px;
+  align-items:center;
+  min-width:0;
+}
+.poxy-col-filter-tab{
+  position:relative;
+  padding:0 2px 10px;
+  border:none;
+  background:transparent;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:rgba(229,226,225,0.4);
+  cursor:pointer;
+  transition:color 0.3s cubic-bezier(0.16,1,0.3,1),transform 0.2s;
+}
+.poxy-col-filter-tab:hover{color:#e5e2e1;text-shadow:0 0 8px rgba(255,255,255,0.35)}
+.poxy-col-filter-tab.active{color:#e5e2e1}
+.poxy-col-filter-tab.active::after{
+  content:'';
+  position:absolute;
+  left:0;right:0;bottom:-9px;
+  height:2px;
+  background:#f9abff;
+  box-shadow:0 0 8px rgba(249,171,255,0.65);
+}
+
+.poxy-col-forge{
+  border:1px solid #9c27b0;
+  animation:poxy-plasma-pulse 3s infinite;
+  background:#0a0a0c;
+  color:#f9abff;
+  padding:10px 20px;
+  border-radius:999px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+  transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.poxy-col-forge:hover{transform:scale(1.05)}
+.poxy-col-forge:active{transform:scale(0.95)}
+.poxy-col-forge .material-symbols-outlined{font-size:16px}
+
+@keyframes poxy-plasma-pulse{
+  0%{border-color:#9c27b0;box-shadow:0 0 5px #9c27b0}
+  50%{border-color:#f9abff;box-shadow:0 0 15px #f9abff}
+  100%{border-color:#9c27b0;box-shadow:0 0 5px #9c27b0}
+}
+
+.poxy-col-burn{
+  background:rgba(10,10,12,0.8);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(249,171,255,0.25);
+  border-radius:12px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+@media(min-width:768px){
+  .poxy-col-burn{flex-direction:row;align-items:center;justify-content:space-between}
+}
+.poxy-col-burn-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:#e5e2e1;
+}
+.poxy-col-burn-label .material-symbols-outlined{
+  font-size:22px;
+  color:#f9abff;
+  animation:poxy-burn-pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;
+}
+@keyframes poxy-burn-pulse{0%,100%{opacity:1}50%{opacity:0.45}}
+.poxy-col-burn-rates{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.poxy-col-burn-chip{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:4px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:#9d8b9b;
+}
+
+.poxy-col-bulk{
+  display:none;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  background:rgba(156,39,176,0.08);
+  border:1px solid rgba(249,171,255,0.2);
+  border-radius:12px;
+}
+.poxy-col-bulk.show{display:flex}
+.poxy-col-bulk-count{
+  flex:1;
+  font-size:12px;
+  font-weight:600;
+  color:#f9abff;
+}
+.poxy-col-bulk-btn{
+  padding:8px 18px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(90deg,#9c27b0,#d70357);
+  color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  cursor:pointer;
+  transition:opacity 0.2s,transform 0.2s;
+}
+.poxy-col-bulk-btn:hover{opacity:0.9;transform:scale(1.02)}
+
+#colContent{min-width:0}
+.poxy-col-grid{
+  display:grid;
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  gap:20px;
+  align-items:stretch;
+}
+@media(min-width:640px){.poxy-col-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1280px){.poxy-col-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.poxy-collection-page .col-card.poxy-col-card{
+  background:#1c1b1b!important;
+  border:1px solid rgba(255,255,255,0.08)!important;
+  border-radius:14px!important;
+  padding:16px!important;
+  aspect-ratio:auto!important;
+  min-height:0;
+  box-shadow:none!important;
+  animation:fadeIn 0.4s ease both;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),box-shadow 0.35s,border-color 0.35s!important;
+}
+.poxy-collection-page .col-card.poxy-col-card:hover{
+  transform:translateY(-4px)!important;
+  box-shadow:0 0 20px rgba(249,171,255,0.2)!important;
+  border-color:rgba(249,171,255,0.45)!important;
+  z-index:5;
+}
+.poxy-collection-page .col-card.poxy-col-card.selected-for-dust{
+  outline:2px solid #f9abff;
+  outline-offset:2px;
+}
+.poxy-collection-page .col-card.poxy-col-card.poxy-col-card-legendary{
+  border-color:rgba(255,181,160,0.35)!important;
+  animation:fadeIn 0.4s ease both,poxy-legendary-glow 3s ease-in-out infinite;
+}
+@keyframes poxy-legendary-glow{
+  0%,100%{box-shadow:0 0 15px rgba(255,181,160,0.35)}
+  50%{box-shadow:0 0 30px rgba(255,181,160,0.65)}
+}
+
+.poxy-col-badge{
+  position:absolute;
+  top:0;right:0;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:6px 10px;
+  border-bottom-left-radius:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  z-index:4;
+  border-bottom:1px solid;
+  border-left:1px solid;
+  pointer-events:none;
+}
+.poxy-col-badge .material-symbols-outlined{font-size:14px}
+
+.poxy-col-preview{
+  width:100%;
+  height:12rem;
+  margin-bottom:12px;
+  border-radius:10px;
+  background:#131313;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.poxy-collection-page .col-card:hover .poxy-col-preview{transform:scale(1.05)}
+.poxy-col-preview-icon{font-size:64px!important;line-height:1;opacity:0.85}
+.poxy-col-preview-emoji{font-size:56px;line-height:1;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5))}
+
+.poxy-col-foot{padding:4px 4px 0;min-width:0}
+.poxy-col-foot h3{
+  font-size:15px;
+  font-weight:600;
+  color:#e5e2e1;
+  margin:0 0 4px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.poxy-col-foot p{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:#9d8b9b;
+  margin:0;
+  letter-spacing:0.04em;
+}
+
+.poxy-col-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:56px 24px;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  background:rgba(10,10,12,0.5);
+  min-height:240px;
+  color:#9d8b9b;
+  font-size:15px;
+  line-height:1.55;
+}
+.poxy-col-empty-icon{
+  width:72px;height:72px;
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(156,39,176,0.12);
+  border:1px solid rgba(156,39,176,0.35);
+  margin-bottom:20px;
+  box-shadow:0 0 24px rgba(156,39,176,0.2);
+}
+.poxy-col-empty-icon .material-symbols-outlined{font-size:36px;color:#9c27b0}
+.poxy-col-empty h2{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:20px;color:#e5e2e1;margin:0 0 8px}
+
+.poxy-collection-page .col-club-section{margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08)}
+.poxy-collection-page .col-club-header{margin-bottom:16px}
+.poxy-collection-page .col-club-title{color:#f9abff!important;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em}
+.poxy-collection-page .col-club-count{color:#00E5FF}
+.poxy-collection-page .col-club-cta{
+  border:1px solid #9c27b0;
+  color:#f9abff;
+  background:#0a0a0c;
+}
+.poxy-collection-page .col-card-pin-badge{
+  background:rgba(249,171,255,0.15)!important;
+  border:1px solid rgba(249,171,255,0.4)!important;
+  color:#f9abff!important;
+  box-shadow:0 0 12px rgba(249,171,255,0.25)!important;
+}
+.poxy-collection-page .col-card-vip-serial{
+  color:#f9abff!important;
+  border-color:rgba(249,171,255,0.45)!important;
+  box-shadow:0 0 12px rgba(156,39,176,0.3)!important;
+}
+.poxy-collection-page .col-card-menu-item.active{background:rgba(249,171,255,0.12);color:#f9abff}
+
+.col-loading,.poxy-col-loading{text-align:center;padding:48px 16px;color:#9d8b9b}
+.poxy-col-loading .col-spinner{border-top-color:#f9abff;margin:0 auto 12px}
