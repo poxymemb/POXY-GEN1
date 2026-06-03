@@ -1,37 +1,29 @@
-/* POXY Store — Tactical Terminal */
-body.poxy-stitch-dash #storePage.page,
-body.poxy-stitch-dash .poxy-store-page.page{
-  max-width:100%;
-  width:100%;
-  min-height:0;
-  padding:0;
-  margin:0 auto;
-}
-.poxy-store-page{
-  display:none;
+/* POXY Store — Tactical Terminal (embedded on Dashboard) */
+.poxy-store-embed{
   width:100%;
   max-width:100%;
-  margin:0 auto;
-  padding:20px 16px 56px;
+  margin:48px 0 0;
+  padding:0 0 32px;
   box-sizing:border-box;
-  overflow-x:hidden;
-  color:#e5e2e1;
-  font-family:Inter,system-ui,sans-serif;
   position:relative;
+  scroll-margin-top:calc(var(--st-nav-h,96px) + 20px);
+  overflow:hidden;
+  color:#e5e2e1;
 }
-.poxy-store-page.visible{display:block}
-.poxy-store-page::before{
+.poxy-store-embed::before{
   content:'';
-  position:fixed;
+  position:absolute;
   inset:0;
   pointer-events:none;
-  z-index:9998;
+  z-index:0;
   opacity:0.03;
   background-image:repeating-linear-gradient(0deg,transparent,transparent 1px,#fff 1px,#fff 2px);
   mix-blend-mode:overlay;
+  border-radius:24px;
 }
-@media(min-width:768px){.poxy-store-page{padding:24px 24px 64px}}
-@media(min-width:1280px){.poxy-store-page{padding:28px 32px 72px}}
+.poxy-store-embed .poxy-store-layout{position:relative;z-index:1}
+@media(min-width:768px){.poxy-store-embed{padding-bottom:48px}}
+@media(min-width:1280px){.poxy-store-embed{padding-bottom:56px}}
 
 .poxy-store-layout{
   display:flex;

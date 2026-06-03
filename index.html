@@ -1077,7 +1077,7 @@ body.dark-club .club-sub{color:#888}
     <button type="button" class="sidebar-tab-btn active" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
     <button type="button" class="sidebar-tab-btn" id="stab-gen1" onclick="closeSidebar();showStitchTab('tierlist')">Rarity</button>
     <button type="button" class="sidebar-tab-btn" id="stab-leaderboard" onclick="closeSidebar();showStitchTab('ranks')">Player Ranks</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-customize" onclick="closeSidebar();showPage('store')">Store</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-customize" onclick="closeSidebar();scrollToStore()">Store</button>
     </div>
   </div>
   <div class="sidebar-content">
@@ -1162,7 +1162,7 @@ body.dark-club .club-sub{color:#888}
           <div class="st-nav-primary" aria-label="Main">
             <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')">Explore</button>
             <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')">Rarity</button>
-            <button type="button" class="st-nav-link" id="psdNavStore" onclick="showPage('store')">Store</button>
+            <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()">Store</button>
           </div>
           <div class="st-nav-secondary" aria-label="More">
             <div class="st-nav-pills">
@@ -1306,6 +1306,105 @@ body.dark-club .club-sub{color:#888}
           <button type="button" class="st-view-all" onclick="showStitchTab('explore');switchExploreSection('legal')">Full legal docs in Explore →</button>
         </section>
       </div>
+      <section class="poxy-store-embed" id="dashStoreSection" aria-label="Tactical Terminal">
+        <div class="poxy-store-layout" id="storePage">
+          <aside class="poxy-store-sidenav" aria-label="Store categories">
+            <div class="poxy-store-sidenav-brand">
+              <div class="poxy-store-sidenav-icon"><span class="material-symbols-outlined" aria-hidden="true">storefront</span></div>
+              <h2>Tactical Terminal</h2>
+              <p>Premium assets</p>
+            </div>
+            <button type="button" class="poxy-store-nav-btn active" id="storeNavThemes" data-store-cat="themes" onclick="switchStoreCategory('themes')">
+              <span class="material-symbols-outlined" aria-hidden="true">palette</span> Themes
+            </button>
+            <button type="button" class="poxy-store-nav-btn" id="storeNavGradients" data-store-cat="gradients" onclick="switchStoreCategory('gradients')">
+              <span class="material-symbols-outlined" aria-hidden="true">layers</span> Gradients
+            </button>
+            <button type="button" class="poxy-store-nav-btn" id="storeNavBoosters" data-store-cat="boosters" onclick="switchStoreCategory('boosters')">
+              <span class="material-symbols-outlined" aria-hidden="true">bolt</span> Boosters
+            </button>
+            <button type="button" class="poxy-store-nav-btn" id="storeNavBundles" data-store-cat="bundles" onclick="switchStoreCategory('bundles')">
+              <span class="material-symbols-outlined" aria-hidden="true">package_2</span> Bundles
+            </button>
+          </aside>
+          <div class="poxy-store-main">
+            <section class="poxy-store-bento">
+              <div class="poxy-store-obsidian poxy-store-preview">
+                <header class="poxy-store-preview-head">
+                  <div>
+                    <h3 class="poxy-store-metallic">Asset Previewer</h3>
+                    <p class="poxy-store-preview-sub">Live simulation engine</p>
+                  </div>
+                  <span class="material-symbols-outlined" style="font-size:40px;color:rgba(249,171,255,0.45)" aria-hidden="true">view_in_ar</span>
+                </header>
+                <div class="poxy-store-preview-stage" id="storePreviewStage">
+                  <div class="poxy-store-preview-card" id="storePreviewCard">
+                    <div class="poxy-store-preview-user">
+                      <div class="poxy-store-preview-av" id="storePreviewAvatar">👾</div>
+                      <div>
+                        <div class="poxy-store-preview-handle" id="storePreviewHandle">@player</div>
+                        <div class="poxy-store-preview-name" id="storePreviewName">Operative</div>
+                      </div>
+                    </div>
+                    <div class="poxy-store-preview-bar"><div class="poxy-store-preview-bar-fill"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="poxy-store-obsidian poxy-store-terminal">
+                <div>
+                  <div class="poxy-store-terminal-label">
+                    <span>Exchange terminal</span>
+                    <span class="poxy-store-terminal-pulse" aria-hidden="true"></span>
+                  </div>
+                  <div class="poxy-store-terminal-balance" id="storeBalanceDisplay">0 <span>PC</span></div>
+                  <div class="poxy-store-terminal-rows">
+                    <div class="poxy-store-terminal-row">
+                      <span class="lbl">Dust balance</span>
+                      <span class="val" id="storeDustDisplay">0</span>
+                    </div>
+                    <div class="poxy-store-terminal-row">
+                      <span class="lbl">Collection</span>
+                      <span class="val" id="storeColDisplay">0 items</span>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="poxy-store-terminal-fund" onclick="scrollToTreasury()">Add funds — treasury</button>
+              </div>
+            </section>
+            <section class="poxy-store-uplinks" aria-label="Active uplinks">
+              <div class="poxy-store-uplinks-head">
+                <h3>Active uplinks</h3>
+                <div class="poxy-store-uplinks-rule"></div>
+              </div>
+              <div class="poxy-store-uplinks-tray">
+                <div class="poxy-store-uplink cyan">
+                  <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1" aria-hidden="true">bolt</span>
+                  Member perks online
+                </div>
+                <div class="poxy-store-uplink primary">
+                  <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1" aria-hidden="true">local_offer</span>
+                  Zero market fees
+                </div>
+                <button type="button" class="poxy-store-uplink ghost" onclick="showToast('Boosters deploy in a future update.')">
+                  <span class="material-symbols-outlined" style="font-size:16px" aria-hidden="true">add</span>
+                  Deploy booster
+                </button>
+              </div>
+            </section>
+            <section>
+              <header class="poxy-store-grid-header">
+                <div>
+                  <h2 class="poxy-store-metallic" id="storeGridTitle">Premium caches</h2>
+                  <p id="storeGridSub">Acquire exclusive visual modifications.</p>
+                </div>
+              </header>
+              <div class="poxy-store-grid" id="storeGrid">
+                <div class="poxy-store-signin">Sign in to access the store.</div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
     </main>
     </section>
 
@@ -1621,107 +1720,6 @@ body.dark-club .club-sub{color:#888}
   <div class="page-title">ADD FUNDS</div>
   <p class="psd-subpages-hint">Treasury &amp; card form are on the Dashboard.</p>
   <button type="button" class="btn-primary" onclick="showPage('hunt');scrollToTreasury()">Go to Dashboard Treasury</button>
-</div>
-
-<!-- POXY STORE (Stitch Tactical Terminal) -->
-<div class="page poxy-store-page" id="storePage">
-  <div class="poxy-store-layout">
-    <aside class="poxy-store-sidenav" aria-label="Store categories">
-      <div class="poxy-store-sidenav-brand">
-        <div class="poxy-store-sidenav-icon"><span class="material-symbols-outlined" aria-hidden="true">storefront</span></div>
-        <h2>Tactical Terminal</h2>
-        <p>Premium assets</p>
-      </div>
-      <button type="button" class="poxy-store-nav-btn active" id="storeNavThemes" data-store-cat="themes" onclick="switchStoreCategory('themes')">
-        <span class="material-symbols-outlined" aria-hidden="true">palette</span> Themes
-      </button>
-      <button type="button" class="poxy-store-nav-btn" id="storeNavGradients" data-store-cat="gradients" onclick="switchStoreCategory('gradients')">
-        <span class="material-symbols-outlined" aria-hidden="true">layers</span> Gradients
-      </button>
-      <button type="button" class="poxy-store-nav-btn" id="storeNavBoosters" data-store-cat="boosters" onclick="switchStoreCategory('boosters')">
-        <span class="material-symbols-outlined" aria-hidden="true">bolt</span> Boosters
-      </button>
-      <button type="button" class="poxy-store-nav-btn" id="storeNavBundles" data-store-cat="bundles" onclick="switchStoreCategory('bundles')">
-        <span class="material-symbols-outlined" aria-hidden="true">package_2</span> Bundles
-      </button>
-    </aside>
-    <div class="poxy-store-main">
-      <section class="poxy-store-bento">
-        <div class="poxy-store-obsidian poxy-store-preview">
-          <header class="poxy-store-preview-head">
-            <div>
-              <h3 class="poxy-store-metallic">Asset Previewer</h3>
-              <p class="poxy-store-preview-sub">Live simulation engine</p>
-            </div>
-            <span class="material-symbols-outlined" style="font-size:40px;color:rgba(249,171,255,0.45)" aria-hidden="true">view_in_ar</span>
-          </header>
-          <div class="poxy-store-preview-stage" id="storePreviewStage">
-            <div class="poxy-store-preview-card" id="storePreviewCard">
-              <div class="poxy-store-preview-user">
-                <div class="poxy-store-preview-av" id="storePreviewAvatar">👾</div>
-                <div>
-                  <div class="poxy-store-preview-handle" id="storePreviewHandle">@player</div>
-                  <div class="poxy-store-preview-name" id="storePreviewName">Operative</div>
-                </div>
-              </div>
-              <div class="poxy-store-preview-bar"><div class="poxy-store-preview-bar-fill"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="poxy-store-obsidian poxy-store-terminal">
-          <div>
-            <div class="poxy-store-terminal-label">
-              <span>Exchange terminal</span>
-              <span class="poxy-store-terminal-pulse" aria-hidden="true"></span>
-            </div>
-            <div class="poxy-store-terminal-balance" id="storeBalanceDisplay">0 <span>PC</span></div>
-            <div class="poxy-store-terminal-rows">
-              <div class="poxy-store-terminal-row">
-                <span class="lbl">Dust balance</span>
-                <span class="val" id="storeDustDisplay">0</span>
-              </div>
-              <div class="poxy-store-terminal-row">
-                <span class="lbl">Collection</span>
-                <span class="val" id="storeColDisplay">0 items</span>
-              </div>
-            </div>
-          </div>
-          <button type="button" class="poxy-store-terminal-fund" onclick="showStitchTab('dashboard');scrollToTreasury()">Add funds — treasury</button>
-        </div>
-      </section>
-      <section class="poxy-store-uplinks" aria-label="Active uplinks">
-        <div class="poxy-store-uplinks-head">
-          <h3>Active uplinks</h3>
-          <div class="poxy-store-uplinks-rule"></div>
-        </div>
-        <div class="poxy-store-uplinks-tray">
-          <div class="poxy-store-uplink cyan">
-            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1" aria-hidden="true">bolt</span>
-            Member perks online
-          </div>
-          <div class="poxy-store-uplink primary">
-            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1" aria-hidden="true">local_offer</span>
-            Zero market fees
-          </div>
-          <button type="button" class="poxy-store-uplink ghost" onclick="showToast('Boosters deploy in a future update.')">
-            <span class="material-symbols-outlined" style="font-size:16px" aria-hidden="true">add</span>
-            Deploy booster
-          </button>
-        </div>
-      </section>
-      <section>
-        <header class="poxy-store-grid-header">
-          <div>
-            <h2 class="poxy-store-metallic" id="storeGridTitle">Premium caches</h2>
-            <p id="storeGridSub">Acquire exclusive visual modifications.</p>
-          </div>
-        </header>
-        <div class="poxy-store-grid" id="storeGrid">
-          <div class="poxy-store-signin">Sign in to access the store.</div>
-        </div>
-      </section>
-    </div>
-  </div>
 </div>
 
 <!-- POXY CLUB / Founders Circle (Stitch) -->
@@ -2776,6 +2774,18 @@ window.scrollToTreasury=function(){
   const el=$('psdTreasury');
   if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'start'}));
 };
+window.scrollToStore=function(){
+  showStitchTab('dashboard');
+  document.querySelectorAll('.st-nav-link').forEach(b=>b.classList.remove('active'));
+  const storeNav=$('psdNavStore');if(storeNav)storeNav.classList.add('active');
+  const run=()=>{
+    if(!colData.length)loadCollection().then(()=>renderStorePage()).catch(()=>renderStorePage());
+    else renderStorePage();
+    const el=$('dashStoreSection');
+    if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'start'}));
+  };
+  run();
+};
 let activeStitchTab='dashboard';
 let globalTierCounts={};
 let dmTargetUserId=null;
@@ -2854,7 +2864,7 @@ window.showStitchTab=function(tab){
   document.body.classList.add('poxy-stitch-dash');
   $('huntPage').style.display='block';
   $('bottomNav').style.display='none';
-  ['profile','collection','friends','store','market','bank'].forEach(p=>{
+  ['profile','collection','friends','market','bank'].forEach(p=>{
     const el=$(p+'Page');
     if(el&&el.parentElement&&el.id!=='marketPage')el.classList.remove('visible');
   });
@@ -2875,6 +2885,7 @@ window.showStitchTab=function(tab){
     if(!colData.length)loadCollection().catch(console.error);
     else renderDashColPreview();
     renderBank();
+    if(currentUser)renderStorePage();
   }
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
@@ -3118,19 +3129,21 @@ function refreshStitchDashboardChrome(){
   if(price)price.textContent=formatPC(STANDARD_CASE_PRICE).replace(' PC','')+' PC';
   updatePsdMemberBadge();
   renderDashColPreview();
+  if(currentUser&&$('storeGrid'))renderStorePage();
 }
 
 // ── NAVIGATION ──
 window.showPage=function(page){
   if(!currentUser){showToast('Sign in first.');return;}
   if(page==='bank'){showStitchTab('dashboard');scrollToTreasury();return;}
+  if(page==='store'){scrollToStore();return;}
   const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks'};
   if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
   showPoxyAppShell();
   document.body.classList.add('poxy-stitch-dash');
   $('huntPage').style.display='none';
   $('bottomNav').style.display='none';
-  ['profile','collection','friends','store'].forEach(p=>{
+  ['profile','collection','friends'].forEach(p=>{
     const el=$(p+'Page');
     if(el)el.classList.toggle('visible',page===p);
   });
@@ -3138,11 +3151,6 @@ window.showPage=function(page){
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
   if(page==='friends'){loadFriends();loadPendingRequests();}
   if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();}
-  if(page==='store'){
-    const run=()=>renderStorePage();
-    if(!colData.length)loadCollection().then(run).catch(run);
-    else run();
-  }
   document.body.classList.remove('dark-club');
   window.scrollTo(0,0);
 };
@@ -5212,7 +5220,7 @@ function renderStorePage(){
 }
 function renderCustomizeTab(){
   const cont=$('customizeStoreContent');
-  if(cont)cont.innerHTML='<div class="news-empty" style="padding:12px 0">Open the Tactical Terminal for the full store experience.</div><button type="button" class="btn-primary" style="margin-top:12px;width:100%" onclick="closeSidebar();showPage(\'store\')">Open POXY Store</button>';
+  if(cont)cont.innerHTML='<div class="news-empty" style="padding:12px 0">Tactical Terminal is on the Dashboard — scroll down after opening Dash.</div><button type="button" class="btn-primary" style="margin-top:12px;width:100%" onclick="closeSidebar();scrollToStore()">Go to Store</button>';
 }
 window.purchaseCustomization=async function(itemId){
   const item=CUSTOMIZATION_ITEMS.find(c=>c.id===itemId);
@@ -5232,7 +5240,7 @@ window.purchaseCustomization=async function(itemId){
     if(item.type==='theme')applyTheme(item.themeVal);
     else if(item.type==='gradient')applyNameGradientUI(item.gradientVal);
     showToast(item.name+' activated!');
-    if($('storePage')?.classList.contains('visible'))renderStorePage();
+    if($('storeGrid'))renderStorePage();
     else renderCustomizeTab();
   }catch(e){showToast('Purchase failed: '+(e.message||'error'));}
 };
