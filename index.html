@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css">
+<link rel="stylesheet" href="assets/poxy-ranks-page.css">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-club-gold.css">
@@ -1432,18 +1433,25 @@ body.dark-club .club-sub{color:#888}
     </section>
 
     <section class="st-spa-panel ranks-panel" id="stPanelRanks" data-st-tab="ranks" hidden>
-      <div class="st-main">
-        <div class="ranks-panel-hdr">
-          <div>
-            <h2>Player Ranks</h2>
-            <p>Tap any player to open their expanded profile, message, or trade.</p>
-          </div>
-        </div>
-        <div class="lb-toggle">
+      <div class="st-main ranks-page">
+        <header class="ranks-page-hdr">
+          <h2>Player Ranks</h2>
+          <p>Tap any player to open their expanded profile, message, or trade.</p>
+        </header>
+        <div class="lb-toggle ranks-page-toggle" role="tablist" aria-label="Leaderboard mode">
           <button type="button" class="lb-toggle-btn active" id="spaLbBtnBalance" onclick="switchLeaderboard('balance')">PC Balance</button>
           <button type="button" class="lb-toggle-btn" id="spaLbBtnCollection" onclick="switchLeaderboard('collection')">Rare+ Count</button>
         </div>
-        <div id="spaLeaderboardList"><div class="lb-loading"><div class="col-spinner"></div></div></div>
+        <div class="ranks-podium" id="ranksPodium" aria-label="Top 3 players"></div>
+        <div class="ranks-body-grid">
+          <div class="ranks-list-col">
+            <h3 class="ranks-list-heading">Global standings</h3>
+            <div id="spaLeaderboardList" class="ranks-list-scroll"><div class="lb-loading"><div class="col-spinner"></div></div></div>
+          </div>
+          <aside class="ranks-profile-widget" id="ranksMyProfileWidget" aria-label="My rank summary">
+            <div class="lb-loading"><div class="col-spinner"></div></div>
+          </aside>
+        </div>
       </div>
     </section>
 
@@ -6902,7 +6910,12 @@ window.switchLeaderboard=function(mode){
 };
 async function loadLeaderboardData(){
   const listEl=getLeaderboardListEl();if(!listEl)return;
-  listEl.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
+  const loading='<div class="lb-loading"><div class="col-spinner"></div></div>';
+  listEl.innerHTML=loading;
+  if(listEl.id==='spaLeaderboardList'){
+    const podium=$('ranksPodium');if(podium)podium.innerHTML='';
+    const widget=$('ranksMyProfileWidget');if(widget)widget.innerHTML=loading;
+  }
   try{
     if(leaderboardMode==='balance'){
       const{data,error}=await sb.from('profiles').select('id,username,avatar_url,balance').order('balance',{ascending:false}).limit(25);
@@ -6923,8 +6936,112 @@ async function loadLeaderboardData(){
     }
   }catch(e){listEl.innerHTML='<div class="lb-empty">Error loading leaderboard.</div>';}
 }
+function attachLbRowClick(row,uid){
+  const openProfile=()=>{if(uid)openInspectModal(uid);};
+  row.addEventListener('click',openProfile);
+  row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProfile();}});
+}
+function fillLbAvatar(el,item){
+  const av=item.avatar_url||item.avatar||'';
+  if(av&&av.startsWith('http'))el.innerHTML='<img src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';
+  else el.textContent=av||'👾';
+}
+function formatLbValue(item,mode){
+  return mode==='balance'?formatPC(item.balance||0):(item.count||0)+' rare+';
+}
+function buildRanksPodiumCard(item,rank,mode,slotClass){
+  const card=document.createElement('button');
+  card.type='button';
+  card.className='ranks-podium-card gpu-accel '+slotClass;
+  const uid=item.id;
+  attachLbRowClick(card,uid);
+  const badge=document.createElement('div');badge.className='ranks-podium-rank';badge.textContent='#'+rank;
+  const av=document.createElement('div');av.className='ranks-podium-avatar';fillLbAvatar(av,item);
+  const name=document.createElement('div');name.className='ranks-podium-name';name.textContent=sanitizeText(item.username||'Anonymous');
+  const val=document.createElement('div');val.className='ranks-podium-value';val.textContent=formatLbValue(item,mode);
+  card.append(badge,av,name,val);
+  return card;
+}
+function buildRanksListRow(item,rank,mode){
+  const row=document.createElement('div');
+  row.className='ranks-list-row lb-row--clickable gpu-accel';
+  row.setAttribute('role','button');
+  row.setAttribute('tabindex','0');
+  const uid=item.id;
+  attachLbRowClick(row,uid);
+  const rankEl=document.createElement('div');
+  rankEl.className='ranks-list-rank';
+  rankEl.textContent='#'+rank;
+  const avEl=document.createElement('div');avEl.className='ranks-list-avatar';fillLbAvatar(avEl,item);
+  const meta=document.createElement('div');meta.className='ranks-list-meta';
+  const nameEl=document.createElement('div');nameEl.className='ranks-list-name';nameEl.textContent=sanitizeText(item.username||'Anonymous');
+  const valEl=document.createElement('div');valEl.className='ranks-list-value';valEl.textContent=formatLbValue(item,mode);
+  meta.append(nameEl,valEl);
+  row.append(rankEl,avEl,meta);
+  return row;
+}
+function renderRanksMyProfileWidget(data,mode){
+  const el=$('ranksMyProfileWidget');if(!el)return;
+  if(!currentUser||!currentProfile){
+    el.innerHTML='<div class="ranks-widget-card"><h3 class="ranks-widget-title">My Profile Rank</h3><p class="ranks-widget-muted">Sign in to track your standing.</p></div>';
+    return;
+  }
+  const myId=currentUser.id;
+  const idx=data.findIndex(d=>d.id===myId);
+  const rank=idx>=0?idx+1:null;
+  const total=Math.max(data.length,1);
+  const topPct=rank?Math.max(1,Math.round(((total-rank+1)/total)*100)):null;
+  let progressPct=0,progressLabel='Climb into the top 25 to appear here.';
+  if(rank&&rank>1){
+    const mine=mode==='balance'?(parseFloat(currentProfile.balance)||0):(data[idx].count||0);
+    const above=mode==='balance'?(parseFloat(data[idx-1].balance)||0):(data[idx-1].count||0);
+    if(above>0){
+      progressPct=Math.min(99,Math.round((mine/above)*100));
+      progressLabel=progressPct+'% of the player above you';
+    }
+  }else if(rank===1){progressPct=100;progressLabel='You hold the #1 spot';}
+  const rankTxt=rank?'#'+rank:'—';
+  const pctTxt=topPct?'Top '+topPct+'% of this board':'Not ranked on this board';
+  el.innerHTML='<div class="ranks-widget-card">'
+    +'<h3 class="ranks-widget-title">My Profile Rank</h3>'
+    +'<div class="ranks-widget-stat"><span class="ranks-widget-label">Your rank</span><span class="ranks-widget-value">'+rankTxt+'</span></div>'
+    +'<div class="ranks-widget-stat"><span class="ranks-widget-label">Percentile</span><span class="ranks-widget-value">'+sanitizeText(pctTxt)+'</span></div>'
+    +'<div class="ranks-widget-progress-wrap"><div class="ranks-widget-progress-label">'+sanitizeText(progressLabel)+'</div>'
+    +'<div class="ranks-widget-progress" role="progressbar" aria-valuenow="'+progressPct+'" aria-valuemin="0" aria-valuemax="100">'
+    +'<div class="ranks-widget-progress-fill" style="width:'+progressPct+'%"></div></div></div>'
+    +'<button type="button" class="ranks-widget-btn" onclick="showPage(\'profile\')">View my profile</button></div>';
+}
+function renderRanksPageLayout(data,mode){
+  const podium=$('ranksPodium');
+  const listEl=$('spaLeaderboardList');
+  if(!listEl)return;
+  leaderboardRankByUser={};
+  data.forEach((item,i)=>{if(item.id)leaderboardRankByUser[item.id]=i+1;});
+  if(!data.length){
+    if(podium)podium.innerHTML='';
+    listEl.innerHTML='<div class="lb-empty">No data yet.</div>';
+    renderRanksMyProfileWidget(data,mode);
+    return;
+  }
+  const top3=data.slice(0,3);
+  const rest=data.slice(3);
+  if(podium){
+    podium.innerHTML='';
+    const slots=[
+      {item:top3[1],rank:2,cls:'ranks-podium-card--silver'},
+      {item:top3[0],rank:1,cls:'ranks-podium-card--gold ranks-podium-card--hero'},
+      {item:top3[2],rank:3,cls:'ranks-podium-card--bronze'}
+    ];
+    slots.forEach(s=>{if(s.item)podium.appendChild(buildRanksPodiumCard(s.item,s.rank,mode,s.cls));});
+  }
+  listEl.innerHTML='';
+  if(!rest.length)listEl.innerHTML='<div class="ranks-list-empty">Everyone else is still climbing the ladder.</div>';
+  else rest.forEach((item,i)=>listEl.appendChild(buildRanksListRow(item,i+4,mode)));
+  renderRanksMyProfileWidget(data,mode);
+}
 function renderLeaderboardList(data,mode){
   const listEl=getLeaderboardListEl();if(!listEl)return;
+  if(listEl.id==='spaLeaderboardList'){renderRanksPageLayout(data,mode);return;}
   if(!data.length){listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;}
   listEl.innerHTML='';
   leaderboardRankByUser={};
@@ -6936,16 +7053,11 @@ function renderLeaderboardList(data,mode){
     row.setAttribute('role','button');
     row.setAttribute('tabindex','0');
     const uid=item.id;
-    const openProfile=()=>{if(uid)openInspectModal(uid);};
-    row.addEventListener('click',openProfile);
-    row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProfile();}});
+    attachLbRowClick(row,uid);
     const rankEl=document.createElement('div');rankEl.className='lb-rank'+(rank===1?' gold':rank===2?' silver':rank===3?' bronze':'');rankEl.textContent='#'+rank;
-    const avEl=document.createElement('div');avEl.className='lb-avatar';
-    const av=item.avatar_url||item.avatar||'';
-    if(av&&av.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';else avEl.textContent=av||'👾';
+    const avEl=document.createElement('div');avEl.className='lb-avatar';fillLbAvatar(avEl,item);
     const nameEl=document.createElement('div');nameEl.className='lb-username';nameEl.textContent=sanitizeText(item.username||'Anonymous');
-    const valEl=document.createElement('div');valEl.className='lb-value';
-    valEl.textContent=mode==='balance'?formatPC(item.balance||0):(item.count||0)+' items';
+    const valEl=document.createElement('div');valEl.className='lb-value';valEl.textContent=formatLbValue(item,mode);
     row.appendChild(rankEl);row.appendChild(avEl);row.appendChild(nameEl);row.appendChild(valEl);
     listEl.appendChild(row);
   });
