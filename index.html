@@ -1344,7 +1344,10 @@ body.dark-club .club-sub{color:#888}
         <div class="st-win-reveal-name" id="stWinName"></div>
         <div class="st-win-reveal-rarity" id="stWinRarity"></div>
         <div class="st-win-reveal-serial" id="stWinSerial"></div>
-        <button type="button" class="st-win-reveal-btn" id="stWinContinue">Continue</button>
+        <div class="st-win-reveal-actions">
+          <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd">Add to Collection</button>
+          <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard">Discard</button>
+        </div>
       </div>
     </div>
     <footer class="st-footer">
@@ -1906,6 +1909,7 @@ function usernameTakenMessage(err){
 let audioCtx=null;
 const getAC=()=>{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;};
 function playTick(){try{const ac=getAC(),o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='square';o.frequency.setValueAtTime(200,ac.currentTime);o.frequency.exponentialRampToValueAtTime(70,ac.currentTime+0.04);g.gain.setValueAtTime(0.15,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.05);o.start();o.stop(ac.currentTime+0.06);}catch(e){}}
+function playSpinTick(){try{const ac=getAC(),t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),lp=ac.createBiquadFilter();o.type='sine';o.frequency.setValueAtTime(88+Math.random()*18,t);o.frequency.exponentialRampToValueAtTime(52,t+0.1);lp.type='lowpass';lp.frequency.value=240;lp.Q.value=0.5;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.085,t+0.018);g.gain.exponentialRampToValueAtTime(0.0001,t+0.16);o.connect(lp);lp.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+0.17);}catch(e){}}
 function playMythicChord(){try{const ac=getAC(),freqs=[261.63,329.63,392,523.25,659.25],mg=ac.createGain();mg.gain.setValueAtTime(0,ac.currentTime);mg.gain.linearRampToValueAtTime(0.28,ac.currentTime+0.3);mg.gain.linearRampToValueAtTime(0.15,ac.currentTime+1.5);mg.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+3.5);mg.connect(ac.destination);freqs.forEach((f,i)=>{const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;o2.type='triangle';o2.frequency.value=f*2.005;g.gain.value=1/freqs.length;o.connect(g);o2.connect(g);g.connect(mg);o.start(ac.currentTime+i*0.07);o2.start(ac.currentTime+i*0.07);o.stop(ac.currentTime+4);o2.stop(ac.currentTime+4);});}catch(e){}}
 function playDrop(id){try{const ac=getAC(),freq={common:200,uncommon:280,rare:350,epic:440,legendary:550,mythic:680}[id]||300,o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=id==='epic'||id==='legendary'?'triangle':'sine';o.frequency.setValueAtTime(freq*0.5,ac.currentTime);o.frequency.exponentialRampToValueAtTime(freq,ac.currentTime+0.15);g.gain.setValueAtTime(0.2,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.65);o.start();o.stop(ac.currentTime+0.7);if(id==='mythic')setTimeout(playMythicChord,200);}catch(e){}}
 
@@ -2384,7 +2388,7 @@ $('lX').addEventListener('mouseleave',()=>$('logoRow').classList.remove('x-activ
 $('lX').addEventListener('touchstart',e=>{e.preventDefault();$('logoRow').classList.toggle('x-active');});
 
 // ── GACHA ──
-const SPIN_MS=7500;
+const SPIN_MS=4000;
 const ROULETTE_SLOT_W=102;
 const ROULETTE_SLOT_HALF=45;
 const ROULETTE_WIN_INDEX=50;
@@ -2411,7 +2415,7 @@ function buildRouletteTrack(winTier){
     const win=i===rouletteWinIndex;
     return '<div class="st-slot'+(win?' st-slot--winner':'')+'" data-tier="'+t.id+'" style="color:'+t.color+';--prize-glow:'+tierGlowVar(t)+'">'+t.icon+'</div>';
   }).join('');
-  track.classList.remove('is-spinning','is-settling','is-landed');
+  track.classList.remove('is-spinning','is-landed');
   track.style.transition='none';
   track.style.transform='translateX(0)';
   void track.offsetWidth;
@@ -2426,7 +2430,7 @@ function onRouletteLand(tier){
   const track=$('stRouletteTrack');
   clearSpinTimers();
   if(track){
-    track.classList.remove('is-spinning','is-settling');
+    track.classList.remove('is-spinning');
     track.classList.add('is-landed');
     const winSlot=track.querySelector('.st-slot--winner');
     if(winSlot)winSlot.classList.add('st-slot--landed');
@@ -2451,13 +2455,12 @@ function runRouletteCarousel(winTier){
     onRouletteLand(winTier);
   };
   track.addEventListener('transitionend',track._spinEndHandler);
-  spinTickTimer=setInterval(()=>playTick(),110);
+  spinTickTimer=setInterval(()=>playSpinTick(),95);
   spinSettleTimer=setTimeout(()=>{
-    track.classList.add('is-settling');
     if(spinTickTimer){clearInterval(spinTickTimer);spinTickTimer=null;}
-    spinSlowTickTimer=setInterval(()=>playTick(),260);
-    setTimeout(()=>{if(spinSlowTickTimer){clearInterval(spinSlowTickTimer);spinSlowTickTimer=null;}},2800);
-  },5000);
+    spinSlowTickTimer=setInterval(()=>playSpinTick(),240);
+    setTimeout(()=>{if(spinSlowTickTimer){clearInterval(spinSlowTickTimer);spinSlowTickTimer=null;}},1500);
+  },2500);
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       track.style.transition='';
@@ -2473,13 +2476,19 @@ function resetRouletteCarousel(){
   clearSpinTimers();
   detachRouletteEnd(track);
   if(track){
-    track.classList.remove('is-spinning','is-settling','is-landed');
+    track.classList.remove('is-spinning','is-landed');
     track.style.transition='none';
     track.style.transform='translateX(0)';
     track.innerHTML='';
   }
   if(idle)idle.classList.remove('is-hidden');
   if(mount)mount.classList.remove('is-rolling');
+}
+function closeWinRevealModalOnly(){
+  const modal=$('stWinReveal');
+  if(modal){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');}
+  const addBtn=$('stWinAdd');
+  if(addBtn){addBtn.disabled=false;addBtn.textContent='Add to Collection';}
 }
 function openWinRevealModal(tier){
   const t=tier||pendingSpinTier||TIERS[0];
@@ -2495,14 +2504,37 @@ function openWinRevealModal(tier){
   $('stWinRarity').style.color=t.color;
   $('stWinRarity').className='st-win-reveal-rarity st-rarity-'+t.id;
   $('stWinSerial').textContent=currentSerial;
+  const addBtn=$('stWinAdd');
+  if(addBtn){addBtn.disabled=false;addBtn.textContent='Add to Collection';}
   if(modal){modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');}
+  if(t.id==='mythic'&&mythicCount<10){mythicCount++;$('fomoText').textContent='Mythic POXY claimed this month: '+mythicCount+'/10';}
   triggerRevealFX(t.id);
   setBodyBg(t.id);
 }
-function closeWinRevealModal(){
-  const modal=$('stWinReveal');
-  if(modal){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');}
-  finishSpin();
+async function addCurrentDropToCollection(sourceBtn){
+  if(!currentTier||!currentUser||!currentSerial)return;
+  const orig=sourceBtn?sourceBtn.textContent:'';
+  if(sourceBtn){sourceBtn.disabled=true;sourceBtn.textContent='Saving...';}
+  try{
+    const{error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial});
+    if(error)throw error;
+    showToast('Saved to collection!');
+    if(currentTier.id==='mythic'){hasMythic=true;toggleClubAccess(true);}
+    if(['legendary','mythic'].includes(currentTier.id))refreshPremiumFrame();
+    loadCollection().catch(console.error);
+  }catch(e){
+    showToast('Error saving.');
+    if(sourceBtn){sourceBtn.disabled=false;sourceBtn.textContent=orig;}
+    return;
+  }
+  if(sourceBtn){sourceBtn.disabled=false;sourceBtn.textContent=orig;}
+  closeWinRevealModalOnly();
+  resetAll();
+}
+function discardCurrentDrop(){
+  closeWinRevealModalOnly();
+  showToast('POXY discarded.');
+  resetAll();
 }
 function startSpin(){
   pendingSpinTier=pickTier();
@@ -2511,9 +2543,6 @@ function startSpin(){
   const sb2=$('spinBox');
   if(sb2){sb2.classList.remove('spin-rapid');sb2.style.opacity='0';}
   runRouletteCarousel(pendingSpinTier);
-}
-function finishSpin(){
-  showReward(pendingSpinTier,true);
 }
 function launchParticles(color){
   particles=[];
@@ -2584,22 +2613,12 @@ $('btnOpen').addEventListener('click',async function(){
   $('idleBox').style.opacity='0';startSpin();
   bumpQuest('open_3_cases',1);
 });
-const stWinContinue=$('stWinContinue');
-if(stWinContinue)stWinContinue.addEventListener('click',closeWinRevealModal);
-$('btnAdd').addEventListener('click',async function(){
-  if(!currentTier||!currentUser||!currentSerial)return;
-  const orig=$('btnAdd').textContent;$('btnAdd').disabled=true;$('btnAdd').textContent='Saving...';
-  try{
-    const{error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial});
-    if(error)throw error;
-    showToast('Saved to collection!');
-    if(currentTier.id==='mythic'){hasMythic=true;toggleClubAccess(true);}
-    if(['legendary','mythic'].includes(currentTier.id))refreshPremiumFrame();
-    loadCollection().catch(console.error);
-  }catch(e){showToast('Error saving.');}
-  $('btnAdd').disabled=false;$('btnAdd').textContent=orig;resetAll();
-});
-$('btnDiscard').addEventListener('click',function(){showToast('POXY discarded.');resetAll();});
+const stWinAdd=$('stWinAdd');
+const stWinDiscard=$('stWinDiscard');
+if(stWinAdd)stWinAdd.addEventListener('click',()=>addCurrentDropToCollection(stWinAdd));
+if(stWinDiscard)stWinDiscard.addEventListener('click',discardCurrentDrop);
+$('btnAdd').addEventListener('click',()=>addCurrentDropToCollection($('btnAdd')));
+$('btnDiscard').addEventListener('click',discardCurrentDrop);
 $('btnListFromHunt').addEventListener('click',function(){if(!currentTier||!currentSerial)return;pendingListItem={tier:currentTier,serial:currentSerial,fromHunt:true};openPriceModal();});
 
 // ── MYTHIC + VIP CLUB ACCESS ──

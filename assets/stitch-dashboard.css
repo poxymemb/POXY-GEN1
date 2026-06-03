@@ -56,11 +56,9 @@
 .st-roulette-mask{mask-image:linear-gradient(to right,transparent,black 8%,black 92%,transparent);height:100%;overflow:hidden;position:relative}
 .st-roulette-track-wrap{position:absolute;inset:0;display:flex;align-items:center;overflow:hidden;z-index:1}
 .st-roulette-track{display:flex;align-items:center;gap:12px;padding-left:50%;will-change:transform;transition:none}
-.st-roulette-track.is-spinning{transition:transform 7.5s cubic-bezier(0.05,0.9,0.1,1)}
-.st-roulette-track.is-spinning .st-slot{filter:blur(4px);transform:scale(0.98);transition:filter 0.12s ease-out,transform 0.12s ease-out,box-shadow 0.25s ease,opacity 0.25s ease,border-color 0.25s ease}
-.st-roulette-track.is-spinning.is-settling .st-slot{filter:blur(0);transform:scale(1);transition:filter 2.5s ease-out,transform 2.5s ease-out,box-shadow 0.25s ease,opacity 0.25s ease,border-color 0.25s ease}
-.st-roulette-track.is-landed .st-slot{filter:none!important;transition:box-shadow 0.3s ease,transform 0.3s ease,border-color 0.3s ease}
-.st-roulette-track .st-slot{width:90px;height:110px;border-radius:12px;border:1px solid var(--st-glass);background:var(--st-surface-bright);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:32px;line-height:1;opacity:0.88;transition:opacity 0.2s,border-color 0.2s,box-shadow 0.2s,filter 0.2s,transform 0.2s}
+.st-roulette-track.is-spinning{transition:transform 4s cubic-bezier(0.05,0.9,0.1,1)}
+.st-roulette-track.is-landed .st-slot{transition:box-shadow 0.3s ease,transform 0.3s ease,border-color 0.3s ease}
+.st-roulette-track .st-slot{width:90px;height:110px;border-radius:12px;border:1px solid var(--st-glass);background:var(--st-surface-bright);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:32px;line-height:1;opacity:0.88;transition:opacity 0.2s,border-color 0.2s,box-shadow 0.2s,transform 0.2s}
 .st-roulette-track .st-slot--winner{border:2px solid var(--st-electric-cyan);opacity:1}
 .st-roulette-track .st-slot--landed{z-index:3;border:2px solid var(--st-electric-cyan)!important;opacity:1!important;filter:blur(0)!important;transform:scale(1.08)!important;animation:prize-pulse 1.15s ease-in-out infinite}
 .st-roulette-track .st-slot[data-tier="common"]{box-shadow:0 0 14px rgba(158,158,158,0.35),0 0 28px rgba(158,158,158,0.12)}
@@ -83,8 +81,13 @@
 .st-win-reveal-name{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:26px;font-weight:700;color:var(--st-on-surface);margin-bottom:10px}
 .st-win-reveal-rarity{display:inline-block;font-size:11px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;padding:6px 14px;border-radius:999px;border:1px solid currentColor;background:rgba(255,255,255,0.04);margin-bottom:8px}
 .st-win-reveal-serial{font-size:11px;color:var(--st-on-surface-variant);font-family:'JetBrains Mono',monospace;margin-bottom:22px}
-.st-win-reveal-btn{width:100%;padding:14px 20px;border:none;border-radius:12px;background:linear-gradient(90deg,var(--st-primary-container),var(--st-secondary-container));color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 8px 28px rgba(156,39,176,0.35);transition:transform 0.2s ease,filter 0.2s ease}
-.st-win-reveal-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.st-win-reveal-actions{display:flex;flex-direction:column;gap:10px;width:100%}
+.st-win-reveal-btn{width:100%;padding:14px 20px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform 0.2s ease,filter 0.2s ease,opacity 0.2s ease}
+.st-win-reveal-btn--add{background:linear-gradient(90deg,var(--st-primary-container),var(--st-secondary-container));color:#fff;box-shadow:0 8px 28px rgba(156,39,176,0.35)}
+.st-win-reveal-btn--add:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.st-win-reveal-btn--add:disabled{opacity:0.55;cursor:not-allowed;transform:none}
+.st-win-reveal-btn--discard{background:transparent;border:1px solid var(--st-glass);color:var(--st-on-surface-variant);box-shadow:none}
+.st-win-reveal-btn--discard:hover{color:var(--st-on-surface);border-color:rgba(255,255,255,0.18);transform:translateY(-1px)}
 .st-roulette-deco{display:flex;gap:12px;align-items:center;height:100%;padding:0 24px;justify-content:center;position:absolute;inset:0;z-index:2;pointer-events:none;transition:opacity 0.35s ease}
 .st-roulette-deco.is-hidden{opacity:0}
 .st-roulette-deco .st-slot{width:90px;height:110px;border-radius:12px;border:1px solid var(--st-glass);background:var(--st-surface-bright);display:flex;align-items:center;justify-content:center;opacity:0.45;flex-shrink:0}
