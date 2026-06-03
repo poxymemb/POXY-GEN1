@@ -4,3 +4,4 @@
 *.local
 stitch-export/cli-out.txt
 stitch-export/dashboard-hub.raw.json
+stitch-export/screens/*.html

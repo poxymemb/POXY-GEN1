@@ -1,0 +1,105 @@
+/* POXY GEN1 — Premium Modern UI (Stitch design system port) */
+:root{
+  --poxy-bg:#131313;
+  --poxy-surface:#1c1b1b;
+  --poxy-surface-high:#2a2a2a;
+  --poxy-surface-highest:#353535;
+  --poxy-on-surface:#e5e2e1;
+  --poxy-on-surface-variant:#d5c1d2;
+  --poxy-primary:#f9abff;
+  --poxy-primary-container:#9c27b0;
+  --poxy-secondary:#d70357;
+  --poxy-cyan:#00E5FF;
+  --poxy-glass:rgba(255,255,255,0.08);
+  --poxy-max:1280px;
+  --poxy-r-common:#9E9E9E;
+  --poxy-r-rare:#29B6F6;
+  --poxy-r-epic:#AB47BC;
+  --poxy-r-legendary:#FFCA28;
+  --poxy-r-mythic:#FF5252;
+}
+
+body.poxy-app-dark{background:var(--poxy-bg);color:var(--poxy-on-surface)}
+body.poxy-app-dark .page{background:var(--poxy-bg);color:var(--poxy-on-surface);max-width:var(--poxy-max);margin:0 auto;padding:20px 16px 100px}
+body.poxy-app-dark .page.visible{animation:fadeIn 0.35s ease}
+body.poxy-app-dark .page-title{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px;color:var(--poxy-on-surface)}
+body.poxy-app-dark .page-title::after{content:'';display:block;width:48px;height:3px;background:linear-gradient(90deg,var(--poxy-primary),var(--poxy-secondary));border-radius:2px;margin-top:8px}
+body.poxy-app-dark .section-label,body.poxy-app-dark .profile-label,body.poxy-app-dark .bank-form-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .profile-input,body.poxy-app-dark .bank-input,body.poxy-app-dark .search-input,body.poxy-app-dark .news-input{background:var(--poxy-bg);border:1px solid var(--poxy-glass);color:var(--poxy-on-surface);border-radius:10px}
+body.poxy-app-dark .profile-input:focus,body.poxy-app-dark .bank-input:focus{border-color:var(--poxy-primary);outline:none;box-shadow:0 0 0 1px var(--poxy-primary)}
+body.poxy-app-dark .btn-primary,body.poxy-app-dark .btn-search,body.poxy-app-dark .btn-accept-req{background:linear-gradient(90deg,var(--poxy-primary-container),var(--poxy-secondary));border:none;color:#fff;border-radius:12px;font-weight:700;box-shadow:0 4px 20px rgba(156,39,176,0.25)}
+body.poxy-app-dark .btn-primary:hover,body.poxy-app-dark .btn-search:hover{transform:translateY(-1px);filter:brightness(1.08)}
+body.poxy-app-dark .btn-logout{color:var(--poxy-primary)}
+body.poxy-app-dark .pstat{background:var(--poxy-surface);border:1px solid var(--poxy-glass);border-radius:12px}
+body.poxy-app-dark .pstat-val{color:var(--poxy-primary)}
+
+/* Bottom navigation */
+body.poxy-app-dark .bottom-nav{max-width:var(--poxy-max);background:rgba(19,19,19,0.95);backdrop-filter:blur(16px);border-top:1px solid var(--poxy-glass);position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;z-index:90}
+body.poxy-app-dark .nav-btn{color:var(--poxy-on-surface-variant);font-family:'JetBrains Mono',monospace;font-size:9px}
+body.poxy-app-dark .nav-btn.active{color:var(--poxy-primary)}
+body.poxy-app-dark .nav-btn.active::after{background:linear-gradient(90deg,var(--poxy-primary),var(--poxy-cyan))}
+body.poxy-app-dark .nav-btn.club-tab{background:linear-gradient(90deg,#FFD700,#ff416c,#FFD700);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* Profile + frame shop */
+body.poxy-app-dark #profilePage .frame-cosmetic-panel{background:var(--poxy-surface);border:1px solid var(--poxy-glass);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,0.4)}
+body.poxy-app-dark .frame-selector-header{border:none;background:transparent}
+body.poxy-app-dark .frame-selector-label{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:20px;font-weight:600;color:var(--poxy-on-surface)}
+body.poxy-app-dark .frame-selector-sub{color:var(--poxy-on-surface-variant);font-size:13px}
+body.poxy-app-dark .frame-selector-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(min-width:640px){body.poxy-app-dark .frame-selector-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:900px){body.poxy-app-dark .frame-selector-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+body.poxy-app-dark .frame-cosmetic-slot .frame-slot-glass{background:#121212;border:1px solid var(--poxy-glass);border-radius:14px;padding:16px 12px;min-height:120px;transform:none!important}
+body.poxy-app-dark .frame-cosmetic-slot.active .frame-slot-glass{border-color:var(--poxy-secondary);box-shadow:0 0 0 1px var(--poxy-secondary),0 0 24px rgba(215,3,87,0.35)}
+body.poxy-app-dark .frame-slot-emblem{font-size:28px;margin-bottom:8px;filter:drop-shadow(0 0 8px var(--frame-accent-glow))}
+body.poxy-app-dark .frame-slot-name{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--poxy-on-surface)}
+body.poxy-app-dark .frame-slot-tier{font-size:9px;color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .frame-slot-lock{background:rgba(0,0,0,0.75);border:1px solid var(--poxy-glass);border-radius:8px;font-size:10px}
+body.poxy-app-dark #profileBigAvatarWrap{margin:0 auto 20px}
+
+/* Collection archive */
+body.poxy-app-dark .page-collection-wide{max-width:100%;padding-top:8px}
+body.poxy-app-dark .col-sticky-bar{background:rgba(19,19,19,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--poxy-glass);border-radius:0 0 16px 16px;padding:14px 16px}
+body.poxy-app-dark .col-title{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:22px;font-weight:700}
+body.poxy-app-dark .col-count{color:var(--poxy-cyan);font-family:'JetBrains Mono',monospace;font-size:11px}
+body.poxy-app-dark .col-card{background:rgba(28,27,27,0.9)!important;backdrop-filter:blur(8px);border-radius:14px!important;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),box-shadow 0.35s ease,border-color 0.35s!important}
+body.poxy-app-dark .col-card:hover{transform:scale(1.04)!important;z-index:5}
+body.poxy-app-dark .col-card-icon{filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5))}
+body.poxy-app-dark .col-card-tier{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.08em}
+body.poxy-app-dark .filter-btn{background:var(--poxy-surface);border:1px solid var(--poxy-glass);color:var(--poxy-on-surface-variant);border-radius:999px}
+body.poxy-app-dark .filter-btn.active{border-color:var(--poxy-primary);color:var(--poxy-primary);background:rgba(249,171,255,0.1)}
+body.poxy-app-dark .col-card-menu{background:rgba(19,19,19,0.98);border:1px solid var(--poxy-glass);backdrop-filter:blur(12px)}
+body.poxy-app-dark .col-card-menu-item{color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .col-card-menu-item:hover{color:var(--poxy-primary);background:rgba(249,171,255,0.08)}
+body.poxy-app-dark .col-club-section .col-club-title{color:var(--poxy-r-legendary)}
+body.poxy-app-dark .col-card-pin-badge{background:rgba(255,255,255,0.12)!important;backdrop-filter:blur(8px);border:1px solid var(--poxy-glass)!important;color:var(--poxy-on-surface)!important}
+
+/* Spin / win reveal */
+body.poxy-app-dark .st-open-btn,body.poxy-app-dark .btn-open{background:linear-gradient(90deg,var(--poxy-primary),var(--poxy-primary-container))!important;color:#35003f!important;box-shadow:0 0 30px rgba(249,171,255,0.35)!important}
+body.poxy-app-dark .st-open-btn:hover:not(:disabled),body.poxy-app-dark .btn-open:hover:not(:disabled){transform:scale(1.05)!important}
+body.poxy-app-dark .st-open-btn:active:not(:disabled),body.poxy-app-dark .btn-open:active:not(:disabled){transform:scale(0.96)!important}
+body.poxy-app-dark .btn-open:disabled{opacity:0.45;cursor:not-allowed;filter:grayscale(0.3)}
+body.poxy-app-dark .reward-box.reveal-rare,.body.poxy-app-dark .reward-box.reveal-epic{box-shadow:0 0 0 2px var(--poxy-cyan),0 0 48px rgba(0,229,255,0.45)!important}
+body.poxy-app-dark .reward-box.reveal-legendary{box-shadow:0 0 0 2px var(--poxy-r-legendary),0 0 56px rgba(255,202,40,0.55)!important;animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards,poxyLegendaryPulse 1.4s ease-in-out 0.85s infinite!important}
+body.poxy-app-dark .reward-box.reveal-mythic{box-shadow:0 0 0 2px var(--poxy-r-mythic),0 0 64px rgba(255,82,82,0.65)!important;animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards,poxyMythicBurst 1.2s ease-in-out 0.85s infinite!important}
+@keyframes poxyLegendaryPulse{0%,100%{filter:drop-shadow(0 0 12px #FFCA28)}50%{filter:drop-shadow(0 0 28px #FFCA28) drop-shadow(0 0 40px #FF525266)}}
+@keyframes poxyMythicBurst{0%,100%{filter:drop-shadow(0 0 16px #FF5252)}50%{filter:drop-shadow(0 0 36px #FF5252) drop-shadow(0 0 50px #f9abff88)}}
+
+/* Modals */
+body.poxy-app-dark .modal-overlay{background:rgba(0,0,0,0.75);backdrop-filter:blur(10px)}
+body.poxy-app-dark .modal-card{background:var(--poxy-surface);border:1px solid var(--poxy-glass);border-radius:20px;color:var(--poxy-on-surface);box-shadow:0 24px 80px rgba(0,0,0,0.6),0 0 40px rgba(249,171,255,0.08)}
+body.poxy-app-dark .modal-title{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:20px}
+body.poxy-app-dark .modal-input{background:var(--poxy-bg);border:1px solid var(--poxy-glass);color:var(--poxy-on-surface)}
+
+/* Friends / market / bank pages */
+body.poxy-app-dark .user-card,body.poxy-app-dark .market-card,body.poxy-app-dark .pending-card{background:var(--poxy-surface);border:1px solid var(--poxy-glass);border-radius:14px}
+body.poxy-app-dark .user-card-name,body.poxy-app-dark .market-card-title{color:var(--poxy-on-surface)}
+body.poxy-app-dark .market-tab{background:var(--poxy-surface-high);color:var(--poxy-on-surface-variant);border-radius:999px;border:none}
+body.poxy-app-dark .market-tab.active{background:linear-gradient(90deg,var(--poxy-primary-container),var(--poxy-secondary));color:#fff}
+body.poxy-app-dark .toast{background:var(--poxy-surface-highest);border:1px solid var(--poxy-glass);color:var(--poxy-on-surface)}
+
+/* Global home on subpages */
+body.poxy-app-dark .poxy-text-logo{display:inline-block!important}
+
+/* Matrix frame on header — replaces legacy orange glow */
+body.poxy-app-dark .st-matrix-frame{background:linear-gradient(90deg,var(--poxy-cyan),var(--poxy-primary),var(--poxy-cyan));background-size:200% 200%;animation:stMatrix 3s linear infinite;padding:2px;border-radius:50%}
+body.poxy-app-dark .avatar-premium-frame{display:none!important}

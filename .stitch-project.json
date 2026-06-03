@@ -1,7 +1,15 @@
 {
   "projectId": "3452513058897199540",
-  "title": "Premium Modern UI Overhaul",
+  "title": "POXY GEN1",
   "screens": {
-    "dashboardHub": "c7d591e793cd422f8d14ee9c38224f60"
+    "home": "6554c8bbf7d24174a2ab5079ac3b7d80",
+    "dashboardHub": "c7d591e793cd422f8d14ee9c38224f60",
+    "spinHub": "82692aaf7ba046259613476b2da960f5",
+    "animatedSpin": "4afd29b0d3b24d16bd036636e26eba8a",
+    "frameShop": "d8d4ded460004c63b87f1aefc615c049",
+    "animatedFrameShop": "2da22db1878d4865b0dc9fe4364c80b9",
+    "collectionArchive": "fd12ef203c6c4a65bd9304184fc3608c",
+    "collectionAlt": "93fdad083c76413e8d266ea81b215023",
+    "vercelExtract": "6e70128034cb407e98f5551eefccbac1"
   }
 }

@@ -63,6 +63,8 @@ Screen: [AUTH CARD | COLLECTION GRID | SIDEBAR TAB | ...]
 
 1. Auth overlay card (`#authOverlay`) — **done**  
 2. Sidebar header + tabs (`#sidebarPanel`) — done  
-3. **Stitch full Dashboard** (`#poxyStitchDashboard` / `#huntPage`) — **done** (Spin & Win, collection preview, treasury)  
-4. Collection page card chrome — high (test club menu + kebab) — **next**  
+3. **Stitch full Dashboard** (`#poxyStitchDashboard`) — done  
+4. **Global dark theme** (`assets/poxy-theme.css`) — done (pages, nav, modals, collection glass)  
+5. **Avatar frames** (`assets/frames.css`) — extracted, 10 premium frames  
+6. Collection club menu edge cases — verify after deploy  
 4. Case opening UI — highest (animations + economy)

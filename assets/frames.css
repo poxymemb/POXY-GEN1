@@ -1,0 +1,355 @@
+﻿/* POXY Premium Avatar Frames — extracted from index.html */
+/* ── GLOBAL AVATAR FRAME SYSTEM (AAA COSMETIC — PRECISION CENTERED) ── */
+.avatar-frame-target{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  overflow:visible;
+  box-sizing:border-box;
+  flex-shrink:0;
+  isolation:isolate;
+  --af-ring-outer:128%;
+  --af-ring-inner:112%;
+  margin:0;
+  padding:0;
+}
+.avatar-frame-target::before,
+.avatar-frame-target::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  border-radius:50%;
+  pointer-events:none;
+  box-sizing:border-box;
+  z-index:0;
+  transform-origin:center center;
+  transform:translate(-50%,-50%);
+  margin:0;
+  padding:0;
+  inset:auto;
+}
+.avatar-frame-target[data-frame]::before{width:var(--af-ring-outer);height:var(--af-ring-outer)}
+.avatar-frame-target[data-frame]::after{width:var(--af-ring-inner);height:var(--af-ring-inner)}
+.avatar-frame-target>*{
+  position:relative;
+  z-index:1;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  overflow:hidden;
+  line-height:1;
+  text-align:center;
+  transform:none;
+  box-sizing:border-box;
+}
+.avatar-frame-target img,
+.avatar-frame-target .avatar-upload-preview{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
+  object-fit:cover;
+  object-position:center center;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  flex-shrink:0;
+}
+/* ── MY PROFILE menu avatar — localized alignment only (#profilePage scope) ── */
+#profilePage #profileBigAvatarWrap.avatar-frame-target{
+  width:76px;
+  height:76px;
+  min-width:76px;
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:visible;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  flex-shrink:0;
+  --af-ring-outer:124%;
+  --af-ring-inner:110%;
+}
+#profilePage #profileBigAvatarWrap.gpu-accel{
+  transform:none;
+  will-change:auto;
+}
+#profilePage #profileBigAvatarWrap.avatar-frame-target::before,
+#profilePage #profileBigAvatarWrap.avatar-frame-target::after{
+  top:50%;
+  left:50%;
+  right:auto;
+  bottom:auto;
+  transform:translate(-50%,-50%);
+  transform-origin:center center;
+  margin:0;
+  padding:0;
+}
+#profilePage #profileBigAvatarWrap.avatar-frame-target[data-frame]::before{
+  width:var(--af-ring-outer);
+  height:var(--af-ring-outer);
+}
+#profilePage #profileBigAvatarWrap.avatar-frame-target[data-frame]::after{
+  width:var(--af-ring-inner);
+  height:var(--af-ring-inner);
+}
+#profilePage #profileBigAvatarWrap > #profileBigAvatar{
+  width:76px;
+  height:76px;
+  min-width:76px;
+  min-height:76px;
+  max-width:76px;
+  max-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  overflow:hidden;
+  line-height:0;
+  flex-shrink:0;
+  transform:none;
+  box-sizing:border-box;
+}
+#profilePage #profileBigAvatar .profile-menu-avatar-face,
+#profilePage #profileBigAvatar > span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  font-size:40px;
+  line-height:1;
+  text-align:center;
+  transform:none;
+}
+#profilePage #profileBigAvatar img,
+#profilePage #profileBigAvatar .avatar-upload-preview{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  margin:0;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  box-sizing:border-box;
+  transform:none;
+}
+/* ── USER BAR header avatar — localized alignment only (#userBar scope) ── */
+#userBar #userBarAvatarWrap.avatar-frame-target{
+  width:28px;
+  height:28px;
+  min-width:28px;
+  min-height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:visible;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  flex-shrink:0;
+  isolation:isolate;
+}
+#userBar #userBarAvatarWrap.gpu-accel{
+  transform:none;
+  will-change:auto;
+}
+#userBar #userBarAvatarWrap.avatar-frame-target:hover{
+  transform:scale(1.12);
+}
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::before,
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::after{
+  top:-4px;
+  left:-4px;
+  right:-4px;
+  bottom:-4px;
+  width:auto;
+  height:auto;
+  margin:0;
+  padding:0;
+  transform-origin:center center;
+  transform:none;
+}
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]::after{
+  top:-2px;
+  left:-2px;
+  right:-2px;
+  bottom:-2px;
+}
+#userBar #userBarAvatarWrap[data-frame="venom-frame"]::before{animation:afUBVenomBio 4.4s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="venom-frame"]::after{animation:afUBVenomSpike 4.4s ease-in-out infinite 0.35s}
+#userBar #userBarAvatarWrap[data-frame="magma-frame"]::before{animation:afUBMagmaFlow 3.6s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="magma-frame"]::after{animation:afUBMagmaHeat 3.6s ease-in-out infinite 0.25s}
+#userBar #userBarAvatarWrap[data-frame="prism-frame"]::before{animation:afUBPrismRefract 5s linear infinite}
+#userBar #userBarAvatarWrap[data-frame="prism-frame"]::after{animation:afUBPrismSpark 5s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="bio-storm-frame"]::before{animation:afUBBioScan 2.8s linear infinite}
+#userBar #userBarAvatarWrap[data-frame="bio-storm-frame"]::after{animation:afUBBioMatrix 2.8s linear infinite reverse}
+#userBar #userBarAvatarWrap[data-frame="ethereal-flame"]::before{animation:afUBEtherealRise 3.4s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="ethereal-flame"]::after{animation:afUBEtherealPulse 3.4s ease-in-out infinite 0.4s}
+#userBar #userBarAvatarWrap[data-frame="void-frame"]::before{animation:afUBVoidGalaxy 6s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="void-frame"]::after{animation:afUBVoidGravity 6s ease-in-out infinite 0.5s}
+#userBar #userBarAvatarWrap[data-frame="tesla-frame"]::before{animation:afUBTeslaArc 2.2s steps(10,end) infinite}
+#userBar #userBarAvatarWrap[data-frame="tesla-frame"]::after{animation:afUBTeslaCoil 2.2s steps(10,end) infinite 0.08s}
+#userBar #userBarAvatarWrap[data-frame="ocean-frame"]::before{animation:afUBOceanCaustic 4s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="ocean-frame"]::after{animation:afUBOceanBubble 4s ease-in-out infinite 0.3s}
+#userBar #userBarAvatarWrap[data-frame="glitch-frame"]::before{animation:afUBGlitchR 2.6s steps(8,end) infinite}
+#userBar #userBarAvatarWrap[data-frame="glitch-frame"]::after{animation:afUBGlitchB 2.6s steps(8,end) infinite 0.06s}
+#userBar #userBarAvatarWrap[data-frame="ruby-frame"]::before{animation:afUBRubyCore 3.8s ease-in-out infinite}
+#userBar #userBarAvatarWrap[data-frame="ruby-frame"]::after{animation:afUBRubyBlood 3.8s ease-in-out infinite 0.45s}
+@keyframes afUBVenomBio{0%,100%{opacity:0.6;transform:scale(0.95)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBVenomSpike{0%,100%{opacity:0.45;transform:scale(1)}40%{opacity:1;transform:scale(1.03)}70%{opacity:0.8;transform:scale(0.98)}}
+@keyframes afUBMagmaFlow{0%,100%{opacity:0.65;transform:scale(0.96) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(4deg)}}
+@keyframes afUBMagmaHeat{0%,100%{opacity:0.55;transform:scale(1)}35%{opacity:1;transform:scale(1.04)}65%{opacity:0.75;transform:scale(1.01)}}
+@keyframes afUBPrismRefract{0%{transform:rotate(0deg);opacity:0.75}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.75}}
+@keyframes afUBPrismSpark{0%,100%{opacity:0.5;transform:scale(0.97)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes afUBBioScan{0%{transform:rotate(0deg);opacity:0.55}50%{opacity:1}100%{transform:rotate(360deg);opacity:0.55}}
+@keyframes afUBBioMatrix{0%,100%{opacity:0.45;transform:scale(0.97)}50%{opacity:0.95;transform:scale(1.04)}}
+@keyframes afUBEtherealRise{0%,100%{opacity:0.55;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBEtherealPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes afUBVoidGalaxy{0%,100%{opacity:0.6;transform:scale(0.97) rotate(0deg)}50%{opacity:1;transform:scale(1.06) rotate(6deg)}}
+@keyframes afUBVoidGravity{0%,100%{opacity:0.45;transform:scale(1.02)}50%{opacity:0.95;transform:scale(0.96)}}
+@keyframes afUBTeslaArc{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+@keyframes afUBTeslaCoil{0%,100%{opacity:0.35;transform:scale(1.05)}50%{opacity:0.9;transform:scale(0.96)}}
+@keyframes afUBOceanCaustic{0%,100%{opacity:0.6;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBOceanBubble{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+@keyframes afUBGlitchR{0%,82%,100%{opacity:0.75;transform:scale(1)}86%{opacity:1;transform:translate(-1px,0) scale(1.02)}90%{opacity:0.4;transform:translate(1px,-1px) scale(0.98)}94%{opacity:1;transform:scale(1.01)}}
+@keyframes afUBGlitchB{0%,82%,100%{opacity:0.55;transform:scale(1)}84%{opacity:0.9;transform:translate(1px,0) scale(1.02)}88%{opacity:0.3;transform:translate(-1px,1px) scale(0.99)}92%{opacity:0.85;transform:scale(1.01)}}
+@keyframes afUBRubyCore{0%,100%{opacity:0.6;transform:scale(0.96)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes afUBRubyBlood{0%,100%{opacity:0.5;transform:scale(1.01) rotate(0deg)}50%{opacity:1;transform:scale(0.97) rotate(3deg)}}
+#userBar #userBarAvatarWrap > #userBarAvatar{
+  width:28px;
+  height:28px;
+  min-width:28px;
+  min-height:28px;
+  max-width:28px;
+  max-height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+  margin:0;
+  padding:0;
+  border-radius:50%;
+  overflow:hidden;
+  line-height:0;
+  flex-shrink:0;
+  transform:none;
+  box-sizing:border-box;
+}
+#userBar #userBarAvatar .user-bar-avatar-face,
+#userBar #userBarAvatar > span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  font-size:16px;
+  line-height:1;
+  text-align:center;
+  transform:none;
+}
+#userBar #userBarAvatar img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  margin:0;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  box-sizing:border-box;
+  transform:none;
+}
+.inspect-avatar-wrap.avatar-frame-target{width:52px;height:52px;overflow:visible;--af-ring-outer:130%;--af-ring-inner:116%}
+.inspect-avatar-wrap.avatar-frame-target img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;margin:0}
+.pcm-avatar.avatar-frame-target{width:22px;height:22px;font-size:11px;--af-ring-outer:136%;--af-ring-inner:118%}
+.user-card-avatar.avatar-frame-target{width:38px;height:38px;overflow:visible;--af-ring-outer:130%;--af-ring-inner:116%}
+
+/* 1 — VENOM */
+.avatar-frame-target[data-frame="venom-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(12,0,28,0.92) 52%,rgba(57,255,20,0.22) 68%,transparent 72%);animation:afVenomBio 4.4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="venom-frame"]::after{border:2px solid rgba(57,255,20,0.75);box-shadow:0 0 0 1px rgba(60,0,90,0.9),0 0 10px rgba(57,255,20,0.35);animation:afVenomSpike 4.4s ease-in-out infinite 0.35s;will-change:transform,opacity}
+@keyframes afVenomBio{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.93) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07) rotate(4deg)}}
+@keyframes afVenomSpike{0%,100%{opacity:0.45;transform:translate(-50%,-50%) scale(1) rotate(0deg)}40%{opacity:1;transform:translate(-50%,-50%) scale(1.05) rotate(-5deg)}70%{opacity:0.8;transform:translate(-50%,-50%) scale(0.97) rotate(3deg)}}
+
+/* 2 — MAGMA */
+.avatar-frame-target[data-frame="magma-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(255,69,0,0.55) 0%,rgba(120,20,0,0.85) 45%,rgba(40,8,0,0.95) 70%,transparent 74%);animation:afMagmaFlow 3.6s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="magma-frame"]::after{border:2px solid rgba(255,140,0,0.85);box-shadow:0 0 0 1px rgba(255,60,0,0.5),0 0 12px rgba(255,100,0,0.4);animation:afMagmaHeat 3.6s ease-in-out infinite 0.25s;will-change:transform,opacity}
+@keyframes afMagmaFlow{0%,100%{opacity:0.65;transform:translate(-50%,-50%) scale(0.95) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08) rotate(6deg)}}
+@keyframes afMagmaHeat{0%,100%{opacity:0.55;transform:translate(-50%,-50%) scale(1)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}65%{opacity:0.75;transform:translate(-50%,-50%) scale(1.02)}}
+
+/* 3 — PRISM */
+.avatar-frame-target[data-frame="prism-frame"]::before{background:conic-gradient(from 0deg,rgba(255,0,128,0.7),rgba(0,229,255,0.7),rgba(118,255,3,0.7),rgba(255,234,0,0.7),rgba(255,0,128,0.7));animation:afPrismRefract 5s linear infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="prism-frame"]::after{border:2px solid rgba(255,255,255,0.55);animation:afPrismSpark 5s ease-in-out infinite;will-change:transform,opacity}
+@keyframes afPrismRefract{0%{transform:translate(-50%,-50%) rotate(0deg);opacity:0.75}50%{opacity:1}100%{transform:translate(-50%,-50%) rotate(360deg);opacity:0.75}}
+@keyframes afPrismSpark{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(0.96)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}}
+
+/* 4 — BIO-STORM */
+.avatar-frame-target[data-frame="bio-storm-frame"]::before{border:2px dashed rgba(0,255,120,0.75);animation:afBioScan 2.8s linear infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="bio-storm-frame"]::after{background:repeating-conic-gradient(from 0deg,rgba(0,255,120,0.15) 0deg 8deg,transparent 8deg 16deg);animation:afBioMatrix 2.8s linear infinite reverse;will-change:transform,opacity}
+@keyframes afBioScan{0%{transform:translate(-50%,-50%) rotate(0deg);opacity:0.55}50%{opacity:1}100%{transform:translate(-50%,-50%) rotate(360deg);opacity:0.55}}
+@keyframes afBioMatrix{0%,100%{opacity:0.45;transform:translate(-50%,-50%) scale(0.96)}50%{opacity:0.95;transform:translate(-50%,-50%) scale(1.06)}}
+
+/* 5 — ETHEREAL FLAME */
+.avatar-frame-target[data-frame="ethereal-flame"]::before{background:radial-gradient(circle at 50% 50%,rgba(0,255,255,0.45) 0%,rgba(140,0,255,0.35) 40%,rgba(20,0,40,0.2) 65%,transparent 72%);animation:afEtherealRise 3.4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ethereal-flame"]::after{border:2px solid rgba(180,100,255,0.7);animation:afEtherealPulse 3.4s ease-in-out infinite 0.4s;will-change:transform,opacity}
+@keyframes afEtherealRise{0%,100%{opacity:0.55;transform:translate(-50%,-50%) scale(0.94)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes afEtherealPulse{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
+
+/* 6 — VOID */
+.avatar-frame-target[data-frame="void-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(180,140,255,0.35) 0%,rgba(40,0,80,0.6) 35%,rgba(0,0,0,0.95) 62%,transparent 72%);animation:afVoidGalaxy 6s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="void-frame"]::after{border:1.5px solid rgba(124,77,255,0.65);box-shadow:0 0 0 2px rgba(0,0,0,0.8);animation:afVoidGravity 6s ease-in-out infinite 0.5s;will-change:transform,opacity}
+@keyframes afVoidGalaxy{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.96) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(8deg)}}
+@keyframes afVoidGravity{0%,100%{opacity:0.45;transform:translate(-50%,-50%) scale(1.04)}50%{opacity:0.95;transform:translate(-50%,-50%) scale(0.92)}}
+
+/* 7 — TESLA */
+.avatar-frame-target[data-frame="tesla-frame"]::before{border:2px solid rgba(64,196,255,0.9);animation:afTeslaArc 2.2s steps(10,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="tesla-frame"]::after{border:1px solid rgba(255,255,255,0.45);width:var(--af-ring-outer);height:var(--af-ring-outer);animation:afTeslaCoil 2.2s steps(10,end) infinite 0.08s;will-change:transform,opacity}
+@keyframes afTeslaArc{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06) rotate(3deg)}}
+@keyframes afTeslaCoil{0%,100%{opacity:0.35;transform:translate(-50%,-50%) scale(1.08)}50%{opacity:0.9;transform:translate(-50%,-50%) scale(0.94)}}
+
+/* 8 — OCEAN */
+.avatar-frame-target[data-frame="ocean-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(0,200,255,0.4) 0%,rgba(0,80,160,0.55) 45%,rgba(0,20,60,0.85) 68%,transparent 74%);animation:afOceanCaustic 4s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ocean-frame"]::after{border:2px solid rgba(3,169,244,0.75);animation:afOceanBubble 4s ease-in-out infinite 0.3s;will-change:transform,opacity}
+@keyframes afOceanCaustic{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.95)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}}
+@keyframes afOceanBubble{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}}
+
+/* 9 — GLITCH */
+.avatar-frame-target[data-frame="glitch-frame"]::before{border:2px solid rgba(255,23,68,0.85);animation:afGlitchR 2.6s steps(8,end) infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="glitch-frame"]::after{border:2px solid rgba(0,229,255,0.75);animation:afGlitchB 2.6s steps(8,end) infinite 0.06s;will-change:transform,opacity}
+@keyframes afGlitchR{0%,82%,100%{opacity:0.75;transform:translate(-50%,-50%) scale(1)}86%{opacity:1;transform:translate(calc(-50% - 3px),calc(-50% + 1px)) scale(1.04)}90%{opacity:0.4;transform:translate(calc(-50% + 2px),calc(-50% - 2px)) scale(0.97)}94%{opacity:1;transform:translate(-50%,-50%) scale(1.02)}}
+@keyframes afGlitchB{0%,82%,100%{opacity:0.55;transform:translate(-50%,-50%) scale(1)}84%{opacity:0.9;transform:translate(calc(-50% + 3px),calc(-50% - 1px)) scale(1.03)}88%{opacity:0.3;transform:translate(calc(-50% - 2px),calc(-50% + 2px)) scale(0.98)}92%{opacity:0.85;transform:translate(-50%,-50%) scale(1.01)}}
+
+/* 10 — RUBY */
+.avatar-frame-target[data-frame="ruby-frame"]::before{background:radial-gradient(circle at 50% 50%,rgba(255,80,80,0.55) 0%,rgba(180,0,30,0.65) 40%,rgba(60,0,10,0.9) 65%,transparent 72%);animation:afRubyCore 3.8s ease-in-out infinite;will-change:transform,opacity}
+.avatar-frame-target[data-frame="ruby-frame"]::after{border:2.5px solid rgba(229,57,53,0.9);animation:afRubyBlood 3.8s ease-in-out infinite 0.45s;will-change:transform,opacity}
+@keyframes afRubyCore{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(0.94)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes afRubyBlood{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1.02) rotate(0deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(0.96) rotate(4deg)}}
+
+/* Legacy premium frame — other users' avatars only */
+.avatar-premium-frame{border-radius:50%;animation:premiumFrameShift 3.5s ease-in-out infinite;padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC,#FFCA28);background-size:300% 300%}
