@@ -1012,7 +1012,7 @@ body.dark-club .club-sub{color:#888}
 
 /* ── AUTH (Stitch Coral Blaze) ── */
 .auth-overlay,.poxy-auth-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(248,249,250,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);overflow:hidden}
-.auth-overlay.hidden{display:none}
+.auth-overlay.hidden{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .poxy-auth-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .poxy-auth-bg-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:0.1}
 .poxy-auth-bg-blob--tr{top:-10%;right:-10%;width:50vw;height:50vw;background:linear-gradient(90deg,#ff416c,#ff4b2b)}
@@ -2376,37 +2376,35 @@ function resetAuthBtn(btn){
   btn.disabled=false;
   btn.textContent=authMode.v==='login'?'Sign In':'Create Account';
 }
-async function applyAuthSession(session){
-  const user=session?.user??null;
-  currentUser=user;
+function setLoggedOutUI(){
+  authSessionBootstrapped=false;
   const overlay=$('authOverlay');
-  const shell=$('poxyAppShell');
-  const hunt=$('huntPage');
-  if(!user){
-    authSessionBootstrapped=false;
-    if(overlay)overlay.classList.remove('hidden');
-    document.body.classList.remove('poxy-app-dark','poxy-stitch-dash');
-    const ub=$('userBar');
-    if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
-    const bn=$('bottomNav');if(bn)bn.style.display='none';
-    $('balanceBadge')?.classList.remove('visible');
-    if(shell)shell.style.display='none';
-    if(hunt)hunt.style.display='none';
-    teardownRealtimeSubscriptions();
-    if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
-    if(sidebarOpen)closeSidebar();
-    return;
-  }
-  if(overlay)overlay.classList.add('hidden');
-  document.body.classList.add('poxy-app-dark');
+  if(overlay){overlay.classList.remove('hidden');overlay.style.display='flex';overlay.setAttribute('aria-hidden','false');}
+  document.body.classList.remove('poxy-app-dark','poxy-stitch-dash');
+  const ub=$('userBar');
+  if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
+  const bn=$('bottomNav');if(bn)bn.style.display='none';
+  $('balanceBadge')?.classList.remove('visible');
+  const shell=$('poxyAppShell');if(shell)shell.style.display='none';
+  const hunt=$('huntPage');if(hunt)hunt.style.display='none';
+  teardownRealtimeSubscriptions();
+  if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
+  if(sidebarOpen)closeSidebar();
+}
+function setLoggedInUI(){
+  const overlay=$('authOverlay');
+  if(overlay){overlay.classList.add('hidden');overlay.style.display='none';overlay.setAttribute('aria-hidden','true');}
+  document.body.classList.add('poxy-app-dark','poxy-stitch-dash');
   const ub=$('userBar');
   if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
-  const em=$('userEmailEl');if(em)em.textContent=user.email||'';
   $('balanceBadge')?.classList.add('visible');
+  const shell=$('poxyAppShell');if(shell)shell.style.display='block';
+  const hunt=$('huntPage');if(hunt)hunt.style.display='block';
   showPoxyAppShell();
-  showStitchTab('dashboard');
-  if(!authSessionBootstrapped){
-    authSessionBootstrapped=true;
+  try{showStitchTab('dashboard');}catch(e){console.error('showStitchTab:',e);}
+}
+function bootstrapAfterLogin(){
+  return (async()=>{
     try{
       await loadProfile();
       await Promise.all([checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]);
@@ -2414,14 +2412,32 @@ async function applyAuthSession(session){
     setupRealtimeSubscriptions();
     startFriendPoll();
     setTimeout(()=>{loadDailyQuests();},800);
+    syncNavUsernameLabels();
+  })();
+}
+async function applyAuthSession(session){
+  const user=session?.user??null;
+  currentUser=user;
+  if(!user){setLoggedOutUI();return;}
+  const em=$('userEmailEl');if(em)em.textContent=user.email||'';
+  setLoggedInUI();
+  if(!authSessionBootstrapped){
+    authSessionBootstrapped=true;
+    bootstrapAfterLogin();
+  }else{
+    syncNavUsernameLabels();
   }
-  syncNavUsernameLabels();
 }
 function setupAuthStateListener(){
-  sb.auth.onAuthStateChange((_e,session)=>{
-    applyAuthSession(session).catch(e=>console.error('auth session:',e));
+  sb.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_OUT'||(event==='INITIAL_SESSION'&&!session)){
+      applyAuthSession(null).catch(e=>console.error('auth session:',e));
+      return;
+    }
+    if(session)applyAuthSession(session).catch(e=>console.error('auth session:',e));
   });
-  sb.auth.getSession().then(({data:{session}})=>{
+  sb.auth.getSession().then(({data:{session},error})=>{
+    if(error)console.warn('getSession:',error.message);
     if(session)applyAuthSession(session).catch(console.error);
   }).catch(console.error);
 }
@@ -3380,10 +3396,10 @@ function toggleClubAccess(has){
 
 // ── COLLECTION ──
 let colData=[];
-const STITCH_TIER_ICON={common:'hexagon',uncommon:'diamond',rare:'stars',epic:'auto_awesome',legendary:'grade',mythic:'workspace_premium'};
-const STITCH_TIER_COLOR={common:'#9d8b9b',uncommon:'#b0aeb8',rare:'#00E5FF',epic:'#9c27b0',legendary:'#ffb5a0',mythic:'#f9abff'};
-function stitchTierColor(id){return STITCH_TIER_COLOR[id]||(TIER_BY_ID[id]?.color||'#9d8b9b');}
-function stitchTierIcon(id){return STITCH_TIER_ICON[id]||'hexagon';}
+const COLLECTION_TIER_ICON={common:'hexagon',uncommon:'diamond',rare:'stars',epic:'auto_awesome',legendary:'grade',mythic:'workspace_premium'};
+const COLLECTION_TIER_COLOR={common:'#9d8b9b',uncommon:'#b0aeb8',rare:'#00E5FF',epic:'#9c27b0',legendary:'#ffb5a0',mythic:'#f9abff'};
+function stitchTierColor(id){return COLLECTION_TIER_COLOR[id]||(TIER_BY_ID[id]?.color||'#9d8b9b');}
+function stitchTierIcon(id){return COLLECTION_TIER_ICON[id]||'hexagon';}
 
 function renderBurnRates(){
   const el=$('colBurnRates');if(!el)return;
@@ -3504,7 +3520,7 @@ function buildCollectionCard(item,index,lockedView){
 
   const preview=document.createElement('div');
   preview.className='poxy-col-preview';
-  if(STITCH_TIER_ICON[item.poxy_tier]){
+  if(COLLECTION_TIER_ICON[item.poxy_tier]){
     const sym=document.createElement('span');
     sym.className='material-symbols-outlined poxy-col-preview-icon';
     sym.style.color=tColor;
