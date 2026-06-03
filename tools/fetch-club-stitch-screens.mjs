@@ -6,11 +6,11 @@
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { request } from "https";
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const root = join(__dir, "..");
 const metaPath = join(root, "stitch-export", "club-screens.json");
+const DOWNLOAD_TIMEOUT_MS = 120_000;
 
 const SCREENS = [
   { key: "awakening", screenId: "c3fa3a6bdaf84bc286fc76b0219ca6d8", title: "POXY - The Awakening Onboarding" },
@@ -20,25 +20,18 @@ const SCREENS = [
   { key: "governance", screenId: "ffea8979fc14412789f8e540e7f57821", title: "POXY CLUB - DAO Council & Voting" },
 ];
 
-function download(url, dest) {
-  return new Promise((resolve, reject) => {
-    const run = (u, redirects = 0) => {
-      const parsed = new URL(u);
-      request(parsed, (res) => {
-        if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location && redirects < 8) {
-          return run(res.headers.location, redirects + 1);
-        }
-        if (res.statusCode >= 400) return reject(new Error("HTTP " + res.statusCode));
-        const chunks = [];
-        res.on("data", (c) => chunks.push(c));
-        res.on("end", () => {
-          writeFileSync(dest, Buffer.concat(chunks));
-          resolve(dest);
-        });
-      }).on("error", reject);
-    };
-    run(url);
-  });
+async function download(url, dest) {
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), DOWNLOAD_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { redirect: "follow", signal: ac.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const buf = Buffer.from(await res.arrayBuffer());
+    writeFileSync(dest, buf);
+    return dest;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 let meta;
