@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
+<link rel="stylesheet" href="assets/poxy-profile-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1581,63 +1582,85 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- PROFILE PAGE (Stitch Frame Shop) -->
+<!-- PROFILE PAGE (general members — graphite / gold dashboard) -->
 <div class="page poxy-page-profile" id="profilePage">
-  <div class="page-title">MY PROFILE</div>
-  <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target"><div id="profileBigAvatar"></div></div></div>
-  <div class="frame-cosmetic-panel frame-selector-section" id="frameSelectorSection">
-    <button type="button" class="frame-selector-header" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
-      <span class="frame-selector-header-text">
-        <span class="frame-selector-label">Avatar Frames</span>
-        <span class="frame-selector-sub">Premium Cosmetics</span>
-      </span>
-      <span class="frame-selector-chevron" aria-hidden="true">▾</span>
-    </button>
-    <div class="frame-selector-body" id="frameSelectorBody">
-      <div class="frame-selector-grid" id="frameSelectorGrid"></div>
+  <h1 class="poxy-profile-title">MY PROFILE</h1>
+  <div class="poxy-profile-layout">
+    <aside class="poxy-profile-hero">
+      <div class="poxy-profile-avatar-block">
+        <div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target">
+          <div id="profileBigAvatar"></div>
+        </div>
+        <label for="avatarUpload" class="poxy-profile-upload-btn">Upload Photo</label>
+        <input type="file" id="avatarUpload" accept="image/*" hidden>
+        <div id="uploadStatus" class="poxy-profile-upload-status"></div>
+      </div>
+      <div class="profile-field">
+        <label class="profile-label" for="profileUsername">Username</label>
+        <input class="profile-input" id="profileUsername" placeholder="Choose a username" maxlength="24" autocomplete="username">
+      </div>
+      <div class="poxy-profile-actions">
+        <button type="button" class="poxy-profile-btn" id="btnSaveProfile">Save Profile</button>
+        <button type="button" class="poxy-profile-btn poxy-profile-btn--ghost" id="pwdSectionToggle" aria-expanded="false" aria-controls="pwdSection">Security</button>
+      </div>
+    </aside>
+    <div class="poxy-profile-main">
+      <div class="profile-stats">
+        <div class="pstat"><div class="pstat-val" id="statTotal">–</div><div class="pstat-label">Total</div></div>
+        <div class="pstat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
+        <div class="pstat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
+      </div>
+      <div class="poxy-profile-grid-2">
+        <div class="poxy-profile-card">
+          <p class="poxy-profile-section-label">Featured POXY</p>
+          <div id="featuredPoxyDisplay" class="poxy-featured-slot empty">
+            <p class="featured-poxy-empty">Select one from Collection</p>
+          </div>
+        </div>
+        <div class="poxy-profile-card">
+          <p class="poxy-profile-section-label">Daily Quests</p>
+          <div id="dailyQuestList" class="poxy-quest-list">
+            <p class="poxy-quest-loading">Sign in to load quests…</p>
+          </div>
+        </div>
+      </div>
+      <div class="frame-cosmetic-panel frame-selector-section poxy-profile-card" id="frameSelectorSection">
+        <button type="button" class="frame-selector-header" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
+          <span class="frame-selector-header-text">
+            <span class="frame-selector-label">Avatar Frames</span>
+            <span class="frame-selector-sub">Premium Cosmetics</span>
+          </span>
+          <span class="frame-selector-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div class="frame-selector-body" id="frameSelectorBody">
+          <div class="frame-selector-grid" id="frameSelectorGrid"></div>
+        </div>
+      </div>
+      <div class="poxy-profile-card mythic-club-tracker" id="mythicClubTracker">
+        <div class="mct-label">Ecosystem Private Club Entry</div>
+        <div class="mct-bar-track"><div class="mct-bar-fill" id="mctBarFill" style="width:0%"></div></div>
+        <div class="mct-status" id="mctStatus">Loading…</div>
+      </div>
+      <div class="poxy-profile-card badge-wallet" id="badgeWalletContainer">
+        <div class="badge-wallet-label">Badge Wallet</div>
+        <div class="badge-list" id="badgeList"><span class="badge-none">No badges yet.</span></div>
+      </div>
+      <div class="poxy-profile-card poxy-profile-security" id="pwdSection" hidden>
+        <div class="poxy-profile-security-head">
+          <h3>Change Password</h3>
+          <button type="button" class="poxy-profile-btn poxy-profile-btn--ghost poxy-profile-btn--compact" id="pwdSectionClose" aria-label="Close">Close</button>
+        </div>
+        <div class="pwd-form">
+          <input class="profile-input" type="password" id="pwdNewPassword" placeholder="New password" autocomplete="new-password">
+          <input class="profile-input" type="password" id="pwdConfirmPassword" placeholder="Confirm new password" autocomplete="new-password">
+          <div class="poxy-profile-actions" style="margin-top:10px">
+            <button type="button" class="poxy-profile-btn poxy-profile-btn--compact" id="btnChangePassword">Update Password</button>
+          </div>
+          <div class="pwd-msg" id="pwdMsg"></div>
+        </div>
+      </div>
     </div>
   </div>
-  <div style="text-align:center;margin-bottom:14px">
-    <label for="avatarUpload" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border:1.5px dashed #e0e0e0;border-radius:50px;font-size:10px;font-weight:700;color:#B0B0B0;letter-spacing:1px;cursor:pointer;transition:all 0.2s;text-transform:uppercase" onmouseover="this.style.borderColor='#FF5722';this.style.color='#FF5722'" onmouseout="this.style.borderColor='#e0e0e0';this.style.color='#B0B0B0'">
-      📷 Upload Photo
-    </label>
-    <input type="file" id="avatarUpload" accept="image/*" style="display:none">
-    <div id="uploadStatus" style="font-size:10px;color:#B0B0B0;margin-top:5px;letter-spacing:1px"></div>
-  </div>
-  <div class="profile-field">
-    <div class="profile-label">Username</div>
-    <input class="profile-input" id="profileUsername" placeholder="Choose a username" maxlength="24">
-  </div>
-  <div class="profile-stats">
-    <div class="pstat"><div class="pstat-val" id="statTotal">–</div><div class="pstat-label">Total</div></div>
-    <div class="pstat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
-    <div class="pstat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
-  </div>
-  <div class="mythic-club-tracker" id="mythicClubTracker">
-    <div class="mct-label">Ecosystem Private Club Entry</div>
-    <div class="mct-bar-track"><div class="mct-bar-fill" id="mctBarFill" style="width:0%"></div></div>
-    <div class="mct-status" id="mctStatus">Loading...</div>
-  </div>
-  <div class="badge-wallet" id="badgeWalletContainer">
-    <div class="badge-wallet-label">Badge Wallet</div>
-    <div class="badge-list" id="badgeList"><span class="badge-none">No badges yet.</span></div>
-  </div>
-  <div class="featured-poxy-section">
-    <div class="featured-poxy-label">Featured POXY</div>
-    <div class="featured-poxy-display" id="featuredPoxyDisplay"><div class="featured-poxy-empty">No POXY featured yet. Select one from your collection.</div></div>
-  </div>
-  <div style="margin:14px 0">
-    <div class="featured-poxy-label">Daily Quests</div>
-    <div id="dailyQuestList"><div style="font-size:10.5px;color:#B0B0B0;padding:6px 0">Sign in to load quests…</div></div>
-  </div>
-  <div class="pwd-form">
-    <div class="pwd-form-label">Change Password</div>
-    <input class="profile-input" type="password" id="pwdNewPassword" placeholder="New password" style="margin-bottom:8px">
-    <input class="profile-input" type="password" id="pwdConfirmPassword" placeholder="Confirm new password" style="margin-bottom:8px">
-    <button class="btn-primary" id="btnChangePassword" style="margin-top:4px">Update Password</button>
-    <div class="pwd-msg" id="pwdMsg"></div>
-  </div>
-  <button class="btn-primary" id="btnSaveProfile" style="margin-top:8px">Save Profile</button>
 </div>
 
 <!-- COLLECTION PAGE -->
@@ -2996,7 +3019,7 @@ async function renderProfileStats(){
   try{
     const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
     $('statTotal').textContent=data?.length||0;
-    $('statRare').textContent=data?.filter(d=>['rare','epic','legendary','mythic'].includes(d.poxy_tier)).length||0;
+    $('statRare').textContent=data?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
     $('statDust').textContent=currentProfile?.dust||0;
   }catch(e){}
 }
@@ -3045,13 +3068,35 @@ async function renderBadgeWallet(){
 async function renderFeaturedPoxyDisplay(){
   const el=$('featuredPoxyDisplay');
   if(!el||!currentProfile)return;
-  if(!currentProfile.favorite_poxy_id){el.innerHTML='<div class="featured-poxy-empty">No POXY featured yet. Select one from your collection.</div>';return;}
+  if(!currentProfile.favorite_poxy_id){
+    el.className='poxy-featured-slot empty';
+    el.innerHTML='<p class="featured-poxy-empty">Select one from Collection</p>';
+    return;
+  }
   try{
     const{data,error}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('id',currentProfile.favorite_poxy_id).single();
-    if(error||!data){el.innerHTML='<div class="featured-poxy-empty">Featured POXY not found.</div>';return;}
+    if(error||!data){
+      el.className='poxy-featured-slot empty';
+      el.innerHTML='<p class="featured-poxy-empty">Featured POXY not found.</p>';
+      return;
+    }
     const tier=TIERS.find(t=>t.id===data.poxy_tier)||TIERS[0];
-    el.innerHTML='<div class="featured-poxy-icon">'+tier.icon+'</div><div class="featured-poxy-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="featured-poxy-serial">'+sanitizeText(data.serial_number||'–')+'</div>';
-  }catch(e){el.innerHTML='<div class="featured-poxy-empty">Could not load featured POXY.</div>';}
+    el.className='poxy-featured-slot';
+    el.innerHTML='<span class="poxy-featured-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</span>'
+      +'<span class="poxy-featured-icon">'+tier.icon+'</span>'
+      +'<span class="poxy-featured-serial">'+sanitizeText(data.serial_number||'–')+'</span>';
+  }catch(e){
+    el.className='poxy-featured-slot empty';
+    el.innerHTML='<p class="featured-poxy-empty">Could not load featured POXY.</p>';
+  }
+}
+function toggleProfilePwdSection(forceOpen){
+  const sec=$('pwdSection'),tog=$('pwdSectionToggle');
+  if(!sec)return;
+  const open=forceOpen!==undefined?!!forceOpen:!!sec.hidden;
+  sec.hidden=!open;
+  if(tog)tog.setAttribute('aria-expanded',open?'true':'false');
+  if(!open){$('pwdNewPassword').value='';$('pwdConfirmPassword').value='';const m=$('pwdMsg');if(m){m.textContent='';m.className='pwd-msg';}}
 }
 $('btnSaveProfile').addEventListener('click',async function(){
   const username=$('profileUsername').value.trim();
@@ -3070,6 +3115,10 @@ $('btnSaveProfile').addEventListener('click',async function(){
   }catch(e){showToast(usernameTakenMessage(e));}
   btn.disabled=false;
 });
+const pwdToggle=$('pwdSectionToggle');
+if(pwdToggle)pwdToggle.addEventListener('click',()=>toggleProfilePwdSection());
+const pwdClose=$('pwdSectionClose');
+if(pwdClose)pwdClose.addEventListener('click',()=>toggleProfilePwdSection(false));
 $('btnChangePassword').addEventListener('click',async function(){
   const np=$('pwdNewPassword').value;
   const cp=$('pwdConfirmPassword').value;
@@ -3077,12 +3126,13 @@ $('btnChangePassword').addEventListener('click',async function(){
   msg.textContent='';msg.className='pwd-msg';
   if(!np||np.length<6){msg.className='pwd-msg error';msg.textContent='Password must be at least 6 characters.';return;}
   if(np!==cp){msg.className='pwd-msg error';msg.textContent='Passwords do not match.';return;}
-  const btn=$('btnChangePassword');btn.disabled=true;btn.textContent='Updating...';
+  const btn=$('btnChangePassword');btn.disabled=true;btn.textContent='Updating…';
   try{
     const{error}=await sb.auth.updateUser({password:np});
     if(error)throw error;
     msg.className='pwd-msg success';msg.textContent='Password updated successfully.';
     $('pwdNewPassword').value='';$('pwdConfirmPassword').value='';
+    setTimeout(()=>toggleProfilePwdSection(false),1200);
   }catch(e){msg.className='pwd-msg error';msg.textContent=e.message||'Update failed.';}
   btn.disabled=false;btn.textContent='Update Password';
 });
@@ -3508,7 +3558,7 @@ window.showPage=function(page){
   syncPsdTopNav(page);
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
   if(page==='friends'){loadFriends();loadPendingRequests();}
-  if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();}
+  if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();loadDailyQuests();}
   document.body.classList.remove('dark-club');
   window.scrollTo(0,0);
 };
@@ -3998,6 +4048,7 @@ async function toggleFeaturePoxy(userPoxyId){
     if(error)throw error;
     if(currentProfile)currentProfile.favorite_poxy_id=newId;
     if(activeClubSubTab==='profile')renderClubProfileFeatured();
+    renderFeaturedPoxyDisplay();
     showToast(newId?'Featured in profile!':'Removed from profile.');
     renderCollection();
   }catch(e){logAndToast('feature',e);}
@@ -6907,23 +6958,32 @@ function updateGreatBurnUI(){
 async function loadDailyQuests(){
   if(!currentUser)return;
   const list=$('dailyQuestList');if(!list)return;
-  list.innerHTML='<div style="font-size:10px;color:#444;padding:8px 0">Loading quests…</div>';
+  list.innerHTML='<p class="poxy-quest-loading">Loading quests…</p>';
   try{
     const{data,error}=await sb.rpc('ensure_daily_quests',{p_user_id:currentUser.id});
     if(error)throw error;
     dailyQuests=data||[];
-    if(!dailyQuests.length){list.innerHTML='<div style="font-size:10px;color:#444">No quests today.</div>';return;}
+    if(!dailyQuests.length){list.innerHTML='<p class="poxy-quest-empty">No quests today.</p>';return;}
     const labels={open_3_cases:'Open 3 cases',burn_5_commons:'Burn 5 Commons',list_1_market:'List 1 item on market',send_chat:'Send a chat message'};
     list.innerHTML='';
     dailyQuests.forEach(q=>{
       const pct=Math.min(100,(q.progress/q.goal)*100);
+      const claimed=!!q.claimed;
+      const ready=q.progress>=q.goal&&!claimed;
       const row=document.createElement('div');
-      row.style.cssText='background:#13131a;border:1px solid #1e1e28;border-radius:10px;padding:10px 12px;margin-bottom:8px';
-      row.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;font-weight:700;color:#ccc">'+(labels[q.quest_key]||q.quest_key)+'</span><span style="font-size:10px;color:#888">'+q.progress+' / '+q.goal+'</span></div><div style="height:5px;background:#0d0d10;border-radius:3px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,#ff416c,#ffab2e);transition:width 0.4s ease"></div></div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:10px;color:#FF6E40;font-weight:700">+ '+formatPC(q.reward_pc)+'</span><button class="btn-claim-q" data-id="'+q.id+'" '+(q.claimed?'disabled':'')+' style="padding:5px 12px;border:1px solid '+(q.claimed?'#2a2a35':'#ff416c')+';border-radius:20px;background:'+(q.claimed?'#13131a':'transparent')+';color:'+(q.claimed?'#444':'#ff416c')+';font-size:9.5px;font-weight:700;cursor:'+(q.claimed?'default':'pointer')+';font-family:inherit">'+(q.claimed?'Claimed':q.progress>=q.goal?'Claim':'In progress')+'</button></div>';
+      row.className='poxy-quest-row'+(claimed?' is-claimed':'');
+      const btnLabel=claimed?'Claimed':ready?'Claim':'In progress';
+      row.innerHTML='<div class="poxy-quest-head"><span class="poxy-quest-title">'+sanitizeText(labels[q.quest_key]||q.quest_key)+'</span>'
+        +'<span class="poxy-quest-progress">'+q.progress+' / '+q.goal+'</span></div>'
+        +'<div class="poxy-quest-track"><div class="poxy-quest-fill" style="width:'+pct+'%"></div></div>'
+        +'<div class="poxy-quest-foot"><span class="poxy-quest-reward">+ '+formatPC(q.reward_pc)+'</span>'
+        +'<button type="button" class="poxy-quest-claim'+(claimed?' is-claimed':'')+'" data-id="'+q.id+'">'+btnLabel+'</button></div>';
+      const btn=row.querySelector('.poxy-quest-claim');
+      btn.disabled=claimed||!ready;
+      if(ready)btn.addEventListener('click',()=>claimQuestReward(q.id));
       list.appendChild(row);
     });
-    list.querySelectorAll('.btn-claim-q').forEach(b=>b.addEventListener('click',()=>claimQuestReward(b.dataset.id)));
-  }catch(e){list.innerHTML='<div style="font-size:10px;color:#FF5252">Could not load quests.</div>';}
+  }catch(e){list.innerHTML='<p class="poxy-quest-empty" style="color:#ffb4ab">Could not load quests.</p>';}
 }
 async function bumpQuest(quest_key,delta){
   if(!currentUser)return;
