@@ -1219,10 +1219,9 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- STITCH: POXY Gaming Dashboard - Hub (project 3452513058897199540) -->
-<div id="huntPage" style="display:none">
-  <div class="poxy-stitch-dash" id="poxyStitchDashboard">
-    <nav class="st-nav">
+<!-- STITCH app shell: global top nav stays on every page -->
+<div id="poxyAppShell" style="display:none">
+  <nav class="st-nav st-nav--global" id="stGlobalNav" aria-label="POXY World">
       <div class="st-nav-inner">
         <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
         <div class="st-nav-left">
@@ -1238,6 +1237,8 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span> Market</button>
               <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span> Club</button>
               <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span> Ranks</button>
+              <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span> Collection</button>
+              <button type="button" class="st-nav-pill" id="psdNavFriends" onclick="showPage('friends')"><span class="material-symbols-outlined">group</span> Friends</button>
             </div>
           </div>
         </div>
@@ -1259,7 +1260,9 @@ body.dark-club .club-sub{color:#888}
           </div>
         </div>
       </div>
-    </nav>
+  </nav>
+<div id="huntPage" style="display:none">
+  <div class="poxy-stitch-dash" id="poxyStitchDashboard">
     <div class="st-spa-viewport" id="stSpaViewport">
     <section class="st-spa-panel st-spa-panel--active" id="stPanelDashboard" data-st-tab="dashboard">
     <main class="st-main">
@@ -1271,6 +1274,7 @@ body.dark-club .club-sub{color:#888}
           <p>Unlock immutable digital heritage. What will you reveal today?</p>
           <div class="fomo" id="fomoText">Mythic POXY claimed this month: 0/10</div>
           <div id="greatBurnCounter">🔥 The Great Burn — 0 POXY</div>
+          <div class="st-hero-playfield" id="stHeroPlayfield">
           <div class="st-roulette-wrap">
             <div class="st-roulette-mask">
               <div class="st-roulette-track-wrap" aria-hidden="true">
@@ -1306,6 +1310,22 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="btn-discard" id="btnDiscard">DISCARD</button>
             </div>
             <button type="button" class="btn-list-market" id="btnListFromHunt">LIST ON MARKET INSTEAD</button>
+          </div>
+          <div class="st-win-reveal" id="stWinReveal" aria-hidden="true" role="dialog" aria-labelledby="stWinRevealTitle">
+            <div class="st-win-reveal-backdrop" aria-hidden="true"></div>
+            <div class="st-win-reveal-card" id="stWinRevealCard">
+              <div class="st-win-reveal-flare" id="stWinFlare" aria-hidden="true"></div>
+              <div class="st-win-reveal-kicker" id="stWinRevealTitle">Win Reveal</div>
+              <div class="st-win-reveal-icon" id="stWinIcon"></div>
+              <div class="st-win-reveal-name" id="stWinName"></div>
+              <div class="st-win-reveal-rarity" id="stWinRarity"></div>
+              <div class="st-win-reveal-serial" id="stWinSerial"></div>
+              <div class="st-win-reveal-actions">
+                <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd">Add to Collection</button>
+                <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard">Discard</button>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       </section>
@@ -1354,21 +1374,6 @@ body.dark-club .club-sub{color:#888}
         </section>
       </div>
     </main>
-    <div class="st-win-reveal" id="stWinReveal" aria-hidden="true" role="dialog" aria-labelledby="stWinRevealTitle">
-      <div class="st-win-reveal-backdrop" aria-hidden="true"></div>
-      <div class="st-win-reveal-card" id="stWinRevealCard">
-        <div class="st-win-reveal-flare" id="stWinFlare" aria-hidden="true"></div>
-        <div class="st-win-reveal-kicker" id="stWinRevealTitle">Win Reveal</div>
-        <div class="st-win-reveal-icon" id="stWinIcon"></div>
-        <div class="st-win-reveal-name" id="stWinName"></div>
-        <div class="st-win-reveal-rarity" id="stWinRarity"></div>
-        <div class="st-win-reveal-serial" id="stWinSerial"></div>
-        <div class="st-win-reveal-actions">
-          <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd">Add to Collection</button>
-          <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard">Discard</button>
-        </div>
-      </div>
-    </div>
     </section>
 
     <section class="st-spa-panel" id="stPanelTierList" data-st-tab="tierlist" hidden>
@@ -1590,7 +1595,7 @@ body.dark-club .club-sub{color:#888}
       <div id="feedItems"></div>
     </div>
   </div>
-</div>
+</div><!-- /#poxyAppShell -->
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottomNav" style="display:none">
@@ -2185,6 +2190,8 @@ function setupAuthStateListener(){
       $('bottomNav').style.display='none';
       $('balanceBadge').classList.remove('visible');
       document.body.classList.remove('poxy-stitch-dash');
+      const shell=$('poxyAppShell');
+      if(shell)shell.style.display='none';
       $('huntPage').style.display='none';
       teardownRealtimeSubscriptions();
       if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
@@ -2480,8 +2487,21 @@ let tradeTargetUserId=null;
 const tradeSelectedIds=new Set();
 let leaderboardRankByUser={};
 
+function updateStNavOffset(){
+  const nav=$('stGlobalNav');
+  const shell=$('poxyAppShell');
+  if(!nav||!shell)return;
+  const h=Math.ceil(nav.getBoundingClientRect().height);
+  shell.style.setProperty('--st-nav-h',h+'px');
+}
+function showPoxyAppShell(){
+  const shell=$('poxyAppShell');
+  if(shell)shell.style.display='block';
+  requestAnimationFrame(updateStNavOffset);
+}
 const STITCH_TAB_MAP={
   dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavExplore',
+  collection:'psdNavCollection',friends:'psdNavFriends',profile:'psdNavDashboard',
   market:'psdNavMarket',club:'psdNavClub',
   tierlist:'psdNavRarity',rarity:'psdNavRarity',ranks:'psdNavRanks'
 };
@@ -2505,9 +2525,9 @@ function syncPsdTopNav(page){
   const pillId=STITCH_TAB_MAP[tab]||(page==='bank'?'psdNavDashboard':null);
   const pillBtn=pillId?$(pillId):null;
   if(pillBtn)pillBtn.classList.add('active');
-  if(tab==='dashboard'||tab==='explore'||tab==='hunt'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
+  if(tab==='dashboard'||tab==='explore'||tab==='hunt'||tab==='profile'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
   else if(tab==='rarity'||tab==='tierlist'){const r=$('psdNavRarity');if(r)r.classList.add('active');}
-  else if(tab==='market'||tab==='club'||tab==='ranks'){}
+  else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'){}
 }
 
 function mountSpaPanels(){
@@ -2533,6 +2553,7 @@ window.showStitchTab=function(tab){
   const prev=activeStitchTab;
   activeStitchTab=next;
   mountSpaPanels();
+  showPoxyAppShell();
   document.body.classList.add('poxy-stitch-dash');
   $('huntPage').style.display='block';
   $('bottomNav').style.display='none';
@@ -2803,31 +2824,24 @@ function refreshStitchDashboardChrome(){
 
 // ── NAVIGATION ──
 window.showPage=function(page){
-  if(page==='bank'){scrollToTreasury();return;}
-  if(['hunt','market','club','tierlist','ranks'].includes(page)&&currentUser){
-    showStitchTab(page==='hunt'?'dashboard':page);
-    return;
-  }
-  const isHunt=page==='hunt';
-  document.body.classList.toggle('poxy-stitch-dash',isHunt);
-  $('huntPage').style.display=isHunt?'block':'none';
-  if(isHunt&&currentUser)showStitchTab('dashboard');
-  ['profile','collection','friends','market','bank'].forEach(p=>{
+  if(!currentUser){showToast('Sign in first.');return;}
+  if(page==='bank'){showStitchTab('dashboard');scrollToTreasury();return;}
+  const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks'};
+  if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
+  showPoxyAppShell();
+  document.body.classList.add('poxy-stitch-dash');
+  $('huntPage').style.display='none';
+  $('bottomNav').style.display='none';
+  ['profile','collection','friends'].forEach(p=>{
     const el=$(p+'Page');
-    if(!el)return;
-    if(el.id==='marketPage'||el.id==='clubPage'){if(!isHunt)el.classList.toggle('visible',page===p);return;}
-    el.classList.toggle('visible',page===p);
+    if(el)el.classList.toggle('visible',page===p);
   });
-  $('bottomNav').style.display=isHunt?'none':'flex';
   syncPsdTopNav(page);
-  ['navHunt','navCollection','navFriends','navMarket','navBank','navClub'].forEach(id=>{const b=$(id);if(b)b.classList.remove('active');});
-  const navMap={hunt:'navHunt',collection:'navCollection',friends:'navFriends',market:'navMarket',bank:'navBank',club:'navClub',profile:'navHunt'};
-  const nv=$(navMap[page]);if(nv)nv.classList.add('active');
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
   if(page==='friends'){loadFriends();loadPendingRequests();}
   if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();}
   document.body.classList.remove('dark-club');
-  if(currentTier&&isHunt)setBodyBg(currentTier.id);
+  window.scrollTo(0,0);
 };
 
 // ── LOGO ──
@@ -2961,6 +2975,14 @@ function openWinRevealModal(tier){
   const addBtn=$('stWinAdd');
   if(addBtn){addBtn.disabled=false;addBtn.textContent='Add to Collection';}
   if(modal){modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');}
+  const playfield=$('stHeroPlayfield');
+  if(playfield){
+    const navH=72;
+    const top=playfield.getBoundingClientRect().top+window.scrollY-navH;
+    if(window.scrollY>top-8||playfield.getBoundingClientRect().top<navH+8){
+      window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+    }
+  }
   if(t.id==='mythic'&&mythicCount<10){mythicCount++;$('fomoText').textContent='Mythic POXY claimed this month: '+mythicCount+'/10';}
   triggerRevealFX(t.id);
   setBodyBg(t.id);
@@ -4930,6 +4952,8 @@ function setupGlobalEscapeClose(){
 
 function bootApp(){
   mountSpaPanels();
+  updateStNavOffset();
+  window.addEventListener('resize',updateStNavOffset,{passive:true});
   setupGlobalEscapeClose();
   loadSelectedFrame();
   initFrameSelectorCollapse();

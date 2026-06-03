@@ -21,7 +21,11 @@
   min-height:100vh;
 }
 .poxy-stitch-dash .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;font-size:20px;line-height:1;vertical-align:middle}
-.st-nav{position:sticky;top:0;z-index:120;background:rgba(19,19,19,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--st-glass);box-shadow:0 0 20px rgba(249,171,255,0.08)}
+#poxyAppShell{--st-nav-h:96px;min-height:100vh;padding-top:var(--st-nav-h)}
+#poxyAppShell>.page.visible,#poxyAppShell>#huntPage,#poxyAppShell>.club-page.visible{padding-top:0}
+.st-nav{background:rgba(19,19,19,0.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--st-glass);box-shadow:0 0 20px rgba(249,171,255,0.08)}
+.st-nav--global{position:fixed;top:0;left:0;right:0;z-index:320}
+.st-nav:not(.st-nav--global){position:sticky;top:0;z-index:120}
 .st-nav-inner{max-width:var(--st-max);margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 @media(min-width:1280px){.st-nav-inner{padding:14px 64px}}
 .st-topup-btn{
@@ -91,7 +95,10 @@
 .st-hero-inner{position:relative;z-index:2;max-width:720px;margin:0 auto}
 .st-hero h1{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:clamp(32px,5vw,48px);font-weight:700;margin-bottom:8px}
 .st-hero p{font-size:16px;color:var(--st-on-surface-variant);line-height:1.5;margin-bottom:24px}
+.st-hero-playfield{position:relative;margin-bottom:24px;isolation:isolate}
 .st-roulette-wrap{background:var(--st-surface-highest);border:1px solid var(--st-glass);border-radius:16px;padding:12px;height:180px;position:relative;margin-bottom:24px;box-shadow:inset 0 2px 12px rgba(0,0,0,0.35)}
+.st-hero-playfield .st-roulette-wrap{margin-bottom:24px}
+.st-hero-playfield .cta-wrap{position:relative;z-index:1}
 .st-roulette-wrap::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--st-electric-cyan);box-shadow:0 0 15px var(--st-electric-cyan);transform:translateX(-50%);z-index:5}
 .st-roulette-mask{mask-image:linear-gradient(to right,transparent,black 8%,black 92%,transparent);height:100%;overflow:hidden;position:relative}
 .st-roulette-track-wrap{position:absolute;inset:0;display:flex;align-items:center;overflow:hidden;z-index:1}
@@ -108,9 +115,9 @@
 .st-roulette-track .st-slot[data-tier="legendary"]{box-shadow:0 0 22px rgba(255,202,40,0.6),0 0 44px rgba(255,152,0,0.22)}
 .st-roulette-track .st-slot[data-tier="mythic"]{box-shadow:0 0 24px rgba(255,82,82,0.65),0 0 48px rgba(255,82,82,0.28)}
 @keyframes prize-pulse{0%,100%{box-shadow:0 0 20px var(--prize-glow,rgba(0,229,255,0.45)),0 0 40px var(--prize-glow,rgba(0,229,255,0.25)),0 0 0 2px var(--st-electric-cyan);transform:scale(1.06)}50%{box-shadow:0 0 36px var(--prize-glow,rgba(0,229,255,0.7)),0 0 72px var(--prize-glow,rgba(0,229,255,0.35)),0 0 120px var(--prize-glow,rgba(0,229,255,0.15)),0 0 0 2px var(--st-electric-cyan);transform:scale(1.12)}}
-.st-win-reveal{position:fixed;inset:0;z-index:2500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.4s ease,visibility 0.4s ease}
+.st-win-reveal{position:absolute;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px 12px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.4s ease,visibility 0.4s ease;border-radius:20px}
 .st-win-reveal.is-open{opacity:1;visibility:visible;pointer-events:auto}
-.st-win-reveal-backdrop{position:absolute;inset:0;background:rgba(5,5,8,0.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.st-win-reveal-backdrop{position:absolute;inset:0;background:rgba(5,5,8,0.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:20px}
 .st-win-reveal-card{position:relative;z-index:2;width:100%;max-width:360px;padding:36px 28px 28px;border-radius:24px;border:1px solid var(--st-glass);background:linear-gradient(165deg,rgba(42,42,42,0.98),rgba(19,19,19,0.98));text-align:center;transform:scale(0);opacity:0;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.55)}
 .st-win-reveal.is-open .st-win-reveal-card{animation:stWinPop 0.65s cubic-bezier(0.34,1.56,0.64,1) forwards}
 .st-win-reveal-flare{position:absolute;inset:-50%;background:radial-gradient(circle,var(--flare-color,rgba(249,171,255,0.3)) 0%,transparent 68%);pointer-events:none;animation:stWinFlare 2.4s ease-in-out infinite}
