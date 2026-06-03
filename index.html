@@ -1731,20 +1731,21 @@ body.dark-club .club-sub{color:#888}
       <span class="poxy-club-orb poxy-club-orb--amber"></span>
       <span class="poxy-club-orb poxy-club-orb--cyan"></span>
     </div>
-    <header class="poxy-club-header">
-      <div class="poxy-club-header-glow" aria-hidden="true"></div>
-      <div class="poxy-club-header-inner">
-        <span class="material-symbols-outlined" aria-hidden="true">diamond</span>
-        <h1 class="poxy-club-title">POXY CLUB</h1>
-        <p class="poxy-club-sub">VIP Lounge · Stitch Elite</p>
-      </div>
-    </header>
-    <nav class="poxy-club-dock" role="tablist" aria-label="Club modules">
-      <button type="button" class="poxy-club-dock-btn active" data-club-tab="terminal" onclick="switchClubSubTab('terminal')"><span class="material-symbols-outlined">deployed_code</span> Terminal</button>
-      <button type="button" class="poxy-club-dock-btn" data-club-tab="intel" onclick="switchClubSubTab('intel')"><span class="material-symbols-outlined">monitoring</span> Intel</button>
-      <button type="button" class="poxy-club-dock-btn" data-club-tab="market" onclick="switchClubSubTab('market')"><span class="material-symbols-outlined">handshake</span> OTC Market</button>
-      <button type="button" class="poxy-club-dock-btn" data-club-tab="syndicate" onclick="switchClubSubTab('syndicate')"><span class="material-symbols-outlined">groups</span> Syndicate</button>
-    </nav>
+    <div class="poxy-club-top">
+      <header class="poxy-club-header">
+        <div class="poxy-club-header-inner">
+          <span class="material-symbols-outlined" aria-hidden="true">diamond</span>
+          <h1 class="poxy-club-title">POXY CLUB</h1>
+          <p class="poxy-club-sub">VIP Lounge · Stitch Elite</p>
+        </div>
+      </header>
+      <nav class="poxy-club-dock" role="tablist" aria-label="Club modules">
+        <button type="button" class="poxy-club-dock-btn active" data-club-tab="terminal" onclick="switchClubSubTab('terminal')"><span class="material-symbols-outlined">deployed_code</span> Terminal</button>
+        <button type="button" class="poxy-club-dock-btn" data-club-tab="intel" onclick="switchClubSubTab('intel')"><span class="material-symbols-outlined">monitoring</span> Intel</button>
+        <button type="button" class="poxy-club-dock-btn" data-club-tab="market" onclick="switchClubSubTab('market')"><span class="material-symbols-outlined">handshake</span> OTC Market</button>
+        <button type="button" class="poxy-club-dock-btn" data-club-tab="syndicate" onclick="switchClubSubTab('syndicate')"><span class="material-symbols-outlined">groups</span> Syndicate</button>
+      </nav>
+    </div>
     <div class="poxy-club-panels">
       <section id="clubTabTerminal" class="poxy-club-panel active" data-club-panel="terminal">
         <div class="poxy-club-module poxy-club-terminal-module" id="clubTerminalModule">
