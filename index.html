@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="assets/frames.css">
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
-<link rel="stylesheet" href="assets/poxy-spa-nav.css">
-<link rel="stylesheet" href="assets/poxy-ranks-page.css">
+<link rel="stylesheet" href="assets/poxy-spa-nav.css?v=3">
+<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-club-gold.css">
@@ -1430,7 +1430,7 @@ body.dark-club .club-sub{color:#888}
 
     <section class="st-spa-panel ranks-panel" id="stPanelRanks" data-st-tab="ranks" hidden>
       <div class="st-main ranks-page">
-        <header class="ranks-hero ranks-reveal-up">
+        <header class="ranks-hero">
           <h1 class="ranks-hero-title">Global Ranks</h1>
           <p class="ranks-hero-sub">The elite echelon of POXY WORLD.</p>
           <div class="lb-toggle ranks-page-toggle" id="ranksModeToggle" role="tablist" aria-label="Leaderboard mode">
@@ -1439,15 +1439,15 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="lb-toggle-btn" id="spaLbBtnCollection" onclick="switchLeaderboard('collection')">Rare+ Count</button>
           </div>
         </header>
-        <section class="ranks-podium-wrap ranks-reveal-up" style="animation-delay:0.08s" aria-label="Top 3 players">
+        <section class="ranks-podium-wrap" aria-label="Top 3 players">
           <div class="ranks-podium" id="ranksPodium"></div>
         </section>
         <section class="ranks-body-grid">
-          <div class="ranks-list-col ranks-reveal-right" style="animation-delay:0.2s">
+          <div class="ranks-list-col">
             <h2 class="ranks-list-heading">Top 100 Players</h2>
             <div id="spaLeaderboardList" class="ranks-list-scroll"><div class="lb-loading"><div class="col-spinner"></div></div></div>
           </div>
-          <aside class="ranks-profile-widget ranks-reveal-left" id="ranksMyProfileWidget" style="animation-delay:0.28s" aria-label="Your standing overview">
+          <aside class="ranks-profile-widget" id="ranksMyProfileWidget" aria-label="Your standing overview">
             <div class="lb-loading"><div class="col-spinner"></div></div>
           </aside>
         </section>
@@ -2365,7 +2365,7 @@ body.dark-club .club-sub{color:#888}
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <script>
 const sb = supabase.createClient(
   'https://rbrtjkfawdnomvvyxwvp.supabase.co',
@@ -3418,7 +3418,10 @@ window.showStitchTab=function(tab){
   if(next==='tierlist')loadTierListPanel();
   if(next==='ranks'){
     ensureRanksPanelReady();
-    loadLeaderboardData();
+    requestAnimationFrame(()=>{
+      ensureRanksPanelReady();
+      loadLeaderboardData();
+    });
   }
   syncNavUsernameLabels();
 };
@@ -3622,10 +3625,16 @@ function getLeaderboardListEl(){
 function ensureRanksPanelReady(){
   const panel=$('stPanelRanks');
   if(!panel||panel.hidden)return;
-  panel.querySelectorAll('.ranks-reveal-up,.ranks-reveal-right,.ranks-reveal-left,.ranks-podium-wrap,.ranks-body-grid').forEach(el=>{
-    el.style.opacity='1';
-    el.style.visibility='visible';
-  });
+  panel.classList.add('ranks-panel--ready');
+  panel.style.opacity='1';
+  panel.style.visibility='visible';
+  panel.style.transform='none';
+  const main=panel.querySelector('.st-main.ranks-page');
+  if(main){
+    main.style.opacity='1';
+    main.style.visibility='visible';
+    main.style.transform='none';
+  }
 }
 const STITCH_TIER_ICON={mythic:'diamond',legendary:'grade',epic:'auto_awesome',rare:'stars',uncommon:'eco',common:'view_in_ar'};
 function renderDashColPreview(){

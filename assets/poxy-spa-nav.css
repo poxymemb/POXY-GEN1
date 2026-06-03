@@ -13,6 +13,8 @@
 }
 .st-spa-panel--active{
   display:block;
+  opacity:1;
+  transform:translateX(0);
   animation:stSpaEnter 0.42s cubic-bezier(0.1,1,0.1,1) forwards;
   pointer-events:auto;
 }
@@ -22,12 +24,12 @@
   pointer-events:none;
 }
 @keyframes stSpaEnter{
-  from{opacity:0;transform:translateX(22px)}
-  to{opacity:1;transform:translateX(0)}
+  from{transform:translateX(22px)}
+  to{transform:translateX(0)}
 }
 @keyframes stSpaLeave{
-  from{opacity:1;transform:translateX(0)}
-  to{opacity:0;transform:translateX(-14px)}
+  from{transform:translateX(0)}
+  to{transform:translateX(-14px)}
 }
 
 .st-spa-panel-inner.page{
