@@ -24,7 +24,7 @@ body.bg-rare{background:linear-gradient(135deg,rgba(41,182,246,0.07) 0%,#fff 70%
 body.bg-epic{background:linear-gradient(135deg,rgba(171,71,188,0.08) 0%,#fff 60%)}
 body.bg-legendary{background:linear-gradient(135deg,rgba(255,202,40,0.10) 0%,rgba(255,152,0,0.05) 50%,#fff 80%)}
 body.bg-mythic{animation:prism 3s ease-in-out infinite}
-body.dark-club{background:linear-gradient(165deg,#121216 0%,#1a1a24 50%,#15151c 100%);color:#f5f5f7;animation:none}
+body.dark-club{background:transparent;color:inherit;animation:none}
 body[data-theme="cyberpunk"]{background:#0d0d10}
 body[data-theme="cyberpunk"] .page,.page.visible[data-theme="cyberpunk"],.app{background:transparent}
 body[data-theme="mayfair"]{background:#0e0608}
@@ -1736,7 +1736,7 @@ body.dark-club .club-sub{color:#888}
       <div class="poxy-club-header-inner">
         <span class="material-symbols-outlined" aria-hidden="true">diamond</span>
         <h1 class="poxy-club-title">POXY CLUB</h1>
-        <p class="poxy-club-sub">Cyber-Luxury · Frosted Titanium Lounge</p>
+        <p class="poxy-club-sub">VIP Lounge · Stitch Elite</p>
       </div>
     </header>
     <nav class="poxy-club-dock" role="tablist" aria-label="Club modules">
@@ -4928,10 +4928,10 @@ function renderClubHeatmap(){
   for(let i=0;i<24;i++){v=Math.max(8,Math.min(95,v+(Math.random()-0.48)*18));pts.push({x:i/(23)*w,y:h-v/100*h});}
   const d=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
   const mythicAt=pts.length-3;
-  chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><defs><linearGradient id="clubHg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(243,198,111,0.45)"/><stop offset="100%" stop-color="transparent"/></linearGradient><filter id="clubHgGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
+  chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><defs><linearGradient id="clubHg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(249,171,255,0.4)"/><stop offset="100%" stop-color="transparent"/></linearGradient><filter id="clubHgGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
     +'<path d="'+d+' L'+w+','+h+' L0,'+h+' Z" fill="url(#clubHg)"/>'
-    +'<path d="'+d+'" fill="none" stroke="#F3C66F" stroke-width="2.5" opacity="1" filter="url(#clubHgGlow)"/>'
-    +'<circle cx="'+pts[mythicAt].x+'" cy="'+pts[mythicAt].y+'" r="5" fill="#F3C66F" filter="url(#clubHgGlow)"/></svg>';
+    +'<path d="'+d+'" fill="none" stroke="#f9abff" stroke-width="2.5" opacity="1" filter="url(#clubHgGlow)"/>'
+    +'<circle cx="'+pts[mythicAt].x+'" cy="'+pts[mythicAt].y+'" r="5" fill="#00E5FF" filter="url(#clubHgGlow)"/></svg>';
   if(leg)leg.innerHTML='<span>Live opens</span><span>Mythic · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span><span>24h window</span>';
 }
 async function renderClubFoundersLedger(){
@@ -5174,7 +5174,7 @@ function renderClubPromo(){
     +'<h2 class="poxy-club-locked-title">POXY CLUB</h2>'
     +'<p class="poxy-club-locked-text">Exclusive '+formatPC(VIP_CASE_PRICE)+' ultra-rare VIP boxes.<br>Mint serials #1, #2, #3 across unique tiers.<br>Members-only flash sales &amp; founder broadcasts.</p>'
     +'<div class="poxy-club-glass poxy-club-locked-pool"><div class="poxy-club-section-label" style="margin-bottom:12px"><span class="material-symbols-outlined">stars</span> VIP Tier Pool</div>'+poolRows+'</div>'
-    +'<p class="poxy-club-locked-text" style="margin-top:16px;font-size:13px">Collect any <strong style="color:#F3C66F">Mythic POXY</strong> from the standard hunt to unlock the Founders Circle instantly.</p>';
+    +'<p class="poxy-club-locked-text" style="margin-top:16px;font-size:13px">Collect any <strong style="color:#f9abff">Mythic POXY</strong> from the standard hunt to unlock the Founders Circle instantly.</p>';
 }
 async function loadFounderAnnouncements(){
   const wrap=$('founderAnnouncements');if(!wrap)return;
@@ -5214,7 +5214,7 @@ async function loadFlashSales(){
       const left=document.createElement('div');left.style.flex='1';
       const endsMs=new Date(s.ends_at).getTime()-Date.now();
       const m=Math.max(0,Math.floor(endsMs/60000));
-      left.innerHTML='<div style="font-size:12px;font-weight:800;color:'+tier.color+';margin-bottom:4px">'+tier.icon+' '+sanitizeText(s.title||tier.label)+'</div><div style="font-size:12px;color:#888;line-height:1.4">'+sanitizeText(s.description||'')+'</div><div style="font-size:11px;color:#D4AF37;margin-top:6px;font-weight:700">'+m+' min left · stock '+s.stock+'</div>';
+      left.innerHTML='<div style="font-size:12px;font-weight:800;color:'+tier.color+';margin-bottom:4px">'+tier.icon+' '+sanitizeText(s.title||tier.label)+'</div><div style="font-size:12px;color:#888;line-height:1.4">'+sanitizeText(s.description||'')+'</div><div style="font-size:11px;color:#00E5FF;margin-top:6px;font-weight:700">'+m+' min left · stock '+s.stock+'</div>';
       const buy=document.createElement('button');buy.type='button';buy.className='poxy-club-flash-buy';buy.textContent=formatPC(s.price_pc)+' · BUY';
       buy.onclick=()=>buyFlashSale(s,tier,buy);
       card.appendChild(left);card.appendChild(buy);
@@ -5315,7 +5315,7 @@ function clubFeedIcon(avatar){
 async function loadFeed(){
   const cont=$('feedItems');
   if(!cont)return;
-  cont.innerHTML='<div class="poxy-club-muted"><div class="col-spinner" style="border-top-color:#D4AF37;margin:0 auto 8px"></div></div>';
+  cont.innerHTML='<div class="poxy-club-muted"><div class="col-spinner" style="border-top-color:#f9abff;margin:0 auto 8px"></div></div>';
   try{
     const{data}=await sb.from('club_feed').select('*').order('created_at',{ascending:false}).limit(20);
     cont.innerHTML='';
@@ -5327,7 +5327,7 @@ async function loadFeed(){
       const icon=clubFeedIcon(item.author_avatar);
       const iconHtml=icon.length<=4?'<span class="poxy-club-feed-avatar">'+icon+'</span>':'<span class="material-symbols-outlined">'+icon+'</span>';
       el.innerHTML='<div class="poxy-club-feed-msg-head"><div class="poxy-club-feed-msg-user">'+iconHtml
-        +'<span class="poxy-club-feed-username'+(isTag?' style="color:#D4AF37"':'')+'">'+sanitizeText(item.author_username||'Member')+'</span></div>'
+        +'<span class="poxy-club-feed-username'+(isTag?' style="color:#f9abff"':'')+'">'+sanitizeText(item.author_username||'Member')+'</span></div>'
         +'<span class="poxy-club-feed-time">'+timeSince(item.created_at)+'</span></div>'
         +'<p class="poxy-club-feed-body'+(isTag?' style="color:rgba(212,175,55,0.8);font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:0.06em"':'')+'">'+sanitizeText(item.content)+'</p>';
       cont.appendChild(el);
