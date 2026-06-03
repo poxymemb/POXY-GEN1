@@ -1,12 +1,25 @@
 /* POXY — Global Ranks (Stitch gaming leaderboard, vanilla port) */
 #stPanelRanks{
+  display:block;
+  min-height:calc(100vh - var(--st-nav-h,96px));
   background:linear-gradient(-45deg,#0e0e0e,#1a0f2e,#131313,#251235);
   background-size:400% 400%;
   animation:ranksBgDrift 20s ease-in-out infinite alternate;
 }
+#stPanelRanks[hidden]{display:none!important}
 @keyframes ranksBgDrift{
   0%{background-position:0% 50%}
   100%{background-position:100% 50%}
+}
+.ranks-panel .st-main.ranks-page{
+  display:block;
+  width:100%;
+  min-height:360px;
+  padding:24px 20px 48px;
+  box-sizing:border-box;
+}
+@media(min-width:1280px){
+  .ranks-panel .st-main.ranks-page{padding:28px 32px 64px}
 }
 .ranks-page{
   --rk-primary:var(--st-primary,#f9abff);
@@ -46,34 +59,49 @@
   0%,100%{box-shadow:0 0 24px rgba(249,171,255,0.15),inset 0 0 16px rgba(249,171,255,0.06)}
   50%{box-shadow:0 0 48px rgba(249,171,255,0.28),inset 0 0 24px rgba(249,171,255,0.1)}
 }
-.ranks-panel--replay .ranks-reveal-up,
+.ranks-panel.st-spa-panel--active .ranks-page,
+.ranks-panel.st-spa-panel--active .ranks-podium-card,
+.ranks-panel.st-spa-panel--active .ranks-list-row,
+.ranks-panel.st-spa-panel--active .ranks-widget-card,
+.ranks-panel.st-spa-panel--active .lb-empty,
+.ranks-panel.st-spa-panel--active .lb-loading{
+  opacity:1;
+  visibility:visible;
+}
 .ranks-panel.st-spa-panel--active .ranks-reveal-up{
-  animation:ranksSlideUp 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
-  opacity:0;
+  animation:ranksSlideUp 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
 }
-.ranks-panel--replay .ranks-reveal-right,
 .ranks-panel.st-spa-panel--active .ranks-reveal-right{
-  animation:ranksFadeRight 0.5s ease-out forwards;
-  opacity:0;
+  animation:ranksFadeRight 0.5s ease-out both;
 }
-.ranks-panel--replay .ranks-reveal-left,
 .ranks-panel.st-spa-panel--active .ranks-reveal-left{
-  animation:ranksFadeLeft 0.5s ease-out forwards;
-  opacity:0;
+  animation:ranksFadeLeft 0.5s ease-out both;
 }
-.ranks-podium-reveal{animation:ranksPodiumIn 0.55s cubic-bezier(0.34,1.56,0.64,1) forwards;opacity:0}
-.ranks-list-reveal{animation:ranksFadeRight 0.45s ease-out forwards;opacity:0}
+.ranks-panel.st-spa-panel--active .ranks-podium-reveal{
+  animation:ranksPodiumIn 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.ranks-panel.st-spa-panel--active .ranks-list-reveal{
+  animation:ranksFadeRight 0.45s ease-out both;
+}
+.ranks-panel--replay .ranks-reveal-up{animation:ranksSlideUp 0.6s cubic-bezier(0.34,1.56,0.64,1) both}
+.ranks-panel--replay .ranks-reveal-right{animation:ranksFadeRight 0.5s ease-out both}
+.ranks-panel--replay .ranks-reveal-left{animation:ranksFadeLeft 0.5s ease-out both}
+.ranks-panel--replay .ranks-podium-reveal{animation:ranksPodiumIn 0.55s cubic-bezier(0.34,1.56,0.64,1) both}
+.ranks-panel--replay .ranks-list-reveal{animation:ranksFadeRight 0.45s ease-out both}
 
 @media(prefers-reduced-motion:reduce){
   #stPanelRanks{animation:none;background:#131313}
+  .ranks-panel.st-spa-panel--active .ranks-reveal-up,
+  .ranks-panel.st-spa-panel--active .ranks-reveal-right,
+  .ranks-panel.st-spa-panel--active .ranks-reveal-left,
+  .ranks-panel.st-spa-panel--active .ranks-podium-reveal,
+  .ranks-panel.st-spa-panel--active .ranks-list-reveal,
   .ranks-panel--replay .ranks-reveal-up,
   .ranks-panel--replay .ranks-reveal-right,
   .ranks-panel--replay .ranks-reveal-left,
-  .ranks-podium-reveal,.ranks-list-reveal,
-  .ranks-panel.st-spa-panel--active .ranks-reveal-up,
-  .ranks-panel.st-spa-panel--active .ranks-reveal-right,
-  .ranks-panel.st-spa-panel--active .ranks-reveal-left{
-    animation:none!important;opacity:1!important;transform:none!important;
+  .ranks-panel--replay .ranks-podium-reveal,
+  .ranks-panel--replay .ranks-list-reveal{
+    animation:none!important;transform:none!important;
   }
   .ranks-podium-card--hero{animation:none!important}
 }

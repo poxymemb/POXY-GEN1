@@ -6929,13 +6929,23 @@ async function loadLeaderboardData(){
       (poxyData||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
       const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,100);
       const uids=sorted.map(([id])=>id);
-      if(!uids.length){listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;}
+      if(!uids.length){
+        if(listEl.id==='spaLeaderboardList'){renderRanksPageLayout([],'collection');return;}
+        listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;
+      }
       const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',uids);
       const pm={};(profs||[]).forEach(p=>{pm[p.id]=p;});
       const merged=sorted.map(([id,count])=>({id,count,username:pm[id]?.username,avatar_url:pm[id]?.avatar_url}));
       renderLeaderboardList(merged,'collection');
     }
-  }catch(e){listEl.innerHTML='<div class="lb-empty">Error loading leaderboard.</div>';}
+  }catch(e){
+    console.error('loadLeaderboardData:',e);
+    if(listEl.id==='spaLeaderboardList'){
+      const podium=$('ranksPodium');if(podium)podium.innerHTML='';
+      renderRanksMyProfileWidget([],leaderboardMode);
+    }
+    listEl.innerHTML='<div class="lb-empty">Error loading leaderboard.</div>';
+  }
 }
 function attachLbRowClick(row,uid){
   const openProfile=()=>{if(uid)openInspectModal(uid);};
