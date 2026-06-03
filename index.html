@@ -1909,7 +1909,67 @@ function usernameTakenMessage(err){
 let audioCtx=null;
 const getAC=()=>{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;};
 function playTick(){try{const ac=getAC(),o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type='square';o.frequency.setValueAtTime(200,ac.currentTime);o.frequency.exponentialRampToValueAtTime(70,ac.currentTime+0.04);g.gain.setValueAtTime(0.15,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.05);o.start();o.stop(ac.currentTime+0.06);}catch(e){}}
-function playSpinTick(){try{const ac=getAC(),t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),lp=ac.createBiquadFilter();o.type='sine';o.frequency.setValueAtTime(88+Math.random()*18,t);o.frequency.exponentialRampToValueAtTime(52,t+0.1);lp.type='lowpass';lp.frequency.value=240;lp.Q.value=0.5;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.085,t+0.018);g.gain.exponentialRampToValueAtTime(0.0001,t+0.16);o.connect(lp);lp.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+0.17);}catch(e){}}
+let spinAudioStart=0;
+function playSpinTick(progress){
+  try{
+    const ac=getAC();
+    const t=ac.currentTime;
+    const p=typeof progress==='number'?Math.min(1,Math.max(0,progress)):0.3;
+    const base=118-p*38+(Math.random()-0.5)*10;
+    const body=ac.createOscillator();
+    const harm=ac.createOscillator();
+    const sub=ac.createOscillator();
+    body.type='triangle';
+    harm.type='sine';
+    sub.type='sine';
+    body.frequency.setValueAtTime(base,t);
+    body.frequency.exponentialRampToValueAtTime(Math.max(52,base*0.78),t+0.11);
+    harm.frequency.setValueAtTime(base*2.003,t);
+    sub.frequency.setValueAtTime(46+(Math.random()-0.5)*4,t);
+    sub.frequency.exponentialRampToValueAtTime(34,t+0.09);
+    const lp=ac.createBiquadFilter();
+    lp.type='lowpass';
+    lp.frequency.setValueAtTime(560-p*160,t);
+    lp.Q.value=0.65;
+    const bodyG=ac.createGain();
+    const harmG=ac.createGain();
+    const subG=ac.createGain();
+    const vol=0.052-p*0.012;
+    bodyG.gain.setValueAtTime(0.0001,t);
+    bodyG.gain.exponentialRampToValueAtTime(vol,t+0.007);
+    bodyG.gain.exponentialRampToValueAtTime(0.0001,t+0.15);
+    harmG.gain.setValueAtTime(0.0001,t);
+    harmG.gain.exponentialRampToValueAtTime(vol*0.28,t+0.005);
+    harmG.gain.exponentialRampToValueAtTime(0.0001,t+0.1);
+    subG.gain.setValueAtTime(0.0001,t);
+    subG.gain.exponentialRampToValueAtTime(vol*0.85,t+0.004);
+    subG.gain.exponentialRampToValueAtTime(0.0001,t+0.12);
+    const buf=ac.createBuffer(1,Math.max(1,Math.floor(ac.sampleRate*0.014)),ac.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.2));
+    const noise=ac.createBufferSource();
+    noise.buffer=buf;
+    const noiseG=ac.createGain();
+    noiseG.gain.setValueAtTime(0.0001,t);
+    noiseG.gain.exponentialRampToValueAtTime(0.009,t+0.002);
+    noiseG.gain.exponentialRampToValueAtTime(0.0001,t+0.028);
+    const noiseF=ac.createBiquadFilter();
+    noiseF.type='bandpass';
+    noiseF.frequency.value=820+Math.random()*120;
+    noiseF.Q.value=0.9;
+    const mix=ac.createGain();
+    mix.gain.value=0.95;
+    body.connect(bodyG);harm.connect(harmG);sub.connect(subG);
+    bodyG.connect(lp);harmG.connect(lp);subG.connect(lp);
+    noise.connect(noiseF);noiseF.connect(noiseG);noiseG.connect(mix);
+    lp.connect(mix);
+    mix.connect(ac.destination);
+    body.start(t);body.stop(t+0.17);
+    harm.start(t);harm.stop(t+0.13);
+    sub.start(t);sub.stop(t+0.14);
+    noise.start(t);noise.stop(t+0.035);
+  }catch(e){}
+}
 function playMythicChord(){try{const ac=getAC(),freqs=[261.63,329.63,392,523.25,659.25],mg=ac.createGain();mg.gain.setValueAtTime(0,ac.currentTime);mg.gain.linearRampToValueAtTime(0.28,ac.currentTime+0.3);mg.gain.linearRampToValueAtTime(0.15,ac.currentTime+1.5);mg.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+3.5);mg.connect(ac.destination);freqs.forEach((f,i)=>{const o=ac.createOscillator(),o2=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;o2.type='triangle';o2.frequency.value=f*2.005;g.gain.value=1/freqs.length;o.connect(g);o2.connect(g);g.connect(mg);o.start(ac.currentTime+i*0.07);o2.start(ac.currentTime+i*0.07);o.stop(ac.currentTime+4);o2.stop(ac.currentTime+4);});}catch(e){}}
 function playDrop(id){try{const ac=getAC(),freq={common:200,uncommon:280,rare:350,epic:440,legendary:550,mythic:680}[id]||300,o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=id==='epic'||id==='legendary'?'triangle':'sine';o.frequency.setValueAtTime(freq*0.5,ac.currentTime);o.frequency.exponentialRampToValueAtTime(freq,ac.currentTime+0.15);g.gain.setValueAtTime(0.2,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.65);o.start();o.stop(ac.currentTime+0.7);if(id==='mythic')setTimeout(playMythicChord,200);}catch(e){}}
 
@@ -2401,6 +2461,11 @@ function clearSpinTimers(){
   if(spinTickTimer){clearInterval(spinTickTimer);spinTickTimer=null;}
   if(spinSlowTickTimer){clearInterval(spinSlowTickTimer);spinSlowTickTimer=null;}
   if(spinSettleTimer){clearTimeout(spinSettleTimer);spinSettleTimer=null;}
+  spinAudioStart=0;
+}
+function getSpinProgress(){
+  if(!spinAudioStart)return 0;
+  return Math.min(1,(performance.now()-spinAudioStart)/SPIN_MS);
 }
 function buildRouletteTrack(winTier){
   const track=$('stRouletteTrack');
@@ -2455,10 +2520,11 @@ function runRouletteCarousel(winTier){
     onRouletteLand(winTier);
   };
   track.addEventListener('transitionend',track._spinEndHandler);
-  spinTickTimer=setInterval(()=>playSpinTick(),95);
+  spinAudioStart=performance.now();
+  spinTickTimer=setInterval(()=>playSpinTick(getSpinProgress()),88);
   spinSettleTimer=setTimeout(()=>{
     if(spinTickTimer){clearInterval(spinTickTimer);spinTickTimer=null;}
-    spinSlowTickTimer=setInterval(()=>playSpinTick(),240);
+    spinSlowTickTimer=setInterval(()=>playSpinTick(getSpinProgress()),210);
     setTimeout(()=>{if(spinSlowTickTimer){clearInterval(spinSlowTickTimer);spinSlowTickTimer=null;}},1500);
   },2500);
   requestAnimationFrame(()=>{
