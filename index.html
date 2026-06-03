@@ -3416,7 +3416,10 @@ window.showStitchTab=function(tab){
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
   if(next==='tierlist')loadTierListPanel();
-  if(next==='ranks')loadLeaderboardData();
+  if(next==='ranks'){
+    ensureRanksPanelReady();
+    loadLeaderboardData();
+  }
   syncNavUsernameLabels();
 };
 
@@ -3610,9 +3613,19 @@ function syncLeaderboardToggleUI(){
 }
 
 function getLeaderboardListEl(){
-  const spa=$('spaLeaderboardList');
-  if(spa&&$('huntPage')&&$('huntPage').style.display!=='none'&&activeStitchTab==='ranks')return spa;
+  if(activeStitchTab==='ranks'){
+    const spa=$('spaLeaderboardList');
+    if(spa)return spa;
+  }
   return $('leaderboardList');
+}
+function ensureRanksPanelReady(){
+  const panel=$('stPanelRanks');
+  if(!panel||panel.hidden)return;
+  panel.querySelectorAll('.ranks-reveal-up,.ranks-reveal-right,.ranks-reveal-left,.ranks-podium-wrap,.ranks-body-grid').forEach(el=>{
+    el.style.opacity='1';
+    el.style.visibility='visible';
+  });
 }
 const STITCH_TIER_ICON={mythic:'diamond',legendary:'grade',epic:'auto_awesome',rare:'stars',uncommon:'eco',common:'view_in_ar'};
 function renderDashColPreview(){
@@ -6910,7 +6923,17 @@ window.switchLeaderboard=function(mode){
   if(activeStitchTab==='tierlist')loadRarityLeaderboardPreview();
 };
 async function loadLeaderboardData(){
-  const listEl=getLeaderboardListEl();if(!listEl)return;
+  if(activeStitchTab==='ranks')ensureRanksPanelReady();
+  const listEl=getLeaderboardListEl();
+  if(!listEl){
+    if(activeStitchTab==='ranks'){
+      const fallback=$('spaLeaderboardList');
+      if(fallback){
+        fallback.innerHTML='<div class="lb-empty">Could not mount ranks list.</div>';
+      }
+    }
+    return;
+  }
   const loading='<div class="lb-loading"><div class="col-spinner"></div></div>';
   listEl.innerHTML=loading;
   if(listEl.id==='spaLeaderboardList'){
@@ -7089,6 +7112,7 @@ function renderRanksPageLayout(data,mode){
   if(!rest.length)listEl.innerHTML='<div class="ranks-list-empty">Everyone else is still climbing the ladder.</div>';
   else rest.forEach((item,i)=>listEl.appendChild(buildRanksListRow(item,i+4,mode,450+i*50)));
   renderRanksMyProfileWidget(data,mode);
+  ensureRanksPanelReady();
   const panel=$('stPanelRanks');
   if(panel){panel.classList.remove('ranks-panel--replay');void panel.offsetWidth;panel.classList.add('ranks-panel--replay');}
 }
