@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="assets/frames.css">
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
-<link rel="stylesheet" href="assets/poxy-spa-nav.css?v=3">
-<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=3">
+<link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
+<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-club-gold.css">
@@ -2882,7 +2882,7 @@ function setLoggedOutUI(){
   const overlay=$('authOverlay');
   if(overlay){overlay.classList.remove('hidden');overlay.style.display='flex';overlay.setAttribute('aria-hidden','false');}
   updateAuthModeUI();
-  document.body.classList.remove('poxy-app-dark','poxy-stitch-dash');
+  document.body.classList.remove('poxy-app-dark','poxy-stitch-dash','ranks-tab-active');
   const ub=$('userBar');
   if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
   const bn=$('bottomNav');if(bn)bn.style.display='none';
@@ -3405,6 +3405,7 @@ window.showStitchTab=function(tab){
     if(isNext)p.classList.add('st-spa-panel--active');
   });
   syncPsdTopNav(next);
+  document.body.classList.toggle('ranks-tab-active',next==='ranks');
   document.body.classList.remove('dark-club');
   if(next==='club'){document.body.classList.add('dark-club');enterClubExperience();}
   if(next==='dashboard'){

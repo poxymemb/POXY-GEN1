@@ -3,7 +3,8 @@
 .st-nav-pills{flex-wrap:wrap;max-width:100%}
 .st-nav-pill--tier,.st-nav-pill--ranks{flex-shrink:0}
 
-.st-spa-viewport{position:relative;min-height:420px;width:100%;max-width:100%;overflow-x:hidden;box-sizing:border-box}
+.st-spa-viewport{position:relative;min-height:420px;width:100%;max-width:100%;overflow-x:hidden;overflow-y:visible;box-sizing:border-box}
+body.ranks-tab-active .st-spa-viewport{overflow:visible}
 .st-spa-panel{
   display:none;
   opacity:0;
