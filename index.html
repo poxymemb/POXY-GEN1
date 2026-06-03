@@ -1741,6 +1741,7 @@ body.dark-club .club-sub{color:#888}
         <button type="button" class="club-replay-intel" id="clubReplayIntel" title="Replay Intel"><span class="material-symbols-outlined">replay</span></button>
       </div>
       <nav class="club-sidebar-nav" role="tablist">
+        <button type="button" class="club-nav-btn" data-club-tab="profile" onclick="switchClubSubTab('profile')"><span class="material-symbols-outlined">person</span> Profile</button>
         <button type="button" class="club-nav-btn active" data-club-tab="feed" onclick="switchClubSubTab('feed')"><span class="material-symbols-outlined">rss_feed</span> Feed</button>
         <button type="button" class="club-nav-btn" data-club-tab="pass" onclick="switchClubSubTab('pass')"><span class="material-symbols-outlined">badge</span> Passport</button>
         <button type="button" class="club-nav-btn" data-club-tab="lounge" onclick="switchClubSubTab('lounge')"><span class="material-symbols-outlined">terminal</span> Terminal</button>
@@ -1770,6 +1771,69 @@ body.dark-club .club-sub{color:#888}
       </header>
       <div class="club-airgap-banner" id="clubAirgapBanner" hidden>Air-Gap: transfers frozen 24h after new session.</div>
       <div class="club-panels">
+        <section id="clubTabProfile" class="club-panel" data-club-panel="profile">
+          <header class="club-panel-head"><h1>Member Profile</h1><p>Founders Circle clearance · personal dossier</p></header>
+          <div class="club-profile-layout">
+            <aside class="club-profile-id obsidian-glass-card">
+              <div class="club-profile-avatar-wrap" id="clubProfileAvatar" aria-hidden="true"></div>
+              <div class="club-profile-field">
+                <span class="club-profile-label">Callsign</span>
+                <div class="club-profile-value" id="clubProfileCallsign">—</div>
+              </div>
+              <div class="club-profile-field">
+                <span class="club-profile-label">Clearance Level</span>
+                <div class="club-profile-value club-profile-clearance" id="clubProfileClearance"><span class="material-symbols-outlined">verified_user</span> —</div>
+              </div>
+              <div class="club-profile-entry obsidian-glass-card">
+                <div class="club-profile-entry-head"><span class="material-symbols-outlined">key</span> Club Entry Status</div>
+                <div class="club-profile-entry-row"><span>Season 01 Access</span><strong id="clubProfileSeasonAccess">—</strong></div>
+                <div class="club-profile-entry-row"><span>VIP Lounge Hours</span><strong id="clubProfileVipHours">0 / 100</strong></div>
+                <div class="club-profile-vip-bar"><span id="clubProfileVipBar" style="width:0%"></span></div>
+                <div class="club-profile-medals-label">Service Medals</div>
+                <div class="club-profile-medals" id="clubProfileMedals"></div>
+              </div>
+            </aside>
+            <div class="club-profile-main">
+              <div class="club-profile-stats">
+                <article class="club-profile-stat obsidian-glass-card">
+                  <span class="club-profile-stat-label">Total Assets</span>
+                  <strong id="clubProfileStatAssets">0</strong>
+                  <span class="material-symbols-outlined club-profile-stat-icon">diamond</span>
+                </article>
+                <article class="club-profile-stat obsidian-glass-card">
+                  <span class="club-profile-stat-label">Rare+ Collection</span>
+                  <strong id="clubProfileStatRare">0</strong>
+                  <span class="material-symbols-outlined club-profile-stat-icon">stars</span>
+                </article>
+                <article class="club-profile-stat obsidian-glass-card">
+                  <span class="club-profile-stat-label">Stardust</span>
+                  <strong id="clubProfileStatDust">0</strong>
+                  <span class="material-symbols-outlined club-profile-stat-icon">grain</span>
+                </article>
+              </div>
+              <div class="club-profile-columns">
+                <section class="club-profile-directives obsidian-glass-card">
+                  <header class="club-profile-block-head">
+                    <span class="material-symbols-outlined">assignment</span>
+                    <h2>Daily Directives</h2>
+                    <span class="club-profile-directives-progress" id="clubProfileDirectivesProgress">0/0 COMPLETE</span>
+                  </header>
+                  <div id="clubProfileDirectives" class="club-profile-directive-list"></div>
+                </section>
+                <section class="club-profile-featured obsidian-glass-card">
+                  <header class="club-profile-block-head">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <h2>Featured Asset</h2>
+                  </header>
+                  <div id="clubProfileFeatured" class="club-profile-featured-card">
+                    <p class="club-profile-featured-empty">No featured POXY selected.</p>
+                  </div>
+                  <button type="button" class="club-profile-goto-collection" onclick="showPage('collection')">Manage in Collection</button>
+                </section>
+              </div>
+            </div>
+          </div>
+        </section>
         <section id="clubTabFeed" class="club-panel active" data-club-panel="feed">
           <div class="club-feed-layout">
             <div class="club-feed-main">
@@ -3933,6 +3997,7 @@ async function toggleFeaturePoxy(userPoxyId){
     const{error}=await sb.from('profiles').update({favorite_poxy_id:newId}).eq('id',currentUser.id);
     if(error)throw error;
     if(currentProfile)currentProfile.favorite_poxy_id=newId;
+    if(activeClubSubTab==='profile')renderClubProfileFeatured();
     showToast(newId?'Featured in profile!':'Removed from profile.');
     renderCollection();
   }catch(e){logAndToast('feature',e);}
@@ -4962,11 +5027,157 @@ window.switchClubSubTab=function(tab){
   if(next)next.classList.add('active');
   activeClubSubTab=tab;
   if(tab==='lounge'&&currentUser)bumpClubBounty('club_visit_terminal',1);
+  if(tab==='profile')renderClubProfile();
   if(tab==='pass')renderClubPassport();
   if(tab==='otc')renderClubOtcDesk();
   if(tab==='governance')renderClubGovernance();
   if(tab==='feed'){loadFounderAnnouncements();loadFeed();renderClubEventCalendar();}
 };
+const CLUB_PROFILE_DIRECTIVE_LABELS={
+  club_open_5_vip:'Acquire 5 VIP Assets',
+  club_post_2_feed:'Transmit Feed Intel',
+  club_vote_1_dao:'Verify DAO Signature',
+  club_visit_terminal:'Enter Club Lounge'
+};
+const CLUB_PROFILE_DIRECTIVE_GOTO={
+  club_open_5_vip:'lounge',
+  club_post_2_feed:'feed',
+  club_vote_1_dao:'governance',
+  club_visit_terminal:'lounge'
+};
+function clubProfileClearanceLabel(lvl){
+  if(lvl>=8)return 'OBSIDIAN PRIME';
+  if(lvl>=5)return 'GOLD KEYCARD';
+  return 'FOUNDER TIER';
+}
+function renderClubProfileMedals(st){
+  const el=$('clubProfileMedals');if(!el)return;
+  const opens=st?.total_vip_opens||currentProfile?.total_vip_opens||0;
+  const medals=[
+    {id:'vip100',icon:'military_tech',ok:opens>=100,title:'100 VIP Opens'},
+    {id:'dao1',icon:'how_to_vote',ok:!!localStorage.getItem('club_dao_voted_'+currentUser?.id),title:'DAO Vote'},
+    {id:'mythic',icon:'diamond',ok:hasMythic||isClubMember(),title:'Mythic Holder'}
+  ];
+  el.innerHTML='';
+  medals.forEach((m,i)=>{
+    const slot=document.createElement('div');
+    slot.className='club-profile-medal'+(m.ok?' earned':' locked');
+    slot.title=m.title;
+    if(m.ok){
+      slot.innerHTML='<span class="material-symbols-outlined">'+m.icon+'</span>';
+    }else{
+      slot.innerHTML='<span class="material-symbols-outlined">lock</span>';
+    }
+    el.appendChild(slot);
+  });
+}
+async function renderClubProfileDirectives(){
+  const list=$('clubProfileDirectives'),progEl=$('clubProfileDirectivesProgress');
+  if(!list||!currentUser)return;
+  list.innerHTML='<p class="club-profile-directive-loading">Syncing directives…</p>';
+  try{
+    const{data,error}=await sb.rpc('ensure_club_bounties',{p_user_id:currentUser.id});
+    if(error)throw error;
+    const quests=(data||[]).slice(0,3);
+    const done=quests.filter(q=>q.claimed).length;
+    if(progEl)progEl.textContent=done+'/'+quests.length+' COMPLETE';
+    if(!quests.length){
+      list.innerHTML='<p class="club-profile-directive-empty">No directives today.</p>';
+      return;
+    }
+    list.innerHTML='';
+    quests.forEach(q=>{
+      const claimed=!!q.claimed;
+      const complete=q.progress>=q.goal;
+      const active=!claimed&&!complete;
+      const row=document.createElement('div');
+      row.className='club-profile-directive'+(claimed?' is-claimed':active?' is-active':'');
+      const title=CLUB_PROFILE_DIRECTIVE_LABELS[q.quest_key]||CLUB_BOUNTY_LABELS[q.quest_key]||q.quest_key;
+      const reward='+'+(q.reward_tokens||0)+' token'+(q.reward_tokens!==1?'s':'')+' · +'+q.reward_xp+' XP';
+      const status=claimed?'CLAIMED • '+reward:(complete?'READY • '+reward:'IN PROGRESS • REWARD: '+reward);
+      const gotoTab=CLUB_PROFILE_DIRECTIVE_GOTO[q.quest_key]||'lounge';
+      row.innerHTML='<div class="club-profile-directive-icon"><span class="material-symbols-outlined">'+(claimed?'check_circle':'radio_button_unchecked')+'</span></div>'
+        +'<div class="club-profile-directive-body"><strong>'+sanitizeText(title)+'</strong><span>'+sanitizeText(status)+'</span></div>';
+      if(!claimed){
+        if(complete){
+          const claim=document.createElement('button');
+          claim.type='button';claim.className='club-profile-claim-btn';claim.textContent='Claim';
+          claim.onclick=()=>claimClubBounty(q.id).then(()=>renderClubProfileDirectives());
+          row.appendChild(claim);
+        }else{
+          const goto=document.createElement('button');
+          goto.type='button';goto.className='club-profile-goto-btn';goto.textContent='GOTO';
+          goto.onclick=()=>switchClubSubTab(gotoTab);
+          row.appendChild(goto);
+        }
+      }
+      list.appendChild(row);
+    });
+  }catch(e){
+    list.innerHTML='<p class="club-profile-directive-empty">Directives unavailable.</p>';
+  }
+}
+async function renderClubProfileFeatured(){
+  const el=$('clubProfileFeatured');if(!el||!currentProfile)return;
+  if(!currentProfile.favorite_poxy_id){
+    el.innerHTML='<div class="club-profile-featured-inner empty"><span class="material-symbols-outlined">add_box</span><p>Select a featured POXY in Collection</p></div>';
+    return;
+  }
+  try{
+    const{data,error}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('id',currentProfile.favorite_poxy_id).single();
+    if(error||!data){
+      el.innerHTML='<div class="club-profile-featured-inner empty"><p>Featured asset not found.</p></div>';
+      return;
+    }
+    const tier=TIER_BY_ID[data.poxy_tier]||TIERS[0];
+    const serial=sanitizeText(data.serial_number||'PX-??????');
+    el.innerHTML='<div class="club-profile-featured-inner">'
+      +'<span class="club-profile-featured-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</span>'
+      +'<div class="club-profile-featured-art" style="color:'+tier.color+'">'+tier.icon+'</div>'
+      +'<span class="club-profile-featured-series">PRIME SERIES</span>'
+      +'<footer class="club-profile-featured-serial">'+serial+'</footer>'
+      +'<span class="club-profile-featured-gem material-symbols-outlined">diamond</span></div>';
+  }catch(e){
+    el.innerHTML='<div class="club-profile-featured-inner empty"><p>Could not load featured asset.</p></div>';
+  }
+}
+function renderClubProfile(){
+  if(!currentUser||!currentProfile)return;
+  const st=clubStatusCache||{};
+  const lvl=st.club_level||currentProfile.club_level||1;
+  const callsign=$('clubProfileCallsign');
+  if(callsign)callsign.textContent=(currentProfile.username||'OPERATIVE').toUpperCase().replace(/\s+/g,'_');
+  const clearEl=$('clubProfileClearance');
+  if(clearEl)clearEl.innerHTML='<span class="material-symbols-outlined">verified_user</span> '+clubProfileClearanceLabel(lvl);
+  const season=$('clubProfileSeasonAccess');
+  if(season){
+    season.textContent=isClubMember()?'GRANTED':'PENDING';
+    season.classList.toggle('granted',isClubMember());
+  }
+  const vipOpens=st.total_vip_opens||currentProfile.total_vip_opens||0;
+  const vipCap=100;
+  const hoursEl=$('clubProfileVipHours'),barEl=$('clubProfileVipBar');
+  const loungeHrs=vipOpens%vipCap;
+  if(hoursEl)hoursEl.textContent=loungeHrs+' / '+vipCap;
+  if(barEl)barEl.style.width=(loungeHrs/vipCap*100)+'%';
+  const av=$('clubProfileAvatar');
+  if(av){
+    if(currentProfile.avatar_url&&String(currentProfile.avatar_url).startsWith('http'))
+      av.innerHTML='<img src="'+sanitizeText(avatarImgUrl(currentProfile.avatar_url))+'" alt=""/>';
+    else av.innerHTML='<span class="club-profile-avatar-fallback">'+(currentProfile.avatar_url||'👾')+'</span>';
+  }
+  const rareTiers=['rare','epic','legendary','mythic','stellar','diamond','secret'];
+  const total=(colData||[]).length;
+  const rare=(colData||[]).filter(i=>rareTiers.includes(i.poxy_tier)).length;
+  const dust=currentProfile.dust||0;
+  const aEl=$('clubProfileStatAssets'),rEl=$('clubProfileStatRare'),dEl=$('clubProfileStatDust');
+  if(aEl)aEl.textContent=total.toLocaleString();
+  if(rEl)rEl.textContent=rare.toLocaleString();
+  if(dEl)dEl.textContent=Number(dust).toLocaleString();
+  renderClubProfileMedals(st);
+  renderClubProfileDirectives();
+  renderClubProfileFeatured();
+}
 window.switchClubFeedSub=function(sub){
   document.querySelectorAll('.club-feed-tab').forEach(t=>t.classList.toggle('active',t.dataset.feedSub===sub));
   document.querySelectorAll('.club-feed-pane').forEach(p=>p.classList.toggle('active',p.dataset.feedPane===sub));
@@ -5059,6 +5270,7 @@ async function loadClubStatus(){
 function renderClubStatusDock(st){
   clubStatusCache=st;
   renderClubPassport(st);
+  if(activeClubSubTab==='profile')renderClubProfile();
   renderClubVoteWeight();
   updateClubTopBalance();
 }
@@ -5525,6 +5737,7 @@ async function bumpClubBounty(key,delta){
   try{
     await sb.rpc('increment_club_bounty_progress',{p_user_id:currentUser.id,p_quest_key:key,p_delta:delta||1});
     if($('clubBountiesList'))loadClubBounties();
+    if(activeClubSubTab==='profile')renderClubProfileDirectives();
   }catch(e){}
 }
 async function claimClubBounty(bid){
@@ -5789,6 +6002,7 @@ async function initClubLuxuryModules(){
   renderClubOtcDesk();
   renderClubGovernance();
   renderClubPassport(clubStatusCache);
+  renderClubProfile();
   renderClubEventCalendar();
   loadClubBounties();
   loadFounderAnnouncements();
@@ -5982,7 +6196,7 @@ async function doClubOpen(count){
     showToast(drops.length+' VIP POXY · +'+xp+' Club XP');
     await loadClubStatus();
     renderClubVaultSlots();
-    loadCollection().then(()=>{renderClubExtraction();renderClubArmory();});
+    loadCollection().then(()=>{renderClubExtraction();renderClubArmory();if(activeClubSubTab==='profile')renderClubProfile();});
     loadClubBounties();
   }
   if(btn1)btn1.disabled=false;if(btn5)btn5.disabled=false;
