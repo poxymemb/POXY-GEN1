@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css">
+<link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1074,7 +1075,7 @@ body.dark-club .club-sub{color:#888}
     <div class="poxy-sidebar-tabs-track">
     <button type="button" class="sidebar-tab-btn active" id="stab-codex" onclick="switchSidebarTab('codex')">Codex</button>
     <button type="button" class="sidebar-tab-btn" id="stab-news" onclick="switchSidebarTab('news')">News</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-gen1" onclick="closeSidebar();showStitchTab('tierlist')">Tier List</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-gen1" onclick="closeSidebar();showStitchTab('tierlist')">Rarity</button>
     <button type="button" class="sidebar-tab-btn" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
     <button type="button" class="sidebar-tab-btn" id="stab-leaderboard" onclick="closeSidebar();showStitchTab('ranks')">Player Ranks</button>
     <button type="button" class="sidebar-tab-btn" id="stab-support" onclick="switchSidebarTab('support')">Legal</button>
@@ -1224,22 +1225,35 @@ body.dark-club .club-sub{color:#888}
     <nav class="st-nav">
       <div class="st-nav-inner">
         <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
-        <span class="st-brand">POXY WORLD</span>
-        <div class="st-nav-pills" aria-label="Main">
-          <button type="button" class="st-nav-pill active" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span> Dashboard</button>
-          <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span> Marketplace</button>
-          <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span> Club Entry</button>
-          <button type="button" class="st-nav-pill st-nav-pill--tier" id="psdNavTierList" onclick="showStitchTab('tierlist')"><span class="material-symbols-outlined">layers</span> Tier List</button>
-          <button type="button" class="st-nav-pill st-nav-pill--ranks" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span> Player Ranks</button>
+        <div class="st-nav-left">
+          <button type="button" class="st-brand-link" id="psdNavBrand" onclick="showStitchTab('dashboard')">POXY WORLD</button>
+          <div class="st-nav-primary" aria-label="Main">
+            <button type="button" class="st-nav-link active" id="psdNavExplore" onclick="showStitchTab('dashboard')">Explore</button>
+            <button type="button" class="st-nav-link" id="psdNavCodex" onclick="openSidebar();switchSidebarTab('codex')">Codex</button>
+            <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')">Rarity</button>
+          </div>
+          <div class="st-nav-secondary" aria-label="More">
+            <div class="st-nav-pills">
+              <button type="button" class="st-nav-pill" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span> Dash</button>
+              <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span> Market</button>
+              <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span> Club</button>
+              <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span> Ranks</button>
+            </div>
+          </div>
         </div>
         <div class="st-nav-right">
-          <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">monetization_on</span> 0 PC</button>
+          <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">account_balance_wallet</span> <span id="stBalanceText">0 PC</span></button>
+          <button type="button" class="st-nav-notify" aria-label="Notifications" onclick="showToast('Notifications coming soon.')"><span class="material-symbols-outlined">notifications</span></button>
+          <button type="button" class="st-topup-btn" onclick="scrollToTreasury()">Top Up</button>
           <div class="user-bar st-user" id="userBar">
             <div class="st-user-meta">
               <div class="st-user-name user-username" id="userUsernameEl">Player</div>
               <div class="st-user-badge" id="psdMemberBadge" style="display:none">POXY MEMBER</div>
             </div>
-            <div class="st-matrix-frame user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap" onclick="showPage('profile')" title="My Profile"><span id="userBarAvatar">🎭</span></div>
+            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" title="My Profile">
+              <div class="st-matrix-frame user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
+              <span class="st-nav-user-label user-username" id="stNavUsernameLabel">Player</span>
+            </button>
             <button type="button" class="btn-logout" onclick="handleLogout()">Sign out</button>
             <span class="user-email" id="userEmailEl" style="display:none"></span>
           </div>
@@ -1358,15 +1372,27 @@ body.dark-club .club-sub{color:#888}
     </section>
 
     <section class="st-spa-panel" id="stPanelTierList" data-st-tab="tierlist" hidden>
-      <div class="st-main tier-list-panel">
-        <div class="tier-list-hero">
-          <h2>Asset Tier List</h2>
-          <p>Immutable rarity hierarchy with live global unbox telemetry. Scarcity is permanent — totals only increase.</p>
-        </div>
-        <div class="tier-list-grid" id="tierListGrid"></div>
-        <div class="tier-list-gen1">
-          <div class="tier-list-gen1-hdr"><span class="material-symbols-outlined">auto_awesome</span> Generation 1 Archive</div>
-          <div class="tier-list-gen1-grid" id="tierListGen1Grid"></div>
+      <div class="rarity-page" id="rarityPageRoot">
+        <div class="rarity-page-layout">
+          <div class="rarity-page-main">
+            <header class="rarity-page-header rarity-reveal-up">
+              <h1>Asset Rarity &amp; Tiers</h1>
+              <p>Discover the hierarchical structure of POXY assets. Rarity coefficients dictate base value, emission rates, and utility within the ecosystem. Lower drop rates yield exponentially higher ecosystem influence.</p>
+            </header>
+            <div class="rarity-tier-stack" id="rarityTierStack"></div>
+          </div>
+          <aside class="rarity-page-aside rarity-reveal-up" style="transition-delay:0.15s">
+            <div class="rarity-lb-panel">
+              <div class="rarity-lb-tabs">
+                <button type="button" class="rarity-lb-tab active" id="rarityLbBtnBalance" onclick="switchRarityLeaderboard('balance')">PC Balance</button>
+                <button type="button" class="rarity-lb-tab" id="rarityLbBtnCollection" onclick="switchRarityLeaderboard('collection')">Rare+ Count</button>
+              </div>
+              <div class="rarity-lb-list" id="rarityLbList"><div class="lb-loading"><div class="col-spinner"></div></div></div>
+              <div class="rarity-lb-foot">
+                <button type="button" onclick="showStitchTab('ranks')">View Full Rankings</button>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -1964,7 +1990,10 @@ function formatPC(amount){
 }
 function updateBalanceBadge(bal){
   const b=$('balanceBadge');
-  if(b)b.innerHTML='<span class="material-symbols-outlined">monetization_on</span> '+formatPC(bal);
+  const txt=$('stBalanceText');
+  const formatted=formatPC(bal);
+  if(txt)txt.textContent=formatted;
+  if(b)b.innerHTML='<span class="material-symbols-outlined">account_balance_wallet</span> <span id="stBalanceText">'+formatted+'</span>';
   b.classList.add('visible');
   b.classList.remove('pop');
   requestAnimationFrame(()=>b.classList.add('pop'));
@@ -2221,6 +2250,7 @@ async function loadProfile(){
       }
       selectedAvatar=av;
       $('userUsernameEl').textContent=data.username||'';
+      syncNavUsernameLabels();
       applyNameGradientUI(data.name_gradient);
       applyTheme(data.profile_theme);
       setBarAvatar(selectedAvatar);
@@ -2451,17 +2481,33 @@ const tradeSelectedIds=new Set();
 let leaderboardRankByUser={};
 
 const STITCH_TAB_MAP={
-  dashboard:'psdNavDashboard',hunt:'psdNavDashboard',
+  dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavExplore',
   market:'psdNavMarket',club:'psdNavClub',
-  tierlist:'psdNavTierList',ranks:'psdNavRanks'
+  tierlist:'psdNavRarity',rarity:'psdNavRarity',ranks:'psdNavRanks'
 };
+
+const RARITY_TIER_META={
+  mythic:{glow:'glow-mythic',matIcon:'diamond',accent:'#FF3366',glowRgb:'rgba(255,51,102,0.8)',dropPct:'0.01',coeff:40,desc:'The absolute zenith of the Codex. Mythic items alter the fundamental physics of the local grid and grant unparalleled governance weight.'},
+  legendary:{glow:'glow-legendary',matIcon:'star',accent:'#FFCC00',glowRgb:'rgba(255,204,0,0.8)',dropPct:'0.5',coeff:20,desc:'Items of historical significance. They carry powerful auras that buff entire factions and serve as cornerstone assets for any serious collector.'},
+  epic:{glow:'glow-epic',matIcon:'grade',accent:'#9C27B0',glowRgb:'rgba(156,39,176,0.8)',dropPct:'5.0',coeff:8,desc:'Highly specialized gear and artifacts. Epic tier introduces unique visual states and significant operational advantages in competitive spheres.'},
+  rare:{glow:'glow-rare',matIcon:'token',accent:'#00E5FF',glowRgb:'rgba(0,229,255,0.8)',dropPct:'15.0',coeff:3,desc:'The backbone of the advanced economy. Rare items distinguish dedicated users from casual participants, offering solid baseline utility.'},
+  uncommon:{glow:'glow-uncommon',matIcon:'eco',accent:'#4CAF50',glowRgb:'rgba(76,175,80,0.7)',dropPct:'30.0',coeff:1.5,desc:'Elevated standard assets with measurable ecosystem weight. A reliable tier for strategic portfolio growth.'},
+  common:{glow:'glow-common',matIcon:'view_in_ar',accent:'#9E9E9E',glowRgb:'rgba(158,158,158,0.6)',dropPct:'50.0',coeff:1,desc:'Foundation layer of the POXY economy. Common drops fuel daily activity and entry-level collection building.'}
+};
+const RARITY_DISPLAY_ORDER=['mythic','legendary','epic','rare','uncommon','common'];
+let rarityLbMode='balance';
+let rarityRevealObserver=null;
 
 function syncPsdTopNav(page){
   document.querySelectorAll('.st-nav-pill').forEach(b=>b.classList.remove('active'));
-  const tab=page==='hunt'?'dashboard':(page==='tierlist'||page==='ranks'?page:page);
-  const id=STITCH_TAB_MAP[tab]||(page==='bank'?'psdNavDashboard':null);
-  const btn=id?$(id):null;
-  if(btn)btn.classList.add('active');
+  document.querySelectorAll('.st-nav-link').forEach(b=>b.classList.remove('active'));
+  const tab=page==='hunt'?'dashboard':(page==='tierlist'?'rarity':page);
+  const pillId=STITCH_TAB_MAP[tab]||(page==='bank'?'psdNavDashboard':null);
+  const pillBtn=pillId?$(pillId):null;
+  if(pillBtn)pillBtn.classList.add('active');
+  if(tab==='dashboard'||tab==='explore'||tab==='hunt'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
+  else if(tab==='rarity'||tab==='tierlist'){const r=$('psdNavRarity');if(r)r.classList.add('active');}
+  else if(tab==='market'||tab==='club'||tab==='ranks'){}
 }
 
 function mountSpaPanels(){
@@ -2515,7 +2561,14 @@ window.showStitchTab=function(tab){
   if(next==='market')loadMarket();
   if(next==='tierlist')loadTierListPanel();
   if(next==='ranks')loadLeaderboardData();
+  syncNavUsernameLabels();
 };
+
+function syncNavUsernameLabels(){
+  const name=currentProfile?.username||'Player';
+  const u1=$('userUsernameEl');if(u1)u1.textContent=name;
+  const u2=$('stNavUsernameLabel');if(u2)u2.textContent=name;
+}
 
 async function loadGlobalTierCounts(){
   globalTierCounts={};
@@ -2534,54 +2587,168 @@ async function loadGlobalTierCounts(){
   }
 }
 
-function renderTierListPanel(){
-  const grid=$('tierListGrid');
-  const gen1=$('tierListGen1Grid');
-  if(!grid)return;
-  grid.innerHTML='';
-  TIERS.forEach(t=>{
-    const total=globalTierCounts[t.id]!=null?globalTierCounts[t.id]:0;
-    const card=document.createElement('article');
-    card.className='tier-list-card gpu-accel';
-    card.style.setProperty('--tl-color',t.color);
-    card.style.setProperty('--tl-glow',t.glow);
-    card.innerHTML=
-      '<div class="tier-list-card-icon" style="color:'+t.color+'">'+t.icon+'</div>'+
-      '<div class="tier-list-card-label" style="color:'+t.color+'">'+t.label+'</div>'+
-      '<div class="tier-list-card-prob">'+(t.prob*100).toFixed(t.prob<0.01?3:1)+'% drop rate</div>'+
-      '<div class="tier-list-counter">'+
-        '<div class="tier-list-counter-label">Total Unboxed</div>'+
-        '<div class="tier-list-counter-val">'+Number(total).toLocaleString()+'</div>'+
-      '</div>';
-    grid.appendChild(card);
-  });
-  if(gen1){
-    gen1.innerHTML='';
-    GEN1_MODELS.forEach(model=>{
-      const tier=TIERS.find(x=>x.id===model.tier)||TIERS[0];
-      const card=document.createElement('div');
-      card.className='tier-list-gen1-card';
-      card.innerHTML=
-        '<div style="font-size:26px;color:'+tier.color+'">'+model.icon+'</div>'+
-        '<div style="font-size:12px;font-weight:800;color:#e5e2e1;margin-top:6px">'+model.name+'</div>'+
-        '<div style="font-size:9px;color:'+tier.color+';letter-spacing:0.1em;text-transform:uppercase;margin-top:4px">'+tier.label+'</div>';
-      gen1.appendChild(card);
+function initRarityRevealObserver(){
+  if(rarityRevealObserver)return;
+  rarityRevealObserver=new IntersectionObserver((entries,obs)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){entry.target.classList.add('is-visible');obs.unobserve(entry.target);}
     });
-  }
+  },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+}
+function observeRarityReveals(root){
+  initRarityRevealObserver();
+  if(!root||!rarityRevealObserver)return;
+  root.querySelectorAll('.rarity-reveal-up').forEach(el=>{
+    el.classList.remove('is-visible');
+    rarityRevealObserver.observe(el);
+  });
+}
+function attachRarityCardTilt(card){
+  card.addEventListener('mousemove',function(e){
+    const rect=card.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const rotX=((y-rect.height/2)/(rect.height/2))*-10;
+    const rotY=((x-rect.width/2)/(rect.width/2))*10;
+    card.style.transform='perspective(1000px) rotateX('+rotX+'deg) rotateY('+rotY+'deg) scale3d(1.02,1.02,1.02)';
+    card.style.transition='none';
+  });
+  card.addEventListener('mouseleave',function(){
+    card.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+    card.style.transition='all 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+  });
+  card.addEventListener('mouseenter',function(){
+    card.style.transition='all 0.1s cubic-bezier(0.25, 1, 0.5, 1)';
+  });
 }
 
+function renderRarityTierStack(){
+  const stack=$('rarityTierStack');
+  if(!stack)return;
+  stack.innerHTML='';
+  RARITY_DISPLAY_ORDER.forEach((tid,idx)=>{
+    const t=TIERS.find(x=>x.id===tid)||TIERS[0];
+    const meta=RARITY_TIER_META[tid]||RARITY_TIER_META.common;
+    const total=globalTierCounts[tid]!=null?globalTierCounts[tid]:0;
+    const dropLabel=(t.prob*100)<0.1?((t.prob*100).toFixed(2)+'% DROP'):(meta.dropPct+'% DROP');
+    const card=document.createElement('article');
+    card.className='rarity-tier-card gpu-accel rarity-reveal-up '+meta.glow;
+    card.style.transitionDelay=(0.08+idx*0.08)+'s';
+    card.style.setProperty('--rt-color',meta.accent);
+    card.style.setProperty('--rt-glow',t.glow);
+    card.innerHTML=
+      '<div class="rarity-tier-icon-box" style="border-color:'+meta.accent+'44">'+
+        '<div class="icon-bg" style="background:'+meta.accent+'18"></div>'+
+        '<span class="material-symbols-outlined" style="color:'+meta.accent+';filter:drop-shadow(0 0 15px '+meta.glowRgb+')">'+meta.matIcon+'</span>'+
+      '</div>'+
+      '<div class="rarity-tier-body">'+
+        '<div class="rarity-tier-title-row"><h2>'+t.label.toUpperCase()+'</h2>'+
+        '<span class="rarity-drop-pill" style="background:'+meta.accent+'18;color:'+meta.accent+';border-color:'+meta.accent+'33">'+dropLabel+'</span></div>'+
+        '<p class="rarity-tier-desc">'+meta.desc+'</p>'+
+        '<div class="rarity-tier-stats">'+
+          '<span><span class="material-symbols-outlined">bolt</span> '+meta.coeff+'x Coeff</span>'+
+          '<span><span class="material-symbols-outlined">inventory_2</span> Supply: <span class="rarity-supply-val">'+Number(total).toLocaleString()+'</span></span>'+
+        '</div>'+
+      '</div>';
+    attachRarityCardTilt(card);
+    stack.appendChild(card);
+  });
+  observeRarityReveals($('rarityPageRoot'));
+}
+
+window.switchRarityLeaderboard=function(mode){
+  rarityLbMode=mode;
+  $('rarityLbBtnBalance')?.classList.toggle('active',mode==='balance');
+  $('rarityLbBtnCollection')?.classList.toggle('active',mode==='collection');
+  syncLeaderboardToggleUI();
+  loadRarityLeaderboardPreview();
+};
+
+async function loadRarityLeaderboardPreview(){
+  const list=$('rarityLbList');
+  if(!list)return;
+  list.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
+  try{
+    let data=[];
+    if(rarityLbMode==='balance'){
+      const{data:rows,error}=await sb.from('profiles').select('id,username,avatar_url,balance').order('balance',{ascending:false}).limit(5);
+      if(error)throw error;
+      data=rows||[];
+    }else{
+      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']);
+      if(pe)throw pe;
+      const counts={};
+      (poxyData||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
+      const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const uids=sorted.map(([id])=>id);
+      if(!uids.length){list.innerHTML='<div class="lb-empty">No data yet.</div>';return;}
+      const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',uids);
+      const pm={};(profs||[]).forEach(p=>{pm[p.id]=p;});
+      data=sorted.map(([id,count])=>({id,count,username:pm[id]?.username,avatar_url:pm[id]?.avatar_url}));
+    }
+    renderRarityLeaderboardRows(data,rarityLbMode);
+  }catch(e){list.innerHTML='<div class="lb-empty">Error loading ranks.</div>';}
+}
+
+function renderRarityLeaderboardRows(data,mode){
+  const list=$('rarityLbList');
+  if(!list)return;
+  if(!data.length){list.innerHTML='<div class="lb-empty">No data yet.</div>';return;}
+  list.innerHTML='';
+  leaderboardRankByUser={};
+  data.forEach((item,i)=>{
+    const rank=i+1;
+    if(item.id)leaderboardRankByUser[item.id]=rank;
+    const row=document.createElement('div');
+    row.className='rarity-lb-row gpu-accel'+(i<3?' shimmer-effect':'');
+    row.setAttribute('role','button');
+    row.setAttribute('tabindex','0');
+    const uid=item.id;
+    const open=()=>{if(uid)openInspectModal(uid);};
+    row.addEventListener('click',open);
+    row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+    const rankEl=document.createElement('span');
+    rankEl.className='rarity-lb-rank'+(rank===1?' gold':rank===2?' silver':rank===3?' bronze':'');
+    rankEl.textContent='#'+rank;
+    const av=document.createElement('div');
+    av.className='rarity-lb-avatar';
+    const avSrc=item.avatar_url||'';
+    if(avSrc&&avSrc.startsWith('http'))av.innerHTML='<img src="'+sanitizeText(avatarImgUrl(avSrc))+'" alt="">';
+    else av.textContent=avSrc||'👾';
+    const left=document.createElement('div');
+    left.className='rarity-lb-row-left';
+    const name=document.createElement('span');
+    name.className='rarity-lb-name';
+    name.textContent=sanitizeText(item.username||'Anonymous');
+    left.appendChild(rankEl);left.appendChild(av);left.appendChild(name);
+    const val=document.createElement('span');
+    val.className='rarity-lb-value';
+    val.textContent=mode==='balance'?formatPC(item.balance||0):(item.count||0)+' items';
+    row.appendChild(left);row.appendChild(val);
+    list.appendChild(row);
+  });
+}
+
+function renderTierListPanel(){renderRarityTierStack();}
+
 async function loadTierListPanel(){
-  const grid=$('tierListGrid');
-  if(!grid)return;
-  grid.innerHTML='<div class="lb-loading" style="grid-column:1/-1"><div class="col-spinner"></div></div>';
+  const stack=$('rarityTierStack');
+  if(!stack)return;
+  stack.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
   await loadGlobalTierCounts();
-  renderTierListPanel();
+  renderRarityTierStack();
+  rarityLbMode=leaderboardMode;
+  syncLeaderboardToggleUI();
+  $('rarityLbBtnBalance')?.classList.toggle('active',rarityLbMode==='balance');
+  $('rarityLbBtnCollection')?.classList.toggle('active',rarityLbMode==='collection');
+  await loadRarityLeaderboardPreview();
 }
 
 function syncLeaderboardToggleUI(){
   const bal=leaderboardMode==='balance';
-  ['lbBtnBalance','spaLbBtnBalance'].forEach(id=>{const b=$(id);if(b)b.classList.toggle('active',bal);});
-  ['lbBtnCollection','spaLbBtnCollection'].forEach(id=>{const b=$(id);if(b)b.classList.toggle('active',!bal);});
+  ['lbBtnBalance','spaLbBtnBalance','rarityLbBtnBalance'].forEach(id=>{const b=$(id);if(b)b.classList.toggle('active',bal);});
+  ['lbBtnCollection','spaLbBtnCollection','rarityLbBtnCollection'].forEach(id=>{const b=$(id);if(b)b.classList.toggle('active',!bal);});
+  rarityLbMode=leaderboardMode;
 }
 
 function getLeaderboardListEl(){
@@ -4426,8 +4593,10 @@ function renderAppraisalTabContent(){
 // ── LEADERBOARDS ──
 window.switchLeaderboard=function(mode){
   leaderboardMode=mode;
+  rarityLbMode=mode;
   syncLeaderboardToggleUI();
   loadLeaderboardData();
+  if(activeStitchTab==='tierlist')loadRarityLeaderboardPreview();
 };
 async function loadLeaderboardData(){
   const listEl=getLeaderboardListEl();if(!listEl)return;
