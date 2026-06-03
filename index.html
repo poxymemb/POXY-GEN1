@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
+<link rel="stylesheet" href="assets/poxy-club-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1553,46 +1554,94 @@ body.dark-club .club-sub{color:#888}
   <button type="button" class="btn-primary" onclick="showPage('hunt');scrollToTreasury()">Go to Dashboard Treasury</button>
 </div>
 
-<!-- DARK CLUB PAGE -->
-<div class="club-page" id="clubPage">
-  <div id="clubLocked" class="club-locked" style="display:none">
-    <div class="club-locked-icon">🔒</div>
-    <div class="page-title" style="margin-bottom:8px">POXY CLUB</div>
-    <div class="club-locked-text">You need at least one<br><strong>Mythic POXY</strong> to enter.<br>Keep hunting!</div>
-  </div>
-  <div id="clubUnlocked" style="display:none">
-    <div class="club-hero">
-      <div class="club-badge">✸</div>
-      <div class="club-title">POXY CLUB</div>
-      <div class="club-sub">Founders Circle</div>
-    </div>
-    <div class="club-open-row">
-      <button class="btn-club-open one" id="btnClub1">Open 1 Box<br><span style="font-size:10px;opacity:0.8">1 PC</span></button>
-      <button class="btn-club-open five" id="btnClub5">Open 5 Boxes<br><span style="font-size:10px;opacity:0.8">4 PC</span></button>
-    </div>
-    <div class="club-multi-stage" id="clubBoxes"></div>
-    <div class="club-results" id="clubResults"></div>
-    <div style="margin:18px 0">
-      <div class="section-label" style="color:#FFCA28;margin-bottom:10px;font-weight:800;letter-spacing:1.5px">FOUNDER ANNOUNCEMENTS</div>
-      <div id="founderAnnouncements"></div>
-    </div>
-    <div style="margin:18px 0">
-      <div class="section-label" style="color:#FF6E40;margin-bottom:10px;font-weight:800;letter-spacing:1.5px">⚡ FLASH SALES — VIP ONLY</div>
-      <div id="flashSalesWrap"></div>
-    </div>
-    <div class="club-apply-form">
-      <div class="club-apply-title">Club Application</div>
-      <input class="club-apply-input" id="clubNickname" placeholder="Club nickname">
-      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap" id="clubAvatarRow"></div>
-      <button class="btn-apply" id="btnApplyClub">Submit Application</button>
-    </div>
-    <div class="club-feed-wrap">
-      <div class="section-label" style="color:#555;margin-bottom:10px">CLUB FEED</div>
-      <div class="feed-input-row">
-        <input class="feed-input" id="feedInput" placeholder="Post to the club..." maxlength="140">
-        <button class="btn-post" onclick="postToFeed()">Post</button>
+<!-- POXY CLUB / Founders Circle (Stitch) -->
+<div class="club-page poxy-club-page" id="clubPage">
+  <div id="clubLocked" class="poxy-club-locked" style="display:none"></div>
+  <div id="clubUnlocked" class="poxy-club-main" style="display:none">
+    <header class="poxy-club-header poxy-club-breathing">
+      <div class="poxy-club-header-glow" aria-hidden="true"></div>
+      <div class="poxy-club-header-inner">
+        <span class="material-symbols-outlined" aria-hidden="true">diamond</span>
+        <h1 class="poxy-club-title">POXY CLUB</h1>
+        <p class="poxy-club-sub">Founders Circle</p>
+        <div class="poxy-club-header-rule" aria-hidden="true"></div>
       </div>
-      <div id="feedItems"></div>
+    </header>
+    <section class="poxy-club-vip-actions">
+      <div class="poxy-club-vip-btns">
+        <button type="button" class="poxy-club-btn-obsidian" id="btnClub1">
+          <span class="poxy-club-btn-title">Open 1 VIP Box</span>
+          <span class="poxy-club-btn-price" id="btnClub1Price">5 PC</span>
+        </button>
+        <button type="button" class="poxy-club-btn-liquid" id="btnClub5">
+          <span class="poxy-club-btn-title">Open 5 VIP Boxes</span>
+          <span class="poxy-club-btn-price" id="btnClub5Price">25 PC</span>
+        </button>
+      </div>
+      <div class="poxy-club-mystery-row" id="clubBoxes"></div>
+      <div class="poxy-club-results" id="clubResults"></div>
+    </section>
+    <section class="poxy-club-glass poxy-club-vault poxy-club-breathing" aria-label="Member perks">
+      <div class="poxy-club-vault-item">
+        <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">vpn_key</span></div>
+        <div>
+          <div class="poxy-club-vault-label">London Club Keycard</div>
+          <p class="poxy-club-vault-value">Active <span>• Level 4</span></p>
+        </div>
+      </div>
+      <div class="poxy-club-vault-divider" aria-hidden="true"></div>
+      <div class="poxy-club-vault-item">
+        <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">percent</span></div>
+        <div>
+          <div class="poxy-club-vault-label">Case-Opening Discount</div>
+          <p class="poxy-club-vault-value">15% Off Applied</p>
+        </div>
+      </div>
+    </section>
+    <div class="poxy-club-layout">
+      <div class="poxy-club-col">
+        <section>
+          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">campaign</span> Founder Announcements</h2>
+          <div id="founderAnnouncements"></div>
+          <div class="poxy-club-flash-section">
+            <h2 class="poxy-club-section-label" style="margin-top:24px"><span class="material-symbols-outlined">bolt</span> Flash Sales — VIP Only</h2>
+            <div id="flashSalesWrap"></div>
+          </div>
+        </section>
+        <section class="poxy-club-glass poxy-club-apply">
+          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">terminal</span> Club Application</h2>
+          <div class="poxy-club-input-well">
+            <input type="text" id="clubNickname" placeholder="Club nickname" maxlength="64" autocomplete="off"/>
+          </div>
+          <div class="poxy-club-badge-row" id="clubAvatarRow"></div>
+          <button type="button" class="poxy-club-submit" id="btnApplyClub">Submit Application</button>
+        </section>
+      </div>
+      <div class="poxy-club-col">
+        <section class="poxy-club-glass poxy-club-governance">
+          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">gavel</span> Governance Proposals</h2>
+          <div class="poxy-club-proposal">
+            <h3>Proposal #042: Increase Case Drop Rate</h3>
+            <p>Voting ends in 24h. Only VIP members eligible.</p>
+            <div class="poxy-club-proposal-btns">
+              <button type="button" class="poxy-club-vote-for" onclick="showToast('Governance voting coming soon.')">Vote For</button>
+              <button type="button" class="poxy-club-vote-abstain" onclick="showToast('Vote recorded as abstain.')">Abstain</button>
+            </div>
+          </div>
+        </section>
+        <section>
+          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">forum</span> Club Feed</h2>
+          <div class="poxy-club-glass poxy-club-feed-panel">
+            <div class="poxy-club-feed-compose">
+              <div class="poxy-club-input-well">
+                <input type="text" id="feedInput" placeholder="Post to the club..." maxlength="140" autocomplete="off"/>
+              </div>
+              <button type="button" class="poxy-club-feed-post" onclick="postToFeed()">Post</button>
+            </div>
+            <div class="poxy-club-feed-stream" id="feedItems"></div>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 </div><!-- /#poxyAppShell -->
@@ -4135,6 +4184,34 @@ window.formatCard=function(el){let v=el.value.replace(/\D/g,'').substring(0,16);
 window.formatExpiry=function(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
 
 // ── VIP CLUB (PHASE 7 — 5 PC ultra-rare cases with serial minting) ──
+function renderClubMysterySlots(){
+  const row=$('clubBoxes');if(!row)return;
+  row.innerHTML='';
+  for(let i=0;i<5;i++){
+    const b=document.createElement('div');
+    b.className='poxy-club-mystery-slot mini-box';
+    b.id='mbox'+i;
+    b.innerHTML='<span class="material-symbols-outlined">lock</span>';
+    row.appendChild(b);
+  }
+}
+function renderClubAvatarPicker(){
+  const ar=$('clubAvatarRow');if(!ar)return;
+  ar.innerHTML='';
+  AVATARS.forEach(av=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='poxy-club-badge-hex';
+    b.textContent=av;
+    b.title='Avatar '+av;
+    b.onclick=()=>{ar.querySelectorAll('.poxy-club-badge-hex').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');};
+    ar.appendChild(b);
+  });
+}
+function updateClubPriceLabels(){
+  const p1=$('btnClub1Price');if(p1)p1.textContent=formatPC(VIP_CASE_PRICE);
+  const p5=$('btnClub5Price');if(p5)p5.textContent=formatPC(VIP_CASE_PRICE*5);
+}
 function renderClub(){
   const locked=$('clubLocked'),unlocked=$('clubUnlocked');
   const isMember=isClubMember();
@@ -4143,13 +4220,10 @@ function renderClub(){
     renderClubPromo();
     return;
   }
-  locked.style.display='none';unlocked.style.display='block';
-  const lblOne=$('btnClub1');if(lblOne)lblOne.innerHTML='Open 1 VIP Box<br><span style="font-size:10px;opacity:0.8">'+formatPC(VIP_CASE_PRICE)+'</span>';
-  const lblFive=$('btnClub5');if(lblFive)lblFive.innerHTML='Open 5 VIP Boxes<br><span style="font-size:10px;opacity:0.8">'+formatPC(VIP_CASE_PRICE*5)+'</span>';
-  const row=$('clubBoxes');row.innerHTML='';
-  for(let i=0;i<5;i++){const b=document.createElement('div');b.className='mini-box';b.id='mbox'+i;b.textContent='?';row.appendChild(b);}
-  const ar=$('clubAvatarRow');ar.innerHTML='';
-  AVATARS.forEach(av=>{const b=document.createElement('button');b.style.cssText='font-size:20px;background:#13131a;border:1px solid #2a2a2e;border-radius:8px;padding:6px;cursor:pointer;transition:border-color 0.2s';b.textContent=av;b.onclick=()=>{ar.querySelectorAll('button').forEach(x=>x.style.borderColor='#2a2a2e');b.style.borderColor='#FF5252';};ar.appendChild(b);});
+  locked.style.display='none';unlocked.style.display='flex';
+  updateClubPriceLabels();
+  renderClubMysterySlots();
+  renderClubAvatarPicker();
   loadFeed();
   loadFounderAnnouncements();
   loadFlashSales();
@@ -4158,49 +4232,58 @@ function renderClubPromo(){
   const locked=$('clubLocked');if(!locked)return;
   if(locked.dataset.rendered==='1')return;
   locked.dataset.rendered='1';
-  locked.innerHTML='<div class="club-locked-icon">✸</div><div class="page-title" style="margin-bottom:8px">POXY VIP CLUB</div><div class="club-locked-text" style="margin-bottom:20px">Exclusive 5 PC ultra-rare boxes.<br>Mint serials #1, #2, #3 across 6 unique tiers.<br>Members-only flash sales &amp; founder broadcasts.</div><div style="background:#13131a;border:1px solid #1e1e28;border-radius:14px;padding:14px;margin:14px 0;text-align:left"><div style="font-size:9px;font-weight:800;letter-spacing:2px;color:#FF6E40;text-transform:uppercase;margin-bottom:10px">VIP Tier Pool</div>'+VIP_TIERS.map(t=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1a1a24"><span style="color:'+t.color+';font-weight:700;font-size:11px">'+t.icon+' '+t.label+'</span><span style="font-size:10px;color:#666">'+(t.prob*100).toFixed(2)+'%</span></div>').join('')+'</div><div style="font-size:11px;color:#666;line-height:1.6;margin-top:12px">Earn membership by collecting any Mythic-tier POXY from the standard hunt — the system promotes you instantly. Or contact the founder for invitation.</div>';
+  const poolRows=VIP_TIERS.map(t=>'<div class="poxy-club-locked-pool-row"><span style="color:'+t.color+';font-weight:700">'+t.icon+' '+t.label+'</span><span style="color:#666">'+(t.prob*100).toFixed(2)+'%</span></div>').join('');
+  locked.innerHTML='<div class="poxy-club-locked-icon"><span class="material-symbols-outlined" style="font-size:3rem">lock</span></div>'
+    +'<h2 class="poxy-club-locked-title">POXY CLUB</h2>'
+    +'<p class="poxy-club-locked-text">Exclusive '+formatPC(VIP_CASE_PRICE)+' ultra-rare VIP boxes.<br>Mint serials #1, #2, #3 across unique tiers.<br>Members-only flash sales &amp; founder broadcasts.</p>'
+    +'<div class="poxy-club-glass poxy-club-locked-pool"><div class="poxy-club-section-label" style="margin-bottom:12px"><span class="material-symbols-outlined">stars</span> VIP Tier Pool</div>'+poolRows+'</div>'
+    +'<p class="poxy-club-locked-text" style="margin-top:16px;font-size:13px">Collect any <strong style="color:#D4AF37">Mythic POXY</strong> from the standard hunt to unlock the Founders Circle instantly.</p>';
 }
 async function loadFounderAnnouncements(){
   const wrap=$('founderAnnouncements');if(!wrap)return;
-  wrap.innerHTML='<div style="font-size:10px;color:#444">Loading announcements…</div>';
+  wrap.innerHTML='<div class="poxy-club-muted">Loading announcements…</div>';
   try{
     const{data:fp}=await sb.from('profiles').select('id').eq('email',FOUNDER_EMAIL).maybeSingle();
     if(!fp){wrap.innerHTML='';return;}
     const{data,error}=await sb.from('news_posts').select('*').eq('author_id',fp.id).order('created_at',{ascending:false}).limit(5);
     if(error)throw error;
-    if(!data||!data.length){wrap.innerHTML='<div style="font-size:10px;color:#444">No founder announcements yet.</div>';return;}
+    if(!data||!data.length){wrap.innerHTML='<div class="poxy-club-muted">No founder announcements yet.</div>';return;}
     wrap.innerHTML='';
     data.forEach(p=>{
       const el=document.createElement('div');
-      el.style.cssText='background:linear-gradient(135deg,rgba(255,202,40,0.08),rgba(0,0,0,0.0));border:1px solid rgba(255,202,40,0.35);border-radius:10px;padding:10px 12px;margin-bottom:8px;box-shadow:0 0 18px rgba(255,202,40,0.12)';
-      el.innerHTML='<div style="font-size:10px;font-weight:800;letter-spacing:2px;color:#FFCA28;text-transform:uppercase;margin-bottom:4px">FOUNDER · '+timeSince(p.created_at)+'</div><div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">'+sanitizeText(p.title)+'</div><div style="font-size:11px;color:#aaa;line-height:1.5">'+sanitizeText(p.content)+'</div>';
+      el.className='poxy-club-glass poxy-club-announce-card';
+      el.innerHTML='<div class="poxy-club-announce-meta"><span class="poxy-club-announce-badge">Founder</span><span class="poxy-club-announce-time">'+timeSince(p.created_at)+'</span></div>'
+        +'<h3 class="poxy-club-announce-title">'+sanitizeText(p.title)+'</h3>'
+        +'<p class="poxy-club-announce-body">'+sanitizeText(p.content)+'</p>';
       wrap.appendChild(el);
     });
-  }catch(e){wrap.innerHTML='<div style="font-size:10px;color:#FF5252">Could not load announcements.</div>';}
+  }catch(e){wrap.innerHTML='<div class="poxy-club-muted" style="color:#c44">Could not load announcements.</div>';}
 }
 async function loadFlashSales(){
   const wrap=$('flashSalesWrap');if(!wrap)return;
-  wrap.innerHTML='<div style="font-size:10px;color:#444">Loading flash sales…</div>';
+  wrap.innerHTML='<div class="poxy-club-muted">Loading flash sales…</div>';
   try{
     const{data,error}=await sb.from('flash_sales').select('*').gt('ends_at',new Date().toISOString()).order('ends_at',{ascending:true});
     if(error)throw error;
     activeFlashSales=data||[];
-    if(!activeFlashSales.length){wrap.innerHTML='<div style="font-size:10px;color:#444">No active flash drops. Check back soon.</div>';return;}
+    if(!activeFlashSales.length){wrap.innerHTML='<div class="poxy-club-glass poxy-club-flash-empty">No active flash drops. Check back soon.</div>';return;}
     wrap.innerHTML='';
     activeFlashSales.forEach(s=>{
       const tier=TIER_BY_ID[s.poxy_tier]||TIERS[0];
       const card=document.createElement('div');
-      card.style.cssText='background:'+tier.glow+';border:1px solid '+tier.color+'55;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px';
+      card.className='poxy-club-glass poxy-club-flash-card';
+      card.style.background=tier.glow;
+      card.style.borderColor=tier.color+'55';
       const left=document.createElement('div');left.style.flex='1';
       const endsMs=new Date(s.ends_at).getTime()-Date.now();
       const m=Math.max(0,Math.floor(endsMs/60000));
-      left.innerHTML='<div style="font-size:11px;font-weight:800;color:'+tier.color+';margin-bottom:2px">'+tier.icon+' '+sanitizeText(s.title||tier.label)+'</div><div style="font-size:9px;color:#888;line-height:1.4">'+sanitizeText(s.description||'')+'</div><div style="font-size:9px;color:#FF5252;margin-top:4px;font-weight:700">'+m+' min left · stock '+s.stock+'</div>';
-      const buy=document.createElement('button');buy.className='btn-club-open one';buy.style.cssText='padding:9px 14px;font-size:11px';buy.innerHTML=formatPC(s.price_pc)+'<br>BUY';
+      left.innerHTML='<div style="font-size:12px;font-weight:800;color:'+tier.color+';margin-bottom:4px">'+tier.icon+' '+sanitizeText(s.title||tier.label)+'</div><div style="font-size:12px;color:#888;line-height:1.4">'+sanitizeText(s.description||'')+'</div><div style="font-size:11px;color:#D4AF37;margin-top:6px;font-weight:700">'+m+' min left · stock '+s.stock+'</div>';
+      const buy=document.createElement('button');buy.type='button';buy.className='poxy-club-flash-buy';buy.textContent=formatPC(s.price_pc)+' · BUY';
       buy.onclick=()=>buyFlashSale(s,tier,buy);
       card.appendChild(left);card.appendChild(buy);
       wrap.appendChild(card);
     });
-  }catch(e){wrap.innerHTML='<div style="font-size:10px;color:#FF5252">Could not load flash sales.</div>';}
+  }catch(e){wrap.innerHTML='<div class="poxy-club-muted" style="color:#c44">Could not load flash sales.</div>';}
 }
 async function buyFlashSale(sale,tier,btn){
   if(!currentUser)return;
@@ -4225,7 +4308,7 @@ async function buyFlashSale(sale,tier,btn){
     }
     showToast('Flash drop claimed!');
     loadFlashSales();
-  }catch(e){showToast('Purchase failed: '+(e.message||'error'));btn.disabled=false;btn.textContent=formatPC(sale.price_pc);}
+  }catch(e){showToast('Purchase failed: '+(e.message||'error'));btn.disabled=false;btn.textContent=formatPC(sale.price_pc)+' · BUY';}
 }
 async function doClubOpen(count){
   if(!currentUser)return;
@@ -4237,8 +4320,7 @@ async function doClubOpen(count){
   const btn1=$('btnClub1'),btn5=$('btnClub5');
   if(btn1)btn1.disabled=true;if(btn5)btn5.disabled=true;
   const results=$('clubResults');results.innerHTML='';
-  const row=$('clubBoxes');row.innerHTML='';
-  for(let i=0;i<5;i++){const b=document.createElement('div');b.className='mini-box';b.id='mbox'+i;b.textContent='?';row.appendChild(b);}
+  renderClubMysterySlots();
   const drops=[];
   for(let i=0;i<count;i++){
     await new Promise(r=>setTimeout(r,i*220));
@@ -4251,7 +4333,7 @@ async function doClubOpen(count){
       drops.push({tier:t,serial:data.vip_serial});
       playTick();
       const b=$('mbox'+i);
-      if(b){b.textContent=t.icon;b.style.setProperty('--bc',t.color);b.classList.add('revealed');b.style.borderColor=t.color;b.style.boxShadow='0 0 16px '+t.color+'88';}
+      if(b){b.innerHTML=t.icon;b.style.setProperty('--bc',t.color);b.classList.add('revealed');b.style.borderColor=t.color;b.style.color=t.color;}
     }catch(e){showToast('VIP open failed: '+(e.message||'error'));break;}
   }
   if(drops.some(d=>d.tier.id==='secret'||d.tier.id==='diamond'))playMythicChord();
@@ -4272,24 +4354,31 @@ $('btnApplyClub').addEventListener('click',async function(){
   if(!nick){showToast('Enter a club nickname.');return;}
   showToast('Application submitted! Welcome to the club ✸');$('clubNickname').value='';
 });
+function clubFeedIcon(avatar){
+  if(avatar&&avatar.length<=4&&!avatar.startsWith('http'))return avatar;
+  return 'star';
+}
 async function loadFeed(){
   const cont=$('feedItems');
-  cont.innerHTML='<div class="col-loading"><div class="col-spinner" style="border-top-color:#FF5252"></div></div>';
+  if(!cont)return;
+  cont.innerHTML='<div class="poxy-club-muted"><div class="col-spinner" style="border-top-color:#D4AF37;margin:0 auto 8px"></div></div>';
   try{
     const{data}=await sb.from('club_feed').select('*').order('created_at',{ascending:false}).limit(20);
     cont.innerHTML='';
-    if(!data||!data.length){cont.innerHTML='<div style="font-size:12px;color:#444;padding:8px">No posts yet. Be first!</div>';return;}
-    data.forEach(item=>{
-      const el=document.createElement('div');el.className='feed-item';
-      const auth=document.createElement('div');auth.className='feed-author';
-      const avs=document.createElement('span');avs.className='feed-avatar';avs.textContent=item.author_avatar||'✸';
-      const un=document.createElement('span');un.className='feed-username';un.textContent=sanitizeText(item.author_username||'Member');
-      const tm=document.createElement('span');tm.className='feed-time';tm.textContent=timeSince(item.created_at);
-      auth.appendChild(avs);auth.appendChild(un);auth.appendChild(tm);
-      const txt=document.createElement('div');txt.className='feed-content';txt.textContent=item.content;
-      el.appendChild(auth);el.appendChild(txt);cont.appendChild(el);
+    if(!data||!data.length){cont.innerHTML='<div class="poxy-club-feed-empty">No posts yet. Be first!</div>';return;}
+    data.forEach((item,i)=>{
+      const el=document.createElement('div');
+      const isTag=(item.content||'').trim().startsWith('#');
+      el.className='poxy-club-feed-msg'+(isTag?' poxy-club-feed-msg--highlight':'');
+      const icon=clubFeedIcon(item.author_avatar);
+      const iconHtml=icon.length<=4?'<span class="poxy-club-feed-avatar">'+icon+'</span>':'<span class="material-symbols-outlined">'+icon+'</span>';
+      el.innerHTML='<div class="poxy-club-feed-msg-head"><div class="poxy-club-feed-msg-user">'+iconHtml
+        +'<span class="poxy-club-feed-username'+(isTag?' style="color:#D4AF37"':'')+'">'+sanitizeText(item.author_username||'Member')+'</span></div>'
+        +'<span class="poxy-club-feed-time">'+timeSince(item.created_at)+'</span></div>'
+        +'<p class="poxy-club-feed-body'+(isTag?' style="color:rgba(212,175,55,0.8);font-family:JetBrains Mono,monospace;font-size:12px;letter-spacing:0.06em"':'')+'">'+sanitizeText(item.content)+'</p>';
+      cont.appendChild(el);
     });
-  }catch(e){cont.innerHTML='<div style="font-size:12px;color:#444">Feed unavailable.</div>';}
+  }catch(e){cont.innerHTML='<div class="poxy-club-feed-empty">Feed unavailable.</div>';}
 }
 window.postToFeed=async function(){
   const input=$('feedInput'),content=input.value.trim();

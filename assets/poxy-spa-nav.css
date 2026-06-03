@@ -38,11 +38,12 @@
   min-height:360px;
   animation:none;
 }
-.st-spa-panel-inner.club-page{
+.st-spa-panel-inner.club-page,
+.st-spa-panel-inner.poxy-club-page{
   display:block!important;
-  max-width:var(--st-max,1280px);
-  margin:0 auto;
-  padding:24px 20px 48px;
+  max-width:none;
+  margin:0;
+  padding:0;
 }
 
 /* Tier List */
