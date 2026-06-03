@@ -1261,6 +1261,21 @@ body.dark-club .club-sub{color:#888}
         </div>
       </div>
   </nav>
+  <div class="st-win-reveal" id="stWinReveal" aria-hidden="true" role="dialog" aria-labelledby="stWinRevealTitle">
+    <div class="st-win-reveal-backdrop" aria-hidden="true"></div>
+    <div class="st-win-reveal-card" id="stWinRevealCard">
+      <div class="st-win-reveal-flare" id="stWinFlare" aria-hidden="true"></div>
+      <div class="st-win-reveal-kicker" id="stWinRevealTitle">Win Reveal</div>
+      <div class="st-win-reveal-icon" id="stWinIcon"></div>
+      <div class="st-win-reveal-name" id="stWinName"></div>
+      <div class="st-win-reveal-rarity" id="stWinRarity"></div>
+      <div class="st-win-reveal-serial" id="stWinSerial"></div>
+      <div class="st-win-reveal-actions">
+        <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd">Add to Collection</button>
+        <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard">Discard</button>
+      </div>
+    </div>
+  </div>
 <div id="huntPage" style="display:none">
   <div class="poxy-stitch-dash" id="poxyStitchDashboard">
     <div class="st-spa-viewport" id="stSpaViewport">
@@ -1310,21 +1325,6 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="btn-discard" id="btnDiscard">DISCARD</button>
             </div>
             <button type="button" class="btn-list-market" id="btnListFromHunt">LIST ON MARKET INSTEAD</button>
-          </div>
-          <div class="st-win-reveal" id="stWinReveal" aria-hidden="true" role="dialog" aria-labelledby="stWinRevealTitle">
-            <div class="st-win-reveal-backdrop" aria-hidden="true"></div>
-            <div class="st-win-reveal-card" id="stWinRevealCard">
-              <div class="st-win-reveal-flare" id="stWinFlare" aria-hidden="true"></div>
-              <div class="st-win-reveal-kicker" id="stWinRevealTitle">Win Reveal</div>
-              <div class="st-win-reveal-icon" id="stWinIcon"></div>
-              <div class="st-win-reveal-name" id="stWinName"></div>
-              <div class="st-win-reveal-rarity" id="stWinRarity"></div>
-              <div class="st-win-reveal-serial" id="stWinSerial"></div>
-              <div class="st-win-reveal-actions">
-                <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd">Add to Collection</button>
-                <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard">Discard</button>
-              </div>
-            </div>
           </div>
           </div>
         </div>
@@ -2954,6 +2954,7 @@ function resetRouletteCarousel(){
 }
 function closeWinRevealModalOnly(){
   const modal=$('stWinReveal');
+  document.body.classList.remove('st-win-reveal-open');
   if(modal){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');}
   const addBtn=$('stWinAdd');
   if(addBtn){addBtn.disabled=false;addBtn.textContent='Add to Collection';}
@@ -2975,11 +2976,12 @@ function openWinRevealModal(tier){
   const addBtn=$('stWinAdd');
   if(addBtn){addBtn.disabled=false;addBtn.textContent='Add to Collection';}
   if(modal){modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');}
-  const playfield=$('stHeroPlayfield');
-  if(playfield){
-    const navH=72;
-    const top=playfield.getBoundingClientRect().top+window.scrollY-navH;
-    if(window.scrollY>top-8||playfield.getBoundingClientRect().top<navH+8){
+  document.body.classList.add('st-win-reveal-open');
+  const hero=document.querySelector('#stPanelDashboard .st-hero');
+  if(hero){
+    const navH=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--st-nav-h'))||96;
+    const top=hero.getBoundingClientRect().top+window.scrollY-navH-12;
+    if(window.scrollY>top+4||hero.getBoundingClientRect().top<navH+16){
       window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
     }
   }
@@ -3066,6 +3068,7 @@ function resetAll(){
   if(spinAnim)cancelAnimationFrame(spinAnim);if(particleLoop)cancelAnimationFrame(particleLoop);
   clearSpinTimers();
   const winModal=$('stWinReveal');
+  document.body.classList.remove('st-win-reveal-open');
   if(winModal){winModal.classList.remove('is-open');winModal.setAttribute('aria-hidden','true');}
   resetRouletteCarousel();
   $('cvs').getContext('2d').clearRect(0,0,240,240);particles=[];
