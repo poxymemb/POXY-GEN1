@@ -29,7 +29,7 @@
   .rarity-page-aside{width:100%;max-width:380px;flex-shrink:0}
 }
 
-.rarity-page-header{max-width:640px}
+.rarity-page-header{max-width:640px;margin-bottom:32px}
 .rarity-page-header h1{
   font-family:'Hanken Grotesk',Inter,sans-serif;
   font-size:clamp(32px,5vw,56px);
