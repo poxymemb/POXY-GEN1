@@ -2481,7 +2481,7 @@ function persistSelectedFrame(frameId){
 }
 
 function updateGlobalFrames(frameClass){
-  const frame = (frameClass && SUPPORTED_AVATAR_FRAMES.includes(frameClass))
+  let frame = (frameClass && SUPPORTED_AVATAR_FRAMES.includes(frameClass))
     ? frameClass
     : (userConfig.selectedFrame && SUPPORTED_AVATAR_FRAMES.includes(userConfig.selectedFrame) ? userConfig.selectedFrame : 'none');
   if(frame!=='none'&&!isFrameUnlocked(frame))frame='none';
