@@ -35,17 +35,17 @@ body.dark-club .poxy-club-page{
     url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
   background-attachment:fixed;
 }
-.poxy-club-main{
+.poxy-club-main,.poxy-club-app{
   display:flex;
   flex-direction:column;
-  gap:32px;
+  gap:24px;
   width:100%;
   max-width:var(--club-max);
   margin:0 auto;
   min-width:0;
   overflow-x:hidden;
 }
-@media(min-width:768px){.poxy-club-main{gap:48px}}
+@media(min-width:768px){.poxy-club-main,.poxy-club-app{gap:32px}}
 
 .poxy-club-header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;position:relative;width:100%;overflow:hidden}
 .poxy-club-header-glow{position:absolute;top:50%;left:50%;width:min(24rem,100vw);height:min(24rem,60vh);transform:translate(-50%,-50%);background:rgba(212,175,55,0.05);border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
@@ -202,3 +202,240 @@ body.dark-club{overflow-x:hidden}
 body.dark-club #poxyAppShell,
 body.dark-club #huntPage,
 body.dark-club .st-spa-viewport{overflow-x:hidden;max-width:100%}
+
+/* ── Mayfair Elite: dock, panels, modules ── */
+.poxy-club-page{
+  --club-silver:#c8c5c2;
+  --club-silver-dim:#8a8784;
+}
+.poxy-club-dock{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px 8px;
+  background:rgba(0,0,0,0.6);border:1px solid rgba(212,175,55,0.12);border-radius:999px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);max-width:100%;margin:0 auto 8px;
+}
+.poxy-club-dock-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;
+  border:1px solid transparent;background:transparent;color:var(--club-silver-dim);
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+  cursor:pointer;transition:all 400ms cubic-bezier(0.16,1,0.3,1);white-space:nowrap;
+}
+.poxy-club-dock-btn .material-symbols-outlined{font-size:16px;color:inherit}
+.poxy-club-dock-btn:hover{color:var(--club-silver);border-color:rgba(212,175,55,0.2);background:rgba(212,175,55,0.04)}
+.poxy-club-dock-btn.active{
+  color:var(--club-gold);border-color:rgba(212,175,55,0.45);
+  background:rgba(212,175,55,0.08);box-shadow:0 0 24px rgba(212,175,55,0.12);
+}
+.poxy-club-panels{display:grid;min-height:360px;width:100%}
+.poxy-club-panel{
+  grid-area:1/1;align-self:start;width:100%;
+  visibility:hidden;opacity:0;transform:translateY(15px) scale(0.97);pointer-events:none;
+  transition:opacity 400ms cubic-bezier(0.16,1,0.3,1),transform 400ms cubic-bezier(0.16,1,0.3,1),visibility 0s 400ms;
+  will-change:opacity,transform;
+}
+.poxy-club-panel.active{visibility:visible;opacity:1;transform:translateY(0) scale(1);pointer-events:auto;transition-delay:0s}
+.poxy-club-panel.leaving{visibility:visible;opacity:0;transform:translateY(-6px) scale(0.97);pointer-events:none;transition-delay:0s}
+.poxy-club-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--club-silver-dim);margin:0 0 12px;display:flex;align-items:center;gap:6px;
+}
+.poxy-club-kicker .material-symbols-outlined{font-size:14px;color:var(--club-gold)}
+.poxy-club-muted{font-size:13px;color:var(--club-silver-dim);line-height:1.5;margin:0 0 12px}
+.poxy-club-grid-2{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;width:100%}
+@media(min-width:900px){.poxy-club-grid-2{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}}
+.poxy-club-module,.poxy-club-glass{padding:20px;box-sizing:border-box}
+.poxy-club-vip-block .poxy-club-vip-btns{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+@media(min-width:640px){.poxy-club-vip-block .poxy-club-vip-btns{flex-direction:row}}
+
+/* Flash Event Radar */
+.poxy-club-flash-radar{padding:16px 20px;margin-bottom:16px;overflow:hidden}
+.poxy-club-flash-radar-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.poxy-club-flash-radar-timer{
+  font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--club-gold);
+  text-shadow:0 0 20px rgba(212,175,55,0.4);letter-spacing:0.08em;
+}
+.poxy-club-flash-radar-status{font-size:12px;color:var(--club-silver);margin:8px 0 0}
+.poxy-club-flash-matrix{display:flex;gap:4px;margin-top:12px;height:6px}
+.poxy-club-flash-matrix span{
+  flex:1;background:rgba(212,175,55,0.15);border-radius:2px;animation:poxyClubMatrixPulse 1.2s ease-in-out infinite;
+}
+.poxy-club-flash-matrix span:nth-child(2){animation-delay:.15s}
+.poxy-club-flash-matrix span:nth-child(3){animation-delay:.3s}
+.poxy-club-flash-matrix span:nth-child(4){animation-delay:.45s}
+.poxy-club-flash-matrix span:nth-child(5){animation-delay:.6s}
+.poxy-club-flash-matrix span:nth-child(6){animation-delay:.75s}
+@keyframes poxyClubMatrixPulse{0%,100%{opacity:.25;height:4px}50%{opacity:1;height:8px;background:rgba(212,175,55,0.6)}}
+.poxy-club-terminal-module.flash-active .poxy-club-glass,
+.poxy-club-terminal-module.flash-active .poxy-club-flash-radar{
+  animation:clubFlameBorder 2.4s ease-in-out infinite;
+}
+.poxy-club-terminal-module.flash-active .poxy-club-flash-radar-timer{color:#fff;text-shadow:0 0 30px rgba(255,200,80,0.8)}
+@keyframes clubFlameBorder{
+  0%,100%{box-shadow:0 0 0 1px rgba(212,175,55,0.25),0 0 20px rgba(212,175,55,0.08)}
+  50%{box-shadow:0 0 0 1px rgba(255,200,80,0.7),0 0 40px rgba(212,175,55,0.25)}
+}
+
+/* Extraction Matrix */
+.poxy-club-extraction-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(min-width:640px){.poxy-club-extraction-row{grid-template-columns:repeat(6,1fr)}}
+.poxy-club-cryo{
+  aspect-ratio:3/4;border-radius:12px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#0a0a0a,#000);border:1px solid rgba(136,136,136,0.2);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px;
+  transition:all 400ms cubic-bezier(0.16,1,0.3,1);
+}
+.poxy-club-cryo.locked{opacity:0.55}
+.poxy-club-cryo.locked::before{content:'LOCKED';font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--club-silver-dim);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.poxy-club-cryo.active{border-color:rgba(212,175,55,0.5);box-shadow:0 0 24px rgba(212,175,55,0.12) inset}
+.poxy-club-cryo-card{
+  font-size:1.75rem;line-height:1;filter:drop-shadow(0 0 12px rgba(212,175,55,0.5));
+  animation:poxyClubCardFloat 4s ease-in-out infinite;
+}
+@keyframes poxyClubCardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.poxy-club-cryo-points{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--club-gold);margin-top:4px}
+.poxy-club-cryo-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.poxy-club-cryo-particles i{
+  position:absolute;bottom:0;width:2px;height:2px;background:var(--club-gold);border-radius:50%;
+  opacity:0;animation:poxyClubParticleUp 2.5s ease-out infinite;
+}
+@keyframes poxyClubParticleUp{0%{opacity:0;transform:translateY(0)}20%{opacity:.8}100%{opacity:0;transform:translateY(-80px)}}
+
+/* Heatmap */
+.poxy-club-heatmap-chart{height:160px;position:relative;margin:8px 0;border-radius:8px;background:rgba(0,0,0,0.5);overflow:hidden}
+.poxy-club-heatmap-chart svg{width:100%;height:100%;display:block}
+.poxy-club-heatmap-legend{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--club-silver-dim);display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.poxy-club-heatmap-legend span{color:var(--club-gold)}
+
+/* Sovereign Ledger */
+.poxy-club-ledger-monolith{
+  max-height:280px;overflow-y:auto;padding:16px 20px;
+  background:linear-gradient(180deg,#0c0c0c 0%,#050505 50%,#0a0a0a 100%);
+  border-radius:8px;border:1px solid rgba(212,175,55,0.08);
+  box-shadow:inset 0 2px 40px rgba(0,0,0,0.8);
+}
+.poxy-club-ledger-row{
+  font-family:'Hanken Grotesk',Inter,sans-serif;font-size:14px;color:var(--club-silver);
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  transition:all 300ms cubic-bezier(0.16,1,0.3,1);cursor:default;
+}
+.poxy-club-ledger-row:hover{
+  color:#fff;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,0.12),transparent);
+  text-shadow:0 0 20px rgba(255,255,255,0.5),0 0 40px rgba(212,175,55,0.3);
+}
+
+/* OTC */
+.poxy-club-otc-split{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media(min-width:700px){.poxy-club-otc-split{grid-template-columns:1fr 1fr}}
+.poxy-club-otc-col h3{font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--club-gold);margin:0 0 10px}
+.poxy-club-otc-list{display:flex;flex-direction:column;gap:8px}
+.poxy-club-otc-req{padding:12px;border-radius:8px;border:1px solid rgba(212,175,55,0.15);background:rgba(0,0,0,0.4)}
+.poxy-club-otc-req strong{display:block;color:#fff;font-size:13px;margin-bottom:4px}
+.poxy-club-otc-req span{font-size:11px;color:var(--club-silver-dim)}
+.poxy-club-otc-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.poxy-club-otc-slot{
+  aspect-ratio:1;border-radius:8px;border:1px dashed rgba(212,175,55,0.25);
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--club-silver-dim);
+  background:rgba(5,5,5,0.8);transition:border-color 300ms;
+}
+.poxy-club-otc-slot.filled{border-style:solid;border-color:rgba(212,175,55,0.4);font-size:1.25rem}
+.poxy-club-btn-gold{
+  width:100%;padding:12px;border-radius:8px;border:1px solid rgba(212,175,55,0.5);
+  background:rgba(212,175,55,0.06);color:var(--club-gold);font-weight:600;cursor:pointer;
+  font-family:inherit;transition:all 400ms cubic-bezier(0.16,1,0.3,1);
+}
+.poxy-club-btn-gold:hover{background:rgba(212,175,55,0.15);transform:translateY(-1px)}
+
+/* Golden Crucible */
+.poxy-club-duel-stage{display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0}
+.poxy-club-duel-node{
+  width:88px;height:88px;border-radius:12px;border:2px solid rgba(212,175,55,0.4);
+  display:flex;align-items:center;justify-content:center;background:#000;
+  clip-path:polygon(12% 0,88% 0,100% 12%,100% 88%,88% 100%,12% 100%,0 88%,0 12%);
+}
+.poxy-club-duel-av{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--club-gold);letter-spacing:0.08em}
+.poxy-club-duel-vs{font-size:12px;color:var(--club-silver-dim);font-weight:700}
+.poxy-club-btn-duel{
+  width:100%;padding:18px;border:none;border-radius:8px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#1a1508,#000);color:var(--club-gold);font-size:14px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:inherit;
+  border:1px solid rgba(212,175,55,0.5);display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform 400ms cubic-bezier(0.16,1,0.3,1);
+}
+.poxy-club-btn-duel:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(212,175,55,0.2)}
+.poxy-club-duel.sweep .poxy-club-btn-duel::after{
+  content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.25) 50%,transparent 60%);
+  animation:clubDuelSweep 800ms cubic-bezier(0.16,1,0.3,1) forwards;
+}
+@keyframes clubDuelSweep{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
+
+/* Armory */
+.poxy-club-armory{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:16px 0}
+.poxy-club-armory-slot{
+  width:min(140px,28vw);aspect-ratio:2/3;border-radius:12px;position:relative;
+  background:rgba(5,5,5,0.9);backdrop-filter:blur(12px);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;padding:12px;
+}
+.poxy-club-armory-slot::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(180deg,rgba(212,175,55,0.5),rgba(212,175,55,0.1));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude}
+.poxy-club-armory-icon{font-size:2.5rem;line-height:1}
+.poxy-club-armory-label{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--club-silver);text-align:center}
+.poxy-club-armory-empty{font-size:10px;color:var(--club-silver-dim);text-transform:uppercase;letter-spacing:0.1em}
+
+/* Syndicate */
+.poxy-club-syndicate-panels{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+@media(min-width:640px){.poxy-club-syndicate-panels{grid-template-columns:1fr 1fr}}
+.poxy-club-syndicate-roster,.poxy-club-syndicate-vault{
+  min-height:140px;padding:12px;border-radius:8px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.05);
+}
+.poxy-club-syndicate-member{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.poxy-club-syndicate-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.poxy-club-syndicate-dot.online{background:#4caf50;box-shadow:0 0 8px rgba(76,175,80,0.6)}
+.poxy-club-syndicate-dot.idle{background:#ff9800}
+.poxy-club-syndicate-vault-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.poxy-club-syndicate-asset{
+  aspect-ratio:1;border-radius:6px;background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+
+/* Atelier */
+.poxy-club-atelier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.poxy-club-atelier-card{
+  border-radius:10px;overflow:hidden;border:1px solid rgba(212,175,55,0.15);
+  background:#050505;transition:transform 400ms cubic-bezier(0.16,1,0.3,1);
+}
+.poxy-club-atelier-card:hover{transform:translateY(-3px);border-color:rgba(212,175,55,0.35)}
+.poxy-club-atelier-thumb{height:72px;width:100%}
+.poxy-club-atelier-body{padding:10px}
+.poxy-club-atelier-name{font-size:12px;font-weight:600;color:var(--club-silver);margin-bottom:4px}
+.poxy-club-atelier-desc{font-size:10px;color:var(--club-silver-dim);line-height:1.4;margin-bottom:8px}
+.poxy-club-atelier-btn{
+  width:100%;padding:8px;border-radius:6px;border:1px solid rgba(212,175,55,0.4);
+  background:transparent;color:var(--club-gold);font-size:10px;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;
+  transition:background 300ms;
+}
+.poxy-club-atelier-btn:hover{background:rgba(212,175,55,0.12)}
+.poxy-club-atelier-btn.equipped{background:rgba(212,175,55,0.2);border-color:var(--club-gold)}
+
+/* Alpha Stream */
+.poxy-club-alpha-player{border-radius:12px;overflow:hidden;background:rgba(0,0,0,0.6)}
+.poxy-club-alpha-screen{
+  min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,rgba(212,175,55,0.04),transparent);
+  color:var(--club-silver);
+}
+.poxy-club-alpha-screen .material-symbols-outlined{font-size:48px;color:var(--club-gold);opacity:0.7}
+.poxy-club-alpha-screen p{font-size:13px;margin:0;text-align:center;padding:0 16px}
+.poxy-club-alpha-controls{display:flex;gap:8px;padding:12px;background:rgba(5,5,5,0.8);backdrop-filter:blur(16px)}
+.poxy-club-alpha-ctrl{
+  flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);
+  background:transparent;color:var(--club-silver-dim);font-size:11px;cursor:pointer;font-family:inherit;
+  transition:all 300ms;
+}
+.poxy-club-alpha-ctrl.active,.poxy-club-alpha-ctrl:hover{color:var(--club-gold);border-color:rgba(212,175,55,0.35)}
+.poxy-club-feed-wrap .poxy-club-feed-panel{height:min(360px,45vh)}
+.poxy-club-status-dock .poxy-club-vault-item{margin-bottom:16px}
+.poxy-club-status-dock .poxy-club-vault-value{color:var(--club-silver)}
+.poxy-club-title,.poxy-club-sub{color:var(--club-silver)}

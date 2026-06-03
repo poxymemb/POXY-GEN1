@@ -1722,94 +1722,192 @@ body.dark-club .club-sub{color:#888}
   <button type="button" class="btn-primary" onclick="showPage('hunt');scrollToTreasury()">Go to Dashboard Treasury</button>
 </div>
 
-<!-- POXY CLUB / Founders Circle (Stitch) -->
+<!-- POXY CLUB — Mayfair Elite Private Lounge -->
 <div class="club-page poxy-club-page" id="clubPage">
   <div id="clubLocked" class="poxy-club-locked" style="display:none"></div>
-  <div id="clubUnlocked" class="poxy-club-main" style="display:none">
-    <header class="poxy-club-header poxy-club-breathing">
+  <div id="clubUnlocked" class="poxy-club-app" style="display:none">
+    <header class="poxy-club-header">
       <div class="poxy-club-header-glow" aria-hidden="true"></div>
       <div class="poxy-club-header-inner">
         <span class="material-symbols-outlined" aria-hidden="true">diamond</span>
         <h1 class="poxy-club-title">POXY CLUB</h1>
-        <p class="poxy-club-sub">Founders Circle</p>
-        <div class="poxy-club-header-rule" aria-hidden="true"></div>
+        <p class="poxy-club-sub">Mayfair Elite · Private Lounge</p>
       </div>
     </header>
-    <section class="poxy-club-vip-actions">
-      <div class="poxy-club-vip-btns">
-        <button type="button" class="poxy-club-btn-obsidian" id="btnClub1">
-          <span class="poxy-club-btn-title">Open 1 VIP Box</span>
-          <span class="poxy-club-btn-price" id="btnClub1Price">5 PC</span>
-        </button>
-        <button type="button" class="poxy-club-btn-liquid" id="btnClub5">
-          <span class="poxy-club-btn-title">Open 5 VIP Boxes</span>
-          <span class="poxy-club-btn-price" id="btnClub5Price">25 PC</span>
-        </button>
-      </div>
-      <div class="poxy-club-mystery-row" id="clubBoxes"></div>
-      <div class="poxy-club-results" id="clubResults"></div>
-    </section>
-    <section class="poxy-club-glass poxy-club-vault poxy-club-breathing" aria-label="Member perks">
-      <div class="poxy-club-vault-item">
-        <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">vpn_key</span></div>
-        <div>
-          <div class="poxy-club-vault-label">London Club Keycard</div>
-          <p class="poxy-club-vault-value">Active <span>• Level 4</span></p>
-        </div>
-      </div>
-      <div class="poxy-club-vault-divider" aria-hidden="true"></div>
-      <div class="poxy-club-vault-item">
-        <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">percent</span></div>
-        <div>
-          <div class="poxy-club-vault-label">Case-Opening Discount</div>
-          <p class="poxy-club-vault-value">15% Off Applied</p>
-        </div>
-      </div>
-    </section>
-    <div class="poxy-club-layout">
-      <div class="poxy-club-col">
-        <section>
-          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">campaign</span> Founder Announcements</h2>
-          <div id="founderAnnouncements"></div>
-          <div class="poxy-club-flash-section">
-            <h2 class="poxy-club-section-label" style="margin-top:24px"><span class="material-symbols-outlined">bolt</span> Flash Sales — VIP Only</h2>
-            <div id="flashSalesWrap"></div>
+    <nav class="poxy-club-dock" role="tablist" aria-label="Club modules">
+      <button type="button" class="poxy-club-dock-btn active" data-club-tab="terminal" onclick="switchClubSubTab('terminal')"><span class="material-symbols-outlined">deployed_code</span> Terminal</button>
+      <button type="button" class="poxy-club-dock-btn" data-club-tab="intel" onclick="switchClubSubTab('intel')"><span class="material-symbols-outlined">monitoring</span> Intel</button>
+      <button type="button" class="poxy-club-dock-btn" data-club-tab="market" onclick="switchClubSubTab('market')"><span class="material-symbols-outlined">handshake</span> OTC Market</button>
+      <button type="button" class="poxy-club-dock-btn" data-club-tab="syndicate" onclick="switchClubSubTab('syndicate')"><span class="material-symbols-outlined">groups</span> Syndicate</button>
+    </nav>
+    <div class="poxy-club-panels">
+      <section id="clubTabTerminal" class="poxy-club-panel active" data-club-panel="terminal">
+        <div class="poxy-club-module poxy-club-terminal-module" id="clubTerminalModule">
+          <div class="poxy-club-flash-radar poxy-club-glass" id="clubFlashRadar">
+            <div class="poxy-club-flash-radar-head">
+              <span class="poxy-club-kicker">Feature 10 · Flash Event Radar</span>
+              <span class="poxy-club-flash-radar-timer" id="clubFlashRadarTimer">--:--</span>
+            </div>
+            <p class="poxy-club-flash-radar-status" id="clubFlashRadarStatus">Scanning for Mythic buff windows…</p>
+            <div class="poxy-club-flash-matrix" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
           </div>
-        </section>
-        <section class="poxy-club-glass poxy-club-apply">
-          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">terminal</span> Club Application</h2>
-          <div class="poxy-club-input-well">
-            <input type="text" id="clubNickname" placeholder="Club nickname" maxlength="64" autocomplete="off"/>
-          </div>
-          <div class="poxy-club-badge-row" id="clubAvatarRow"></div>
-          <button type="button" class="poxy-club-submit" id="btnApplyClub">Submit Application</button>
-        </section>
-      </div>
-      <div class="poxy-club-col">
-        <section class="poxy-club-glass poxy-club-governance">
-          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">gavel</span> Governance Proposals</h2>
-          <div class="poxy-club-proposal">
-            <h3>Proposal #042: Increase Case Drop Rate</h3>
-            <p>Voting ends in 24h. Only VIP members eligible.</p>
-            <div class="poxy-club-proposal-btns">
-              <button type="button" class="poxy-club-vote-for" onclick="showToast('Governance voting coming soon.')">Vote For</button>
-              <button type="button" class="poxy-club-vote-abstain" onclick="showToast('Vote recorded as abstain.')">Abstain</button>
+          <div class="poxy-club-grid-2">
+            <div class="poxy-club-glass poxy-club-vip-block">
+              <h2 class="poxy-club-kicker">Core extraction</h2>
+              <div class="poxy-club-vip-btns">
+                <button type="button" class="poxy-club-btn-obsidian" id="btnClub1">
+                  <span class="poxy-club-btn-title">Open 1 VIP Box</span>
+                  <span class="poxy-club-btn-price" id="btnClub1Price">5 PC</span>
+                </button>
+                <button type="button" class="poxy-club-btn-liquid" id="btnClub5">
+                  <span class="poxy-club-btn-title">Open 5 VIP Boxes</span>
+                  <span class="poxy-club-btn-price" id="btnClub5Price">25 PC</span>
+                </button>
+              </div>
+              <div class="poxy-club-mystery-row" id="clubBoxes"></div>
+              <div class="poxy-club-results" id="clubResults"></div>
+            </div>
+            <div class="poxy-club-glass poxy-club-extraction-block">
+              <h2 class="poxy-club-kicker">Feature 3 · Extraction Matrix</h2>
+              <p class="poxy-club-muted">Cryogenic bays — active slots stream platform points.</p>
+              <div class="poxy-club-extraction-row" id="clubExtractionRow"></div>
             </div>
           </div>
-        </section>
-        <section>
-          <h2 class="poxy-club-section-label"><span class="material-symbols-outlined">forum</span> Club Feed</h2>
-          <div class="poxy-club-glass poxy-club-feed-panel">
+          <div class="poxy-club-glass poxy-club-flash-sales-block">
+            <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">bolt</span> VIP flash desk</h2>
+            <div id="flashSalesWrap"></div>
+          </div>
+        </div>
+      </section>
+      <section id="clubTabIntel" class="poxy-club-panel" data-club-panel="intel">
+        <div class="poxy-club-grid-2">
+          <div class="poxy-club-glass poxy-club-heatmap">
+            <h2 class="poxy-club-kicker">Feature 7 · Drop heatmap</h2>
+            <div class="poxy-club-heatmap-chart" id="clubHeatmapChart" role="img" aria-label="Case opening activity chart"></div>
+            <div class="poxy-club-heatmap-legend" id="clubHeatmapLegend"></div>
+          </div>
+          <div class="poxy-club-glass poxy-club-status-dock" aria-label="Personal status">
+            <h2 class="poxy-club-kicker">Member credentials</h2>
+            <div class="poxy-club-vault-item">
+              <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">vpn_key</span></div>
+              <div>
+                <div class="poxy-club-vault-label">London Club Keycard</div>
+                <p class="poxy-club-vault-value" id="clubKeycardLevel">Active · Level 4</p>
+              </div>
+            </div>
+            <div class="poxy-club-vault-item">
+              <div class="poxy-club-vault-icon"><span class="material-symbols-outlined">percent</span></div>
+              <div>
+                <div class="poxy-club-vault-label">Passive case discount</div>
+                <p class="poxy-club-vault-value" id="clubDiscountVal">15% applied</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="poxy-club-glass poxy-club-ledger">
+          <h2 class="poxy-club-kicker">Feature 6 · Sovereign ledger</h2>
+          <div class="poxy-club-ledger-monolith" id="clubFoundersLedger"></div>
+        </div>
+        <div class="poxy-club-glass">
+          <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">campaign</span> Founder intel</h2>
+          <div id="founderAnnouncements"></div>
+        </div>
+      </section>
+      <section id="clubTabMarket" class="poxy-club-panel" data-club-panel="market">
+        <div class="poxy-club-grid-2">
+          <div class="poxy-club-glass poxy-club-otc">
+            <h2 class="poxy-club-kicker">Feature 2 · Private OTC desk</h2>
+            <p class="poxy-club-muted">0% platform commission · member-to-member only.</p>
+            <div class="poxy-club-otc-split">
+              <div class="poxy-club-otc-col">
+                <h3>Active requests</h3>
+                <div id="clubOtcRequests" class="poxy-club-otc-list"></div>
+              </div>
+              <div class="poxy-club-otc-col">
+                <h3>Your offer slot</h3>
+                <div class="poxy-club-otc-slots" id="clubOtcSlots"></div>
+                <button type="button" class="poxy-club-btn-gold" onclick="showToast('OTC listing flow opens from Collection → List on Market.')">Configure offer</button>
+              </div>
+            </div>
+          </div>
+          <div class="poxy-club-glass poxy-club-duel" id="clubDuelArena">
+            <h2 class="poxy-club-kicker">Feature 4 · Golden crucible</h2>
+            <div class="poxy-club-duel-stage">
+              <div class="poxy-club-duel-node" id="clubDuelYou"><span class="poxy-club-duel-av">You</span></div>
+              <div class="poxy-club-duel-vs">VS</div>
+              <div class="poxy-club-duel-node" id="clubDuelOpp"><span class="poxy-club-duel-av">?</span></div>
+            </div>
+            <button type="button" class="poxy-club-btn-duel" id="btnClubDuel" onclick="runClubDuelAnimation()"><span class="material-symbols-outlined">swords</span> Initiate duel</button>
+          </div>
+        </div>
+        <div class="poxy-club-glass poxy-club-armory-block">
+          <h2 class="poxy-club-kicker">Feature 1 · Armory showcase</h2>
+          <p class="poxy-club-muted">Pin your top 3 rarest POXY for club inspection &amp; OTC bids.</p>
+          <div class="poxy-club-armory" id="clubArmory"></div>
+        </div>
+      </section>
+      <section id="clubTabSyndicate" class="poxy-club-panel" data-club-panel="syndicate">
+        <div class="poxy-club-grid-2">
+          <div class="poxy-club-glass poxy-club-syndicate-split">
+            <h2 class="poxy-club-kicker">Feature 9 · Core syndicate</h2>
+            <div class="poxy-club-syndicate-panels">
+              <div class="poxy-club-syndicate-roster" id="clubSyndicateRoster"></div>
+              <div class="poxy-club-syndicate-vault" id="clubSyndicateVault"></div>
+            </div>
+          </div>
+          <div class="poxy-club-glass poxy-club-atelier">
+            <h2 class="poxy-club-kicker">Feature 8 · Custom atelier</h2>
+            <div class="poxy-club-atelier-grid" id="clubAtelierGrid"></div>
+          </div>
+        </div>
+        <div class="poxy-club-glass poxy-club-alpha">
+          <h2 class="poxy-club-kicker">Feature 5 · Alpha stream</h2>
+          <div class="poxy-club-alpha-player">
+            <div class="poxy-club-alpha-screen" id="clubAlphaScreen">
+              <span class="material-symbols-outlined">play_circle</span>
+              <p>Exclusive drop previews &amp; dev logs</p>
+            </div>
+            <div class="poxy-club-alpha-controls">
+              <button type="button" class="poxy-club-alpha-ctrl" onclick="cycleClubAlpha(0)">Prev</button>
+              <button type="button" class="poxy-club-alpha-ctrl active" onclick="cycleClubAlpha(1)">Live</button>
+              <button type="button" class="poxy-club-alpha-ctrl" onclick="cycleClubAlpha(2)">Next</button>
+            </div>
+          </div>
+        </div>
+        <div class="poxy-club-grid-2">
+          <div class="poxy-club-glass poxy-club-governance">
+            <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">gavel</span> DAO governance</h2>
+            <div class="poxy-club-proposal">
+              <h3>Proposal #042: Increase Case Drop Rate</h3>
+              <p>Voting ends in 24h. VIP members only.</p>
+              <div class="poxy-club-proposal-btns">
+                <button type="button" class="poxy-club-vote-for" onclick="showToast('Vote recorded: FOR.')">Vote for</button>
+                <button type="button" class="poxy-club-vote-abstain" onclick="showToast('Vote recorded: ABSTAIN.')">Abstain</button>
+              </div>
+            </div>
+          </div>
+          <div class="poxy-club-glass poxy-club-apply">
+            <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">terminal</span> Syndicate application</h2>
+            <div class="poxy-club-input-well">
+              <input type="text" id="clubNickname" placeholder="Club nickname" maxlength="64" autocomplete="off"/>
+            </div>
+            <div class="poxy-club-badge-row" id="clubAvatarRow"></div>
+            <button type="button" class="poxy-club-submit" id="btnApplyClub">Submit application</button>
+          </div>
+        </div>
+        <div class="poxy-club-glass poxy-club-feed-wrap">
+          <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">forum</span> Syndicate comms</h2>
+          <div class="poxy-club-feed-panel">
             <div class="poxy-club-feed-compose">
               <div class="poxy-club-input-well">
-                <input type="text" id="feedInput" placeholder="Post to the club..." maxlength="140" autocomplete="off"/>
+                <input type="text" id="feedInput" placeholder="Post to the lounge…" maxlength="140" autocomplete="off"/>
               </div>
               <button type="button" class="poxy-club-feed-post" onclick="postToFeed()">Post</button>
             </div>
             <div class="poxy-club-feed-stream" id="feedItems"></div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   </div>
 </div><!-- /#poxyAppShell -->
@@ -2573,7 +2671,6 @@ async function loadProfile(){
       setBarAvatar(selectedAvatar);
       updateBalanceBadge(data.balance||0);
       updatePsdMemberBadge();
-      syncStoreData();
     } else {
       currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null};
       sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).then(({error})=>{if(error&&error.code!=='23505')console.error(error);});
@@ -4547,7 +4644,269 @@ $('btnApplePay').addEventListener('click',async function(){
 window.formatCard=function(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;};
 window.formatExpiry=function(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
 
-// ── VIP CLUB (PHASE 7 — 5 PC ultra-rare cases with serial minting) ──
+// ── VIP CLUB — Mayfair Elite multi-tab lounge ──
+let activeClubSubTab='terminal';
+let clubFlashBuffEnd=0;
+let clubFlashRadarIv=null;
+const CLUB_ALPHA_DECKS=[
+  {title:'Mythic drop reel',sub:'Preview · upcoming case animation'},
+  {title:'Dev log #12',sub:'Syndicate vault & OTC desk polish'},
+  {title:'Concept · Neon Noir',sub:'Early border pack artwork'}
+];
+const CLUB_ATELIER_EXTRA=[
+  {id:'border_neon_noir',type:'border',name:'Neon Noir Border',desc:'Thin neon rim on profile cards',cost:45,previewBg:'linear-gradient(135deg,#0a0a12,#ff0080 40%,#0a0a12)'}
+];
+const CLUB_OTC_MOCK=[
+  {item:'Diamond POXY #0042',user:'@vault_ace',pc:'420 PC'},
+  {item:'Secret ⟁ #0007',user:'@founder_lane',pc:'Offer'},
+  {item:'Stellar ✷ bundle',user:'@cybermint',pc:'88 PC'}
+];
+function clubTierScore(tierId){
+  const s=TIERS.findIndex(t=>t.id===tierId);
+  if(s>=0)return s;
+  const v=VIP_TIERS.findIndex(t=>t.id===tierId);
+  return v>=0?TIERS.length+v:-1;
+}
+window.switchClubSubTab=function(tab){
+  if(tab===activeClubSubTab)return;
+  const prev=document.querySelector('.poxy-club-panel.active');
+  const next=document.querySelector('.poxy-club-panel[data-club-panel="'+tab+'"]');
+  document.querySelectorAll('.poxy-club-dock-btn').forEach(b=>b.classList.toggle('active',b.dataset.clubTab===tab));
+  if(prev){
+    prev.classList.add('leaving');
+    prev.classList.remove('active');
+    setTimeout(()=>{prev.classList.remove('leaving');},400);
+  }
+  if(next){
+    next.removeAttribute('hidden');
+    requestAnimationFrame(()=>{next.classList.add('active');});
+  }
+  activeClubSubTab=tab;
+  if(tab==='intel')renderClubIntelModules();
+  if(tab==='market')renderClubMarketModules();
+  if(tab==='syndicate')renderClubSyndicateModules();
+};
+function initClubFlashRadar(){
+  const mod=$('clubTerminalModule');
+  const timerEl=$('clubFlashRadarTimer');
+  const statusEl=$('clubFlashRadarStatus');
+  if(!mod||!timerEl)return;
+  if(clubFlashRadarIv)clearInterval(clubFlashRadarIv);
+  const tick=()=>{
+    const now=Date.now();
+    if(!clubFlashBuffEnd||now>=clubFlashBuffEnd){
+      if(activeFlashSales&&activeFlashSales.length){
+        clubFlashBuffEnd=now+15*60*1000;
+        statusEl.textContent='MYTHIC BUFF ACTIVE — +15 min elevated drop vectors';
+      }else if(!clubFlashBuffEnd){
+        const mins=8+Math.floor(Math.random()*7);
+        clubFlashBuffEnd=now+mins*60*1000;
+        statusEl.textContent='Radar locked — scheduled Mythic window';
+      }
+    }
+    const left=Math.max(0,clubFlashBuffEnd-now);
+    const m=Math.floor(left/60000);
+    const s=Math.floor((left%60000)/1000);
+    timerEl.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    const active=left>0&&(activeFlashSales?.length||left<16*60*1000);
+    mod.classList.toggle('flash-active',active);
+    if(left<=0&&!activeFlashSales?.length){
+      clubFlashBuffEnd=0;
+      statusEl.textContent='Scanning for Mythic buff windows…';
+      mod.classList.remove('flash-active');
+    }
+  };
+  tick();
+  clubFlashRadarIv=setInterval(tick,1000);
+}
+function renderClubExtraction(){
+  const row=$('clubExtractionRow');if(!row)return;
+  const vipItems=(colData||[]).filter(i=>VIP_TIERS.some(t=>t.id===i.poxy_tier)).slice(0,6);
+  row.innerHTML='';
+  for(let i=0;i<6;i++){
+    const item=vipItems[i];
+    const bay=document.createElement('div');
+    bay.className='poxy-club-cryo'+(item?' active':' locked');
+    if(item){
+      const t=TIER_BY_ID[item.poxy_tier]||VIP_TIERS[0];
+      const pts=(2+clubTierScore(item.poxy_tier)*0.4).toFixed(1);
+      bay.innerHTML='<div class="poxy-club-cryo-particles"><i style="left:20%;animation-delay:0s"></i><i style="left:50%;animation-delay:.8s"></i><i style="left:75%;animation-delay:1.6s"></i></div>'
+        +'<span class="poxy-club-cryo-card" style="color:'+t.color+'">'+t.icon+'</span>'
+        +'<span class="poxy-club-cryo-points">+'+pts+' PC/s</span>';
+    }
+    row.appendChild(bay);
+  }
+}
+function renderClubHeatmap(){
+  const chart=$('clubHeatmapChart');
+  const leg=$('clubHeatmapLegend');
+  if(!chart)return;
+  const w=400,h=120,pts=[];
+  let v=30+Math.random()*20;
+  for(let i=0;i<24;i++){v=Math.max(8,Math.min(95,v+(Math.random()-0.48)*18));pts.push({x:i/(23)*w,y:h-v/100*h});}
+  const d=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+  const mythicAt=pts.length-3;
+  chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><defs><linearGradient id="clubHg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(212,175,55,0.35)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>'
+    +'<path d="'+d+' L'+w+','+h+' L0,'+h+' Z" fill="url(#clubHg)"/>'
+    +'<path d="'+d+'" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.85"/>'
+    +'<circle cx="'+pts[mythicAt].x+'" cy="'+pts[mythicAt].y+'" r="4" fill="#D4AF37" filter="drop-shadow(0 0 6px #D4AF37)"/></svg>';
+  if(leg)leg.innerHTML='<span>Live opens</span><span>Mythic · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span><span>24h window</span>';
+}
+async function renderClubFoundersLedger(){
+  const el=$('clubFoundersLedger');if(!el)return;
+  if(el.dataset.loaded==='1')return;
+  el.innerHTML='<div class="poxy-club-muted">Loading sovereign ledger…</div>';
+  try{
+    const{data}=await sb.from('profiles').select('username,email,created_at').order('created_at',{ascending:true}).limit(100);
+    el.innerHTML='';
+    (data||[]).forEach((p,i)=>{
+      const name=sanitizeText(p.username||p.email?.split('@')[0]||'Founder '+(i+1));
+      const row=document.createElement('div');
+      row.className='poxy-club-ledger-row';
+      row.textContent=(i+1)+'. '+name;
+      el.appendChild(row);
+    });
+    if(!data?.length)el.innerHTML='<div class="poxy-club-muted">Ledger awaiting first founders.</div>';
+    el.dataset.loaded='1';
+  }catch(e){
+    el.innerHTML='<div class="poxy-club-muted">Could not load ledger.</div>';
+  }
+}
+function renderClubIntelModules(){
+  renderClubHeatmap();
+  renderClubFoundersLedger();
+}
+function renderClubOtcDesk(){
+  const list=$('clubOtcRequests');if(!list)return;
+  list.innerHTML='';
+  CLUB_OTC_MOCK.forEach(r=>{
+    const d=document.createElement('div');
+    d.className='poxy-club-otc-req';
+    d.innerHTML='<strong>'+sanitizeText(r.item)+'</strong><span>'+sanitizeText(r.user)+' · '+sanitizeText(r.pc)+'</span>';
+    list.appendChild(d);
+  });
+  const slots=$('clubOtcSlots');
+  if(slots){
+    slots.innerHTML='';
+    for(let i=0;i<3;i++){
+      const s=document.createElement('div');
+      s.className='poxy-club-otc-slot';
+      s.textContent='Slot '+(i+1);
+      slots.appendChild(s);
+    }
+  }
+}
+function renderClubArmory(){
+  const wrap=$('clubArmory');if(!wrap)return;
+  const top=(colData||[]).slice().sort((a,b)=>clubTierScore(b.poxy_tier)-clubTierScore(a.poxy_tier)).slice(0,3);
+  wrap.innerHTML='';
+  for(let i=0;i<3;i++){
+    const slot=document.createElement('div');
+    slot.className='poxy-club-armory-slot';
+    const item=top[i];
+    if(item){
+      const t=TIER_BY_ID[item.poxy_tier]||TIERS[0];
+      slot.innerHTML='<span class="poxy-club-armory-icon" style="color:'+t.color+'">'+t.icon+'</span>'
+        +'<span class="poxy-club-armory-label">'+t.label+'<br>#'+(item.serial_number||'—')+'</span>';
+    }else slot.innerHTML='<span class="poxy-club-armory-empty">Empty slot</span>';
+    wrap.appendChild(slot);
+  }
+}
+function renderClubMarketModules(){
+  renderClubOtcDesk();
+  renderClubArmory();
+  const you=$('clubDuelYou');
+  if(you){
+    const av=currentProfile?.avatar||'🎭';
+    you.innerHTML='<span class="poxy-club-duel-av">'+(av.length<=4?av:'You')+'</span>';
+  }
+}
+window.runClubDuelAnimation=function(){
+  const arena=$('clubDuelArena');
+  if(!arena)return;
+  arena.classList.add('sweep');
+  const opp=$('clubDuelOpp');
+  if(opp)opp.innerHTML='<span class="poxy-club-duel-av">'+AVATARS[Math.floor(Math.random()*AVATARS.length)]+'</span>';
+  setTimeout(()=>{
+    arena.classList.remove('sweep');
+    showToast(Math.random()>0.5?'Duel won — pot credited.':'Duel lost — rematch available.');
+  },900);
+};
+function renderClubAtelier(){
+  const grid=$('clubAtelierGrid');if(!grid)return;
+  const items=CUSTOMIZATION_ITEMS.concat(CLUB_ATELIER_EXTRA).map(it=>{
+    if(it.id==='gradient_gold')return Object.assign({},it,{name:'Liquid Gold Username Gradient'});
+    if(it.id==='theme_cyberpunk')return Object.assign({},it,{name:'Cyberpunk Carbon Theme'});
+    return it;
+  });
+  grid.innerHTML='';
+  items.forEach(it=>{
+    const card=document.createElement('div');
+    card.className='poxy-club-atelier-card';
+    const thumbStyle=it.previewBg?.includes('gradient')?it.previewBg:'background:'+(it.previewBg||'#111');
+    card.innerHTML='<div class="poxy-club-atelier-thumb" style="'+thumbStyle+'"></div>'
+      +'<div class="poxy-club-atelier-body"><div class="poxy-club-atelier-name">'+sanitizeText(it.name)+'</div>'
+      +'<div class="poxy-club-atelier-desc">'+sanitizeText(it.desc)+'</div>'
+      +'<button type="button" class="poxy-club-atelier-btn">'+formatPC(it.cost)+' · Equip</button></div>';
+    card.querySelector('.poxy-club-atelier-btn').onclick=function(){
+      this.classList.add('equipped');
+      this.textContent='Equipped';
+      showToast(sanitizeText(it.name)+' applied to profile.');
+    };
+    grid.appendChild(card);
+  });
+}
+function renderClubSyndicateRoster(){
+  const roster=$('clubSyndicateRoster');const vault=$('clubSyndicateVault');
+  if(!roster)return;
+  const members=[
+    {name:currentProfile?.username||'You',status:'online'},
+    {name:'@vault_ace',status:'online'},
+    {name:'@founder_lane',status:'idle'},
+    {name:'@cybermint',status:'online'}
+  ];
+  roster.innerHTML='<div class="poxy-club-kicker" style="margin-bottom:8px">Roster</div>';
+  members.forEach(m=>{
+    const row=document.createElement('div');
+    row.className='poxy-club-syndicate-member';
+    row.innerHTML='<span class="poxy-club-syndicate-dot '+m.status+'"></span><span>'+sanitizeText(m.name)+'</span>';
+    roster.appendChild(row);
+  });
+  if(vault){
+    vault.innerHTML='<div class="poxy-club-kicker" style="margin-bottom:8px">Syndicate vault</div><div class="poxy-club-syndicate-vault-grid"></div>';
+    const g=vault.querySelector('.poxy-club-syndicate-vault-grid');
+    const icons=['◇','✷','❖','✸','◆','★','⟁','☽'];
+    icons.forEach(ic=>{
+      const a=document.createElement('div');
+      a.className='poxy-club-syndicate-asset';
+      a.textContent=ic;
+      g.appendChild(a);
+    });
+  }
+}
+function renderClubSyndicateModules(){
+  renderClubAtelier();
+  renderClubSyndicateRoster();
+}
+let clubAlphaIdx=0;
+window.cycleClubAlpha=function(dir){
+  const screen=$('clubAlphaScreen');
+  if(!screen)return;
+  if(dir===0)clubAlphaIdx=(clubAlphaIdx+CLUB_ALPHA_DECKS.length-1)%CLUB_ALPHA_DECKS.length;
+  else if(dir===2)clubAlphaIdx=(clubAlphaIdx+1)%CLUB_ALPHA_DECKS.length;
+  const deck=CLUB_ALPHA_DECKS[clubAlphaIdx];
+  screen.innerHTML='<span class="material-symbols-outlined">play_circle</span><p><strong>'+sanitizeText(deck.title)+'</strong><br>'+sanitizeText(deck.sub)+'</p>';
+  document.querySelectorAll('.poxy-club-alpha-ctrl').forEach((b,i)=>b.classList.toggle('active',i===1));
+};
+function initClubLuxuryModules(){
+  initClubFlashRadar();
+  renderClubExtraction();
+  renderClubIntelModules();
+  renderClubMarketModules();
+  renderClubSyndicateModules();
+  cycleClubAlpha(1);
+  switchClubSubTab(activeClubSubTab||'terminal');
+}
 function renderClubMysterySlots(){
   const row=$('clubBoxes');if(!row)return;
   row.innerHTML='';
@@ -4590,7 +4949,7 @@ function renderClub(){
   renderClubAvatarPicker();
   loadFeed();
   loadFounderAnnouncements();
-  loadFlashSales();
+  loadFlashSales().then(()=>initClubLuxuryModules()).catch(()=>initClubLuxuryModules());
 }
 function renderClubPromo(){
   const locked=$('clubLocked');if(!locked)return;
@@ -4630,7 +4989,7 @@ async function loadFlashSales(){
     const{data,error}=await sb.from('flash_sales').select('*').gt('ends_at',new Date().toISOString()).order('ends_at',{ascending:true});
     if(error)throw error;
     activeFlashSales=data||[];
-    if(!activeFlashSales.length){wrap.innerHTML='<div class="poxy-club-glass poxy-club-flash-empty">No active flash drops. Check back soon.</div>';return;}
+    if(!activeFlashSales.length){wrap.innerHTML='<div class="poxy-club-glass poxy-club-flash-empty">No active flash drops. Check back soon.</div>';updateClubFlashRadarState();return;}
     wrap.innerHTML='';
     activeFlashSales.forEach(s=>{
       const tier=TIER_BY_ID[s.poxy_tier]||TIERS[0];
@@ -4647,7 +5006,13 @@ async function loadFlashSales(){
       card.appendChild(left);card.appendChild(buy);
       wrap.appendChild(card);
     });
+    updateClubFlashRadarState();
   }catch(e){wrap.innerHTML='<div class="poxy-club-muted" style="color:#c44">Could not load flash sales.</div>';}
+}
+function updateClubFlashRadarState(){
+  if(activeFlashSales?.length)clubFlashBuffEnd=Date.now()+15*60*1000;
+  const mod=$('clubTerminalModule');
+  if(mod&&activeFlashSales?.length)mod.classList.add('flash-active');
 }
 async function buyFlashSale(sale,tier,btn){
   if(!currentUser)return;
@@ -4707,7 +5072,7 @@ async function doClubOpen(count){
     c.innerHTML=d.tier.label+'<span style="display:block;font-size:9px;color:#888;font-weight:600">#'+d.serial+'</span>';
     results.appendChild(c);
   });
-  if(drops.length){showToast(drops.length+' VIP POXY minted!');}
+  if(drops.length){showToast(drops.length+' VIP POXY minted!');showStitchTab('club');loadCollection().then(()=>{renderClubExtraction();renderClubArmory();});}
   if(btn1)btn1.disabled=false;if(btn5)btn5.disabled=false;
   vipBusy=false;
 }
