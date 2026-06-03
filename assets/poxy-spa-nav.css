@@ -39,7 +39,8 @@
   animation:none;
 }
 .st-spa-panel-inner.club-page,
-.st-spa-panel-inner.poxy-club-page{
+.st-spa-panel-inner.poxy-club-page,
+.st-spa-panel-inner.poxy-market-page{
   display:block!important;
   width:100%;
   max-width:100%;

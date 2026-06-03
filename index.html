@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="assets/poxy-spa-nav.css">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
+<link rel="stylesheet" href="assets/poxy-market-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1537,14 +1538,39 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- MARKETPLACE PAGE -->
-<div class="page" id="marketPage">
-  <div class="page-title">MARKETPLACE</div>
-  <div class="market-tabs">
-    <button class="market-tab active" id="mTabBuy" onclick="switchMarketTab('buy')">Buy</button>
-    <button class="market-tab" id="mTabSell" onclick="switchMarketTab('sell')">My Listings</button>
+<!-- MARKETPLACE PAGE (Stitch) -->
+<div class="page poxy-market-page" id="marketPage">
+  <div class="poxy-market-shell">
+    <header class="poxy-market-header">
+      <h1 class="poxy-market-title">Marketplace</h1>
+      <nav class="poxy-market-tabs" role="tablist" aria-label="Marketplace">
+        <button type="button" role="tab" class="poxy-market-tab active" id="mTabBuy" onclick="switchMarketTab('buy')">Buy</button>
+        <button type="button" role="tab" class="poxy-market-tab" id="mTabSell" onclick="switchMarketTab('sell')">My Listings</button>
+      </nav>
+    </header>
+    <div class="poxy-market-toolbar" id="marketToolbar">
+      <label class="poxy-market-search">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <input type="search" id="marketSearchInput" placeholder="Search tier or serial..." autocomplete="off" oninput="clearTimeout(window._mktDeb);window._mktDeb=setTimeout(window.onMarketSearchChange,200)"/>
+      </label>
+      <div class="poxy-market-field">
+        <select id="marketRarityFilter" class="poxy-market-select" aria-label="Rarity filter" onchange="window.onMarketRarityChange()">
+          <option value="all">All rarities</option>
+        </select>
+      </div>
+      <div class="poxy-market-field">
+        <span class="material-symbols-outlined" aria-hidden="true">sort</span>
+        <select id="marketSort" class="poxy-market-select" aria-label="Sort order" onchange="window.onMarketSortChange()">
+          <option value="newest">Newest First</option>
+          <option value="price_asc">Price: Lowest First</option>
+          <option value="price_desc">Price: Highest First</option>
+        </select>
+      </div>
+    </div>
+    <div class="poxy-market-content" id="marketContent">
+      <div class="poxy-market-loading"><div class="col-spinner"></div></div>
+    </div>
   </div>
-  <div id="marketContent"><div class="col-loading"><div class="col-spinner"></div></div></div>
 </div>
 
 <!-- BANK PAGE (treasury lives on dashboard; this redirects) -->
@@ -3193,8 +3219,8 @@ function renderFilterButtons(){
     const btn=document.createElement('button');
     btn.className='filter-btn'+(id===colFilter?' active':'');
     btn.textContent=id==='all'?'All':tier?.label||id;
-    btn.style.setProperty('--fc',tier?.color||'#FF5722');
-    btn.style.setProperty('--fb',tier?tier.glow:'rgba(255,87,34,0.1)');
+    btn.style.setProperty('--fc',tier?.color||'#f9abff');
+    btn.style.setProperty('--fb',tier?tier.glow:'rgba(249,171,255,0.12)');
     btn.onclick=()=>{colFilter=id;selectedForDust=new Set();updateBulkBar();renderCollection();document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');};
     row.appendChild(btn);
   });
@@ -3948,7 +3974,105 @@ function applyMarketFilters(list){
   return arr;
 }
 function sortMarketListings(list){return applyMarketFilters(list);}
-window.switchMarketTab=function(tab){marketTab=tab;$('mTabBuy').classList.toggle('active',tab==='buy');$('mTabSell').classList.toggle('active',tab==='sell');loadMarket();};
+function initMarketFilters(){
+  const rarity=$('marketRarityFilter');
+  if(!rarity||rarity.options.length>1)return;
+  ALL_TIERS.forEach(t=>{
+    const opt=document.createElement('option');
+    opt.value=t.id;opt.textContent=t.label;
+    rarity.appendChild(opt);
+  });
+}
+function renderMarketEmpty(message){
+  const cont=$('marketContent');
+  if(!cont)return;
+  cont.innerHTML='<div class="poxy-market-empty"><div class="poxy-market-empty-icon"><span class="material-symbols-outlined">lock</span></div><h2>Secure Vault Empty</h2><p>'+sanitizeText(message||'No matching listings found for your current filter parameters. Adjust your terminal settings to explore more assets.')+'</p></div>';
+}
+function buildMarketCard(item,opts){
+  const tier=opts.tier;
+  const card=document.createElement('div');
+  card.className='poxy-market-card gpu-accel';
+  card.dataset.tier=tier.id;
+  card.style.borderColor=tier.color+'44';
+  if(opts.isVip){
+    const vipBadge=document.createElement('div');
+    vipBadge.className='poxy-market-vip-badge';
+    vipBadge.textContent=item.user_poxy?.vip_serial?'VIP #'+item.user_poxy.vip_serial:'VIP';
+    card.appendChild(vipBadge);
+  }
+  if(opts.vipLocked){
+    const lock=document.createElement('div');
+    lock.className='poxy-market-lock-overlay';
+    lock.innerHTML='<span><span class="material-symbols-outlined">lock</span>VIP ONLY</span>';
+    card.appendChild(lock);
+  }
+  const visual=document.createElement('div');
+  visual.className='poxy-market-card-visual';
+  visual.style.color=tier.color;
+  visual.style.borderColor=tier.color+'44';
+  visual.style.background=tier.glow;
+  visual.textContent=tier.icon;
+  const body=document.createElement('div');
+  body.className='poxy-market-card-body';
+  const tierEl=document.createElement('div');
+  tierEl.className='poxy-market-card-tier';
+  tierEl.style.color=tier.color;
+  tierEl.textContent=tier.label+(opts.isVip?' · VIP':'');
+  const serialEl=document.createElement('div');
+  serialEl.className='poxy-market-card-serial';
+  serialEl.textContent=opts.serialDisplay;
+  body.appendChild(tierEl);
+  body.appendChild(serialEl);
+  if(opts.statusLabel){
+    const st=document.createElement('div');
+    st.className='poxy-market-card-status poxy-market-card-status--'+opts.statusClass;
+    st.textContent=opts.statusLabel;
+    body.appendChild(st);
+  }
+  const side=document.createElement('div');
+  side.className='poxy-market-card-side';
+  const priceEl=document.createElement('div');
+  priceEl.className='poxy-market-card-price';
+  priceEl.textContent=formatPC(item.price);
+  side.appendChild(priceEl);
+  const actions=document.createElement('div');
+  actions.className='poxy-market-card-actions';
+  if(opts.onQuickBuy){
+    const quickBtn=document.createElement('button');
+    quickBtn.type='button';
+    quickBtn.className='poxy-market-btn poxy-market-btn--primary';
+    quickBtn.textContent='Quick Buy';
+    quickBtn.addEventListener('click',()=>opts.onQuickBuy(quickBtn));
+    actions.appendChild(quickBtn);
+    const detailBtn=document.createElement('button');
+    detailBtn.type='button';
+    detailBtn.className='poxy-market-btn poxy-market-btn--ghost';
+    detailBtn.textContent='Details';
+    detailBtn.addEventListener('click',opts.onDetails);
+    actions.appendChild(detailBtn);
+  }
+  if(opts.onCancel){
+    const cb=document.createElement('button');
+    cb.type='button';
+    cb.className='poxy-market-btn poxy-market-btn--muted';
+    cb.textContent='Cancel';
+    cb.addEventListener('click',opts.onCancel);
+    actions.appendChild(cb);
+  }
+  side.appendChild(actions);
+  card.appendChild(visual);
+  card.appendChild(body);
+  card.appendChild(side);
+  return card;
+}
+window.switchMarketTab=function(tab){
+  marketTab=tab;
+  $('mTabBuy').classList.toggle('active',tab==='buy');
+  $('mTabSell').classList.toggle('active',tab==='sell');
+  const tb=$('marketToolbar');
+  if(tb)tb.style.display=tab==='buy'?'flex':'none';
+  loadMarket();
+};
 window.onMarketSortChange=function(){const sel=$('marketSort');if(sel)marketSort=sel.value;loadMarket();};
 window.onMarketSearchChange=function(){const inp=$('marketSearchInput');marketSearchQuery=inp?inp.value.trim():'';loadMarket();};
 window.onMarketRarityChange=function(){const sel=$('marketRarityFilter');marketRarityFilter=sel?sel.value:'all';loadMarket();};
@@ -3970,7 +4094,15 @@ async function quickBuyListing(item,tier,buyBtn){
 }
 async function loadMarket(){
   const cont=$('marketContent');
-  cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
+  if(!cont)return;
+  initMarketFilters();
+  const search=$('marketSearchInput');
+  if(search)search.value=marketSearchQuery;
+  const rarity=$('marketRarityFilter');
+  if(rarity)rarity.value=marketRarityFilter;
+  const sort=$('marketSort');
+  if(sort)sort.value=marketSort;
+  cont.innerHTML='<div class="poxy-market-loading"><div class="col-spinner"></div></div>';
   try{
     if(marketTab==='buy'){
       const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number,is_vip,vip_serial)').eq('status','active').neq('seller_id',currentUser.id).order('created_at',{ascending:false});
@@ -3978,83 +4110,57 @@ async function loadMarket(){
       marketBuyCache=data||[];
       const sorted=applyMarketFilters(marketBuyCache);
       cont.innerHTML='';
-      const toolbar=document.createElement('div');toolbar.className='market-toolbar';
-      toolbar.style.cssText='display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px';
-      const search=document.createElement('input');search.id='marketSearchInput';search.className='search-input';search.placeholder='Search tier or your serial...';search.value=marketSearchQuery;
-      search.style.flex='1';search.style.minWidth='140px';
-      search.oninput=()=>{clearTimeout(window._mktDeb);window._mktDeb=setTimeout(window.onMarketSearchChange,200);};
-      const rarity=document.createElement('select');rarity.id='marketRarityFilter';rarity.className='market-sort-select';
-      rarity.innerHTML='<option value="all">All rarities</option>'+ALL_TIERS.map(t=>'<option value="'+t.id+'">'+t.label+'</option>').join('');
-      rarity.value=marketRarityFilter;rarity.onchange=window.onMarketRarityChange;
-      const sel=document.createElement('select');sel.className='market-sort-select';sel.id='marketSort';
-      sel.innerHTML='<option value="newest">Newest First</option><option value="price_asc">Price: Lowest First</option><option value="price_desc">Price: Highest First</option>';
-      sel.value=marketSort;sel.onchange=window.onMarketSortChange;
-      toolbar.appendChild(search);toolbar.appendChild(rarity);toolbar.appendChild(sel);
-      cont.appendChild(toolbar);
-      if(!sorted.length){const emp=document.createElement('div');emp.className='col-empty';emp.innerHTML='<div class="col-empty-icon">💰</div>No matching listings.';cont.appendChild(emp);return;}
+      if(!sorted.length){renderMarketEmpty();return;}
+      const grid=document.createElement('div');
+      grid.className='poxy-market-grid';
       sorted.forEach(item=>{
         const tier=TIER_BY_ID[item.user_poxy?.poxy_tier]||TIERS[0];
         const isOwner=item.seller_id===currentUser.id;
-        const serialDisplay=maskSerial(item.user_poxy?.serial_number,isOwner);
         const isVip=!!item.user_poxy?.is_vip;
-        const vipLocked=isVip&&!isClubMember();
-        const card=document.createElement('div');card.className='market-card gpu-accel';card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44;position:relative';
-        if(isVip){
-          const vipBadge=document.createElement('div');
-          vipBadge.style.cssText='position:absolute;top:6px;right:6px;background:linear-gradient(135deg,#FF6E40,#FFCA28);color:#1a1a1a;font-size:9px;font-weight:800;letter-spacing:1px;padding:2px 6px;border-radius:6px';
-          vipBadge.textContent=item.user_poxy?.vip_serial?'VIP #'+item.user_poxy.vip_serial:'VIP';
-          card.appendChild(vipBadge);
-        }
-        if(vipLocked){
-          const lockOverlay=document.createElement('div');
-          lockOverlay.style.cssText='position:absolute;inset:0;background:rgba(10,10,10,0.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;border-radius:inherit;color:#fff;font-size:18px;pointer-events:none';
-          lockOverlay.innerHTML='<span style="display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:22px">🔒</span><span style="font-size:9px;letter-spacing:1px;font-weight:700">VIP-ONLY UNLOCK</span></span>';
-          card.appendChild(lockOverlay);
-        }
-        const ico=document.createElement('div');ico.className='market-card-icon';ico.style.cssText='background:'+tier.glow+';border:1.5px solid '+tier.color+'44';ico.textContent=tier.icon;
-        const info=document.createElement('div');info.className='market-card-info';
-        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+(isVip?' · VIP':'')+'</div><div class="market-card-serial">'+sanitizeText(serialDisplay)+'</div>';
-        const right=document.createElement('div');right.className='market-card-actions';
-        const priceEl=document.createElement('div');priceEl.className='market-card-price';priceEl.textContent=formatPC(item.price);
-        const quickBtn=document.createElement('button');quickBtn.className='btn-quick-buy';quickBtn.textContent='Quick Buy';
-        quickBtn.addEventListener('click',()=>quickBuyListing(item,tier,quickBtn));
-        const detailBtn=document.createElement('button');detailBtn.className='btn-buy';detailBtn.textContent='Details';
-        detailBtn.addEventListener('click',()=>{pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id,vipLocked};openBuyModal(tier.label,item.price);});
-        right.appendChild(priceEl);right.appendChild(quickBtn);right.appendChild(detailBtn);
-        card.appendChild(ico);card.appendChild(info);card.appendChild(right);cont.appendChild(card);
+        grid.appendChild(buildMarketCard(item,{
+          tier,
+          serialDisplay:maskSerial(item.user_poxy?.serial_number,isOwner),
+          isVip,
+          vipLocked:isVip&&!isClubMember(),
+          onQuickBuy:(btn)=>quickBuyListing(item,tier,btn),
+          onDetails:()=>{pendingBuyItem={listingId:item.id,poxyId:item.poxy_id,price:item.price,tierLabel:tier.label,sellerId:item.seller_id,vipLocked:isVip&&!isClubMember()};openBuyModal(tier.label,item.price);}
+        }));
       });
-    } else {
-      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number)').eq('seller_id',currentUser.id).order('created_at',{ascending:false});
+      cont.appendChild(grid);
+    }else{
+      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number,is_vip,vip_serial)').eq('seller_id',currentUser.id).order('created_at',{ascending:false});
       if(error)throw error;
-      if(!data||!data.length){cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">📋</div>No listings.<br>List from your collection!</div>';return;}
       cont.innerHTML='';
+      if(!data||!data.length){
+        renderMarketEmpty('You have no listings yet. List POXY from your collection to appear here.');
+        return;
+      }
+      const grid=document.createElement('div');
+      grid.className='poxy-market-grid';
       data.forEach(item=>{
-        const tier=TIERS.find(t=>t.id===item.user_poxy?.poxy_tier)||TIERS[0];
-        const serialDisplay=maskSerial(item.user_poxy?.serial_number,true);
-        const sColor=item.status==='sold'?'#4CAF50':item.status==='active'?'#FF5722':'#9E9E9E';
-        const card=document.createElement('div');card.className='market-card gpu-accel';card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'44';
-        const ico=document.createElement('div');ico.className='market-card-icon';ico.style.cssText='background:'+tier.glow+';border:1.5px solid '+tier.color+'44';ico.textContent=tier.icon;
-        const info=document.createElement('div');info.className='market-card-info';
-        info.innerHTML='<div class="market-card-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="market-card-serial">'+sanitizeText(serialDisplay)+'</div><div style="font-size:9px;font-weight:700;color:'+sColor+';margin-top:2px">'+item.status.toUpperCase()+'</div>';
-        const right=document.createElement('div');right.className='market-card-actions';
-        const priceEl=document.createElement('div');priceEl.className='market-card-price';priceEl.textContent=formatPC(item.price);
-        right.appendChild(priceEl);
-        if(item.status==='active'){
-          const cb=document.createElement('button');cb.className='btn-buy';cb.style.cssText='background:#f0f0f0;color:#9E9E9E';cb.textContent='Cancel';
-          cb.addEventListener('click',async function(){
+        const tier=TIER_BY_ID[item.user_poxy?.poxy_tier]||TIERS[0];
+        const statusClass=item.status==='sold'?'sold':item.status==='active'?'active':'cancelled';
+        grid.appendChild(buildMarketCard(item,{
+          tier,
+          serialDisplay:maskSerial(item.user_poxy?.serial_number,true),
+          isVip:!!item.user_poxy?.is_vip,
+          vipLocked:false,
+          statusLabel:item.status.toUpperCase(),
+          statusClass,
+          onCancel:item.status==='active'?async function(){
             if(!isUuid(item.id)){logAndToast('market-cancel',new Error('listing id not UUID — refresh + run migration_uuid_fix.sql'));return;}
             try{
-              const{error}=await sb.from('marketplace').update({status:'cancelled'}).eq('id',item.id);
-              if(error)throw error;
-              cb.textContent='Cancelled';cb.disabled=true;showToast('Cancelled.');
+              const{error:err}=await sb.from('marketplace').update({status:'cancelled'}).eq('id',item.id);
+              if(err)throw err;
+              showToast('Listing cancelled.');
+              loadMarket();
             }catch(e){logAndToast('market-cancel',e);}
-          });
-          right.appendChild(cb);
-        }
-        card.appendChild(ico);card.appendChild(info);card.appendChild(right);cont.appendChild(card);
+          }:null
+        }));
       });
+      cont.appendChild(grid);
     }
-  }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
+  }catch(e){cont.innerHTML='<div class="poxy-market-muted">Failed to load marketplace.</div>';}
 }
 function openPriceModal(){
   const o=$('priceModal');
@@ -5044,6 +5150,7 @@ function setupGlobalEscapeClose(){
 
 function bootApp(){
   mountSpaPanels();
+  initMarketFilters();
   updateStNavOffset();
   window.addEventListener('resize',updateStNavOffset,{passive:true});
   setupGlobalEscapeClose();
