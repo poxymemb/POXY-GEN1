@@ -2233,6 +2233,19 @@ function updateBalanceBadge(bal){
   b.classList.add('visible');
   b.classList.remove('pop');
   requestAnimationFrame(()=>b.classList.add('pop'));
+  syncStoreData();
+}
+function syncStoreData(){
+  if(!$('dashStoreSection'))return;
+  if(!currentUser){
+    const grid=$('storeGrid');
+    if(grid)grid.innerHTML='<div class="poxy-store-signin">Sign in to access the store.</div>';
+    return;
+  }
+  if(currentProfile){
+    renderStorePreview();
+    renderStoreTerminal();
+  }
 }
 
 // ── USERNAME VALIDATION ──
@@ -2434,6 +2447,8 @@ function bootstrapAfterLogin(){
     try{
       await loadProfile();
       await Promise.all([checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]);
+      await loadCollection();
+      renderStorePage();
     }catch(e){console.error('post-login bootstrap:',e);}
     setupRealtimeSubscriptions();
     startFriendPoll();
@@ -2452,6 +2467,8 @@ async function applyAuthSession(session){
     bootstrapAfterLogin();
   }else{
     syncNavUsernameLabels();
+    syncStoreData();
+    if($('storeGrid')&&currentProfile)renderStoreGrid();
   }
 }
 function setupAuthStateListener(){
@@ -2556,6 +2573,7 @@ async function loadProfile(){
       setBarAvatar(selectedAvatar);
       updateBalanceBadge(data.balance||0);
       updatePsdMemberBadge();
+      syncStoreData();
     } else {
       currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null};
       sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).then(({error})=>{if(error&&error.code!=='23505')console.error(error);});
@@ -2707,7 +2725,9 @@ $('btnSaveProfile').addEventListener('click',async function(){
     if(error)throw error;
     currentProfile={...currentProfile,username,avatar_url:selectedAvatar};
     $('userUsernameEl').textContent=username;
+    syncNavUsernameLabels();
     setBarAvatar(selectedAvatar);
+    syncStoreData();
     showToast('Profile saved!');
   }catch(e){showToast(usernameTakenMessage(e));}
   btn.disabled=false;
@@ -2754,6 +2774,7 @@ document.getElementById('avatarUpload').addEventListener('change',async function
     $('profileBigAvatar').innerHTML='<img src="'+sanitizeText(avatarImgUrl(url))+'" class="avatar-upload-preview">';
     setBarAvatar(url);
     renderFrameSelector();
+    syncStoreData();
     status.textContent='Photo saved!';setTimeout(()=>status.textContent='',3000);
     showToast('Avatar updated!');
   }catch(err){
@@ -2882,10 +2903,9 @@ window.showStitchTab=function(tab){
   if(next==='club'){document.body.classList.add('dark-club');renderClub();}
   if(next==='dashboard'){
     refreshStitchDashboardChrome();
-    if(!colData.length)loadCollection().catch(console.error);
-    else renderDashColPreview();
+    if(!colData.length)loadCollection().then(()=>renderStorePage()).catch(()=>renderStorePage());
+    else{renderDashColPreview();renderStorePage();}
     renderBank();
-    if(currentUser)renderStorePage();
   }
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
@@ -3445,6 +3465,8 @@ async function loadCollection(){
     renderFilterButtons();renderCollection();
     renderDashColPreview();
     cnt.textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
+    syncStoreData();
+    if($('storeGrid')&&currentProfile)renderStoreGrid();
   }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
 }
 function renderFilterButtons(){
@@ -5146,9 +5168,15 @@ function renderStorePreview(){
 }
 function renderStoreTerminal(){
   const bal=$('storeBalanceDisplay'),dust=$('storeDustDisplay'),col=$('storeColDisplay');
-  if(bal&&currentProfile)bal.innerHTML=formatPC(currentProfile.balance||0).replace(' PC','')+' <span>PC</span>';
-  if(dust&&currentProfile)dust.textContent=String(Math.floor(currentProfile.dust||0));
-  if(col)col.textContent=(colData.length||0)+' item'+(colData.length===1?'':'s');
+  const pcBal=currentProfile?parseFloat(currentProfile.balance)||0:0;
+  const dustBal=currentProfile?Math.floor(parseFloat(currentProfile.dust)||0):0;
+  const n=colData?.length||0;
+  if(bal){
+    const pcTxt=formatPC(pcBal);
+    bal.innerHTML=pcTxt.replace(/\s*PC\s*$/i,'')+' <span>PC</span>';
+  }
+  if(dust)dust.textContent=String(dustBal);
+  if(col)col.textContent=n+' item'+(n===1?'':'s');
 }
 function renderStoreGrid(){
   const grid=$('storeGrid');if(!grid)return;
@@ -5240,8 +5268,8 @@ window.purchaseCustomization=async function(itemId){
     if(item.type==='theme')applyTheme(item.themeVal);
     else if(item.type==='gradient')applyNameGradientUI(item.gradientVal);
     showToast(item.name+' activated!');
-    if($('storeGrid'))renderStorePage();
-    else renderCustomizeTab();
+    renderStorePage();
+    renderCustomizeTab();
   }catch(e){showToast('Purchase failed: '+(e.message||'error'));}
 };
 
@@ -5281,6 +5309,10 @@ function setupRealtimeSubscriptions(){
       .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles',filter:'id=eq.'+currentUser.id},payload=>{
         if(!payload.new||!currentProfile)return;
         if(payload.new.balance!==undefined){currentProfile.balance=payload.new.balance;updateBalanceBadge(currentProfile.balance);}
+        if(payload.new.dust!==undefined){currentProfile.dust=payload.new.dust;syncStoreData();}
+        if(payload.new.profile_theme!==undefined){currentProfile.profile_theme=payload.new.profile_theme;applyTheme(payload.new.profile_theme);syncStoreData();}
+        if(payload.new.name_gradient!==undefined){currentProfile.name_gradient=payload.new.name_gradient;applyNameGradientUI(payload.new.name_gradient);syncStoreData();}
+        if(payload.new.username!==undefined){currentProfile.username=payload.new.username;syncNavUsernameLabels();syncStoreData();}
         if(payload.new.is_club_member!==undefined){currentProfile.is_club_member=payload.new.is_club_member;}
         if(payload.new.badges!==undefined){currentProfile.badges=payload.new.badges;}
       })
@@ -5290,7 +5322,7 @@ function setupRealtimeSubscriptions(){
     // Inventory changes (mine)
     const invSub=sb.channel('user-poxy-'+currentUser.id)
       .on('postgres_changes',{event:'*',schema:'public',table:'user_poxy',filter:'user_id=eq.'+currentUser.id},payload=>{
-        if($('collectionPage')?.classList.contains('visible'))loadCollection();
+        loadCollection().catch(console.error);
       })
       .subscribe();
     realtimeSubs.push(invSub);
