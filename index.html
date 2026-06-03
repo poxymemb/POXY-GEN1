@@ -1731,29 +1731,29 @@ body.dark-club .club-sub{color:#888}
       <div class="club-awakening-progress"><span id="clubAwakeningProgress"></span></div>
       <div class="club-awakening-slide active" data-slide="0">
         <p class="club-awakening-kicker">Slide I · Initiation</p>
-        <h2 class="club-awakening-title gold">Выбор сделан.</h2>
-        <p class="club-awakening-body">Мифический актив обнаружен в вашем инвентаре. Синдикат открывает дверь только один раз.</p>
+        <h2 class="club-awakening-title gold">The choice is made.</h2>
+        <p class="club-awakening-body">A Mythic asset has been detected in your inventory. The syndicate opens its door only once.</p>
       </div>
       <div class="club-awakening-slide" data-slide="1">
         <p class="club-awakening-kicker">Slide II · Scarcity</p>
         <div class="club-awakening-card-build" aria-hidden="true"><span></span><span></span><span></span></div>
         <h2 class="club-awakening-title">Poxy Club</h2>
-        <p class="club-awakening-body">Закрытый синдикат с доказуемым дефицитом. Каждый предмет уникален. Вас здесь всего <strong>100</strong>.</p>
+        <p class="club-awakening-body">A closed syndicate with provable scarcity. Every item is unique. There are only <strong>100</strong> of you.</p>
       </div>
       <div class="club-awakening-slide" data-slide="2">
         <p class="club-awakening-kicker">Slide III · Sovereignty</p>
-        <h2 class="club-awakening-title">Права владения</h2>
+        <h2 class="club-awakening-title">Rights of ownership</h2>
         <ul class="club-awakening-list">
-          <li>OTC-сделки без комиссии платформы</li>
-          <li>DAO-голосования с весом ключ-карты</li>
-          <li>Закрытые ивенты и London Club access</li>
+          <li>OTC trades with zero platform commission</li>
+          <li>DAO votes weighted by keycard level</li>
+          <li>Closed events and London Club access</li>
         </ul>
       </div>
       <div class="club-awakening-slide" data-slide="3">
         <p class="club-awakening-kicker">Slide IV · Boarding Pass</p>
         <div class="club-awakening-pass-preview" id="clubAwakeningPassPreview"></div>
-        <h2 class="club-awakening-title gold">Ваш цифровой пропуск готов.</h2>
-        <p class="club-awakening-body">Добро пожаловать в <strong>Founders Circle</strong>.</p>
+        <h2 class="club-awakening-title gold">Your digital pass is ready.</h2>
+        <p class="club-awakening-body">Welcome to the <strong>Founders Circle</strong>.</p>
       </div>
       <div class="club-awakening-actions">
         <button type="button" class="club-awakening-skip" id="clubAwakeningSkip">Skip</button>
@@ -1773,11 +1773,11 @@ body.dark-club .club-sub{color:#888}
         <button type="button" class="club-replay-intel" id="clubReplayIntel" title="Replay Intel"><span class="material-symbols-outlined">info</span></button>
       </div>
       <nav class="club-sidebar-nav" role="tablist">
-        <button type="button" class="club-nav-btn active" data-club-tab="feed" onclick="switchClubSubTab('feed')"><span class="material-symbols-outlined">dynamic_feed</span> Лента</button>
-        <button type="button" class="club-nav-btn" data-club-tab="pass" onclick="switchClubSubTab('pass')"><span class="material-symbols-outlined">badge</span> Паспорт</button>
-        <button type="button" class="club-nav-btn" data-club-tab="lounge" onclick="switchClubSubTab('lounge')"><span class="material-symbols-outlined">deployed_code</span> Терминал</button>
-        <button type="button" class="club-nav-btn" data-club-tab="otc" onclick="switchClubSubTab('otc')"><span class="material-symbols-outlined">handshake</span> Рынок</button>
-        <button type="button" class="club-nav-btn" data-club-tab="governance" onclick="switchClubSubTab('governance')"><span class="material-symbols-outlined">account_balance</span> Совет</button>
+        <button type="button" class="club-nav-btn active" data-club-tab="feed" onclick="switchClubSubTab('feed')"><span class="material-symbols-outlined">dynamic_feed</span> Feed</button>
+        <button type="button" class="club-nav-btn" data-club-tab="pass" onclick="switchClubSubTab('pass')"><span class="material-symbols-outlined">badge</span> Passport</button>
+        <button type="button" class="club-nav-btn" data-club-tab="lounge" onclick="switchClubSubTab('lounge')"><span class="material-symbols-outlined">deployed_code</span> Terminal</button>
+        <button type="button" class="club-nav-btn" data-club-tab="otc" onclick="switchClubSubTab('otc')"><span class="material-symbols-outlined">handshake</span> Market</button>
+        <button type="button" class="club-nav-btn" data-club-tab="governance" onclick="switchClubSubTab('governance')"><span class="material-symbols-outlined">account_balance</span> Governance</button>
       </nav>
       <div class="club-sidebar-foot">
         <span class="club-sidebar-uid" id="clubSidebarUid">PXY · · ·</span>
@@ -1787,7 +1787,7 @@ body.dark-club .club-sub{color:#888}
       <div class="club-airgap-banner" id="clubAirgapBanner" hidden>Air-Gap: transfers frozen 24h after new session.</div>
       <div class="club-panels">
         <section id="clubTabFeed" class="club-panel active" data-club-panel="feed">
-          <header class="club-panel-head"><h1>Лента</h1><p>Founder intel · VIP comms · live drops</p></header>
+          <header class="club-panel-head"><h1>Feed</h1><p>Founder intel · VIP comms · live drops</p></header>
           <div class="club-feed-tabs">
             <button type="button" class="club-feed-tab active" data-feed-sub="announce" onclick="switchClubFeedSub('announce')">For You</button>
             <button type="button" class="club-feed-tab" data-feed-sub="chat" onclick="switchClubFeedSub('chat')">VIP Chat</button>
@@ -1796,7 +1796,7 @@ body.dark-club .club-sub{color:#888}
           <div id="clubFlashClaimWrap" class="club-flash-claim" hidden>
             <span class="material-symbols-outlined">water_drop</span>
             <div><strong>Flash Reward</strong><span id="clubFlashClaimTimer">60s</span></div>
-            <button type="button" class="club-flash-claim-btn" id="clubFlashClaimBtn" onclick="claimClubFlashDrop()">Снять награду</button>
+            <button type="button" class="club-flash-claim-btn" id="clubFlashClaimBtn" onclick="claimClubFlashDrop()">Claim reward</button>
           </div>
           <div id="clubFeedAnnounce" class="club-feed-pane active" data-feed-pane="announce"><div id="founderAnnouncements"></div></div>
           <div id="clubFeedChat" class="club-feed-pane" data-feed-pane="chat">
@@ -1838,7 +1838,7 @@ body.dark-club .club-sub{color:#888}
           <p class="club-pass-easter-hint">Hidden themes unlock via passport easter eggs.</p>
         </section>
         <section id="clubTabLounge" class="club-panel" data-club-panel="lounge">
-          <header class="club-panel-head"><h1>Терминал</h1><p>VIP extraction · singularity radar · vaults</p></header>
+          <header class="club-panel-head"><h1>Terminal</h1><p>VIP extraction · singularity radar · vaults</p></header>
           <div class="poxy-club-module poxy-club-terminal-module" id="clubTerminalModule">
             <div class="poxy-club-flash-radar poxy-club-glass" id="clubFlashRadar">
               <div class="poxy-club-flash-radar-head">
@@ -1886,7 +1886,7 @@ body.dark-club .club-sub{color:#888}
           </div>
         </section>
         <section id="clubTabGovernance" class="club-panel" data-club-panel="governance">
-          <header class="club-panel-head"><h1>Совет</h1><p>Weighted DAO · anti-dump safeguards</p></header>
+          <header class="club-panel-head"><h1>Governance</h1><p>Weighted DAO · anti-dump safeguards</p></header>
           <div class="poxy-club-glass club-vote-weight"><span>Your vote weight</span><strong id="clubVoteWeight">1.0×</strong><span class="club-vote-sub">Keycard level + showcase rarity</span></div>
           <div class="poxy-club-glass poxy-club-governance" id="clubGovBoard">
             <div class="poxy-club-proposal">
