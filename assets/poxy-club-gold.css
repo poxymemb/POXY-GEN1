@@ -167,7 +167,7 @@
   border:1px solid var(--club-surface-highest)!important;
   border-radius:12px;
   box-shadow:0 24px 48px rgba(0,0,0,0.55);
-  position:relative;overflow:hidden;
+  position:relative;overflow:visible;
 }
 .poxy-club-page .club-boarding-pass::before{
   content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
@@ -186,11 +186,15 @@
   letter-spacing:0.2em;font-family:'JetBrains Mono',monospace;font-size:10px;
 }
 .poxy-club-page .club-pass-inner{
-  display:grid;grid-template-columns:minmax(0,1fr);gap:24px;padding:28px 24px 24px;
+  display:grid;grid-template-columns:minmax(0,1fr);gap:24px;padding:28px 20px 24px;
 }
-@media(min-width:800px){
-  .poxy-club-page .club-pass-inner{grid-template-columns:1fr 1fr;gap:32px}
+@media(min-width:720px){
+  .poxy-club-page .club-pass-inner{grid-template-columns:minmax(0,1.1fr) minmax(200px,0.9fr);gap:24px}
 }
+@media(min-width:1024px){
+  .poxy-club-page .club-pass-inner{grid-template-columns:minmax(260px,1fr) minmax(220px,1fr);gap:32px;padding:28px 24px 24px}
+}
+.poxy-club-page .club-pass-showcase-col{min-width:0;overflow:visible}
 .poxy-club-page .club-pass-brand{
   font-size:18px;font-weight:800;letter-spacing:0.12em;
   color:var(--club-primary);line-height:1.2;margin-bottom:20px;
@@ -653,7 +657,23 @@ body.club-awakening-open{overflow:hidden}
   display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;
 }
 .poxy-club-page .club-showcase-slot .club-showcase-thumb.empty{border-style:dashed;color:var(--club-outline)}
-.poxy-club-page .club-showcase-meta strong{display:block;font-size:14px;margin-bottom:4px}
+.poxy-club-page .club-showcase-meta{flex:1;min-width:0;overflow:hidden}
+.poxy-club-page .club-showcase-meta strong{
+  display:block;font-size:14px;margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+}
+.club-passport-modal .club-boarding-pass,
+.club-passport-card-render{
+  max-width:920px;margin:0 auto;
+}
+.club-passport-modal .club-pass-inner{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:24px;padding:28px 20px 24px;
+}
+@media(min-width:640px){
+  .club-passport-modal .club-pass-inner{grid-template-columns:minmax(0,1.05fr) minmax(200px,0.95fr);gap:28px}
+}
+.club-passport-modal .club-pass-armory .poxy-club-armory-slot{width:100%;max-width:none}
+.club-passport-modal .club-pass-member strong{color:var(--club-primary)}
 .poxy-club-page .club-showcase-tag{
   font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;border-radius:999px;
   border:1px solid rgba(212,175,55,0.4);color:var(--club-primary);display:inline-block;

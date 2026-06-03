@@ -1840,7 +1840,13 @@ body.dark-club .club-sub{color:#888}
           </div>
         </section>
         <section id="clubTabPass" class="club-panel" data-club-panel="pass">
-          <header class="club-panel-head"><h1>Passport</h1><p>London Boarding Pass · cryptographic entry</p></header>
+          <header class="club-panel-head club-pass-head">
+            <div><h1>Passport</h1><p>London Boarding Pass · cryptographic entry</p></div>
+            <div class="club-pass-head-actions">
+              <button type="button" class="club-pass-share-btn" id="clubPassShareBtn" onclick="copyClubPassportShareLink()" title="Copy share link"><span class="material-symbols-outlined">link</span> Share passport</button>
+              <button type="button" class="club-pass-expand-btn" onclick="openClubPassportFullscreen()" title="Full screen"><span class="material-symbols-outlined">fullscreen</span></button>
+            </div>
+          </header>
           <div class="club-pass-layout">
             <article class="club-boarding-pass" id="clubBoardingPass" data-skin="classic">
               <div class="club-pass-stub"><span>POXY</span><span>LON</span></div>
@@ -1994,10 +2000,6 @@ body.dark-club .club-sub{color:#888}
       </div>
     </main>
   </div>
-  <div id="clubPassportModal" class="club-passport-modal" hidden>
-    <div class="club-passport-modal-backdrop" onclick="closeClubPassportModal()"></div>
-    <div class="club-passport-modal-card" id="clubPassportModalCard"></div>
-  </div>
 </div>
 
 <!-- POXY CLUB intro (viewport overlay — outside SPA panel so position:fixed centers correctly) -->
@@ -2061,6 +2063,29 @@ body.dark-club .club-sub{color:#888}
     <div class="club-awake-progress-track"><span id="clubAwakeningProgressFoot"></span></div>
     <span class="club-awake-sync">SYNC</span>
   </footer>
+</div>
+
+<!-- Club passport — fullscreen share view (outside SPA panel for position:fixed) -->
+<div id="clubPassportModal" class="club-passport-modal" hidden aria-hidden="true">
+  <div class="club-passport-modal-backdrop" onclick="closeClubPassportModal()"></div>
+  <div class="club-passport-modal-panel" role="dialog" aria-labelledby="clubPassportModalName">
+    <header class="club-passport-modal-toolbar">
+      <div class="club-passport-modal-user">
+        <span class="club-passport-modal-av" id="clubPassportModalAvatar">🎭</span>
+        <div>
+          <strong id="clubPassportModalName">Member</strong>
+          <span id="clubPassportModalUidLine">PXY-000-LON</span>
+        </div>
+      </div>
+      <div class="club-passport-modal-actions">
+        <button type="button" class="club-pass-share-btn" id="clubPassportModalShareBtn" onclick="copyClubPassportShareLink(clubPassportModalUserId)"><span class="material-symbols-outlined">link</span> Copy link</button>
+        <button type="button" class="club-passport-close" onclick="closeClubPassportModal()" aria-label="Close"><span class="material-symbols-outlined">close</span></button>
+      </div>
+    </header>
+    <div class="club-passport-modal-scroll">
+      <div class="club-passport-modal-card" id="clubPassportModalCard"></div>
+    </div>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -2703,6 +2728,7 @@ function bootstrapAfterLogin(){
     startFriendPoll();
     setTimeout(()=>{loadDailyQuests();},800);
     syncNavUsernameLabels();
+    await openPendingPassportDeepLink();
   })();
 }
 async function applyAuthSession(session){
@@ -5147,16 +5173,181 @@ window.copyClubUid=function(){
   const uid=getClubPassportUid();
   navigator.clipboard?.writeText(uid).then(()=>showToast('UID copied: '+uid)).catch(()=>showToast(uid));
 };
-window.closeClubPassportModal=function(){
-  const m=$('clubPassportModal');if(m)m.hidden=true;
+let clubPassportModalUserId=null;
+let pendingPassportDeepLink=null;
+function clubPassportUidForUser(userId,prof){
+  if(prof?.club_passport_uid)return prof.club_passport_uid;
+  if(!userId)return 'PXY-000-LON';
+  return 'PXY-'+String(userId).replace(/-/g,'').slice(0,3).toUpperCase()+'-LON';
+}
+function buildClubPassportShareUrl(userId){
+  if(!userId)return location.href;
+  const u=new URL(location.href);
+  u.searchParams.set('passport',userId);
+  u.hash='';
+  return u.toString();
+}
+window.copyClubPassportShareLink=function(userId){
+  const id=userId||currentUser?.id;
+  if(!id){showToast('Sign in to share your passport.');return;}
+  const url=buildClubPassportShareUrl(id);
+  navigator.clipboard?.writeText(url).then(()=>showToast('Passport link copied.')).catch(()=>showToast(url));
 };
-window.openClubPassportModal=function(userId,username){
+function clubShowcaseSlotsHtml(items){
+  let html='';
+  for(let i=0;i<3;i++){
+    const item=items[i];
+    if(item){
+      const t=TIER_BY_ID[item.poxy_tier]||TIERS[0];
+      const name=item.displayName||(item.serial_number?'#'+item.serial_number:t.label);
+      const tag=item.tag||(item.poxy_tier==='mythic'||item.poxy_tier==='diamond'?'GENESIS TIER':item.poxy_tier==='secret'?'SECRET':'RARE');
+      html+='<div class="poxy-club-armory-slot club-showcase-slot">'
+        +'<div class="club-showcase-thumb" style="color:'+t.color+'">'+t.icon+'</div>'
+        +'<div class="club-showcase-meta"><strong title="'+sanitizeText(name)+'">'+sanitizeText(name)+'</strong>'
+        +'<span class="club-showcase-tag">'+sanitizeText(tag)+'</span></div></div>';
+    }else{
+      html+='<div class="poxy-club-armory-slot club-showcase-slot empty">'
+        +'<div class="club-showcase-thumb empty"><span class="material-symbols-outlined">add</span></div>'
+        +'<div class="club-showcase-meta"><strong>Empty Slot</strong><span class="club-showcase-tag muted">AVAILABLE</span></div></div>';
+    }
+  }
+  return html;
+}
+function buildClubPassportCardHtml(o){
+  const issued=o.issued||'—';
+  const rank=o.rank||'Founder Keycard';
+  const bal=o.balanceHtml||'<span class="club-pass-bal">0</span> PC';
+  const showcase=clubShowcaseSlotsHtml(o.showcase||[]);
+  const skin=sanitizeText(o.skin||'classic');
+  const member=sanitizeText(o.username||'Member');
+  return '<article class="club-boarding-pass club-passport-card-render" data-skin="'+skin+'">'
+    +'<div class="club-pass-stub"><span>POXY</span><span>LON</span></div>'
+    +'<div class="club-pass-inner">'
+    +'<div class="club-pass-identity">'
+    +'<div class="club-pass-brand">POXY<br/>PASSPORT</div>'
+    +'<div class="club-pass-row club-pass-member"><span class="club-pass-label">Member</span><strong>'+member+'</strong></div>'
+    +'<div class="club-pass-row"><span class="club-pass-label">UID</span><strong>'+sanitizeText(o.uid||'PXY-000-LON')+'</strong></div>'
+    +'<div class="club-pass-row club-pass-issued"><span class="club-pass-label">Issued Date</span><span>'+sanitizeText(issued)+'</span></div>'
+    +'<div class="club-pass-row"><span class="club-pass-label">Club Rank</span><span><span class="material-symbols-outlined">key</span> '+sanitizeText(rank)+'</span></div>'
+    +'<div class="club-pass-row"><span class="club-pass-label">Balance</span><span>'+bal+'</span></div>'
+    +(o.viewOnly?'':'<div class="club-pass-qr-wrap"><img class="club-pass-qr" width="128" height="128" alt="Club QR" src="'+(o.qrSrc||'')+'"/><span class="club-pass-qr-hint"><span class="material-symbols-outlined" style="font-size:12px;vertical-align:middle">verified</span> Founders Circle · London entry</span></div>')
+    +'</div>'
+    +'<div class="club-pass-showcase-col"><h3 class="club-pass-showcase-title">Mythic Showcase</h3>'
+    +'<div class="poxy-club-armory club-pass-armory">'+showcase+'</div></div>'
+    +'</div></article>';
+}
+async function fetchClubPassportPayload(userId){
+  if(!userId||!isUuid(userId))return null;
+  const isSelf=userId===currentUser?.id;
+  let prof=null;
+  if(isSelf&&currentProfile)prof=currentProfile;
+  else{
+    try{
+      const{data}=await sb.from('profiles').select('id,username,avatar_url,balance,club_issued_at,club_level,club_passport_uid,is_club_member').eq('id',userId).maybeSingle();
+      prof=data;
+    }catch(e){return null;}
+  }
+  if(!prof)return null;
+  let showcase=[];
+  if(isSelf&&(colData||[]).length){
+    showcase=colData.slice().sort((a,b)=>clubTierScore(b.poxy_tier)-clubTierScore(a.poxy_tier)).slice(0,3)
+      .map(it=>{const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];return{poxy_tier:it.poxy_tier,serial_number:it.serial_number,displayName:it.serial_number?'#'+it.serial_number:t.label};});
+  }else{
+    try{
+      const{data:items}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('user_id',userId);
+      showcase=(items||[]).slice().sort((a,b)=>clubTierScore(b.poxy_tier)-clubTierScore(a.poxy_tier)).slice(0,3)
+        .map(it=>{const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];return{poxy_tier:it.poxy_tier,serial_number:it.serial_number,displayName:it.serial_number?'#'+it.serial_number:t.label};});
+    }catch(e){}
+  }
+  const lvl=prof.club_level||1;
+  const rankLabel=lvl>=8?'Obsidian Prime':lvl>=5?'Gold Keycard Level':'Founder Keycard Lv.'+lvl;
+  let issued=prof.club_issued_at;
+  if(isSelf&&!issued){try{issued=localStorage.getItem('club_issued_'+userId);}catch(e){}}
+  const issDate=issued?new Date(issued):null;
+  const issuedStr=issDate?String(issDate.getDate()).padStart(2,'0')+'.'+String(issDate.getMonth()+1).padStart(2,'0')+'.'+issDate.getFullYear():'—';
+  const bal=formatPC(prof.balance||0);
+  const skin=(isSelf&&localStorage.getItem('club_skin_'+userId))||'classic';
+  return{
+    userId,username:prof.username||'Member',avatar_url:prof.avatar_url,
+    uid:clubPassportUidForUser(userId,prof),issued:issuedStr,rank:rankLabel,
+    balanceHtml:'<span class="club-pass-bal">'+bal.replace(' PC','')+'</span> PC',
+    showcase,skin,isSelf,viewOnly:!isSelf
+  };
+}
+async function resolvePassportDeepLinkParam(param){
+  if(!param)return null;
+  const p=decodeURIComponent(String(param).trim());
+  if(isUuid(p))return p;
+  try{
+    const{data}=await sb.from('profiles').select('id').eq('club_passport_uid',p.toUpperCase()).maybeSingle();
+    if(data?.id)return data.id;
+  }catch(e){}
+  return null;
+}
+function clearPassportUrlParams(){
+  try{
+    const u=new URL(location.href);
+    if(!u.searchParams.has('passport')&&!u.searchParams.has('passport_uid'))return;
+    u.searchParams.delete('passport');u.searchParams.delete('passport_uid');
+    history.replaceState({},'',u.pathname+(u.search||'')+u.hash);
+  }catch(e){}
+}
+async function openPendingPassportDeepLink(){
+  if(!pendingPassportDeepLink||!currentUser)return;
+  const param=pendingPassportDeepLink;
+  pendingPassportDeepLink=null;
+  const userId=await resolvePassportDeepLinkParam(param);
+  clearPassportUrlParams();
+  if(!userId){showToast('Passport not found.');return;}
+  await openClubPassportFullscreen(userId);
+}
+function capturePassportDeepLinkFromUrl(){
+  try{
+    const q=new URLSearchParams(location.search);
+    const p=q.get('passport')||q.get('passport_uid');
+    if(p)pendingPassportDeepLink=p;
+  }catch(e){}
+}
+capturePassportDeepLinkFromUrl();
+window.closeClubPassportModal=function(){
+  const m=$('clubPassportModal');
+  if(m){m.hidden=true;m.setAttribute('aria-hidden','true');}
+  document.body.classList.remove('club-passport-open');
+  clubPassportModalUserId=null;
+};
+window.openClubPassportFullscreen=async function(userId,usernameHint){
+  if(!userId){userId=currentUser?.id;}
+  if(!userId){showToast('No passport to show.');return;}
   const m=$('clubPassportModal'),card=$('clubPassportModalCard');
   if(!m||!card)return;
-  card.innerHTML='<div class="poxy-club-muted">Loading pass…</div>';
-  m.hidden=false;
-  const uid=userId?('PXY-'+String(userId).replace(/-/g,'').slice(0,3).toUpperCase()+'-LON'):getClubPassportUid();
-  card.innerHTML='<article class="club-boarding-pass poxy-club-glass" style="margin:0"><div class="club-pass-body"><div class="club-pass-row"><span class="club-pass-label">MEMBER</span><strong>'+sanitizeText(username||'Member')+'</strong></div><div class="club-pass-row"><span class="club-pass-label">UID</span><strong>'+uid+'</strong></div><p class="poxy-club-muted" style="margin-top:12px">Founders Circle · view-only pass</p></div></article>';
+  clubPassportModalUserId=userId;
+  m.hidden=false;m.setAttribute('aria-hidden','false');
+  document.body.classList.add('club-passport-open');
+  card.innerHTML='<p class="club-passport-loading">Loading passport…</p>';
+  const nameEl=$('clubPassportModalName'),uidEl=$('clubPassportModalUidLine'),avEl=$('clubPassportModalAvatar');
+  if(nameEl)nameEl.textContent=usernameHint||'…';
+  if(uidEl)uidEl.textContent='';
+  const payload=await fetchClubPassportPayload(userId);
+  if(!payload){card.innerHTML='<p class="club-passport-loading">Passport unavailable.</p>';return;}
+  if(nameEl)nameEl.textContent=sanitizeText(payload.username);
+  if(uidEl)uidEl.textContent=payload.uid;
+  if(avEl){
+    if(payload.avatar_url&&String(payload.avatar_url).startsWith('http'))
+      avEl.innerHTML='<img src="'+sanitizeText(avatarImgUrl(payload.avatar_url))+'" alt=""/>';
+    else avEl.textContent=payload.avatar_url||'🎭';
+  }
+  const shareBtn=$('clubPassportModalShareBtn');
+  if(shareBtn)shareBtn.style.display=payload.isSelf?'':'none';
+  let qrSrc='';
+  if(payload.isSelf&&currentUser){
+    const ts=Math.floor(Date.now()/30000);
+    const qrPayload=JSON.stringify({uid:payload.uid,uid_user:currentUser.id,ts,sig:clubQrSig(ts)});
+    qrSrc='https://api.qrserver.com/v1/create-qr-code/?size=128x128&data='+encodeURIComponent(qrPayload);
+  }
+  card.innerHTML=buildClubPassportCardHtml({...payload,qrSrc});
+};
+window.openClubPassportModal=function(userId,username){
+  openClubPassportFullscreen(userId,username);
 };
 function renderClubVoteWeight(){
   const el=$('clubVoteWeight');if(!el)return;
@@ -5483,27 +5674,9 @@ function renderClubOtcDesk(){
 }
 function renderClubArmory(){
   const wrap=$('clubArmory');if(!wrap)return;
-  const top=(colData||[]).slice().sort((a,b)=>clubTierScore(b.poxy_tier)-clubTierScore(a.poxy_tier)).slice(0,3);
-  const showcaseNames=['Obsidian Ledger','Silver Passkey',''];
-  const tierTags=['GENESIS TIER','RARE',''];
-  wrap.innerHTML='';
-  for(let i=0;i<3;i++){
-    const slot=document.createElement('div');
-    slot.className='poxy-club-armory-slot club-showcase-slot';
-    const item=top[i];
-    if(item){
-      const t=TIER_BY_ID[item.poxy_tier]||TIERS[0];
-      const tag=tierTags[i]||(item.poxy_tier==='mythic'||item.poxy_tier==='diamond'?'GENESIS TIER':'RARE');
-      slot.innerHTML='<div class="club-showcase-thumb" style="color:'+t.color+'">'+t.icon+'</div>'
-        +'<div class="club-showcase-meta"><strong>'+(showcaseNames[i]||t.label)+'</strong>'
-        +'<span class="club-showcase-tag">'+tag+'</span></div>';
-    }else{
-      slot.className+=' empty';
-      slot.innerHTML='<div class="club-showcase-thumb empty"><span class="material-symbols-outlined">add</span></div>'
-        +'<div class="club-showcase-meta"><strong>Empty Slot</strong><span class="club-showcase-tag muted">AVAILABLE</span></div>';
-    }
-    wrap.appendChild(slot);
-  }
+  const top=(colData||[]).slice().sort((a,b)=>clubTierScore(b.poxy_tier)-clubTierScore(a.poxy_tier)).slice(0,3)
+    .map(it=>{const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];return{...it,displayName:it.serial_number?'#'+it.serial_number:t.label};});
+  wrap.innerHTML=clubShowcaseSlotsHtml(top);
 }
 function renderClubMarketModules(){
   renderClubOtcDesk();
@@ -6619,6 +6792,10 @@ updateGreatBurnUI();
 function setupGlobalEscapeClose(){
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
+    const passM=$('clubPassportModal');
+    if(passM&&!passM.hidden){closeClubPassportModal();return;}
+    const awake=$('clubAwakening');
+    if(awake&&!awake.hidden){closeClubAwakening();return;}
     if($('tradeModal')&&!$('tradeModal').classList.contains('hidden')){closeTradeModal();return;}
     if($('dmOverlay')&&!$('dmOverlay').classList.contains('hidden')){closeDmOverlay();return;}
     if($('inspectModal')&&!$('inspectModal').classList.contains('hidden')){closeInspectModal();return;}
