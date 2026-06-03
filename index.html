@@ -1479,15 +1479,6 @@ body.dark-club .club-sub{color:#888}
     <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
-
-    <footer class="st-footer">
-      <span>© 2026 POXY WORLD. IMMUTABLE EXCLUSIVITY.</span>
-      <div class="st-footer-links">
-        <button type="button" onclick="showPage('friends')">Friends</button>
-        <button type="button" onclick="showStitchTab('explore');switchExploreSection('support')">Support</button>
-        <button type="button" onclick="showPage('profile')">Profile</button>
-      </div>
-    </footer>
   </div>
 </div>
 
@@ -2836,6 +2827,7 @@ function syncPsdTopNav(page){
   if(pillBtn)pillBtn.classList.add('active');
   if(tab==='explore'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
   else if(tab==='rarity'||tab==='tierlist'){const r=$('psdNavRarity');if(r)r.classList.add('active');}
+  else if(tab==='store'){const s=$('psdNavStore');if(s)s.classList.add('active');}
   else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'){}
 }
 
