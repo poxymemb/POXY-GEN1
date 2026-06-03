@@ -24,7 +24,7 @@ body.bg-rare{background:linear-gradient(135deg,rgba(41,182,246,0.07) 0%,#fff 70%
 body.bg-epic{background:linear-gradient(135deg,rgba(171,71,188,0.08) 0%,#fff 60%)}
 body.bg-legendary{background:linear-gradient(135deg,rgba(255,202,40,0.10) 0%,rgba(255,152,0,0.05) 50%,#fff 80%)}
 body.bg-mythic{animation:prism 3s ease-in-out infinite}
-body.dark-club{background:#0a0a0c;color:#e8e8e8;animation:none}
+body.dark-club{background:linear-gradient(165deg,#121216 0%,#1a1a24 50%,#15151c 100%);color:#f5f5f7;animation:none}
 body[data-theme="cyberpunk"]{background:#0d0d10}
 body[data-theme="cyberpunk"] .page,.page.visible[data-theme="cyberpunk"],.app{background:transparent}
 body[data-theme="mayfair"]{background:#0e0608}
@@ -1726,12 +1726,17 @@ body.dark-club .club-sub{color:#888}
 <div class="club-page poxy-club-page" id="clubPage">
   <div id="clubLocked" class="poxy-club-locked" style="display:none"></div>
   <div id="clubUnlocked" class="poxy-club-app" style="display:none">
+    <div class="poxy-club-ambient" aria-hidden="true">
+      <span class="poxy-club-orb poxy-club-orb--violet"></span>
+      <span class="poxy-club-orb poxy-club-orb--amber"></span>
+      <span class="poxy-club-orb poxy-club-orb--cyan"></span>
+    </div>
     <header class="poxy-club-header">
       <div class="poxy-club-header-glow" aria-hidden="true"></div>
       <div class="poxy-club-header-inner">
         <span class="material-symbols-outlined" aria-hidden="true">diamond</span>
         <h1 class="poxy-club-title">POXY CLUB</h1>
-        <p class="poxy-club-sub">Mayfair Elite · Private Lounge</p>
+        <p class="poxy-club-sub">Cyber-Luxury · Frosted Titanium Lounge</p>
       </div>
     </header>
     <nav class="poxy-club-dock" role="tablist" aria-label="Club modules">
@@ -4730,8 +4735,9 @@ function renderClubExtraction(){
     if(item){
       const t=TIER_BY_ID[item.poxy_tier]||VIP_TIERS[0];
       const pts=(2+clubTierScore(item.poxy_tier)*0.4).toFixed(1);
-      bay.innerHTML='<div class="poxy-club-cryo-particles"><i style="left:20%;animation-delay:0s"></i><i style="left:50%;animation-delay:.8s"></i><i style="left:75%;animation-delay:1.6s"></i></div>'
-        +'<span class="poxy-club-cryo-card" style="color:'+t.color+'">'+t.icon+'</span>'
+      bay.innerHTML='<div class="poxy-club-cryo-lid"></div><div class="poxy-club-cryo-chamber">'
+        +'<div class="poxy-club-cryo-particles"><i style="left:20%;animation-delay:0s"></i><i style="left:50%;animation-delay:.8s"></i><i style="left:75%;animation-delay:1.6s"></i></div>'
+        +'<span class="poxy-club-cryo-card poxy-club-cryo-spin" style="color:'+t.color+';--cryo-glow:'+t.color+'">'+t.icon+'</span></div>'
         +'<span class="poxy-club-cryo-points">+'+pts+' PC/s</span>';
     }
     row.appendChild(bay);
@@ -4746,10 +4752,10 @@ function renderClubHeatmap(){
   for(let i=0;i<24;i++){v=Math.max(8,Math.min(95,v+(Math.random()-0.48)*18));pts.push({x:i/(23)*w,y:h-v/100*h});}
   const d=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
   const mythicAt=pts.length-3;
-  chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><defs><linearGradient id="clubHg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(212,175,55,0.35)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>'
+  chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><defs><linearGradient id="clubHg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(243,198,111,0.45)"/><stop offset="100%" stop-color="transparent"/></linearGradient><filter id="clubHgGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'
     +'<path d="'+d+' L'+w+','+h+' L0,'+h+' Z" fill="url(#clubHg)"/>'
-    +'<path d="'+d+'" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.85"/>'
-    +'<circle cx="'+pts[mythicAt].x+'" cy="'+pts[mythicAt].y+'" r="4" fill="#D4AF37" filter="drop-shadow(0 0 6px #D4AF37)"/></svg>';
+    +'<path d="'+d+'" fill="none" stroke="#F3C66F" stroke-width="2.5" opacity="1" filter="url(#clubHgGlow)"/>'
+    +'<circle cx="'+pts[mythicAt].x+'" cy="'+pts[mythicAt].y+'" r="5" fill="#F3C66F" filter="url(#clubHgGlow)"/></svg>';
   if(leg)leg.innerHTML='<span>Live opens</span><span>Mythic · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span><span>24h window</span>';
 }
 async function renderClubFoundersLedger(){
@@ -4960,7 +4966,7 @@ function renderClubPromo(){
     +'<h2 class="poxy-club-locked-title">POXY CLUB</h2>'
     +'<p class="poxy-club-locked-text">Exclusive '+formatPC(VIP_CASE_PRICE)+' ultra-rare VIP boxes.<br>Mint serials #1, #2, #3 across unique tiers.<br>Members-only flash sales &amp; founder broadcasts.</p>'
     +'<div class="poxy-club-glass poxy-club-locked-pool"><div class="poxy-club-section-label" style="margin-bottom:12px"><span class="material-symbols-outlined">stars</span> VIP Tier Pool</div>'+poolRows+'</div>'
-    +'<p class="poxy-club-locked-text" style="margin-top:16px;font-size:13px">Collect any <strong style="color:#D4AF37">Mythic POXY</strong> from the standard hunt to unlock the Founders Circle instantly.</p>';
+    +'<p class="poxy-club-locked-text" style="margin-top:16px;font-size:13px">Collect any <strong style="color:#F3C66F">Mythic POXY</strong> from the standard hunt to unlock the Founders Circle instantly.</p>';
 }
 async function loadFounderAnnouncements(){
   const wrap=$('founderAnnouncements');if(!wrap)return;
