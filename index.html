@@ -1180,16 +1180,19 @@ body.dark-club .club-sub{color:#888}
           <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">account_balance_wallet</span> <span id="stBalanceText">0 PC</span></button>
           <button type="button" class="st-nav-notify" aria-label="Notifications" onclick="showToast('Notifications coming soon.')"><span class="material-symbols-outlined">notifications</span></button>
           <button type="button" class="st-topup-btn" onclick="scrollToTreasury()">Top Up</button>
-          <div class="user-bar st-user" id="userBar">
-            <div class="st-user-meta">
-              <div class="st-user-name user-username" id="userUsernameEl">Player</div>
-              <div class="st-user-badge" id="psdMemberBadge" style="display:none">POXY MEMBER</div>
-            </div>
+          <!-- Profile header: avatar → username/role → sign out (single username source: userUsernameEl) -->
+          <div class="user-bar st-user" id="userBar" role="group" aria-label="Account">
             <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" title="My Profile">
-              <div class="st-matrix-frame user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
-              <span class="st-nav-user-label user-username" id="stNavUsernameLabel">Player</span>
+              <div class="st-user-avatar-ring user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
             </button>
-            <button type="button" class="btn-logout" onclick="handleLogout()">Sign out</button>
+            <div class="st-user-meta">
+              <div class="st-user-name" id="userUsernameEl">Player</div>
+              <div class="st-user-role" id="userRoleEl">POXY MEMBER</div>
+            </div>
+            <button type="button" class="st-logout-btn" onclick="handleLogout()" aria-label="Sign out">
+              <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+              <span>Sign out</span>
+            </button>
             <span class="user-email" id="userEmailEl" style="display:none"></span>
           </div>
         </div>
@@ -3157,7 +3160,7 @@ window.showStitchTab=function(tab){
 function syncNavUsernameLabels(){
   const name=currentProfile?.username||'Player';
   const u1=$('userUsernameEl');if(u1)u1.textContent=name;
-  const u2=$('stNavUsernameLabel');if(u2)u2.textContent=name;
+  updatePsdMemberBadge();
 }
 
 async function loadGlobalTierCounts(){
@@ -3381,8 +3384,8 @@ function renderDashColPreview(){
   }
 }
 function updatePsdMemberBadge(){
-  const badge=$('psdMemberBadge');
-  if(badge)badge.style.display=isClubMember()?'block':'none';
+  const role=$('userRoleEl');
+  if(role)role.textContent=isClubMember()?'ELITE MEMBER':'POXY MEMBER';
 }
 function refreshStitchDashboardChrome(){
   const price=$('btnOpenPrice');
