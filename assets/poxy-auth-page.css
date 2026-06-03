@@ -6,7 +6,7 @@
 .poxy-auth-overlay{
   position:fixed;inset:0;z-index:1000;
   display:flex;flex-direction:column;
-  background:#0b0b0e;
+  background:#000;
   overflow:hidden;
   padding:0;
 }
@@ -16,7 +16,6 @@
 .poxy-auth-shell{
   flex:1;display:flex;align-items:stretch;justify-content:center;
   min-height:0;width:100%;max-width:1280px;margin:0 auto;
-  overflow:visible;
 }
 .poxy-auth-panel{
   flex:1;display:flex;flex-direction:column;justify-content:center;
@@ -69,8 +68,8 @@
 }
 .poxy-auth-field::placeholder{color:#71717a}
 .poxy-auth-field:focus{
-  border-color:rgba(243,198,111,0.45);
-  box-shadow:0 0 0 1px rgba(243,198,111,0.25);
+  border-color:#f9abff;
+  box-shadow:0 0 0 1px rgba(249,171,255,0.35);
 }
 .poxy-auth-continue{
   width:100%;max-width:300px;padding:14px 20px;margin-top:4px;
@@ -82,9 +81,9 @@
 .poxy-auth-continue:not(:disabled):hover{background:#d7dbdc}
 .poxy-auth-continue:disabled{opacity:0.45;cursor:not-allowed}
 .poxy-auth-continue.is-primary{
-  background:linear-gradient(90deg,#e8c872 0%,#c9a227 50%,#a88420 100%);
-  color:#0f0f12;border:none;
-  box-shadow:0 4px 20px rgba(243,198,111,0.22);
+  background:linear-gradient(90deg,#f9abff 0%,#9c27b0 55%,#d70357 100%);
+  color:#1a0020;border:none;
+  box-shadow:0 4px 24px rgba(156,39,176,0.35);
 }
 .poxy-auth-continue.is-primary:not(:disabled):hover{
   filter:brightness(1.06);transform:translateY(-1px);
@@ -92,7 +91,7 @@
 .poxy-auth-mode-switch{
   margin-top:20px;padding:0;border:none;background:none;
   font-family:inherit;font-size:14px;font-weight:600;
-  color:#e8c872;cursor:pointer;text-align:left;max-width:300px;
+  color:#f9abff;cursor:pointer;text-align:left;max-width:300px;
 }
 .poxy-auth-mode-switch:hover{text-decoration:underline}
 .auth-msg,.poxy-auth-msg{
@@ -105,204 +104,39 @@
 }
 .poxy-auth-legal a{color:#71717a;text-decoration:underline}
 .poxy-auth-legal a:hover{color:#c5c5cd}
-/* ── Auth hero mark (POXY) — obsidian + titanium-gold, no purple banding ── */
 .poxy-auth-hero{
   flex:1;display:none;align-items:center;justify-content:center;
-  position:relative;overflow:visible;
-  background:#0b0b0e;
-  padding:clamp(32px,5vh,64px) clamp(64px,9vw,112px) clamp(32px,5vh,64px) clamp(24px,4vw,48px);
-  box-sizing:border-box;
+  position:relative;overflow:hidden;
+  background:#000;
 }
 @media(min-width:900px){
-  .poxy-auth-hero{display:flex;min-width:0;overflow:visible}
+  .poxy-auth-hero{display:flex;min-width:0}
 }
-.poxy-auth-hero-stage{
-  position:relative;
-  display:flex;align-items:center;justify-content:center;
-  overflow:visible;
+.poxy-auth-hero-logo{
+  position:relative;display:flex;align-items:baseline;justify-content:center;
+  user-select:none;pointer-events:none;
   transform:scale(1.15);
-  transform-origin:center center;
-  padding:0.5em 0.75em 0.4em 0.35em;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  opacity:0.14;
 }
-.poxy-auth-ambient{
-  position:absolute;inset:-35% -25%;
-  overflow:visible;
-  pointer-events:none;
-  z-index:0;
-}
-.poxy-auth-ambient-halo,
-.poxy-auth-ambient-core,
-.poxy-auth-ambient-dither{
-  position:absolute;left:50%;top:50%;
-  transform:translate3d(-50%,-50%,0);
-  border-radius:50%;
-  pointer-events:none;
-}
-/* Multi-stop radial + box-shadow layers — no filter:blur (prevents banding) */
-.poxy-auth-ambient-halo{
-  width:min(52vw,520px);height:min(52vw,520px);
-  background:radial-gradient(
-    circle at 50% 48%,
-    rgba(243,198,111,0.055) 0%,
-    rgba(243,198,111,0.038) 8%,
-    rgba(243,198,111,0.022) 16%,
-    rgba(255,255,255,0.014) 24%,
-    rgba(255,255,255,0.008) 32%,
-    rgba(255,255,255,0.004) 40%,
-    rgba(11,11,14,0) 58%,
-    transparent 72%
-  );
-  will-change:transform;
-}
-.poxy-auth-ambient-core{
-  width:min(28vw,260px);height:min(28vw,260px);
-  box-shadow:
-    0 0 40px 12px rgba(243,198,111,0.04),
-    0 0 80px 36px rgba(243,198,111,0.028),
-    0 0 140px 70px rgba(255,255,255,0.012),
-    0 0 220px 120px rgba(255,255,255,0.006);
-  background:radial-gradient(
-    circle at 50% 42%,
-    rgba(255,255,255,0.03) 0%,
-    rgba(243,198,111,0.04) 18%,
-    transparent 62%
-  );
-  will-change:transform;
-}
-/* Film grain dither — breaks gradient stepping */
-.poxy-auth-ambient-dither{
-  width:min(58vw,580px);height:min(58vw,580px);
-  opacity:0.045;
-  mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size:180px 180px;
-}
-.poxy-auth-mark{
-  position:relative;z-index:2;
-  display:flex;align-items:baseline;justify-content:center;
-  flex-wrap:nowrap;
-  user-select:none;
-  pointer-events:none;
-}
-.poxy-auth-outline{
+.poxy-auth-hero-logo .auth-hero-l,
+.poxy-auth-hero-logo .auth-hero-y{
   font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:min(24vw,200px);
-  font-weight:900;
-  line-height:1;
-  letter-spacing:-0.02em;
-  color:transparent;
-  display:inline-block;
-  padding:0.05em 0.07em;
-  -webkit-text-stroke:1px rgba(196,198,205,0.28);
-  paint-order:stroke fill;
-  filter:none;
-  text-rendering:geometricPrecision;
+  font-size:min(28vw,220px);font-weight:900;line-height:0.85;
+  letter-spacing:-0.04em;color:transparent;
+  -webkit-text-stroke:2px rgba(245,245,247,0.55);
 }
-.poxy-auth-outline--y{
-  letter-spacing:0;
-  padding-right:0.14em;
-}
-.poxy-auth-x-node{
-  position:relative;
-  display:inline-block;
-  vertical-align:baseline;
-  margin:0 -0.03em;
-  pointer-events:auto;
-  cursor:default;
-}
-/* Semi-transparent droplet — warm glass, no purple */
-.poxy-auth-x-lens{
-  position:absolute;
-  left:50%;top:50%;
-  width:1.22em;height:1.38em;
-  transform:translate3d(-50%,-50%,0) rotate(-6deg);
-  border-radius:50% 48% 52% 46% / 44% 52% 48% 50%;
-  border:1px solid rgba(243,198,111,0.1);
-  background:radial-gradient(
-    ellipse 70% 65% at 38% 32%,
-    rgba(255,255,255,0.07) 0%,
-    rgba(243,198,111,0.04) 35%,
-    rgba(243,198,111,0.015) 60%,
-    transparent 100%
-  );
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    inset 0 -12px 24px rgba(0,0,0,0.35);
-  opacity:0.65;
-  transition:opacity 0.5s ease,border-color 0.5s ease,transform 0.5s ease;
-  pointer-events:none;
-  z-index:0;
-}
-/* Titanium X — crisp fill, microscopic gold edge (text-shadow, not blur) */
-.poxy-auth-x-letter{
-  position:relative;z-index:1;
-  font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:min(28vw,240px);
-  font-weight:900;
-  line-height:1;
-  letter-spacing:-0.04em;
-  display:inline-block;
-  color:#2e2e34;
-  background:linear-gradient(
-    180deg,
-    #5a5a62 0%,
-    #3a3a42 38%,
-    #2a2a30 72%,
-    #35353c 100%
-  );
-  -webkit-background-clip:text;
-  background-clip:text;
+.poxy-auth-hero-logo .auth-hero-x{
+  font-size:min(32vw,260px);font-weight:900;line-height:0.85;
+  letter-spacing:-0.06em;
+  background:linear-gradient(160deg,#f9abff 0%,#9c27b0 45%,#d70357 100%);
+  -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.14),
-    0 -1px 0 rgba(0,0,0,0.55),
-    0 0 0 rgba(243,198,111,0.5),
-    1px 0 0 rgba(243,198,111,0.22),
-    -1px 0 0 rgba(243,198,111,0.12);
-  filter:none;
-  transition:color 0.45s ease,text-shadow 0.45s ease,transform 0.45s ease;
+  filter:drop-shadow(0 0 60px rgba(249,171,255,0.25));
 }
-.poxy-auth-x-node:hover .poxy-auth-x-lens{
-  opacity:0.95;
-  border-color:rgba(243,198,111,0.22);
-  transform:translate3d(-50%,-50%,0) rotate(-5deg) scale(1.04);
-}
-.poxy-auth-x-node:hover .poxy-auth-x-letter{
-  background:linear-gradient(
-    180deg,
-    #7a7a84 0%,
-    #4a4a54 35%,
-    #3a3a42 70%,
-    #52525c 100%
-  );
-  -webkit-background-clip:text;
-  background-clip:text;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.28),
-    0 -1px 0 rgba(0,0,0,0.5),
-    0 0 12px rgba(243,198,111,0.35),
-    0 0 24px rgba(243,198,111,0.12);
-  transform:scale(1.02);
-}
-.poxy-auth-hero-stage:has(.poxy-auth-x-node:hover) .poxy-auth-ambient-core{
-  box-shadow:
-    0 0 48px 16px rgba(243,198,111,0.07),
-    0 0 96px 44px rgba(243,198,111,0.045),
-    0 0 160px 80px rgba(255,255,255,0.018),
-    0 0 240px 130px rgba(255,255,255,0.01);
-}
-.poxy-auth-hero-stage:has(.poxy-auth-x-node:hover) .poxy-auth-ambient-halo{
-  background:radial-gradient(
-    circle at 50% 48%,
-    rgba(243,198,111,0.08) 0%,
-    rgba(243,198,111,0.05) 10%,
-    rgba(243,198,111,0.03) 20%,
-    rgba(255,255,255,0.02) 30%,
-    rgba(255,255,255,0.01) 40%,
-    transparent 68%
-  );
+.poxy-auth-hero-glow{
+  position:absolute;inset:20% 10%;
+  background:radial-gradient(ellipse at 50% 50%,rgba(156,39,176,0.2),transparent 65%);
+  pointer-events:none;
 }
 .poxy-auth-footer{
   flex-shrink:0;padding:12px clamp(16px,4vw,48px) 20px;
@@ -315,18 +149,15 @@
 .poxy-auth-footer a{color:#536471;text-decoration:none}
 .poxy-auth-footer a:hover{color:#c5c5cd;text-decoration:underline}
 .poxy-auth-panel-logo-mobile{
-  display:flex;align-items:baseline;margin-bottom:28px;gap:0;
+  display:flex;align-items:baseline;margin-bottom:28px;
 }
 @media(min-width:900px){.poxy-auth-panel-logo-mobile{display:none}}
-.poxy-auth-panel-logo-mobile .poxy-auth-outline{
-  font-size:2rem;
-  -webkit-text-stroke:1px rgba(196,198,205,0.35);
+.poxy-auth-panel-logo-mobile .auth-hero-l,
+.poxy-auth-panel-logo-mobile .auth-hero-y{
+  font-size:2rem;font-weight:900;color:#f5f5f7;
 }
-.poxy-auth-panel-logo-mobile .poxy-auth-x-letter{
-  font-size:2.25rem;
-  background:linear-gradient(180deg,#5a5a62,#3a3a42);
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;
-  text-shadow:0 1px 0 rgba(255,255,255,0.12);
-  filter:none;
+.poxy-auth-panel-logo-mobile .auth-hero-x{
+  font-size:2.25rem;font-weight:900;
+  background:linear-gradient(90deg,#f9abff,#d70357);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
