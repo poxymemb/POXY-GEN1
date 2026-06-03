@@ -1915,7 +1915,8 @@ body.dark-club .club-sub{color:#888}
 <script>
 const sb = supabase.createClient(
   'https://rbrtjkfawdnomvvyxwvp.supabase.co',
-  'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG'
+  'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG',
+  {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}}
 );
 const $=id=>document.getElementById(id);
 
@@ -2369,37 +2370,60 @@ window.switchSidebarTab=function(tab){
 };
 
 // ── AUTH ──
+let authSessionBootstrapped=false;
+function resetAuthBtn(btn){
+  if(!btn)return;
+  btn.disabled=false;
+  btn.textContent=authMode.v==='login'?'Sign In':'Create Account';
+}
+async function applyAuthSession(session){
+  const user=session?.user??null;
+  currentUser=user;
+  const overlay=$('authOverlay');
+  const shell=$('poxyAppShell');
+  const hunt=$('huntPage');
+  if(!user){
+    authSessionBootstrapped=false;
+    if(overlay)overlay.classList.remove('hidden');
+    document.body.classList.remove('poxy-app-dark','poxy-stitch-dash');
+    const ub=$('userBar');
+    if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
+    const bn=$('bottomNav');if(bn)bn.style.display='none';
+    $('balanceBadge')?.classList.remove('visible');
+    if(shell)shell.style.display='none';
+    if(hunt)hunt.style.display='none';
+    teardownRealtimeSubscriptions();
+    if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
+    if(sidebarOpen)closeSidebar();
+    return;
+  }
+  if(overlay)overlay.classList.add('hidden');
+  document.body.classList.add('poxy-app-dark');
+  const ub=$('userBar');
+  if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
+  const em=$('userEmailEl');if(em)em.textContent=user.email||'';
+  $('balanceBadge')?.classList.add('visible');
+  showPoxyAppShell();
+  showStitchTab('dashboard');
+  if(!authSessionBootstrapped){
+    authSessionBootstrapped=true;
+    try{
+      await loadProfile();
+      await Promise.all([checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]);
+    }catch(e){console.error('post-login bootstrap:',e);}
+    setupRealtimeSubscriptions();
+    startFriendPoll();
+    setTimeout(()=>{loadDailyQuests();},800);
+  }
+  syncNavUsernameLabels();
+}
 function setupAuthStateListener(){
-  sb.auth.onAuthStateChange(async(_e,session)=>{
-    currentUser=session?.user??null;
-    if(currentUser){
-      $('authOverlay').classList.add('hidden');
-      document.body.classList.add('poxy-app-dark');
-      $('userBar').style.display='flex';
-      $('userBar').classList.add('psd-user-active');
-      $('userEmailEl').textContent=currentUser.email;
-      $('balanceBadge').classList.add('visible');
-      showPage('hunt');
-      Promise.all([loadProfile(),checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]).catch(console.error);
-      setupRealtimeSubscriptions();
-      startFriendPoll();
-      setTimeout(()=>{loadDailyQuests();},800);
-    } else {
-      $('authOverlay').classList.remove('hidden');
-      document.body.classList.remove('poxy-app-dark');
-      $('userBar').style.display='none';
-      $('userBar').classList.remove('psd-user-active');
-      $('bottomNav').style.display='none';
-      $('balanceBadge').classList.remove('visible');
-      document.body.classList.remove('poxy-stitch-dash');
-      const shell=$('poxyAppShell');
-      if(shell)shell.style.display='none';
-      $('huntPage').style.display='none';
-      teardownRealtimeSubscriptions();
-      if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
-      if(sidebarOpen)closeSidebar();
-    }
+  sb.auth.onAuthStateChange((_e,session)=>{
+    applyAuthSession(session).catch(e=>console.error('auth session:',e));
   });
+  sb.auth.getSession().then(({data:{session}})=>{
+    if(session)applyAuthSession(session).catch(console.error);
+  }).catch(console.error);
 }
 const authMode={v:'login'};
 window.switchTab=function(m){
@@ -2424,24 +2448,49 @@ window.handleAuth=async function(){
       let emailToUse=identifier;
       if(!identifier.includes('@')){
         const{data:emailData,error:lookupErr}=await sb.rpc('get_email_by_username',{p_username:identifier});
-        if(lookupErr||!emailData){msg.className='auth-msg error';msg.textContent='Username not found.';btn.disabled=false;return;}
-        emailToUse=emailData;
+        if(lookupErr||!emailData){
+          msg.className='auth-msg error';
+          msg.textContent=lookupErr?(lookupErr.message||'Username lookup failed.'):'Username not found.';
+          resetAuthBtn(btn);
+          return;
+        }
+        emailToUse=String(emailData).trim();
       }
       res=await sb.auth.signInWithPassword({email:emailToUse,password:pw});
     } else {
       res=await sb.auth.signUp({email:identifier,password:pw});
-      if(!res.error&&res.data.user&&!res.data.session){msg.className='auth-msg success';msg.textContent='Check your email!';btn.disabled=false;return;}
+      if(!res.error&&res.data?.user&&!res.data?.session){
+        msg.className='auth-msg success';
+        msg.textContent='Check your email to confirm, then sign in.';
+        resetAuthBtn(btn);
+        return;
+      }
     }
     if(res.error)throw res.error;
+    const session=res.data?.session;
+    if(session){
+      await applyAuthSession(session);
+      msg.className='auth-msg success';
+      msg.textContent='';
+      resetAuthBtn(btn);
+      return;
+    }
+    const{data:retry}=await sb.auth.getSession();
+    if(retry?.session){
+      await applyAuthSession(retry.session);
+      resetAuthBtn(btn);
+      return;
+    }
+    msg.className='auth-msg error';
+    msg.textContent='Signed in but session missing. Refresh the page or try again.';
   }catch(e){
     msg.className='auth-msg error';
     const em=(e?.message||'').toLowerCase();
     if(em.includes('invalid login credentials')||em.includes('invalid_credentials'))msg.textContent='Wrong email or password.';
     else if(em.includes('email not confirmed'))msg.textContent='Confirm your email first, then sign in.';
     else msg.textContent=e.message||'Sign in failed. Try again.';
+    resetAuthBtn(btn);
   }
-  btn.disabled=false;
-  btn.textContent=authMode.v==='login'?'Sign In':'Create Account';
 };
 window.handleLogout=async function(){await sb.auth.signOut();clearBg();document.body.className='';document.body.removeAttribute('data-theme');};
 
@@ -2473,6 +2522,7 @@ async function loadProfile(){
 }
 function applyNameGradientUI(gradient){
   const el=$('userUsernameEl');
+  if(!el)return;
   if(gradient&&typeof gradient==='string'){
     el.style.setProperty('--ug',gradient);
     el.classList.add('username-gradient-active');
