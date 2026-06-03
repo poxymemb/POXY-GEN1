@@ -1775,7 +1775,7 @@ body.dark-club .club-sub{color:#888}
         <span class="club-sidebar-uid" id="clubSidebarUid">PXY · · ·</span>
         <span class="club-sidebar-balance">PC Balance: <strong id="clubSidebarBalance">0 PC</strong></span>
         <button type="button" class="club-connect-wallet" onclick="showToast('Wallet connect — coming soon.')">Connect Wallet</button>
-        <a class="club-sidebar-settings" href="#" onclick="event.preventDefault();showToast('Club settings — coming soon.')"><span class="material-symbols-outlined">settings</span> Settings</a>
+        <button type="button" class="club-sidebar-settings" id="clubOpenSettingsBtn"><span class="material-symbols-outlined">settings</span> Settings</button>
       </div>
     </aside>
     <main class="club-main">
@@ -2171,6 +2171,85 @@ body.dark-club .club-sub{color:#888}
     </header>
     <div class="club-passport-modal-scroll">
       <div class="club-passport-modal-card" id="clubPassportModalCard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- POXY CLUB — Settings overlay (Enclave Security & Privacy) -->
+<div id="clubSettingsOverlay" class="club-settings-overlay" hidden aria-hidden="true">
+  <div class="club-settings-backdrop" onclick="closeClubSettingsOverlay()"></div>
+  <div class="club-settings-panel" role="dialog" aria-labelledby="clubSettingsTitle">
+    <header class="club-settings-header">
+      <div>
+        <p class="club-settings-kicker">Enclave Control</p>
+        <h2 id="clubSettingsTitle">Club Settings</h2>
+      </div>
+      <button type="button" class="club-passport-close" onclick="closeClubSettingsOverlay()" aria-label="Close"><span class="material-symbols-outlined">close</span></button>
+    </header>
+    <div class="club-settings-scroll">
+      <section class="club-settings-card">
+        <h3><span class="material-symbols-outlined">shield_person</span> Privacy &amp; Social</h3>
+        <label class="club-settings-toggle"><input type="checkbox" id="clubSetShowCallsign" onchange="onClubPrivacyToggle('showCallsignInFeed',this.checked)"/><span>Show callsign in Global Feed</span></label>
+        <p class="club-settings-hint">When off, posts appear as an encrypted enclave alias instead of your username.</p>
+        <label class="club-settings-toggle"><input type="checkbox" id="clubSetPublicPassport" onchange="onClubPrivacyToggle('publicPassportLink',this.checked)"/><span>Allow passport share links</span></label>
+        <label class="club-settings-toggle club-settings-toggle--soon"><input type="checkbox" id="clubSetPublicGuest" onchange="onClubPrivacyToggle('publicPassportGuest',this.checked)"/><span>Guest passport view (no login)</span></label>
+        <p class="club-settings-hint">Public API for non-members is in rollout. Links still require sign-in until Enclave policy goes live.</p>
+        <label class="club-settings-toggle"><input type="checkbox" id="clubSetHideBalance" onchange="onClubPrivacyToggle('hidePublicBalance',this.checked)"/><span>Hide PC balance on public passport</span></label>
+        <label class="club-settings-toggle"><input type="checkbox" id="clubSetCs2Flex" onchange="onClubCs2FlexFromSettings(this)"/><span>CS2 golden join broadcast (passport UID)</span></label>
+      </section>
+      <section class="club-settings-card">
+        <h3><span class="material-symbols-outlined">verified_user</span> Verification Status</h3>
+        <div id="clubVerificationList" class="club-verification-list"></div>
+        <button type="button" class="club-settings-btn club-settings-btn--ghost" onclick="showToast('Full KYC verification — Q3 enclave rollout.')">Request enhanced verification</button>
+      </section>
+      <section class="club-settings-card">
+        <h3><span class="material-symbols-outlined">security</span> Account Shield Level</h3>
+        <p class="club-settings-hint">Higher shields add friction to OTC, passport sharing, and session risk.</p>
+        <div class="club-shield-levels" id="clubShieldLevels">
+          <button type="button" class="club-shield-opt" data-level="0" onclick="setClubShieldLevel(0)"><strong>Standard</strong><span>Feed + passport defaults</span></button>
+          <button type="button" class="club-shield-opt" data-level="1" onclick="setClubShieldLevel(1)"><strong>Enhanced</strong><span>Air-gap aware · link expiry</span></button>
+          <button type="button" class="club-shield-opt" data-level="2" onclick="setClubShieldLevel(2)"><strong>Paranoid</strong><span>OTC double-confirm · masked feed</span></button>
+          <button type="button" class="club-shield-opt" data-level="3" onclick="setClubShieldLevel(3)"><strong>Maximum</strong><span>All guards · recovery required for OTC</span></button>
+        </div>
+        <label class="club-settings-toggle"><input type="checkbox" id="clubSetOtcConfirm" onchange="onClubPrivacyToggle('otcDoubleConfirm',this.checked)"/><span>Double confirmation before OTC execute</span></label>
+      </section>
+      <section class="club-settings-card">
+        <h3><span class="material-symbols-outlined">key</span> Personal Recovery Key</h3>
+        <p class="club-settings-hint">One-time backup if you lose password access. Store offline — we cannot show it again.</p>
+        <div id="clubRecoveryKeyDisplay" class="club-recovery-key" hidden></div>
+        <div class="club-settings-btn-row">
+          <button type="button" class="club-settings-btn" id="clubGenRecoveryBtn" onclick="generateClubRecoveryKey()">Generate new key</button>
+          <button type="button" class="club-settings-btn club-settings-btn--ghost" onclick="copyClubRecoveryKey()">Copy key</button>
+        </div>
+        <p class="club-settings-warn">Never share your recovery key. POXY staff will never ask for it.</p>
+      </section>
+      <section class="club-settings-card">
+        <h3><span class="material-symbols-outlined">devices</span> Sessions</h3>
+        <p class="club-settings-hint">Invalidate all active sessions on every device. You will need to sign in again.</p>
+        <button type="button" class="club-settings-btn club-settings-btn--danger" onclick="clubSignOutAllDevices()">Sign out all devices</button>
+      </section>
+      <section class="club-settings-card club-settings-policy">
+        <h3><span class="material-symbols-outlined">gavel</span> Account Transfer Policy</h3>
+        <p>POXY CLUB memberships, keycards, and linked wallets are <strong>non-transferable</strong>. Sale, lease, or sharing of accounts violates the Founders Circle Terms. Violations may result in permanent enclave ban and asset freeze per DAO ruling PIP-041.</p>
+        <ul>
+          <li>No account selling or credential sharing</li>
+          <li>One human operator per callsign</li>
+          <li>Mythic-linked club access is bound to your identity vector</li>
+        </ul>
+      </section>
+      <section class="club-settings-card">
+        <h3><span class="material-symbols-outlined">help</span> FAQ</h3>
+        <details class="club-settings-faq"><summary>What is Air-Gap on OTC?</summary><p>After a new login, peer transfers freeze for 24 hours to protect your vault from session hijack.</p></details>
+        <details class="club-settings-faq"><summary>Can I hide my balance when someone opens my passport link?</summary><p>Yes — enable <em>Hide PC balance on public passport</em>. Rank and showcase remain visible.</p></details>
+        <details class="club-settings-faq"><summary>What does shield level change?</summary><p>Higher levels add OTC confirmations and stricter sharing. Maximum requires a saved recovery key before large OTC moves.</p></details>
+        <details class="club-settings-faq"><summary>Is guest passport view available?</summary><p>Planned for verified club members only. Until then, viewers must sign in to open passport links.</p></details>
+        <details class="club-settings-faq"><summary>How do I feature a POXY on my passport?</summary><p>Open Collection, pin a POXY as featured, then check Passport or Club Profile.</p></details>
+      </section>
+      <section class="club-settings-card">
+        <h3><span class="material-symbols-outlined">notifications</span> Alerts</h3>
+        <label class="club-settings-toggle"><input type="checkbox" id="clubSetNotifyFlash" onchange="onClubPrivacyToggle('notifyFlashDrops',this.checked)"/><span>VIP flash drop &amp; radar alerts</span></label>
+        <label class="club-settings-toggle"><input type="checkbox" id="clubSetNotifyDao" onchange="onClubPrivacyToggle('notifyDaoVotes',this.checked)"/><span>DAO proposal reminders</span></label>
+      </section>
     </div>
   </div>
 </div>
@@ -2922,6 +3001,12 @@ async function loadProfile(){
     if(data){
       if(data.favorite_poxy_id&&!isUuid(data.favorite_poxy_id))data.favorite_poxy_id=null;
       currentProfile=data;
+      if(!currentProfile.club_privacy){
+        try{
+          const s=localStorage.getItem(clubPrivacyStorageKey(currentUser.id));
+          if(s)currentProfile.club_privacy=JSON.parse(s);
+        }catch(e){}
+      }
       let av=data.avatar_url||AVATARS[0];
       if(isBrokenAvatarUrl(av)){
         const repaired=await syncAvatarFromStorage();
@@ -5436,6 +5521,145 @@ window.copyClubUid=function(){
   const uid=getClubPassportUid();
   navigator.clipboard?.writeText(uid).then(()=>showToast('UID copied: '+uid)).catch(()=>showToast(uid));
 };
+const CLUB_PRIVACY_DEFAULTS={
+  showCallsignInFeed:true,
+  publicPassportLink:true,
+  publicPassportGuest:false,
+  hidePublicBalance:true,
+  shieldLevel:1,
+  otcDoubleConfirm:true,
+  notifyFlashDrops:true,
+  notifyDaoVotes:true
+};
+function clubPrivacyStorageKey(uid){return 'club_privacy_'+(uid||'');}
+function parseClubPrivacy(raw){
+  if(!raw||typeof raw!=='object')return{...CLUB_PRIVACY_DEFAULTS};
+  return{...CLUB_PRIVACY_DEFAULTS,...raw};
+}
+function getClubPrivacy(uid){
+  uid=uid||currentUser?.id;
+  if(!uid)return{...CLUB_PRIVACY_DEFAULTS};
+  if(uid===currentUser?.id&&currentProfile?.club_privacy)return parseClubPrivacy(currentProfile.club_privacy);
+  try{
+    const s=localStorage.getItem(clubPrivacyStorageKey(uid));
+    if(s)return parseClubPrivacy(JSON.parse(s));
+  }catch(e){}
+  return{...CLUB_PRIVACY_DEFAULTS};
+}
+async function persistClubPrivacy(patch){
+  if(!currentUser)return getClubPrivacy();
+  const merged=parseClubPrivacy({...getClubPrivacy(),...patch});
+  try{localStorage.setItem(clubPrivacyStorageKey(currentUser.id),JSON.stringify(merged));}catch(e){}
+  if(currentProfile)currentProfile.club_privacy=merged;
+  try{await sb.from('profiles').update({club_privacy:merged}).eq('id',currentUser.id);}catch(e){}
+  return merged;
+}
+window.onClubPrivacyToggle=function(key,val){
+  persistClubPrivacy({[key]:!!val}).then(()=>showToast('Setting saved.'));
+};
+window.onClubCs2FlexFromSettings=function(inp){
+  toggleClubCs2Flex(inp);
+  const cs2=$('clubCs2Flex');if(cs2)cs2.checked=!!inp?.checked;
+};
+window.setClubShieldLevel=function(level){
+  const lv=Math.max(0,Math.min(3,parseInt(level,10)||0));
+  persistClubPrivacy({shieldLevel:lv}).then(()=>{
+    syncClubSettingsUI();
+    showToast('Shield level: '+['Standard','Enhanced','Paranoid','Maximum'][lv]+'.');
+  });
+};
+function clubFeedDisplayName(item){
+  const uname=sanitizeText(item.author_username||'Member');
+  if(!item.author_id||item.author_id!==currentUser?.id)return uname;
+  const priv=getClubPrivacy();
+  if(priv.showCallsignInFeed!==false)return uname;
+  const uid=getClubPassportUid();
+  return 'ENCLAVE · '+uid.replace(/^PXY-/,'').slice(0,8);
+}
+function clubPostAuthorName(){
+  const priv=getClubPrivacy();
+  if(priv.showCallsignInFeed!==false)return currentProfile?.username||currentUser?.email?.split('@')[0]||'Member';
+  return 'ENCLAVE · '+getClubPassportUid().replace(/^PXY-/,'').slice(0,8);
+}
+function renderClubVerificationStatus(){
+  const el=$('clubVerificationList');if(!el||!currentUser)return;
+  const emailOk=!!(currentUser.email_confirmed_at||currentUser.confirmed_at);
+  const rows=[
+    {ok:emailOk,label:'Email verified',detail:currentUser.email||'—'},
+    {ok:!!isClubMember(),label:'Founders Circle member',detail:isClubMember()?'Club access granted':'Requires mythic keycard'},
+    {ok:!!(currentProfile?.is_verified_employee),label:'Staff verification',detail:'Internal operator badge'},
+    {ok:!!(currentProfile?.email&&currentProfile.email.toLowerCase()===FOUNDER_EMAIL),label:'Genesis founder seal',detail:'Protocol authority'}
+  ];
+  el.innerHTML=rows.map(r=>'<div class="club-verification-row'+(r.ok?' ok':'')+'"><span class="material-symbols-outlined">'+(r.ok?'verified':'radio_button_unchecked')+'</span><div><strong>'+sanitizeText(r.label)+'</strong><span>'+sanitizeText(r.detail)+'</span></div></div>').join('');
+}
+function syncClubSettingsUI(){
+  const priv=getClubPrivacy();
+  const set=(id,v)=>{const el=$(id);if(el)el.checked=!!v;};
+  set('clubSetShowCallsign',priv.showCallsignInFeed);
+  set('clubSetPublicPassport',priv.publicPassportLink);
+  set('clubSetPublicGuest',priv.publicPassportGuest);
+  set('clubSetHideBalance',priv.hidePublicBalance);
+  set('clubSetOtcConfirm',priv.otcDoubleConfirm);
+  set('clubSetNotifyFlash',priv.notifyFlashDrops);
+  set('clubSetNotifyDao',priv.notifyDaoVotes);
+  const cs2=localStorage.getItem('club_cs2_flex_'+currentUser?.id)!=='0';
+  set('clubSetCs2Flex',cs2);
+  const cs2Gov=$('clubCs2Flex');if(cs2Gov)cs2Gov.checked=cs2;
+  document.querySelectorAll('.club-shield-opt').forEach(b=>{
+    b.classList.toggle('active',parseInt(b.dataset.level,10)===priv.shieldLevel);
+  });
+  const recEl=$('clubRecoveryKeyDisplay');
+  const stored=localStorage.getItem('club_recovery_key_'+currentUser?.id);
+  if(recEl){
+    if(stored){
+      recEl.hidden=false;
+      recEl.innerHTML='<code id="clubRecoveryKeyText">'+sanitizeText(stored)+'</code><span class="club-recovery-mask">Key on file · generate new to rotate</span>';
+    }else{recEl.hidden=true;recEl.innerHTML='';}
+  }
+  renderClubVerificationStatus();
+}
+window.openClubSettingsOverlay=function(){
+  if(!currentUser){showToast('Sign in to open settings.');return;}
+  const ov=$('clubSettingsOverlay');
+  if(!ov)return;
+  syncClubSettingsUI();
+  ov.hidden=false;ov.setAttribute('aria-hidden','false');
+  document.body.classList.add('club-settings-open');
+};
+window.closeClubSettingsOverlay=function(){
+  const ov=$('clubSettingsOverlay');
+  if(ov){ov.hidden=true;ov.setAttribute('aria-hidden','true');}
+  document.body.classList.remove('club-settings-open');
+};
+window.generateClubRecoveryKey=function(){
+  if(!currentUser)return;
+  if(!confirm('Generate a new recovery key? Any previous key will stop working.'))return;
+  const bytes=new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  const hex=Array.from(bytes).map(b=>b.toString(16).toUpperCase().padStart(2,'0')).join('');
+  const key='POXY-RCV-'+hex.slice(0,4)+'-'+hex.slice(4,8)+'-'+hex.slice(8,12);
+  try{localStorage.setItem('club_recovery_key_'+currentUser.id,key);}catch(e){}
+  const el=$('clubRecoveryKeyDisplay');
+  if(el){el.hidden=false;el.innerHTML='<code id="clubRecoveryKeyText">'+sanitizeText(key)+'</code><span class="club-recovery-mask">Copy now — not shown again after close</span>';}
+  showToast('Recovery key generated. Copy and store offline.');
+};
+window.copyClubRecoveryKey=function(){
+  const t=$('clubRecoveryKeyText');
+  const key=t?t.textContent:localStorage.getItem('club_recovery_key_'+currentUser?.id);
+  if(!key){showToast('Generate a recovery key first.');return;}
+  navigator.clipboard?.writeText(key).then(()=>showToast('Recovery key copied.')).catch(()=>showToast(key));
+};
+window.clubSignOutAllDevices=async function(){
+  if(!confirm('Sign out on all devices? You will need to log in again everywhere.'))return;
+  try{
+    await sb.auth.signOut({scope:'global'});
+    closeClubSettingsOverlay();
+    showToast('Signed out on all devices.');
+  }catch(e){
+    try{await sb.auth.signOut();showToast('Signed out (this device). Global sign-out may require newer auth.');}catch(e2){showToast('Sign out failed.');}
+    closeClubSettingsOverlay();
+  }
+};
 let clubPassportModalUserId=null;
 let pendingPassportDeepLink=null;
 function clubPassportUidForUser(userId,prof){
@@ -5453,6 +5677,8 @@ function buildClubPassportShareUrl(userId){
 window.copyClubPassportShareLink=function(userId){
   const id=userId||currentUser?.id;
   if(!id){showToast('Sign in to share your passport.');return;}
+  const priv=getClubPrivacy(id);
+  if(priv.publicPassportLink===false){showToast('Passport sharing disabled in Settings.');return;}
   const url=buildClubPassportShareUrl(id);
   navigator.clipboard?.writeText(url).then(()=>showToast('Passport link copied.')).catch(()=>showToast(url));
 };
@@ -5492,7 +5718,7 @@ function buildClubPassportCardHtml(o){
     +'<div class="club-pass-row"><span class="club-pass-label">UID</span><strong>'+sanitizeText(o.uid||'PXY-000-LON')+'</strong></div>'
     +'<div class="club-pass-row club-pass-issued"><span class="club-pass-label">Issued Date</span><span>'+sanitizeText(issued)+'</span></div>'
     +'<div class="club-pass-row"><span class="club-pass-label">Club Rank</span><span><span class="material-symbols-outlined">key</span> '+sanitizeText(rank)+'</span></div>'
-    +'<div class="club-pass-row"><span class="club-pass-label">Balance</span><span>'+bal+'</span></div>'
+    +(o.hideBalance?'':'<div class="club-pass-row"><span class="club-pass-label">Balance</span><span>'+bal+'</span></div>')
     +(o.viewOnly?'':'<div class="club-pass-qr-wrap"><img class="club-pass-qr" width="128" height="128" alt="Club QR" src="'+(o.qrSrc||'')+'"/><span class="club-pass-qr-hint"><span class="material-symbols-outlined" style="font-size:12px;vertical-align:middle">verified</span> Founders Circle · London entry</span></div>')
     +'</div>'
     +'<div class="club-pass-showcase-col"><h3 class="club-pass-showcase-title">Mythic Showcase</h3>'
@@ -5506,7 +5732,7 @@ async function fetchClubPassportPayload(userId){
   if(isSelf&&currentProfile)prof=currentProfile;
   else{
     try{
-      const{data}=await sb.from('profiles').select('id,username,avatar_url,balance,club_issued_at,club_level,club_passport_uid,is_club_member').eq('id',userId).maybeSingle();
+      const{data}=await sb.from('profiles').select('id,username,avatar_url,balance,club_issued_at,club_level,club_passport_uid,is_club_member,club_privacy,is_verified_employee,email').eq('id',userId).maybeSingle();
       prof=data;
     }catch(e){return null;}
   }
@@ -5530,11 +5756,13 @@ async function fetchClubPassportPayload(userId){
   const issuedStr=issDate?String(issDate.getDate()).padStart(2,'0')+'.'+String(issDate.getMonth()+1).padStart(2,'0')+'.'+issDate.getFullYear():'—';
   const bal=formatPC(prof.balance||0);
   const skin=(isSelf&&localStorage.getItem('club_skin_'+userId))||'classic';
+  const ownerPriv=parseClubPrivacy(prof.club_privacy||getClubPrivacy(userId));
+  const hideBalance=!isSelf&&ownerPriv.hidePublicBalance===true;
   return{
     userId,username:prof.username||'Member',avatar_url:prof.avatar_url,
     uid:clubPassportUidForUser(userId,prof),issued:issuedStr,rank:rankLabel,
     balanceHtml:'<span class="club-pass-bal">'+bal.replace(' PC','')+'</span> PC',
-    showcase,skin,isSelf,viewOnly:!isSelf
+    showcase,skin,isSelf,viewOnly:!isSelf,hideBalance
   };
 }
 async function resolvePassportDeepLinkParam(param){
@@ -5727,6 +5955,16 @@ window.submitClubOtcTransfer=function(){
   const uid=($('clubOtcUid')?.value||'').trim().toUpperCase();
   const itemId=$('clubOtcItem')?.value;
   if(!uid||!itemId){showToast('Enter recipient UID and select item.');return;}
+  const priv=getClubPrivacy();
+  if(priv.shieldLevel>=3&&!localStorage.getItem('club_recovery_key_'+currentUser?.id)){
+    showToast('Maximum shield: generate a recovery key in Settings first.');openClubSettingsOverlay();return;
+  }
+  if(priv.otcDoubleConfirm&&!window._clubOtcConfirmed){
+    window._clubOtcConfirmed=true;
+    showToast('Confirm again to execute transfer.');
+    return;
+  }
+  window._clubOtcConfirmed=false;
   const hash='0x'+Array.from({length:16},()=>Math.floor(Math.random()*16).toString(16)).join('');
   const prev=$('clubOtcHashPreview');if(prev)prev.textContent='Deal hash: '+hash+' (one-time · server verified)';
   showToast('Secure OTC queued — hash '+hash.slice(0,10)+'…');
@@ -6060,6 +6298,8 @@ async function initClubLuxuryModules(){
   loadFeed();
   const replay=$('clubReplayIntel');
   if(replay&&!replay.dataset.bound){replay.dataset.bound='1';replay.onclick=()=>replayClubAwakening();}
+  const setBtn=$('clubOpenSettingsBtn');
+  if(setBtn&&!setBtn.dataset.bound){setBtn.dataset.bound='1';setBtn.onclick=()=>openClubSettingsOverlay();}
   switchClubSubTab(activeClubSubTab||'feed');
 }
 function renderClubVaultSlots(){
@@ -6281,11 +6521,12 @@ async function loadFeed(){
       const icon=clubFeedIcon(item.author_avatar);
       const av=item.author_avatar||'';
       const iconHtml=(av.startsWith('http')?'<img class="club-feed-avatar-img" alt="" src="'+sanitizeText(av)+'"/>':icon.length<=4?'<span class="poxy-club-feed-avatar">'+icon+'</span>':'<span class="material-symbols-outlined">'+icon+'</span>');
-      const uname=sanitizeText(item.author_username||'Member');
+      const uname=clubFeedDisplayName(item);
       const uidShort=item.author_id?'0x'+String(item.author_id).replace(/-/g,'').slice(0,2).toUpperCase()+'…'+String(item.author_id).slice(-3):'0x???';
       const stats=[12,4,89][i%3]||[3,0,24][i%3];
+      const passName=(item.author_username||'Member').replace(/'/g,"\\'");
       el.innerHTML='<div class="poxy-club-feed-msg-head">'+iconHtml
-        +'<div class="club-feed-user-meta"><span class="poxy-club-feed-username" data-author="'+sanitizeText(item.author_id||'')+'" onclick="openClubPassportModal(this.dataset.author,\''+uname.replace(/'/g,"\\'")+'\')">'+uname+'</span>'
+        +'<div class="club-feed-user-meta"><span class="poxy-club-feed-username" data-author="'+sanitizeText(item.author_id||'')+'" onclick="openClubPassportModal(this.dataset.author,\''+passName+'\')">'+uname+'</span>'
         +'<span class="club-feed-uid">UID: '+uidShort+'</span></div>'
         +'<span class="poxy-club-feed-time">'+timeSince(item.created_at)+'</span></div>'
         +'<p class="poxy-club-feed-body">'+sanitizeText(item.content)+'</p>'
@@ -6299,7 +6540,7 @@ async function loadFeed(){
 window.postToFeed=async function(){
   const input=$('feedInput'),content=input.value.trim();
   if(!content||!currentUser)return;
-  const username=currentProfile?.username||currentUser.email.split('@')[0];
+  const username=clubPostAuthorName();
   const avatar=currentProfile?.avatar_url&&!currentProfile.avatar_url.startsWith('http')?currentProfile.avatar_url:'✸';
   try{
     await sb.from('club_feed').insert({author_id:currentUser.id,author_username:username,author_avatar:avatar,content});
@@ -7066,6 +7307,8 @@ updateGreatBurnUI();
 function setupGlobalEscapeClose(){
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
+    const setOv=$('clubSettingsOverlay');
+    if(setOv&&!setOv.hidden){closeClubSettingsOverlay();return;}
     const passM=$('clubPassportModal');
     if(passM&&!passM.hidden){closeClubPassportModal();return;}
     const awake=$('clubAwakening');
