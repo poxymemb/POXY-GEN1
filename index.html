@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
-<link rel="stylesheet" href="assets/poxy-profile-page.css">
+<link rel="stylesheet" href="assets/poxy-profile-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -1581,70 +1581,82 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- PROFILE PAGE (general members — graphite / gold dashboard) -->
+<!-- PROFILE PAGE (Stitch — Refined Profile HUD) -->
 <div class="page poxy-page-profile" id="profilePage">
-  <h1 class="poxy-profile-title">MY PROFILE</h1>
-  <div class="poxy-profile-layout">
-    <aside class="poxy-profile-hero">
-      <div class="poxy-profile-avatar-block">
-        <div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target">
-          <div id="profileBigAvatar"></div>
+  <div class="poxy-profile-shell">
+    <header class="poxy-profile-header">
+      <h1 class="poxy-profile-title">MY PROFILE</h1>
+    </header>
+    <div class="poxy-profile-layout">
+      <aside class="poxy-profile-sidebar">
+        <div class="poxy-profile-avatar-block">
+          <div class="poxy-profile-avatar-ring">
+            <div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target poxy-profile-avatar-frame">
+              <div id="profileBigAvatar" class="poxy-profile-avatar-inner"></div>
+            </div>
+            <label for="avatarUpload" class="poxy-profile-camera-btn" title="Upload photo">
+              <span class="material-symbols-outlined" aria-hidden="true">photo_camera</span>
+            </label>
+          </div>
+          <input type="file" id="avatarUpload" accept="image/*" hidden>
+          <div id="uploadStatus" class="poxy-profile-upload-status"></div>
         </div>
-        <label for="avatarUpload" class="poxy-profile-upload-btn">Upload Photo</label>
-        <input type="file" id="avatarUpload" accept="image/*" hidden>
-        <div id="uploadStatus" class="poxy-profile-upload-status"></div>
-      </div>
-      <div class="profile-field">
-        <label class="profile-label" for="profileUsername">Username</label>
-        <input class="profile-input" id="profileUsername" placeholder="Choose a username" maxlength="24" autocomplete="username">
-      </div>
-      <div class="poxy-profile-actions">
-        <button type="button" class="poxy-profile-btn" id="btnSaveProfile">Save Profile</button>
-        <button type="button" class="poxy-profile-btn poxy-profile-btn--ghost" id="pwdSectionToggle" aria-expanded="false" aria-controls="pwdSection">Security</button>
-      </div>
-    </aside>
-    <div class="poxy-profile-main">
-      <div class="profile-stats">
-        <div class="pstat"><div class="pstat-val" id="statTotal">–</div><div class="pstat-label">Total</div></div>
-        <div class="pstat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
-        <div class="pstat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
-      </div>
-      <div class="poxy-profile-grid-2">
-        <div class="poxy-profile-card">
-          <p class="poxy-profile-section-label">Featured POXY</p>
-          <div id="featuredPoxyDisplay" class="poxy-featured-slot empty">
-            <p class="featured-poxy-empty">Select one from Collection</p>
+        <div class="profile-field poxy-profile-field">
+          <label class="profile-label poxy-profile-field-label" for="profileUsername">Username</label>
+          <input class="profile-input poxy-profile-username-input" id="profileUsername" placeholder="Choose a username" maxlength="24" autocomplete="username">
+        </div>
+        <div class="poxy-profile-actions">
+          <button type="button" class="poxy-profile-btn poxy-profile-btn--primary" id="btnSaveProfile">Save Profile</button>
+          <button type="button" class="poxy-profile-btn poxy-profile-btn--ghost" id="pwdSectionToggle" aria-expanded="false" aria-controls="pwdSection">
+            <span class="material-symbols-outlined" aria-hidden="true">security</span>
+            Security
+          </button>
+        </div>
+      </aside>
+      <div class="poxy-profile-main">
+        <div class="profile-stats poxy-profile-stats">
+          <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statTotal">–</div><div class="pstat-label">Total</div></div>
+          <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
+          <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
+        </div>
+        <div class="poxy-profile-grid-2">
+          <section class="poxy-profile-panel">
+            <h2 class="poxy-profile-section-label">Featured POXY</h2>
+            <div id="featuredPoxyDisplay" class="poxy-featured-slot empty">
+              <p class="featured-poxy-empty">Select one from Collection</p>
+            </div>
+          </section>
+          <section class="poxy-profile-panel">
+            <h2 class="poxy-profile-section-label">Daily Quests</h2>
+            <div id="dailyQuestList" class="poxy-quest-list">
+              <p class="poxy-quest-loading">Sign in to load quests…</p>
+            </div>
+          </section>
+        </div>
+        <div class="frame-cosmetic-panel frame-selector-section poxy-profile-frames" id="frameSelectorSection">
+          <button type="button" class="frame-selector-header poxy-profile-frames-banner" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
+            <span class="frame-selector-header-text">
+              <span class="frame-selector-label poxy-profile-frames-title">Avatar Frames</span>
+              <span class="frame-selector-sub poxy-profile-frames-sub">Premium Cosmetics</span>
+            </span>
+            <span class="material-symbols-outlined frame-selector-chevron poxy-profile-frames-chevron" aria-hidden="true">chevron_right</span>
+          </button>
+          <div class="frame-selector-body poxy-profile-frames-body" id="frameSelectorBody">
+            <div class="frame-selector-grid" id="frameSelectorGrid"></div>
           </div>
         </div>
-        <div class="poxy-profile-card">
-          <p class="poxy-profile-section-label">Daily Quests</p>
-          <div id="dailyQuestList" class="poxy-quest-list">
-            <p class="poxy-quest-loading">Sign in to load quests…</p>
+        <section class="poxy-profile-panel mythic-club-tracker" id="mythicClubTracker">
+          <h2 class="poxy-profile-section-label mct-label">Ecosystem Private Club Entry</h2>
+          <div class="mct-bar-shell">
+            <div class="mct-bar-track"><div class="mct-bar-fill" id="mctBarFill" style="width:0%"></div></div>
           </div>
-        </div>
-      </div>
-      <div class="frame-cosmetic-panel frame-selector-section poxy-profile-card" id="frameSelectorSection">
-        <button type="button" class="frame-selector-header" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
-          <span class="frame-selector-header-text">
-            <span class="frame-selector-label">Avatar Frames</span>
-            <span class="frame-selector-sub">Premium Cosmetics</span>
-          </span>
-          <span class="frame-selector-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div class="frame-selector-body" id="frameSelectorBody">
-          <div class="frame-selector-grid" id="frameSelectorGrid"></div>
-        </div>
-      </div>
-      <div class="poxy-profile-card mythic-club-tracker" id="mythicClubTracker">
-        <div class="mct-label">Ecosystem Private Club Entry</div>
-        <div class="mct-bar-track"><div class="mct-bar-fill" id="mctBarFill" style="width:0%"></div></div>
-        <div class="mct-status" id="mctStatus">Loading…</div>
-      </div>
-      <div class="poxy-profile-card badge-wallet" id="badgeWalletContainer">
-        <div class="badge-wallet-label">Badge Wallet</div>
-        <div class="badge-list" id="badgeList"><span class="badge-none">No badges yet.</span></div>
-      </div>
-      <div class="poxy-profile-card poxy-profile-security" id="pwdSection" hidden>
+          <p class="mct-status" id="mctStatus">Loading…</p>
+        </section>
+        <section class="poxy-profile-panel badge-wallet" id="badgeWalletContainer">
+          <h2 class="badge-wallet-label poxy-profile-section-label">Badge Wallet</h2>
+          <div class="badge-list poxy-profile-badges" id="badgeList"><span class="badge-none">No badges yet.</span></div>
+        </section>
+        <div class="poxy-profile-card poxy-profile-security" id="pwdSection" hidden>
         <div class="poxy-profile-security-head">
           <h3>Change Password</h3>
           <button type="button" class="poxy-profile-btn poxy-profile-btn--ghost poxy-profile-btn--compact" id="pwdSectionClose" aria-label="Close">Close</button>
@@ -1657,6 +1669,7 @@ body.dark-club .club-sub{color:#888}
           </div>
           <div class="pwd-msg" id="pwdMsg"></div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -3200,8 +3213,9 @@ async function renderFeaturedPoxyDisplay(){
     }
     const tier=TIERS.find(t=>t.id===data.poxy_tier)||TIERS[0];
     el.className='poxy-featured-slot';
-    el.innerHTML='<span class="poxy-featured-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</span>'
-      +'<span class="poxy-featured-icon">'+tier.icon+'</span>'
+    el.innerHTML='<span class="material-symbols-outlined poxy-featured-gem" aria-hidden="true" style="font-variation-settings:\'FILL\' 1">diamond</span>'
+      +'<div class="poxy-featured-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</div>'
+      +'<span class="poxy-featured-icon" aria-hidden="true">'+tier.icon+'</span>'
       +'<span class="poxy-featured-serial">'+sanitizeText(data.serial_number||'–')+'</span>';
   }catch(e){
     el.className='poxy-featured-slot empty';
@@ -7446,7 +7460,7 @@ async function loadDailyQuests(){
       const claimed=!!q.claimed;
       const ready=q.progress>=q.goal&&!claimed;
       const row=document.createElement('div');
-      row.className='poxy-quest-row'+(claimed?' is-claimed':'');
+      row.className='poxy-quest-row'+(claimed?' is-claimed':ready?'':' is-progress');
       const btnLabel=claimed?'Claimed':ready?'Claim':'In progress';
       row.innerHTML='<div class="poxy-quest-head"><span class="poxy-quest-title">'+sanitizeText(labels[q.quest_key]||q.quest_key)+'</span>'
         +'<span class="poxy-quest-progress">'+q.progress+' / '+q.goal+'</span></div>'

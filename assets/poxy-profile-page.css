@@ -1,285 +1,381 @@
-/* MY PROFILE — general users (graphite / gold design system) */
+/* POXY — Refined Profile HUD (Stitch POXY GEN1, vanilla port) */
 #profilePage.poxy-page-profile{
-  --prof-bg:#121216;
-  --prof-surface:rgba(22,22,28,0.7);
-  --prof-border:rgba(255,255,255,0.05);
-  --prof-gold:#f3c66f;
-  --prof-gold-dim:rgba(243,198,111,0.3);
-  --prof-text:#f5f5f7;
-  --prof-muted:#c5c5cd;
+  --prof-bg:#131313;
+  --prof-primary:#f9abff;
+  --prof-primary-dim:rgba(249,171,255,0.35);
+  --prof-secondary:#ffb2be;
+  --prof-secondary-container:#d70357;
+  --prof-on:#e5e2e1;
+  --prof-muted:#d5c1d2;
+  --prof-outline:rgba(157,139,155,0.2);
+  --prof-glass:rgba(22,22,28,0.6);
+  --prof-surface:#20201f;
+  --prof-surface-low:#1c1b1b;
+  --prof-max:1280px;
   background:var(--prof-bg)!important;
-  max-width:960px;
-  padding:20px 16px 100px;
+  color:var(--prof-on);
+  max-width:none;
+  width:100%;
+  padding:calc(var(--st-nav-h,96px) + 24px) 20px 80px;
+  box-sizing:border-box;
 }
+#profilePage .poxy-profile-shell{
+  max-width:var(--prof-max);
+  margin:0 auto;
+  width:100%;
+}
+#profilePage .poxy-profile-header{margin-bottom:32px}
 #profilePage .poxy-profile-title{
-  margin:0 0 20px;
+  margin:0;
   font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:clamp(1.35rem,3vw,1.75rem);
+  font-size:clamp(2.5rem,6vw,4rem);
   font-weight:700;
-  letter-spacing:0.04em;
-  color:var(--prof-text);
+  letter-spacing:-0.02em;
+  line-height:1.1;
+  color:var(--prof-on);
+  text-transform:uppercase;
   background:none;
   -webkit-text-fill-color:unset;
 }
 #profilePage .poxy-profile-title::after{display:none}
 #profilePage .poxy-profile-layout{
   display:grid;
-  grid-template-columns:minmax(0,1fr);
-  gap:16px;
+  grid-template-columns:1fr;
+  gap:32px;
   align-items:start;
 }
-@media(min-width:768px){
+@media(min-width:1024px){
   #profilePage .poxy-profile-layout{
-    grid-template-columns:minmax(200px,240px) minmax(0,1fr);
-    gap:20px;
+    grid-template-columns:minmax(0,3fr) minmax(0,9fr);
+    gap:24px;
   }
 }
-#profilePage .poxy-profile-card{
-  background:var(--prof-surface);
-  border:1px solid var(--prof-border);
-  border-radius:12px;
-  padding:16px 18px;
-  backdrop-filter:blur(12px);
-}
-#profilePage .poxy-profile-hero{
+/* Sidebar */
+#profilePage .poxy-profile-sidebar{
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:24px;
+  align-items:center;
+}
+@media(min-width:1024px){
+  #profilePage .poxy-profile-sidebar{align-items:stretch}
 }
 #profilePage .poxy-profile-avatar-block{
   display:flex;
   flex-direction:column;
   align-items:center;
-  text-align:center;
-  padding:18px 16px 14px;
+  width:100%;
+}
+#profilePage .poxy-profile-avatar-ring{
+  position:relative;
+  width:192px;
+  height:192px;
+  padding:4px;
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--prof-primary),var(--prof-secondary-container));
+  box-shadow:0 0 30px rgba(249,171,255,0.3);
+  margin-bottom:16px;
+}
+#profilePage #profileBigAvatarWrap.poxy-profile-avatar-frame{
+  width:100%;
+  height:100%;
+  margin:0!important;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0e0e0e;
+}
+#profilePage .poxy-profile-avatar-inner,
+#profilePage #profileBigAvatar{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  overflow:hidden;
+}
+#profilePage #profileBigAvatar img.avatar-upload-preview{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:12px;
+}
+#profilePage .profile-menu-avatar-face{
+  font-size:4rem;
+  line-height:1;
+}
+#profilePage .poxy-profile-camera-btn{
+  position:absolute;
+  bottom:8px;
+  right:8px;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:1px solid var(--prof-outline);
   background:var(--prof-surface);
-  border:1px solid var(--prof-border);
-  border-radius:12px;
+  color:var(--prof-on);
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(0,0,0,0.45);
+  transition:background 0.2s ease,transform 0.2s ease;
 }
-#profilePage #profileBigAvatarWrap{
-  margin:0 auto 10px!important;
-  border-radius:12px;
-  box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 0 24px rgba(243,198,111,0.12);
+#profilePage .poxy-profile-camera-btn:hover{
+  background:var(--prof-surface-low);
+  transform:scale(1.05);
 }
-#profilePage .poxy-profile-upload-btn{
-  display:inline-block;
-  margin:0;
-  padding:0;
-  border:none;
-  background:none;
+#profilePage .poxy-profile-camera-btn .material-symbols-outlined{font-size:18px}
+#profilePage .poxy-profile-upload-status{
+  font-size:11px;
+  color:var(--prof-muted);
+  margin-top:4px;
+  min-height:16px;
+  text-align:center;
+}
+#profilePage .poxy-profile-field{width:100%}
+#profilePage .poxy-profile-field-label,
+#profilePage .profile-label{
+  display:block;
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  font-weight:600;
-  letter-spacing:0.12em;
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:0.1em;
   text-transform:uppercase;
   color:var(--prof-muted);
-  cursor:pointer;
-  transition:color 0.2s;
+  margin-bottom:8px;
 }
-#profilePage .poxy-profile-upload-btn:hover{color:var(--prof-gold)}
-#profilePage .poxy-profile-upload-status{
-  font-size:10px;
-  color:var(--prof-muted);
-  margin-top:6px;
-  min-height:14px;
-  letter-spacing:0.04em;
-}
-#profilePage .profile-label{
-  color:var(--prof-muted);
-  margin-bottom:6px;
-}
+#profilePage .poxy-profile-username-input,
 #profilePage .profile-input{
-  background:rgba(14,14,18,0.9);
-  border:1px solid var(--prof-border);
-  color:var(--prof-text);
-  border-radius:8px;
+  width:100%;
+  box-sizing:border-box;
+  padding:12px 24px;
+  border-radius:9999px;
+  border:1px solid var(--prof-outline);
+  background:var(--prof-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  color:var(--prof-on);
+  font-size:16px;
+  outline:none;
+  transition:border-color 0.2s ease,box-shadow 0.2s ease;
 }
 #profilePage .profile-input:focus{
-  border-color:var(--prof-gold-dim);
-  box-shadow:0 0 0 1px rgba(243,198,111,0.2);
-  background:rgba(18,18,22,0.95);
+  border-color:var(--prof-primary);
+  box-shadow:0 0 0 1px rgba(249,171,255,0.35);
 }
 #profilePage .poxy-profile-actions{
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
+  flex-direction:column;
+  gap:12px;
+  width:100%;
 }
 #profilePage .poxy-profile-btn{
-  flex:1;
-  min-width:120px;
-  padding:10px 16px;
-  border-radius:8px;
+  width:100%;
+  padding:12px 24px;
+  border-radius:9999px;
   font-family:'JetBrains Mono',monospace;
-  font-size:11px;
+  font-size:12px;
   font-weight:700;
-  letter-spacing:0.08em;
+  letter-spacing:0.1em;
   text-transform:uppercase;
   cursor:pointer;
-  transition:background 0.2s,border-color 0.2s,color 0.2s;
-  background:#1a1a24;
-  border:1px solid var(--prof-gold-dim);
-  color:var(--prof-gold);
+  border:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:transform 0.3s ease,box-shadow 0.3s ease,background 0.2s ease;
 }
-#profilePage .poxy-profile-btn:hover:not(:disabled){
-  background:#22222e;
-  border-color:rgba(243,198,111,0.5);
+#profilePage .poxy-profile-btn--primary,
+#profilePage .poxy-profile-btn:not(.poxy-profile-btn--ghost):not(.poxy-profile-btn--compact){
+  background:var(--prof-primary);
+  color:#570066;
 }
-#profilePage .poxy-profile-btn:disabled{opacity:0.45;cursor:not-allowed}
+#profilePage .poxy-profile-btn--primary:hover:not(:disabled),
+#profilePage .poxy-profile-btn:not(.poxy-profile-btn--ghost):not(.poxy-profile-btn--compact):hover:not(:disabled){
+  transform:scale(1.02);
+  box-shadow:0 0 15px rgba(249,171,255,0.4);
+}
 #profilePage .poxy-profile-btn--ghost{
-  color:var(--prof-muted);
-  border-color:var(--prof-border);
-  background:rgba(18,18,24,0.8);
+  background:var(--prof-surface);
+  border:1px solid var(--prof-outline);
+  color:var(--prof-on);
 }
 #profilePage .poxy-profile-btn--ghost:hover:not(:disabled){
-  color:var(--prof-gold);
-  border-color:var(--prof-gold-dim);
+  background:#2a2a2a;
 }
+#profilePage .poxy-profile-btn:disabled{opacity:0.45;cursor:not-allowed}
 #profilePage .poxy-profile-btn--compact{
-  flex:0 1 auto;
-  min-width:0;
-  padding:8px 14px;
-  font-size:10px;
+  width:auto;
+  padding:10px 18px;
+  font-size:11px;
 }
+/* Main column */
 #profilePage .poxy-profile-main{
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:32px;
   min-width:0;
 }
-#profilePage .profile-stats{
+#profilePage .poxy-profile-stats{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
+  gap:16px;
   margin:0;
 }
+#profilePage .poxy-profile-stat,
 #profilePage .pstat{
-  background:var(--prof-surface);
-  border:1px solid var(--prof-border);
-  border-radius:10px;
-  padding:14px 10px;
+  background:var(--prof-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--prof-outline);
+  border-radius:12px;
+  padding:24px 16px;
+  text-align:center;
+  transition:background 0.3s ease;
 }
+#profilePage .poxy-profile-stat:hover{background:rgba(42,42,42,0.55)}
 #profilePage .pstat-val{
-  font-size:1.35rem;
-  font-weight:800;
-  color:var(--prof-text)!important;
-  letter-spacing:-0.02em;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:32px;
+  font-weight:700;
+  line-height:1.2;
+  color:var(--prof-primary)!important;
+  margin-bottom:4px;
 }
 #profilePage .pstat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
   color:var(--prof-muted)!important;
-  font-size:9px;
-  letter-spacing:0.14em;
 }
 #profilePage .poxy-profile-grid-2{
   display:grid;
-  grid-template-columns:minmax(0,1fr);
-  gap:12px;
+  grid-template-columns:1fr;
+  gap:32px;
 }
-@media(min-width:640px){
-  #profilePage .poxy-profile-grid-2{
-    grid-template-columns:minmax(140px,200px) minmax(0,1fr);
-    gap:14px;
-  }
+@media(min-width:1024px){
+  #profilePage .poxy-profile-grid-2{grid-template-columns:1fr 1fr}
 }
-#profilePage .poxy-profile-section-label{
+#profilePage .poxy-profile-panel,
+#profilePage .poxy-profile-card{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+#profilePage .poxy-profile-section-label,
+#profilePage .badge-wallet-label,
+#profilePage .mct-label{
+  margin:0;
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:0.14em;
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:0.1em;
   text-transform:uppercase;
-  color:var(--prof-muted);
-  margin:0 0 10px;
+  color:var(--prof-on);
 }
+/* Featured POXY */
 #profilePage .poxy-featured-slot{
+  position:relative;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:6px;
-  min-height:120px;
-  max-height:160px;
-  padding:14px 12px;
-  border:1px solid var(--prof-gold-dim);
-  border-radius:8px;
-  background:radial-gradient(ellipse at 50% 20%,rgba(243,198,111,0.06),transparent 55%),rgba(10,10,14,0.85);
+  gap:8px;
+  min-height:256px;
+  padding:24px;
+  border-radius:12px;
+  border:1px solid rgba(249,171,255,0.2);
+  background:var(--prof-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
   text-align:center;
+  overflow:hidden;
+  cursor:pointer;
+  transition:border-color 0.3s ease;
 }
+#profilePage .poxy-featured-slot:hover{border-color:rgba(249,171,255,0.5)}
 #profilePage .poxy-featured-slot.empty{
-  border-style:dashed;
-  border-color:var(--prof-border);
-  min-height:100px;
+  border-style:solid;
+  border-color:var(--prof-outline);
 }
-#profilePage .poxy-featured-tier{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:0.16em;
-  text-transform:uppercase;
-}
-#profilePage .poxy-featured-icon{
-  font-size:2rem;
+#profilePage .poxy-featured-gem{
+  font-size:40px!important;
+  color:var(--prof-primary);
+  filter:drop-shadow(0 0 10px rgba(249,171,255,0.8));
+  padding:20px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,0,128,0.08) 0%,transparent 70%);
   line-height:1;
 }
+#profilePage .poxy-featured-tier{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:18px;
+  font-weight:700;
+}
+#profilePage .poxy-featured-icon{font-size:2.5rem;line-height:1}
 #profilePage .poxy-featured-serial{
   font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:var(--prof-text);
-  padding:4px 10px;
-  border-radius:4px;
-  background:rgba(30,30,36,0.9);
-  border:1px solid var(--prof-border);
+  font-size:12px;
+  color:var(--prof-muted);
 }
 #profilePage .featured-poxy-empty,
 #profilePage .poxy-featured-slot.empty p{
-  font-size:11px;
+  font-size:14px;
   color:var(--prof-muted);
   margin:0;
-  line-height:1.4;
 }
-#profilePage .poxy-quest-list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
+/* Daily quests */
+#profilePage .poxy-quest-list{display:flex;flex-direction:column;gap:12px}
 #profilePage .poxy-quest-row{
-  padding:12px 14px;
-  border-radius:8px;
-  background:rgba(14,14,18,0.85);
-  border:1px solid var(--prof-border);
+  padding:16px;
+  border-radius:12px;
+  background:var(--prof-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--prof-outline);
 }
-#profilePage .poxy-quest-row.is-claimed{opacity:0.72}
+#profilePage .poxy-quest-row.is-progress{border-left:2px solid var(--prof-secondary-container)}
+#profilePage .poxy-quest-row.is-claimed{opacity:0.85}
 #profilePage .poxy-quest-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:8px;
-  margin-bottom:8px;
+  gap:12px;
+  margin-bottom:12px;
 }
 #profilePage .poxy-quest-title{
-  font-size:12px;
-  font-weight:700;
-  color:var(--prof-text);
+  font-size:16px;
+  font-weight:500;
+  color:var(--prof-on);
 }
 #profilePage .poxy-quest-progress{
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
+  font-size:12px;
   color:var(--prof-muted);
 }
 #profilePage .poxy-quest-track{
-  height:5px;
-  background:rgba(40,40,48,0.9);
+  height:4px;
+  background:var(--prof-surface);
   border-radius:999px;
   overflow:hidden;
-  margin-bottom:8px;
+  margin-bottom:12px;
 }
 #profilePage .poxy-quest-fill{
   height:100%;
   border-radius:999px;
-  background:linear-gradient(90deg,#735c00 0%,#c9a227 45%,#f3c66f 100%);
+  background:linear-gradient(90deg,var(--prof-primary),var(--prof-secondary-container));
   transition:width 0.45s ease;
 }
-#profilePage .poxy-quest-row.is-claimed .poxy-quest-fill{
-  background:#3a3a42;
-}
+#profilePage .poxy-quest-row.is-claimed .poxy-quest-fill{width:100%!important}
 #profilePage .poxy-quest-foot{
   display:flex;
   justify-content:space-between;
@@ -288,90 +384,196 @@
 }
 #profilePage .poxy-quest-reward{
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  color:var(--prof-gold);
-  font-weight:600;
+  font-size:12px;
+  color:var(--prof-primary);
 }
 #profilePage .poxy-quest-claim{
-  padding:5px 12px;
-  border-radius:6px;
+  padding:4px 12px;
+  border-radius:9999px;
   font-family:'JetBrains Mono',monospace;
-  font-size:9px;
-  font-weight:700;
+  font-size:11px;
+  font-weight:500;
   letter-spacing:0.06em;
   text-transform:uppercase;
   cursor:pointer;
-  border:1px solid var(--prof-gold-dim);
-  background:#1a1a24;
-  color:var(--prof-gold);
+  border:1px solid var(--prof-outline);
+  background:transparent;
+  color:var(--prof-muted);
 }
-#profilePage .poxy-quest-claim:hover:not(:disabled){
-  border-color:rgba(243,198,111,0.55);
-  background:#22222e;
+#profilePage .poxy-quest-claim:not(:disabled):not(.is-claimed){
+  border-color:rgba(215,3,87,0.5);
+  background:rgba(215,3,87,0.1);
+  color:var(--prof-secondary);
 }
-#profilePage .poxy-quest-claim:disabled,
-#profilePage .poxy-quest-claim.is-claimed{
-  border-color:var(--prof-border);
-  background:#1e1e24;
-  color:#8a8a94;
+#profilePage .poxy-quest-claim.is-claimed,
+#profilePage .poxy-quest-claim:disabled{
   cursor:default;
+  color:var(--prof-outline);
 }
 #profilePage .poxy-quest-loading,
 #profilePage .poxy-quest-empty{
-  font-size:11px;
+  font-size:14px;
   color:var(--prof-muted);
-  padding:4px 0;
 }
-#profilePage .frame-cosmetic-panel.poxy-profile-card{
+/* Avatar frames banner */
+#profilePage .poxy-profile-frames{
   padding:0;
   overflow:hidden;
+  border-radius:12px;
+  border:1px solid var(--prof-outline);
+  background:linear-gradient(90deg,#353535,#2a1b38);
 }
-#profilePage .frame-selector-body{padding:0 18px 18px}
-#profilePage .frame-selector-header{width:100%;padding:16px 18px}
-#profilePage .frame-selector-label{color:var(--prof-text)!important}
-#profilePage .frame-selector-sub{color:var(--prof-muted)!important}
-#profilePage .mythic-club-tracker{
-  margin:0;
-  background:var(--prof-surface)!important;
-  border:1px solid var(--prof-border)!important;
-  border-radius:12px!important;
+#profilePage .poxy-profile-frames-banner{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:24px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  text-align:left;
+  color:inherit;
+  transition:border-color 0.3s ease;
 }
-#profilePage .mct-label{color:var(--prof-muted)!important}
-#profilePage .mct-status{color:var(--prof-text)!important}
-#profilePage .mct-status.closed{color:var(--prof-muted)!important}
-#profilePage .mct-bar-track{background:rgba(40,40,48,0.9)!important}
-#profilePage .mct-bar-fill{
-  background:linear-gradient(90deg,#735c00,#f3c66f)!important;
+#profilePage .poxy-profile-frames-banner:hover .poxy-profile-frames-title{color:var(--prof-primary)}
+#profilePage .poxy-profile-frames-title{
+  display:block;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:-0.02em;
+  text-transform:uppercase;
+  color:var(--prof-on);
+  transition:color 0.3s ease;
 }
-#profilePage .badge-wallet-label{color:var(--prof-muted)!important}
-#profilePage .badge-none{color:var(--prof-muted)!important}
-#profilePage .badge-chip{
-  background:rgba(18,18,24,0.9);
-  border-color:var(--prof-border);
+#profilePage .poxy-profile-frames-sub{
+  display:block;
+  margin-top:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
   color:var(--prof-muted);
+}
+#profilePage .poxy-profile-frames-chevron{
+  color:var(--prof-outline);
+  font-size:28px!important;
+  transition:transform 0.3s ease,color 0.3s ease;
+}
+#profilePage .frame-selector-section:not(.is-collapsed) .poxy-profile-frames-chevron,
+#profilePage .poxy-profile-frames-banner[aria-expanded="true"] .poxy-profile-frames-chevron{
+  transform:translateX(4px);
+  color:var(--prof-primary);
+}
+#profilePage .frame-cosmetic-panel.is-collapsed .poxy-profile-frames-chevron{
+  transform:rotate(0deg)!important;
+  color:var(--prof-outline);
+}
+#profilePage .poxy-profile-frames-body{
+  padding:0 24px 24px;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+#profilePage .frame-selector-section.is-collapsed .poxy-profile-frames-body{display:none}
+/* Club entry */
+#profilePage .mythic-club-tracker{
+  background:transparent;
+  border:none;
+  padding:0;
+}
+#profilePage .mct-bar-shell{
+  padding:4px;
+  border-radius:9999px;
+  background:var(--prof-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--prof-outline);
+}
+#profilePage .mct-bar-track{
+  height:8px;
+  background:var(--prof-surface);
+  border-radius:999px;
+  overflow:hidden;
+}
+#profilePage .mct-bar-fill{
+  height:100%;
+  border-radius:999px;
+  background:var(--prof-primary)!important;
+  box-shadow:0 0 10px rgba(249,171,255,0.8);
+  transition:width 0.5s ease;
+}
+#profilePage .mct-status{
+  margin:8px 0 0;
+  font-size:14px;
+  color:var(--prof-muted)!important;
+}
+#profilePage .mct-status.closed{color:var(--prof-muted)!important}
+/* Badges */
+#profilePage .poxy-profile-badges,
+#profilePage .badge-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+#profilePage .badge-none{
+  font-size:14px;
+  color:var(--prof-muted);
+}
+#profilePage .badge-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 16px;
+  border-radius:9999px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  font-weight:700;
+  background:var(--prof-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--prof-outline);
+}
+#profilePage .badge-chip.market_baron{
+  border-color:rgba(234,179,8,0.3);
+  color:#eab308;
+}
+#profilePage .badge-chip.first_drop_set{
+  border-color:rgba(249,171,255,0.3);
+  color:var(--prof-primary);
+}
+#profilePage .badge-chip.founder{
+  border-color:rgba(249,115,22,0.3);
+  color:#f97316;
+}
+#profilePage .badge-chip.developer{
+  border-color:rgba(239,68,68,0.3);
+  color:#ef4444;
+}
+/* Security panel */
+#profilePage .poxy-profile-security{
+  background:var(--prof-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--prof-outline);
+  border-radius:12px;
+  padding:20px 24px;
 }
 #profilePage .poxy-profile-security[hidden]{display:none!important}
 #profilePage .poxy-profile-security-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:12px;
+  margin-bottom:16px;
 }
 #profilePage .poxy-profile-security-head h3{
   margin:0;
+  font-family:'JetBrains Mono',monospace;
   font-size:12px;
-  font-weight:700;
   letter-spacing:0.1em;
   text-transform:uppercase;
-  color:var(--prof-text);
+  color:var(--prof-on);
 }
-#profilePage .pwd-form-label{color:var(--prof-muted)}
+#profilePage .pwd-form{background:transparent;border:none;padding:0;margin:0}
 #profilePage .pwd-msg.error{color:#ffb4ab}
-#profilePage .pwd-msg.success{color:#8bc99a}
-#profilePage .pwd-form{
-  background:transparent;
-  border:none;
-  padding:0;
-  margin:0;
-}
-#profilePage .poxy-profile-security .profile-input{margin-bottom:8px}
+#profilePage .pwd-msg.success{color:#99ccf5}
