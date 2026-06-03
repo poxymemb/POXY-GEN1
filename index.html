@@ -1131,7 +1131,13 @@ body.dark-club .club-sub{color:#888}
     <aside class="poxy-auth-hero" aria-hidden="true">
       <div class="poxy-auth-hero-glow"></div>
       <div class="poxy-auth-hero-logo">
-        <span class="auth-hero-l">PO</span><span class="auth-hero-x">X</span><span class="auth-hero-y">Y</span>
+        <span class="auth-hero-l">PO</span>
+        <span class="auth-hero-x-wrap">
+          <span class="auth-hero-x-droplet" aria-hidden="true"></span>
+          <span class="auth-hero-x-inner" aria-hidden="true">X</span>
+          <span class="auth-hero-x">X</span>
+        </span>
+        <span class="auth-hero-y">Y</span>
       </div>
     </aside>
   </div>
@@ -2996,7 +3002,7 @@ window.handleAuth=async function(){
     const session=res.data?.session;
     if(session){
       await applyAuthSession(session);
-      msg.className='auth-msg success';
+      msg.className='auth-msg poxy-auth-msg success';
       msg.textContent='';
       resetAuthBtn(btn);
       return;
@@ -3007,10 +3013,10 @@ window.handleAuth=async function(){
       resetAuthBtn(btn);
       return;
     }
-    msg.className='auth-msg error';
+    msg.className='auth-msg poxy-auth-msg error';
     msg.textContent='Signed in but session missing. Refresh the page or try again.';
   }catch(e){
-    msg.className='auth-msg error';
+    msg.className='auth-msg poxy-auth-msg error';
     const em=(e?.message||'').toLowerCase();
     if(em.includes('invalid login credentials')||em.includes('invalid_credentials'))msg.textContent='Wrong email or password.';
     else if(em.includes('email not confirmed'))msg.textContent='Confirm your email first, then sign in.';
