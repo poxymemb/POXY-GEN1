@@ -1053,7 +1053,6 @@ body.dark-club .club-sub{color:#888}
 <body>
 
 <!-- GLOBAL HOME LOGO — sub-pages only (dashboard has its own header) -->
-<div id="global-home-btn" class="poxy-text-logo" role="button" tabindex="0" aria-label="Return to Dashboard" onclick="showPage('hunt')">POXY</div>
 
 <!-- SIDEBAR BACKDROP -->
 <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
@@ -1255,7 +1254,10 @@ body.dark-club .club-sub{color:#888}
           <div id="greatBurnCounter">🔥 The Great Burn — 0 POXY</div>
           <div class="st-roulette-wrap">
             <div class="st-roulette-mask">
-              <div class="st-roulette-deco" aria-hidden="true">
+              <div class="st-roulette-track-wrap" aria-hidden="true">
+                <div class="st-roulette-track" id="stRouletteTrack"></div>
+              </div>
+              <div class="st-roulette-deco" id="stRouletteIdle" aria-hidden="true">
                 <div class="st-slot"><span class="material-symbols-outlined">view_in_ar</span></div>
                 <div class="st-slot"><span class="material-symbols-outlined">diamond</span></div>
                 <div class="st-slot"><span class="material-symbols-outlined">view_in_ar</span></div>
@@ -1263,7 +1265,7 @@ body.dark-club .club-sub{color:#888}
                 <div class="st-slot"><span class="material-symbols-outlined">token</span></div>
                 <div class="st-slot"><span class="material-symbols-outlined">view_in_ar</span></div>
               </div>
-              <div class="st-spin-mount app">
+              <div class="st-spin-mount app" id="stSpinMount">
                 <div class="stage">
                   <canvas class="particles" id="cvs" width="240" height="240"></canvas>
                   <div class="box" id="idleBox"><div class="box-qmark">?</div></div>
@@ -1348,7 +1350,6 @@ body.dark-club .club-sub{color:#888}
 <div class="page poxy-page-profile" id="profilePage">
   <div class="page-title">MY PROFILE</div>
   <div style="display:flex;justify-content:center;margin-bottom:8px"><div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target"><div id="profileBigAvatar"></div></div></div>
-  <div class="profile-avatar-row" id="avatarRow"></div>
   <div class="frame-cosmetic-panel frame-selector-section" id="frameSelectorSection">
     <button type="button" class="frame-selector-header" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
       <span class="frame-selector-header-text">
@@ -1997,7 +1998,6 @@ function setupAuthStateListener(){
       $('userBar').classList.remove('psd-user-active');
       $('bottomNav').style.display='none';
       $('balanceBadge').classList.remove('visible');
-      $('global-home-btn').classList.remove('visible');
       document.body.classList.remove('poxy-stitch-dash');
       $('huntPage').style.display='none';
       teardownRealtimeSubscriptions();
@@ -2145,14 +2145,6 @@ function renderProfilePage(){
   }
   else{bigAv.innerHTML='<span class="profile-menu-avatar-face">'+selectedAvatar+'</span>';}
   $('profileUsername').value=currentProfile?.username||'';
-  const row=$('avatarRow');row.innerHTML='';
-  AVATARS.forEach(av=>{
-    const btn=document.createElement('button');
-    btn.className='avatar-opt'+(av===selectedAvatar?' selected':'');
-    btn.textContent=av;
-    btn.onclick=()=>{selectedAvatar=av;bigAv.innerHTML='<span class="profile-menu-avatar-face">'+av+'</span>';row.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');setBarAvatar(av);renderFrameSelector();};
-    row.appendChild(btn);
-  });
   renderFrameSelector();
   updateGlobalFrames();
 }
@@ -2214,7 +2206,7 @@ async function renderFeaturedPoxyDisplay(){
     const{data,error}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('id',currentProfile.favorite_poxy_id).single();
     if(error||!data){el.innerHTML='<div class="featured-poxy-empty">Featured POXY not found.</div>';return;}
     const tier=TIERS.find(t=>t.id===data.poxy_tier)||TIERS[0];
-    el.innerHTML='<div style="font-size:28px;margin-bottom:4px">'+tier.icon+'</div><div style="font-size:11px;font-weight:800;color:'+tier.color+';letter-spacing:1.5px;text-transform:uppercase">'+tier.label+'</div><div style="font-size:9px;color:#B0B0B0;font-family:monospace;margin-top:3px">'+sanitizeText(data.serial_number||'–')+'</div>';
+    el.innerHTML='<div class="featured-poxy-icon">'+tier.icon+'</div><div class="featured-poxy-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="featured-poxy-serial">'+sanitizeText(data.serial_number||'–')+'</div>';
   }catch(e){el.innerHTML='<div class="featured-poxy-empty">Could not load featured POXY.</div>';}
 }
 $('btnSaveProfile').addEventListener('click',async function(){
@@ -2274,7 +2266,6 @@ document.getElementById('avatarUpload').addEventListener('change',async function
     $('profileBigAvatar').innerHTML='<img src="'+sanitizeText(avatarImgUrl(url))+'" class="avatar-upload-preview">';
     setBarAvatar(url);
     renderFrameSelector();
-    document.querySelectorAll('.avatar-opt').forEach(b=>b.classList.remove('selected'));
     status.textContent='Photo saved!';setTimeout(()=>status.textContent='',3000);
     showToast('Avatar updated!');
   }catch(err){
@@ -2356,7 +2347,6 @@ window.showPage=function(page){
   ['profile','collection','friends','market','bank'].forEach(p=>{const el=$(p+'Page');if(el)el.classList.toggle('visible',page===p);});
   const clubEl=$('clubPage');if(clubEl)clubEl.classList.toggle('visible',page==='club');
   $('bottomNav').style.display=isHunt?'none':'flex';
-  if(currentUser)$('global-home-btn').classList.toggle('visible',!isHunt);
   syncPsdTopNav(page);
   ['navHunt','navCollection','navFriends','navMarket','navBank','navClub'].forEach(id=>{const b=$(id);if(b)b.classList.remove('active');});
   const navMap={hunt:'navHunt',collection:'navCollection',friends:'navFriends',market:'navMarket',bank:'navBank',club:'navClub',profile:'navHunt'};
@@ -2383,13 +2373,53 @@ $('lX').addEventListener('touchstart',e=>{e.preventDefault();$('logoRow').classL
 
 // ── GACHA ──
 const SPIN_MS=2400;
-let spinNearMissTier=null;
+const ROULETTE_SLOT_W=102;
+let spinNearMissTier=null,rouletteWinIndex=0;
 function tierBgStyle(tier){return{background:tier.glow,borderColor:tier.color,boxShadow:'0 0 22px '+tier.color+'99,inset 0 0 16px '+tier.glow};}
 function flashSpinTier(tier,sb2){Object.assign(sb2.style,tierBgStyle(tier));sb2.style.opacity='1';}
+function buildRouletteTrack(winTier){
+  const track=$('stRouletteTrack');
+  if(!track)return;
+  const slots=[];
+  const loops=5;
+  const perLoop=TIERS.length*3;
+  for(let L=0;L<loops;L++){
+    for(let i=0;i<perLoop;i++)slots.push(TIERS[i%TIERS.length]);
+  }
+  rouletteWinIndex=slots.length;
+  slots.push(winTier||pickTier());
+  slots.push(TIERS[Math.floor(Math.random()*TIERS.length)]);
+  track.innerHTML=slots.map((t,i)=>'<div class="st-slot'+(i===rouletteWinIndex?' st-slot--winner':'')+'" data-tier="'+t.id+'" style="color:'+t.color+'">'+t.icon+'</div>').join('');
+  track.classList.remove('is-spinning');
+  track.style.transform='translateX(0)';
+}
+function runRouletteCarousel(winTier){
+  buildRouletteTrack(winTier);
+  const track=$('stRouletteTrack');
+  const idle=$('stRouletteIdle');
+  const mount=$('stSpinMount');
+  if(!track)return;
+  if(idle)idle.classList.add('is-hidden');
+  if(mount)mount.classList.add('is-rolling');
+  const target=-(rouletteWinIndex*ROULETTE_SLOT_W);
+  requestAnimationFrame(()=>{
+    track.classList.add('is-spinning');
+    track.style.transform='translateX('+target+'px)';
+  });
+}
+function resetRouletteCarousel(){
+  const track=$('stRouletteTrack');
+  const idle=$('stRouletteIdle');
+  const mount=$('stSpinMount');
+  if(track){track.classList.remove('is-spinning');track.style.transform='translateX(0)';track.innerHTML='';}
+  if(idle)idle.classList.remove('is-hidden');
+  if(mount)mount.classList.remove('is-rolling');
+}
 function startSpin(){
   pendingSpinTier=pickTier();
   spinNearMissTier=null;
   if(Math.random()<0.72){spinNearMissTier=Math.random()<0.35?TIERS.find(t=>t.id==='mythic'):TIERS.find(t=>t.id==='legendary');}
+  runRouletteCarousel(pendingSpinTier);
   const sb2=$('spinBox');
   sb2.classList.add('spin-rapid');
   sb2.style.opacity='1';
@@ -2421,19 +2451,16 @@ function startSpin(){
 }
 function finishSpin(){
   const sb2=$('spinBox');
+  const tier=pendingSpinTier||TIERS[0];
   sb2.classList.remove('spin-rapid');
-  sb2.classList.add('spin-white');
-  sb2.style.background='#ffffff';
-  sb2.style.borderColor='#e8e8e8';
-  sb2.style.boxShadow='0 0 24px rgba(255,255,255,0.9), inset 0 0 12px rgba(0,0,0,0.04)';
-  sb2.style.transform='rotate(0deg) scale(1)';
-  sb2.style.transition='background 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.25,1,0.5,1)';
+  Object.assign(sb2.style,tierBgStyle(tier));
+  sb2.style.transform='rotate(0deg) scale(1.08)';
+  sb2.style.transition='transform 0.35s cubic-bezier(0.1,1,0.1,1),opacity 0.3s ease,box-shadow 0.35s ease';
   setTimeout(()=>{
     sb2.style.opacity='0';
-    sb2.style.transition='opacity 0.25s ease';
-    sb2.classList.remove('spin-white');
+    sb2.style.transform='scale(0.85)';
     showReward(pendingSpinTier);
-  },380);
+  },320);
 }
 function launchParticles(color){
   particles=[];
@@ -2457,17 +2484,20 @@ function showReward(tier){
   $('rewardLabel').textContent=currentTier.label;$('rewardLabel').style.color=currentTier.color;
   $('rewardSerial').textContent=currentSerial;
   const rb=$('rewardBox');const aura=$('rewardAura');
-  rb.className='reward-box gpu-accel reveal-'+tid;
+  rb.className='reward-box gpu-accel reveal-'+tid+' poxy-drop-reveal';
   rb.style.setProperty('--rg',currentTier.glow);
+  rb.style.setProperty('--poxy-glow',currentTier.color);
   rb.style.borderColor=currentTier.color;
   rb.style.background=currentTier.glow.replace('0.14','0.10').replace('0.18','0.12').replace('0.20','0.14');
-  rb.style.boxShadow='0 0 0 1px '+currentTier.glow+', 0 0 40px '+currentTier.glow;
-  if(aura){aura.className='reward-aura';aura.style.background='radial-gradient(circle,'+currentTier.color+'55 0%, transparent 70%)';if(tid==='legendary'||tid==='mythic'){aura.classList.add('burst');setTimeout(()=>aura.classList.remove('burst'),900);}}
+  rb.style.boxShadow='0 0 0 2px '+currentTier.color+', 0 0 48px '+currentTier.glow;
+  if(aura){aura.className='reward-aura';aura.style.background='radial-gradient(circle,'+currentTier.color+'66 0%, transparent 72%)';aura.classList.add('burst');setTimeout(()=>aura.classList.remove('burst'),900);}
   if(tid==='mythic'&&mythicCount<10){mythicCount++;$('fomoText').textContent='Mythic POXY claimed this month: '+mythicCount+'/10';}
   if(tid==='mythic'){hasMythic=true;toggleClubAccess(true);refreshPremiumFrame();}
   if(tid==='legendary')refreshPremiumFrame();
-  rb.style.opacity='0';rb.style.transform='scale(0.5)';rb.style.transition='none';
-  requestAnimationFrame(()=>{rb.style.opacity='1';rb.style.transform='';});
+  rb.style.opacity='0';
+  rb.style.animation='none';
+  void rb.offsetWidth;
+  requestAnimationFrame(()=>{rb.style.opacity='1';});
   $('btnOpen').style.opacity='0';$('btnOpen').style.pointerEvents='none';
   $('postBtns').classList.add('visible');
   requestAnimationFrame(()=>requestAnimationFrame(()=>$('postBtns').classList.add('faded-in')));
@@ -2475,10 +2505,11 @@ function showReward(tier){
 }
 function resetAll(){
   if(spinAnim)cancelAnimationFrame(spinAnim);if(particleLoop)cancelAnimationFrame(particleLoop);
+  resetRouletteCarousel();
   $('cvs').getContext('2d').clearRect(0,0,240,240);particles=[];
   const rb=$('rewardBox');rb.style.transition='opacity 0.3s';rb.style.opacity='0';rb.style.animation='';rb.className='reward-box gpu-accel';
   const aura=$('rewardAura');if(aura){aura.className='reward-aura';aura.style.background='';}
-  const sb2=$('spinBox');sb2.style.opacity='0';sb2.style.animation='';sb2.style.boxShadow='';sb2.style.transition='';
+  const sb2=$('spinBox');sb2.style.opacity='0';sb2.style.animation='';sb2.style.boxShadow='';sb2.style.transition='';sb2.classList.remove('spin-rapid','spin-white');
   $('idleBox').style.opacity='1';
   $('postBtns').classList.remove('faded-in');setTimeout(()=>$('postBtns').classList.remove('visible'),400);
   $('btnOpen').style.opacity='1';$('btnOpen').style.pointerEvents='auto';$('btnOpen').disabled=false;
@@ -3205,11 +3236,10 @@ async function loadMarket(){
       cont.innerHTML='';
       const toolbar=document.createElement('div');toolbar.className='market-toolbar';
       toolbar.style.cssText='display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px';
-      const search=document.createElement('input');search.id='marketSearchInput';search.placeholder='Search tier or your serial...';search.value=marketSearchQuery;
-      search.style.cssText='flex:1;min-width:140px;padding:7px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:11px;outline:none;font-family:inherit';
+      const search=document.createElement('input');search.id='marketSearchInput';search.className='search-input';search.placeholder='Search tier or your serial...';search.value=marketSearchQuery;
+      search.style.flex='1';search.style.minWidth='140px';
       search.oninput=()=>{clearTimeout(window._mktDeb);window._mktDeb=setTimeout(window.onMarketSearchChange,200);};
-      const rarity=document.createElement('select');rarity.id='marketRarityFilter';
-      rarity.style.cssText='padding:7px 10px;border:1px solid #e0e0e0;border-radius:8px;font-size:11px;font-family:inherit;background:#fff';
+      const rarity=document.createElement('select');rarity.id='marketRarityFilter';rarity.className='market-sort-select';
       rarity.innerHTML='<option value="all">All rarities</option>'+ALL_TIERS.map(t=>'<option value="'+t.id+'">'+t.label+'</option>').join('');
       rarity.value=marketRarityFilter;rarity.onchange=window.onMarketRarityChange;
       const sel=document.createElement('select');sel.className='market-sort-select';sel.id='marketSort';
@@ -4194,31 +4224,6 @@ function renderCraftPool(){
 renderBank();
 updateBalanceBadge(0);
 updateGreatBurnUI();
-
-// ── GLOBAL HOME BUTTON — routes to Hunt via existing tab system ──
-(function(){
-  var homeBtn=document.getElementById('global-home-btn');
-  if(!homeBtn)return;
-  function goHome(){
-    // A) FIRST: simulate click on existing Hunt tab element
-    var huntTab=document.getElementById('navHunt');
-    if(huntTab&&typeof huntTab.click==='function'){huntTab.click();return;}
-    // B) SECOND: call existing tab switching function if already present
-    if(typeof window.showPage==='function'){window.showPage('hunt');return;}
-    if(typeof window.switchTab==='function'){window.switchTab('hunt');return;}
-    if(typeof window.setActiveTab==='function'){window.setActiveTab('hunt');return;}
-    if(typeof window.changeTab==='function'){window.changeTab('hunt');return;}
-    // C) LAST RESORT: manually activate Hunt view via existing DOM
-    var huntPage=document.getElementById('huntPage');
-    if(!huntPage)return;
-    ['profilePage','collectionPage','friendsPage','marketPage','bankPage','clubPage'].forEach(function(id){
-      var el=document.getElementById(id);if(el)el.classList.remove('visible');
-    });
-    huntPage.style.display='block';
-  }
-  homeBtn.addEventListener('click',goHome);
-  homeBtn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();goHome();}});
-})();
 
 function bootApp(){
   loadSelectedFrame();

@@ -78,7 +78,7 @@ body.poxy-app-dark .st-open-btn,body.poxy-app-dark .btn-open{background:linear-g
 body.poxy-app-dark .st-open-btn:hover:not(:disabled),body.poxy-app-dark .btn-open:hover:not(:disabled){transform:scale(1.05)!important}
 body.poxy-app-dark .st-open-btn:active:not(:disabled),body.poxy-app-dark .btn-open:active:not(:disabled){transform:scale(0.96)!important}
 body.poxy-app-dark .btn-open:disabled{opacity:0.45;cursor:not-allowed;filter:grayscale(0.3)}
-body.poxy-app-dark .reward-box.reveal-rare,.body.poxy-app-dark .reward-box.reveal-epic{box-shadow:0 0 0 2px var(--poxy-cyan),0 0 48px rgba(0,229,255,0.45)!important}
+body.poxy-app-dark .reward-box.reveal-rare,body.poxy-app-dark .reward-box.reveal-epic{box-shadow:0 0 0 2px var(--poxy-cyan),0 0 48px rgba(0,229,255,0.45)!important}
 body.poxy-app-dark .reward-box.reveal-legendary{box-shadow:0 0 0 2px var(--poxy-r-legendary),0 0 56px rgba(255,202,40,0.55)!important;animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards,poxyLegendaryPulse 1.4s ease-in-out 0.85s infinite!important}
 body.poxy-app-dark .reward-box.reveal-mythic{box-shadow:0 0 0 2px var(--poxy-r-mythic),0 0 64px rgba(255,82,82,0.65)!important;animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards,poxyMythicBurst 1.2s ease-in-out 0.85s infinite!important}
 @keyframes poxyLegendaryPulse{0%,100%{filter:drop-shadow(0 0 12px #FFCA28)}50%{filter:drop-shadow(0 0 28px #FFCA28) drop-shadow(0 0 40px #FF525266)}}
@@ -97,8 +97,76 @@ body.poxy-app-dark .market-tab{background:var(--poxy-surface-high);color:var(--p
 body.poxy-app-dark .market-tab.active{background:linear-gradient(90deg,var(--poxy-primary-container),var(--poxy-secondary));color:#fff}
 body.poxy-app-dark .toast{background:var(--poxy-surface-highest);border:1px solid var(--poxy-glass);color:var(--poxy-on-surface)}
 
-/* Global home on subpages */
-body.poxy-app-dark .poxy-text-logo{display:inline-block!important}
+/* Hide legacy fixed "POXY" logo — Stitch nav uses POXY WORLD only */
+body.poxy-app-dark .poxy-text-logo{display:none!important}
+
+/* Profile panels — glass dark cards */
+body.poxy-app-dark .pwd-form,
+body.poxy-app-dark .featured-poxy-display,
+body.poxy-app-dark .mythic-club-tracker,
+body.poxy-app-dark .dust-bar,
+body.poxy-app-dark .pstat{background:rgba(28,27,27,0.85);backdrop-filter:blur(12px);border:1px solid var(--poxy-glass);border-radius:14px;color:var(--poxy-on-surface)}
+body.poxy-app-dark .featured-poxy-display{padding:16px}
+body.poxy-app-dark .featured-poxy-icon{font-size:28px;margin-bottom:6px;line-height:1}
+body.poxy-app-dark .featured-poxy-tier{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+body.poxy-app-dark .featured-poxy-serial{font-size:9px;color:var(--poxy-on-surface-variant);font-family:'JetBrains Mono',monospace;margin-top:4px}
+body.poxy-app-dark .featured-poxy-empty,
+body.poxy-app-dark .mct-status{color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .mct-status.closed{color:var(--poxy-secondary)}
+body.poxy-app-dark .mct-label{color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .mct-bar-track{background:var(--poxy-surface-high)}
+body.poxy-app-dark .mct-bar-fill{background:linear-gradient(90deg,var(--poxy-primary-container),var(--poxy-secondary))}
+body.poxy-app-dark .pstat-val{color:var(--poxy-primary)}
+body.poxy-app-dark .badge-wallet-label,
+body.poxy-app-dark .featured-poxy-label{color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .badge-chip{border:1px solid var(--poxy-glass);background:var(--poxy-surface)}
+body.poxy-app-dark .badge-none{color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .pending-card{background:rgba(215,3,87,0.08);border-color:rgba(215,3,87,0.25)}
+body.poxy-app-dark .pending-label{color:var(--poxy-primary)}
+body.poxy-app-dark .btn-decline-req,
+body.poxy-app-dark .btn-remove-friend{border-color:var(--poxy-glass);color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .btn-decline-req:hover,
+body.poxy-app-dark .btn-remove-friend:hover{background:rgba(255,255,255,0.06);border-color:var(--poxy-primary);color:var(--poxy-primary)}
+body.poxy-app-dark .search-hint{color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .user-card-avatar{background:var(--poxy-bg);border-color:var(--poxy-glass)}
+body.poxy-app-dark .market-card-price{color:var(--poxy-primary)}
+body.poxy-app-dark .market-sort-select{background:var(--poxy-bg);border-color:var(--poxy-glass);color:var(--poxy-on-surface)}
+body.poxy-app-dark .market-sort-select option{background:var(--poxy-surface)}
+body.poxy-app-dark .market-tabs{background:var(--poxy-surface-high);padding:4px;border-radius:999px;border:1px solid var(--poxy-glass)}
+body.poxy-app-dark .bank-form{background:transparent;border:none;padding:0;margin:0}
+body.poxy-app-dark .bank-amt{background:var(--poxy-surface);border-color:var(--poxy-glass)}
+body.poxy-app-dark .bank-amt-val{color:var(--poxy-on-surface)}
+body.poxy-app-dark .bank-amt.selected,
+body.poxy-app-dark .bank-amt-custom.selected{background:rgba(249,171,255,0.1);border-color:var(--poxy-primary)}
+body.poxy-app-dark .bank-custom-input{color:var(--poxy-on-surface)}
+body.poxy-app-dark .bank-custom-add{border-color:var(--poxy-glass);color:var(--poxy-primary)}
+body.poxy-app-dark .btn-add{background:var(--poxy-surface);border-color:var(--poxy-primary);color:var(--poxy-primary)}
+body.poxy-app-dark .btn-add:hover{background:rgba(249,171,255,0.12)}
+body.poxy-app-dark .btn-discard,
+body.poxy-app-dark .btn-list-market{border-color:var(--poxy-glass);color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .btn-discard:hover,
+body.poxy-app-dark .btn-list-market:hover{border-color:var(--poxy-primary);color:var(--poxy-primary);background:rgba(249,171,255,0.06)}
+body.poxy-app-dark .profile-input::placeholder,
+body.poxy-app-dark .bank-input::placeholder,
+body.poxy-app-dark .search-input::placeholder{color:rgba(213,193,210,0.45)}
+body.poxy-app-dark label[for="avatarUpload"]{border-color:var(--poxy-glass)!important;color:var(--poxy-on-surface-variant)!important;background:var(--poxy-surface)}
+body.poxy-app-dark label[for="avatarUpload"]:hover{border-color:var(--poxy-primary)!important;color:var(--poxy-primary)!important}
+body.poxy-app-dark .avatar-upload-preview{border-color:var(--poxy-glass)}
+body.poxy-app-dark .nav-sep{background:var(--poxy-glass)}
+body.poxy-app-dark .btn-modal-cancel{border-color:var(--poxy-glass);color:var(--poxy-on-surface-variant)}
+body.poxy-app-dark .btn-modal-cancel:hover{background:rgba(255,255,255,0.06)}
+body.poxy-app-dark .modal-sub{color:var(--poxy-on-surface-variant)}
+
+/* Drop reveal — epic pop + tier neon */
+body.poxy-app-dark .reward-box.poxy-drop-reveal{animation:poxyDropPop 0.9s cubic-bezier(0.1,1,0.1,1) forwards,poxyRevealGlow 1.6s ease-in-out 0.75s infinite!important}
+body.poxy-app-dark .reward-box.reveal-common.poxy-drop-reveal,
+body.poxy-app-dark .reward-box.reveal-uncommon.poxy-drop-reveal{--poxy-glow:var(--poxy-r-common);box-shadow:0 0 0 2px rgba(158,158,158,0.5),0 0 36px rgba(158,158,158,0.35)!important}
+body.poxy-app-dark .reward-box.reveal-rare.poxy-drop-reveal{--poxy-glow:var(--poxy-r-rare);box-shadow:0 0 0 2px var(--poxy-r-rare),0 0 48px rgba(41,182,246,0.5)!important}
+body.poxy-app-dark .reward-box.reveal-epic.poxy-drop-reveal{--poxy-glow:var(--poxy-r-epic);box-shadow:0 0 0 2px var(--poxy-r-epic),0 0 52px rgba(171,71,188,0.55)!important}
+body.poxy-app-dark .reward-box.reveal-legendary.poxy-drop-reveal{--poxy-glow:var(--poxy-r-legendary);box-shadow:0 0 0 2px var(--poxy-r-legendary),0 0 60px rgba(255,202,40,0.6)!important}
+body.poxy-app-dark .reward-box.reveal-mythic.poxy-drop-reveal{--poxy-glow:var(--poxy-r-mythic);box-shadow:0 0 0 2px var(--poxy-r-mythic),0 0 72px rgba(255,82,82,0.7)!important}
+@keyframes poxyDropPop{0%{opacity:0;transform:scale(0.35) rotate(-8deg);filter:blur(10px)}55%{opacity:1;transform:scale(1.12) rotate(2deg);filter:blur(0)}78%{transform:scale(0.96)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes poxyRevealGlow{0%,100%{filter:drop-shadow(0 0 12px var(--poxy-glow,rgba(249,171,255,0.5)))}50%{filter:drop-shadow(0 0 28px var(--poxy-glow,rgba(249,171,255,0.8))) drop-shadow(0 0 48px var(--poxy-glow,rgba(249,171,255,0.35))}}
 
 /* Matrix frame on header — replaces legacy orange glow */
 body.poxy-app-dark .st-matrix-frame{background:linear-gradient(90deg,var(--poxy-cyan),var(--poxy-primary),var(--poxy-cyan));background-size:200% 200%;animation:stMatrix 3s linear infinite;padding:2px;border-radius:50%}
