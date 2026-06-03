@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
+<link rel="stylesheet" href="assets/poxy-explore-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1077,59 +1078,15 @@ body.dark-club .club-sub{color:#888}
   </div>
   <div class="sidebar-tabs poxy-sidebar-tabs">
     <div class="poxy-sidebar-tabs-track">
-    <button type="button" class="sidebar-tab-btn active" id="stab-codex" onclick="switchSidebarTab('codex')">Codex</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-news" onclick="switchSidebarTab('news')">News</button>
+    <button type="button" class="sidebar-tab-btn active" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
     <button type="button" class="sidebar-tab-btn" id="stab-gen1" onclick="closeSidebar();showStitchTab('tierlist')">Rarity</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
     <button type="button" class="sidebar-tab-btn" id="stab-leaderboard" onclick="closeSidebar();showStitchTab('ranks')">Player Ranks</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-support" onclick="switchSidebarTab('support')">Legal</button>
     <button type="button" class="sidebar-tab-btn" id="stab-customize" onclick="closeSidebar();showPage('store')">Store</button>
     </div>
   </div>
   <div class="sidebar-content">
 
-    <!-- TAB A: CODEX -->
-    <div id="sidebarTabCodex" class="sidebar-tab-content active">
-      <div class="codex-hero">
-        <div class="codex-emblem">✸</div>
-        <div class="codex-title">THE POXY CODEX</div>
-        <div class="codex-subtitle">The Definitive Record of Immutable Digital Heritage</div>
-      </div>
-      <div class="codex-section">
-        <h3>I. The Asset Philosophy</h3>
-        <p>Every POXY is an immutable cryptographic entity. From the precise nanosecond of its generation, each asset carries a permanent, unalterable chain of custody — a digital fingerprint that follows the asset through every transaction, trade, and transfer in perpetuity. No two POXY share identical provenance. Each serial code is a unique gateway into the historical record of an asset's complete life cycle.</p>
-        <p>Ownership is not a permission granted by a platform. It is a verifiable mathematical fact recorded on an immutable ledger. Your POXY is not rented, licensed, or conditionally granted. It belongs to you in the most absolute digital sense possible.</p>
-        <p>The rarity tiers — Common through Mythic — are not arbitrary labels. They represent genuine scarcity coefficients baked permanently into the generation algorithm. A Mythic is mathematically certified to have a 1-in-10,000 emergence probability, making each one a statistically extraordinary event by computational definition.</p>
-      </div>
-      <div class="codex-section">
-        <h3>II. London Private Club Roadmap</h3>
-        <p>POXY World is building the world's first digital collectible-backed private member's club in central London. Ownership of a Legendary or Mythic tier POXY confers provisional membership candidacy. The physical club facility — currently in advanced lease negotiation within Mayfair — will be accessible exclusively to verified top-tier holders.</p>
-        <div class="codex-amenities">
-          <div class="codex-amenity"><div class="codex-amenity-title">🍸 Private Mixology Bar</div><p>Curated cocktail programme operated by internationally certified bartenders. Members-only menu crafted exclusively for the POXY community.</p></div>
-          <div class="codex-amenity"><div class="codex-amenity-title">🎱 Billiards Rooms</div><p>Three championship-grade billiard tables in a dedicated room finished with bespoke POXY-branded equipment and premium low-glare lighting systems.</p></div>
-          <div class="codex-amenity"><div class="codex-amenity-title">💼 Executive Networking</div><p>Closed-door sessions with curated guest speakers from technology, finance, and creative industries. Attendance by verified holder invitation only.</p></div>
-          <div class="codex-amenity"><div class="codex-amenity-title">🎁 Heavyweight Merchandise</div><p>Limited physical runs of museum-quality collectible objects. Each item paired with a unique digital asset code creating a permanent physical-digital link.</p></div>
-          <div class="codex-amenity"><div class="codex-amenity-title">🏆 Custom Figurines</div><p>Premium hand-finished resin figurines of your specific POXY character, individually stamped with your exact serial code. Maximum edition runs of 10 per character variant.</p></div>
-        </div>
-        <p class="codex-note">London club opening: target Q4 2026, subject to membership threshold requirements. Full membership deed and physical keycard issued to qualifying holders at launch.</p>
-      </div>
-    </div>
-
-    <!-- TAB B: NEWS FEED + POXY CHAT (global) -->
-    <div id="sidebarTabNews" class="sidebar-tab-content" style="display:none">
-      <div id="newsCreateFormContainer"></div>
-      <div id="newsPostsList"><div class="news-empty">Loading news...</div></div>
-      <div class="poxychat-section">
-        <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
-        <div class="poxychat-input-row">
-          <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world..." maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
-          <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
-        </div>
-        <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
-      </div>
-    </div>
-
-    <!-- TAB C: GEN 1 -->
+    <!-- TAB: GEN 1 -->
     <div id="sidebarTabGen1" class="sidebar-tab-content" style="display:none">
       <div class="gen1-season-banner">
         <div class="gen1-season-label">⚠ Generation 1 Seals In</div>
@@ -1145,8 +1102,8 @@ body.dark-club .club-sub{color:#888}
       </div>
     </div>
 
-    <!-- TAB D: APPRAISAL -->
-    <div id="sidebarTabAppraisal" class="sidebar-tab-content" style="display:none">
+    <!-- TAB: APPRAISAL -->
+    <div id="sidebarTabAppraisal" class="sidebar-tab-content active">
       <div class="appraisal-header">POXY Box Appraisal Guide — Current Estimated Market Values</div>
       <div class="appraisal-grid" id="appraisalGrid"></div>
       <p class="appraisal-algo-note">Valuations are dynamically calculated using rarity scarcity coefficients multiplied by character weight factors. These are estimated reference values; actual marketplace prices are determined by peer-to-peer supply and demand. All values expressed in PC (Poxy Coin).</p>
@@ -1161,31 +1118,7 @@ body.dark-club .club-sub{color:#888}
       <div id="leaderboardList"><div class="lb-loading"><div class="col-spinner"></div></div></div>
     </div>
 
-    <!-- TAB F: SUPPORT -->
-    <div id="sidebarTabSupport" class="sidebar-tab-content" style="display:none">
-      <div class="support-section">
-        <h3>Privacy Policy</h3>
-        <p><strong>Data Collection:</strong> POXY World collects email address, username, avatar URL, and usage metadata (collection contents, transaction history, session timestamps) strictly for platform operation. No personal data is sold, shared with third parties for marketing purposes, or transmitted outside secure Supabase infrastructure.</p>
-        <p><strong>Cookie Configuration:</strong> Authentication session tokens are stored in secure, httpOnly, sameSite cookies issued by Supabase Auth. No third-party tracking cookies, advertising pixels, or fingerprinting technologies are deployed on this platform.</p>
-        <p><strong>Asset Security:</strong> All POXY asset records are stored in PostgreSQL with row-level security policies. Only the authenticated owner can read, modify, or initiate the transfer of their own assets. No platform administrator has unilateral access to modify asset ownership records without corresponding transaction log entries.</p>
-        <p><strong>Data Retention:</strong> Account data is retained for the duration of active membership. Deletion requests submitted to worldpoxy@gmail.com are processed within 30 days of receipt.</p>
-      </div>
-      <div class="support-section">
-        <h3>Terms of Service</h3>
-        <p><strong>Platform Utilisation:</strong> Access to POXY World requires acceptance of these terms. Users are prohibited from: automated scripts or bots accessing the platform; exploiting pricing or availability vulnerabilities; selling or transferring account credentials; engaging in market manipulation through coordinated buy/sell activity of any kind.</p>
-        <p><strong>Asset Ownership:</strong> Purchase of PC (Poxy Coins) and acquisition of POXY digital assets constitutes purchase of a limited digital asset record within the platform. POXY World reserves no right to revoke issued assets except in documented cases of fraudulent acquisition or security breach remediation, subject to investigation and notice.</p>
-        <p><strong>Virtual Currency Policy:</strong> PC (Poxy Coins) has no cash value and cannot be withdrawn, refunded, or exchanged for fiat currency under any circumstances. All PC top-ups are final and non-refundable. Chargebacks or payment disputes will result in immediate account suspension pending investigation.</p>
-        <p><strong>Marketplace Conduct:</strong> Users list assets at their own discretion. POXY World charges no platform fee on marketplace transactions in the current version. Price manipulation, wash trading, and coordinated artificial price inflation are expressly prohibited and will result in permanent account termination without refund.</p>
-      </div>
-      <div class="support-section">
-        <h3>Help Desk</h3>
-        <p>For all support enquiries, account issues, asset disputes, or partnership proposals, contact the POXY World operations team directly:</p>
-        <a href="mailto:worldpoxy@gmail.com" class="support-email">worldpoxy@gmail.com</a>
-        <p class="support-response">Response time: 24–72 business hours. Please include your registered email address and username in all correspondence for faster resolution.</p>
-      </div>
-    </div>
-
-    <!-- TAB G: CUSTOMIZE -->
+    <!-- TAB: CUSTOMIZE -->
     <div id="sidebarTabCustomize" class="sidebar-tab-content" style="display:none">
       <div id="customizeStoreContent"><div class="news-empty">Sign in to access the store.</div></div>
     </div>
@@ -1231,8 +1164,7 @@ body.dark-club .club-sub{color:#888}
         <div class="st-nav-left">
           <button type="button" class="st-brand-link" id="psdNavBrand" onclick="showStitchTab('dashboard')">POXY WORLD</button>
           <div class="st-nav-primary" aria-label="Main">
-            <button type="button" class="st-nav-link active" id="psdNavExplore" onclick="showStitchTab('dashboard')">Explore</button>
-            <button type="button" class="st-nav-link" id="psdNavCodex" onclick="openSidebar();switchSidebarTab('codex')">Codex</button>
+            <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')">Explore</button>
             <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')">Rarity</button>
           </div>
           <div class="st-nav-secondary" aria-label="More">
@@ -1374,7 +1306,7 @@ body.dark-club .club-sub{color:#888}
           <hr>
           <h4><span class="material-symbols-outlined">gavel</span> Terms of Service</h4>
           <p><strong>Platform Utilisation:</strong> Access requires acceptance of these terms. PC has no cash value. Automated bots and market manipulation are prohibited.</p>
-          <button type="button" class="st-view-all" onclick="openSidebar();switchSidebarTab('support')">Full legal docs in menu →</button>
+          <button type="button" class="st-view-all" onclick="showStitchTab('explore');switchExploreSection('legal')">Full legal docs in Explore →</button>
         </section>
       </div>
     </main>
@@ -1422,6 +1354,127 @@ body.dark-club .club-sub{color:#888}
       </div>
     </section>
 
+    <section class="st-spa-panel" id="stPanelExplore" data-st-tab="explore" hidden>
+      <div class="page poxy-explore-page" id="explorePage">
+        <div class="poxy-explore-shell">
+          <header class="poxy-explore-header">
+            <h1 class="poxy-explore-title">Explore</h1>
+            <p class="poxy-explore-desc">Platform intel, policies, news, and support — your POXY World command reference.</p>
+          </header>
+          <div class="poxy-explore-layout">
+            <nav class="poxy-explore-nav" role="tablist" aria-label="Explore sections">
+              <button type="button" class="poxy-explore-nav-btn active" data-explore="support" onclick="switchExploreSection('support')"><span class="material-symbols-outlined">support_agent</span> Support</button>
+              <button type="button" class="poxy-explore-nav-btn" data-explore="codex" onclick="switchExploreSection('codex')"><span class="material-symbols-outlined">menu_book</span> Codex</button>
+              <button type="button" class="poxy-explore-nav-btn" data-explore="legal" onclick="switchExploreSection('legal')"><span class="material-symbols-outlined">gavel</span> Legal</button>
+              <button type="button" class="poxy-explore-nav-btn" data-explore="policies" onclick="switchExploreSection('policies')"><span class="material-symbols-outlined">policy</span> Policies</button>
+              <button type="button" class="poxy-explore-nav-btn" data-explore="news" onclick="switchExploreSection('news')"><span class="material-symbols-outlined">newspaper</span> Poxy World News</button>
+              <button type="button" class="poxy-explore-nav-btn" data-explore="updates" onclick="switchExploreSection('updates')"><span class="material-symbols-outlined">update</span> Updates</button>
+              <button type="button" class="poxy-explore-nav-btn" data-explore="contact" onclick="switchExploreSection('contact')"><span class="material-symbols-outlined">mail</span> Contact</button>
+            </nav>
+            <div class="poxy-explore-main">
+              <div id="exploreSectionSupport" class="poxy-explore-section active">
+                <div class="poxy-explore-card">
+                  <h2><span class="material-symbols-outlined">support_agent</span> Help Desk</h2>
+                  <p>For account issues, asset disputes, billing questions, or partnership proposals, reach the POXY World operations team directly.</p>
+                  <p><strong>Response time:</strong> 24–72 business hours. Include your registered email and username in every message for faster resolution.</p>
+                  <p><strong>Scope:</strong> Login problems, missing assets after purchase, marketplace disputes, VIP Club eligibility, and security reports.</p>
+                </div>
+              </div>
+              <div id="exploreSectionCodex" class="poxy-explore-section">
+                <div class="poxy-explore-hero">
+                  <div class="poxy-explore-hero-emblem">✸</div>
+                  <div class="poxy-explore-hero-title">THE POXY CODEX</div>
+                  <div class="poxy-explore-hero-sub">Immutable Digital Heritage</div>
+                </div>
+                <div class="poxy-explore-card">
+                  <h3>I. The Asset Philosophy</h3>
+                  <p>Every POXY is an immutable cryptographic entity. From the precise nanosecond of its generation, each asset carries a permanent, unalterable chain of custody — a digital fingerprint that follows the asset through every transaction, trade, and transfer in perpetuity.</p>
+                  <p>Ownership is not a permission granted by a platform. It is a verifiable mathematical fact recorded on an immutable ledger. Your POXY belongs to you in the most absolute digital sense possible.</p>
+                  <p>Rarity tiers — Common through Mythic — represent genuine scarcity coefficients baked permanently into the generation algorithm.</p>
+                </div>
+                <div class="poxy-explore-card">
+                  <h3>II. London Private Club Roadmap</h3>
+                  <p>POXY World is building a digital collectible-backed private member's club in central London. Legendary or Mythic tier POXY confer provisional membership candidacy.</p>
+                  <div class="poxy-explore-amenities">
+                    <div class="poxy-explore-amenity"><div class="poxy-explore-amenity-title">🍸 Private Mixology Bar</div><p>Members-only cocktail programme by internationally certified bartenders.</p></div>
+                    <div class="poxy-explore-amenity"><div class="poxy-explore-amenity-title">🎱 Billiards Rooms</div><p>Three championship tables with bespoke POXY-branded equipment.</p></div>
+                    <div class="poxy-explore-amenity"><div class="poxy-explore-amenity-title">💼 Executive Networking</div><p>Closed-door sessions with curated speakers — verified holders only.</p></div>
+                    <div class="poxy-explore-amenity"><div class="poxy-explore-amenity-title">🎁 Heavyweight Merchandise</div><p>Limited physical runs paired with unique digital asset codes.</p></div>
+                    <div class="poxy-explore-amenity"><div class="poxy-explore-amenity-title">🏆 Custom Figurines</div><p>Hand-finished resin figurines stamped with your exact serial — max 10 per variant.</p></div>
+                  </div>
+                  <p class="poxy-explore-note">London club opening: target Q4 2026. Full membership deed and physical keycard at launch for qualifying holders.</p>
+                </div>
+              </div>
+              <div id="exploreSectionLegal" class="poxy-explore-section">
+                <div class="poxy-explore-card">
+                  <h2><span class="material-symbols-outlined">gavel</span> Terms of Service</h2>
+                  <p><strong>Platform Utilisation:</strong> Access requires acceptance of these terms. Automated bots, credential resale, and coordinated market manipulation are prohibited.</p>
+                  <p><strong>Asset Ownership:</strong> PC and POXY acquisitions are limited digital asset records. Revocation applies only in documented fraud or security remediation cases.</p>
+                  <p><strong>Virtual Currency:</strong> PC has no cash value and cannot be withdrawn or refunded. Chargebacks may result in immediate suspension pending investigation.</p>
+                  <p><strong>Marketplace Conduct:</strong> No platform fee in the current version. Wash trading and artificial price inflation result in permanent termination without refund.</p>
+                </div>
+              </div>
+              <div id="exploreSectionPolicies" class="poxy-explore-section">
+                <div class="poxy-explore-card">
+                  <h2><span class="material-symbols-outlined">policy</span> Privacy Policy</h2>
+                  <p><strong>Data Collection:</strong> Email, username, avatar URL, and usage metadata (collection, transactions, sessions) are collected strictly for platform operation. No data is sold for marketing.</p>
+                  <p><strong>Cookies:</strong> Auth tokens use secure httpOnly sameSite cookies via Supabase Auth. No third-party tracking or fingerprinting.</p>
+                  <p><strong>Asset Security:</strong> PostgreSQL row-level security — only owners can read or transfer their assets.</p>
+                  <p><strong>Retention:</strong> Data kept for active membership. Deletion requests to worldpoxy@gmail.com processed within 30 days.</p>
+                </div>
+              </div>
+              <div id="exploreSectionNews" class="poxy-explore-section">
+                <div id="newsCreateFormContainer"></div>
+                <div id="newsPostsList"><div class="news-empty">Loading news…</div></div>
+                <div class="poxychat-section">
+                  <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
+                  <div class="poxychat-input-row">
+                    <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world…" maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
+                    <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
+                  </div>
+                  <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
+                </div>
+              </div>
+              <div id="exploreSectionUpdates" class="poxy-explore-section">
+                <div class="poxy-explore-card">
+                  <h2><span class="material-symbols-outlined">update</span> Platform Updates</h2>
+                  <ul class="poxy-explore-updates">
+                    <li class="poxy-explore-update">
+                      <div class="poxy-explore-update-tag">Latest</div>
+                      <h4>Explore Hub &amp; Stitch Navigation</h4>
+                      <p>Support, Codex, legal docs, news, and contact now live under the Explore tab with unified premium UI.</p>
+                    </li>
+                    <li class="poxy-explore-update">
+                      <div class="poxy-explore-update-tag">Marketplace</div>
+                      <h4>Stitch Marketplace Terminal</h4>
+                      <p>Buy and list flows redesigned with rarity filters, VIP lock overlays, and obsidian card grid.</p>
+                    </li>
+                    <li class="poxy-explore-update">
+                      <div class="poxy-explore-update-tag">Club</div>
+                      <h4>POXY Club — Founders Circle</h4>
+                      <p>VIP case openings, club feed, governance proposals, and member-exclusive flash sales.</p>
+                    </li>
+                    <li class="poxy-explore-update">
+                      <div class="poxy-explore-update-tag">Economy</div>
+                      <h4>Burn, Craft &amp; Daily Quests</h4>
+                      <p>Secure burn RPCs, Syndicate Forge crafting, and rotating daily objectives for PC rewards.</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div id="exploreSectionContact" class="poxy-explore-section">
+                <div class="poxy-explore-card">
+                  <h2><span class="material-symbols-outlined">mail</span> Contact</h2>
+                  <p>Direct line to POXY World operations for support, partnerships, press, and legal enquiries.</p>
+                  <a href="mailto:worldpoxy@gmail.com" class="poxy-explore-contact-email"><span class="material-symbols-outlined">mail</span> worldpoxy@gmail.com</a>
+                  <p>Please include your registered email and username. Typical response within 24–72 business hours.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
@@ -1430,7 +1483,7 @@ body.dark-club .club-sub{color:#888}
       <span>© 2026 POXY WORLD. IMMUTABLE EXCLUSIVITY.</span>
       <div class="st-footer-links">
         <button type="button" onclick="showPage('friends')">Friends</button>
-        <button type="button" onclick="openSidebar();switchSidebarTab('support')">Support</button>
+        <button type="button" onclick="showStitchTab('explore');switchExploreSection('support')">Support</button>
         <button type="button" onclick="showPage('profile')">Profile</button>
       </div>
     </footer>
@@ -2142,7 +2195,20 @@ let colFilter='all', selectedForDust=new Set();
 let marketSort='newest', hasPremiumFrame=false, pendingSpinTier=null;
 let marketBuyCache=[];
 let marketSearchQuery='', marketRarityFilter='all';
-let sidebarOpen=false, activeSidebarTab='codex';
+let sidebarOpen=false, activeSidebarTab='appraisal';
+let activeExploreSection='support';
+const EXPLORE_SECTION_MAP={
+  support:'exploreSectionSupport',codex:'exploreSectionCodex',legal:'exploreSectionLegal',
+  policies:'exploreSectionPolicies',news:'exploreSectionNews',updates:'exploreSectionUpdates',contact:'exploreSectionContact'
+};
+window.switchExploreSection=function(section){
+  if(!EXPLORE_SECTION_MAP[section])return;
+  activeExploreSection=section;
+  document.querySelectorAll('.poxy-explore-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.explore===section));
+  Object.keys(EXPLORE_SECTION_MAP).forEach(k=>{const el=$(EXPLORE_SECTION_MAP[k]);if(el)el.classList.toggle('active',k===section);});
+  if(section==='news'){loadNewsFeedTab();loadPoxyChat();}
+};
+function loadExplorePanel(){switchExploreSection(activeExploreSection||'support');}
 let leaderboardMode='balance';
 let friendIncoming=[], friendOutgoing=[], friendAccepted=[];
 let inspectTargetUserId=null;
@@ -2318,8 +2384,7 @@ window.openSidebar=function(){
   $('sidebarPanel').classList.add('open');
   $('sidebarBackdrop').classList.add('open');
   document.body.style.overflow='hidden';
-  if(activeSidebarTab==='news'){loadNewsFeedTab();loadPoxyChat();}
-  else if(activeSidebarTab==='leaderboard')loadLeaderboardData();
+  if(activeSidebarTab==='leaderboard')loadLeaderboardData();
   else if(activeSidebarTab==='gen1')renderGen1TabContent();
   else if(activeSidebarTab==='appraisal')renderAppraisalTabContent();
   else if(activeSidebarTab==='customize')renderCustomizeTab();
@@ -2334,12 +2399,11 @@ window.switchSidebarTab=function(tab){
   activeSidebarTab=tab;
   document.querySelectorAll('.sidebar-tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.sidebar-tab-content').forEach(c=>{c.classList.remove('active');c.style.display='none';});
-  const tabIdMap={codex:'sidebarTabCodex',news:'sidebarTabNews',gen1:'sidebarTabGen1',appraisal:'sidebarTabAppraisal',leaderboard:'sidebarTabLeaderboard',support:'sidebarTabSupport',customize:'sidebarTabCustomize'};
+  const tabIdMap={gen1:'sidebarTabGen1',appraisal:'sidebarTabAppraisal',leaderboard:'sidebarTabLeaderboard',customize:'sidebarTabCustomize'};
   const btnId='stab-'+tab;
   const btn=$(btnId);if(btn)btn.classList.add('active');
   const cont=$(tabIdMap[tab]);if(cont){cont.style.display='block';cont.classList.add('active');}
-  if(tab==='news'){loadNewsFeedTab();loadPoxyChat();}
-  else if(tab==='gen1')renderGen1TabContent();
+  if(tab==='gen1')renderGen1TabContent();
   else if(tab==='appraisal')renderAppraisalTabContent();
   else if(tab==='leaderboard')loadLeaderboardData();
   else if(tab==='customize')renderCustomizeTab();
@@ -2769,7 +2833,7 @@ function syncPsdTopNav(page){
   const pillId=STITCH_TAB_MAP[tab]||(page==='bank'?'psdNavDashboard':null);
   const pillBtn=pillId?$(pillId):null;
   if(pillBtn)pillBtn.classList.add('active');
-  if(tab==='dashboard'||tab==='explore'||tab==='hunt'||tab==='profile'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
+  if(tab==='explore'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
   else if(tab==='rarity'||tab==='tierlist'){const r=$('psdNavRarity');if(r)r.classList.add('active');}
   else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'){}
 }
@@ -2824,6 +2888,7 @@ window.showStitchTab=function(tab){
     renderBank();
   }
   if(next==='market')loadMarket();
+  if(next==='explore')loadExplorePanel();
   if(next==='tierlist')loadTierListPanel();
   if(next==='ranks')loadLeaderboardData();
   syncNavUsernameLabels();
@@ -5247,7 +5312,7 @@ function setupRealtimeSubscriptions(){
     // News posts realtime (for sidebar news tab)
     const newsSub=sb.channel('news-posts-global')
       .on('postgres_changes',{event:'*',schema:'public',table:'news_posts'},()=>{
-        if(activeSidebarTab==='news'&&sidebarOpen)loadNewsFeedTab();
+        if(activeStitchTab==='explore'&&activeExploreSection==='news')loadNewsFeedTab();
       })
       .subscribe();
     realtimeSubs.push(newsSub);
