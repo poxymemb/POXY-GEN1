@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY CLUB - The Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#ffe088",
+                      "surface-container-lowest": "#0e0e0e",
+                      "surface-tint": "#e9c349",
+                      "on-primary-fixed-variant": "#574500",
+                      "tertiary-container": "#b2b2b7",
+                      "secondary-fixed-dim": "#d3c5ad",
+                      "on-surface": "#e2e2e2",
+                      "surface-container-highest": "#353535",
+                      "secondary-fixed": "#f0e0c8",
+                      "tertiary-fixed": "#e3e2e7",
+                      "on-secondary-fixed-variant": "#4f4533",
+                      "error-container": "#93000a",
+                      "inverse-surface": "#e2e2e2",
+                      "surface-dim": "#131313",
+                      "surface-container-high": "#2a2a2a",
+                      "secondary": "#d3c5ad",
+                      "background": "#131313",
+                      "error": "#ffb4ab",
+                      "on-secondary-container": "#c5b79f",
+                      "surface": "#131313",
+                      "outline-variant": "#4d4635",
+                      "on-secondary": "#382f1e",
+                      "on-tertiary-container": "#444549",
+                      "on-error": "#690005",
+                      "on-tertiary-fixed": "#1a1b1f",
+                      "on-tertiary": "#2f3034",
+                      "primary-fixed-dim": "#e9c349",
+                      "on-primary-container": "#554300",
+                      "tertiary": "#ceced3",
+                      "on-error-container": "#ffdad6",
+                      "surface-bright": "#393939",
+                      "tertiary-fixed-dim": "#c6c6cb",
+                      "on-primary": "#3c2f00",
+                      "on-background": "#e2e2e2",
+                      "secondary-container": "#524835",
+                      "surface-container": "#1f1f1f",
+                      "primary": "#f2ca50",
+                      "surface-variant": "#353535",
+                      "on-surface-variant": "#d0c5af",
+                      "on-secondary-fixed": "#221b0b",
+                      "on-tertiary-fixed-variant": "#46474b",
+                      "outline": "#99907c",
+                      "inverse-on-surface": "#303030",
+                      "on-primary-fixed": "#241a00",
+                      "inverse-primary": "#735c00",
+                      "primary-container": "#d4af37",
+                      "surface-container-low": "#1b1b1b"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-margin": "24px",
+                      "gutter": "16px",
+                      "section-gap": "80px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Hanken Grotesk", "sans-serif"],
+                      "headline-lg-mobile": ["Hanken Grotesk", "sans-serif"],
+                      "tactical-data": ["JetBrains Mono", "monospace"],
+                      "body-md": ["Hanken Grotesk", "sans-serif"],
+                      "label-sm": ["JetBrains Mono", "monospace"],
+                      "display-lg": ["Hanken Grotesk", "sans-serif"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                      "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                      "tactical-data": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                      "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "400" }],
+                      "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body { background-color: #000000; color: #e2e2e2; }
+        .glass-panel {
+            background-color: rgba(14, 14, 18, 0.65);
+            backdrop-filter: blur(20px);
+            border: 1px solid theme('colors.primary-container');
+        }
+        .chamfer-gold {
+            background-color: rgba(14, 14, 18, 0.65);
+            border: 1px solid theme('colors.primary-container');
+            box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(20px);
+        }
+        /* Custom scrollbar for tactical feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: theme('colors.surface-container-lowest'); }
+        ::-webkit-scrollbar-thumb { background: theme('colors.outline-variant'); border-radius: theme('borderRadius.full'); }
+        ::-webkit-scrollbar-thumb:hover { background: theme('colors.primary-container'); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex overflow-x-hidden">
+<!-- Shared Component: SideNavBar -->
+<nav class="bg-[rgba(14,14,18,0.65)] backdrop-blur-[20px] h-screen w-64 fixed left-0 top-0 border-r border-primary-container/30 shadow-[1px_0_0_0_rgba(212,175,55,0.2)] z-50 flex flex-col h-full py-base">
+<!-- Brand Header -->
+<div class="px-6 py-8 flex flex-col items-center border-b border-primary-container/30 mb-4">
+<div class="w-16 h-16 rounded-full bg-surface-container-high border-2 border-primary-container mb-4 overflow-hidden shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+<img alt="User Rank Badge" class="w-full h-full object-cover" data-alt="A highly detailed, macro shot of a polished metallic badge with intricate geometric engravings. The badge gleams with a champagne gold hue against a deep obsidian black background. The lighting is dramatic, highlighting the sharp, machined chamfer edges and creating a sense of elite exclusivity and high-security clearance. The overall aesthetic is dark, luxurious, and technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY6sKL68TFPTs3p1XJqCoWdWXix6r66gbbCvAHi1yBrcAzDkr-ZagJsq17AFiiLcWLWKpGj3eyC5_MC4OWekqjvC0OM9-Q6g5xCF7n4HIsZ0KEqCL3rbh98tSV1peUQeupeaLEfQRkB9CV5x6tMWfKJjWpdEmCDssAmE9a88Hak6O6Wgr9MQWfm6eglPlUxCivoG4NV8mjlp4IB50W4TazFjRs3X3TeXffojif7cFiSsT3c8Mcn-Do3_fypWob7iWCyrYGiplc9w"/>
+</div>
+<h1 class="text-headline-lg font-headline-lg font-bold text-primary-container tracking-tighter text-center">POXY CLUB</h1>
+<p class="font-tactical-data text-tactical-data text-[#A0A0A5] mt-1 text-center">Elite Tier Member</p>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 flex flex-col gap-2 px-4">
+<!-- Active Tab: Feed -->
+<a class="flex items-center gap-4 py-4 px-6 text-primary-container bg-primary-container/10 border-r-2 border-primary-container translate-x-1 duration-200 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rss_feed</span>
+<span class="font-headline-lg text-headline-lg" style="font-size: 18px;">Feed</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-4 py-4 px-6 text-[#A0A0A5] hover:bg-surface-container-high hover:text-primary-container transition-all duration-300 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="font-headline-lg text-headline-lg" style="font-size: 18px;">Passport</span>
+</a>
+<a class="flex items-center gap-4 py-4 px-6 text-[#A0A0A5] hover:bg-surface-container-high hover:text-primary-container transition-all duration-300 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span class="font-headline-lg text-headline-lg" style="font-size: 18px;">Terminal</span>
+</a>
+<a class="flex items-center gap-4 py-4 px-6 text-[#A0A0A5] hover:bg-surface-container-high hover:text-primary-container transition-all duration-300 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined">currency_exchange</span>
+<span class="font-headline-lg text-headline-lg" style="font-size: 18px;">OTC Desk</span>
+</a>
+<a class="flex items-center gap-4 py-4 px-6 text-[#A0A0A5] hover:bg-surface-container-high hover:text-primary-container transition-all duration-300 rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-headline-lg text-headline-lg" style="font-size: 18px;">Governance</span>
+</a>
+</div>
+<!-- CTA & Footer Nav -->
+<div class="mt-auto px-6 flex flex-col gap-4 border-t border-primary-container/30 pt-6">
+<button class="w-full py-3 bg-primary-container text-on-primary font-headline-lg font-bold tracking-widest rounded-DEFAULT hover:bg-[#b5952f] transition-colors shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                CONNECT WALLET
+            </button>
+<div class="flex justify-between mt-4">
+<a class="flex flex-col items-center gap-1 text-[#A0A0A5] hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">PC Balance</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[#A0A0A5] hover:text-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-64 relative min-h-screen">
+<!-- Shared Component: TopAppBar -->
+<header class="bg-[rgba(14,14,18,0.65)] backdrop-blur-[20px] fixed top-0 right-0 left-64 h-20 border-b border-primary-container/30 z-40 flex justify-between items-center px-container-margin">
+<!-- Navigation Links -->
+<nav class="flex gap-8">
+<a class="text-primary-container font-bold border-b border-primary-container pb-1 font-body-md text-body-md" href="#">VIP Chat</a>
+<a class="text-secondary font-medium hover:text-primary-container transition-colors font-body-md text-body-md" href="#">Lounge</a>
+<a class="text-secondary font-medium hover:text-primary-container transition-colors font-body-md text-body-md" href="#">DAO</a>
+</nav>
+<!-- Brand Logo (Centered) -->
+<div class="absolute left-1/2 -translate-x-1/2">
+<span class="text-headline-lg font-headline-lg font-black text-primary-container drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">POXY CLUB</span>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-6">
+<!-- Trailing Primary Action (Balance) -->
+<div class="font-tactical-data text-tactical-data text-primary-container bg-[rgba(14,14,18,0.8)] px-3 py-1.5 rounded-DEFAULT border border-primary-container/50">
+                    $9,420 PC
+                </div>
+<!-- Icons & Profile -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface hover:text-primary-container transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface hover:text-primary-container transition-colors"><span class="material-symbols-outlined">shield</span></button>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-primary-container/50">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A striking portrait of a male avatar with glowing neon accents. The background is a pure, abyssal black. The subject's features are sharp and confident, illuminated by a subtle, ambient light that mimics the glow of a high-end monitor in a dark room. The overall vibe is cyberpunk meets high-fashion luxury, perfectly fitting a VIP web3 persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIiNQrJCi1Bj3tfGy8QFHd60330f9Orcu3xf6pFm3GpyOb3pK_roVbf05j_zlOIBzpudEqMDIJTnaPGZ_p07umH58alUoxKxSSBZZQ4DCbBVuudBdQxECsrj6pmyE4pr_P9-LOCOKUxiY09wsQT-QmUlyd2D0UGJjNW78rZ7lf-w-Ga7dV1dZn2rtXk3kSv7gYg3697pt6gE82Y0x4y2z7b4I_Jpqi9FK3eLzSS0TU8Sdc8ym9-OUWl34Uyq1O7twGyHrWw6PoIg"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content Layout -->
+<main class="mt-20 flex justify-center px-container-margin py-base gap-gutter max-w-7xl mx-auto">
+<!-- Center Column (The Feed) -->
+<section class="flex-1 max-w-2xl flex flex-col gap-base">
+<!-- Feed Header Tabs -->
+<div class="glass-panel flex rounded-lg overflow-hidden border-b-0 mb-2 sticky top-20 z-30 border-primary-container/30">
+<button class="flex-1 py-4 text-center border-b-2 border-primary-container text-primary-container font-headline-lg font-bold bg-primary-container/10">
+                        For You
+                    </button>
+<button class="flex-1 py-4 text-center border-b-2 border-transparent text-[#A0A0A5] hover:text-on-surface transition-colors font-headline-lg font-medium hover:bg-surface-container/10">
+                        Global
+                    </button>
+</div>
+<!-- Flash Reward Claim -->
+<div class="chamfer-gold p-6 rounded-lg relative overflow-hidden group">
+<!-- Subtle background glow -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/10 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10 flex justify-between items-center">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface" style="font-size: 20px;">FLASH REWARD DROP</h3>
+</div>
+<p class="font-body-md text-body-md text-secondary">Exclusive allocation for Elite Tier. Claim window closing.</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<div class="font-tactical-data text-tactical-data text-error animate-pulse flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">timer</span>
+<span id="countdown">04:59</span>
+</div>
+<button class="bg-primary-container text-on-primary font-headline-lg font-bold px-6 py-2 rounded-DEFAULT shadow-[0_0_15px_rgba(212,175,55,0.4)] hover:bg-[#b5952f] hover:scale-105 transition-all duration-200 active:scale-95">
+                                CLAIM DROP
+                            </button>
+</div>
+</div>
+</div>
+<!-- Admin Announcement -->
+<div class="glass-panel p-0 rounded-lg overflow-hidden border-primary-container relative">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-primary-container drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="p-6 pb-4">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 bg-primary-container/20 rounded-full flex items-center justify-center border border-primary-container/50">
+<span class="material-symbols-outlined text-primary-container">campaign</span>
+</div>
+<div>
+<h4 class="font-headline-lg text-headline-lg text-primary-container" style="font-size: 18px;">Admin Transmission</h4>
+<p class="font-tactical-data text-tactical-data text-primary-container text-xs">SYS_BROADCAST // PINNED</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-4 leading-relaxed">
+                            Protocol V2 migration parameters have been successfully ratified by the Governance council. Expected network downtime is zero. Prepare portfolios for elevated staking yields beginning epoch 492. Stay secured.
+                        </p>
+</div>
+<div class="bg-[rgba(14,14,18,0.8)] px-6 py-3 border-t border-primary-container/30 flex justify-between items-center">
+<span class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs">TIMESTAMP: 1698745200</span>
+<a class="font-body-md text-body-md text-primary-container hover:underline text-sm font-medium" href="#">View Proposal Details</a>
+</div>
+</div>
+<!-- Live VIP Chat Stream (The Feed) -->
+<div class="flex flex-col gap-4 mt-4">
+<!-- Message 1 -->
+<div class="glass-panel p-5 rounded-lg border-primary-container/30 hover:border-primary-container transition-colors flex gap-4">
+<img alt="User Avatar" class="w-12 h-12 rounded-full border border-primary-container/50 object-cover shrink-0" data-alt="A moody, high-contrast portrait of a tech-savvy individual. They are wearing dark, textured clothing against an absolute black background. The lighting is harsh and directional, creating deep shadows that emphasize a serious, focused expression. It feels like a profile picture for a high-ranking member of an underground digital syndicate." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMM7jYDSe5_tcqup0DXMoU6o_DJc5ThW716aZxnAZ2dimzJUmOW825X6MXubijaS156j7_tNWlYU7rovxI02PqDXk_fOke-Okh7zEf16h8XsxMObBoN6aSp8DDI8sy1ivsyWDuUNZs4rugYTVgvAjNdrC4Pfg8dGt-5Ww4EgHqQM6FQRZFOF17IJO4NAPtT089arl4-eG7QddR-BgK32L7n8U9eoGclEiFJXnOg8xCwSukwpqXCVUnjoDMvix9QeCaMULgToSURA"/>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-headline-lg font-bold text-primary-container text-base">Cipher_Punk</span>
+<span class="font-tactical-data text-tactical-data text-primary-container text-xs bg-[rgba(14,14,18,0.8)] border border-primary-container/30 px-2 py-0.5 rounded-DEFAULT">UID: 0x9A...4F2</span>
+<span class="material-symbols-outlined text-primary-container text-sm drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]" style="font-variation-settings: 'FILL' 1;" title="Elite Rank">workspace_premium</span>
+<span class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs ml-auto">2m ago</span>
+</div>
+<p class="font-body-md text-body-md text-secondary">Just swept the floor on the new artifact drop. The metadata looks insane. Anyone else decode the hidden string in the contract?</p>
+<div class="flex gap-6 mt-3 text-[#A0A0A5]">
+<button class="flex items-center gap-1 hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-sm">chat_bubble</span><span class="font-tactical-data text-tactical-data text-xs">12</span></button>
+<button class="flex items-center gap-1 hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-sm">repeat</span><span class="font-tactical-data text-tactical-data text-xs">4</span></button>
+<button class="flex items-center gap-1 hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-sm">favorite</span><span class="font-tactical-data text-tactical-data text-xs">89</span></button>
+</div>
+</div>
+</div>
+<!-- Message 2 -->
+<div class="glass-panel p-5 rounded-lg border-primary-container/30 hover:border-primary-container transition-colors flex gap-4">
+<img alt="User Avatar" class="w-12 h-12 rounded-full border border-primary-container/50 object-cover shrink-0" data-alt="An abstract, generative digital avatar composed of sharp geometric shards of glass and metal. The colors are predominantly deep blacks and polished silvers, with piercing neon cyan highlights. It sits against a completely dark background, giving the impression of a cold, highly advanced artificial intelligence or a pseudonymous hacker persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVeh6lxK3QnNi6UODD_I2TZaZAmXA44s6JFeG4eJGYQ49qvytNwgH1uv7gEZg-Y9V3Arsf0_YzIRPi8wc38cDZ0iJ1uwvsGoA-ywCDZHH5EbEMQJZ4EzrKNeD9T_EcGv9MW3nXmE0WFRRAhnfo7eyrdaC9t-9nPwSzk8Xexj19e5ar91gJQGLoFj7Kuj4CcMDCZqMAH3I7GxlF3qFnOd157TybAuMukB1lKzad1mSYIaF4B2B6OWwBaIr0JNh8kbLqa0zEBtnIKA"/>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-headline-lg font-bold text-primary-container text-base">Null_Vector</span>
+<span class="font-tactical-data text-tactical-data text-primary-container text-xs bg-[rgba(14,14,18,0.8)] border border-primary-container/30 px-2 py-0.5 rounded-DEFAULT">UID: 0x2B...8C1</span>
+<span class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs ml-auto">15m ago</span>
+</div>
+<p class="font-body-md text-body-md text-secondary">OTC desk is moving massive volume today. Looks like whales are positioning for the governance vote on Friday. Hold your positions.</p>
+<div class="flex gap-6 mt-3 text-[#A0A0A5]">
+<button class="flex items-center gap-1 hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-sm">chat_bubble</span><span class="font-tactical-data text-tactical-data text-xs">3</span></button>
+<button class="flex items-center gap-1 hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-sm">repeat</span><span class="font-tactical-data text-tactical-data text-xs">0</span></button>
+<button class="flex items-center gap-1 hover:text-primary-container transition-colors"><span class="material-symbols-outlined text-sm">favorite</span><span class="font-tactical-data text-tactical-data text-xs">24</span></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Sidebar -->
+<aside class="w-80 hidden xl:flex flex-col gap-base sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pb-8">
+<!-- Search -->
+<div class="relative mb-2">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#A0A0A5]">search</span>
+<input class="w-full bg-[rgba(14,14,18,0.65)] border border-primary-container/50 rounded-full py-2.5 pl-10 pr-4 text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container/50 transition-all font-body-md text-body-md placeholder:text-[#A0A0A5]" placeholder="Search Feed..." type="text"/>
+</div>
+<!-- Trending DAO Proposals -->
+<div class="glass-panel rounded-lg p-5 border-primary-container/30">
+<h3 class="font-headline-lg text-headline-lg text-primary-container mb-4 flex items-center gap-2 border-b border-primary-container/30 pb-2" style="font-size: 18px;">
+<span class="material-symbols-outlined text-primary-container">trending_up</span> Trending DAO
+                    </h3>
+<div class="flex flex-col gap-4">
+<a class="group block" href="#">
+<div class="flex justify-between items-start mb-1">
+<span class="font-tactical-data text-tactical-data text-primary-container text-xs">PIP-42</span>
+<span class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs">Active</span>
+</div>
+<p class="font-body-md text-body-md text-secondary group-hover:text-primary-container transition-colors text-sm font-medium leading-snug">Adjust Base Fee Burn Rate Mechanics</p>
+<div class="w-full bg-[rgba(14,14,18,0.8)] border border-primary-container/20 h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary-container h-full w-[78%] shadow-[0_0_8px_rgba(212,175,55,0.6)]"></div>
+</div>
+</a>
+<a class="group block" href="#">
+<div class="flex justify-between items-start mb-1">
+<span class="font-tactical-data text-tactical-data text-primary-container text-xs">PIP-43</span>
+<span class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs">Voting</span>
+</div>
+<p class="font-body-md text-body-md text-secondary group-hover:text-primary-container transition-colors text-sm font-medium leading-snug">Treasury Allocation for Q3 Hackathon</p>
+<div class="w-full bg-[rgba(14,14,18,0.8)] border border-primary-container/20 h-1.5 rounded-full mt-2 overflow-hidden flex">
+<div class="bg-primary-container h-full w-[45%] shadow-[0_0_8px_rgba(212,175,55,0.6)]"></div>
+<div class="bg-[#A0A0A5] h-full w-[30%]"></div>
+</div>
+</a>
+</div>
+<a class="block text-center mt-4 pt-3 border-t border-primary-container/30 font-tactical-data text-tactical-data text-primary-container hover:text-white transition-colors text-xs" href="#">VIEW ALL PROPOSALS</a>
+</div>
+<!-- Upcoming Event Calendar -->
+<div class="glass-panel rounded-lg p-5 border-primary-container/30">
+<h3 class="font-headline-lg text-headline-lg text-primary-container mb-4 flex items-center gap-2 border-b border-primary-container/30 pb-2" style="font-size: 18px;">
+<span class="material-symbols-outlined text-primary-container">calendar_today</span> Upcoming Events
+                    </h3>
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-start">
+<div class="bg-[rgba(14,14,18,0.8)] border border-primary-container/50 rounded flex flex-col items-center justify-center w-12 h-12 shrink-0">
+<span class="font-tactical-data text-tactical-data text-primary-container text-xs">OCT</span>
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold leading-none mt-0.5" style="font-size: 16px;">28</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-secondary text-sm font-bold">Townhall AMAs</p>
+<p class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs mt-0.5">14:00 UTC • Lounge</p>
+</div>
+</div>
+<div class="flex gap-3 items-start">
+<div class="bg-[rgba(14,14,18,0.8)] border border-primary-container/20 rounded flex flex-col items-center justify-center w-12 h-12 shrink-0">
+<span class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs">NOV</span>
+<span class="font-headline-lg text-headline-lg text-[#A0A0A5] font-bold leading-none mt-0.5" style="font-size: 16px;">02</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-secondary text-sm font-bold">Epoch 492 Start</p>
+<p class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs mt-0.5">00:00 UTC • Network</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Links -->
+<div class="flex flex-wrap gap-x-4 gap-y-2 px-2 mt-4">
+<a class="font-tactical-data text-tactical-data text-[#A0A0A5] hover:text-primary-container text-xs transition-colors" href="#">Terms</a>
+<a class="font-tactical-data text-tactical-data text-[#A0A0A5] hover:text-primary-container text-xs transition-colors" href="#">Privacy</a>
+<a class="font-tactical-data text-tactical-data text-[#A0A0A5] hover:text-primary-container text-xs transition-colors" href="#">Contracts</a>
+<a class="font-tactical-data text-tactical-data text-[#A0A0A5] hover:text-primary-container text-xs transition-colors" href="#">Docs</a>
+<span class="font-tactical-data text-tactical-data text-[#A0A0A5] text-xs w-full mt-2">© 2024 POXY CLUB. ALL RIGHTS RESERVED.</span>
+</div>
+</aside>
+</main>
+</div>
+<!-- Micro-interaction JS for Timer -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let timeLeft = 299; // 4:59 in seconds
+            const timerElement = document.getElementById('countdown');
+            
+            if(timerElement) {
+                const interval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft < 0) {
+                        clearInterval(interval);
+                        timerElement.textContent = "00:00";
+                        timerElement.classList.remove('text-error', 'animate-pulse');
+                        timerElement.classList.add('text-outline-variant');
+                        return;
+                    }
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }, 1000);
+            }
+        });
+    </script>
+</body></html>

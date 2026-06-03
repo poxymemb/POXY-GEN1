@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="assets/poxy-spa-nav.css">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
+<link rel="stylesheet" href="assets/poxy-club-gold.css">
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
@@ -1725,24 +1726,30 @@ body.dark-club .club-sub{color:#888}
 <!-- POXY CLUB v2 — Founders Circle Ecosystem (fragment for index.html) -->
 <div class="club-page poxy-club-page" id="clubPage">
   <div id="clubLocked" class="poxy-club-locked" style="display:none"></div>
-  <div id="clubAwakening" class="club-awakening" hidden aria-hidden="true">
+  <div id="clubAwakening" class="club-awakening club-stitch-awake" hidden aria-hidden="true">
     <div class="club-awakening-backdrop"></div>
+    <header class="club-awake-top">
+      <div class="club-awake-brand"><span class="material-symbols-outlined">diamond</span> POXY CLUB</div>
+      <div class="club-awake-top-actions">
+        <button type="button" class="club-replay-intel club-awake-replay" id="clubAwakeningReplay" title="Replay Intel"><span class="material-symbols-outlined">replay</span></button>
+        <button type="button" class="club-awakening-skip" id="clubAwakeningSkip">Skip Intel</button>
+      </div>
+    </header>
     <div class="club-awakening-stage">
       <div class="club-awakening-progress"><span id="clubAwakeningProgress"></span></div>
       <div class="club-awakening-slide active" data-slide="0">
-        <p class="club-awakening-kicker">Slide I · Initiation</p>
-        <h2 class="club-awakening-title gold">The choice is made.</h2>
-        <p class="club-awakening-body">A Mythic asset has been detected in your inventory. The syndicate opens its door only once.</p>
+        <p class="club-awakening-kicker">System Override</p>
+        <h2 class="club-awakening-title gold-shimmer">INITIATION</h2>
+        <p class="club-awakening-body">Choice made. Mythic asset detected in your inventory. Commencing secure protocol.</p>
       </div>
       <div class="club-awakening-slide" data-slide="1">
-        <p class="club-awakening-kicker">Slide II · Scarcity</p>
-        <div class="club-awakening-card-build" aria-hidden="true"><span></span><span></span><span></span></div>
-        <h2 class="club-awakening-title">Poxy Club</h2>
-        <p class="club-awakening-body">A closed syndicate with provable scarcity. Every item is unique. There are only <strong>100</strong> of you.</p>
+        <p class="club-awakening-kicker">Asset Parameter 01</p>
+        <h2 class="club-awakening-title">SCARCITY PHILOSOPHY</h2>
+        <p class="club-awakening-body">Absolute provenance guaranteed by cryptographic enforcement. Only <strong>100</strong> members will ever hold the genesis keycard.</p>
       </div>
       <div class="club-awakening-slide" data-slide="2">
-        <p class="club-awakening-kicker">Slide III · Sovereignty</p>
-        <h2 class="club-awakening-title">Rights of ownership</h2>
+        <p class="club-awakening-kicker">Asset Parameter 02</p>
+        <h2 class="club-awakening-title">SOVEREIGN RIGHTS</h2>
         <ul class="club-awakening-list">
           <li>OTC trades with zero platform commission</li>
           <li>DAO votes weighted by keycard level</li>
@@ -1750,13 +1757,12 @@ body.dark-club .club-sub{color:#888}
         </ul>
       </div>
       <div class="club-awakening-slide" data-slide="3">
-        <p class="club-awakening-kicker">Slide IV · Boarding Pass</p>
+        <p class="club-awakening-kicker">Boarding Pass Generated</p>
         <div class="club-awakening-pass-preview" id="clubAwakeningPassPreview"></div>
-        <h2 class="club-awakening-title gold">Your digital pass is ready.</h2>
+        <h2 class="club-awakening-title gold-shimmer">PASS READY</h2>
         <p class="club-awakening-body">Welcome to the <strong>Founders Circle</strong>.</p>
       </div>
       <div class="club-awakening-actions">
-        <button type="button" class="club-awakening-skip" id="clubAwakeningSkip">Skip</button>
         <button type="button" class="club-awakening-next" id="clubAwakeningNext">Continue</button>
       </div>
     </div>
@@ -1773,14 +1779,15 @@ body.dark-club .club-sub{color:#888}
         <button type="button" class="club-replay-intel" id="clubReplayIntel" title="Replay Intel"><span class="material-symbols-outlined">info</span></button>
       </div>
       <nav class="club-sidebar-nav" role="tablist">
-        <button type="button" class="club-nav-btn active" data-club-tab="feed" onclick="switchClubSubTab('feed')"><span class="material-symbols-outlined">dynamic_feed</span> Feed</button>
+        <button type="button" class="club-nav-btn active" data-club-tab="feed" onclick="switchClubSubTab('feed')"><span class="material-symbols-outlined">rss_feed</span> Feed</button>
         <button type="button" class="club-nav-btn" data-club-tab="pass" onclick="switchClubSubTab('pass')"><span class="material-symbols-outlined">badge</span> Passport</button>
-        <button type="button" class="club-nav-btn" data-club-tab="lounge" onclick="switchClubSubTab('lounge')"><span class="material-symbols-outlined">deployed_code</span> Terminal</button>
-        <button type="button" class="club-nav-btn" data-club-tab="otc" onclick="switchClubSubTab('otc')"><span class="material-symbols-outlined">handshake</span> Market</button>
+        <button type="button" class="club-nav-btn" data-club-tab="lounge" onclick="switchClubSubTab('lounge')"><span class="material-symbols-outlined">terminal</span> Terminal</button>
+        <button type="button" class="club-nav-btn" data-club-tab="otc" onclick="switchClubSubTab('otc')"><span class="material-symbols-outlined">currency_exchange</span> OTC Desk</button>
         <button type="button" class="club-nav-btn" data-club-tab="governance" onclick="switchClubSubTab('governance')"><span class="material-symbols-outlined">account_balance</span> Governance</button>
       </nav>
       <div class="club-sidebar-foot">
         <span class="club-sidebar-uid" id="clubSidebarUid">PXY · · ·</span>
+        <span class="club-sidebar-balance">PC Balance: <strong id="clubSidebarBalance">0 PC</strong></span>
       </div>
     </aside>
     <main class="club-main">
@@ -1813,29 +1820,34 @@ body.dark-club .club-sub{color:#888}
           </div>
         </section>
         <section id="clubTabPass" class="club-panel" data-club-panel="pass">
-          <header class="club-panel-head"><h1>My Pass</h1><p>London Boarding Pass · cryptographic entry</p></header>
+          <header class="club-panel-head"><h1>Passport</h1><p>London Boarding Pass · cryptographic entry</p></header>
           <div class="club-pass-layout">
-            <article class="club-boarding-pass poxy-club-glass" id="clubBoardingPass" data-skin="classic">
+            <article class="club-boarding-pass" id="clubBoardingPass" data-skin="classic">
               <div class="club-pass-stub"><span>POXY</span><span>LON</span></div>
-              <div class="club-pass-body">
-                <div class="club-pass-row"><span class="club-pass-label">UID</span><strong id="clubPassportUid">PXY-000-LON</strong><button type="button" class="club-pass-copy" onclick="copyClubUid()" title="Copy UID"><span class="material-symbols-outlined">content_copy</span></button></div>
-                <div class="club-pass-row"><span class="club-pass-label">ISSUED</span><span id="clubPassportIssued">—</span></div>
-                <div class="club-pass-row"><span class="club-pass-label">RANK</span><span id="clubPassportRank">Keycard Lv.1</span></div>
-                <div class="club-pass-row"><span class="club-pass-label">BALANCE</span><span id="clubPassportBalance">0 PC</span></div>
-                <div class="club-pass-qr-wrap">
-                  <img id="clubPassQR" class="club-pass-qr" width="120" height="120" alt="Dynamic club QR"/>
-                  <span class="club-pass-qr-hint">Refreshes every 30s · London entry</span>
+              <div class="club-pass-inner">
+                <div class="club-pass-identity">
+                  <div class="club-pass-brand">POXY<br/>PASSPORT</div>
+                  <div class="club-pass-row"><span class="club-pass-label">UID</span><strong id="clubPassportUid">PXY-000-LON</strong><button type="button" class="club-pass-copy" onclick="copyClubUid()" title="Copy UID"><span class="material-symbols-outlined">content_copy</span></button></div>
+                  <div class="club-pass-row"><span class="club-pass-label">ISSUED</span><span id="clubPassportIssued">—</span></div>
+                  <div class="club-pass-row"><span class="club-pass-label">RANK</span><span id="clubPassportRank">Keycard Lv.1</span></div>
+                  <div class="club-pass-row"><span class="club-pass-label">BALANCE</span><span id="clubPassportBalance">0 PC</span></div>
+                  <div class="club-pass-qr-wrap">
+                    <img id="clubPassQR" class="club-pass-qr" width="128" height="128" alt="Dynamic club QR"/>
+                    <span class="club-pass-qr-hint"><span class="material-symbols-outlined" style="font-size:12px;vertical-align:middle">timer</span> Refreshes in <strong id="clubPassQrTimer">30</strong>s · London entry</span>
+                  </div>
+                </div>
+                <div class="club-pass-showcase-col">
+                  <h3 class="club-pass-showcase-title">Mythic Showcase</h3>
+                  <div class="poxy-club-armory club-pass-armory" id="clubArmory"></div>
                 </div>
               </div>
-              <div class="club-pass-holo" aria-hidden="true"></div>
             </article>
             <div class="club-pass-side">
               <div class="poxy-club-glass club-milestones"><h3>Milestone Badges</h3><div id="clubMilestoneBadges" class="club-badge-grid"></div></div>
               <div class="poxy-club-glass club-pass-skins"><h3>Passport Skin</h3><div id="clubPassSkinPicker" class="club-skin-picker"></div></div>
-              <div class="poxy-club-glass club-showcase-block"><h3>Trophy Showcase</h3><div class="poxy-club-armory" id="clubArmory"></div></div>
             </div>
           </div>
-          <p class="club-pass-easter-hint">Hidden themes unlock via passport easter eggs.</p>
+          <p class="club-pass-easter-hint">Restricted Access · Encrypted Connection · Hidden themes via easter eggs</p>
         </section>
         <section id="clubTabLounge" class="club-panel" data-club-panel="lounge">
           <header class="club-panel-head"><h1>Terminal</h1><p>VIP extraction · singularity radar · vaults</p></header>
@@ -4735,6 +4747,8 @@ function showClubAwakening(onDone){
   };
   if(nextBtn){nextBtn.onclick=advance;}
   if(skipBtn){skipBtn.onclick=()=>closeClubAwakening(onDone);}
+  const replayAw=$('clubAwakeningReplay');
+  if(replayAw){replayAw.onclick=()=>{clubAwakeningSlide=0;updateClubAwakeningSlide();};}
 }
 function closeClubAwakening(onDone){
   const el=$('clubAwakening');if(el){el.hidden=true;el.setAttribute('aria-hidden','true');}
@@ -4871,18 +4885,28 @@ function renderClubPassport(st){
   if(issEl)issEl.textContent=issued?'ISSUED: '+new Date(issued).toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'}):'ISSUED: '+new Date().toLocaleDateString('en-GB');
   const lvl=st.club_level||currentProfile?.club_level||1;
   const rankEl=$('clubPassportRank');if(rankEl)rankEl.textContent='Keycard Lv.'+lvl+' · '+((st.discount_pct||clubDiscountPct(lvl))+'% VIP off');
-  const balEl=$('clubPassportBalance');if(balEl)balEl.textContent=formatPC(currentProfile?.balance||0);
+  const bal=formatPC(currentProfile?.balance||0);
+  const balEl=$('clubPassportBalance');if(balEl)balEl.textContent=bal;
+  const sideBal=$('clubSidebarBalance');if(sideBal)sideBal.textContent=bal;
   renderClubArmory();
   renderClubMilestoneBadges(st);
   renderClubPassSkinPicker();
   refreshClubQR();
   bindClubPassEasterEggs();
 }
+let clubQrSecondsLeft=30;
 function refreshClubQR(){
   const img=$('clubPassQR');if(!img||!currentUser)return;
   const ts=Math.floor(Date.now()/30000);
   const payload=JSON.stringify({uid:getClubPassportUid(),uid_user:currentUser.id,ts,sig:clubQrSig(ts)});
-  img.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(payload);
+  img.src='https://api.qrserver.com/v1/create-qr-code/?size=128x128&data='+encodeURIComponent(payload);
+  clubQrSecondsLeft=30;
+  const tEl=$('clubPassQrTimer');if(tEl)tEl.textContent='30';
+}
+function tickClubQrTimer(){
+  clubQrSecondsLeft--;
+  if(clubQrSecondsLeft<=0){refreshClubQR();return;}
+  const tEl=$('clubPassQrTimer');if(tEl)tEl.textContent=String(clubQrSecondsLeft);
 }
 function clubQrSig(ts){
   const s=getClubPassportUid()+':'+currentUser.id+':'+ts;
@@ -4892,7 +4916,7 @@ function clubQrSig(ts){
 function startClubQrRefresh(){
   if(clubQrRefreshIv)clearInterval(clubQrRefreshIv);
   refreshClubQR();
-  clubQrRefreshIv=setInterval(refreshClubQR,30000);
+  clubQrRefreshIv=setInterval(tickClubQrTimer,1000);
 }
 function renderClubMilestoneBadges(st){
   const el=$('clubMilestoneBadges');if(!el)return;

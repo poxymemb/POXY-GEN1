@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY CLUB - Passport</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffe088",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-tint": "#e9c349",
+                        "on-primary-fixed-variant": "#574500",
+                        "tertiary-container": "#b2b2b7",
+                        "secondary-fixed-dim": "#d3c5ad",
+                        "on-surface": "#e2e2e2",
+                        "surface-container-highest": "#353535",
+                        "secondary-fixed": "#f0e0c8",
+                        "tertiary-fixed": "#e3e2e7",
+                        "on-secondary-fixed-variant": "#4f4533",
+                        "error-container": "#93000a",
+                        "inverse-surface": "#e2e2e2",
+                        "surface-dim": "#131313",
+                        "surface-container-high": "#2a2a2a",
+                        "secondary": "#d3c5ad",
+                        "background": "#131313",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#c5b79f",
+                        "surface": "#131313",
+                        "outline-variant": "#4d4635",
+                        "on-secondary": "#382f1e",
+                        "on-tertiary-container": "#444549",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#1a1b1f",
+                        "on-tertiary": "#2f3034",
+                        "primary-fixed-dim": "#e9c349",
+                        "on-primary-container": "#554300",
+                        "tertiary": "#ceced3",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#393939",
+                        "tertiary-fixed-dim": "#c6c6cb",
+                        "on-primary": "#3c2f00",
+                        "on-background": "#e2e2e2",
+                        "secondary-container": "#524835",
+                        "surface-container": "#1f1f1f",
+                        "primary": "#f2ca50",
+                        "surface-variant": "#353535",
+                        "on-surface-variant": "#d0c5af",
+                        "on-secondary-fixed": "#221b0b",
+                        "on-tertiary-fixed-variant": "#46474b",
+                        "outline": "#99907c",
+                        "inverse-on-surface": "#303030",
+                        "on-primary-fixed": "#241a00",
+                        "inverse-primary": "#735c00",
+                        "primary-container": "#d4af37",
+                        "surface-container-low": "#1b1b1b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-margin": "24px",
+                        "gutter": "16px",
+                        "section-gap": "80px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk", "sans-serif"],
+                        "headline-lg-mobile": ["Hanken Grotesk", "sans-serif"],
+                        "tactical-data": ["JetBrains Mono", "monospace"],
+                        "body-md": ["Hanken Grotesk", "sans-serif"],
+                        "label-sm": ["JetBrains Mono", "monospace"],
+                        "display-lg": ["Hanken Grotesk", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "tactical-data": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(19, 19, 19, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(77, 70, 53, 0.3);
+        }
+        .chamfer-edge {
+            box-shadow: inset 0 0 0 1px transparent;
+            background: linear-gradient(rgba(19, 19, 19, 0.9), rgba(19, 19, 19, 0.9)) padding-box,
+                        linear-gradient(45deg, #f2ca50, #d4af37, #4d4635) border-box;
+            border: 1px solid transparent;
+        }
+        .gold-glow {
+            text-shadow: 0 0 10px rgba(242, 202, 80, 0.4);
+        }
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(242,202,80,0.1) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg);
+            animation: shimmer-anim 3s infinite linear;
+        }
+        @keyframes shimmer-anim {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        .leather-texture {
+            background-color: #131313;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+        .holographic-thread {
+            background: linear-gradient(90deg, #f2ca50, #ffb4ab, #f2ca50);
+            background-size: 200% auto;
+            animation: holo-anim 2s linear infinite;
+        }
+        @keyframes holo-anim {
+            0% { background-position: 0% center; }
+            100% { background-position: -200% center; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-background/80 backdrop-blur-[20px] h-screen w-64 fixed left-0 top-0 border-r border-outline-variant/30 flex flex-col py-base z-50 shadow-[1px_0_0_0_rgba(242,202,80,0.2)] hidden md:flex">
+<div class="px-6 py-6 mb-4 flex flex-col gap-2">
+<h1 class="text-headline-lg font-headline-lg font-bold text-primary tracking-tighter">POXY CLUB</h1>
+<div class="flex items-center gap-3 mt-4">
+<img alt="User Rank Badge" class="w-12 h-12 rounded-full border-2 border-primary/50" data-alt="A macro shot of a physical, custom-machined obsidian metal badge indicating elite status. The badge features geometric gold inlays and glowing metallic edges against a pitch-black surface. The aesthetic is high-contrast minimalism, web3 luxury, and precision hardware. Lighting is dramatic, reflecting off the polished gold elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdmAjlAMQQQJ7YwGDKXGDDmB-weCWCDfONMEePfjH90SFFx90bGnamZ7a2kJ1DmeH82RaaVkW2B1NtRLQhyJwuYSoHDGOgelHjpUn3skcGu1KQsoUoMjeYY1VyL8P8wepC2kGbihJPeD2w1ZIPbgryZpLtVMLRpoF6xk56iVINSfEb8avgn8pfVZP9VgK7XVLXAQO038ZTKh-W07CfZV_76RxUm2v8CDh0uCjJ-SvTppb6sljcaEsE7UDO_wJ6xtq1wkejRgmbow"/>
+<div>
+<div class="font-headline-lg text-primary text-sm font-semibold">Elite Tier Member</div>
+<div class="font-tactical-data text-tactical-data text-on-surface-variant text-xs">PXY-992-LON</div>
+</div>
+</div>
+<button class="mt-6 w-full py-2 bg-primary text-on-primary font-headline-lg font-bold text-sm tracking-wide rounded-sm hover:bg-primary-fixed transition-colors">
+                CONNECT WALLET
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto mt-4">
+<ul class="flex flex-col">
+<li>
+<a class="flex items-center gap-4 py-4 px-6 text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">rss_feed</span>
+<span class="font-headline-lg text-sm">Feed</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 py-4 px-6 text-primary bg-primary-container/10 border-r-2 border-primary hover:bg-surface-container-high hover:text-primary transition-all duration-300 translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">badge</span>
+<span class="font-headline-lg text-sm font-bold">Passport</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 py-4 px-6 text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span class="font-headline-lg text-sm">Terminal</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 py-4 px-6 text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">currency_exchange</span>
+<span class="font-headline-lg text-sm">OTC Desk</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 py-4 px-6 text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-headline-lg text-sm">Governance</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="mt-auto px-6 py-6 border-t border-outline-variant/20">
+<ul class="flex flex-col gap-2">
+<li>
+<a class="flex items-center gap-4 py-3 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<div class="flex flex-col">
+<span class="font-headline-lg text-xs">PC Balance</span>
+<span class="font-tactical-data text-tactical-data text-primary">2,450 PC</span>
+</div>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 py-3 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-headline-lg text-xs">Settings</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-64 relative min-h-screen pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 h-20 bg-surface-dim/40 backdrop-blur-[20px] border-b border-outline-variant/20 z-40 hidden md:flex justify-between items-center px-container-margin">
+<div class="flex items-center gap-8">
+<div class="text-headline-lg font-headline-lg font-black text-primary drop-shadow-[0_0_10px_rgba(242,202,80,0.4)] md:hidden">POXY CLUB</div>
+<nav class="hidden lg:flex gap-6">
+<a class="text-secondary font-medium font-headline-lg text-sm hover:text-primary-fixed-dim transition-colors" href="#">VIP Chat</a>
+<a class="text-secondary font-medium font-headline-lg text-sm hover:text-primary-fixed-dim transition-colors" href="#">Lounge</a>
+<a class="text-secondary font-medium font-headline-lg text-sm hover:text-primary-fixed-dim transition-colors" href="#">DAO</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="font-tactical-data text-tactical-data text-primary hidden sm:block">
+                    Balance: <span class="text-on-surface">$9,420 PC</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">shield</span>
+</button>
+<img alt="User Avatar" class="w-10 h-10 rounded-full border border-outline-variant cursor-pointer" data-alt="A sophisticated, dark-themed user avatar profile picture. The image features a minimalist, geometric design composed of deep obsidian and shimmering gold elements. It conveys a sense of high-stakes investment and elite status in a web3 environment, with subtle glassmorphic reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4JJYC8-5aIgfUPC6RLS9ib449MsoalhJeNHMB7QvEU7oqWHcAP_Xm4u9XvMVwFa4ZkV7NQEXY_WtqRfpfi0P_s7gaGzDFPZPtx-VcuWPGRw20mwFhAlhuPwXrjnz4KEcMShjJuJfae_lQzDZFjJxrfJmjY64MAweM-DrwbvEyVTLL0nwbifiMPZ2CoNDcnLP00V0NuqT8_X437Adss3S0VUsMJpvXR9wnVCutFBf9DLz04hT3BziqKhcWK-ZmsUY8ohhhwGbQGg"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="pt-24 md:pt-32 px-4 md:px-12 pb-12 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
+<!-- VIP Passport Card -->
+<div class="relative w-full max-w-4xl aspect-[1.6/1] leather-texture rounded-xl shadow-2xl p-6 md:p-10 flex flex-col md:flex-row gap-8 items-stretch border border-surface-container-highest overflow-hidden">
+<!-- Holographic Security Strip -->
+<div class="absolute left-0 top-0 bottom-0 w-2 holographic-thread opacity-70"></div>
+<!-- Left Column: Identity & QR -->
+<div class="flex-1 flex flex-col justify-between border-r border-outline-variant/20 pr-8">
+<div>
+<div class="flex justify-between items-start mb-6">
+<div class="text-primary font-headline-lg font-black tracking-widest text-xl gold-glow">POXY<br/>PASSPORT</div>
+<div class="font-tactical-data text-tactical-data text-on-surface-variant text-right">
+<div class="text-[10px] text-tertiary">ISSUED DATE</div>
+<div>03.06.2026</div>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<div class="font-tactical-data text-label-sm text-tertiary mb-1">UID</div>
+<div class="font-tactical-data text-tactical-data text-on-surface text-lg tracking-widest bg-surface-container-highest/50 px-3 py-1 rounded inline-block border border-outline-variant/30">
+                                    PXY-992-LON
+                                </div>
+</div>
+<div>
+<div class="font-tactical-data text-label-sm text-tertiary mb-1">CLUB RANK</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">key</span>
+<span class="font-headline-lg font-bold text-primary tracking-wide">Gold Keycard Level</span>
+</div>
+</div>
+<div>
+<div class="font-tactical-data text-label-sm text-tertiary mb-1">BALANCE</div>
+<div class="font-tactical-data text-tactical-data text-on-surface text-xl">
+<span class="text-primary">2,450</span> PC
+                                </div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex flex-col items-center p-4 bg-surface-container-lowest/80 rounded-lg border border-primary/20 relative shimmer">
+<img alt="Dynamic QR Code" class="w-32 h-32 object-cover rounded shadow-[0_0_15px_rgba(242,202,80,0.3)]" data-alt="A shimmering, metallic gold QR code embedded within a dark, glossy obsidian glass panel. The QR code pattern is sharp, precise, and glowing slightly against the pitch-black background, conveying high security and digital luxury. Thin geometric lines suggest an active scan or refresh timer." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_qaecv-GmC-lFRxP-RAAQxGkEWPtXPg7XEssOkpIhZO8Ahm18Sbd-sOEXc53lzlEPxHDOsAFYM8i5d0jvQcoGfdIsSn55bHlUv2iB3ElhkxgSXAPLIsWTMne_eXtuF7gvE5mV9MPvFT4Z5uJu9FNnzwt5YCO-2Cbu9-eSIQTXlDZ0llz9P7rGtafvVkQbi_xwSVKHdGZIHx-3XVODZps27x3fNSNZnkVB8YWT37CLrYDlgE9-IsoMiHeOT4uqZKMt8k7tWKaF1A"/>
+<div class="mt-3 font-tactical-data text-[10px] text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">timer</span>
+                            Refreshes in <span class="text-primary font-bold" id="qr-timer">30</span>s
+                        </div>
+</div>
+</div>
+<!-- Right Column: Showcase -->
+<div class="flex-1 flex flex-col">
+<div class="font-headline-lg text-sm text-on-surface-variant uppercase tracking-widest mb-6 border-b border-outline-variant/20 pb-2">
+                        Mythic Showcase
+                    </div>
+<div class="flex flex-col gap-4 h-full justify-center">
+<!-- Slot 1 -->
+<div class="chamfer-edge rounded-lg p-3 flex items-center gap-4 bg-surface-container-lowest/50 hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="w-16 h-16 rounded border border-primary/30 overflow-hidden relative">
+<img alt="Mythic Item 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A detailed 3D render of a luxury, cybernetic artifact—perhaps a digital key or a mechanised timepiece. It is constructed from dark matte metal and brushed gold, resting on a pitch-black surface. High-contrast lighting highlights its precision engineering and opulent web3 aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5gbQO7DbQ40bfjy2ZcjzwVugowx91-af51wjH4Zprh0kK2bU49WIohbG4HiywGcDarAUf4XatoyusQXWPywUiL4WwgrSdThmHwCAXhR3D6Qali-1zo_TB44sXRzq26OPVH8QlWI5ThW3YFtdSdTNz1ihF8BFDTLzzCBz5aQxk949MSdslb4psRIva09qvfIWrvUPCOR_dm77MbkBomzDSNTwFTGuU3ghbHJHgRSl5yZ7J7c82xXRxZUU763WyEVDXhVIOGm7bXA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+</div>
+<div>
+<div class="font-headline-lg font-bold text-on-surface text-sm">Obsidian Ledger</div>
+<div class="font-tactical-data text-[10px] text-primary mt-1 border border-primary/40 px-2 py-0.5 rounded-full inline-block">GENESIS TIER</div>
+</div>
+</div>
+<!-- Slot 2 -->
+<div class="chamfer-edge rounded-lg p-3 flex items-center gap-4 bg-surface-container-lowest/50 hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="w-16 h-16 rounded border border-secondary/30 overflow-hidden relative">
+<img alt="Mythic Item 2" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A striking abstract digital asset representing a web3 token or collectible. It features sharp, crystalline geometry in dark metallic tones, accented by a glowing silver inner core. The background is deep black, creating a sense of a highly secure digital vault containing a rare artifact." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7H41IXIATdfRNK81Nco67jIPakjMbLLc2zVk7f4vjBNFISFjsW1zv2EbUgI6BZXsW_prr9isM94PJq2LFCjyFiZdZs-JusrfW1M2ckRu7Qp_CV5HiVTesixJYhwRoHTX0jaORMfJfkFXOak4U--jkvw7ip4qIqh7OIKSQC7pCZrV0y9onPFhtErU4O2TNvQQ0a2lCpR5CPw0RibVq_EiBgJQIYCDIxyVPH3kLiTnFG01kQ4_uftuofbfHhG2YmmsxL8Nb8eG27w"/>
+</div>
+<div>
+<div class="font-headline-lg font-bold text-on-surface text-sm">Silver Passkey</div>
+<div class="font-tactical-data text-[10px] text-secondary mt-1 border border-secondary/40 px-2 py-0.5 rounded-full inline-block">RARE</div>
+</div>
+</div>
+<!-- Slot 3 -->
+<div class="chamfer-edge rounded-lg p-3 flex items-center gap-4 bg-surface-container-lowest/50 opacity-60 border-dashed border-outline-variant">
+<div class="w-16 h-16 rounded border border-outline-variant/30 flex items-center justify-center bg-surface-dim">
+<span class="material-symbols-outlined text-outline-variant">add</span>
+</div>
+<div>
+<div class="font-headline-lg font-medium text-outline-variant text-sm">Empty Slot</div>
+<div class="font-tactical-data text-[10px] text-tertiary mt-1">AVAILABLE</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Atmospheric Footer Text -->
+<div class="mt-8 text-center opacity-40">
+<p class="font-tactical-data text-xs text-on-surface-variant uppercase tracking-[0.2em]">Restricted Access • Encrypted Connection • Sector 7G</p>
+</div>
+</div>
+</main>
+<script>
+        // Simple timer logic for the QR code
+        let timeLeft = 30;
+        const timerElement = document.getElementById('qr-timer');
+        
+        setInterval(() => {
+            timeLeft--;
+            if (timeLeft < 0) timeLeft = 30;
+            timerElement.textContent = timeLeft;
+        }, 1000);
+    </script>
+</body></html>
