@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-collection-page.css">
+<link rel="stylesheet" href="assets/poxy-store-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1082,7 +1083,7 @@ body.dark-club .club-sub{color:#888}
     <button type="button" class="sidebar-tab-btn" id="stab-appraisal" onclick="switchSidebarTab('appraisal')">Value</button>
     <button type="button" class="sidebar-tab-btn" id="stab-leaderboard" onclick="closeSidebar();showStitchTab('ranks')">Player Ranks</button>
     <button type="button" class="sidebar-tab-btn" id="stab-support" onclick="switchSidebarTab('support')">Legal</button>
-    <button type="button" class="sidebar-tab-btn" id="stab-customize" onclick="switchSidebarTab('customize')">Store</button>
+    <button type="button" class="sidebar-tab-btn" id="stab-customize" onclick="closeSidebar();showPage('store')">Store</button>
     </div>
   </div>
   <div class="sidebar-content">
@@ -1603,6 +1604,107 @@ body.dark-club .club-sub{color:#888}
   <div class="page-title">ADD FUNDS</div>
   <p class="psd-subpages-hint">Treasury &amp; card form are on the Dashboard.</p>
   <button type="button" class="btn-primary" onclick="showPage('hunt');scrollToTreasury()">Go to Dashboard Treasury</button>
+</div>
+
+<!-- POXY STORE (Stitch Tactical Terminal) -->
+<div class="page poxy-store-page" id="storePage">
+  <div class="poxy-store-layout">
+    <aside class="poxy-store-sidenav" aria-label="Store categories">
+      <div class="poxy-store-sidenav-brand">
+        <div class="poxy-store-sidenav-icon"><span class="material-symbols-outlined" aria-hidden="true">storefront</span></div>
+        <h2>Tactical Terminal</h2>
+        <p>Premium assets</p>
+      </div>
+      <button type="button" class="poxy-store-nav-btn active" id="storeNavThemes" data-store-cat="themes" onclick="switchStoreCategory('themes')">
+        <span class="material-symbols-outlined" aria-hidden="true">palette</span> Themes
+      </button>
+      <button type="button" class="poxy-store-nav-btn" id="storeNavGradients" data-store-cat="gradients" onclick="switchStoreCategory('gradients')">
+        <span class="material-symbols-outlined" aria-hidden="true">layers</span> Gradients
+      </button>
+      <button type="button" class="poxy-store-nav-btn" id="storeNavBoosters" data-store-cat="boosters" onclick="switchStoreCategory('boosters')">
+        <span class="material-symbols-outlined" aria-hidden="true">bolt</span> Boosters
+      </button>
+      <button type="button" class="poxy-store-nav-btn" id="storeNavBundles" data-store-cat="bundles" onclick="switchStoreCategory('bundles')">
+        <span class="material-symbols-outlined" aria-hidden="true">package_2</span> Bundles
+      </button>
+    </aside>
+    <div class="poxy-store-main">
+      <section class="poxy-store-bento">
+        <div class="poxy-store-obsidian poxy-store-preview">
+          <header class="poxy-store-preview-head">
+            <div>
+              <h3 class="poxy-store-metallic">Asset Previewer</h3>
+              <p class="poxy-store-preview-sub">Live simulation engine</p>
+            </div>
+            <span class="material-symbols-outlined" style="font-size:40px;color:rgba(249,171,255,0.45)" aria-hidden="true">view_in_ar</span>
+          </header>
+          <div class="poxy-store-preview-stage" id="storePreviewStage">
+            <div class="poxy-store-preview-card" id="storePreviewCard">
+              <div class="poxy-store-preview-user">
+                <div class="poxy-store-preview-av" id="storePreviewAvatar">👾</div>
+                <div>
+                  <div class="poxy-store-preview-handle" id="storePreviewHandle">@player</div>
+                  <div class="poxy-store-preview-name" id="storePreviewName">Operative</div>
+                </div>
+              </div>
+              <div class="poxy-store-preview-bar"><div class="poxy-store-preview-bar-fill"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="poxy-store-obsidian poxy-store-terminal">
+          <div>
+            <div class="poxy-store-terminal-label">
+              <span>Exchange terminal</span>
+              <span class="poxy-store-terminal-pulse" aria-hidden="true"></span>
+            </div>
+            <div class="poxy-store-terminal-balance" id="storeBalanceDisplay">0 <span>PC</span></div>
+            <div class="poxy-store-terminal-rows">
+              <div class="poxy-store-terminal-row">
+                <span class="lbl">Dust balance</span>
+                <span class="val" id="storeDustDisplay">0</span>
+              </div>
+              <div class="poxy-store-terminal-row">
+                <span class="lbl">Collection</span>
+                <span class="val" id="storeColDisplay">0 items</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="poxy-store-terminal-fund" onclick="showStitchTab('dashboard');scrollToTreasury()">Add funds — treasury</button>
+        </div>
+      </section>
+      <section class="poxy-store-uplinks" aria-label="Active uplinks">
+        <div class="poxy-store-uplinks-head">
+          <h3>Active uplinks</h3>
+          <div class="poxy-store-uplinks-rule"></div>
+        </div>
+        <div class="poxy-store-uplinks-tray">
+          <div class="poxy-store-uplink cyan">
+            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1" aria-hidden="true">bolt</span>
+            Member perks online
+          </div>
+          <div class="poxy-store-uplink primary">
+            <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1" aria-hidden="true">local_offer</span>
+            Zero market fees
+          </div>
+          <button type="button" class="poxy-store-uplink ghost" onclick="showToast('Boosters deploy in a future update.')">
+            <span class="material-symbols-outlined" style="font-size:16px" aria-hidden="true">add</span>
+            Deploy booster
+          </button>
+        </div>
+      </section>
+      <section>
+        <header class="poxy-store-grid-header">
+          <div>
+            <h2 class="poxy-store-metallic" id="storeGridTitle">Premium caches</h2>
+            <p id="storeGridSub">Acquire exclusive visual modifications.</p>
+          </div>
+        </header>
+        <div class="poxy-store-grid" id="storeGrid">
+          <div class="poxy-store-signin">Sign in to access the store.</div>
+        </div>
+      </section>
+    </div>
+  </div>
 </div>
 
 <!-- POXY CLUB / Founders Circle (Stitch) -->
@@ -2932,7 +3034,7 @@ window.showPage=function(page){
   document.body.classList.add('poxy-stitch-dash');
   $('huntPage').style.display='none';
   $('bottomNav').style.display='none';
-  ['profile','collection','friends'].forEach(p=>{
+  ['profile','collection','friends','store'].forEach(p=>{
     const el=$(p+'Page');
     if(el)el.classList.toggle('visible',page===p);
   });
@@ -2940,6 +3042,11 @@ window.showPage=function(page){
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
   if(page==='friends'){loadFriends();loadPendingRequests();}
   if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();}
+  if(page==='store'){
+    const run=()=>renderStorePage();
+    if(!colData.length)loadCollection().then(run).catch(run);
+    else run();
+  }
   document.body.classList.remove('dark-club');
   window.scrollTo(0,0);
 };
@@ -4970,24 +5077,122 @@ function renderLeaderboardList(data,mode){
   });
 }
 
-// ── CUSTOMIZATION STORE ──
+// ── POXY STORE (Tactical Terminal) ──
+let storeCategory='themes';
+const STORE_CAT_META={
+  themes:{title:'Premium caches',sub:'Acquire exclusive interface themes.',type:'theme'},
+  gradients:{title:'Signal gradients',sub:'Animated username overlays for your profile.',type:'gradient'},
+  boosters:{title:'Active uplinks',sub:'Power-up modules — coming soon.',type:null},
+  bundles:{title:'Asset bundles',sub:'Curated packs — coming soon.',type:null}
+};
+window.switchStoreCategory=function(cat){
+  storeCategory=cat||'themes';
+  document.querySelectorAll('.poxy-store-nav-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.storeCat===storeCategory);
+  });
+  const meta=STORE_CAT_META[storeCategory]||STORE_CAT_META.themes;
+  const t=$('storeGridTitle');if(t)t.textContent=meta.title;
+  const s=$('storeGridSub');if(s)s.textContent=meta.sub;
+  renderStoreGrid();
+};
+function renderStorePreview(){
+  const stage=$('storePreviewStage'),nameEl=$('storePreviewName'),handleEl=$('storePreviewHandle'),avEl=$('storePreviewAvatar');
+  if(!stage||!currentProfile)return;
+  const themeItem=CUSTOMIZATION_ITEMS.find(c=>c.type==='theme'&&c.themeVal===(currentProfile.profile_theme||''));
+  const bg=themeItem?themeItem.previewBg:'#131313';
+  stage.style.background=bg;
+  const uname=currentProfile.username||'Operative';
+  if(handleEl)handleEl.textContent='@'+uname.toLowerCase().replace(/\s+/g,'_');
+  if(nameEl){
+    nameEl.textContent=uname;
+    nameEl.style.background=currentProfile.name_gradient||'none';
+    nameEl.style.webkitBackgroundClip=currentProfile.name_gradient?'text':'';
+    nameEl.style.backgroundClip=currentProfile.name_gradient?'text':'';
+    nameEl.style.color=currentProfile.name_gradient?'transparent':'#e5e2e1';
+  }
+  if(avEl){
+    const av=currentProfile.avatar_url||'';
+    if(av&&av.startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';
+    else{avEl.innerHTML='';avEl.textContent=av||'👾';}
+  }
+}
+function renderStoreTerminal(){
+  const bal=$('storeBalanceDisplay'),dust=$('storeDustDisplay'),col=$('storeColDisplay');
+  if(bal&&currentProfile)bal.innerHTML=formatPC(currentProfile.balance||0).replace(' PC','')+' <span>PC</span>';
+  if(dust&&currentProfile)dust.textContent=String(Math.floor(currentProfile.dust||0));
+  if(col)col.textContent=(colData.length||0)+' item'+(colData.length===1?'':'s');
+}
+function renderStoreGrid(){
+  const grid=$('storeGrid');if(!grid)return;
+  if(!currentUser){grid.innerHTML='<div class="poxy-store-signin">Sign in to access the store.</div>';return;}
+  if(!currentProfile){grid.innerHTML='<div class="poxy-store-signin">Loading profile…</div>';return;}
+  const meta=STORE_CAT_META[storeCategory]||STORE_CAT_META.themes;
+  if(!meta.type){
+    grid.innerHTML='<div class="poxy-store-empty">This category opens in a future terminal update. Check back soon.</div>';
+    return;
+  }
+  const items=CUSTOMIZATION_ITEMS.filter(c=>c.type===meta.type);
+  if(!items.length){grid.innerHTML='<div class="poxy-store-empty">No assets in this category.</div>';return;}
+  grid.innerHTML='';
+  items.forEach(item=>{
+    const isTheme=item.type==='theme';
+    const equipped=isTheme?currentProfile.profile_theme===item.themeVal:currentProfile.name_gradient===item.gradientVal;
+    const previewBg=isTheme?item.previewBg:item.gradientVal;
+    const typeLabel=isTheme?'Theme':'Gradient';
+    const card=document.createElement('article');
+    card.className='poxy-store-obsidian poxy-store-card'+(equipped?' equipped':'');
+    if(equipped){
+      const badge=document.createElement('div');
+      badge.className='poxy-store-card-badge';
+      badge.textContent='Equipped';
+      card.appendChild(badge);
+    }
+    const visual=document.createElement('div');
+    visual.className='poxy-store-card-visual';
+    visual.style.background=previewBg;
+    const tag=document.createElement('span');
+    tag.className='poxy-store-card-tag';
+    tag.textContent=typeLabel;
+    visual.appendChild(tag);
+    const h4=document.createElement('h4');
+    h4.textContent=item.name;
+    const foot=document.createElement('div');
+    foot.className='poxy-store-card-foot';
+    if(equipped){
+      const price=document.createElement('span');
+      price.className='poxy-store-card-price muted';
+      price.textContent=item.cost+' PC';
+      const status=document.createElement('span');
+      status.className='poxy-store-card-status';
+      status.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">check_circle</span> In use';
+      foot.appendChild(price);foot.appendChild(status);
+    }else{
+      const price=document.createElement('span');
+      price.className='poxy-store-card-price';
+      price.textContent=item.cost+' PC';
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.className='poxy-store-card-acquire';
+      btn.textContent='Acquire';
+      btn.onclick=function(e){e.stopPropagation();purchaseCustomization(item.id);};
+      foot.appendChild(price);foot.appendChild(btn);
+    }
+    card.appendChild(visual);card.appendChild(h4);card.appendChild(foot);
+    grid.appendChild(card);
+  });
+}
+function renderStorePage(){
+  if(!currentUser){
+    const grid=$('storeGrid');if(grid)grid.innerHTML='<div class="poxy-store-signin">Sign in to access the store.</div>';
+    return;
+  }
+  switchStoreCategory(storeCategory);
+  renderStorePreview();
+  renderStoreTerminal();
+}
 function renderCustomizeTab(){
-  const cont=$('customizeStoreContent');if(!cont||!currentUser)return;
-  if(!currentProfile){cont.innerHTML='<div class="news-empty">Loading profile...</div>';return;}
-  const ownedTheme=currentProfile.profile_theme||null;
-  const ownedGradient=currentProfile.name_gradient||null;
-  let html='<div class="customize-section-label">Profile Themes</div><div class="customize-items">';
-  CUSTOMIZATION_ITEMS.filter(c=>c.type==='theme').forEach(item=>{
-    const isOwned=ownedTheme===item.themeVal;
-    html+='<div class="customize-item"><div class="customize-preview" style="background:'+item.previewBg+'"></div><div class="customize-info"><div class="customize-name">'+item.name+'</div><div class="customize-desc">'+item.desc+'</div></div><div class="customize-cost">'+item.cost+' PC</div><button class="btn-customize-buy'+(isOwned?' owned':'')+'" data-id="'+item.id+'" onclick="purchaseCustomization(\''+item.id+'\')">'+( isOwned?'Active':'Buy')+'</button></div>';
-  });
-  html+='</div><div class="customize-section-label">Username Gradients</div><div class="customize-items">';
-  CUSTOMIZATION_ITEMS.filter(c=>c.type==='gradient').forEach(item=>{
-    const isOwned=ownedGradient===item.gradientVal;
-    html+='<div class="customize-item"><div class="customize-preview" style="background:'+item.gradientVal+'"></div><div class="customize-info"><div class="customize-name">'+item.name+'</div><div class="customize-desc">'+item.desc+'</div></div><div class="customize-cost">'+item.cost+' PC</div><button class="btn-customize-buy'+(isOwned?' owned':'')+'" data-id="'+item.id+'" onclick="purchaseCustomization(\''+item.id+'\')">'+( isOwned?'Active':'Buy')+'</button></div>';
-  });
-  html+='</div>';
-  cont.innerHTML=html;
+  const cont=$('customizeStoreContent');
+  if(cont)cont.innerHTML='<div class="news-empty" style="padding:12px 0">Open the Tactical Terminal for the full store experience.</div><button type="button" class="btn-primary" style="margin-top:12px;width:100%" onclick="closeSidebar();showPage(\'store\')">Open POXY Store</button>';
 }
 window.purchaseCustomization=async function(itemId){
   const item=CUSTOMIZATION_ITEMS.find(c=>c.id===itemId);
@@ -5007,7 +5212,8 @@ window.purchaseCustomization=async function(itemId){
     if(item.type==='theme')applyTheme(item.themeVal);
     else if(item.type==='gradient')applyNameGradientUI(item.gradientVal);
     showToast(item.name+' activated!');
-    renderCustomizeTab();
+    if($('storePage')?.classList.contains('visible'))renderStorePage();
+    else renderCustomizeTab();
   }catch(e){showToast('Purchase failed: '+(e.message||'error'));}
 };
 
