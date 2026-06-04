@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
-<link rel="stylesheet" href="assets/poxy-quick-profile.css?v=1">
+<link rel="stylesheet" href="assets/poxy-quick-profile.css?v=3">
 <link rel="stylesheet" href="assets/poxy-ranks-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
@@ -2759,8 +2759,10 @@ body.dark-club .club-sub{color:#888}
   <button type="button" class="qp-profile-close" onclick="closeInspectModal()" aria-label="Close profile"><span class="material-symbols-outlined">close</span></button>
   <div class="modal-card qp-profile-card">
     <div class="qp-profile-banner" id="inspectBanner">
-      <img class="qp-profile-banner-img" id="inspectBannerImg" alt="" hidden>
-      <div class="qp-profile-banner-gradient" aria-hidden="true"></div>
+      <div class="qp-profile-banner-aura" id="inspectBannerAura" aria-hidden="true"></div>
+      <div class="qp-profile-banner-rank" id="inspectBannerRank" aria-hidden="true"></div>
+      <div class="qp-profile-banner-vignette" aria-hidden="true"></div>
+      <div class="qp-profile-banner-readability" aria-hidden="true"></div>
     </div>
     <div class="qp-profile-content">
       <div class="qp-profile-avatar-row">
@@ -6521,8 +6523,8 @@ function startFriendPoll(){
 }
 
 // ── EXPANDED PLAYER PROFILE (X-style Quick Profile) ──
-const QP_DEFAULT_BANNER='https://lh3.googleusercontent.com/aida/AP1WRLsv5xUYyi2QPfEH0OUSf_Dz_SzuiRIz5hGtAkP_Wdw_cKqWSIEpN6WQBpoOHIWpIe7Qy_-4X-R7pQHUqXbrbk5j-qsGbW2a1OT6Ce2r_ydwvUeoFY--2nYhZAnPYhXmSA_X7HgEU6-mNjd4MzvmJ1sSEq1XqpMm7kcXJ93q3fGIAYJrrli0uGydRrsONYTxgFmfua6z2BUw6aD8HqeS5bSkUwbbkSZ-iqHrB88rsOCsEEZkS_3DvPM2rg';
 const QP_INSPECT_TIER_ORDER=['secret','diamond','stellar','mythic','legendary','epic','rare','uncommon','common'];
+const QP_AURA_FALLBACK=[18,18,22];
 const QP_BADGE_DEFS={
   founder:{icon:'workspace_premium',label:'FOUNDER',mod:'founder'},
   vip_club:{icon:'diamond',label:'VIP',mod:'vip'},
@@ -6530,6 +6532,97 @@ const QP_BADGE_DEFS={
   market_baron:{icon:'payments',label:'BARON',mod:''},
   first_drop_set:{icon:'target',label:'HUNTER',mod:''}
 };
+function qpHighestTierId(poxyData){
+  for(const id of QP_INSPECT_TIER_ORDER){
+    if(poxyData?.some(d=>d.poxy_tier===id))return id;
+  }
+  return 'common';
+}
+function qpAuraTextureClass(tierId){
+  if(['mythic','secret','diamond','stellar'].includes(tierId))return 'mythic';
+  if(tierId==='legendary')return 'legendary';
+  if(tierId==='epic')return 'epic';
+  if(tierId==='rare')return 'rare';
+  return 'member';
+}
+function qpHexToRgb(hex){
+  if(!hex||typeof hex!=='string')return null;
+  const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.trim());
+  return m?[parseInt(m[1],16),parseInt(m[2],16),parseInt(m[3],16)]:null;
+}
+function qpDesaturateRgb(r,g,b,amt){
+  const gray=0.299*r+0.587*g+0.114*b;
+  return[
+    Math.round(r+(gray-r)*amt),
+    Math.round(g+(gray-g)*amt),
+    Math.round(b+(gray-b)*amt)
+  ];
+}
+function resetInspectAuraBanner(){
+  const aura=$('inspectBannerAura');
+  const rank=$('inspectBannerRank');
+  if(aura){
+    aura.classList.remove('is-active');
+    aura.style.background='#121011';
+  }
+  if(rank){
+    rank.className='qp-profile-banner-rank';
+    rank.classList.remove('is-active');
+  }
+}
+async function extractDominantColorFromAvatar(avWrap,tierId){
+  const tier=TIER_BY_ID[tierId]||TIERS[0];
+  const fallback=qpHexToRgb(tier.color)||QP_AURA_FALLBACK;
+  const img=avWrap?.querySelector('img');
+  if(!img)return fallback;
+  if(!img.crossOrigin)img.crossOrigin='anonymous';
+  if(!img.complete)await new Promise(res=>{img.onload=img.onerror=res;});
+  try{
+    const size=36;
+    const canvas=document.createElement('canvas');
+    canvas.width=size;
+    canvas.height=size;
+    const ctx=canvas.getContext('2d',{willReadFrequently:true});
+    ctx.drawImage(img,0,0,size,size);
+    const pixels=ctx.getImageData(0,0,size,size).data;
+    let r=0,g=0,b=0,n=0;
+    for(let i=0;i<pixels.length;i+=4){
+      if(pixels[i+3]<48)continue;
+      const lum=0.299*pixels[i]+0.587*pixels[i+1]+0.114*pixels[i+2];
+      if(lum<22||lum>248)continue;
+      r+=pixels[i];
+      g+=pixels[i+1];
+      b+=pixels[i+2];
+      n++;
+    }
+    if(!n)return fallback;
+    return[Math.round(r/n),Math.round(g/n),Math.round(b/n)];
+  }catch(e){
+    return fallback;
+  }
+}
+function applyCompositeAuraBanner(rgb,tierTexture){
+  const aura=$('inspectBannerAura');
+  const rank=$('inspectBannerRank');
+  if(!aura)return;
+  const base=qpDesaturateRgb(rgb[0],rgb[1],rgb[2],0.52);
+  const glow=qpDesaturateRgb(rgb[0],rgb[1],rgb[2],0.35);
+  const [r,g,b]=base;
+  const [r2,g2,b2]=glow;
+  aura.style.background=
+    'radial-gradient(ellipse 130% 115% at 22% 18%, rgba('+r+','+g+','+b+',0.4) 0%, transparent 58%),'
+    +'radial-gradient(ellipse 95% 85% at 78% 8%, rgba('+r2+','+g2+','+b2+',0.18) 0%, transparent 52%),'
+    +'#121011';
+  aura.classList.remove('is-active');
+  if(rank){
+    rank.className='qp-profile-banner-rank qp-profile-banner-rank--'+tierTexture;
+    rank.classList.remove('is-active');
+  }
+  requestAnimationFrame(()=>{
+    aura.classList.add('is-active');
+    if(rank)rank.classList.add('is-active');
+  });
+}
 function qpInspectTierLabel(poxyData,isClub){
   for(const id of QP_INSPECT_TIER_ORDER){
     if(poxyData?.some(d=>d.poxy_tier===id)){
@@ -6664,8 +6757,7 @@ async function openInspectModal(userId){
   $('inspectActionsRow').innerHTML='';
   const avWrap=$('inspectAvatarWrap');
   if(avWrap){avWrap.className='qp-profile-avatar-wrap';avWrap.innerHTML='<span id="inspectAvatarInner">👾</span>';}
-  const bannerImg=$('inspectBannerImg');
-  if(bannerImg){bannerImg.src=QP_DEFAULT_BANNER;bannerImg.hidden=false;}
+  resetInspectAuraBanner();
   modal.classList.remove('hidden');
   requestAnimationFrame(()=>modal.classList.add('show'));
   try{
@@ -6686,10 +6778,15 @@ async function openInspectModal(userId){
     const presence=friendPresenceMap[userId]||'offline';
     avWrap.className='qp-profile-avatar-wrap'+(isSelfInspect?' avatar-frame-target':'')+(isPrem&&!isSelfInspect?' inspect-prem':'');
     let avInner='<span id="inspectAvatarInner">'+sanitizeText(prof.avatar_url||'👾')+'</span>';
-    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avInner='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="">';
+    if(prof.avatar_url&&prof.avatar_url.startsWith('http')){
+      avInner='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="" crossorigin="anonymous" referrerpolicy="no-referrer">';
+    }
     const presHtml=(!isSelfInspect&&presence!=='offline')?'<span class="qp-profile-presence qp-profile-presence--'+(presence==='inventory'?'inventory':'online')+'"></span>':'';
     avWrap.innerHTML=avInner+presHtml;
     if(isSelfInspect)updateGlobalFrames();
+    const highestTier=qpHighestTierId(poxyData);
+    const auraRgb=await extractDominantColorFromAvatar(avWrap,highestTier);
+    applyCompositeAuraBanner(auraRgb,qpAuraTextureClass(highestTier));
     const uname=sanitizeText(prof.username||'Anonymous');
     $('inspectUsernameText').textContent='@'+uname.replace(/^@/,'');
     const verified=$('inspectVerified');
@@ -6733,6 +6830,7 @@ async function openInspectModal(userId){
 }
 window.closeInspectModal=function(){
   closeInspectMoreMenu();
+  resetInspectAuraBanner();
   const modal=$('inspectModal');
   modal.classList.remove('show');
   setTimeout(()=>modal.classList.add('hidden'),280);
