@@ -3744,6 +3744,7 @@ function bootstrapAfterLogin(){
 async function applyAuthSession(session){
   const user=session?.user??null;
   currentUser=user;
+  window.currentUser=user;
   if(!user){setLoggedOutUI();return;}
   const em=$('userEmailEl');if(em)em.textContent=user.email||'';
   setLoggedInUI();
@@ -3756,6 +3757,7 @@ async function applyAuthSession(session){
     if($('storeGrid')&&currentProfile)renderStoreGrid();
   }
 }
+window.applyAuthSession=applyAuthSession;
 function setupAuthStateListener(){
   sb.auth.onAuthStateChange((event,session)=>{
     if(event==='SIGNED_OUT'||(event==='INITIAL_SESSION'&&!session)){

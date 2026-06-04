@@ -116,15 +116,44 @@
     } catch (e) {}
   }
 
+  function resolveUser() {
+    return global.currentUser || null;
+  }
+
+  async function ensureUser() {
+    if (resolveUser()) return resolveUser();
+    if (!global.sb?.auth?.getSession) return null;
+    try {
+      const { data: { session } } = await global.sb.auth.getSession();
+      if (session?.user) {
+        global.currentUser = session.user;
+        if (typeof global.applyAuthSession === 'function') {
+          await global.applyAuthSession(session);
+        }
+        return session.user;
+      }
+    } catch (e) {}
+    return null;
+  }
+
   function enter(opts) {
     opts = opts || {};
-    if (!global.currentUser) {
-      if (typeof global.showToast === 'function') {
-        global.showToast('Sign in to open Lumina OS.');
-      }
+    const user = resolveUser();
+    if (!user) {
+      ensureUser().then((u) => {
+        if (u) enter(opts);
+        else if (typeof global.showToast === 'function') {
+          const overlay = document.getElementById('authOverlay');
+          if (overlay) {
+            overlay.classList.remove('hidden');
+            overlay.style.display = 'flex';
+          }
+          global.showToast('Sign in to open Lumina OS.');
+        }
+      });
       return;
     }
-    if (opts.user && String(opts.user) === String(global.currentUser.id)) {
+    if (opts.user && String(opts.user) === String(user.id)) {
       if (typeof global.showToast === 'function') {
         global.showToast('Cannot message yourself.');
       }
@@ -211,8 +240,14 @@
 
   function onPopState() {
     if (isLuminaOSPath()) {
-      if (global.currentUser) enter({ replace: true, ...parseQuery() });
-      else showMainLayout();
+      if (resolveUser()) enter({ replace: true, ...parseQuery() });
+      else {
+        ensureUser().then((u) => {
+          if (u) enter({ replace: true, ...parseQuery() });
+          else showMainLayout();
+        });
+      }
+      return;
     } else if (mounted) {
       mounted = false;
       if (global.LuminaOSApp) global.LuminaOSApp.deactivate();
@@ -223,10 +258,14 @@
   }
 
   function bootstrapFromUrl() {
-    if (isLuminaOSPath() && global.currentUser) {
+    if (!isLuminaOSPath()) return false;
+    if (resolveUser()) {
       enter({ replace: true, ...parseQuery() });
       return true;
     }
+    ensureUser().then((u) => {
+      if (u && isLuminaOSPath()) enter({ replace: true, ...parseQuery() });
+    });
     return false;
   }
 
