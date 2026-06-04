@@ -1,0 +1,370 @@
+/* POXY Notification Bell Hub — slide drawer + gifts unboxing */
+
+.st-nav-notify{
+  position:relative;
+}
+.poxy-notify-dot{
+  position:absolute;
+  top:2px;
+  right:2px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#f9abff;
+  box-shadow:0 0 10px rgba(249,171,255,0.9),0 0 18px rgba(215,3,87,0.5);
+  border:1px solid rgba(19,19,19,0.9);
+  pointer-events:none;
+}
+.poxy-notify-dot[hidden]{display:none!important}
+
+.poxy-notify-overlay{
+  position:fixed;
+  inset:0;
+  z-index:11500;
+  pointer-events:none;
+}
+.poxy-notify-overlay.is-open{pointer-events:auto}
+.poxy-notify-overlay[hidden]{display:none!important}
+
+.poxy-notify-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  opacity:0;
+  transition:opacity 0.35s ease;
+}
+.poxy-notify-overlay.is-open .poxy-notify-backdrop{opacity:1}
+
+.poxy-notify-drawer{
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  width:min(420px,100vw);
+  display:flex;
+  flex-direction:column;
+  background:rgba(14,14,18,0.98);
+  border-left:1px solid rgba(255,255,255,0.1);
+  box-shadow:-20px 0 60px rgba(0,0,0,0.55);
+  transform:translateX(100%);
+  transition:transform 0.45s cubic-bezier(0.1,1,0.1,1);
+  will-change:transform;
+}
+.poxy-notify-overlay.is-open .poxy-notify-drawer{transform:translateX(0)}
+
+.poxy-notify-drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:20px 18px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.poxy-notify-drawer-head h2{
+  margin:0;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:18px;
+  font-weight:700;
+  color:#fff;
+}
+.poxy-notify-close{
+  width:36px;height:36px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.35);
+  color:#9ca3af;
+  font-size:18px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s,color 0.2s;
+}
+.poxy-notify-close:hover{background:rgba(255,255,255,0.1);color:#fff}
+
+.poxy-notify-tabs{
+  display:flex;
+  gap:8px;
+  padding:12px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.poxy-notify-tab{
+  flex:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:9999px;
+  border:1px solid transparent;
+  background:transparent;
+  color:#9ca3af;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:background 0.25s,border-color 0.25s,color 0.25s;
+}
+.poxy-notify-tab:hover{color:#e5e2e1}
+.poxy-notify-tab.active{
+  background:rgba(249,171,255,0.12);
+  border-color:rgba(249,171,255,0.35);
+  color:#f9abff;
+}
+.poxy-notify-tab-badge{
+  min-width:18px;
+  height:18px;
+  padding:0 6px;
+  border-radius:9999px;
+  background:#d70357;
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  line-height:18px;
+}
+.poxy-notify-tab-badge[hidden]{display:none}
+
+.poxy-notify-body{
+  flex:1;
+  overflow-y:auto;
+  padding:16px;
+}
+.poxy-notify-panel[hidden]{display:none!important}
+
+.poxy-notify-empty{
+  text-align:center;
+  padding:40px 16px;
+  color:#9d8b9b;
+  font-size:14px;
+  line-height:1.5;
+}
+.poxy-notify-activity-item{
+  padding:14px 16px;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:rgba(28,27,27,0.75);
+  border:1px solid rgba(255,255,255,0.08);
+  font-size:13px;
+  color:#d5c1d2;
+  line-height:1.45;
+}
+.poxy-notify-activity-item time{
+  display:block;
+  margin-top:6px;
+  font-size:11px;
+  color:#9d8b9b;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* Unopened gift cards */
+.poxy-notify-gift-list{display:flex;flex-direction:column;gap:12px}
+.poxy-notify-gift-card{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:14px;
+  padding:16px;
+  border-radius:14px;
+  background:rgba(28,27,27,0.8);
+  border:1px solid rgba(255,255,255,0.1);
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.poxy-notify-gift-card--pending{
+  border-color:rgba(249,171,255,0.25);
+  box-shadow:0 0 24px rgba(249,171,255,0.08);
+}
+.poxy-notify-gift-card--opened{
+  border-color:rgba(255,255,255,0.08);
+  opacity:0.92;
+}
+.poxy-notify-gift-card--claimed{opacity:0.55}
+
+.poxy-notify-gift-mini{
+  width:52px;height:52px;
+  border-radius:12px;
+  background:linear-gradient(145deg,#0a0a0c,#1c1b1b);
+  border:1px solid rgba(249,171,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  box-shadow:inset 0 0 16px rgba(249,171,255,0.12);
+}
+.poxy-notify-gift-card--opened .poxy-notify-gift-mini{
+  font-size:28px;
+  border-color:rgba(249,171,255,0.5);
+}
+.poxy-notify-gift-meta{min-width:0}
+.poxy-notify-gift-from{
+  margin:0 0 4px;
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+}
+.poxy-notify-gift-sub{
+  margin:0;
+  font-size:12px;
+  color:#9d8b9b;
+}
+.poxy-notify-gift-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+
+.poxy-notify-btn-reveal,
+.poxy-notify-btn-collection{
+  padding:10px 16px;
+  border-radius:9999px;
+  border:none;
+  font-family:inherit;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:transform 0.2s,box-shadow 0.25s;
+}
+.poxy-notify-btn-reveal{
+  background:linear-gradient(135deg,#9c27b0,#d70357);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(215,3,87,0.35);
+}
+.poxy-notify-btn-reveal:hover{transform:scale(1.04)}
+.poxy-notify-btn-collection{
+  background:#f9abff;
+  color:#131313;
+  box-shadow:0 0 16px rgba(249,171,255,0.35);
+}
+.poxy-notify-btn-collection:hover{transform:scale(1.04)}
+
+/* Full-screen unboxing (Framer-style spring via CSS) */
+.poxy-gift-unbox-overlay{
+  position:fixed;
+  inset:0;
+  z-index:12500;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(0,0,0,0.82);
+  backdrop-filter:blur(12px);
+}
+.poxy-gift-unbox-overlay[hidden]{display:none!important}
+
+.poxy-gift-unbox-stage{
+  position:relative;
+  width:min(320px,90vw);
+  height:min(360px,70vh);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:900px;
+}
+
+.poxy-gift-unbox-box{
+  position:relative;
+  width:200px;
+  height:200px;
+  transform-style:preserve-3d;
+  transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.poxy-gift-unbox-box.is-open{
+  transform:translateY(24px) scale(0.92);
+}
+
+.poxy-gift-unbox-lid{
+  position:absolute;
+  left:0;right:0;top:0;
+  height:44%;
+  transform-origin:bottom center;
+  background:linear-gradient(180deg,#1a1a1e,#0d0d10);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px 14px 4px 4px;
+  z-index:3;
+  box-shadow:0 -8px 24px rgba(249,171,255,0.15);
+  transition:transform 0.7s cubic-bezier(0.34,1.56,0.64,1);
+}
+.poxy-gift-unbox-box.is-opening .poxy-gift-unbox-lid,
+.poxy-gift-unbox-box.is-open .poxy-gift-unbox-lid{
+  transform:rotateX(-112deg) translateY(-8px);
+}
+
+.poxy-gift-unbox-body{
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  background:linear-gradient(145deg,#0a0a0c,#20201f);
+  border:1px solid rgba(255,255,255,0.1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  box-shadow:0 24px 50px rgba(0,0,0,0.6),inset 0 0 40px rgba(249,171,255,0.1);
+}
+
+.poxy-gift-unbox-sparks{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+}
+.poxy-gift-unbox-box.is-open .poxy-gift-unbox-sparks{opacity:1}
+.poxy-gift-unbox-spark{
+  position:absolute;
+  left:50%;top:42%;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:#f9abff;
+  box-shadow:0 0 14px #d70357;
+  animation:poxy-unbox-spark 0.9s cubic-bezier(0.1,1,0.1,1) forwards;
+  animation-delay:var(--delay,0ms);
+}
+@keyframes poxy-unbox-spark{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0)}
+  20%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--sx)),calc(-50% + var(--sy))) scale(0)}
+}
+
+.poxy-gift-unbox-reveal{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  opacity:0;
+  transform:scale(0.6) translateY(20px);
+  pointer-events:none;
+}
+.poxy-gift-unbox-reveal.is-visible{
+  opacity:1;
+  transform:scale(1) translateY(0);
+  pointer-events:auto;
+  transition:opacity 0.45s ease,transform 0.65s cubic-bezier(0.34,1.56,0.64,1);
+}
+.poxy-gift-unbox-reveal-card{
+  width:min(280px,100%);
+  padding:24px 20px;
+  border-radius:16px;
+  text-align:center;
+  background:rgba(28,27,27,0.95);
+  border:1px solid rgba(249,171,255,0.35);
+  box-shadow:0 0 40px rgba(249,171,255,0.2);
+}
+.poxy-gift-unbox-reveal-icon{font-size:56px;line-height:1;margin-bottom:8px}
+.poxy-gift-unbox-reveal-tier{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.poxy-gift-unbox-reveal-serial{font-size:12px;color:#9d8b9b;margin-bottom:16px}
+.poxy-gift-unbox-reveal-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.poxy-gift-unbox-skip{
+  margin-top:8px;
+  background:none;border:none;
+  color:#9d8b9b;font-size:12px;cursor:pointer;font-family:inherit;
+}
+.poxy-gift-unbox-skip:hover{color:#f9abff}

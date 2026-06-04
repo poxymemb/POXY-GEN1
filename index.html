@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=3">
+<link rel="stylesheet" href="assets/poxy-notify-hub.css?v=1">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -1179,7 +1180,7 @@ body.dark-club .club-sub{color:#888}
         </div>
         <div class="st-nav-right">
           <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">account_balance_wallet</span> <span id="stBalanceText">0 PC</span></button>
-          <button type="button" class="st-nav-notify" aria-label="Notifications" onclick="showToast('Notifications coming soon.')"><span class="material-symbols-outlined">notifications</span></button>
+          <button type="button" class="st-nav-notify" id="stNavNotify" aria-label="Notifications" onclick="openNotifyHub()"><span class="material-symbols-outlined">notifications</span><span class="poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span></button>
           <button type="button" class="st-topup-btn" onclick="scrollToTreasury()">Top Up</button>
           <!-- Profile header: avatar → username/role (single username source: userUsernameEl) -->
           <div class="user-bar st-user" id="userBar" role="group" aria-label="Account">
@@ -2720,6 +2721,54 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
+<!-- NOTIFICATION BELL HUB (Activity + Gifts) -->
+<div class="poxy-notify-overlay" id="notifyHubOverlay" hidden aria-hidden="true">
+  <div class="poxy-notify-backdrop" onclick="closeNotifyHub()"></div>
+  <aside class="poxy-notify-drawer" role="dialog" aria-labelledby="notifyHubTitle">
+    <header class="poxy-notify-drawer-head">
+      <h2 id="notifyHubTitle">Notifications</h2>
+      <button type="button" class="poxy-notify-close" onclick="closeNotifyHub()" aria-label="Close notifications">✕</button>
+    </header>
+    <div class="poxy-notify-tabs" role="tablist">
+      <button type="button" class="poxy-notify-tab active" id="notifyTabActivity" data-notify-tab="activity" onclick="switchNotifyTab('activity')">Activity</button>
+      <button type="button" class="poxy-notify-tab" id="notifyTabGifts" data-notify-tab="gifts" onclick="switchNotifyTab('gifts')">Gifts <span class="poxy-notify-tab-badge" id="notifyGiftsTabBadge" hidden>0</span></button>
+    </div>
+    <div class="poxy-notify-body">
+      <div class="poxy-notify-panel" id="notifyPanelActivity" data-notify-panel="activity">
+        <div id="notifyActivityList"></div>
+        <p class="poxy-notify-empty" id="notifyActivityEmpty" hidden>No recent activity yet.</p>
+      </div>
+      <div class="poxy-notify-panel" id="notifyPanelGifts" data-notify-panel="gifts" hidden>
+        <div class="poxy-notify-gift-list" id="notifyGiftsList"></div>
+        <p class="poxy-notify-empty" id="notifyGiftsEmpty">No pending gifts. Friends can send POXY from their profile.</p>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="poxy-gift-unbox-overlay" id="giftUnboxOverlay" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="giftUnboxTitle">
+  <div class="poxy-gift-unbox-stage">
+    <div class="poxy-gift-unbox-box" id="giftUnboxBox">
+      <div class="poxy-gift-unbox-lid" aria-hidden="true"></div>
+      <div class="poxy-gift-unbox-body" id="giftUnboxBodyIcon">🎁</div>
+      <div class="poxy-gift-unbox-sparks" id="giftUnboxSparks" aria-hidden="true"></div>
+    </div>
+    <div class="poxy-gift-unbox-reveal" id="giftUnboxReveal">
+      <div class="poxy-gift-unbox-reveal-card">
+        <p class="poxy-gift-unbox-reveal-tier" id="giftUnboxTier">RARE</p>
+        <div class="poxy-gift-unbox-reveal-icon" id="giftUnboxIcon">💎</div>
+        <p id="giftUnboxTitle" style="margin:0 0 6px;font-size:16px;font-weight:700;color:#fff">Gift revealed</p>
+        <p class="poxy-gift-unbox-reveal-serial" id="giftUnboxSerial">PX-XXXXXX</p>
+        <div class="poxy-gift-unbox-reveal-actions">
+          <button type="button" class="poxy-notify-btn-collection" id="giftUnboxAddBtn" onclick="claimGiftFromUnbox()">Add to Collection</button>
+          <button type="button" class="poxy-notify-btn-reveal" style="background:rgba(255,255,255,0.08);color:#e5e2e1;box-shadow:none" onclick="closeGiftUnboxOverlay()">Close</button>
+        </div>
+      </div>
+      <button type="button" class="poxy-gift-unbox-skip" onclick="closeGiftUnboxOverlay()">Skip animation</button>
+    </div>
+  </div>
+</div>
+
 <!-- DIRECT MESSAGE SLIDE-OVER -->
 <div class="dm-overlay hidden" id="dmOverlay" role="dialog" aria-modal="true" aria-labelledby="dmHeaderName">
   <div class="dm-panel">
@@ -3065,6 +3114,10 @@ let dailyQuests=[];
 let greatBurnTotal=0;
 // notifications queue (Phase 1)
 let notificationQueue=[];
+let pendingGifts=[];
+let activeNotifyTab='activity';
+let unboxingGiftId=null;
+const PENDING_GIFTS_LS='poxy_pending_gifts_v1';
 
 // ── SANITIZATION ──
 function sanitizeText(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
@@ -3194,7 +3247,12 @@ function pickTier(){let r=Math.random(),acc=0;for(const t of TIERS){acc+=t.prob;
 function pickVipTier(){let r=Math.random(),acc=0;for(const t of VIP_TIERS){acc+=t.prob;if(r<acc)return t;}return VIP_TIERS[VIP_TIERS.length-1];}
 function isFounder(){return!!(currentUser&&currentUser.email&&currentUser.email.toLowerCase()===FOUNDER_EMAIL);}
 function isClubMember(){return!!(currentProfile&&(currentProfile.is_club_member||hasMythic));}
-function pushNotification(type,payload){notificationQueue.push({type,payload,t:Date.now()});if(notificationQueue.length>50)notificationQueue.shift();}
+function pushNotification(type,payload){
+  notificationQueue.unshift({type,payload,t:Date.now(),read:false});
+  if(notificationQueue.length>50)notificationQueue.length=50;
+  updateNotifyBellDot();
+  if($('notifyHubOverlay')?.classList.contains('is-open'))renderNotifyActivityList();
+}
 function timeSince(iso){const s=Math.floor((Date.now()-new Date(iso))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
 function maskSerial(serial,showFull){if(showFull)return serial||'–';if(!serial)return'XXXX-XXXX';const s=String(serial);if(s.length<=4)return'XXXX-XXXX';return'XXXX-'+s.slice(-4);}
 function isUuid(v){return!!(v&&typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v));}
@@ -3328,6 +3386,8 @@ function bootstrapAfterLogin(){
       renderStorePage();
     }catch(e){console.error('post-login bootstrap:',e);}
     setupRealtimeSubscriptions();
+    loadPendingGifts();
+    updateNotifyBellDot();
     startFriendPoll();
     setTimeout(()=>{loadDailyQuests();},800);
     syncNavUsernameLabels();
@@ -5858,25 +5918,27 @@ window.confirmSendGift=async function(){
   const btn=$('btnSendGiftConfirm');
   if(btn)btn.disabled=true;
   try{
+    const payload={
+      to_id:giftTargetUserId,
+      from_id:currentUser.id,
+      from_name:currentProfile?.username||'Player',
+      item_id:giftSelectedItemId,
+      tier:item?.poxy_tier,
+      serial:item?.serial_number,
+      icon:tier?.icon
+    };
     if(giftBroadcastCh){
-      await giftBroadcastCh.send({
-        type:'broadcast',
-        event:'gift',
-        payload:{
-          to_id:giftTargetUserId,
-          from_id:currentUser.id,
-          from_name:currentProfile?.username||'Player',
-          item_id:giftSelectedItemId,
-          tier:item?.poxy_tier,
-          serial:item?.serial_number,
-          icon:tier?.icon
-        }
-      });
+      await giftBroadcastCh.send({type:'broadcast',event:'gift',payload});
     }
-    showToast('Gift sent! Recipient sees celebration particles.');
+    const{error:delErr}=await sb.from('user_poxy').delete().eq('id',giftSelectedItemId).eq('user_id',currentUser.id);
+    if(delErr)throw delErr;
+    colData=colData.filter(i=>String(i.id)!==String(giftSelectedItemId));
+    pushNotification('gift_sent',{to:giftTargetUserId,item_id:giftSelectedItemId});
+    showToast('Gift sent! They can open it from the notification bell.');
     closeGiftPicker();
-    if(String(giftTargetUserId)===String(friendProfileUserId))showToast('Wrapped in matte-black box with magenta ribbon.');
-  }catch(e){showToast('Gift send failed.');}
+    if(activeStitchTab==='dashboard')renderDashColPreview();
+    if($('collectionPage')?.classList.contains('visible'))loadCollection();
+  }catch(e){showToast('Gift send failed.');console.error(e);}
   if(btn)btn.disabled=false;
 };
 function triggerGiftParticleBurst(){
@@ -5898,14 +5960,225 @@ function triggerGiftParticleBurst(){
   setTimeout(()=>{layer.innerHTML='';},1300);
 }
 let giftBroadcastCh=null;
+
+function pendingGiftsStorageKey(){return PENDING_GIFTS_LS+'_'+(currentUser?.id||'');}
+function loadPendingGifts(){
+  pendingGifts=[];
+  try{
+    const raw=localStorage.getItem(pendingGiftsStorageKey());
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed))pendingGifts=parsed;
+    }
+  }catch(e){}
+}
+function savePendingGifts(){
+  if(!currentUser)return;
+  try{localStorage.setItem(pendingGiftsStorageKey(),JSON.stringify(pendingGifts));}catch(e){}
+}
+function countPendingGifts(){return pendingGifts.filter(g=>g.status==='pending').length;}
+function updateNotifyBellDot(){
+  const dot=$('notifyBellDot');
+  const badge=$('notifyGiftsTabBadge');
+  const n=countPendingGifts();
+  const hasUnreadActivity=notificationQueue.some(x=>!x.read);
+  if(dot)dot.hidden=!(n>0||hasUnreadActivity);
+  if(badge){
+    if(n>0){badge.hidden=false;badge.textContent=String(n);}
+    else badge.hidden=true;
+  }
+}
+function addIncomingGift(p){
+  if(!p||!currentUser)return;
+  const gift={
+    id:'gift_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),
+    from_id:p.from_id,
+    from_name:p.from_name||'Player',
+    item_id:p.item_id,
+    tier:p.tier||'common',
+    serial:p.serial||genSerial(),
+    icon:p.icon||'🎁',
+    status:'pending',
+    t:Date.now()
+  };
+  pendingGifts.unshift(gift);
+  if(pendingGifts.length>30)pendingGifts.length=30;
+  savePendingGifts();
+  pushNotification('gift_received',{from_name:gift.from_name,gift_id:gift.id});
+  updateNotifyBellDot();
+  renderNotifyGiftsList();
+  triggerGiftParticleBurst();
+  showToast('🎁 Gift from '+sanitizeText(gift.from_name)+' — open the bell icon.');
+}
+window.openNotifyHub=function(){
+  if(!currentUser){showToast('Sign in first.');return;}
+  const ov=$('notifyHubOverlay');
+  if(!ov)return;
+  notificationQueue.forEach(n=>{n.read=true;});
+  updateNotifyBellDot();
+  ov.hidden=false;
+  ov.setAttribute('aria-hidden','false');
+  requestAnimationFrame(()=>ov.classList.add('is-open'));
+  document.body.style.overflow='hidden';
+  renderNotifyActivityList();
+  renderNotifyGiftsList();
+  switchNotifyTab(countPendingGifts()>0?'gifts':'activity');
+};
+window.closeNotifyHub=function(){
+  const ov=$('notifyHubOverlay');
+  if(!ov)return;
+  ov.classList.remove('is-open');
+  document.body.style.overflow='';
+  setTimeout(()=>{ov.hidden=true;ov.setAttribute('aria-hidden','true');},400);
+};
+window.switchNotifyTab=function(tab){
+  activeNotifyTab=tab;
+  document.querySelectorAll('.poxy-notify-tab').forEach(b=>b.classList.toggle('active',b.dataset.notifyTab===tab));
+  document.querySelectorAll('.poxy-notify-panel').forEach(p=>{p.hidden=p.dataset.notifyPanel!==tab;});
+};
+function renderNotifyActivityList(){
+  const list=$('notifyActivityList');
+  const empty=$('notifyActivityEmpty');
+  if(!list)return;
+  const items=notificationQueue.slice(0,40);
+  if(!items.length){list.innerHTML='';if(empty)empty.hidden=false;return;}
+  if(empty)empty.hidden=true;
+  list.innerHTML='';
+  items.forEach(n=>{
+    const el=document.createElement('div');
+    el.className='poxy-notify-activity-item';
+    let text='Activity';
+    if(n.type==='gift_received')text='🎁 Gift received from '+sanitizeText(n.payload?.from_name||'a friend');
+    else if(n.type==='gift_sent')text='You sent a gift';
+    else if(n.type==='gift_claimed')text='Gift added to your collection';
+    else text=String(n.type||'update').replace(/_/g,' ');
+    el.innerHTML=sanitizeText(text)+'<time>'+timeSince(new Date(n.t).toISOString())+'</time>';
+    list.appendChild(el);
+  });
+}
+function renderNotifyGiftsList(){
+  const list=$('notifyGiftsList');
+  const empty=$('notifyGiftsEmpty');
+  if(!list)return;
+  const visible=pendingGifts.filter(g=>g.status!=='claimed');
+  if(!visible.length){list.innerHTML='';if(empty)empty.hidden=false;return;}
+  if(empty)empty.hidden=true;
+  list.innerHTML='';
+  visible.forEach(g=>{
+    const tier=TIER_BY_ID[g.tier]||TIERS[0];
+    const card=document.createElement('article');
+    card.className='poxy-notify-gift-card poxy-notify-gift-card--'+g.status;
+    card.dataset.giftId=g.id;
+    const icon=g.status==='opened'?tier.icon:g.icon||'🎁';
+    let actions='';
+    if(g.status==='pending'){
+      actions='<button type="button" class="poxy-notify-btn-reveal" onclick="startGiftUnbox(\''+g.id+'\')">Reveal</button>';
+    }else if(g.status==='opened'){
+      actions='<button type="button" class="poxy-notify-btn-collection" onclick="claimGiftById(\''+g.id+'\')">Add to Collection</button>';
+    }
+    card.innerHTML='<div class="poxy-notify-gift-mini" style="color:'+tier.color+'">'+icon+'</div>'
+      +'<div class="poxy-notify-gift-meta"><p class="poxy-notify-gift-from">From @'+sanitizeText(g.from_name||'player')+'</p>'
+      +'<p class="poxy-notify-gift-sub">'+(g.status==='pending'?'Unopened gift':g.status==='opened'?'Opened — claim to vault':'Claimed')+'</p></div>'
+      +'<div class="poxy-notify-gift-actions">'+actions+'</div>';
+    list.appendChild(card);
+  });
+  updateNotifyBellDot();
+}
+function buildUnboxSparks(){
+  const wrap=$('giftUnboxSparks');
+  if(!wrap)return;
+  wrap.innerHTML='';
+  for(let i=0;i<24;i++){
+    const s=document.createElement('span');
+    s.className='poxy-gift-unbox-spark';
+    const ang=(Math.PI*2*i)/24;
+    const dist=60+Math.random()*100;
+    s.style.setProperty('--sx',Math.cos(ang)*dist+'px');
+    s.style.setProperty('--sy',Math.sin(ang)*dist+'px');
+    s.style.setProperty('--delay',(i*18)+'ms');
+    if(i%3===0)s.style.background='#d70357';
+    wrap.appendChild(s);
+  }
+}
+window.startGiftUnbox=function(giftId){
+  const g=pendingGifts.find(x=>x.id===giftId);
+  if(!g||g.status!=='pending')return;
+  unboxingGiftId=giftId;
+  const tier=TIER_BY_ID[g.tier]||TIERS[0];
+  const box=$('giftUnboxBox');
+  const reveal=$('giftUnboxReveal');
+  const ov=$('giftUnboxOverlay');
+  $('giftUnboxBodyIcon').textContent='🎁';
+  $('giftUnboxTier').textContent=tier.label;
+  $('giftUnboxTier').style.color=tier.color;
+  $('giftUnboxIcon').textContent=tier.icon;
+  $('giftUnboxIcon').style.color=tier.color;
+  $('giftUnboxSerial').textContent=maskSerial(g.serial,true);
+  if(reveal)reveal.classList.remove('is-visible');
+  if(box){box.classList.remove('is-open','is-opening');}
+  buildUnboxSparks();
+  if(ov){ov.hidden=false;ov.setAttribute('aria-hidden','false');}
+  requestAnimationFrame(()=>{
+    if(box)box.classList.add('is-opening');
+    setTimeout(()=>{
+      if(box){box.classList.add('is-open');box.classList.remove('is-opening');}
+      g.status='opened';
+      savePendingGifts();
+      renderNotifyGiftsList();
+      updateNotifyBellDot();
+      if(reveal)reveal.classList.add('is-visible');
+      triggerGiftParticleBurst();
+    },720);
+  });
+};
+window.closeGiftUnboxOverlay=function(){
+  const ov=$('giftUnboxOverlay');
+  const box=$('giftUnboxBox');
+  const reveal=$('giftUnboxReveal');
+  if(box){box.classList.remove('is-open','is-opening');}
+  if(reveal)reveal.classList.remove('is-visible');
+  if(ov){ov.hidden=true;ov.setAttribute('aria-hidden','true');}
+  unboxingGiftId=null;
+};
+window.claimGiftFromUnbox=function(){
+  if(unboxingGiftId)claimGiftById(unboxingGiftId);
+};
+window.claimGiftById=async function(giftId){
+  const g=pendingGifts.find(x=>x.id===giftId);
+  if(!g||!currentUser)return;
+  if(g.status==='claimed')return;
+  const btn=$('giftUnboxAddBtn');
+  if(btn){btn.disabled=true;btn.textContent='Adding…';}
+  try{
+    const{error}=await sb.from('user_poxy').insert({
+      user_id:currentUser.id,
+      poxy_tier:g.tier||'common',
+      serial_number:g.serial||genSerial()
+    });
+    if(error)throw error;
+    g.status='claimed';
+    savePendingGifts();
+    pushNotification('gift_claimed',{serial:g.serial,tier:g.tier});
+    renderNotifyGiftsList();
+    updateNotifyBellDot();
+    closeGiftUnboxOverlay();
+    showToast('POXY added to your collection!');
+    if(!colData.length)await loadCollection();
+    else await loadCollection();
+    if(activeStitchTab==='dashboard')renderDashColPreview();
+  }catch(e){
+    showToast('Could not add gift: '+(e.message||'error'));
+    console.error(e);
+  }
+  if(btn){btn.disabled=false;btn.textContent='Add to Collection';}
+};
 function setupGiftBroadcastListener(){
   if(!currentUser||giftBroadcastCh)return;
   giftBroadcastCh=sb.channel('poxy-gifts-lobby');
   giftBroadcastCh.on('broadcast',{event:'gift'},payload=>{
     const p=payload?.payload;
     if(!p||String(p.to_id)!==String(currentUser.id))return;
-    triggerGiftParticleBurst();
-    showToast('🎁 Gift from '+sanitizeText(p.from_name||'a friend')+'!');
+    addIncomingGift(p);
   }).subscribe();
   realtimeSubs.push(giftBroadcastCh);
 }
