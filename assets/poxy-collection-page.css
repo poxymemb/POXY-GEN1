@@ -426,22 +426,13 @@ body.poxy-stitch-dash .poxy-collection-page.page{
 
 .poxy-col-main{min-width:0}
 
-/* High-density inventory grid (4–5 columns) */
+/* High-density inventory grid — same cell sizing as legacy col-grid-wide */
 .poxy-col-inventory-grid,
 #collectionPage .poxy-col-inventory-grid{
   display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:12px!important;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;
+  gap:14px!important;
   align-items:stretch;
-}
-@media(min-width:520px){
-  .poxy-col-inventory-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-}
-@media(min-width:768px){
-  .poxy-col-inventory-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important}
-}
-@media(min-width:1100px){
-  .poxy-col-inventory-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}
 }
 
 /* Matte titanium inventory cards */
@@ -450,7 +441,7 @@ body.poxy-stitch-dash .poxy-collection-page.page{
   contain-intrinsic-size:140px;
   aspect-ratio:1/1;
   min-height:0;
-  padding:10px!important;
+  padding:14px 10px 10px!important;
   border-radius:12px!important;
   background:linear-gradient(145deg,#2a2a2e 0%,#1a1a1d 48%,#141416 100%)!important;
   border:1px solid rgba(255,255,255,0.08)!important;
@@ -493,11 +484,12 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
 
 .col-inv-thumb{
   position:relative;
-  flex:1;
+  flex:1 1 auto;
   min-height:0;
+  max-height:72px;
   width:100%;
-  margin-bottom:8px;
-  border-radius:10px;
+  margin-bottom:5px;
+  border-radius:8px;
   background:#131316;
   display:flex;
   align-items:center;
@@ -511,10 +503,11 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   opacity:0.85;
 }
 .poxy-collection-page .col-inv-card .poxy-col-preview-icon{
-  font-size:clamp(28px,5vw,40px)!important;
+  font-size:28px!important;
+  line-height:1;
   position:relative;
   z-index:1;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.45));
 }
 .col-inv-foot{
   flex-shrink:0;
