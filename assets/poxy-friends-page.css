@@ -136,9 +136,23 @@
 /* Full-scale friend profile viewport */
 .poxy-friend-profile-view{
   display:none;
+  background:#0e0e0e;
   animation:poxy-fp-fade-in 0.4s cubic-bezier(0.16,1,0.3,1) both;
 }
 .poxy-friend-profile-view.is-active{display:block}
+.poxy-id-shell--full.poxy-friend-profile-view{
+  min-height:calc(100vh - var(--st-nav-h,96px));
+  padding-bottom:48px;
+}
+.poxy-id-passport-toolbar{
+  max-width:1280px;
+  margin:0 auto;
+  padding:16px 24px 0;
+  box-sizing:border-box;
+}
+@media(min-width:1024px){
+  .poxy-id-passport-toolbar{padding:24px 64px 0}
+}
 @keyframes poxy-fp-fade-in{
   from{opacity:0;transform:translateY(12px)}
   to{opacity:1;transform:translateY(0)}

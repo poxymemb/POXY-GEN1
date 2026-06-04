@@ -54,7 +54,7 @@ body.poxy-app-dark .frame-slot-emblem{font-size:28px;margin-bottom:8px;filter:dr
 body.poxy-app-dark .frame-slot-name{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--poxy-on-surface)}
 body.poxy-app-dark .frame-slot-tier{font-size:9px;color:var(--poxy-on-surface-variant)}
 body.poxy-app-dark .frame-slot-lock{background:rgba(0,0,0,0.75);border:1px solid var(--poxy-glass);border-radius:8px;font-size:10px}
-body.poxy-app-dark #profileBigAvatarWrap{margin:0 auto 20px}
+body.poxy-app-dark #profilePage #profileBigAvatarWrap{margin:0!important}
 
 /* Collection archive */
 body.poxy-app-dark .page-collection-wide{max-width:100%;padding-top:8px}

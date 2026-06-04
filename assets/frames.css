@@ -67,10 +67,10 @@
 }
 /* ── MY PROFILE menu avatar — localized alignment only (#profilePage scope) ── */
 #profilePage #profileBigAvatarWrap.avatar-frame-target{
-  width:76px;
-  height:76px;
-  min-width:76px;
-  min-height:76px;
+  width:112px;
+  height:112px;
+  min-width:112px;
+  min-height:112px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -107,12 +107,12 @@
   height:var(--af-ring-inner);
 }
 #profilePage #profileBigAvatarWrap > #profileBigAvatar{
-  width:76px;
-  height:76px;
-  min-width:76px;
-  min-height:76px;
-  max-width:76px;
-  max-height:76px;
+  width:112px;
+  height:112px;
+  min-width:112px;
+  min-height:112px;
+  max-width:112px;
+  max-height:112px;
   display:flex;
   align-items:center;
   justify-content:center;

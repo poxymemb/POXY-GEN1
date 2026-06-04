@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
-<link rel="stylesheet" href="assets/poxy-quick-profile.css?v=3">
+<link rel="stylesheet" href="assets/poxy-identity.css?v=1">
+<link rel="stylesheet" href="assets/poxy-quick-profile.css?v=5">
 <link rel="stylesheet" href="assets/poxy-ranks-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
@@ -17,9 +18,9 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
-<link rel="stylesheet" href="assets/poxy-profile-page.css?v=3">
+<link rel="stylesheet" href="assets/poxy-profile-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
+<link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
@@ -1663,13 +1664,21 @@ body.dark-club .club-sub{color:#888}
     <div class="poxy-profile-layout">
       <aside class="poxy-profile-sidebar">
         <div class="poxy-profile-avatar-block">
-          <div class="poxy-profile-avatar-ring">
-            <div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target poxy-profile-avatar-frame">
-              <div id="profileBigAvatar" class="poxy-profile-avatar-inner"></div>
+          <div class="poxy-profile-hero">
+            <div class="poxy-id-banner qp-profile-banner poxy-profile-hero-banner" id="profileAuraBanner">
+              <div class="poxy-id-banner-aura qp-profile-banner-aura" id="profileAuraBannerAura" aria-hidden="true"></div>
+              <div class="poxy-id-banner-rank qp-profile-banner-rank" id="profileAuraBannerRank" aria-hidden="true"></div>
+              <div class="poxy-id-banner-vignette qp-profile-banner-vignette" aria-hidden="true"></div>
+              <div class="poxy-id-banner-readability qp-profile-banner-readability" aria-hidden="true"></div>
             </div>
-            <label for="avatarUpload" class="poxy-profile-camera-btn" title="Upload photo">
-              <span class="material-symbols-outlined" aria-hidden="true">photo_camera</span>
-            </label>
+            <div class="poxy-profile-avatar-float">
+              <div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target poxy-profile-avatar-frame">
+                <div id="profileBigAvatar" class="poxy-profile-avatar-inner"></div>
+              </div>
+              <label for="avatarUpload" class="poxy-profile-camera-btn" title="Upload photo">
+                <span class="material-symbols-outlined" aria-hidden="true">photo_camera</span>
+              </label>
+            </div>
           </div>
           <input type="file" id="avatarUpload" accept="image/*" hidden>
           <div id="uploadStatus" class="poxy-profile-upload-status"></div>
@@ -2096,32 +2105,74 @@ body.dark-club .club-sub{color:#888}
       <div class="poxy-friends-roster" id="friendsList"></div>
     </div>
   </div>
-  <div class="poxy-friend-profile-view" id="friendProfileView" hidden>
-    <div class="poxy-friends-shell">
-      <div class="pfp-toolbar">
-        <button type="button" class="pfp-back" id="btnFriendProfileBack"><span class="material-symbols-outlined" style="font-size:16px">arrow_back</span> Roster</button>
+  <div class="poxy-friend-profile-view poxy-id-shell poxy-id-shell--full" id="friendProfileView" hidden>
+    <div class="pfp-toolbar poxy-id-passport-toolbar">
+      <button type="button" class="pfp-back" id="btnFriendProfileBack"><span class="material-symbols-outlined" style="font-size:16px">arrow_back</span> Roster</button>
+    </div>
+    <header class="poxy-id-hero">
+      <div class="poxy-id-banner" id="friendProfileBanner">
+        <div class="poxy-id-banner-aura" id="friendProfileBannerAura" aria-hidden="true"></div>
+        <div class="poxy-id-banner-rank" id="friendProfileBannerRank" aria-hidden="true"></div>
+        <div class="poxy-id-banner-vignette" aria-hidden="true"></div>
+        <div class="poxy-id-banner-readability" aria-hidden="true"></div>
       </div>
-      <div class="pfp-banner" id="friendProfileBanner" aria-hidden="true"></div>
-      <div class="pfp-hero">
-        <div class="pfp-avatar" id="friendProfileAvatar">👾</div>
-        <div>
-          <h2 class="pfp-name" id="friendProfileName">–</h2>
-          <p class="pfp-rank" id="friendProfileRank">–</p>
-          <div class="poxy-friend-presence" id="friendProfilePresence"></div>
+      <div class="poxy-id-hero-inner">
+        <div class="poxy-id-hero-main">
+          <div class="poxy-id-avatar-wrap" id="friendProfileAvatarWrap"><span id="friendProfileAvatarInner">👾</span><span class="poxy-id-avatar-verified material-symbols-outlined" id="friendProfileVerified" hidden>verified</span><span class="poxy-id-presence" id="friendProfilePresenceDot" hidden></span></div>
+          <div class="poxy-id-head">
+            <div class="poxy-id-username-row">
+              <h1 class="poxy-id-username" id="friendProfileUsername">–</h1>
+            </div>
+            <div class="poxy-id-meta" id="friendProfileMeta">
+              <span class="poxy-id-meta-primary" id="friendProfileRank">–</span>
+              <span class="poxy-id-meta-dot" aria-hidden="true"></span>
+              <span class="poxy-id-meta-secondary" id="friendProfileMember">POXY Member</span>
+            </div>
+            <div class="poxy-id-stats" id="friendProfileStats"></div>
+          </div>
         </div>
+        <div class="poxy-id-dock" id="friendProfileDock"></div>
       </div>
-      <div class="pfp-stats" id="friendProfileStats"></div>
-      <div class="pfp-trade-split">
-        <div class="pfp-trade-col">
-          <h3>Your Items</h3>
-          <div id="friendTradeMine"><div class="pfp-trade-empty">Select items via Initiate Trade</div></div>
-        </div>
-        <div class="pfp-trade-col">
-          <h3 id="friendTradeTheirLabel">Friend's Items</h3>
-          <div id="friendTradeTheirs"><div class="pfp-trade-empty">Preview only — offers via trade modal</div></div>
-        </div>
+    </header>
+    <div class="poxy-id-body">
+      <div class="poxy-id-grid">
+        <aside class="poxy-id-col-side">
+          <div class="poxy-id-glass poxy-id-glass-panel" id="friendProfileBioPanel" hidden>
+            <h3 class="poxy-id-section-label">Bio</h3>
+            <p class="poxy-id-bio" id="friendProfileBio"></p>
+          </div>
+          <div class="poxy-id-glass poxy-id-glass-panel">
+            <h3 class="poxy-id-section-label">Identity Tags</h3>
+            <div class="poxy-id-badges" id="friendProfileBadges"></div>
+          </div>
+          <div class="poxy-id-rank-card" id="friendProfileRankCard">
+            <h3 class="poxy-id-section-label" style="margin-bottom:8px">Network Rank</h3>
+            <p class="poxy-id-rank-card-val" id="friendProfileRankVal">–</p>
+            <p class="poxy-id-stat-label" style="margin-top:12px;letter-spacing:0.2em">Global Standing</p>
+            <div class="poxy-id-rank-card-bg" aria-hidden="true"><span class="material-symbols-outlined">insights</span></div>
+          </div>
+        </aside>
+        <main class="poxy-id-col-main">
+          <div class="poxy-id-glass poxy-id-showcase" id="friendProfileShowcase" hidden>
+            <div class="poxy-id-showcase-stage">
+              <span class="poxy-id-showcase-pill" id="friendProfileShowcasePill">Featured POXY</span>
+              <span class="poxy-id-showcase-icon" id="friendProfileShowcaseIcon">👾</span>
+            </div>
+            <div class="poxy-id-showcase-foot">
+              <div>
+                <h2 class="poxy-id-showcase-title" id="friendProfileShowcaseTitle">–</h2>
+                <p class="poxy-id-showcase-sub" id="friendProfileShowcaseSub"></p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="poxy-id-drops-head">
+              <h3 class="poxy-id-drops-title">Recent Drops</h3>
+            </div>
+            <div class="poxy-id-drops-grid" id="friendProfileDrops"></div>
+          </div>
+        </main>
       </div>
-      <div class="pfp-actions" id="friendProfileActions"></div>
     </div>
   </div>
 </div>
@@ -2757,37 +2808,41 @@ body.dark-club .club-sub{color:#888}
 <!-- EXPANDED PLAYER PROFILE MODAL (X-style Quick Profile) -->
 <div class="modal-overlay hidden profile-expanded-backdrop" id="inspectModal" role="dialog" aria-modal="true" aria-labelledby="inspectUsernameText">
   <button type="button" class="qp-profile-close" onclick="closeInspectModal()" aria-label="Close profile"><span class="material-symbols-outlined">close</span></button>
-  <div class="modal-card qp-profile-card">
-    <div class="qp-profile-banner" id="inspectBanner">
-      <div class="qp-profile-banner-aura" id="inspectBannerAura" aria-hidden="true"></div>
-      <div class="qp-profile-banner-rank" id="inspectBannerRank" aria-hidden="true"></div>
-      <div class="qp-profile-banner-vignette" aria-hidden="true"></div>
-      <div class="qp-profile-banner-readability" aria-hidden="true"></div>
-    </div>
-    <div class="qp-profile-content">
-      <div class="qp-profile-avatar-row">
-        <div class="qp-profile-avatar-wrap" id="inspectAvatarWrap"><span id="inspectAvatarInner">👾</span><span class="qp-profile-presence" id="inspectPresence" hidden></span></div>
-        <span class="qp-profile-tier-pill" id="inspectTierPill" hidden>Elite Tier</span>
+  <div class="modal-card qp-profile-card poxy-id-shell poxy-id-shell--modal">
+    <header class="poxy-id-hero">
+      <div class="poxy-id-banner qp-profile-banner" id="inspectBanner">
+        <div class="poxy-id-banner-aura qp-profile-banner-aura" id="inspectBannerAura" aria-hidden="true"></div>
+        <div class="poxy-id-banner-rank qp-profile-banner-rank" id="inspectBannerRank" aria-hidden="true"></div>
+        <div class="poxy-id-banner-vignette qp-profile-banner-vignette" aria-hidden="true"></div>
+        <div class="poxy-id-banner-readability qp-profile-banner-readability" aria-hidden="true"></div>
       </div>
-      <div class="qp-profile-identity">
-        <div class="qp-profile-name-row">
-          <h2 class="qp-profile-name" id="inspectUsernameText">–</h2>
-          <span class="material-symbols-outlined qp-profile-verified" id="inspectVerified" hidden>verified</span>
+      <div class="poxy-id-hero-inner">
+        <div class="qp-profile-avatar-row">
+          <div class="poxy-id-avatar-wrap qp-profile-avatar-wrap" id="inspectAvatarWrap"><span id="inspectAvatarInner">👾</span><span class="poxy-id-presence qp-profile-presence" id="inspectPresence" hidden></span></div>
+          <span class="poxy-id-tier-pill qp-profile-tier-pill" id="inspectTierPill" hidden>Elite Tier</span>
         </div>
-        <div class="qp-profile-rank-row">
-          <span class="qp-profile-rank-primary" id="inspectRankText">Unranked</span>
-          <span class="qp-profile-rank-dot" aria-hidden="true"></span>
-          <span class="qp-profile-rank-secondary" id="inspectMemberText">POXY Member</span>
+        <div class="poxy-id-head qp-profile-identity">
+          <div class="poxy-id-username-row qp-profile-name-row">
+            <h2 class="poxy-id-username qp-profile-name" id="inspectUsernameText">–</h2>
+            <span class="material-symbols-outlined poxy-id-verified qp-profile-verified" id="inspectVerified" hidden>verified</span>
+          </div>
+          <div class="poxy-id-meta qp-profile-rank-row">
+            <span class="poxy-id-meta-primary qp-profile-rank-primary" id="inspectRankText">Unranked</span>
+            <span class="poxy-id-meta-dot qp-profile-rank-dot" aria-hidden="true"></span>
+            <span class="poxy-id-meta-secondary qp-profile-rank-secondary" id="inspectMemberText">POXY Member</span>
+          </div>
+          <div class="poxy-id-stats qp-profile-stats-bar" id="inspectStatsGrid"></div>
         </div>
       </div>
-      <div class="qp-profile-stats-bar" id="inspectStatsGrid"></div>
+    </header>
+    <div class="poxy-id-modal-body qp-profile-content">
       <div class="qp-profile-bio-block" id="inspectBioBlock" hidden>
-        <p class="qp-profile-bio" id="inspectBioText"></p>
+        <p class="qp-profile-bio poxy-id-bio poxy-id-bio--compact" id="inspectBioText"></p>
       </div>
-      <div class="qp-profile-badges" id="inspectBadgesRow"></div>
+      <div class="poxy-id-badges qp-profile-badges" id="inspectBadgesRow"></div>
       <div class="qp-profile-featured" id="inspectFavPoxy" hidden></div>
     </div>
-    <div class="qp-profile-action-bar" id="inspectActionsRow"></div>
+    <div class="poxy-id-dock qp-profile-action-bar" id="inspectActionsRow"></div>
   </div>
 </div>
 
@@ -3853,7 +3908,7 @@ function renderSettingsPage(){
 function renderProfilePage(){
   if(currentProfile?.avatar_url&&!isBrokenAvatarUrl(currentProfile.avatar_url))selectedAvatar=currentProfile.avatar_url;
   const bigAv=$('profileBigAvatar');
-  if(selectedAvatar&&selectedAvatar.startsWith('http')&&!isBrokenAvatarUrl(selectedAvatar)){bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(selectedAvatar))+'" class="avatar-upload-preview">';}
+  if(selectedAvatar&&selectedAvatar.startsWith('http')&&!isBrokenAvatarUrl(selectedAvatar)){bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(selectedAvatar))+'" class="avatar-upload-preview" crossorigin="anonymous" referrerpolicy="no-referrer">';}
   else if(isBrokenAvatarUrl(selectedAvatar||currentProfile?.avatar_url)){
     bigAv.innerHTML='<span class="profile-menu-avatar-face">🎭</span>';
     syncAvatarFromStorage().then(function(repaired){
@@ -3861,10 +3916,11 @@ function renderProfilePage(){
       selectedAvatar=repaired;
       if(currentProfile)currentProfile.avatar_url=repaired;
       window._avatarCacheV=Date.now();
-      bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(repaired))+'" class="avatar-upload-preview">';
+      bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(repaired))+'" class="avatar-upload-preview" crossorigin="anonymous" referrerpolicy="no-referrer">';
       setBarAvatar(repaired);
       renderFrameSelector();
       updateGlobalFrames();
+      refreshProfileAuraBanner();
     });
   }
   else{bigAv.innerHTML='<span class="profile-menu-avatar-face">'+selectedAvatar+'</span>';}
@@ -3873,6 +3929,7 @@ function renderProfilePage(){
   updateGlobalFrames();
   if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
   renderSettingsAvatar();
+  refreshProfileAuraBanner();
 }
 async function renderProfileStats(){
   try{
@@ -5906,88 +5963,84 @@ function closeFriendProfileView(){
   if(hub)hub.classList.remove('is-hidden');
   if(view){view.hidden=true;view.classList.remove('is-active');}
 }
-window.openFriendProfileView=async function(userId){
+window.openFriendProfileView=window.openUserPassport=async function(userId){
   if(!userId)return;
   friendProfileUserId=userId;
   const hub=$('friendsHubView'),view=$('friendProfileView');
   if(hub)hub.classList.add('is-hidden');
   if(view){view.hidden=false;view.classList.add('is-active');}
-  $('friendProfileName').textContent='Loading…';
+  $('friendProfileUsername').innerHTML=formatPoxyHandle('Loading');
   $('friendProfileStats').innerHTML='';
-  $('friendTradeMine').innerHTML='<div class="pfp-trade-empty">Loading…</div>';
-  $('friendTradeTheirs').innerHTML='<div class="pfp-trade-empty">Loading…</div>';
-  $('friendProfileActions').innerHTML='';
+  $('friendProfileDock').innerHTML='';
+  $('friendProfileBadges').innerHTML='';
+  $('friendProfileDrops').innerHTML='';
+  $('friendProfileBioPanel').hidden=true;
+  $('friendProfileShowcase').hidden=true;
+  resetAuraBanner('friendProfileBannerAura','friendProfileBannerRank');
+  const avWrap=$('friendProfileAvatarWrap');
+  if(avWrap){avWrap.innerHTML='<span id="friendProfileAvatarInner">👾</span>';}
   try{
-    const[{data:prof},{data:poxyData}]=await Promise.all([
+    const a=userId<currentUser.id?userId:currentUser.id;
+    const b=userId<currentUser.id?currentUser.id:userId;
+    const[{data:prof},{data:poxyAll},{data:reqs},{data:premData},{data:friendships}]=await Promise.all([
       sb.from('profiles').select('*').eq('id',userId).single(),
-      sb.from('user_poxy').select('poxy_tier,serial_number').eq('user_id',userId).order('dropped_at',{ascending:false}).limit(8)
+      sb.from('user_poxy').select('poxy_tier,serial_number,dropped_at').eq('user_id',userId).order('dropped_at',{ascending:false}),
+      sb.from('friend_requests').select('id,status,from_id,to_id').or('and(from_id.eq.'+currentUser.id+',to_id.eq.'+userId+'),and(from_id.eq.'+userId+',to_id.eq.'+currentUser.id+')').limit(1),
+      sb.from('user_poxy').select('id').eq('user_id',userId).in('poxy_tier',['legendary','mythic','diamond','secret']).limit(1),
+      sb.from('friendships').select('id').eq('user_a_id',a).eq('user_b_id',b).limit(1)
     ]);
     if(!prof){closeFriendProfileView();showToast('Profile not found.');return;}
-    const av=$('friendProfileAvatar');
-    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))av.innerHTML='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="">';
-    else av.textContent=prof.avatar_url||'👾';
-    $('friendProfileName').textContent=sanitizeText(prof.username||'Anonymous');
+    prof.id=userId;
+    const isPrem=!!(premData&&premData.length);
+    const isFriend=!!(friendships&&friendships.length);
+    const poxyData=poxyAll||[];
+    poxyIdRenderAvatar($('friendProfileAvatarWrap'),prof,false,isPrem);
+    await poxyIdHydrateAura($('friendProfileAvatarWrap'),poxyData,'friendProfileBannerAura','friendProfileBannerRank');
+    $('friendProfileUsername').innerHTML=formatPoxyHandle(prof.username);
     const rk=leaderboardRankByUser[userId];
-    $('friendProfileRank').textContent=rk?'Global Rank #'+rk:'Unranked Player';
-    const pst=friendPresenceMap[userId]||'offline';
-    $('friendProfilePresence').innerHTML='<span class="poxy-friend-presence-dot poxy-friend-presence-dot--'+(pst==='inventory'?'inventory':pst==='online'?'online':'offline')+'"></span><span>'+presenceLabel(pst)+'</span>';
-    const rare=(poxyData||[]).filter(d=>!['common','uncommon'].includes(d.poxy_tier)).length;
-    $('friendProfileStats').innerHTML=
-      '<div class="pfp-stat"><div class="pfp-stat-val">'+(poxyData?.length||0)+'</div><div class="pfp-stat-lbl">Items</div></div>'+
-      '<div class="pfp-stat"><div class="pfp-stat-val">'+rare+'</div><div class="pfp-stat-lbl">Rare+</div></div>'+
-      '<div class="pfp-stat"><div class="pfp-stat-val">'+formatPC(prof.balance||0)+'</div><div class="pfp-stat-lbl">Balance</div></div>';
-    const mine=$('friendTradeMine');
-    mine.innerHTML='';
-    (colData||[]).slice(0,4).forEach(it=>{
-      const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];
-      mine.innerHTML+='<div class="pfp-trade-slot"><span style="color:'+t.color+'">'+t.icon+'</span> '+sanitizeText(it.serial_number||'–')+'</div>';
-    });
-    if(!colData.length)mine.innerHTML='<div class="pfp-trade-empty">Load collection to preview your offers</div>';
-    const theirs=$('friendTradeTheirs');
-    theirs.innerHTML='';
-    (poxyData||[]).slice(0,4).forEach(it=>{
-      const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];
-      theirs.innerHTML+='<div class="pfp-trade-slot"><span style="color:'+t.color+'">'+t.icon+'</span> '+sanitizeText(it.serial_number||'–')+'</div>';
-    });
-    if(!poxyData?.length)theirs.innerHTML='<div class="pfp-trade-empty">No public items</div>';
-    $('friendTradeTheirLabel').textContent=(prof.username||'Friend')+"'s Items";
-    const actions=$('friendProfileActions');
-    actions.innerHTML='';
-    const giftBtn=document.createElement('button');
-    giftBtn.type='button';giftBtn.className='pfp-btn-gift';
-    giftBtn.textContent='Send a Gift';
-    giftBtn.onclick=()=>openGiftPicker(userId,prof.username);
-    actions.appendChild(giftBtn);
-    const dmBtn=document.createElement('button');
-    dmBtn.type='button';dmBtn.className='pfp-back';
-    dmBtn.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">chat</span> Message';
-    dmBtn.onclick=()=>openDmOverlay(userId,prof.username,prof.avatar_url);
-    actions.appendChild(dmBtn);
-    const trBtn=document.createElement('button');
-    trBtn.type='button';trBtn.className='pfp-back';
-    trBtn.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">swap_horiz</span> Trade';
-    trBtn.onclick=()=>openTradeModal(userId,prof.username);
-    actions.appendChild(trBtn);
-    const rmBtn=document.createElement('button');
-    rmBtn.type='button';
-    rmBtn.className='pfp-btn-danger';
-    rmBtn.textContent='Remove Friend';
-    rmBtn.onclick=async()=>{
-      if(!confirm('Remove '+(prof.username||'this friend')+' from your list?'))return;
-      if(!isUuid(userId)){logAndToast('remove-friend',new Error('user id not UUID'));return;}
-      rmBtn.disabled=true;
+    $('friendProfileRank').textContent=rk?'Global Rank #'+rk:'Unranked';
+    $('friendProfileRankVal').textContent=rk?'#'+String(rk).padStart(4,'0'):'–';
+    $('friendProfileMember').textContent=prof.is_club_member?'Elite Member':'POXY Member';
+    const rareItems=poxyData.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length;
+    $('friendProfileStats').innerHTML=poxyIdStatsHtml(poxyData.length,rareItems,prof.balance,'full');
+    $('friendProfileBadges').innerHTML=poxyIdBadgesHtml(poxyIdCollectBadges(prof));
+    const bio=poxyIdBioFromProf(prof);
+    const bioPanel=$('friendProfileBioPanel');
+    if(bio&&bioPanel){
+      $('friendProfileBio').textContent=bio;
+      bioPanel.hidden=false;
+    }else if(bioPanel)bioPanel.hidden=true;
+    const showcase=$('friendProfileShowcase');
+    if(prof.favorite_poxy_id&&showcase){
       try{
-        const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:userId});
-        if(re)throw re;
-        if(data&&data.ok===false)throw new Error(data.error||'Could not remove');
-        showToast('Friend removed.');
-        friendAccepted=friendAccepted.filter(x=>x!==userId);
-        closeFriendProfileView();
-        loadFriends();
-      }catch(err){logAndToast('remove-friend',err);rmBtn.disabled=false;}
-    };
-    actions.appendChild(rmBtn);
-  }catch(e){showToast('Could not load friend profile.');closeFriendProfileView();}
+        const{data:fp}=await sb.from('user_poxy').select('poxy_tier,serial_number,dropped_at').eq('id',prof.favorite_poxy_id).single();
+        if(fp){
+          const ft=TIERS.find(t=>t.id===fp.poxy_tier)||TIERS[0];
+          $('friendProfileShowcasePill').textContent=(ft.label||'POXY')+' Artifact';
+          $('friendProfileShowcaseIcon').textContent=ft.icon;
+          $('friendProfileShowcaseIcon').style.color=ft.color;
+          $('friendProfileShowcaseTitle').textContent=ft.label+' · '+sanitizeText(fp.serial_number||'–');
+          const dropped=fp.dropped_at?new Date(fp.dropped_at).toLocaleDateString(undefined,{month:'long',year:'numeric'}):'';
+          $('friendProfileShowcaseSub').textContent=dropped?'Acquired '+dropped:'Featured collectible';
+          showcase.hidden=false;
+        }else showcase.hidden=true;
+      }catch(e){showcase.hidden=true;}
+    }else if(showcase)showcase.hidden=true;
+    const drops=$('friendProfileDrops');
+    const recent=poxyData.slice(0,3);
+    if(!recent.length)drops.innerHTML='<p class="poxy-id-bio" style="color:#9d8b9b">No recent drops yet.</p>';
+    else{
+      const accent=['','--epic','--rare'];
+      drops.innerHTML=recent.map((it,i)=>{
+        const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];
+        return '<article class="poxy-id-glass poxy-id-drop-card poxy-id-drop-card'+accent[i%3]+'">'
+          +'<div class="poxy-id-drop-thumb" style="color:'+t.color+'">'+t.icon+'</div>'
+          +'<h4 class="poxy-id-drop-name">'+sanitizeText(it.serial_number||'–')+'</h4>'
+          +'<p class="poxy-id-drop-tier">'+sanitizeText(t.label)+'</p></article>';
+      }).join('');
+    }
+    poxyIdBuildDock($('friendProfileDock'),{isSelf:false,userId,prof,isFriend,existingReq:reqs&&reqs[0],layout:'full'});
+  }catch(e){showToast('Could not load profile.');closeFriendProfileView();}
 };
 
 function buildFriendRow(p,premIds){
@@ -6000,7 +6053,8 @@ function buildFriendRow(p,premIds){
   const main=document.createElement('div');
   main.className='poxy-friend-row-main';
   const pst=friendPresenceMap[p.id]||'offline';
-  main.innerHTML='<div class="poxy-friend-row-name">'+sanitizeText(p.username||'Anonymous')+'</div>'+
+  const handle='@'+(String(p.username||'Anonymous').replace(/^@/,''));
+  main.innerHTML='<div class="poxy-friend-row-name">'+sanitizeText(handle)+'</div>'+
     '<div class="poxy-friend-row-meta"><span class="poxy-friend-presence"><span class="poxy-friend-presence-dot poxy-friend-presence-dot--'+(pst==='inventory'?'inventory':pst==='online'?'online':'offline')+'"></span><span class="poxy-friend-presence-label">'+presenceLabel(pst)+'</span></span> · '+(p.is_club_member?'VIP':'Member')+'</div>';
   const tray=document.createElement('div');
   tray.className='poxy-friend-hotkey-tray';
@@ -6522,29 +6576,197 @@ function startFriendPoll(){
   },60000);
 }
 
-// ── EXPANDED PLAYER PROFILE (X-style Quick Profile) ──
+// ── POXY Identity UI (Quick Profile + Full Passport) ──
 const QP_INSPECT_TIER_ORDER=['secret','diamond','stellar','mythic','legendary','epic','rare','uncommon','common'];
 const QP_AURA_FALLBACK=[18,18,22];
-const QP_BADGE_DEFS={
+const POXY_ID_BADGE_DEFS={
   founder:{icon:'workspace_premium',label:'FOUNDER',mod:'founder'},
   vip_club:{icon:'diamond',label:'VIP',mod:'vip'},
   developer:{icon:'terminal',label:'DEVELOPER',mod:'dev'},
   market_baron:{icon:'payments',label:'BARON',mod:''},
   first_drop_set:{icon:'target',label:'HUNTER',mod:''}
 };
-function qpHighestTierId(poxyData){
+window.formatPoxyHandle=function(username){
+  const u=String(username||'Anonymous').replace(/^@/,'').trim()||'Anonymous';
+  return '<span class="poxy-id-at">@</span>'+sanitizeText(u);
+};
+function poxyIdHighestTierId(poxyData){
   for(const id of QP_INSPECT_TIER_ORDER){
     if(poxyData?.some(d=>d.poxy_tier===id))return id;
   }
   return 'common';
 }
-function qpAuraTextureClass(tierId){
+function poxyIdAuraTextureClass(tierId){
   if(['mythic','secret','diamond','stellar'].includes(tierId))return 'mythic';
   if(tierId==='legendary')return 'legendary';
   if(tierId==='epic')return 'epic';
   if(tierId==='rare')return 'rare';
   return 'member';
 }
+function poxyIdTierLabel(poxyData,isClub){
+  for(const id of QP_INSPECT_TIER_ORDER){
+    if(poxyData?.some(d=>d.poxy_tier===id)){
+      const t=TIER_BY_ID[id]||TIERS[0];
+      if(['mythic','legendary','diamond','secret','stellar'].includes(id))return t.label+' Tier';
+    }
+  }
+  if(isClub)return 'Elite Tier';
+  return '';
+}
+function poxyIdStatsHtml(total,rare,balance,layout){
+  const n=parseFloat(balance||0);
+  const bal=Number.isInteger(n)?n.toLocaleString():n.toFixed(2);
+  const div=layout==='full'?'<div class="poxy-id-stat-divider" aria-hidden="true"></div>':'';
+  const rareAccent=layout==='full'?' is-accent':'';
+  const rareLbl=layout==='full'?' is-accent':'';
+  const pcUnit=layout==='full'?' <span class="poxy-id-stat-unit">PC</span>':'';
+  return '<div class="poxy-id-stat qp-profile-stat"><span class="poxy-id-stat-val qp-profile-stat-val">'+total+'</span><span class="poxy-id-stat-label qp-profile-stat-label">Items</span></div>'
+    +div
+    +'<div class="poxy-id-stat qp-profile-stat"><span class="poxy-id-stat-val qp-profile-stat-val'+rareAccent+'">'+rare+'</span><span class="poxy-id-stat-label qp-profile-stat-label'+rareLbl+'">Rare+</span></div>'
+    +div
+    +'<div class="poxy-id-stat qp-profile-stat"><span class="poxy-id-stat-val qp-profile-stat-val">'+bal+pcUnit+'</span><span class="poxy-id-stat-label qp-profile-stat-label">Balance</span></div>';
+}
+function poxyIdBadgesHtml(badgesArr){
+  if(!badgesArr?.length)return '';
+  return badgesArr.map(b=>{
+    const d=POXY_ID_BADGE_DEFS[b]||QP_BADGE_DEFS[b]||{icon:'military_tech',label:b.replace(/_/g,' '),mod:''};
+    return '<span class="poxy-id-badge qp-profile-badge'+(d.mod?' poxy-id-badge--'+d.mod+' qp-profile-badge--'+d.mod:'')+'"><span class="material-symbols-outlined">'+d.icon+'</span>'+sanitizeText(d.label)+'</span>';
+  }).join('');
+}
+function poxyIdBioFromProf(prof){
+  let bio='';
+  try{
+    const priv=typeof prof.club_privacy==='string'?JSON.parse(prof.club_privacy):prof.club_privacy;
+    if(priv&&typeof priv.bio==='string')bio=priv.bio.trim();
+  }catch(e){}
+  if(!bio&&prof.is_club_member)bio='Elite POXY Club member — collector and competitor on the global ladder.';
+  return bio;
+}
+function poxyIdCollectBadges(prof){
+  const badgesArr=Array.isArray(prof.badges)?prof.badges.slice():[];
+  if(prof.is_verified_employee&&!badgesArr.includes('developer'))badgesArr.push('developer');
+  if(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL&&!badgesArr.includes('founder'))badgesArr.push('founder');
+  if(prof.is_club_member&&!badgesArr.includes('vip_club'))badgesArr.push('vip_club');
+  return badgesArr;
+}
+function poxyIdRenderAvatar(wrap,prof,isSelf,isPrem){
+  if(!wrap)return;
+  const isInspect=wrap.id==='inspectAvatarWrap';
+  const presence=friendPresenceMap[prof.id]||'offline';
+  wrap.className='poxy-id-avatar-wrap qp-profile-avatar-wrap'+(isSelf?' avatar-frame-target':'')+(isPrem&&!isSelf?' is-premium inspect-prem':'');
+  let avInner='<span id="'+(isInspect?'inspectAvatarInner':'friendProfileAvatarInner')+'">'+sanitizeText(prof.avatar_url||'👾')+'</span>';
+  if(prof.avatar_url&&prof.avatar_url.startsWith('http')){
+    avInner='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="" crossorigin="anonymous" referrerpolicy="no-referrer">';
+  }
+  wrap.innerHTML=avInner;
+  let pres=wrap.querySelector('.poxy-id-presence');
+  if(!isSelf&&presence!=='offline'){
+    if(!pres){pres=document.createElement('span');wrap.appendChild(pres);}
+    pres.id=isInspect?'inspectPresence':'friendProfilePresenceDot';
+    pres.className='poxy-id-presence qp-profile-presence poxy-id-presence--'+(presence==='inventory'?'inventory':'online');
+    pres.hidden=false;
+  }else if(pres)pres.remove();
+  if(!isInspect){
+    let ver=wrap.querySelector('#friendProfileVerified');
+    if(!ver){
+      ver=document.createElement('span');
+      ver.id='friendProfileVerified';
+      ver.className='poxy-id-avatar-verified material-symbols-outlined';
+      ver.textContent='verified';
+      wrap.appendChild(ver);
+    }
+    ver.hidden=!(prof.is_verified_employee||(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL));
+  }
+  if(isSelf)updateGlobalFrames();
+}
+function poxyIdBuildDock(dockEl,opts){
+  if(!dockEl)return;
+  dockEl.innerHTML='';
+  const{isSelf,userId,prof,isFriend,existingReq,layout}=opts;
+  const mk=(cls,html,fn,dis)=>{const b=document.createElement('button');b.type='button';b.className='poxy-id-btn qp-btn '+cls;b.innerHTML=html;if(dis)b.disabled=true;if(fn)b.addEventListener('click',fn);return b;};
+  if(isSelf){
+    dockEl.appendChild(mk('poxy-id-btn--glass qp-btn--outline','<span class="material-symbols-outlined">person</span> My Profile',()=>{closeInspectModal();showPage('profile');}));
+    return;
+  }
+  const giftPrimary=layout==='full';
+  if(giftPrimary){
+    dockEl.appendChild(mk('poxy-id-btn--primary qp-btn--primary','<span class="material-symbols-outlined">featured_seasonal_and_gifts</span> Send Gift',()=>openGiftPicker(userId,prof.username)));
+  }
+  let friendLabel='<span class="material-symbols-outlined">person_add</span> Add Friend';
+  let friendDis=false;
+  if(isFriend){friendLabel='<span class="material-symbols-outlined">group</span> Friends';friendDis=true;}
+  else if(existingReq&&existingReq.status==='pending'){friendLabel='<span class="material-symbols-outlined">schedule</span> Request Sent';friendDis=true;}
+  if(!giftPrimary){
+    const fr=mk('poxy-id-btn--primary qp-btn--primary',friendLabel,null,friendDis);
+    if(!friendDis)fr.addEventListener('click',async function(){
+      if(!isUuid(userId)){logAndToast('add-friend-modal',new Error('user id not UUID'));return;}
+      fr.disabled=true;
+      try{
+        const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
+        if(ie)throw ie;
+        if(data&&data.ok===false)throw new Error(data.error||'Could not send');
+        fr.innerHTML='<span class="material-symbols-outlined">schedule</span> Sent';
+        showToast('Friend request sent.');
+      }catch(e){logAndToast('add-friend-modal',e);fr.disabled=false;}
+    });
+    dockEl.appendChild(fr);
+  }
+  dockEl.appendChild(mk('poxy-id-btn--glass qp-btn--outline','<span class="material-symbols-outlined">chat_bubble</span> Message',()=>{if(layout==='modal')closeInspectModal();openDmOverlay(userId,prof.username,prof.avatar_url);}));
+  dockEl.appendChild(mk('poxy-id-btn--icon qp-btn--icon','<span class="material-symbols-outlined">swap_horiz</span>',()=>openTradeModal(userId,prof.username)));
+  if(layout==='full'){
+    const rm=mk('poxy-id-btn--danger','<span class="material-symbols-outlined">person_remove</span>',null);
+    rm.addEventListener('click',async()=>{
+      if(!confirm('Remove '+(prof.username||'this friend')+' from your list?'))return;
+      if(!isUuid(userId)){logAndToast('remove-friend',new Error('user id not UUID'));return;}
+      rm.disabled=true;
+      try{
+        const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:userId});
+        if(re)throw re;
+        if(data&&data.ok===false)throw new Error(data.error||'Could not remove');
+        showToast('Friend removed.');
+        friendAccepted=friendAccepted.filter(x=>x!==userId);
+        closeFriendProfileView();
+        loadFriends();
+      }catch(err){logAndToast('remove-friend',err);rm.disabled=false;}
+    });
+    dockEl.appendChild(rm);
+  }else{
+    const moreWrap=document.createElement('div');
+    moreWrap.className='poxy-id-more-wrap qp-profile-more-wrap';
+    const moreBtn=document.createElement('button');
+    moreBtn.type='button';
+    moreBtn.className='poxy-id-btn poxy-id-btn--icon qp-btn qp-btn--icon';
+    moreBtn.setAttribute('aria-label','More actions');
+    moreBtn.innerHTML='<span class="material-symbols-outlined">more_horiz</span>';
+    moreBtn.onclick=e=>{e.stopPropagation();toggleInspectMoreMenu();};
+    const menu=document.createElement('div');
+    menu.className='poxy-id-more-menu qp-profile-more-menu';
+    menu.id='inspectMoreMenu';
+    menu.innerHTML=
+      '<button type="button" class="poxy-id-more-item qp-profile-more-item" data-act="trade"><span class="material-symbols-outlined">swap_horiz</span> Initiate Trade</button>'
+      +'<button type="button" class="poxy-id-more-item qp-profile-more-item" data-act="full"><span class="material-symbols-outlined">badge</span> Full Profile</button>'
+      +'<button type="button" class="poxy-id-more-item qp-profile-more-item" data-act="copy"><span class="material-symbols-outlined">content_copy</span> Copy User ID</button>';
+    menu.querySelector('[data-act="trade"]').onclick=()=>{closeInspectModal();openTradeModal(userId,prof.username);};
+    menu.querySelector('[data-act="full"]').onclick=()=>{closeInspectModal();showPage('friends');openFriendProfileView(userId);};
+    menu.querySelector('[data-act="copy"]').onclick=()=>{
+      navigator.clipboard?.writeText(userId).then(()=>showToast('User ID copied.')).catch(()=>showToast(userId));
+      closeInspectMoreMenu();
+    };
+    moreWrap.appendChild(moreBtn);
+    moreWrap.appendChild(menu);
+    dockEl.appendChild(moreWrap);
+  }
+}
+async function poxyIdHydrateAura(avatarWrap,poxyData,auraId,rankId){
+  resetAuraBanner(auraId,rankId);
+  const tierId=poxyIdHighestTierId(poxyData);
+  const rgb=await extractDominantColorFromAvatar(avatarWrap,tierId);
+  applyCompositeAuraBanner(rgb,poxyIdAuraTextureClass(tierId),auraId,rankId);
+  return tierId;
+}
+const QP_BADGE_DEFS=POXY_ID_BADGE_DEFS;
+const qpHighestTierId=poxyIdHighestTierId;
+const qpAuraTextureClass=poxyIdAuraTextureClass;
 function qpHexToRgb(hex){
   if(!hex||typeof hex!=='string')return null;
   const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.trim());
@@ -6558,18 +6780,19 @@ function qpDesaturateRgb(r,g,b,amt){
     Math.round(b+(gray-b)*amt)
   ];
 }
-function resetInspectAuraBanner(){
-  const aura=$('inspectBannerAura');
-  const rank=$('inspectBannerRank');
+function resetAuraBanner(auraId,rankId){
+  const aura=$(auraId);
+  const rank=$(rankId);
   if(aura){
     aura.classList.remove('is-active');
     aura.style.background='#121011';
   }
   if(rank){
-    rank.className='qp-profile-banner-rank';
+    rank.className='poxy-id-banner-rank qp-profile-banner-rank';
     rank.classList.remove('is-active');
   }
 }
+function resetInspectAuraBanner(){resetAuraBanner('inspectBannerAura','inspectBannerRank');}
 async function extractDominantColorFromAvatar(avWrap,tierId){
   const tier=TIER_BY_ID[tierId]||TIERS[0];
   const fallback=qpHexToRgb(tier.color)||QP_AURA_FALLBACK;
@@ -6601,21 +6824,21 @@ async function extractDominantColorFromAvatar(avWrap,tierId){
     return fallback;
   }
 }
-function applyCompositeAuraBanner(rgb,tierTexture){
-  const aura=$('inspectBannerAura');
-  const rank=$('inspectBannerRank');
+function applyCompositeAuraBanner(rgb,tierTexture,auraId,rankId){
+  const aura=$(auraId||'inspectBannerAura');
+  const rank=$(rankId||'inspectBannerRank');
   if(!aura)return;
   const base=qpDesaturateRgb(rgb[0],rgb[1],rgb[2],0.52);
   const glow=qpDesaturateRgb(rgb[0],rgb[1],rgb[2],0.35);
   const [r,g,b]=base;
   const [r2,g2,b2]=glow;
   aura.style.background=
-    'radial-gradient(ellipse 130% 115% at 22% 18%, rgba('+r+','+g+','+b+',0.4) 0%, transparent 58%),'
-    +'radial-gradient(ellipse 95% 85% at 78% 8%, rgba('+r2+','+g2+','+b2+',0.18) 0%, transparent 52%),'
+    'radial-gradient(ellipse 130% 115% at 22% 18%, rgba('+r+','+g+','+b+',0.28) 0%, transparent 58%),'
+    +'radial-gradient(ellipse 95% 85% at 78% 8%, rgba('+r2+','+g2+','+b2+',0.12) 0%, transparent 52%),'
     +'#121011';
   aura.classList.remove('is-active');
   if(rank){
-    rank.className='qp-profile-banner-rank qp-profile-banner-rank--'+tierTexture;
+    rank.className='poxy-id-banner-rank qp-profile-banner-rank poxy-id-banner-rank--'+tierTexture+' qp-profile-banner-rank--'+tierTexture;
     rank.classList.remove('is-active');
   }
   requestAnimationFrame(()=>{
@@ -6623,121 +6846,35 @@ function applyCompositeAuraBanner(rgb,tierTexture){
     if(rank)rank.classList.add('is-active');
   });
 }
-function qpInspectTierLabel(poxyData,isClub){
-  for(const id of QP_INSPECT_TIER_ORDER){
-    if(poxyData?.some(d=>d.poxy_tier===id)){
-      const t=TIER_BY_ID[id]||TIERS[0];
-      if(['mythic','legendary','diamond','secret','stellar'].includes(id))return t.label+' Tier';
-    }
-  }
-  if(isClub)return 'Elite Tier';
-  return '';
-}
-function qpInspectStatsHtml(total,rare,balance){
-  const n=parseFloat(balance||0);
-  const bal=Number.isInteger(n)?n.toLocaleString():n.toFixed(2);
-  return '<div class="qp-profile-stat"><span class="qp-profile-stat-val">'+total+'</span><span class="qp-profile-stat-label">Items</span></div>'
-    +'<div class="qp-profile-stat"><span class="qp-profile-stat-val">'+rare+'</span><span class="qp-profile-stat-label">Rare+</span></div>'
-    +'<div class="qp-profile-stat"><span class="qp-profile-stat-val">'+bal+'</span><span class="qp-profile-stat-label">PC</span></div>';
-}
-function qpInspectBadgesHtml(badgesArr){
-  if(!badgesArr.length)return '';
-  return badgesArr.map(b=>{
-    const d=QP_BADGE_DEFS[b]||{icon:'military_tech',label:b.replace(/_/g,' '),mod:''};
-    return '<span class="qp-profile-badge'+(d.mod?' qp-profile-badge--'+d.mod:'')+'"><span class="material-symbols-outlined">'+d.icon+'</span>'+sanitizeText(d.label)+'</span>';
-  }).join('');
-}
-function qpInspectBioFromProf(prof){
-  let bio='';
+async function refreshProfileAuraBanner(){
+  const wrap=$('profileBigAvatarWrap');
+  if(!wrap||!currentUser)return;
+  let poxyData=[];
   try{
-    const priv=typeof prof.club_privacy==='string'?JSON.parse(prof.club_privacy):prof.club_privacy;
-    if(priv&&typeof priv.bio==='string')bio=priv.bio.trim();
+    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+    poxyData=data||[];
   }catch(e){}
-  if(!bio&&prof.is_club_member)bio='Elite POXY Club member — collector and competitor on the global ladder.';
-  return bio;
+  await poxyIdHydrateAura(wrap,poxyData,'profileAuraBannerAura','profileAuraBannerRank');
 }
+const qpInspectTierLabel=poxyIdTierLabel;
+const qpInspectStatsHtml=(t,r,b)=>poxyIdStatsHtml(t,r,b,'modal');
+const qpInspectBadgesHtml=poxyIdBadgesHtml;
+const qpInspectBioFromProf=poxyIdBioFromProf;
 function closeInspectMoreMenu(){
-  document.querySelectorAll('.qp-profile-more-menu.open').forEach(m=>m.classList.remove('open'));
+  document.querySelectorAll('.poxy-id-more-menu.open,.qp-profile-more-menu.open').forEach(m=>m.classList.remove('open'));
 }
 window.toggleInspectMoreMenu=function(){
   const m=$('inspectMoreMenu');
   if(m)m.classList.toggle('open');
 };
 function buildInspectActionBar(opts){
-  const row=$('inspectActionsRow');
-  if(!row)return;
-  row.innerHTML='';
   closeInspectMoreMenu();
-  const{isSelf,userId,prof,isFriend,existingReq}=opts;
-  if(isSelf){
-    const btn=document.createElement('button');
-    btn.type='button';
-    btn.className='qp-btn qp-btn--outline';
-    btn.style.flex='1';
-    btn.innerHTML='<span class="material-symbols-outlined">person</span> My Profile';
-    btn.onclick=()=>{closeInspectModal();showPage('profile');};
-    row.appendChild(btn);
-    return;
-  }
-  const primary=document.createElement('button');
-  primary.type='button';
-  primary.className='qp-btn qp-btn--primary';
-  if(isFriend){
-    primary.innerHTML='<span class="material-symbols-outlined">group</span> Friends';
-    primary.disabled=true;
-  }else if(existingReq&&existingReq.status==='pending'){
-    primary.innerHTML='<span class="material-symbols-outlined">schedule</span> Request Sent';
-    primary.disabled=true;
-  }else{
-    primary.innerHTML='<span class="material-symbols-outlined">person_add</span> Add Friend';
-    primary.addEventListener('click',async function(){
-      if(!isUuid(userId)){logAndToast('add-friend-modal',new Error('user id not UUID'));return;}
-      primary.disabled=true;
-      try{
-        const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
-        if(ie)throw ie;
-        if(data&&data.ok===false)throw new Error(data.error||'Could not send');
-        primary.innerHTML='<span class="material-symbols-outlined">schedule</span> Sent';
-        showToast('Friend request sent.');
-      }catch(e){logAndToast('add-friend-modal',e);primary.disabled=false;}
-    });
-  }
-  const msg=document.createElement('button');
-  msg.type='button';
-  msg.className='qp-btn qp-btn--outline';
-  msg.innerHTML='<span class="material-symbols-outlined">mail</span> Message';
-  msg.onclick=()=>{closeInspectModal();openDmOverlay(userId,prof.username,prof.avatar_url);};
-  const moreWrap=document.createElement('div');
-  moreWrap.className='qp-profile-more-wrap';
-  const moreBtn=document.createElement('button');
-  moreBtn.type='button';
-  moreBtn.className='qp-btn qp-btn--icon';
-  moreBtn.setAttribute('aria-label','More actions');
-  moreBtn.innerHTML='<span class="material-symbols-outlined">more_horiz</span>';
-  moreBtn.onclick=e=>{e.stopPropagation();toggleInspectMoreMenu();};
-  const menu=document.createElement('div');
-  menu.className='qp-profile-more-menu';
-  menu.id='inspectMoreMenu';
-  menu.innerHTML=
-    '<button type="button" class="qp-profile-more-item" data-act="trade"><span class="material-symbols-outlined">swap_horiz</span> Initiate Trade</button>'
-    +'<button type="button" class="qp-profile-more-item" data-act="full"><span class="material-symbols-outlined">badge</span> Full Profile</button>'
-    +'<button type="button" class="qp-profile-more-item" data-act="copy"><span class="material-symbols-outlined">content_copy</span> Copy User ID</button>';
-  menu.querySelector('[data-act="trade"]').onclick=()=>{closeInspectModal();openTradeModal(userId,prof.username);};
-  menu.querySelector('[data-act="full"]').onclick=()=>{closeInspectModal();showPage('friends');openFriendProfileView(userId);};
-  menu.querySelector('[data-act="copy"]').onclick=()=>{
-    navigator.clipboard?.writeText(userId).then(()=>showToast('User ID copied.')).catch(()=>showToast(userId));
-    closeInspectMoreMenu();
-  };
-  moreWrap.appendChild(moreBtn);
-  moreWrap.appendChild(menu);
-  row.appendChild(primary);
-  row.appendChild(msg);
-  row.appendChild(moreWrap);
+  poxyIdBuildDock($('inspectActionsRow'),{...opts,layout:'modal'});
 }
 if(!window._qpInspectMoreBound){
   window._qpInspectMoreBound=true;
   document.addEventListener('click',e=>{
-    if(!e.target.closest('.qp-profile-more-wrap'))closeInspectMoreMenu();
+    if(!e.target.closest('.poxy-id-more-wrap,.qp-profile-more-wrap'))closeInspectMoreMenu();
   });
 }
 window.openExpandedProfile=openInspectModal;
@@ -6745,7 +6882,7 @@ async function openInspectModal(userId){
   if(!userId)return;
   inspectTargetUserId=userId;
   const modal=$('inspectModal');
-  $('inspectUsernameText').textContent='Loading…';
+  $('inspectUsernameText').innerHTML=formatPoxyHandle('Loading');
   $('inspectRankText').textContent='Loading…';
   $('inspectMemberText').textContent='';
   $('inspectStatsGrid').innerHTML='';
@@ -6756,7 +6893,7 @@ async function openInspectModal(userId){
   $('inspectVerified').hidden=true;
   $('inspectActionsRow').innerHTML='';
   const avWrap=$('inspectAvatarWrap');
-  if(avWrap){avWrap.className='qp-profile-avatar-wrap';avWrap.innerHTML='<span id="inspectAvatarInner">👾</span>';}
+  if(avWrap){avWrap.className='poxy-id-avatar-wrap qp-profile-avatar-wrap';avWrap.innerHTML='<span id="inspectAvatarInner">👾</span>';}
   resetInspectAuraBanner();
   modal.classList.remove('hidden');
   requestAnimationFrame(()=>modal.classList.add('show'));
@@ -6774,21 +6911,10 @@ async function openInspectModal(userId){
     if(!prof){closeInspectModal();showToast('User not found.');return;}
     const isPrem=!!(premData&&premData.length);
     const isFriend=!!(friendships&&friendships.length);
-    const avWrap=$('inspectAvatarWrap');
-    const presence=friendPresenceMap[userId]||'offline';
-    avWrap.className='qp-profile-avatar-wrap'+(isSelfInspect?' avatar-frame-target':'')+(isPrem&&!isSelfInspect?' inspect-prem':'');
-    let avInner='<span id="inspectAvatarInner">'+sanitizeText(prof.avatar_url||'👾')+'</span>';
-    if(prof.avatar_url&&prof.avatar_url.startsWith('http')){
-      avInner='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="" crossorigin="anonymous" referrerpolicy="no-referrer">';
-    }
-    const presHtml=(!isSelfInspect&&presence!=='offline')?'<span class="qp-profile-presence qp-profile-presence--'+(presence==='inventory'?'inventory':'online')+'"></span>':'';
-    avWrap.innerHTML=avInner+presHtml;
-    if(isSelfInspect)updateGlobalFrames();
-    const highestTier=qpHighestTierId(poxyData);
-    const auraRgb=await extractDominantColorFromAvatar(avWrap,highestTier);
-    applyCompositeAuraBanner(auraRgb,qpAuraTextureClass(highestTier));
-    const uname=sanitizeText(prof.username||'Anonymous');
-    $('inspectUsernameText').textContent='@'+uname.replace(/^@/,'');
+    prof.id=userId;
+    poxyIdRenderAvatar($('inspectAvatarWrap'),prof,isSelfInspect,isPrem);
+    await poxyIdHydrateAura($('inspectAvatarWrap'),poxyData,'inspectBannerAura','inspectBannerRank');
+    $('inspectUsernameText').innerHTML=formatPoxyHandle(prof.username);
     const verified=$('inspectVerified');
     if(verified)verified.hidden=!(prof.is_verified_employee||(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL));
     const rk=leaderboardRankByUser[userId];

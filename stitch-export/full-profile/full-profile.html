@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nexus Hub | @Syntax Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Hanken+Grotesk:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#d70357",
+                        "on-primary": "#570066",
+                        "on-tertiary-container": "#bbe0ff",
+                        "surface": "#131313",
+                        "on-tertiary": "#00344e",
+                        "on-secondary": "#660025",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#35003f",
+                        "tertiary-fixed": "#cae6ff",
+                        "secondary-fixed-dim": "#ffb2be",
+                        "outline": "#9d8b9b",
+                        "inverse-surface": "#e5e2e1",
+                        "primary-fixed": "#ffd6fe",
+                        "on-primary-container": "#ffcaff",
+                        "tertiary-container": "#2e6589",
+                        "surface-container-highest": "#353535",
+                        "background": "#131313",
+                        "surface-tint": "#f9abff",
+                        "secondary-fixed": "#ffd9de",
+                        "inverse-on-surface": "#313030",
+                        "primary": "#f9abff",
+                        "outline-variant": "#514250",
+                        "on-background": "#e5e2e1",
+                        "on-surface-variant": "#d5c1d2",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#353535",
+                        "on-tertiary-fixed-variant": "#074b6e",
+                        "tertiary": "#99ccf5",
+                        "on-tertiary-fixed": "#001e2f",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed-variant": "#900038",
+                        "surface-container": "#20201f",
+                        "primary-fixed-dim": "#f9abff",
+                        "inverse-primary": "#9a25ae",
+                        "secondary": "#ffb2be",
+                        "on-secondary-container": "#ffeced",
+                        "error-container": "#93000a",
+                        "on-primary-fixed-variant": "#7b008f",
+                        "tertiary-fixed-dim": "#99ccf5",
+                        "primary-container": "#9c27b0",
+                        "surface-bright": "#393939",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-dim": "#131313",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-low": "#1c1b1b",
+                        "on-secondary-fixed": "#400014",
+                        "glass-stroke": "rgba(255, 255, 255, 0.1)"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px",
+                        "base": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0e0e0e;
+            color: #e5e2e1;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(25, 25, 25, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .composite-aura {
+            background: radial-gradient(circle at center, #35003f 0%, #131313 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .composite-aura::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(249, 171, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.3;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-outline-variant/20 shadow-[0_0_20px_rgba(249,171,255,0.1)] flex justify-between items-center px-margin-desktop h-20">
+<div class="flex items-center gap-8">
+<span class="font-display-lg text-headline-md tracking-tighter text-primary">Nexus Hub</span>
+<div class="hidden md:flex gap-6">
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-all duration-300" href="#">Marketplace</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-all duration-300" href="#">Discover</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md" href="#">Profile</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="text-primary font-label-caps text-label-caps tracking-widest">$2,450.00</span>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors" data-icon="wallet">wallet</span>
+<span class="material-symbols-outlined text-primary cursor-pointer transition-colors" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-20 h-[calc(100vh-80px)] w-20 bg-surface-container-low/80 backdrop-blur-lg border-r border-outline-variant/10 flex flex-col items-center py-base gap-6 hidden md:flex">
+<div class="flex flex-col items-center gap-2 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="shield">shield</span>
+</div>
+</div>
+<button class="text-on-surface-variant p-3 hover:bg-surface-container-highest transition-colors rounded-full group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="chat_bubble">chat_bubble</span>
+</button>
+<button class="text-on-surface-variant p-3 hover:bg-surface-container-highest transition-colors rounded-full group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="text-on-surface-variant p-3 hover:bg-surface-container-highest transition-colors rounded-full group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="featured_seasonal_and_gifts">featured_seasonal_and_gifts</span>
+</button>
+</aside>
+<main class="md:pl-20 pt-20 min-h-screen">
+<!-- Hero Header -->
+<header class="relative w-full h-[320px] composite-aura">
+<div class="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] to-transparent"></div>
+<div class="max-w-container-max mx-auto px-margin-desktop relative h-full flex items-end pb-12">
+<div class="flex items-end gap-8 w-full">
+<!-- Overlapping Avatar -->
+<div class="relative -mb-20">
+<div class="w-44 h-44 rounded-full border-[6px] border-surface-container-lowest overflow-hidden shadow-[0_0_40px_rgba(249,171,255,0.2)] bg-surface-container">
+<img alt="Syntax Avatar" class="w-full h-full object-cover" data-alt="A stylized 3D rendered profile avatar for a professional gamer. The character has sleek obsidian-toned cybernetic gear with subtle magenta neon accents glowing against a soft violet background. The lighting is dramatic, high-contrast, and luxurious, matching a premium dark-mode aesthetic. The art style is polished and futuristic, suitable for a high-end digital identity platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApvoNGsEeIrVNFuPmhCgfNaXE8GN2I43mrj1qrXYt9w78c35i-8H1u1zGhIT_RWlZHSpHUhnJZwivzCrTnPgCcKNOlWRqJorByiG2VpYHg3oHHelhX7ATVGLmPyE8hZN9_fj5lDNg3R10N7nEMRUBpVvNoe85vKzZm57qYVEP4XSW8Ctkem59b2VT5-aUR6lYUFSYaSEALhp8iAWk3Y3pKYT5UETWyHGzZF-RAe4hRSHNqK1HHLtTaCxFeDCVdXVgorXGVcv2KMQ"/>
+</div>
+<div class="absolute bottom-2 right-2 w-10 h-10 bg-primary rounded-full border-4 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[18px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<!-- Identity & Stats -->
+<div class="flex-1 pb-4">
+<div class="flex justify-between items-end">
+<div>
+<h1 class="font-display-lg text-display-lg text-white mb-2">@Syntax</h1>
+<div class="flex items-center gap-6 text-on-surface-variant">
+<div class="flex flex-col">
+<span class="text-white font-bold text-headline-md">82</span>
+<span class="font-label-caps text-[10px] tracking-widest uppercase opacity-60">Items</span>
+</div>
+<div class="w-[1px] h-8 bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-primary font-bold text-headline-md">33</span>
+<span class="font-label-caps text-[10px] tracking-widest uppercase opacity-60 text-primary/80">Rare+</span>
+</div>
+<div class="w-[1px] h-8 bg-outline-variant/20"></div>
+<div class="flex flex-col">
+<span class="text-white font-bold text-headline-md">56,352.74 <span class="text-primary/60 font-body-md">PC</span></span>
+<span class="font-label-caps text-[10px] tracking-widest uppercase opacity-60">Balance</span>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex gap-3 mb-4">
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]" data-icon="featured_seasonal_and_gifts">featured_seasonal_and_gifts</span>
+<span>Send Gift</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-3 glass-card text-white rounded-full font-medium hover:bg-white/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="chat_bubble">chat_bubble</span>
+<span>Message</span>
+</button>
+<button class="flex items-center justify-center w-12 h-12 glass-card text-white rounded-full hover:bg-white/10 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+</button>
+<button class="flex items-center justify-center w-12 h-12 glass-card text-error/80 rounded-full hover:bg-error/10 active:scale-95 transition-all border-error/20">
+<span class="material-symbols-outlined" data-icon="person_remove">person_remove</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Grid -->
+<section class="max-w-container-max mx-auto px-margin-desktop py-section-gap grid grid-cols-12 gap-gutter">
+<!-- LEFT COLUMN: Identity Card -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<div class="glass-card p-8 rounded-xl space-y-8">
+<!-- Bio -->
+<div>
+<h3 class="font-label-caps text-label-caps text-primary mb-4 tracking-widest uppercase">Bio</h3>
+<p class="text-on-surface-variant leading-relaxed font-body-md">
+                            Lead Architect at Nexus Void. Collector of rare digital artifacts and competitive strat-runner. Always looking for unique trades and high-tier community challenges.
+                        </p>
+</div>
+<!-- Badge Wallet -->
+<div>
+<h3 class="font-label-caps text-label-caps text-primary mb-4 tracking-widest uppercase">Identity Tags</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-[10px] font-label-caps tracking-widest uppercase rounded">Founder</span>
+<span class="px-3 py-1 bg-tertiary/10 border border-tertiary/20 text-tertiary text-[10px] font-label-caps tracking-widest uppercase rounded">Developer</span>
+<span class="px-3 py-1 bg-secondary-container/10 border border-secondary-container/20 text-secondary-container text-[10px] font-label-caps tracking-widest uppercase rounded">Elite VIP</span>
+<span class="px-3 py-1 bg-white/5 border border-white/10 text-white/60 text-[10px] font-label-caps tracking-widest uppercase rounded">Top 100</span>
+</div>
+</div>
+<!-- Social Links -->
+<div>
+<h3 class="font-label-caps text-label-caps text-primary mb-4 tracking-widest uppercase">Digital Footprint</h3>
+<div class="space-y-3">
+<a class="flex items-center justify-between p-3 rounded bg-white/5 hover:bg-white/10 transition-colors group" href="#">
+<span class="text-on-surface-variant group-hover:text-white transition-colors">Nexus Link</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="north_east">north_east</span>
+</a>
+<a class="flex items-center justify-between p-3 rounded bg-white/5 hover:bg-white/10 transition-colors group" href="#">
+<span class="text-on-surface-variant group-hover:text-white transition-colors">Void Terminal</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="terminal">terminal</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Stats Visual -->
+<div class="p-8 rounded-xl border border-primary/10 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-[120px]" data-icon="insights">insights</span>
+</div>
+<h3 class="text-white font-headline-md mb-2">Network Rank</h3>
+<p class="text-primary font-display-lg text-headline-md">#0042</p>
+<p class="text-on-surface-variant font-label-caps text-[10px] mt-4 tracking-[0.2em] uppercase">Global Standing</p>
+</div>
+</div>
+<!-- RIGHT COLUMN: The Showcase -->
+<div class="col-span-12 lg:col-span-8 space-y-12">
+<!-- Featured Poxy -->
+<div class="glass-card rounded-xl overflow-hidden relative group">
+<div class="absolute top-6 left-6 z-10">
+<span class="px-4 py-2 bg-secondary-container text-white font-label-caps text-[12px] tracking-widest uppercase rounded-full shadow-lg">Mythic Artifact</span>
+</div>
+<div class="w-full h-[450px] bg-[#1a1a1a] flex items-center justify-center relative overflow-hidden">
+<!-- Simulated 3D Environment -->
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle, #f9abff 1px, transparent 1px); background-size: 40px 40px;"></div>
+<img alt="Featured Collectible" class="w-64 h-64 drop-shadow-[0_0_50px_rgba(249,171,255,0.4)] group-hover:scale-110 transition-transform duration-700 ease-out" data-alt="A highly detailed, futuristic robotic collectible figure displayed in a 3D digital museum environment. The robot has a polished matte black obsidian finish with intricate violet neon circuit patterns pulsing across its chest and limbs. The background is a minimalist, dark architectural space with floating geometric particles and soft, atmospheric violet volumetric lighting. Professional product photography style for a high-value NFT or gaming asset." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB12Q1t8nPJj47_loqu71g1LnwAehKiQYm5aUg5ixLAcnh04mAYzyhdPnv-2v1thYxh57rr0NwzjcgxmydJamgUjQG6TckeeyR665s89YWDD16EYfCnmJmOA_rW6B2akhD-wodHtaiiPicns5e6q_JCkmUFSvcSF4kPzJ60B-luV9FwyYEOa1er-6c6vdDziktrAFMBgrtsXaZLWv-2lxkp77IlWt4GmDB8Zr_CRF_fGHa-Q5-G61P4mRquLq20CSW1fCs2QV5HSw"/>
+<div class="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+<div>
+<h2 class="text-white font-headline-md text-headline-md">Void-Stalker MK IV</h2>
+<p class="text-on-surface-variant font-body-md opacity-60">Acquired October 2023 • Limited Series 1/15</p>
+</div>
+<div class="flex gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="w-2 h-2 rounded-full bg-primary/40"></span>
+<span class="w-2 h-2 rounded-full bg-primary/20"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Drops Grid -->
+<div>
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline-md text-white">Recent Drops</h3>
+<a class="text-primary font-label-caps text-label-caps hover:underline tracking-widest uppercase" href="#">View All Assets</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-gutter">
+<!-- Drop 1 -->
+<div class="glass-card p-6 rounded-xl hover:bg-surface-container-high transition-all group cursor-pointer border-l-4 border-l-primary">
+<div class="h-32 bg-surface-container-lowest rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-primary/40 text-[40px] group-hover:scale-125 transition-transform" data-icon="hardware">hardware</span>
+</div>
+<h4 class="text-white font-bold mb-1">VIP-000018</h4>
+<p class="text-on-surface-variant text-[12px] uppercase tracking-wider font-label-caps">Tier 5 Upgrade</p>
+</div>
+<!-- Drop 2 -->
+<div class="glass-card p-6 rounded-xl hover:bg-surface-container-high transition-all group cursor-pointer border-l-4 border-l-tertiary">
+<div class="h-32 bg-surface-container-lowest rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-tertiary/40 text-[40px] group-hover:scale-125 transition-transform" data-icon="token">token</span>
+</div>
+<h4 class="text-white font-bold mb-1">PX-55SB6A</h4>
+<p class="text-on-surface-variant text-[12px] uppercase tracking-wider font-label-caps">Elite Catalyst</p>
+</div>
+<!-- Drop 3 -->
+<div class="glass-card p-6 rounded-xl hover:bg-surface-container-high transition-all group cursor-pointer border-l-4 border-l-secondary">
+<div class="h-32 bg-surface-container-lowest rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-secondary/40 text-[40px] group-hover:scale-125 transition-transform" data-icon="mystery_box">mystery</span>
+</div>
+<h4 class="text-white font-bold mb-1">VIP-000017</h4>
+<p class="text-on-surface-variant text-[12px] uppercase tracking-wider font-label-caps">Vault Key</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-surface-container-lowest border-t border-outline-variant/10">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop max-w-container-max mx-auto gap-8">
+<div class="flex items-center gap-2">
+<span class="font-display-lg text-headline-md text-primary tracking-tighter">Nexus</span>
+<span class="text-on-surface-variant font-label-caps text-label-caps opacity-50 tracking-widest">SYSTEMS v4.0</span>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant text-center md:text-left">© 2024 NEXUS GAMING ID. ALL RIGHTS RESERVED.</p>
+<div class="flex gap-8">
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Legal</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Terms</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Community</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for active scaling
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => button.style.transform = 'scale(0.95)');
+            button.addEventListener('mouseup', () => button.style.transform = 'scale(1.02)');
+            button.addEventListener('mouseleave', () => button.style.transform = 'scale(1)');
+        });
+    </script>
+</body></html>

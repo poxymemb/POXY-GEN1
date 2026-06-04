@@ -1,0 +1,656 @@
+/* POXY — Unified Identity UI (Quick Profile + Full Passport) */
+
+/* ── Composite Aura Banner (shared) ── */
+.poxy-id-banner,
+.qp-profile-banner{
+  position:relative;
+  width:100%;
+  background:#0e0e0e;
+  overflow:hidden;
+  isolation:isolate;
+}
+.poxy-id-shell--modal .poxy-id-banner,
+.modal-overlay.profile-expanded-backdrop .qp-profile-banner{height:128px}
+.poxy-id-shell--full .poxy-id-banner{height:min(42vw,320px);border-radius:0}
+
+.poxy-id-banner-aura,
+.qp-profile-banner-aura{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:#121011;
+  opacity:0;
+  transition:opacity 0.8s ease-in-out,background 0.8s ease-in-out;
+  will-change:opacity,background;
+}
+.poxy-id-banner-aura.is-active,
+.qp-profile-banner-aura.is-active{opacity:1}
+
+.poxy-id-banner-rank,
+.qp-profile-banner-rank{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  opacity:0;
+  pointer-events:none;
+  mix-blend-mode:soft-light;
+  transition:opacity 0.8s ease-in-out;
+  will-change:opacity,transform;
+}
+.poxy-id-banner-rank.is-active,
+.qp-profile-banner-rank.is-active{
+  opacity:1;
+  animation:poxyIdRankBreathe 7s ease-in-out infinite;
+}
+@keyframes poxyIdRankBreathe{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.035)}
+}
+
+.poxy-id-banner-rank--mythic,.qp-profile-banner-rank--mythic{
+  mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+.poxy-id-banner-rank--mythic.is-active,.qp-profile-banner-rank--mythic.is-active{
+  animation:poxyIdRankNoise 12s linear infinite,poxyIdRankBreathe 7s ease-in-out infinite;
+}
+@keyframes poxyIdRankNoise{
+  0%{background-position:0 0}
+  100%{background-position:180px 180px}
+}
+
+.poxy-id-banner-rank--legendary,.qp-profile-banner-rank--legendary{
+  mix-blend-mode:screen;
+  background-image:
+    radial-gradient(circle at 18% 28%,rgba(255,204,0,0.35) 0%,transparent 38%),
+    radial-gradient(circle at 62% 18%,rgba(255,236,170,0.28) 0%,transparent 32%),
+    radial-gradient(circle at 82% 55%,rgba(255,180,40,0.22) 0%,transparent 28%),
+    radial-gradient(1px 1px at 20% 40%,rgba(255,220,140,0.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 75% 48%,rgba(255,230,160,0.75) 0%,transparent 100%);
+}
+.poxy-id-banner-rank--epic,.qp-profile-banner-rank--epic{
+  mix-blend-mode:soft-light;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 30% 20%,rgba(156,39,176,0.32) 0%,transparent 55%),
+    linear-gradient(115deg,transparent 40%,rgba(180,80,255,0.12) 50%,transparent 60%);
+  background-size:100% 100%,200% 100%;
+}
+.poxy-id-banner-rank--epic.is-active,.qp-profile-banner-rank--epic.is-active{
+  animation:poxyIdRankShimmer 9s ease-in-out infinite,poxyIdRankBreathe 7s ease-in-out infinite;
+}
+@keyframes poxyIdRankShimmer{
+  0%,100%{background-position:0 0,0% 0}
+  50%{background-position:0 0,100% 0}
+}
+.poxy-id-banner-rank--rare,.qp-profile-banner-rank--rare{
+  mix-blend-mode:soft-light;
+  background-image:
+    radial-gradient(ellipse 90% 70% at 25% 30%,rgba(0,229,255,0.22) 0%,transparent 58%),
+    radial-gradient(ellipse 60% 50% at 75% 20%,rgba(0,180,220,0.14) 0%,transparent 50%);
+}
+.poxy-id-banner-rank--member,.qp-profile-banner-rank--member{
+  mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  background-size:128px 128px;
+}
+.poxy-id-banner-rank--member.is-active,.qp-profile-banner-rank--member.is-active{opacity:0.72}
+
+.poxy-id-banner-vignette,.qp-profile-banner-vignette{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(14,14,14,0.05) 0%,rgba(14,14,14,0.45) 52%,rgba(14,14,14,0.98) 100%),
+    linear-gradient(90deg,rgba(14,14,14,0.55) 0%,transparent 32%,transparent 68%,rgba(14,14,14,0.45) 100%);
+}
+.poxy-id-banner-readability,.qp-profile-banner-readability{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(14,14,14,0) 0%,rgba(14,14,14,0.35) 45%,rgba(14,14,14,0.75) 100%);
+}
+
+/* ── Hero (banner + overlapping identity row) ── */
+.poxy-id-hero{position:relative;width:100%}
+.poxy-id-hero-inner{
+  position:relative;
+  z-index:4;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+}
+.poxy-id-shell--modal .poxy-id-hero-inner{padding:0 24px 0;margin-top:-48px}
+.poxy-id-shell--modal .poxy-id-hero-inner .qp-profile-avatar-row,
+.poxy-id-shell--modal .poxy-id-hero-inner .poxy-id-head{width:100%}
+.poxy-id-shell--full .poxy-id-hero-inner{
+  max-width:1280px;
+  margin:-88px auto 0;
+  padding:0 24px 32px;
+  width:100%;
+  box-sizing:border-box;
+}
+@media(min-width:1024px){
+  .poxy-id-shell--full .poxy-id-hero-inner{padding:0 64px 40px;margin-top:-96px}
+}
+
+.poxy-id-hero-main{
+  display:flex;
+  align-items:flex-end;
+  gap:16px;
+  min-width:0;
+  flex:1;
+}
+.poxy-id-shell--full .poxy-id-hero-main{gap:32px}
+
+/* Avatar */
+.poxy-id-avatar-wrap,
+.qp-profile-avatar-wrap{
+  border-radius:50%;
+  border:4px solid #0e0e0e;
+  background:#353535;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 12px 32px rgba(0,0,0,0.45),0 0 40px rgba(249,171,255,0.08);
+  position:relative;
+}
+.poxy-id-shell--modal .poxy-id-avatar-wrap,
+.qp-profile-avatar-wrap{width:96px;height:96px;font-size:40px}
+.poxy-id-shell--full .poxy-id-avatar-wrap{width:min(28vw,176px);height:min(28vw,176px);font-size:56px;border-width:6px}
+.poxy-id-avatar-wrap img,.qp-profile-avatar-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.poxy-id-avatar-wrap.is-premium,.qp-profile-avatar-wrap.inspect-prem{
+  padding:3px;
+  background:linear-gradient(90deg,#00e5ff,#f9abff,#d70357);
+  animation:stMatrix 3s linear infinite;
+}
+.poxy-id-avatar-verified{
+  position:absolute;
+  bottom:4px;
+  right:4px;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:3px solid #0e0e0e;
+  background:#9c27b0;
+  color:#570066;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(249,171,255,0.35);
+}
+.poxy-id-avatar-verified .material-symbols-outlined{font-size:16px;font-variation-settings:'FILL' 1}
+.poxy-id-avatar-verified[hidden]{display:none!important}
+.poxy-id-shell--full .poxy-id-avatar-verified{bottom:8px;right:8px;width:36px;height:36px}
+.poxy-id-shell--full .poxy-id-avatar-verified .material-symbols-outlined{font-size:20px}
+
+.poxy-id-presence,
+.qp-profile-presence{
+  position:absolute;
+  bottom:4px;
+  right:4px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:3px solid #0e0e0e;
+  background:#6a6a7a;
+}
+.poxy-id-presence--online,.qp-profile-presence--online{background:#f9abff}
+.poxy-id-presence--inventory,.qp-profile-presence--inventory{background:#00e5ff}
+
+/* @username */
+.poxy-id-head{min-width:0;flex:1;padding-bottom:4px}
+.poxy-id-username-row,
+.qp-profile-name-row{display:flex;align-items:center;gap:8px;min-width:0}
+.poxy-id-username,
+.qp-profile-name{
+  margin:0;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-weight:800;
+  line-height:1.1;
+  color:#fff;
+  letter-spacing:-0.02em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-shadow:0 2px 14px rgba(0,0,0,0.9),0 0 28px rgba(0,0,0,0.55);
+}
+.poxy-id-shell--modal .poxy-id-username,
+.qp-profile-name{font-size:24px}
+.poxy-id-shell--full .poxy-id-username{font-size:clamp(2rem,5vw,4rem)}
+.poxy-id-username .poxy-id-at,
+.qp-profile-name .poxy-id-at{
+  color:#f9abff;
+  font-weight:700;
+  margin-right:1px;
+}
+.poxy-id-verified,
+.qp-profile-verified{flex-shrink:0;font-size:20px;color:#f9abff;font-variation-settings:'FILL' 1}
+.poxy-id-verified[hidden],.qp-profile-verified[hidden]{display:none!important}
+
+.poxy-id-meta,
+.qp-profile-rank-row{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:8px;
+}
+.poxy-id-meta-primary,
+.qp-profile-rank-primary{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  color:#ffb2be;
+  text-transform:uppercase;
+  text-shadow:0 1px 10px rgba(0,0,0,0.85);
+}
+.poxy-id-meta-dot,
+.qp-profile-rank-dot{width:4px;height:4px;border-radius:50%;background:#514250;flex-shrink:0}
+.poxy-id-meta-secondary,
+.qp-profile-rank-secondary{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.04em;
+  color:#d5c1d2;
+  text-transform:uppercase;
+  text-shadow:0 1px 8px rgba(0,0,0,0.8);
+}
+.poxy-id-tier-pill,
+.qp-profile-tier-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 12px;
+  border-radius:999px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:#ffb2be;
+  background:rgba(14,14,14,0.55);
+  border:1px solid rgba(255,178,190,0.3);
+  backdrop-filter:blur(8px);
+  text-shadow:0 1px 6px rgba(0,0,0,0.8);
+}
+.poxy-id-tier-pill[hidden],.qp-profile-tier-pill[hidden]{display:none!important}
+
+/* Stats bar */
+.poxy-id-stats,
+.qp-profile-stats-bar{
+  display:flex;
+  align-items:flex-start;
+  gap:0;
+  width:100%;
+}
+.poxy-id-shell--modal .poxy-id-stats,
+.qp-profile-stats-bar{
+  justify-content:space-between;
+  margin-top:20px;
+  padding:16px 0;
+  border-top:1px solid rgba(81,66,80,0.15);
+  border-bottom:1px solid rgba(81,66,80,0.15);
+}
+.poxy-id-shell--full .poxy-id-stats{margin-top:16px;gap:0}
+.poxy-id-shell--modal .poxy-id-stats{gap:16px}
+
+.poxy-id-stat,
+.qp-profile-stat{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+.poxy-id-shell--modal .poxy-id-stat,
+.qp-profile-stat{flex:1}
+.poxy-id-shell--full .poxy-id-stat{padding:0 20px}
+.poxy-id-shell--full .poxy-id-stat:first-child{padding-left:0}
+.poxy-id-stat-divider{
+  width:1px;
+  height:32px;
+  background:rgba(157,139,155,0.2);
+  flex-shrink:0;
+  align-self:center;
+}
+.poxy-id-shell--modal .poxy-id-stat-divider{display:none}
+
+.poxy-id-stat-val,
+.qp-profile-stat-val{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-weight:700;
+  line-height:1;
+  color:#e5e2e1;
+}
+.poxy-id-shell--modal .poxy-id-stat-val,
+.qp-profile-stat-val{font-size:18px}
+.poxy-id-shell--full .poxy-id-stat-val{font-size:clamp(1.25rem,2.5vw,2rem)}
+.poxy-id-stat-val.is-accent{color:#f9abff}
+.poxy-id-stat-unit{font-size:0.55em;color:rgba(249,171,255,0.6);font-weight:500;font-family:Inter,sans-serif}
+
+.poxy-id-stat-label,
+.qp-profile-stat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#9d8b9b;
+}
+.poxy-id-shell--full .poxy-id-stat-label.is-accent{color:rgba(249,171,255,0.8)}
+
+/* Action dock */
+.poxy-id-dock,
+.qp-profile-action-bar{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.poxy-id-shell--modal .poxy-id-dock,
+.qp-profile-action-bar{
+  padding:16px 24px 24px;
+  border-top:1px solid rgba(81,66,80,0.12);
+  background:#0e0e0e;
+}
+.poxy-id-shell--full .poxy-id-dock{
+  flex-shrink:0;
+  margin-bottom:8px;
+}
+.poxy-id-dock:empty,.qp-profile-action-bar:empty{display:none}
+
+.poxy-id-btn,
+.qp-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:48px;
+  padding:0 18px;
+  border-radius:999px;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  border:none;
+  transition:transform 0.15s ease,filter 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;
+  white-space:nowrap;
+}
+.poxy-id-btn:active,.qp-btn:active{transform:scale(0.97)}
+.poxy-id-btn .material-symbols-outlined,.qp-btn .material-symbols-outlined{font-size:20px}
+.poxy-id-btn--primary,.qp-btn--primary{
+  background:#f9abff;
+  color:#570066;
+  box-shadow:0 4px 20px rgba(249,171,255,0.25);
+}
+.poxy-id-btn--primary:hover:not(:disabled),.qp-btn--primary:hover:not(:disabled){filter:brightness(1.06)}
+.poxy-id-btn--primary:disabled,.qp-btn--primary:disabled{opacity:0.55;cursor:default;box-shadow:none}
+.poxy-id-btn--glass,.qp-btn--outline{
+  background:rgba(25,25,25,0.4);
+  backdrop-filter:blur(20px);
+  color:#e5e2e1;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.poxy-id-btn--glass:hover:not(:disabled),.qp-btn--outline:hover:not(:disabled){background:rgba(255,255,255,0.08)}
+.poxy-id-btn--icon,.qp-btn--icon{
+  flex:0 0 48px;
+  width:48px;
+  min-width:48px;
+  padding:0;
+  background:rgba(25,25,25,0.4);
+  border:1px solid rgba(255,255,255,0.1);
+  color:#e5e2e1;
+  border-radius:50%;
+}
+.poxy-id-btn--icon:hover,.qp-btn--icon:hover{background:rgba(255,255,255,0.1)}
+.poxy-id-btn--danger{
+  background:rgba(25,25,25,0.4);
+  border:1px solid rgba(255,180,171,0.25);
+  color:rgba(255,180,171,0.9);
+  border-radius:50%;
+}
+.poxy-id-btn--danger:hover{background:rgba(147,0,10,0.15)}
+
+.poxy-id-more-wrap,.qp-profile-more-wrap{position:relative;flex-shrink:0}
+.poxy-id-more-menu,.qp-profile-more-menu{
+  position:absolute;
+  right:0;
+  bottom:calc(100% + 8px);
+  min-width:180px;
+  padding:6px;
+  border-radius:12px;
+  background:#1c1b1b;
+  border:1px solid rgba(157,139,155,0.25);
+  box-shadow:0 16px 40px rgba(0,0,0,0.55);
+  z-index:20;
+  opacity:0;
+  transform:translateY(6px) scale(0.96);
+  pointer-events:none;
+  transition:opacity 0.2s ease,transform 0.2s ease;
+}
+.poxy-id-more-menu.open,.qp-profile-more-menu.open{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+.poxy-id-more-item,.qp-profile-more-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:10px 12px;
+  border:none;
+  border-radius:8px;
+  background:transparent;
+  color:#e5e2e1;
+  font-family:Inter,sans-serif;
+  font-size:13px;
+  font-weight:500;
+  text-align:left;
+  cursor:pointer;
+}
+.poxy-id-more-item:hover,.qp-profile-more-item:hover{background:rgba(255,255,255,0.06)}
+.poxy-id-more-item .material-symbols-outlined,.qp-profile-more-item .material-symbols-outlined{font-size:18px;color:#f9abff}
+
+/* Full passport body */
+.poxy-id-body{
+  max-width:1280px;
+  margin:0 auto;
+  padding:24px;
+  box-sizing:border-box;
+}
+@media(min-width:1024px){
+  .poxy-id-body{padding:48px 64px 80px}
+}
+.poxy-id-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:32px;
+}
+@media(min-width:1024px){
+  .poxy-id-grid{grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:24px}
+}
+
+.poxy-id-glass{
+  background:rgba(25,25,25,0.4);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.35);
+}
+.poxy-id-section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#f9abff;
+  margin:0 0 16px;
+}
+.poxy-id-bio{
+  margin:0;
+  font-family:Inter,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  color:#d5c1d2;
+}
+.poxy-id-badges,
+.qp-profile-badges{display:flex;flex-wrap:wrap;gap:8px}
+.poxy-id-badges:empty,.qp-profile-badges:empty{display:none}
+.poxy-id-badge,
+.qp-profile-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+  border-radius:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.05);
+  color:#e5e2e1;
+}
+.poxy-id-badge--founder,.qp-profile-badge--founder{border-color:rgba(249,171,255,0.2);background:rgba(249,171,255,0.1);color:#f9abff}
+.poxy-id-badge--vip,.qp-profile-badge--vip{border-color:rgba(255,178,190,0.2);background:rgba(215,3,87,0.1);color:#ffb2be}
+.poxy-id-badge--dev,.qp-profile-badge--dev{border-color:rgba(153,204,245,0.2);background:rgba(46,101,137,0.15);color:#99ccf5}
+.poxy-id-badge .material-symbols-outlined,.qp-profile-badge .material-symbols-outlined{font-size:16px;font-variation-settings:'FILL' 1}
+
+.poxy-id-rank-card{
+  padding:32px;
+  border-radius:12px;
+  border:1px solid rgba(249,171,255,0.1);
+  background:linear-gradient(135deg,rgba(249,171,255,0.05),transparent);
+  position:relative;
+  overflow:hidden;
+}
+.poxy-id-rank-card-val{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:2rem;
+  font-weight:700;
+  color:#f9abff;
+  margin:8px 0 0;
+}
+.poxy-id-rank-card-bg{
+  position:absolute;
+  right:-16px;
+  bottom:-16px;
+  opacity:0.08;
+  pointer-events:none;
+}
+.poxy-id-rank-card-bg .material-symbols-outlined{font-size:120px;color:#f9abff}
+
+.poxy-id-showcase{
+  border-radius:12px;
+  overflow:hidden;
+  position:relative;
+}
+.poxy-id-showcase-stage{
+  height:min(50vw,450px);
+  background:#1a1a1a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.poxy-id-showcase-stage::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  opacity:0.2;
+  background-image:radial-gradient(circle,#f9abff 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+.poxy-id-showcase-pill{
+  position:absolute;
+  top:24px;
+  left:24px;
+  z-index:2;
+  padding:8px 16px;
+  border-radius:999px;
+  background:#d70357;
+  color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  box-shadow:0 8px 24px rgba(215,3,87,0.35);
+}
+.poxy-id-showcase-icon{font-size:96px;line-height:1;filter:drop-shadow(0 0 50px rgba(249,171,255,0.4));transition:transform 0.7s ease}
+.poxy-id-showcase:hover .poxy-id-showcase-icon{transform:scale(1.08)}
+.poxy-id-showcase-foot{
+  padding:24px 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:16px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.poxy-id-showcase-title{margin:0;font-family:'Hanken Grotesk',Inter,sans-serif;font-size:1.5rem;font-weight:600;color:#fff}
+.poxy-id-showcase-sub{margin:4px 0 0;font-size:14px;color:#9d8b9b}
+
+.poxy-id-drops-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:24px;
+  gap:12px;
+}
+.poxy-id-drops-title{margin:0;font-family:'Hanken Grotesk',Inter,sans-serif;font-size:1.5rem;font-weight:600;color:#fff}
+.poxy-id-drops-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:24px;
+}
+.poxy-id-drop-card{
+  padding:24px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:background 0.25s ease,transform 0.2s ease;
+  border-left:4px solid #f9abff;
+}
+.poxy-id-drop-card:hover{background:rgba(42,42,42,0.8);transform:translateY(-2px)}
+.poxy-id-drop-card--epic{border-left-color:#99ccf5}
+.poxy-id-drop-card--rare{border-left-color:#ffb2be}
+.poxy-id-drop-thumb{
+  height:128px;
+  border-radius:8px;
+  background:#0e0e0e;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+}
+.poxy-id-drop-name{margin:0 0 4px;font-weight:700;color:#fff;font-size:14px}
+.poxy-id-drop-tier{margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#9d8b9b}
+
+.poxy-id-glass-panel{padding:32px}
+.poxy-id-glass-panel + .poxy-id-glass-panel{margin-top:32px}
+
+/* Modal compact content (bio, featured) */
+.poxy-id-modal-body,
+.qp-profile-content{padding:0 24px 24px;position:relative}
+.qp-profile-bio-block{margin-top:20px}
+.qp-profile-bio-block[hidden]{display:none!important}
+.qp-profile-bio,.poxy-id-bio--compact{font-size:14px}
+.qp-profile-featured{
+  margin-top:16px;
+  padding:12px;
+  border-radius:10px;
+  background:rgba(32,32,32,0.6);
+  border:1px solid rgba(81,66,80,0.2);
+  text-align:center;
+}
+.qp-profile-featured[hidden]{display:none!important}
