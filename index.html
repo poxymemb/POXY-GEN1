@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
-<link rel="stylesheet" href="assets/poxy-settings-page.css?v=1">
+<link rel="stylesheet" href="assets/poxy-settings-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -1730,21 +1730,24 @@ body.dark-club .club-sub{color:#888}
     </aside>
     <section class="poxy-settings-viewport" aria-live="polite">
       <header class="poxy-settings-viewport-head">
-        <h1 class="poxy-settings-viewport-title" id="settingsViewportTitle">Your Account</h1>
+        <p class="poxy-settings-breadcrumb" aria-current="page"><span>Settings</span><span class="poxy-settings-breadcrumb-sep" aria-hidden="true">/</span><span id="settingsViewportTitle">Your Account</span></p>
         <p class="poxy-settings-viewport-desc" id="settingsViewportDesc">Manage your account settings, password, and identity verification.</p>
         <button type="button" class="poxy-settings-profile-link" onclick="showPage('profile')">View showcase &amp; stats profile <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></button>
       </header>
       <div class="poxy-settings-panels">
         <div class="poxy-settings-panel" id="settingsPanelAccount" data-settings-panel="account">
-          <div class="poxy-settings-section-hdr"><h3>Account Information</h3></div>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Account Information</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-profile-row">
-              <label class="poxy-settings-avatar-ring" for="settingsAvatarUpload" title="Change avatar">
-                <div id="settingsAvatarWrap" class="avatar-frame-target gpu-accel"><div id="settingsBigAvatar" class="poxy-settings-avatar-inner"></div></div>
-                <span class="poxy-settings-avatar-overlay"><span class="material-symbols-outlined">photo_camera</span></span>
+              <label class="poxy-settings-avatar-label" for="settingsAvatarUpload" title="Change avatar">
+                <span class="poxy-settings-avatar-ring">
+                  <span id="settingsAvatarWrap" class="poxy-settings-avatar-media avatar-frame-target gpu-accel"><span id="settingsBigAvatar" class="poxy-settings-avatar-inner"></span></span>
+                  <span class="poxy-settings-avatar-overlay"><span class="material-symbols-outlined">photo_camera</span></span>
+                </span>
               </label>
               <input type="file" id="settingsAvatarUpload" accept="image/*" hidden>
-              <div>
+              <div class="poxy-settings-identity">
                 <div class="poxy-settings-handle" id="settingsDisplayHandle">@player</div>
                 <div class="poxy-settings-joined" id="settingsJoinedText">Joined —</div>
               </div>
@@ -1763,7 +1766,9 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-settings-btn-primary" id="btnSettingsSaveProfile">Save changes</button>
             </div>
           </div>
-          <div class="poxy-settings-section-hdr" style="margin-top:48px"><h3>Change Password</h3></div>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Change Password</h3>
           <form class="poxy-settings-glass" id="settingsPasswordForm" onsubmit="return false">
             <div class="poxy-settings-field">
               <label class="poxy-settings-label poxy-settings-label--muted" for="settingsPwdCurrent">Current Password</label>
@@ -1784,7 +1789,9 @@ body.dark-club .club-sub{color:#888}
             </div>
             <div class="poxy-settings-msg" id="settingsPwdMsg"></div>
           </form>
-          <div class="poxy-settings-section-hdr poxy-settings-section-hdr--danger" style="margin-top:48px"><h3>Danger Zone</h3></div>
+          </section>
+          <section class="poxy-settings-block poxy-settings-block--danger">
+          <h3 class="poxy-settings-section-title poxy-settings-section-title--danger">Danger Zone</h3>
           <div class="poxy-settings-glass poxy-settings-glass--danger">
             <div class="poxy-settings-danger-row">
               <div>
@@ -1794,9 +1801,11 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-settings-btn-outline" onclick="showToast('Account deactivation — contact support@poxy.world.')">Deactivate</button>
             </div>
           </div>
+          </section>
         </div>
         <div class="poxy-settings-panel" id="settingsPanelSecurity" data-settings-panel="security" hidden>
-          <div class="poxy-settings-section-hdr"><h3>Two-Factor Authentication</h3></div>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Two-Factor Authentication</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-toggle-list">
               <div class="poxy-settings-toggle-row">
@@ -1815,18 +1824,24 @@ body.dark-club .club-sub{color:#888}
               </div>
             </div>
           </div>
-          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Sessions</h3></div>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Sessions</h3>
           <div class="poxy-settings-glass">
-            <p class="poxy-settings-toggle-desc" style="margin-bottom:16px">Sign out everywhere except this browser. Use after a suspected login or device loss.</p>
+            <p class="poxy-settings-toggle-desc poxy-settings-block-lead">Sign out everywhere except this browser. Use after a suspected login or device loss.</p>
             <button type="button" class="poxy-settings-btn-primary" onclick="clubSignOutAllDevices()">Log out of all other devices</button>
           </div>
-          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Recent Login History</h3></div>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Recent Login History</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-sessions-list" id="settingsLoginHistory"></div>
           </div>
+          </section>
         </div>
         <div class="poxy-settings-panel" id="settingsPanelNotifications" data-settings-panel="notifications" hidden>
-          <div class="poxy-settings-section-hdr"><h3>Delivery Preferences</h3></div>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Delivery Preferences</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-toggle-row">
               <div class="poxy-settings-toggle-info">
@@ -1843,8 +1858,9 @@ body.dark-club .club-sub{color:#888}
               <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifEmail" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
             </div>
           </div>
-          <div class="poxy-settings-subgroup">
-            <p class="poxy-settings-subgroup-title">Mentions</p>
+          </section>
+          <section class="poxy-settings-block">
+            <h3 class="poxy-settings-section-title">Mentions</h3>
             <div class="poxy-settings-glass">
               <div class="poxy-settings-toggle-row">
                 <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Chat @mentions</p></div>
@@ -1855,9 +1871,9 @@ body.dark-club .club-sub{color:#888}
                 <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifMentionsClub" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
               </div>
             </div>
-          </div>
-          <div class="poxy-settings-subgroup">
-            <p class="poxy-settings-subgroup-title">Trade Requests</p>
+          </section>
+          <section class="poxy-settings-block">
+            <h3 class="poxy-settings-section-title">Trade Requests</h3>
             <div class="poxy-settings-glass">
               <div class="poxy-settings-toggle-row">
                 <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Incoming trade offers</p></div>
@@ -1868,9 +1884,9 @@ body.dark-club .club-sub{color:#888}
                 <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifTradeDone" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
               </div>
             </div>
-          </div>
-          <div class="poxy-settings-subgroup">
-            <p class="poxy-settings-subgroup-title">News</p>
+          </section>
+          <section class="poxy-settings-block">
+            <h3 class="poxy-settings-section-title">News</h3>
             <div class="poxy-settings-glass">
               <div class="poxy-settings-toggle-row">
                 <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Patch notes &amp; major updates</p></div>
@@ -1881,10 +1897,11 @@ body.dark-club .club-sub{color:#888}
                 <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifNewsHotfix" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
               </div>
             </div>
-          </div>
+          </section>
         </div>
         <div class="poxy-settings-panel" id="settingsPanelDisplay" data-settings-panel="display" hidden>
-          <div class="poxy-settings-section-hdr"><h3>Theme</h3></div>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Theme</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-theme-grid" id="settingsThemeGrid">
               <button type="button" class="poxy-settings-theme-card" data-theme="" onclick="selectSettingsTheme('')"><div class="poxy-settings-theme-swatch" style="background:linear-gradient(135deg,#131313,#2a2a2a)"></div><span class="poxy-settings-theme-name">Dark / Matte</span></button>
@@ -1893,7 +1910,9 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-settings-theme-card" data-theme="arctic" onclick="selectSettingsTheme('arctic')"><div class="poxy-settings-theme-swatch" style="background:#e8f4f8"></div><span class="poxy-settings-theme-name">Arctic</span></button>
             </div>
           </div>
-          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Accent Color</h3></div>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Accent Color</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-accent-row" id="settingsAccentRow">
               <button type="button" class="poxy-settings-accent-dot active" data-accent="magenta" style="background:#f9abff" onclick="selectSettingsAccent('magenta')" aria-label="Magenta"></button>
@@ -1902,7 +1921,9 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-settings-accent-dot" data-accent="gold" style="background:#FFCA28" onclick="selectSettingsAccent('gold')" aria-label="Gold"></button>
             </div>
           </div>
-          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Font Size</h3></div>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Font Size</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-font-scale">
               <button type="button" class="poxy-settings-font-btn" data-font-scale="sm" onclick="selectSettingsFontScale('sm')">Compact</button>
@@ -1910,7 +1931,9 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-settings-font-btn" data-font-scale="lg" onclick="selectSettingsFontScale('lg')">Large</button>
             </div>
           </div>
-          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Performance &amp; Audio</h3></div>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Performance &amp; Audio</h3>
           <div class="poxy-settings-glass">
             <div class="poxy-settings-toggle-row">
               <div class="poxy-settings-toggle-info">
@@ -1926,6 +1949,7 @@ body.dark-club .club-sub{color:#888}
               <label class="poxy-settings-switch"><input type="checkbox" id="settingsHudSound" onchange="PoxyHudAudio&&PoxyHudAudio.setEnabled(this.checked)"><span class="poxy-settings-switch-slider"></span></label>
             </div>
           </div>
+          </section>
         </div>
       </div>
     </section>
@@ -3505,10 +3529,10 @@ function setBarAvatar(av){
 const SETTINGS_PREFS_KEY='poxy_settings_prefs_v1';
 let activeSettingsTab='account';
 const SETTINGS_TAB_COPY={
-  account:{title:'Your Account',desc:'Manage your account settings, password, and identity verification. See information about your account, download an archive of your data, or learn about your account deactivation options.'},
-  security:{title:'Security & Account Access',desc:'Protect your vault with two-factor authentication, review active sessions, and sign out of other devices.'},
-  notifications:{title:'Notifications',desc:'Control how POXY WORLD reaches you — mentions, trades, patch notes, and delivery channels.'},
-  display:{title:'Display & Interface',desc:'Tune theme, accent color, typography scale, and performance options for your terminal.'}
+  account:{title:'Your Account',desc:'Username, email, password, and account status.'},
+  security:{title:'Security & Account Access',desc:'2FA, sessions, and login history.'},
+  notifications:{title:'Notifications',desc:'Mentions, trades, news, and delivery channels.'},
+  display:{title:'Display & Interface',desc:'Theme, accent, typography, and performance.'}
 };
 function loadSettingsPrefs(){
   try{
@@ -3600,8 +3624,11 @@ function renderSettingsLoginHistory(){
 function renderSettingsAvatar(){
   const bigAv=$('settingsBigAvatar');if(!bigAv)return;
   const av=selectedAvatar||currentProfile?.avatar_url||'🎭';
-  if(av&&String(av).startsWith('http')&&!isBrokenAvatarUrl(av)){bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';}
-  else{bigAv.innerHTML='<span>'+(av||'🎭')+'</span>';}
+  if(av&&String(av).startsWith('http')&&!isBrokenAvatarUrl(av)){
+    bigAv.innerHTML='<img class="poxy-settings-avatar-img" src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';
+  }else{
+    bigAv.innerHTML='<span class="poxy-settings-avatar-emoji">'+(av||'🎭')+'</span>';
+  }
   updateGlobalFrames();
 }
 function renderSettingsPage(){
