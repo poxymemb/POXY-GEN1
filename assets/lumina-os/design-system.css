@@ -152,7 +152,7 @@
 #luminaOsRoot .lc-nav-brand-text {
   font-family: var(--lo-font-family);
   font-weight: 800;
-  background: linear-gradient(135deg, var(--lo-primary), var(--lo-tertiary));
+  background: var(--lo-grad-primary);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -181,8 +181,29 @@
 
 #luminaOsRoot[data-lo-theme='dark'] .lc-nav-item.is-active {
   color: var(--lo-primary);
-  background: rgba(156, 39, 176, 0.14);
-  box-shadow: 0 0 24px rgba(215, 3, 87, 0.18);
+  background: var(--lo-grad-soft);
+  border: 1px solid rgba(249, 171, 255, 0.18);
+  box-shadow: var(--lo-grad-glow);
+}
+
+#luminaOsRoot .lc-nav-item.is-active::before {
+  display: none;
+}
+
+#luminaOsRoot .lc-nav-item.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: var(--lo-grad-horizontal);
+  box-shadow: 0 0 12px rgba(249, 171, 255, 0.55);
+}
+
+#luminaOsRoot[data-lo-theme='light'] .lc-nav-item.is-active::after {
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
 }
 
 #luminaOsRoot .lc-nav-footer {
@@ -488,9 +509,15 @@
 }
 
 .lo-btn--primary {
-  background: linear-gradient(135deg, var(--lo-primary), var(--lo-tertiary));
+  background: var(--lo-grad-primary);
   color: #ffffff;
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--lo-primary) 35%, transparent);
+  box-shadow: var(--lo-grad-glow);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lo-btn--primary:hover {
+  filter: brightness(1.06);
+  box-shadow: var(--lo-grad-glow), 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .lo-btn--secondary {
@@ -1002,7 +1029,11 @@
 }
 
 .lo-stat-val--primary {
-  color: var(--lo-primary);
+  background: var(--lo-grad-horizontal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
 }
 
 .lo-win-chart-track {
@@ -1015,7 +1046,7 @@
 
 .lo-win-chart-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--lo-primary), var(--lo-tertiary));
+  background: var(--lo-grad-horizontal);
   border-radius: 999px;
   transition: width 600ms ease;
 }
@@ -1093,8 +1124,9 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background: var(--lo-primary);
+  background: var(--lo-grad-horizontal);
   border-radius: 4px 0 0 4px;
+  box-shadow: var(--lo-grad-glow);
 }
 
 .lo-notif-group {
@@ -1296,9 +1328,9 @@
   top: 0;
   bottom: 0;
   width: 6px;
-  background: var(--lo-primary);
+  background: var(--lo-grad-horizontal);
   border-radius: 6px 0 0 6px;
-  box-shadow: 0 0 12px color-mix(in srgb, var(--lo-primary) 50%, transparent);
+  box-shadow: var(--lo-grad-glow);
 }
 
 .lo-notif-icon-wrap {
@@ -1501,8 +1533,11 @@
 }
 
 .lo-storage-pct {
-  color: var(--lo-primary);
   font-weight: 700;
+  background: var(--lo-grad-horizontal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .lo-cloud-title {
@@ -1627,6 +1662,7 @@
 
 .lo-theme-preview.is-active .lo-theme-preview-box {
   border-color: color-mix(in srgb, var(--lo-primary) 35%, transparent);
+  box-shadow: var(--lo-grad-glow);
 }
 
 .lo-theme-preview-box--dark {
@@ -1655,7 +1691,7 @@
   width: 75%;
   height: 8px;
   border-radius: 999px;
-  background: var(--lo-primary);
+  background: var(--lo-grad-horizontal);
 }
 
 .lo-theme-preview-bar--short {
@@ -1719,9 +1755,15 @@
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
 }
 
+.lo-silk-switch input:checked + .lo-silk-slider {
+  background: var(--lo-grad-horizontal);
+  box-shadow: var(--lo-grad-glow);
+}
+
 .lo-silk-switch input:checked + .lo-silk-slider::before {
   transform: translateX(24px);
-  background: var(--lo-primary);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .lo-pref-row {
@@ -1780,7 +1822,7 @@
 .lo-storage-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--lo-primary), var(--lo-tertiary));
+  background: var(--lo-grad-horizontal);
 }
 
 .lo-storage-meta {
@@ -1825,8 +1867,14 @@
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.06em;
-  background: color-mix(in srgb, var(--lo-primary) 12%, transparent);
+  background: var(--lo-grad-soft);
+  border: 1px solid color-mix(in srgb, var(--lo-primary) 28%, transparent);
   color: var(--lo-primary);
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lo-device-tag {
+  color: #fce4ff;
+  border-color: rgba(249, 171, 255, 0.28);
 }
 
 .lo-settings-actions {
@@ -1894,6 +1942,98 @@
   }
 }
 
+/* ── Gradient accents (POXY pink → purple → rose) ── */
+#luminaOsRoot .lc-nav-brand-icon {
+  background: var(--lo-grad-primary) !important;
+  box-shadow: var(--lo-grad-glow) !important;
+}
+
+#luminaOsRoot .lc-nav-brand-icon .material-symbols-outlined {
+  color: #ffffff !important;
+}
+
+#luminaOsRoot .lc-nav-badge {
+  background: var(--lo-grad-horizontal) !important;
+  box-shadow: var(--lo-grad-glow);
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lo-module-scroll {
+  background:
+    radial-gradient(ellipse 70% 45% at 12% 0%, rgba(156, 39, 176, 0.14), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 92% 8%, rgba(215, 3, 87, 0.1), transparent 50%),
+    var(--lo-background);
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lo-module-title,
+#luminaOsRoot[data-lo-theme='dark'] .lo-settings-page .lo-module-title {
+  background: var(--lo-grad-horizontal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lo-settings-card-title .material-symbols-outlined {
+  background: var(--lo-grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#luminaOsRoot .lo-icon-btn:hover,
+#luminaOsRoot .lo-silk-raised.lo-icon-btn:hover {
+  color: var(--lo-primary);
+  box-shadow: var(--lo-grad-glow);
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lo-glass-card {
+  border-bottom-color: rgba(215, 3, 87, 0.2);
+  box-shadow: var(--lo-shadow-soft), 0 0 40px rgba(156, 39, 176, 0.06);
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lo-friend-passport:hover,
+#luminaOsRoot[data-lo-theme='dark'] .lo-squad-card:hover,
+#luminaOsRoot[data-lo-theme='dark'] .lo-notif-card.is-unread {
+  box-shadow: var(--lo-shadow-soft), var(--lo-grad-glow);
+}
+
+#luminaOsRoot .lo-silk-action--primary .material-symbols-outlined {
+  background: var(--lo-grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#luminaOsRoot .lo-module-search-pill:focus-within {
+  box-shadow: var(--lo-grad-glow);
+  border: 1px solid color-mix(in srgb, var(--lo-primary) 35%, transparent);
+}
+
+#luminaOsRoot .lo-theme-toggle:hover {
+  background: var(--lo-grad-soft);
+  color: var(--lo-primary);
+  box-shadow: var(--lo-grad-glow);
+}
+
+#luminaOsRoot .lc-compose-send:not(:disabled) {
+  background: var(--lo-grad-primary) !important;
+  box-shadow: var(--lo-grad-glow) !important;
+}
+
+#luminaOsRoot .lc-conv-item.is-active {
+  background: var(--lo-grad-soft);
+  border: 1px solid color-mix(in srgb, var(--lo-primary) 28%, transparent);
+  box-shadow: var(--lo-grad-glow);
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lc-msg-row.is-mine .lc-bubble {
+  background: var(--lo-grad-primary);
+  box-shadow: var(--lo-grad-glow);
+}
+
+#luminaOsRoot .lo-timeline-rail-fill {
+  background: var(--lo-grad-horizontal);
+}
+
 /* Bridge legacy chat CSS vars to design tokens */
 #luminaOsRoot[data-lo-theme='light'] {
   --lc-bg: var(--lo-background);
@@ -1904,8 +2044,8 @@
   --lc-text: var(--lo-on-surface);
   --lc-muted: var(--lo-on-surface-variant);
   --lc-in: var(--lo-surface-container-low);
-  --lc-grad: linear-gradient(135deg, var(--lo-primary), var(--lo-tertiary));
-  --lc-grad-2: linear-gradient(135deg, var(--lo-primary-container), var(--lo-tertiary));
+  --lc-grad: var(--lo-grad-primary);
+  --lc-grad-2: var(--lo-grad-horizontal);
 }
 
 #luminaOsRoot[data-lo-theme='dark'] {
@@ -1917,8 +2057,8 @@
   --lc-text: var(--lo-on-surface);
   --lc-muted: var(--lo-on-surface-variant);
   --lc-in: var(--lo-surface-container);
-  --lc-grad: linear-gradient(135deg, var(--lo-primary), var(--lo-secondary));
-  --lc-grad-2: linear-gradient(135deg, var(--lo-primary-container), var(--lo-tertiary));
+  --lc-grad: var(--lo-grad-primary);
+  --lc-grad-2: var(--lo-grad-horizontal);
 }
 
 /* Messages — theme-aware overrides */
@@ -2009,17 +2149,17 @@
 }
 
 #luminaOsRoot .lc-compose-send {
-  background: linear-gradient(135deg, var(--lo-primary), var(--lo-tertiary));
+  background: var(--lo-grad-primary);
   box-shadow: 0 4px 16px color-mix(in srgb, var(--lo-primary) 35%, transparent);
 }
 
 #luminaOsRoot[data-lo-theme='light'] .lc-compose-send:not(:disabled) {
-  background: linear-gradient(135deg, #a5b4fc, #818cf8);
+  background: var(--lo-grad-primary);
   box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
 }
 
 #luminaOsRoot[data-lo-theme='light'] .lc-msg-row.is-mine .lc-bubble {
-  background: linear-gradient(135deg, var(--lo-primary), var(--lo-tertiary));
+  background: var(--lo-grad-primary);
   color: #fff;
 }
 
@@ -2030,7 +2170,7 @@
 }
 
 #luminaOsRoot[data-lo-theme='dark'] .lc-msg-row.is-mine .lc-bubble {
-  background: linear-gradient(135deg, var(--lo-primary-container), var(--lo-secondary));
+  background: var(--lo-grad-primary);
   color: #fff;
 }
 

@@ -47,6 +47,10 @@
     glassBorderTop: 'rgba(255, 255, 255, 0.4)',
     glassBorderBottom: 'rgba(180, 184, 198, 0.22)',
     glassBlur: '24px',
+    gradPrimary: 'linear-gradient(135deg, #6366f1 0%, #818cf8 42%, #7c3aed 100%)',
+    gradHorizontal: 'linear-gradient(90deg, #6366f1, #818cf8, #a78bfa)',
+    gradSoft: 'linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(124, 58, 237, 0.1))',
+    gradGlow: '0 4px 20px rgba(99, 102, 241, 0.28), 0 8px 28px rgba(124, 58, 237, 0.12)',
     fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
     radiusSm: '8px',
     radiusMd: '12px',
@@ -96,6 +100,14 @@
     glassBorder: 'rgba(249, 171, 255, 0.14)',
     glassBorderTop: 'rgba(249, 171, 255, 0.22)',
     glassBorderBottom: 'rgba(215, 3, 87, 0.12)',
+    gradPrimary:
+      'linear-gradient(135deg, #f9abff 0%, #c77bd8 28%, #9c27b0 58%, #d70357 100%)',
+    gradHorizontal:
+      'linear-gradient(90deg, #f9abff 0%, #9c27b0 50%, #d70357 100%)',
+    gradSoft:
+      'linear-gradient(135deg, rgba(249, 171, 255, 0.16), rgba(215, 3, 87, 0.1))',
+    gradGlow:
+      '0 4px 24px rgba(249, 171, 255, 0.42), 0 8px 36px rgba(215, 3, 87, 0.22)',
     fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
     radiusSm: '8px',
     radiusMd: '12px',
@@ -116,6 +128,12 @@
       root.style.setProperty('--lo-shadow-raised', tokens.shadowRaised || '');
       root.style.setProperty('--lo-shadow-soft', tokens.shadowSoft || tokens.shadowRaised || '');
       root.style.setProperty('--lo-shadow-inset', tokens.shadowInset || '');
+    }
+    if (tokens.gradPrimary) {
+      root.style.setProperty('--lo-grad-primary', tokens.gradPrimary);
+      root.style.setProperty('--lo-grad-horizontal', tokens.gradHorizontal || tokens.gradPrimary);
+      root.style.setProperty('--lo-grad-soft', tokens.gradSoft || tokens.gradPrimary);
+      root.style.setProperty('--lo-grad-glow', tokens.gradGlow || 'none');
     }
   }
 
