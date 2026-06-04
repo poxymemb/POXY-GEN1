@@ -99,18 +99,17 @@
   .st-nav-inner{
     grid-template-columns:minmax(0,1fr) auto;
     grid-template-rows:auto auto;
-    row-gap:8px;
-    height:auto;
-    min-height:var(--st-nav-h-val);
-    padding-top:10px;
-    padding-bottom:10px;
+    row-gap:10px;
+    padding-top:14px;
+    padding-bottom:14px;
+    min-height:124px;
   }
   .st-nav-zone--center{
     grid-column:1/-1;
     justify-self:stretch;
     justify-content:flex-start;
   }
-  #poxyAppShell{--st-nav-h-val:112px}
+  #poxyAppShell{--st-nav-h-val:124px}
 }
 .st-nav-zone--right{
   display:flex;
