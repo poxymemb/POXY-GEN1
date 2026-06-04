@@ -1,5 +1,7 @@
 /* POXY News — Stitch Global News & Patch Notes (3452513058897199540 / c1916a0cc…) */
+#stPanelNews .poxy-news-page,
 body.poxy-stitch-dash #stPanelNews .poxy-news-page{
+  display:block!important;
   max-width:min(1280px,100%)!important;
   width:100%;
   margin:0 auto;
@@ -8,7 +10,7 @@ body.poxy-stitch-dash #stPanelNews .poxy-news-page{
   color:#e5e2e1;
   background:transparent;
 }
-.poxy-news-page.visible{display:block}
+.poxy-news-page.visible{display:block!important}
 
 .poxy-news-hero{margin:16px 0 48px}
 .poxy-news-title{
@@ -282,6 +284,27 @@ body.poxy-stitch-dash #stPanelNews .poxy-news-page{
   color:#9d8b9b;
   font-size:15px;
 }
+.poxy-news-demo-hint{
+  text-align:center;
+  font-size:12px;
+  color:#9d8b9b;
+  margin:0 0 24px;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.06em;
+}
+.poxy-news-card--demo{cursor:default}
+.poxy-news-card--demo:hover{transform:none}
+.poxy-news-card--demo .poxy-news-card-snippet{
+  font-size:15px;
+  line-height:1.5;
+  color:#d5c1d2;
+  margin:0;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.poxy-news-card--standard.poxy-news-card--demo .poxy-news-card-snippet{-webkit-line-clamp:2}
 .poxy-news-page .poxychat-section{
   margin-top:56px;
   padding-top:32px;

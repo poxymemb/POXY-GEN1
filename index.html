@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
-<link rel="stylesheet" href="assets/poxy-news-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -3814,7 +3814,15 @@ window.showStitchTab=function(tab){
   }
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
-  if(next==='news'){loadNewsFeedTab();loadPoxyChat();}
+  if(next==='news'){
+    const np=$('newsPage');
+    if(np)np.classList.add('visible');
+    loadNewsFeedTab();
+    loadPoxyChat();
+  } else {
+    const np=$('newsPage');
+    if(np)np.classList.remove('visible');
+  }
   if(next==='tierlist')loadTierListPanel();
   updatePresenceTrack();
   if(next==='ranks'){
@@ -7685,6 +7693,26 @@ window.postToFeed=async function(){
 };
 
 // ── NEWS FEED (Stitch Global News layout) ──
+const NEWS_DEMO_IMAGES={
+  featured:'https://lh3.googleusercontent.com/aida-public/AB6AXuC8LDFNr52E6nxtVEY6Bzv-S_dLwK-cmBvpGwbxFihCLn1xqZIRkQgo7V7ZrifVR93dFsQjOx8LaAca7RFqBtU2uHhxt0SLzG2ek0lfS5zHXQ0AEvl_PBEqWi_t8abKhKvmBSOPnRrnxRUGIpRdN6uR4yHbaygQzTTXyPhcE3rEmnO57siu4e5ZQFEZNiWGy9JNhWxHpO6x8SCOU9V7LBa9El4YbyJ8Ry9obZT6Mc-ZNlHMe4DHt3whmzq0zD9t6aDy3o17MAzZ4w',
+  patch:'https://lh3.googleusercontent.com/aida-public/AB6AXuA3dyxI66GscIZipjvkNDaVmuw7n5h9n4oKGGD3VnJJAehoNWpah5xWqzhwEvtIxV3lSElWdj1u9ttpGEWJu0HXRNYnTv4WOXW9faP4gT8LPbipxxvTWtBgvHecu_z_V0ghDJmIJ4ao-GacM74OpDiZgKj-9MfbavXSspLj1SF_bdUNqiajvmwg5Bibqe-XUxCz2znuPsgPKoat702oUMg0MDSoH1LfVV8Qy6e2pqeUJTeSJQYyuD9VBYt7OnlwwDLR4umszr2Isg',
+  hotfix:'https://lh3.googleusercontent.com/aida-public/AB6AXuAULoDZlR6oCAMUKUqUDHzXl7O2BuX5-GShMP9-_Zmg45cUz9hDN95RjymrCItZw2NmN5maVNTrFOxV_XOAABoZhrNizCgEJmRLee5PP9e3QfLpyY_HDRbYStMgChSmLQ_AzbBwe7rfoN6vXOavsD-Aqss97A1fpFZEyKL3b2CT3uJLAzHeTEM5VMBCwZK7K9GeqN4xEs-zj_njdWN9MKC5h8cCMGWyJ5cPbFMgQlsr-j69YcIscsZ40tMs7nHCcCK7BAR3lrIZxw'
+};
+function renderNewsDemoFeed(listEl){
+  if(!listEl)return;
+  listEl.innerHTML='<p class="poxy-news-demo-hint">Preview layout — live posts appear here once published by staff.</p>';
+  const demos=[
+    {featured:true,badge:'MAJOR UPDATE',badgeMod:'major',time:'v2.4.0 · OCT 24',title:'The Obsidian Protocol: Route Overhaul',body:'We\'ve completely rewritten the core navigation routing logic. Say goodbye to the legacy red admin dashboards. The new framework introduces hardware-accelerated transitions and a refined, deep graphite aesthetic across all terminal interfaces.',img:NEWS_DEMO_IMAGES.featured},
+    {badge:'PATCH NOTES',badgeMod:'patch',time:'v2.3.5 · OCT 18',title:'Economy Balance Adjustments',body:'Adjusted drop rates for rare synthetic materials across Tier 3 zones. Market friction algorithms have been optimized to ensure smoother high-volume transactions.',img:NEWS_DEMO_IMAGES.patch},
+    {badge:'HOTFIX',badgeMod:'hotfix',time:'v2.3.4 · OCT 12',title:'Authentication Gateway Stability',body:'Resolved intermittent latency issues affecting login handshakes during peak load periods. Improved caching layer performance for user profile retrieval.',img:NEWS_DEMO_IMAGES.hotfix}
+  ];
+  demos.forEach(d=>{
+    const art=document.createElement('article');
+    art.className='poxy-news-card poxy-news-card--demo'+(d.featured?' poxy-news-card--featured':' poxy-news-card--standard');
+    art.innerHTML='<div class="poxy-news-media"><img src="'+d.img+'" alt=""></div><div class="poxy-news-content"><div class="poxy-news-meta-row"><span class="poxy-news-badge poxy-news-badge--'+d.badgeMod+'">'+d.badge+'</span><time class="poxy-news-time">'+d.time+'</time></div><h2 class="poxy-news-card-title">'+sanitizeText(d.title)+'</h2><p class="poxy-news-card-snippet">'+sanitizeText(d.body)+'</p>'+(d.featured?'<span class="poxy-news-read-cta">Read full patch notes <span class="material-symbols-outlined">arrow_forward</span></span>':'')+'</div>';
+    listEl.appendChild(art);
+  });
+}
 async function loadNewsFeedTab(loadMore){
   if(!currentUser)return;
   const listEl=$('newsPostsList');
@@ -7702,7 +7730,9 @@ async function loadNewsFeedTab(loadMore){
     const{data,error}=await sb.from('news_posts').select('*').order('created_at',{ascending:false}).limit(newsFeedLimit);
     if(error)throw error;
     if(!data||!data.length){
-      listEl.innerHTML='<div class="news-empty">No news posts yet. Check back after the next patch.</div>';
+      renderNewsDemoFeed(listEl);
+      const loadBtn=$('btnNewsLoadMore');
+      if(loadBtn)loadBtn.style.display='none';
       return;
     }
     listEl.innerHTML='';
