@@ -278,6 +278,7 @@
     if (thread) thread.classList.remove('lc-hidden');
     box.innerHTML = '';
     let lastDay = '';
+    const W = window.LuminaWidgets;
     state.messages.forEach((m, i) => {
       const day = m.created_at ? m.created_at.slice(0, 10) : '';
       if (day && day !== lastDay) {
@@ -293,22 +294,43 @@
       row.style.animationDelay = Math.min(i * 0.03, 0.3) + 's';
       const bubble = document.createElement('div');
       bubble.className = 'lc-bubble';
-      if (m.type === 'voice') {
+
+      const msgType = m.type || 'text';
+
+      if (msgType === 'image') {
+        bubble.classList.add('lc-bubble--image');
+        const imgSrc = m.meta?.url || m.content;
+        bubble.innerHTML = `<img class="lc-image-bubble" src="${U.sanitizeText(imgSrc)}" alt="Image" loading="lazy" data-action="open-lightbox" data-src="${U.sanitizeText(imgSrc)}">`;
+      } else if (msgType === 'trade_widget' && W) {
+        bubble.classList.add('lc-bubble--trade');
+        bubble.innerHTML = W.renderTradeCard(m, state.currentUser.id);
+      } else if (msgType === 'duel_widget' && W) {
+        bubble.classList.add('lc-bubble--duel');
+        bubble.innerHTML = W.renderDuelCard(m, state.currentUser.id);
+        // If duel is active/completed, run animation on completed cards
+        if (m.meta?.status === 'completed' && m.meta?.winner_id) {
+          requestAnimationFrame(() => {
+            const card = bubble.querySelector('.lf-duel-card');
+            if (card) W.runDuelAnimation(card, m.meta);
+          });
+        }
+      } else if (msgType === 'voice') {
         bubble.classList.add('lc-bubble--voice');
         bubble.innerHTML =
           '<button type="button" class="lc-voice-play" aria-label="Play"><span class="material-symbols-outlined">play_arrow</span></button><div class="lc-voice-wave"></div><span style="font-size:12px;opacity:0.8">0:42</span>';
       } else {
         bubble.textContent = m.content;
       }
+
       row.appendChild(bubble);
-      const meta = document.createElement('div');
-      meta.className = 'lc-msg-meta';
-      meta.innerHTML =
+      const metaEl = document.createElement('div');
+      metaEl.className = 'lc-msg-meta';
+      metaEl.innerHTML =
         U.timeShort(m.created_at) +
         (mine
           ? ' <span class="material-symbols-outlined lc-read">done_all</span>'
           : '');
-      row.appendChild(meta);
+      row.appendChild(metaEl);
       box.appendChild(row);
     });
     box.scrollTop = box.scrollHeight;
@@ -520,7 +542,12 @@
       shell?.classList.add('layout-module');
       if (moduleHost) {
         moduleHost.classList.remove('lc-hidden');
-        moduleHost.innerHTML = renderModulePage(nav);
+        if (nav === 'squads' && window.LuminaClanSystem) {
+          moduleHost.innerHTML = '';
+          window.LuminaClanSystem.renderClanModule(state.currentUser?.id || '');
+        } else {
+          moduleHost.innerHTML = renderModulePage(nav);
+        }
         moduleHost.style.animation = 'none';
         requestAnimationFrame(() => {
           moduleHost.style.animation = '';
@@ -532,9 +559,32 @@
     window.LuminaChatOS_setNav = (n) => setNav(n);
   }
 
+  // Expose state for widgets
+  window._lcState = state;
+
   function bindUi() {
     document.querySelectorAll('.lc-nav-item').forEach((btn) => {
       btn.onclick = () => setNav(btn.dataset.nav);
+    });
+
+    // Widget compose buttons
+    U.$('lcWidgetTrade')?.addEventListener('click', async () => {
+      if (!state.selectedId || !state.currentUser) return;
+      const W = window.LuminaWidgets;
+      if (!W) return;
+      const peer = state.friends.find((f) => f.id === state.selectedId);
+      // Fetch user poxy for selection
+      const { data: poxy } = await sb.from('user_poxy').select('id,poxy_tier').eq('user_id', state.currentUser.id).limit(12);
+      W.showTradeComposer(state.selectedId, peer?.displayName || 'Friend', state.currentUser.id, poxy || []);
+    });
+
+    U.$('lcWidgetDuel')?.addEventListener('click', async () => {
+      if (!state.selectedId || !state.currentUser) return;
+      const W = window.LuminaWidgets;
+      if (!W) return;
+      const peer = state.friends.find((f) => f.id === state.selectedId);
+      const { data: poxy } = await sb.from('user_poxy').select('id,poxy_tier').eq('user_id', state.currentUser.id).limit(12);
+      W.showDuelComposer(state.selectedId, peer?.displayName || 'Friend', state.currentUser.id, poxy || []);
     });
     U.$('lcConvSearch')?.addEventListener('input', (e) => {
       renderConvList(e.target.value);

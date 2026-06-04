@@ -947,10 +947,21 @@
     }
   }
 
+  function renderSquadsClan() {
+    const ClanSystem = global.LuminaClanSystem;
+    if (ClanSystem && global.currentUser) {
+      const mod = host();
+      if (mod) mod.innerHTML = '';
+      ClanSystem.renderClanModule(global.currentUser.id);
+    } else {
+      renderSquads();
+    }
+  }
+
   const renderers = {
     messages: null,
     friends: renderFriends,
-    squads: renderSquads,
+    squads: renderSquadsClan,
     activity: renderActivity,
     notifications: renderNotifications,
     settings: renderSettings,

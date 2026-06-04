@@ -271,6 +271,7 @@
     if (thread) thread.classList.remove('lc-hidden');
     box.innerHTML = '';
     let lastDay = '';
+    const W = global.LuminaWidgets;
     runtime.messages.forEach((m, i) => {
       const day = m.created_at ? m.created_at.slice(0, 10) : '';
       if (day && day !== lastDay) {
@@ -286,13 +287,34 @@
       row.style.animationDelay = Math.min(i * 0.03, 0.3) + 's';
       const bubble = document.createElement('div');
       bubble.className = 'lc-bubble';
-      if (m.type === 'voice') {
+      const msgType = m.type || 'text';
+
+      if (msgType === 'image') {
+        bubble.classList.add('lc-bubble--image');
+        const imgSrc = (m.meta?.url) || m.content;
+        bubble.innerHTML = '<img class="lc-image-bubble" src="' + U.sanitizeText(imgSrc) + '" alt="Image" loading="lazy" data-action="open-lightbox" data-src="' + U.sanitizeText(imgSrc) + '">';
+      } else if (msgType === 'trade_widget' && W) {
+        bubble.classList.add('lc-bubble--trade');
+        bubble.innerHTML = W.renderTradeCard(m, currentUser().id);
+      } else if (msgType === 'duel_widget' && W) {
+        bubble.classList.add('lc-bubble--duel');
+        bubble.innerHTML = W.renderDuelCard(m, currentUser().id);
+        if (m.meta?.status === 'completed' && m.meta?.winner_id) {
+          const capturedBubble = bubble;
+          const capturedMeta = m.meta;
+          requestAnimationFrame(() => {
+            const card = capturedBubble.querySelector('.lf-duel-card');
+            if (card) W.runDuelAnimation(card, capturedMeta);
+          });
+        }
+      } else if (msgType === 'voice') {
         bubble.classList.add('lc-bubble--voice');
         bubble.innerHTML =
           '<button type="button" class="lc-voice-play" aria-label="Play"><span class="material-symbols-outlined">play_arrow</span></button><div class="lc-voice-wave"></div><span class="lc-voice-dur">0:42</span>';
       } else {
         bubble.textContent = m.content;
       }
+
       row.appendChild(bubble);
       const meta = document.createElement('div');
       meta.className = 'lc-msg-meta';
@@ -561,6 +583,28 @@
     });
     bindClick('lcComposeVoice', () => toast('Hold to record — coming soon.'));
     bindClick('lcComposeAttach', () => toast('Attachments — coming soon.'));
+
+    // Widget buttons — Trade & Duel
+    bindClick('lcWidgetTrade', async () => {
+      if (!runtime.selectedId) return;
+      const W = global.LuminaWidgets;
+      if (!W) { toast('Widget engine loading…'); return; }
+      const user = currentUser();
+      const peer = runtime.friends.find((f) => f.id === runtime.selectedId);
+      const { data: poxy } = await sb().from('user_poxy').select('id,poxy_tier').eq('user_id', user.id).limit(12);
+      W.showTradeComposer(runtime.selectedId, peer?.displayName || 'Friend', user.id, poxy || []);
+    });
+
+    bindClick('lcWidgetDuel', async () => {
+      if (!runtime.selectedId) return;
+      const W = global.LuminaWidgets;
+      if (!W) { toast('Widget engine loading…'); return; }
+      const user = currentUser();
+      const peer = runtime.friends.find((f) => f.id === runtime.selectedId);
+      const { data: poxy } = await sb().from('user_poxy').select('id,poxy_tier').eq('user_id', user.id).limit(12);
+      global._lcProfile = runtime.profile;
+      W.showDuelComposer(runtime.selectedId, peer?.displayName || 'Friend', user.id, poxy || []);
+    });
     bindClick('lcThreadBack', () => {
       document.querySelector('#luminaOsRoot .lc-shell')?.classList.remove('conv-open');
     });
