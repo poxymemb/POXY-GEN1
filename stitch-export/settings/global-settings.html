@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY WORLD - Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-secondary-fixed": "#400014",
+                "on-secondary": "#660025",
+                "error": "#ffb4ab",
+                "secondary-fixed-dim": "#ffb2be",
+                "surface-variant": "#353535",
+                "on-tertiary-container": "#bbe0ff",
+                "on-surface-variant": "#d5c1d2",
+                "on-primary-fixed": "#35003f",
+                "on-secondary-container": "#ffeced",
+                "outline-variant": "#514250",
+                "inverse-primary": "#9a25ae",
+                "surface-dim": "#131313",
+                "surface-container-low": "#1c1b1b",
+                "inverse-on-surface": "#313030",
+                "primary-fixed": "#ffd6fe",
+                "on-tertiary-fixed": "#001e2f",
+                "on-error-container": "#ffdad6",
+                "secondary-container": "#d70357",
+                "on-primary": "#570066",
+                "error-container": "#93000a",
+                "secondary": "#ffb2be",
+                "on-primary-fixed-variant": "#7b008f",
+                "primary": "#f9abff",
+                "surface-bright": "#393939",
+                "tertiary-fixed-dim": "#99ccf5",
+                "surface": "#131313",
+                "on-tertiary-fixed-variant": "#074b6e",
+                "tertiary-fixed": "#cae6ff",
+                "surface-container-high": "#2a2a2a",
+                "tertiary-container": "#2e6589",
+                "on-background": "#e5e2e1",
+                "outline": "#9d8b9b",
+                "tertiary": "#99ccf5",
+                "secondary-fixed": "#ffd9de",
+                "primary-fixed-dim": "#f9abff",
+                "inverse-surface": "#e5e2e1",
+                "surface-tint": "#f9abff",
+                "surface-container-lowest": "#0e0e0e",
+                "on-surface": "#e5e2e1",
+                "surface-container": "#20201f",
+                "primary-container": "#9c27b0",
+                "on-primary-container": "#ffcaff",
+                "surface-container-highest": "#353535",
+                "on-tertiary": "#00344e",
+                "on-secondary-fixed-variant": "#900038",
+                "background": "#131313",
+                "on-error": "#690005",
+                "glass-stroke": "rgba(255, 255, 255, 0.1)"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem",
+                "capsule": "9999px"
+        },
+        "spacing": {
+                "section-gap": "120px",
+                "container-max": "1280px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "margin-mobile": "20px",
+                "base": "8px"
+        },
+        "fontFamily": {
+                "label-caps": [
+                        "JetBrains Mono"
+                ],
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "display-lg-mobile": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Hanken Grotesk"
+                ],
+                "body-lg": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "64px",
+                        {
+                                "lineHeight": "72px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        
+        .hardware-accelerated {
+            transform: translateZ(0);
+            will-change: transform, opacity;
+        }
+
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid theme('colors.glass-stroke');
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+            will-change: transform, opacity, filter;
+        }
+        
+        .smooth-transition {
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Ambient Glow */
+        .ambient-glow {
+            position: relative;
+        }
+        .ambient-glow::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            background: linear-gradient(45deg, theme('colors.primary'), transparent, theme('colors.primary-container'));
+            filter: blur(8px);
+            opacity: 0;
+            transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+            pointer-events: none;
+            will-change: opacity;
+        }
+
+        .ambient-glow:hover::before,
+        .ambient-glow.active::before {
+            opacity: 0.3;
+        }
+
+        /* Form Controls */
+        input[type="password"], input[type="text"], input[type="email"] {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid theme('colors.glass-stroke');
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            color: #ffffff;
+        }
+        
+        input[type="password"]:focus, input[type="text"]:focus, input[type="email"]:focus {
+            border-color: theme('colors.primary');
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(249, 171, 255, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Hide scrollbar for a cleaner look but keep functionality */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface-container-lowest');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.surface-variant');
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container bg-background">
+<!-- Header Injection -->
+    {{DATA:SCREEN:SCREEN_54}}
+
+    <main class="flex-1 flex w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-[80px] mb-12 gap-gutter h-[calc(100vh-130px)]">
+<!-- Left Sub-Sidebar (30%) -->
+<aside class="hidden md:flex flex-col w-[30%] h-full shrink-0">
+<div class="glass-panel rounded-xl h-full p-6 flex flex-col gap-2 overflow-y-auto hardware-accelerated">
+<h2 class="font-headline-md text-headline-md mb-6 text-white">Settings</h2>
+<nav class="flex flex-col gap-1 w-full">
+<!-- Active Node -->
+<a class="group relative flex items-center gap-4 px-4 py-4 rounded-xl bg-surface-container-high border border-primary/30 smooth-transition hardware-accelerated ambient-glow active" href="#">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full shadow-[0_0_10px_rgba(249,171,255,0.5)]"></div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-white font-bold">Your Account</span>
+</div>
+</a>
+<!-- Inactive Nodes -->
+<a class="group flex items-center gap-4 px-4 py-4 rounded-xl border border-transparent hover:border-glass-stroke hover:bg-surface-container/50 smooth-transition hardware-accelerated" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white smooth-transition">security</span>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-gray-400 group-hover:text-white smooth-transition">Security &amp; Account Access</span>
+</div>
+</a>
+<a class="group flex items-center gap-4 px-4 py-4 rounded-xl border border-transparent hover:border-glass-stroke hover:bg-surface-container/50 smooth-transition hardware-accelerated" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white smooth-transition">notifications</span>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-gray-400 group-hover:text-white smooth-transition">Notifications</span>
+</div>
+</a>
+<a class="group flex items-center gap-4 px-4 py-4 rounded-xl border border-transparent hover:border-glass-stroke hover:bg-surface-container/50 smooth-transition hardware-accelerated" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-white smooth-transition">palette</span>
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg text-gray-400 group-hover:text-white smooth-transition">Display &amp; Interface</span>
+</div>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Right Content Viewport (70%) -->
+<section class="w-full md:w-[70%] h-full flex flex-col h-full overflow-y-auto pr-2 pb-12">
+<header class="mb-12 sticky top-0 bg-background/90 backdrop-blur-md z-10 py-4 border-b border-glass-stroke hardware-accelerated">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-white">Your Account</h1>
+<p class="font-body-lg text-body-lg text-gray-400 mt-2 max-w-2xl">Manage your account settings, password, and identity verification. See information about your account, download an archive of your data, or learn about your account deactivation options.</p>
+</header>
+<div class="flex flex-col gap-section-gap">
+<!-- Account Info Section -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-glass-stroke pb-4">
+<h3 class="font-headline-md text-headline-md text-white">Account Information</h3>
+</div>
+<div class="glass-panel rounded-xl p-8 flex flex-col gap-8 hardware-accelerated ambient-glow">
+<div class="flex items-center gap-6">
+<div class="w-24 h-24 rounded-full bg-surface-container-high border-2 border-primary/50 flex items-center justify-center shrink-0 overflow-hidden relative group cursor-pointer shadow-[0_0_15px_rgba(249,171,255,0.2)]">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A close-up portrait of a young woman with a cyberpunk or modern tech aesthetic. She is illuminated by soft, moody lighting with subtle neon magenta and cyan reflections on her skin, set against a dark, minimalist background. The style is highly polished, cinematic, and professional, aligning with a high-end SaaS or luxury fintech brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7TE7uwg9EfQMvLLyzzsydQUDVkLRA0frZTaTAY3xOVUVCgFq2P1VdadY1mgBx-J1a_xOh-o-vx0bd-Jzh6CcDZcXWcO2bQ1qRM1Y2xLo6ODUDT-YWNDD_MUnGXI-4xDmt3hBnPCulLD1a90J525gkfRlPw-WWe1nkxvBapx6s94wANm2fSxTCcb1FIA6dGKmTLruCr1u5cfU02PZJnhZaHyhjvvBGLD1BDnkLDiZs7voMAS9f4b535l478Eczv-pL-_dEO_RHvg"/>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 smooth-transition flex items-center justify-center backdrop-blur-sm">
+<span class="material-symbols-outlined text-white">photo_camera</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-body-lg text-body-lg font-bold text-white">@nikita_poxy</span>
+<span class="text-gray-400">Joined December 2023</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-primary uppercase ml-4">Username</label>
+<input class="w-full rounded-capsule px-6 py-4 text-white font-body-lg bg-surface-container/30 border border-glass-stroke" disabled="" type="text" value="@nikita_poxy"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-primary uppercase ml-4">Email</label>
+<input class="w-full rounded-capsule px-6 py-4 text-white font-body-lg bg-surface-container/30 border border-glass-stroke" disabled="" type="email" value="nikita@poxy.world"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Change Password Section -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-glass-stroke pb-4">
+<h3 class="font-headline-md text-headline-md text-white">Change Password</h3>
+</div>
+<form class="glass-panel rounded-xl p-8 flex flex-col gap-8 hardware-accelerated ambient-glow">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-gray-400 uppercase ml-4" for="current_password">Current Password</label>
+<input class="w-full rounded-capsule px-6 py-4 text-white font-body-lg focus:bg-surface-container/50" id="current_password" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-primary uppercase ml-4" for="new_password">New Password</label>
+<input class="w-full rounded-capsule px-6 py-4 text-white font-body-lg focus:bg-surface-container/50" id="new_password" placeholder="Create a strong password" type="password"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-primary uppercase ml-4" for="confirm_password">Confirm New Password</label>
+<input class="w-full rounded-capsule px-6 py-4 text-white font-body-lg focus:bg-surface-container/50" id="confirm_password" placeholder="Repeat new password" type="password"/>
+</div>
+</div>
+<div class="flex justify-end mt-4">
+<button class="bg-primary text-background font-body-lg text-body-lg font-bold px-8 py-4 rounded-capsule hover:scale-[1.02] active:scale-95 smooth-transition shadow-[0_0_20px_rgba(249,171,255,0.3)] hover:shadow-[0_0_30px_rgba(249,171,255,0.5)] hardware-accelerated" type="button">
+                                Update Password
+                            </button>
+</div>
+</form>
+</div>
+<!-- Danger Zone -->
+<div class="flex flex-col gap-6 mt-12">
+<div class="flex items-center justify-between border-b border-error/20 pb-4">
+<h3 class="font-headline-md text-headline-md text-error">Danger Zone</h3>
+</div>
+<div class="glass-panel border-error/30 bg-error-container/5 rounded-xl p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hardware-accelerated">
+<div class="flex flex-col gap-2 max-w-lg">
+<span class="font-body-lg text-body-lg font-bold text-white">Deactivate Account</span>
+<span class="text-gray-400">Find out how you can deactivate your account. This action is temporary and can be reversed within 30 days.</span>
+</div>
+<button class="shrink-0 bg-transparent border border-error text-error hover:bg-error hover:text-white hover:shadow-[0_0_20px_rgba(255,180,171,0.3)] font-body-lg text-body-lg font-medium px-8 py-3 rounded-capsule smooth-transition hardware-accelerated" type="button">
+                            Deactivate
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Injection -->
+    {{DATA:SCREEN:SCREEN_55}}
+
+
+</body></html>

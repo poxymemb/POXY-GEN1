@@ -38,6 +38,30 @@
   -webkit-text-fill-color:unset;
 }
 #profilePage .poxy-profile-title::after{display:none}
+.poxy-profile-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.poxy-profile-settings-link{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 16px;
+  border-radius:9999px;
+  border:1px solid rgba(249,171,255,0.35);
+  background:rgba(156,39,176,0.12);
+  color:#f9abff;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+  transition:background 0.25s,transform 0.2s;
+}
+.poxy-profile-settings-link:hover{background:rgba(156,39,176,0.22);transform:scale(1.02)}
+.poxy-profile-settings-link .material-symbols-outlined{font-size:18px}
 #profilePage .poxy-profile-layout{
   display:grid;
   grid-template-columns:1fr;

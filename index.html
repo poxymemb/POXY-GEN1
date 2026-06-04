@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
+<link rel="stylesheet" href="assets/poxy-settings-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -1182,7 +1183,7 @@ body.dark-club .club-sub{color:#888}
           <button type="button" class="st-topup-btn" onclick="scrollToTreasury()">Top Up</button>
           <!-- Profile header: avatar → username/role (single username source: userUsernameEl) -->
           <div class="user-bar st-user" id="userBar" role="group" aria-label="Account">
-            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" title="My Profile">
+            <button type="button" class="st-nav-user-chip" onclick="showPage('settings')" title="Settings">
               <div class="st-user-avatar-ring user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
             </button>
             <div class="st-user-meta">
@@ -1609,6 +1610,7 @@ body.dark-club .club-sub{color:#888}
   <div class="poxy-profile-shell">
     <header class="poxy-profile-header">
       <h1 class="poxy-profile-title">MY PROFILE</h1>
+      <button type="button" class="poxy-profile-settings-link" onclick="showPage('settings')"><span class="material-symbols-outlined">settings</span> Settings</button>
     </header>
     <div class="poxy-profile-layout">
       <aside class="poxy-profile-sidebar">
@@ -1703,6 +1705,230 @@ body.dark-club .club-sub{color:#888}
       </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- SETTINGS PAGE — Global Settings Terminal (Stitch) -->
+<div class="page poxy-settings-page" id="settingsPage">
+  <div class="poxy-settings-shell">
+    <div class="poxy-settings-mobile-tabs" role="tablist" aria-label="Settings sections">
+      <button type="button" class="poxy-settings-nav-btn active" data-settings-tab="account" onclick="switchSettingsTab('account')"><span class="material-symbols-outlined">manage_accounts</span> Account</button>
+      <button type="button" class="poxy-settings-nav-btn" data-settings-tab="security" onclick="switchSettingsTab('security')"><span class="material-symbols-outlined">security</span> Security</button>
+      <button type="button" class="poxy-settings-nav-btn" data-settings-tab="notifications" onclick="switchSettingsTab('notifications')"><span class="material-symbols-outlined">notifications</span> Alerts</button>
+      <button type="button" class="poxy-settings-nav-btn" data-settings-tab="display" onclick="switchSettingsTab('display')"><span class="material-symbols-outlined">palette</span> Display</button>
+    </div>
+    <aside class="poxy-settings-sidebar" aria-label="Settings navigation">
+      <div class="poxy-settings-sidebar-panel">
+        <h2 class="poxy-settings-sidebar-title">Settings</h2>
+        <nav class="poxy-settings-nav" role="tablist">
+          <button type="button" class="poxy-settings-nav-btn active" data-settings-tab="account" onclick="switchSettingsTab('account')"><span class="material-symbols-outlined">manage_accounts</span><span>Your Account</span></button>
+          <button type="button" class="poxy-settings-nav-btn" data-settings-tab="security" onclick="switchSettingsTab('security')"><span class="material-symbols-outlined">security</span><span>Security &amp; Account Access</span></button>
+          <button type="button" class="poxy-settings-nav-btn" data-settings-tab="notifications" onclick="switchSettingsTab('notifications')"><span class="material-symbols-outlined">notifications</span><span>Notifications</span></button>
+          <button type="button" class="poxy-settings-nav-btn" data-settings-tab="display" onclick="switchSettingsTab('display')"><span class="material-symbols-outlined">palette</span><span>Display &amp; Interface</span></button>
+        </nav>
+      </div>
+    </aside>
+    <section class="poxy-settings-viewport" aria-live="polite">
+      <header class="poxy-settings-viewport-head">
+        <h1 class="poxy-settings-viewport-title" id="settingsViewportTitle">Your Account</h1>
+        <p class="poxy-settings-viewport-desc" id="settingsViewportDesc">Manage your account settings, password, and identity verification.</p>
+        <button type="button" class="poxy-settings-profile-link" onclick="showPage('profile')">View showcase &amp; stats profile <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span></button>
+      </header>
+      <div class="poxy-settings-panels">
+        <div class="poxy-settings-panel" id="settingsPanelAccount" data-settings-panel="account">
+          <div class="poxy-settings-section-hdr"><h3>Account Information</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-profile-row">
+              <label class="poxy-settings-avatar-ring" for="settingsAvatarUpload" title="Change avatar">
+                <div id="settingsAvatarWrap" class="avatar-frame-target gpu-accel"><div id="settingsBigAvatar" class="poxy-settings-avatar-inner"></div></div>
+                <span class="poxy-settings-avatar-overlay"><span class="material-symbols-outlined">photo_camera</span></span>
+              </label>
+              <input type="file" id="settingsAvatarUpload" accept="image/*" hidden>
+              <div>
+                <div class="poxy-settings-handle" id="settingsDisplayHandle">@player</div>
+                <div class="poxy-settings-joined" id="settingsJoinedText">Joined —</div>
+              </div>
+            </div>
+            <div class="poxy-settings-field-grid">
+              <div class="poxy-settings-field">
+                <label class="poxy-settings-label" for="settingsUsername">Username</label>
+                <input class="poxy-settings-input" id="settingsUsername" type="text" maxlength="24" autocomplete="username" placeholder="@username">
+              </div>
+              <div class="poxy-settings-field">
+                <label class="poxy-settings-label" for="settingsEmail">Email</label>
+                <input class="poxy-settings-input" id="settingsEmail" type="email" disabled autocomplete="email">
+              </div>
+            </div>
+            <div class="poxy-settings-actions-row">
+              <button type="button" class="poxy-settings-btn-primary" id="btnSettingsSaveProfile">Save changes</button>
+            </div>
+          </div>
+          <div class="poxy-settings-section-hdr" style="margin-top:48px"><h3>Change Password</h3></div>
+          <form class="poxy-settings-glass" id="settingsPasswordForm" onsubmit="return false">
+            <div class="poxy-settings-field">
+              <label class="poxy-settings-label poxy-settings-label--muted" for="settingsPwdCurrent">Current Password</label>
+              <input class="poxy-settings-input" id="settingsPwdCurrent" type="password" autocomplete="current-password" placeholder="••••••••">
+            </div>
+            <div class="poxy-settings-field-grid" style="margin-top:16px">
+              <div class="poxy-settings-field">
+                <label class="poxy-settings-label" for="settingsPwdNew">New Password</label>
+                <input class="poxy-settings-input" id="settingsPwdNew" type="password" autocomplete="new-password" placeholder="Create a strong password">
+              </div>
+              <div class="poxy-settings-field">
+                <label class="poxy-settings-label" for="settingsPwdConfirm">Confirm New Password</label>
+                <input class="poxy-settings-input" id="settingsPwdConfirm" type="password" autocomplete="new-password" placeholder="Repeat new password">
+              </div>
+            </div>
+            <div class="poxy-settings-actions-row">
+              <button type="button" class="poxy-settings-btn-primary" id="btnSettingsUpdatePassword">Update Password</button>
+            </div>
+            <div class="poxy-settings-msg" id="settingsPwdMsg"></div>
+          </form>
+          <div class="poxy-settings-section-hdr poxy-settings-section-hdr--danger" style="margin-top:48px"><h3>Danger Zone</h3></div>
+          <div class="poxy-settings-glass poxy-settings-glass--danger">
+            <div class="poxy-settings-danger-row">
+              <div>
+                <div class="poxy-settings-handle">Deactivate Account</div>
+                <p class="poxy-settings-toggle-desc" style="margin-top:8px">Temporary deactivation can be reversed within 30 days. Contact support to process a full account closure.</p>
+              </div>
+              <button type="button" class="poxy-settings-btn-outline" onclick="showToast('Account deactivation — contact support@poxy.world.')">Deactivate</button>
+            </div>
+          </div>
+        </div>
+        <div class="poxy-settings-panel" id="settingsPanelSecurity" data-settings-panel="security" hidden>
+          <div class="poxy-settings-section-hdr"><h3>Two-Factor Authentication</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-toggle-list">
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info">
+                  <p class="poxy-settings-toggle-title">Authenticator app (TOTP)</p>
+                  <p class="poxy-settings-toggle-desc">Require a one-time code when signing in from a new device.</p>
+                </div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settings2faTotp" onchange="onSettings2faToggle(this.checked)"><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info">
+                  <p class="poxy-settings-toggle-title">SMS backup codes</p>
+                  <p class="poxy-settings-toggle-desc">Receive backup codes via verified phone — rollout Q3.</p>
+                </div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settings2faSms" disabled><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+            </div>
+          </div>
+          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Sessions</h3></div>
+          <div class="poxy-settings-glass">
+            <p class="poxy-settings-toggle-desc" style="margin-bottom:16px">Sign out everywhere except this browser. Use after a suspected login or device loss.</p>
+            <button type="button" class="poxy-settings-btn-primary" onclick="clubSignOutAllDevices()">Log out of all other devices</button>
+          </div>
+          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Recent Login History</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-sessions-list" id="settingsLoginHistory"></div>
+          </div>
+        </div>
+        <div class="poxy-settings-panel" id="settingsPanelNotifications" data-settings-panel="notifications" hidden>
+          <div class="poxy-settings-section-hdr"><h3>Delivery Preferences</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-toggle-row">
+              <div class="poxy-settings-toggle-info">
+                <p class="poxy-settings-toggle-title">In-app notifications</p>
+                <p class="poxy-settings-toggle-desc">Show toasts and badges inside POXY WORLD.</p>
+              </div>
+              <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifInApp" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+            </div>
+            <div class="poxy-settings-toggle-row">
+              <div class="poxy-settings-toggle-info">
+                <p class="poxy-settings-toggle-title">Email digests</p>
+                <p class="poxy-settings-toggle-desc">Weekly summary of trades, news, and club activity.</p>
+              </div>
+              <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifEmail" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+            </div>
+          </div>
+          <div class="poxy-settings-subgroup">
+            <p class="poxy-settings-subgroup-title">Mentions</p>
+            <div class="poxy-settings-glass">
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Chat @mentions</p></div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifMentionsChat" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Club feed tags</p></div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifMentionsClub" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+            </div>
+          </div>
+          <div class="poxy-settings-subgroup">
+            <p class="poxy-settings-subgroup-title">Trade Requests</p>
+            <div class="poxy-settings-glass">
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Incoming trade offers</p></div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifTradeIn" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Trade completed</p></div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifTradeDone" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+            </div>
+          </div>
+          <div class="poxy-settings-subgroup">
+            <p class="poxy-settings-subgroup-title">News</p>
+            <div class="poxy-settings-glass">
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Patch notes &amp; major updates</p></div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifNewsMajor" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+              <div class="poxy-settings-toggle-row">
+                <div class="poxy-settings-toggle-info"><p class="poxy-settings-toggle-title">Hotfixes &amp; maintenance</p></div>
+                <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifNewsHotfix" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="poxy-settings-panel" id="settingsPanelDisplay" data-settings-panel="display" hidden>
+          <div class="poxy-settings-section-hdr"><h3>Theme</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-theme-grid" id="settingsThemeGrid">
+              <button type="button" class="poxy-settings-theme-card" data-theme="" onclick="selectSettingsTheme('')"><div class="poxy-settings-theme-swatch" style="background:linear-gradient(135deg,#131313,#2a2a2a)"></div><span class="poxy-settings-theme-name">Dark / Matte</span></button>
+              <button type="button" class="poxy-settings-theme-card" data-theme="cyberpunk" onclick="selectSettingsTheme('cyberpunk')"><div class="poxy-settings-theme-swatch" style="background:#0d0d10"></div><span class="poxy-settings-theme-name">Cyber-Matte</span></button>
+              <button type="button" class="poxy-settings-theme-card" data-theme="mayfair" onclick="selectSettingsTheme('mayfair')"><div class="poxy-settings-theme-swatch" style="background:#1a0a14"></div><span class="poxy-settings-theme-name">Mayfair</span></button>
+              <button type="button" class="poxy-settings-theme-card" data-theme="arctic" onclick="selectSettingsTheme('arctic')"><div class="poxy-settings-theme-swatch" style="background:#e8f4f8"></div><span class="poxy-settings-theme-name">Arctic</span></button>
+            </div>
+          </div>
+          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Accent Color</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-accent-row" id="settingsAccentRow">
+              <button type="button" class="poxy-settings-accent-dot active" data-accent="magenta" style="background:#f9abff" onclick="selectSettingsAccent('magenta')" aria-label="Magenta"></button>
+              <button type="button" class="poxy-settings-accent-dot" data-accent="rose" style="background:#ffb2be" onclick="selectSettingsAccent('rose')" aria-label="Rose"></button>
+              <button type="button" class="poxy-settings-accent-dot" data-accent="cyan" style="background:#99ccf5" onclick="selectSettingsAccent('cyan')" aria-label="Cyan"></button>
+              <button type="button" class="poxy-settings-accent-dot" data-accent="gold" style="background:#FFCA28" onclick="selectSettingsAccent('gold')" aria-label="Gold"></button>
+            </div>
+          </div>
+          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Font Size</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-font-scale">
+              <button type="button" class="poxy-settings-font-btn" data-font-scale="sm" onclick="selectSettingsFontScale('sm')">Compact</button>
+              <button type="button" class="poxy-settings-font-btn active" data-font-scale="md" onclick="selectSettingsFontScale('md')">Default</button>
+              <button type="button" class="poxy-settings-font-btn" data-font-scale="lg" onclick="selectSettingsFontScale('lg')">Large</button>
+            </div>
+          </div>
+          <div class="poxy-settings-section-hdr" style="margin-top:40px"><h3>Performance &amp; Audio</h3></div>
+          <div class="poxy-settings-glass">
+            <div class="poxy-settings-toggle-row">
+              <div class="poxy-settings-toggle-info">
+                <p class="poxy-settings-toggle-title">Performance mode</p>
+                <p class="poxy-settings-toggle-desc">Reduces motion, blur, and heavy UI animations across the app.</p>
+              </div>
+              <label class="poxy-settings-switch"><input type="checkbox" id="settingsPerformanceMode" onchange="onSettingsPerformanceToggle(this.checked)"><span class="poxy-settings-switch-slider"></span></label>
+            </div>
+            <div class="poxy-settings-toggle-row">
+              <div class="poxy-settings-toggle-info">
+                <p class="poxy-settings-toggle-title">HUD inventory hover sounds</p>
+              </div>
+              <label class="poxy-settings-switch"><input type="checkbox" id="settingsHudSound" onchange="PoxyHudAudio&&PoxyHudAudio.setEnabled(this.checked)"><span class="poxy-settings-switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
 
@@ -3214,6 +3440,7 @@ async function loadProfile(){
       syncNavUsernameLabels();
       applyNameGradientUI(data.name_gradient);
       applyTheme(data.profile_theme);
+      applySettingsPrefsUi();
       setBarAvatar(selectedAvatar);
       updateBalanceBadge(data.balance||0);
       updatePsdMemberBadge();
@@ -3275,6 +3502,124 @@ function setBarAvatar(av){
   else{el.innerHTML='<span class="user-bar-avatar-face">'+(av||'🎭')+'</span>';}
   applyPremiumFrameUI();
 }
+const SETTINGS_PREFS_KEY='poxy_settings_prefs_v1';
+let activeSettingsTab='account';
+const SETTINGS_TAB_COPY={
+  account:{title:'Your Account',desc:'Manage your account settings, password, and identity verification. See information about your account, download an archive of your data, or learn about your account deactivation options.'},
+  security:{title:'Security & Account Access',desc:'Protect your vault with two-factor authentication, review active sessions, and sign out of other devices.'},
+  notifications:{title:'Notifications',desc:'Control how POXY WORLD reaches you — mentions, trades, patch notes, and delivery channels.'},
+  display:{title:'Display & Interface',desc:'Tune theme, accent color, typography scale, and performance options for your terminal.'}
+};
+function loadSettingsPrefs(){
+  try{
+    const raw=localStorage.getItem(SETTINGS_PREFS_KEY);
+    return raw?JSON.parse(raw):{};
+  }catch(e){return{};}
+}
+function saveSettingsPrefs(prefs){
+  try{localStorage.setItem(SETTINGS_PREFS_KEY,JSON.stringify(prefs));}catch(e){}
+}
+function applySettingsPrefsUi(){
+  const p=loadSettingsPrefs();
+  const setChk=(id,v)=>{const el=$(id);if(el)el.checked=v!==false;};
+  setChk('settingsNotifInApp',p.notifInApp!==false);
+  setChk('settingsNotifEmail',!!p.notifEmail);
+  setChk('settingsNotifMentionsChat',p.notifMentionsChat!==false);
+  setChk('settingsNotifMentionsClub',p.notifMentionsClub!==false);
+  setChk('settingsNotifTradeIn',p.notifTradeIn!==false);
+  setChk('settingsNotifTradeDone',p.notifTradeDone!==false);
+  setChk('settingsNotifNewsMajor',p.notifNewsMajor!==false);
+  setChk('settingsNotifNewsHotfix',p.notifNewsHotfix!==false);
+  setChk('settings2faTotp',!!p.totp2fa);
+  const perf=$('settingsPerformanceMode');if(perf){perf.checked=!!p.performanceMode;document.body.classList.toggle('poxy-performance-mode',!!p.performanceMode);}
+  const hud=$('settingsHudSound');if(hud){hud.checked=p.hudSound!==false;if(window.PoxyHudAudio)PoxyHudAudio.setEnabled(hud.checked);}
+  const theme=currentProfile?.profile_theme||p.theme||'';
+  document.querySelectorAll('.poxy-settings-theme-card').forEach(c=>c.classList.toggle('active',c.dataset.theme===(theme||'')));
+  const accent=p.accent||'magenta';
+  document.body.setAttribute('data-accent',accent);
+  document.querySelectorAll('.poxy-settings-accent-dot').forEach(d=>d.classList.toggle('active',d.dataset.accent===accent));
+  const fs=p.fontScale||'md';
+  document.body.setAttribute('data-font-scale',fs==='md'?'':fs);
+  document.querySelectorAll('.poxy-settings-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.fontScale===(fs||'md')));
+}
+window.saveSettingsPrefsFromUi=function(){
+  const p=loadSettingsPrefs();
+  const g=id=>{const el=$(id);return el?el.checked:null;};
+  p.notifInApp=g('settingsNotifInApp');p.notifEmail=g('settingsNotifEmail');
+  p.notifMentionsChat=g('settingsNotifMentionsChat');p.notifMentionsClub=g('settingsNotifMentionsClub');
+  p.notifTradeIn=g('settingsNotifTradeIn');p.notifTradeDone=g('settingsNotifTradeDone');
+  p.notifNewsMajor=g('settingsNotifNewsMajor');p.notifNewsHotfix=g('settingsNotifNewsHotfix');
+  saveSettingsPrefs(p);
+};
+window.onSettings2faToggle=function(on){
+  const p=loadSettingsPrefs();p.totp2fa=on;saveSettingsPrefs(p);
+  showToast(on?'2FA enrollment opens in a future security update. Preference saved.':'2FA preference saved (off).');
+};
+window.onSettingsPerformanceToggle=function(on){
+  const p=loadSettingsPrefs();p.performanceMode=on;saveSettingsPrefs(p);
+  document.body.classList.toggle('poxy-performance-mode',on);
+};
+window.selectSettingsTheme=function(themeVal){
+  const p=loadSettingsPrefs();p.theme=themeVal||null;saveSettingsPrefs(p);
+  applyTheme(themeVal||null);
+  if(currentUser){
+    sb.from('profiles').update({profile_theme:themeVal||null}).eq('id',currentUser.id).then(()=>{if(currentProfile)currentProfile.profile_theme=themeVal||null;});
+  }
+  document.querySelectorAll('.poxy-settings-theme-card').forEach(c=>c.classList.toggle('active',c.dataset.theme===(themeVal||'')));
+};
+window.selectSettingsAccent=function(accent){
+  const p=loadSettingsPrefs();p.accent=accent;saveSettingsPrefs(p);
+  document.body.setAttribute('data-accent',accent);
+  document.querySelectorAll('.poxy-settings-accent-dot').forEach(d=>d.classList.toggle('active',d.dataset.accent===accent));
+};
+window.selectSettingsFontScale=function(scale){
+  const p=loadSettingsPrefs();p.fontScale=scale;saveSettingsPrefs(p);
+  document.body.setAttribute('data-font-scale',scale==='md'?'':scale);
+  document.querySelectorAll('.poxy-settings-font-btn').forEach(b=>b.classList.toggle('active',b.dataset.fontScale===scale));
+};
+window.switchSettingsTab=function(tab){
+  activeSettingsTab=tab;
+  document.querySelectorAll('.poxy-settings-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.settingsTab===tab));
+  document.querySelectorAll('.poxy-settings-panel').forEach(p=>{p.hidden=p.dataset.settingsPanel!==tab;});
+  const copy=SETTINGS_TAB_COPY[tab]||SETTINGS_TAB_COPY.account;
+  const t=$('settingsViewportTitle');const d=$('settingsViewportDesc');
+  if(t)t.textContent=copy.title;
+  if(d)d.textContent=copy.desc;
+  const link=document.querySelector('.poxy-settings-profile-link');
+  if(link)link.style.display=tab==='account'?'inline-flex':'none';
+  if(tab==='security')renderSettingsLoginHistory();
+};
+function renderSettingsLoginHistory(){
+  const list=$('settingsLoginHistory');if(!list)return;
+  const when=currentUser?.last_sign_in_at||currentUser?.created_at;
+  const whenStr=when?new Date(when).toLocaleString():'Unknown';
+  const email=sanitizeText(currentUser?.email||'—');
+  list.innerHTML='<div class="poxy-settings-session-item"><div><strong>This device · Active now</strong><span class="poxy-settings-session-meta">'+whenStr+' · '+email+'</span></div><span class="poxy-settings-session-badge">Current</span></div>'
+    +'<div class="poxy-settings-session-item"><div><strong>Web session</strong><span class="poxy-settings-session-meta">POXY WORLD · Encrypted TLS</span></div></div>';
+}
+function renderSettingsAvatar(){
+  const bigAv=$('settingsBigAvatar');if(!bigAv)return;
+  const av=selectedAvatar||currentProfile?.avatar_url||'🎭';
+  if(av&&String(av).startsWith('http')&&!isBrokenAvatarUrl(av)){bigAv.innerHTML='<img src="'+sanitizeText(avatarImgUrl(av))+'" alt="">';}
+  else{bigAv.innerHTML='<span>'+(av||'🎭')+'</span>';}
+  updateGlobalFrames();
+}
+function renderSettingsPage(){
+  if(!currentUser)return;
+  renderSettingsAvatar();
+  const un=currentProfile?.username||'';
+  const su=$('settingsUsername');if(su)su.value=un;
+  const pu=$('profileUsername');if(pu)pu.value=un;
+  const handle=$('settingsDisplayHandle');
+  if(handle)handle.textContent=un?'@'+un:'@player';
+  const em=$('settingsEmail');if(em)em.value=currentUser.email||'';
+  const joined=$('settingsJoinedText');
+  if(joined&&currentUser.created_at){
+    joined.textContent='Joined '+new Date(currentUser.created_at).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  }
+  applySettingsPrefsUi();
+  if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
+}
 function renderProfilePage(){
   if(currentProfile?.avatar_url&&!isBrokenAvatarUrl(currentProfile.avatar_url))selectedAvatar=currentProfile.avatar_url;
   const bigAv=$('profileBigAvatar');
@@ -3297,6 +3642,7 @@ function renderProfilePage(){
   renderFrameSelector();
   updateGlobalFrames();
   if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
+  renderSettingsAvatar();
 }
 async function renderProfileStats(){
   try{
@@ -3634,30 +3980,58 @@ const pwdToggle=$('pwdSectionToggle');
 if(pwdToggle)pwdToggle.addEventListener('click',()=>toggleProfilePwdSection());
 const pwdClose=$('pwdSectionClose');
 if(pwdClose)pwdClose.addEventListener('click',()=>toggleProfilePwdSection(false));
-$('btnChangePassword').addEventListener('click',async function(){
-  const np=$('pwdNewPassword').value;
-  const cp=$('pwdConfirmPassword').value;
-  const msg=$('pwdMsg');
-  msg.textContent='';msg.className='pwd-msg';
-  if(!np||np.length<6){msg.className='pwd-msg error';msg.textContent='Password must be at least 6 characters.';return;}
-  if(np!==cp){msg.className='pwd-msg error';msg.textContent='Passwords do not match.';return;}
-  const btn=$('btnChangePassword');btn.disabled=true;btn.textContent='Updating…';
+async function updateUserPassword(np,cp,msgEl,btn,onSuccess){
+  if(msgEl){msgEl.textContent='';msgEl.className='poxy-settings-msg';}
+  if(!np||np.length<6){if(msgEl){msgEl.className='poxy-settings-msg error';msgEl.textContent='Password must be at least 6 characters.';}return;}
+  if(np!==cp){if(msgEl){msgEl.className='poxy-settings-msg error';msgEl.textContent='Passwords do not match.';}return;}
+  const cur=$('settingsPwdCurrent')?.value?.trim();
+  if(cur&&cur===np){if(msgEl){msgEl.className='poxy-settings-msg error';msgEl.textContent='New password must differ from current.';}return;}
+  if(btn){btn.disabled=true;btn.textContent='Updating…';}
   try{
     const{error}=await sb.auth.updateUser({password:np});
     if(error)throw error;
-    msg.className='pwd-msg success';msg.textContent='Password updated successfully.';
-    $('pwdNewPassword').value='';$('pwdConfirmPassword').value='';
-    setTimeout(()=>toggleProfilePwdSection(false),1200);
-  }catch(e){msg.className='pwd-msg error';msg.textContent=e.message||'Update failed.';}
-  btn.disabled=false;btn.textContent='Update Password';
+    if(msgEl){msgEl.className='poxy-settings-msg success';msgEl.textContent='Password updated successfully.';}
+    if($('pwdNewPassword'))$('pwdNewPassword').value='';
+    if($('pwdConfirmPassword'))$('pwdConfirmPassword').value='';
+    if($('settingsPwdCurrent'))$('settingsPwdCurrent').value='';
+    if($('settingsPwdNew'))$('settingsPwdNew').value='';
+    if($('settingsPwdConfirm'))$('settingsPwdConfirm').value='';
+    if(onSuccess)onSuccess();
+  }catch(e){if(msgEl){msgEl.className='poxy-settings-msg error';msgEl.textContent=e.message||'Update failed.';}}
+  if(btn){btn.disabled=false;btn.textContent='Update Password';}
+}
+$('btnChangePassword').addEventListener('click',async function(){
+  const msg=$('pwdMsg');
+  await updateUserPassword($('pwdNewPassword').value,$('pwdConfirmPassword').value,msg,$('btnChangePassword'),()=>setTimeout(()=>toggleProfilePwdSection(false),1200));
+  if(msg&&msg.classList.contains('success')){msg.className='pwd-msg success';}
+  else if(msg&&msg.classList.contains('error')){msg.className='pwd-msg error';}
 });
-document.getElementById('avatarUpload').addEventListener('change',async function(e){
-  const file=e.target.files[0];if(!file||!currentUser)return;
-  const status=$('uploadStatus');
-  const input=e.target;
-  if(!file.type.startsWith('image/')){showToast('Please select an image.');input.value='';return;}
-  if(file.size>2*1024*1024){showToast('Image must be under 2MB.');input.value='';return;}
-  status.textContent='Uploading...';
+const btnSettingsPwd=$('btnSettingsUpdatePassword');
+if(btnSettingsPwd)btnSettingsPwd.addEventListener('click',()=>updateUserPassword($('settingsPwdNew').value,$('settingsPwdConfirm').value,$('settingsPwdMsg'),btnSettingsPwd,null));
+const btnSettingsSave=$('btnSettingsSaveProfile');
+if(btnSettingsSave)btnSettingsSave.addEventListener('click',async function(){
+  const inp=$('settingsUsername')||$('profileUsername');
+  const username=(inp?.value||'').trim();
+  const v=validateUsername(username);
+  if(!v.ok){showToast(v.msg);return;}
+  btnSettingsSave.disabled=true;
+  try{
+    const{error}=await sb.from('profiles').update({username}).eq('id',currentUser.id);
+    if(error)throw error;
+    currentProfile.username=username;
+    $('profileUsername').value=username;
+    $('settingsDisplayHandle').textContent='@'+username;
+    $('userUsernameEl').textContent=username;
+    syncNavUsernameLabels();
+    showToast('Profile saved!');
+  }catch(e){showToast(usernameTakenMessage(e));}
+  btnSettingsSave.disabled=false;
+});
+async function handleAvatarFileUpload(file,inputEl,statusEl){
+  if(!file||!currentUser)return;
+  if(!file.type.startsWith('image/')){showToast('Please select an image.');if(inputEl)inputEl.value='';return;}
+  if(file.size>2*1024*1024){showToast('Image must be under 2MB.');if(inputEl)inputEl.value='';return;}
+  if(statusEl)statusEl.textContent='Uploading...';
   try{
     const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
     const path='avatars/'+currentUser.id+'.'+ext;
@@ -3673,23 +4047,28 @@ document.getElementById('avatarUpload').addEventListener('change',async function
       if(insErr)throw insErr;
     }
     window._avatarCacheV=Date.now();
-    selectedAvatar=url;currentProfile={...(currentProfile||{id:currentUser.id}),avatar_url:url};
-    $('profileBigAvatar').innerHTML='<img src="'+sanitizeText(avatarImgUrl(url))+'" class="avatar-upload-preview">';
+    selectedAvatar=url;
+    currentProfile={...(currentProfile||{id:currentUser.id}),avatar_url:url};
+    renderProfilePage();
+    renderSettingsPage();
     setBarAvatar(url);
     renderFrameSelector();
     syncStoreData();
-    status.textContent='Photo saved!';setTimeout(()=>status.textContent='',3000);
+    if(statusEl){statusEl.textContent='Photo saved!';setTimeout(()=>{statusEl.textContent='';},3000);}
     showToast('Avatar updated!');
   }catch(err){
     console.error('avatar upload:',err);
-    status.textContent='';
+    if(statusEl)statusEl.textContent='';
     const msg=(err?.message||String(err)).toLowerCase();
     if(msg.includes('bucket')||msg.includes('not found'))showToast('Upload failed — enable the avatars storage bucket in Supabase.');
     else if(msg.includes('policy')||msg.includes('row-level')||msg.includes('permission')||msg.includes('denied'))showToast('Upload blocked — check Storage policies for avatars.');
     else showToast('Upload failed: '+(err?.message||'Unknown error'));
   }
-  input.value='';
-});
+  if(inputEl)inputEl.value='';
+}
+document.getElementById('avatarUpload').addEventListener('change',e=>handleAvatarFileUpload(e.target.files[0],e.target,$('uploadStatus')));
+const settingsAvatarInp=$('settingsAvatarUpload');
+if(settingsAvatarInp)settingsAvatarInp.addEventListener('change',e=>handleAvatarFileUpload(e.target.files[0],e.target,null));
 
 // ── STITCH DASHBOARD helpers ──
 const DASH_COL_GOAL=20;
@@ -4102,7 +4481,7 @@ window.showPage=function(page){
   document.body.classList.add('poxy-stitch-dash');
   $('huntPage').style.display='none';
   $('bottomNav').style.display='none';
-  ['profile','collection','friends'].forEach(p=>{
+  ['profile','collection','friends','settings'].forEach(p=>{
     const el=$(p+'Page');
     if(el)el.classList.toggle('visible',page===p);
   });
@@ -4125,6 +4504,11 @@ window.showPage=function(page){
     renderMythicClubTracker();renderProfileStreakWidget();renderProfileShowcaseMatrix();
     renderBadgeWallet();loadDailyQuests();
     if(!colData.length)loadCollection().then(()=>renderProfileShowcaseMatrix());
+  }
+  if(page==='settings'){
+    renderSettingsPage();
+    applySettingsPrefsUi();
+    switchSettingsTab(activeSettingsTab||'account');
   }
   document.body.classList.remove('dark-club');
   window.scrollTo(0,0);

@@ -20,8 +20,10 @@ window.PoxyHudAudio=(function(){
     enabled=!!on;
     localStorage.setItem(LS_KEY,enabled?'1':'0');
     if(!enabled)stopMythicHum();
-    const el=document.getElementById('poxyHudSoundToggle');
-    if(el)el.checked=enabled;
+    ['poxyHudSoundToggle','settingsHudSound'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.checked=enabled;
+    });
   }
 
   function isEnabled(){return enabled;}
@@ -117,8 +119,10 @@ window.PoxyHudAudio=(function(){
   }
 
   function syncToggleUi(){
-    const el=document.getElementById('poxyHudSoundToggle');
-    if(el)el.checked=enabled;
+    ['poxyHudSoundToggle','settingsHudSound'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.checked=enabled;
+    });
   }
 
   return{setEnabled,isEnabled,playClick,startMythicHum,stopMythicHum,bindCard,bindCollectionGrid,syncToggleUi};
