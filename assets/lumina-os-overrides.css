@@ -94,13 +94,6 @@ body.lumina-os-active .page {
   pointer-events: auto;
 }
 
-#luminaOsRoot:not([hidden]) .lc-shell {
-  flex: 1;
-  min-height: 0;
-  height: auto;
-  min-height: 0;
-}
-
 #luminaOsRoot:not([hidden]) {
   display: flex !important;
   opacity: 1 !important;
