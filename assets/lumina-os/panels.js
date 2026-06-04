@@ -26,6 +26,25 @@
     return rt.friends || [];
   }
 
+  const FRIEND_MOTTOS = [
+    '"Always ready for a co-op run!"',
+    '"Currently studying the meta…"',
+    '"Playing: Lumina Quest IV"',
+    '"LF someone to trade rare cores."',
+    '"Be right back, grabbing coffee."',
+  ];
+
+  function friendMotto(f, index) {
+    if (f.statusQuote) return '"' + f.statusQuote + '"';
+    return FRIEND_MOTTOS[index % FRIEND_MOTTOS.length];
+  }
+
+  function friendPresence(index) {
+    if (index % 5 === 4) return 'away';
+    if (index % 4 === 1) return 'offline';
+    return 'online';
+  }
+
   function renderFriends() {
     const root = host();
     if (!root) return;
@@ -37,83 +56,83 @@
         (f.displayName || '').toLowerCase().includes(q) ||
         (f.handle || '').toLowerCase().includes(q)
     );
-    const online = friends.length;
 
     root.innerHTML = '';
-    const scroll = C.el('div', 'lo-module-scroll');
+    const canvas = C.el('div', 'lo-module-canvas lo-friends-page');
+    canvas.appendChild(
+      C.moduleTopBar({
+        placeholder: 'Search friends or groups...',
+        searchId: 'loFriendsSearch',
+        searchValue: st.friendsSearch || '',
+        onSearch: (v) => {
+          Store.setState({ friendsSearch: v });
+          renderFriends();
+        },
+        onNotifications: () => {
+          if (global.LuminaOSApp && global.LuminaOSApp.setNav) {
+            global.LuminaOSApp.setNav('notifications');
+          }
+        },
+      })
+    );
 
-    const head = C.el('header', 'lo-module-head');
-    head.appendChild(C.el('h2', 'lo-module-title', { text: 'Friends Hub' }));
-    head.appendChild(
+    const scroll = C.el('div', 'lo-module-scroll');
+    const pageHead = C.el('div', 'lo-page-header');
+    pageHead.appendChild(C.el('h2', 'lo-module-title', { text: 'Friends Hub' }));
+    pageHead.appendChild(
       C.el('p', 'lo-module-sub', {
-        text: 'Connect, trade, and message your inner circle.',
+        text: 'Connect, trade, and play with your inner circle.',
       })
     );
-    const searchRow = C.el('div', 'lo-module-toolbar');
-    const search = C.glassCard(null, { inset: true });
-    search.classList.add('lo-search-inset');
-    search.innerHTML =
-      '<span class="material-symbols-outlined">search</span><input type="search" id="loFriendsSearch" placeholder="Search friends or @username…" autocomplete="off" value="' +
-      U.sanitizeText(st.friendsSearch || '') +
-      '">';
-    searchRow.appendChild(search);
-    searchRow.appendChild(
-      C.el('span', 'lo-online-pill', {
-        text: online + ' friends · ' + (st.onlineFriendsCount || online) + ' online',
-      })
-    );
-    scroll.appendChild(head);
-    scroll.appendChild(searchRow);
+    scroll.appendChild(pageHead);
 
     const grid = C.el('div', 'lo-friends-grid');
-    friends.forEach((f) => {
-      const card = C.glassCard(null, {});
+    friends.forEach((f, i) => {
+      const card = C.glassCard(null, { hover: true });
       card.classList.add('lo-friend-passport');
-      card.appendChild(C.avatar(f.avatar_url, { lg: true, status: 'online' }));
+      card.appendChild(C.passportAvatar(f.avatar_url, friendPresence(i)));
       card.appendChild(
         C.el('h3', 'lo-friend-name', { text: f.displayName || f.handle })
       );
       card.appendChild(
         C.el('p', 'lo-friend-handle', {
-          html: '<span class="lo-handle-at">@</span>' + U.sanitizeText(f.handle),
+          text: '@' + U.sanitizeText(f.handle),
         })
+      );
+      card.appendChild(
+        C.el('p', 'lo-friend-motto', { text: friendMotto(f, i) })
       );
       const actions = C.el('div', 'lo-friend-actions');
       actions.appendChild(
-        C.secondaryButton('Message', {
-          small: true,
-          onClick: () => {
-            Store.setState({ activeNav: 'messages' });
-            if (global.LuminaOSApp && global.LuminaOSApp.openMessagesWith) {
-              global.LuminaOSApp.openMessagesWith(f.id);
-            }
-          },
+        C.silkIconAction('Message', 'chat_bubble', 'primary', () => {
+          if (global.LuminaOSApp && global.LuminaOSApp.openMessagesWith) {
+            global.LuminaOSApp.openMessagesWith(f.id);
+          }
         })
       );
       actions.appendChild(
-        C.secondaryButton('Profile', {
-          small: true,
-          onClick: () => {
-            if (typeof global.openFriendProfileView === 'function') {
-              global.openFriendProfileView(f.id);
-            } else toast('Open profile from POXY Friends page.');
-          },
+        C.silkIconAction('Trade', 'swap_horizontal_circle', 'tertiary', () => {
+          toast('Trade flow opens from POXY Market.');
         })
       );
       actions.appendChild(
-        C.secondaryButton('Trade', {
-          small: true,
-          onClick: () => toast('Trade flow opens from POXY Market.'),
+        C.silkIconAction('Profile', 'person', 'muted', () => {
+          if (typeof global.openFriendProfileView === 'function') {
+            global.openFriendProfileView(f.id);
+          } else toast('Open profile from POXY Friends page.');
         })
       );
       card.appendChild(actions);
       grid.appendChild(card);
     });
 
-    const addCard = C.glassCard(null, { inset: true });
+    const addCard = C.glassCard(null, { hover: true });
     addCard.classList.add('lo-friend-add');
-    addCard.innerHTML =
-      '<span class="material-symbols-outlined">person_add</span><h3>Add New Friend</h3><p>Expand your network on POXY</p>';
+    const addIcon = C.el('div', 'lo-friend-add-icon lo-silk-inset');
+    addIcon.appendChild(C.icon('person_add'));
+    addCard.appendChild(addIcon);
+    addCard.appendChild(C.el('h3', '', { text: 'Add New Friend' }));
+    addCard.appendChild(C.el('p', '', { text: 'Expand your network' }));
     addCard.onclick = () => {
       if (typeof global.showPage === 'function') {
         global.LuminaOSRouter.exit();
@@ -123,39 +142,73 @@
     grid.appendChild(addCard);
     scroll.appendChild(grid);
 
-    const feedSec = C.el('section', 'lo-activity-bento');
-    feedSec.appendChild(C.el('h3', 'lo-bento-title', { text: 'Recent Activity' }));
+    const bento = C.el('section', 'lo-activity-bento');
+    const activityPanel = C.glassCard(null, { hover: false });
+    activityPanel.classList.add('lo-bento-panel');
+    const actTitle = C.el('h3', 'lo-bento-title');
+    actTitle.appendChild(C.icon('history'));
+    actTitle.appendChild(document.createTextNode(' Recent Activity'));
+    activityPanel.appendChild(actTitle);
     const feedList = C.el('div', 'lo-feed-list');
-    (st.activityFeed || []).slice(0, 3).forEach((item) => {
+    const feedItems = (st.activityFeed || Data.seedActivity()).slice(0, 2);
+    feedItems.forEach((item, idx) => {
       const row = C.glassCard(null, { inset: true });
       row.classList.add('lo-feed-row');
-      row.innerHTML =
-        '<span class="material-symbols-outlined">' +
-        U.sanitizeText(item.icon || 'bolt') +
-        '</span><div><p class="lo-feed-title">' +
-        U.sanitizeText(item.title) +
-        '</p><p class="lo-feed-time">' +
-        U.sanitizeText(item.time) +
-        '</p></div>';
+      const main = C.el('div', 'lo-feed-row-main');
+      const av = C.el('img', '', { alt: '' });
+      av.src =
+        'https://lh3.googleusercontent.com/aida-public/AB6AXuDOOC-exFRbZTXSpqxVcQxTosumgzZuqRCDmF92MY7QwLOCP4SMt5QvsVO4IJBp-z_lrvv5OlnkRSvLF2-H1jg9kX7hWp41mfxHiBkHTEDTQrtXpRzWn9kYULPmKAgNKzkY8_EPBrO4TBQs4xHQEPROVixwyN6p7zWiQc3ULufPFGaaefTpoFvj--0u1rjr59O7QILFLyLLNNtdhPRG2eZtC0RZ7frduyc_rbhS3CrWtyjcjx79QabkaNsOf_5JaM9ilIui6Alm7g';
+      main.appendChild(av);
+      const text = C.el('div', '');
+      const title = item.title || 'Activity';
+      const parts = title.split(':');
+      if (parts.length > 1) {
+        text.appendChild(
+          C.el('p', 'lo-feed-title', {
+            html:
+              '<strong>' +
+              U.sanitizeText(parts[0].trim()) +
+              '</strong> <span>' +
+              U.sanitizeText(parts.slice(1).join(':').trim()) +
+              '</span>',
+          })
+        );
+      } else {
+        text.appendChild(C.el('p', 'lo-feed-title', { text: title }));
+      }
+      text.appendChild(C.el('p', 'lo-feed-time', { text: item.time || '' }));
+      main.appendChild(text);
+      row.appendChild(main);
+      row.appendChild(
+        C.icon(item.icon === 'group_add' ? 'group_add' : 'military_tech', 'lo-tone-' + (item.tone || 'primary'))
+      );
       feedList.appendChild(row);
     });
-    feedSec.appendChild(feedList);
-    const world = C.glassCard(null, {});
-    world.innerHTML =
-      '<span class="material-symbols-outlined lo-world-icon">public</span><p class="lo-world-count">' +
-      (st.onlineFriendsCount || 1204) +
-      '</p><p class="lo-world-label">Friends Online Globally</p>';
-    feedSec.appendChild(world);
-    scroll.appendChild(feedSec);
+    activityPanel.appendChild(feedList);
+    bento.appendChild(activityPanel);
 
-    root.appendChild(scroll);
-    const inp = document.getElementById('loFriendsSearch');
-    if (inp) {
-      inp.oninput = (e) => {
-        Store.setState({ friendsSearch: e.target.value });
-        renderFriends();
-      };
-    }
+    const worldPanel = C.glassCard(null, {});
+    worldPanel.classList.add('lo-bento-panel', 'lo-world-panel');
+    worldPanel.appendChild(C.el('h3', 'lo-bento-title', { text: 'World Status' }));
+    const iconWrap = C.el('div', 'lo-world-icon-wrap lo-silk-inset');
+    iconWrap.appendChild(C.icon('public', 'lo-world-icon'));
+    worldPanel.appendChild(iconWrap);
+    worldPanel.appendChild(
+      C.el('p', 'lo-world-count', {
+        text: String(st.onlineFriendsCount || 1204),
+      })
+    );
+    worldPanel.appendChild(
+      C.el('p', 'lo-world-label', { text: 'Friends Online Globally' })
+    );
+    const cta = C.el('button', 'lo-world-cta', { type: 'button', text: 'Join Global Hub' });
+    cta.onclick = () => toast('Global hub opens soon.');
+    worldPanel.appendChild(cta);
+    bento.appendChild(worldPanel);
+    scroll.appendChild(bento);
+
+    canvas.appendChild(scroll);
+    root.appendChild(canvas);
   }
 
   function renderSquads() {
@@ -166,37 +219,52 @@
     if (!squads.length && Data) squads = Data.seedSquads();
 
     root.innerHTML = '';
+    const canvas = C.el('div', 'lo-module-canvas lo-squads-page');
+    canvas.appendChild(
+      C.moduleTopBar({
+        placeholder: 'Search squads...',
+        onNotifications: () => global.LuminaOSApp?.setNav?.('notifications'),
+      })
+    );
     const scroll = C.el('div', 'lo-module-scroll');
-    const head = C.el('header', 'lo-module-head');
-    head.appendChild(C.el('h2', 'lo-module-title', { text: 'Tactical Squads' }));
-    head.appendChild(
+    const headRow = C.el('div', 'lo-page-header-row');
+    const headText = C.el('div', '');
+    headText.appendChild(C.el('h2', 'lo-module-title', { text: 'Tactical Squads' }));
+    headText.appendChild(
       C.el('p', 'lo-module-sub', {
-        text: 'Coordinate, dominate, and climb the global leaderboards.',
+        text: 'Coordinate, dominate, and climb the global leaderboards with your specialized strike team.',
       })
     );
-    const toolbar = C.el('div', 'lo-module-toolbar');
-    toolbar.appendChild(
-      C.secondaryButton(st.squadsFilter === 'all' ? 'All Regions' : st.squadsFilter, {
-        onClick: () => {
-          const order = ['all', 'EU-WEST', 'NA-EAST', 'APAC'];
-          const i = order.indexOf(st.squadsFilter || 'all');
-          Store.setState({ squadsFilter: order[(i + 1) % order.length] });
-          renderSquads();
-        },
-      })
+    headRow.appendChild(headText);
+    const filters = C.el('div', 'lo-module-toolbar');
+    const chip1 = C.el('button', 'lo-silk-raised lo-filter-chip');
+    chip1.type = 'button';
+    chip1.appendChild(C.icon('filter_list', ''));
+    chip1.appendChild(
+      document.createTextNode(st.squadsFilter === 'all' ? 'All Regions' : st.squadsFilter)
     );
-    toolbar.appendChild(
-      C.secondaryButton('Sort: ' + (st.squadsSort || 'winRate'), {
-        onClick: () => {
-          Store.setState({
-            squadsSort: st.squadsSort === 'winRate' ? 'totalPc' : 'winRate',
-          });
-          renderSquads();
-        },
-      })
+    chip1.onclick = () => {
+      const order = ['all', 'EU-WEST', 'NA-EAST', 'APAC'];
+      const i = order.indexOf(st.squadsFilter || 'all');
+      Store.setState({ squadsFilter: order[(i + 1) % order.length] });
+      renderSquads();
+    };
+    const chip2 = C.el('button', 'lo-silk-raised lo-filter-chip');
+    chip2.type = 'button';
+    chip2.appendChild(C.icon('sort', ''));
+    chip2.appendChild(
+      document.createTextNode('Win Rate')
     );
-    scroll.appendChild(head);
-    scroll.appendChild(toolbar);
+    chip2.onclick = () => {
+      Store.setState({
+        squadsSort: st.squadsSort === 'winRate' ? 'totalPc' : 'winRate',
+      });
+      renderSquads();
+    };
+    filters.appendChild(chip1);
+    filters.appendChild(chip2);
+    headRow.appendChild(filters);
+    scroll.appendChild(headRow);
 
     const filtered =
       st.squadsFilter && st.squadsFilter !== 'all'
@@ -209,7 +277,7 @@
 
     const grid = C.el('div', 'lo-squads-grid');
     sorted.forEach((sq) => {
-      const card = C.glassCard(null, {});
+      const card = C.glassCard(null, { hover: true });
       card.classList.add('lo-squad-card');
       const top = C.el('div', 'lo-squad-top');
       top.innerHTML =
@@ -288,7 +356,8 @@
     createCard.onclick = () => openCreateSquadModal();
     grid.appendChild(createCard);
     scroll.appendChild(grid);
-    root.appendChild(scroll);
+    canvas.appendChild(scroll);
+    root.appendChild(canvas);
   }
 
   function openCreateSquadModal() {
@@ -353,13 +422,31 @@
     const items = st.activityFeed && st.activityFeed.length ? st.activityFeed : Data.seedActivity();
 
     root.innerHTML = '';
-    const scroll = C.el('div', 'lo-module-scroll lo-activity-page');
-    scroll.appendChild(C.el('h2', 'lo-module-title', { text: 'Recent Activity' }));
-    scroll.appendChild(
+    const canvas = C.el('div', 'lo-module-canvas lo-activity-page');
+    canvas.appendChild(
+      C.moduleTopBar({
+        placeholder: 'Search activities...',
+        onNotifications: () => global.LuminaOSApp?.setNav?.('notifications'),
+      })
+    );
+    const scroll = C.el('div', 'lo-module-scroll');
+    const headRow = C.el('div', 'lo-page-header-row');
+    const headText = C.el('div', '');
+    headText.appendChild(C.el('h2', 'lo-module-title', { text: 'Recent Activity' }));
+    headText.appendChild(
       C.el('p', 'lo-module-sub', {
         text: 'Tracking your digital evolution in Lumina OS',
       })
     );
+    headRow.appendChild(headText);
+    const tools = C.el('div', 'lo-module-toolbar');
+    tools.appendChild(C.secondaryButton('Filter', { icon: 'filter_list' }));
+    tools.appendChild(C.primaryButton('Export', { icon: 'download' }));
+    headRow.appendChild(tools);
+    scroll.appendChild(headRow);
+
+    const wrap = C.el('div', 'lo-timeline-wrap');
+    wrap.appendChild(C.el('div', 'lo-timeline-rail'));
 
     const byDay = {};
     items.forEach((it) => {
@@ -368,22 +455,35 @@
       byDay[d].push(it);
     });
 
-    Object.keys(byDay).forEach((day) => {
+    Object.keys(byDay).forEach((day, dayIdx) => {
       const sec = C.el('section', 'lo-timeline-day');
-      sec.appendChild(C.el('h3', 'lo-timeline-label', { text: day }));
+      const marker = C.el('div', 'lo-timeline-marker');
+      const dot = C.el('div', 'lo-timeline-dot' + (dayIdx > 0 ? ' is-muted' : ''));
+      marker.appendChild(dot);
+      marker.appendChild(C.el('span', 'lo-timeline-label', { text: day }));
+      sec.appendChild(marker);
       const list = C.el('div', 'lo-timeline-list');
       byDay[day].forEach((it) => {
-        const card = C.glassCard(null, {});
+        const card = C.glassCard(null, { hover: true });
         card.classList.add('lo-timeline-card');
-        card.appendChild(
-          C.el('span', 'material-symbols-outlined lo-timeline-icon lo-tone-' + (it.tone || 'primary'), {
-            text: it.icon,
-          })
-        );
+        const media = C.el('div', 'lo-timeline-media lo-silk-inset');
+        if (it.icon === 'emoji_events') {
+          const img = C.el('img', '', { alt: '' });
+          img.src =
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuC5HOloVj_QNHOw5_UR8pqZq-RvKtero697Ckof4gq2fDw2H_sB9QzneMsZE9DmMKheZs1Jtzk7sbdQRsXphQnPcIiEpixcCDQDvaa1MmwyQiPm9Pqy1JHXNG3YYfgUCcP_Ea05DiA3gegUEcWxXhfeVi8QUmC4aAFL0Opde7E2FXWhZcSuYRLQ0pbLsODUjIAdC3KIY3fKPjF-PucSb0T7JxWrSqHggx4-4dlEEKocOG5dQHTbty7rN721LPY5NgBtu5uHz8A4Hw';
+          media.appendChild(img);
+        } else {
+          media.appendChild(
+            C.icon(it.icon || 'update', 'lo-timeline-icon')
+          );
+        }
+        card.appendChild(media);
         const body = C.el('div', 'lo-timeline-body');
-        body.appendChild(C.el('h4', '', { text: it.title }));
+        const head = C.el('div', 'lo-timeline-head');
+        head.appendChild(C.el('h4', '', { text: it.title }));
+        head.appendChild(C.el('span', 'lo-timeline-time', { text: it.time }));
+        body.appendChild(head);
         body.appendChild(C.el('p', '', { text: it.body }));
-        body.appendChild(C.el('span', 'lo-timeline-time', { text: it.time }));
         if (it.actions) {
           const acts = C.el('div', 'lo-timeline-actions');
           acts.appendChild(C.primaryButton('Accept', { small: true }));
@@ -394,9 +494,11 @@
         list.appendChild(card);
       });
       sec.appendChild(list);
-      scroll.appendChild(sec);
+      wrap.appendChild(sec);
     });
-    root.appendChild(scroll);
+    scroll.appendChild(wrap);
+    canvas.appendChild(scroll);
+    root.appendChild(canvas);
   }
 
   function renderNotifications() {
@@ -407,20 +509,30 @@
     const unread = list.filter((n) => n.unread).length;
 
     root.innerHTML = '';
-    const scroll = C.el('div', 'lo-module-scroll');
-    const head = C.el('header', 'lo-module-head lo-notif-head');
-    head.appendChild(C.el('h2', 'lo-module-title', { text: 'Notifications' }));
-    head.appendChild(
-      C.el('p', 'lo-module-sub', {
-        html:
-          'You have <strong>' +
-          unread +
-          ' unread</strong> messages across your ecosystem.',
+    const canvas = C.el('div', 'lo-module-canvas lo-notif-page');
+    canvas.appendChild(
+      C.moduleTopBar({
+        placeholder: 'Search activities...',
+        onNotifications: () => {},
       })
     );
+    const scroll = C.el('div', 'lo-module-scroll lo-notif-feed');
+    const headRow = C.el('div', 'lo-notif-head-row');
+    const headText = C.el('div', '');
+    headText.appendChild(C.el('h2', 'lo-module-title', { text: 'Notifications' }));
+    headText.appendChild(
+      C.el('p', 'lo-module-sub', {
+        html:
+          'You have <span class="lo-text-primary">' +
+          unread +
+          ' unread</span> messages across your ecosystem.',
+      })
+    );
+    headRow.appendChild(headText);
     const tools = C.el('div', 'lo-module-toolbar');
     tools.appendChild(
       C.secondaryButton('Mark as Read', {
+        icon: 'done_all',
         onClick: () => {
           const next = list.map((n) => ({ ...n, unread: false }));
           Store.setState({ notifications: next });
@@ -431,6 +543,7 @@
     );
     tools.appendChild(
       C.secondaryButton('Clear All', {
+        icon: 'delete_sweep',
         onClick: () => {
           Store.setState({ notifications: [] });
           updateNotifBadge();
@@ -438,8 +551,8 @@
         },
       })
     );
-    scroll.appendChild(head);
-    scroll.appendChild(tools);
+    headRow.appendChild(tools);
+    scroll.appendChild(headRow);
 
     const groups = {};
     list.forEach((n) => {
@@ -448,25 +561,40 @@
       groups[g].push(n);
     });
     Object.keys(groups).forEach((g) => {
-      scroll.appendChild(C.el('h3', 'lo-notif-group', { text: g }));
+      const groupRow = C.el('div', 'lo-notif-group-row');
+      groupRow.appendChild(C.el('h3', '', { text: g }));
+      groupRow.appendChild(C.el('div', 'lo-notif-group-line'));
+      scroll.appendChild(groupRow);
       groups[g].forEach((n) => {
-        const card = C.glassCard(null, { inset: !n.unread });
+        const card = C.glassCard(null, { inset: !n.unread, hover: !!n.unread });
         card.classList.add('lo-notif-card');
         if (n.unread) card.classList.add('is-unread');
-        card.innerHTML =
-          '<span class="material-symbols-outlined lo-notif-icon">' +
-          U.sanitizeText(n.icon) +
-          '</span><div class="lo-notif-body"><h4>' +
-          U.sanitizeText(n.title) +
-          '</h4><p>' +
-          U.sanitizeText(n.body) +
-          '</p><span class="lo-notif-time">' +
-          U.sanitizeText(n.time) +
-          '</span></div>';
+        const iconWrap = C.el('div', 'lo-notif-icon-wrap lo-silk-inset');
+        iconWrap.appendChild(C.icon(n.icon || 'notifications', 'lo-notif-icon'));
+        card.appendChild(iconWrap);
+        const body = C.el('div', 'lo-notif-body');
+        const head = C.el('div', 'lo-timeline-head');
+        const titleParts = (n.title || '').split(' ');
+        head.appendChild(
+          C.el('h4', '', {
+            html: U.sanitizeText(n.title),
+          })
+        );
+        head.appendChild(C.el('span', 'lo-notif-time', { text: n.time }));
+        body.appendChild(head);
+        body.appendChild(C.el('p', '', { text: n.body }));
+        if (n.unread && n.icon === 'chat') {
+          const acts = C.el('div', 'lo-notif-actions');
+          acts.appendChild(C.secondaryButton('Reply', { small: true }));
+          acts.appendChild(C.secondaryButton('Archive', { small: true }));
+          body.appendChild(acts);
+        }
+        card.appendChild(body);
         scroll.appendChild(card);
       });
     });
-    root.appendChild(scroll);
+    canvas.appendChild(scroll);
+    root.appendChild(canvas);
     updateNotifBadge();
   }
 
@@ -493,16 +621,108 @@
         : 'light';
 
     root.innerHTML = '';
-    const scroll = C.el('div', 'lo-module-scroll lo-settings-page');
-    scroll.appendChild(C.el('h2', 'lo-module-title', { text: 'Global Settings' }));
-    scroll.appendChild(
-      C.el('p', 'lo-module-sub', {
-        text: 'Manage your ecosystem preferences and Lumina OS appearance.',
+    const canvas = C.el('div', 'lo-module-canvas lo-settings-page');
+    canvas.appendChild(
+      C.moduleTopBar({
+        placeholder: 'Search settings...',
+        onNotifications: () => global.LuminaOSApp?.setNav?.('notifications'),
       })
     );
+    const scroll = C.el('div', 'lo-module-scroll');
+    const pageHead = C.el('div', 'lo-page-header');
+    pageHead.appendChild(C.el('h2', 'lo-module-title', { text: 'Global Settings' }));
+    pageHead.appendChild(
+      C.el('p', 'lo-module-sub', {
+        text: 'Manage your ecosystem preferences and account security.',
+      })
+    );
+    scroll.appendChild(pageHead);
+
+    const bento = C.el('div', 'lo-settings-bento');
+
+    const profile = C.glassCard(null, {});
+    profile.classList.add('lo-settings-card', 'lo-settings-card--8');
+    const profileRow = C.el('div', 'lo-settings-profile-row');
+    const who = C.el('div', '');
+    const rt = global.LuminaOSApp?.getRuntime?.();
+    const avUrl = rt?.profile?.avatar_url;
+    const avBlock = C.el('div', 'lo-settings-profile-av lo-silk-inset');
+    if (avUrl) {
+      avBlock.innerHTML =
+        '<img src="' + U.sanitizeText(U.avatarUrl(avUrl)) + '" alt="" class="lo-settings-av-img">';
+    }
+    const meta = C.el('div', '');
+    meta.appendChild(
+      C.el('h4', '', {
+        text: rt?.profile
+          ? U.displayNameFromProf(rt.profile)
+          : 'Alex Sterling',
+      })
+    );
+    meta.appendChild(
+      C.el('p', '', {
+        text: rt?.profile?.email || 'alex.sterling@lumina.io',
+      })
+    );
+    const whoInner = C.el('div', 'lo-settings-who');
+    whoInner.appendChild(avBlock);
+    whoInner.appendChild(meta);
+    who.appendChild(whoInner);
+    profileRow.appendChild(who);
+    profileRow.appendChild(
+      C.secondaryButton('Edit Profile', {
+        onClick: () => {
+          if (typeof global.openProfileSettings === 'function') {
+            global.LuminaOSRouter.exit();
+            global.openProfileSettings();
+          }
+        },
+      })
+    );
+    profile.appendChild(profileRow);
+    const fields = C.el('div', 'lo-settings-fields');
+    const f1 = C.el('div', '');
+    f1.appendChild(C.el('label', 'lo-field-label', { text: 'Display Name' }));
+    f1.appendChild(
+      C.el('div', 'lo-field-value lo-silk-inset', {
+        text: rt?.profile ? U.displayNameFromProf(rt.profile) : 'Alex Sterling',
+      })
+    );
+    const f2 = C.el('div', '');
+    f2.appendChild(C.el('label', 'lo-field-label', { text: 'Timezone' }));
+    const tz = C.el('div', 'lo-field-value lo-silk-inset');
+    tz.appendChild(document.createTextNode('UTC -05:00 (EST)'));
+    tz.appendChild(C.icon('expand_more'));
+    f2.appendChild(tz);
+    fields.appendChild(f1);
+    fields.appendChild(f2);
+    profile.appendChild(fields);
+    bento.appendChild(profile);
+
+    const security = C.glassCard(null, {});
+    security.classList.add('lo-settings-card', 'lo-settings-card--4');
+    security.appendChild(C.el('h3', 'lo-settings-card-title', { text: 'Security Pulse' }));
+    const sec1 = C.el('div', 'lo-security-row');
+    sec1.appendChild(C.icon('verified_user', 'lo-sec-icon lo-sec-icon--ok'));
+    const s1t = C.el('div', '');
+    s1t.appendChild(C.el('p', 'lo-sec-title', { text: '2FA Enabled' }));
+    s1t.appendChild(C.el('p', 'lo-sec-sub', { text: 'Protecting your data' }));
+    sec1.appendChild(s1t);
+    security.appendChild(sec1);
+    const sec2 = C.el('div', 'lo-security-row');
+    sec2.appendChild(C.icon('report_problem', 'lo-sec-icon lo-sec-icon--warn'));
+    const s2t = C.el('div', '');
+    s2t.appendChild(C.el('p', 'lo-sec-title', { text: 'Recovery Key' }));
+    s2t.appendChild(C.el('p', 'lo-sec-sub', { text: 'Not yet backed up' }));
+    sec2.appendChild(s2t);
+    security.appendChild(sec2);
+    security.appendChild(
+      C.el('p', 'lo-sec-foot', { text: 'Last activity: 2 hours ago from NYC' })
+    );
+    bento.appendChild(security);
 
     const appearance = C.glassCard(null, {});
-    appearance.classList.add('lo-settings-card');
+    appearance.classList.add('lo-settings-card', 'lo-settings-card--4');
     appearance.appendChild(
       C.el('h3', 'lo-settings-card-title', {
         html: '<span class="material-symbols-outlined">palette</span> Appearance',
@@ -517,7 +737,7 @@
       const btn = C.el('button', 'lo-theme-opt' + (cur === mode ? ' is-active' : ''));
       btn.type = 'button';
       btn.textContent =
-        mode === 'light' ? 'SICHA Light' : mode === 'dark' ? 'Lumina Dark' : 'System';
+        mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'System';
       btn.onclick = () => {
         Store.setState({ theme: mode });
         if (global.setTheme) global.setTheme(mode);
@@ -526,50 +746,29 @@
       themeRow.appendChild(btn);
     });
     appearance.appendChild(themeRow);
-    appearance.appendChild(
-      C.primaryButton('Toggle theme', {
-        onClick: () => {
-          if (global.toggleTheme) global.toggleTheme();
-          const r = global.LuminaOSTheme.getResolvedTheme();
-          Store.setState({ theme: r });
-          renderSettings();
-        },
-      })
-    );
-    scroll.appendChild(appearance);
+    bento.appendChild(appearance);
 
     const prefs = C.glassCard(null, {});
-    prefs.classList.add('lo-settings-card');
-    prefs.innerHTML = '<h3 class="lo-settings-card-title"><span class="material-symbols-outlined">tune</span> Preferences</h3>';
+    prefs.classList.add('lo-settings-card', 'lo-settings-card--8');
+    prefs.innerHTML =
+      '<h3 class="lo-settings-card-title"><span class="material-symbols-outlined">notifications_active</span> Smart Notifications</h3>';
     const sounds = C.el('label', 'lo-switch-row');
     sounds.innerHTML =
-      '<span>HUD sounds</span><input type="checkbox" id="loPrefSounds"' +
+      '<span><strong>System Alerts</strong><br><small>Major OS updates and warnings</small></span><input type="checkbox" id="loPrefSounds"' +
       (st.preferences.sounds ? ' checked' : '') +
       '>';
     const enter = C.el('label', 'lo-switch-row');
     enter.innerHTML =
-      '<span>Enter to send</span><input type="checkbox" id="loPrefEnter"' +
+      '<span><strong>Enter to send</strong><br><small>Send messages with Enter key</small></span><input type="checkbox" id="loPrefEnter"' +
       (st.preferences.enterToSend ? ' checked' : '') +
       '>';
     prefs.appendChild(sounds);
     prefs.appendChild(enter);
-    scroll.appendChild(prefs);
+    bento.appendChild(prefs);
 
-    const link = C.glassCard(null, {});
-    link.innerHTML =
-      '<p>Account security, password, and POXY profile settings remain on the main app.</p>';
-    link.appendChild(
-      C.primaryButton('Open POXY Settings', {
-        onClick: () => {
-          if (typeof global.openProfileSettings === 'function') {
-            global.LuminaOSRouter.exit();
-            global.openProfileSettings();
-          }
-        },
-      })
-    );
-    scroll.appendChild(link);
-    root.appendChild(scroll);
+    scroll.appendChild(bento);
+    canvas.appendChild(scroll);
+    root.appendChild(canvas);
 
     const ps = document.getElementById('loPrefSounds');
     const pe = document.getElementById('loPrefEnter');

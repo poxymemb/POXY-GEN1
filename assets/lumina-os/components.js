@@ -25,7 +25,11 @@
 
   function glassCard(children, opts) {
     opts = opts || {};
-    const card = el('div', 'lo-glass-card' + (opts.inset ? ' lo-glass-card--inset' : ''));
+    let cls = 'lo-glass-card';
+    if (opts.inset) cls += ' lo-glass-card--inset lo-silk-inset';
+    if (opts.raised) cls += ' lo-silk-raised';
+    if (opts.hover) cls += ' lo-hover-lift';
+    const card = el('div', cls);
     if (typeof children === 'string') card.innerHTML = children;
     else if (children) {
       if (Array.isArray(children)) children.forEach((c) => c && card.appendChild(c));
@@ -36,22 +40,29 @@
 
   function primaryButton(label, opts) {
     opts = opts || {};
-    const btn = el('button', 'lo-btn lo-btn--primary' + (opts.small ? ' lo-btn--sm' : ''));
+    const btn = el(
+      'button',
+      (opts.ghost ? 'lo-silk-raised ' : '') + 'lo-btn lo-btn--primary' + (opts.small ? ' lo-btn--sm' : '')
+    );
     btn.type = 'button';
     if (opts.id) btn.id = opts.id;
     if (opts.disabled) btn.disabled = true;
     if (opts.icon) btn.appendChild(icon(opts.icon));
-    const span = el('span', '', { text: label });
-    btn.appendChild(span);
+    btn.appendChild(el('span', '', { text: label }));
     if (opts.onClick) btn.onclick = opts.onClick;
     return btn;
   }
 
   function secondaryButton(label, opts) {
     opts = opts || {};
-    const btn = el('button', 'lo-btn lo-btn--secondary' + (opts.small ? ' lo-btn--sm' : ''));
+    const btn = el('button', 'lo-silk-raised lo-btn lo-btn--secondary' + (opts.small ? ' lo-btn--sm' : ''));
     btn.type = 'button';
-    btn.textContent = label;
+    if (opts.icon) {
+      btn.appendChild(icon(opts.icon));
+      btn.appendChild(el('span', '', { text: label }));
+    } else {
+      btn.textContent = label;
+    }
     if (opts.onClick) btn.onclick = opts.onClick;
     return btn;
   }
@@ -114,6 +125,68 @@
     return wrap;
   }
 
+  function silkIconAction(label, iconName, tone, onClick) {
+    const btn = el('button', 'lo-silk-action lo-silk-action--' + (tone || 'muted'));
+    btn.type = 'button';
+    btn.appendChild(icon(iconName));
+    btn.appendChild(el('span', 'lo-silk-action-label', { text: label }));
+    if (onClick) btn.onclick = onClick;
+    return btn;
+  }
+
+  function passportAvatar(content, status) {
+    const wrap = el('div', 'lo-passport-avatar-wrap');
+    const ring = el('div', 'lo-passport-avatar-ring lo-silk-raised');
+    ring.appendChild(avatar(content, { lg: true, status: status || 'online' }));
+    wrap.appendChild(ring);
+    return wrap;
+  }
+
+  function moduleTopBar(cfg) {
+    cfg = cfg || {};
+    const bar = el('header', 'lo-module-topbar');
+    const searchSlot = el('div', 'lo-module-topbar-search');
+    const pill = el('div', 'lo-silk-inset lo-module-search-pill');
+    pill.appendChild(icon('search'));
+    const inp = el('input', '', {
+      type: 'search',
+      placeholder: cfg.placeholder || 'Search…',
+      autocomplete: 'off',
+    });
+    if (cfg.searchId) inp.id = cfg.searchId;
+    if (cfg.searchValue) inp.value = cfg.searchValue;
+    if (cfg.onSearch) {
+      inp.addEventListener('input', (e) => cfg.onSearch(e.target.value));
+    }
+    pill.appendChild(inp);
+    searchSlot.appendChild(pill);
+    bar.appendChild(searchSlot);
+
+    const actions = el('div', 'lo-module-topbar-actions');
+    ['notifications', 'videogame_asset', 'mail'].forEach((ic) => {
+      const b = el('button', 'lo-silk-raised lo-icon-btn');
+      b.type = 'button';
+      b.appendChild(icon(ic));
+      if (ic === 'notifications' && cfg.onNotifications) b.onclick = cfg.onNotifications;
+      actions.appendChild(b);
+    });
+    const chip = el('div', 'lo-silk-raised lo-profile-chip');
+    const rt =
+      global.LuminaOSApp && global.LuminaOSApp.getRuntime
+        ? global.LuminaOSApp.getRuntime()
+        : null;
+    const av = rt && rt.profile && rt.profile.avatar_url;
+    if (av) {
+      chip.innerHTML =
+        '<img src="' + U.sanitizeText(U.avatarUrl(av)) + '" alt="You">';
+    } else {
+      chip.textContent = '👾';
+    }
+    actions.appendChild(chip);
+    bar.appendChild(actions);
+    return bar;
+  }
+
   function modalBase(title, bodyNode, actions) {
     const overlay = el('div', 'lo-modal-overlay');
     overlay.onclick = (e) => {
@@ -145,5 +218,8 @@
     animatedWrap,
     winRateChart,
     modalBase,
+    silkIconAction,
+    passportAvatar,
+    moduleTopBar,
   };
 })(window);

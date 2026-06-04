@@ -37,11 +37,16 @@
     'inverse-surface': '#2e3040',
     'inverse-primary': '#a5b4fc',
     shadowRaised:
-      '6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6)',
+      '20px 20px 48px rgba(46, 48, 64, 0.05), -16px -16px 40px rgba(255, 255, 255, 0.75)',
+    shadowSoft:
+      '12px 12px 32px rgba(46, 48, 64, 0.04), -8px -8px 24px rgba(255, 255, 255, 0.65)',
     shadowInset:
-      'inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5)',
-    glassBg: 'rgba(232, 234, 240, 0.72)',
-    glassBorder: 'rgba(208, 210, 220, 0.45)',
+      'inset 4px 4px 10px rgba(46, 48, 64, 0.05), inset -4px -4px 10px rgba(255, 255, 255, 0.55)',
+    glassBg: 'rgba(245, 246, 250, 0.6)',
+    glassBorder: 'rgba(208, 210, 220, 0.35)',
+    glassBorderTop: 'rgba(255, 255, 255, 0.4)',
+    glassBorderBottom: 'rgba(180, 184, 198, 0.22)',
+    glassBlur: '24px',
     fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
     radiusSm: '8px',
     radiusMd: '12px',
@@ -104,6 +109,11 @@
         key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase()).replace(/_/g, '-');
       root.style.setProperty(cssKey, tokens[key]);
     });
+    if (tokens.glassBg) {
+      root.style.setProperty('--lo-shadow-raised', tokens.shadowRaised || '');
+      root.style.setProperty('--lo-shadow-soft', tokens.shadowSoft || tokens.shadowRaised || '');
+      root.style.setProperty('--lo-shadow-inset', tokens.shadowInset || '');
+    }
   }
 
   global.LuminaOSTokens = {
