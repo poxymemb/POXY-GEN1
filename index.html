@@ -49,14 +49,16 @@
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=4">
-<script src="assets/poxy-i18n-extra.js?v=4"></script>
+<script src="assets/poxy-i18n-extra.js?v=5"></script>
 <script src="assets/poxy-i18n.js?v=4"></script>
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/lumina-chat-os.css?v=12">
 <link rel="stylesheet" href="assets/lumina-os/design-system.css?v=14">
 <link rel="stylesheet" href="assets/lumina-os-overrides.css?v=12">
+<link rel="stylesheet" href="assets/poxy-landing-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
+<script src="assets/poxy-landing-page.js?v=1" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -1185,8 +1187,132 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
+<!-- POXY World — public landing (logged out entry) -->
+<div id="poxyLanding" hidden aria-label="POXY World">
+  <div class="pl-ambient" aria-hidden="true">
+    <div class="pl-glow pl-glow--a" id="plGlow1"></div>
+    <div class="pl-glow pl-glow--b" id="plGlow2"></div>
+  </div>
+  <header class="pl-nav">
+    <button type="button" class="pl-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">POXY</button>
+    <nav class="pl-nav-links" aria-label="Landing">
+      <a class="pl-nav-link is-active" href="#landing-hero" data-i18n="landing.nav.features">Features</a>
+      <a class="pl-nav-link" href="#landing-heritage" data-i18n="landing.nav.heritage">Heritage</a>
+      <a class="pl-nav-link" href="#landing-pillars" data-i18n="landing.nav.pillars">Pillars</a>
+    </nav>
+    <button type="button" class="pl-btn pl-btn--ghost" data-pl-auth data-i18n="landing.nav.signIn">Sign In</button>
+  </header>
+  <main class="pl-main">
+    <section class="pl-hero" id="landing-hero">
+      <div class="pl-hero-copy pl-reveal">
+        <p class="pl-kicker" data-i18n="landing.hero.kicker">Digital heritage</p>
+        <h1 class="pl-headline" data-i18n="landing.hero.title">Own your<br>POXY identity</h1>
+        <p class="pl-lead" data-i18n="landing.hero.lead">Step into a new era of digital heritage. Mint, collect, and showcase your immutable digital self with unmatched high-contrast style.</p>
+        <div class="pl-hero-cta">
+          <button type="button" class="pl-btn pl-btn--solid" data-pl-auth data-i18n="landing.hero.cta">Enter POXY World</button>
+        </div>
+      </div>
+      <div class="pl-hero-stage pl-reveal" aria-hidden="true">
+        <div class="pl-float pl-float--spin">
+          <div class="pl-mock pl-mock--spin">
+            <div class="pl-mock-spin-ring"><div class="pl-mock-spin-core">🎰</div></div>
+            <button type="button" class="pl-mock-btn" tabindex="-1">Spin &amp; Win</button>
+          </div>
+        </div>
+        <div class="pl-float pl-float--dash">
+          <div class="pl-mock pl-mock--dash">
+            <div class="pl-mock-cell"></div><div class="pl-mock-cell"></div><div class="pl-mock-cell"></div>
+            <div class="pl-mock-cell"></div><div class="pl-mock-cell"></div><div class="pl-mock-cell"></div>
+          </div>
+        </div>
+        <div class="pl-float pl-float--id">
+          <div class="pl-mock pl-mock--profile">
+            <div class="pl-mock-profile-row">
+              <div class="pl-mock-av"></div>
+              <div class="pl-mock-lines"><div class="pl-mock-line"></div><div class="pl-mock-line pl-mock-line--short"></div></div>
+            </div>
+            <div class="pl-mock-line"></div><div class="pl-mock-line pl-mock-line--short"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="pl-heritage" id="landing-heritage">
+      <div class="pl-heritage-grid">
+        <div class="pl-reveal">
+          <h2 class="pl-section-title" data-i18n="landing.heritage.title">Immutable<br>Digital<br>Heritage</h2>
+          <p class="pl-body" data-i18n="landing.heritage.body">POXY isn't just an asset; it's your permanent footprint in the digital realm. Built on raw authenticity and neo-brutalist transparency, your identity belongs to you—forever.</p>
+        </div>
+        <div class="pl-passport-wrap pl-reveal">
+          <div class="pl-passport-glow" aria-hidden="true"></div>
+          <article class="pl-passport">
+            <div class="pl-passport-head">
+              <div class="pl-passport-brand">POXY ID</div>
+              <span class="pl-badge" data-i18n="landing.passport.tier">Mythic Tier</span>
+            </div>
+            <div class="pl-passport-user">
+              <div class="pl-passport-av" aria-hidden="true">👾</div>
+              <div>
+                <p class="pl-passport-serial">#409</p>
+                <p class="pl-passport-role" data-i18n="landing.passport.verified">Verified Owner</p>
+                <span class="pl-passport-wallet">0x7F…3B9A</span>
+              </div>
+            </div>
+            <div class="pl-meta-row"><span data-i18n="landing.passport.issued">ISSUED</span><span>2024.10.24</span></div>
+            <div class="pl-meta-row pl-meta-row--active"><span data-i18n="landing.passport.status">STATUS</span><span>ACTIVE</span></div>
+            <div class="pl-meta-row"><span data-i18n="landing.passport.network">NETWORK</span><span>MAINNET</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="pl-pillars" id="landing-pillars">
+      <div class="pl-pillars-title pl-reveal">
+        <h2 class="pl-section-title" data-i18n="landing.pillars.title">Core Pillars</h2>
+      </div>
+      <div class="pl-pillar-grid">
+        <article class="pl-glass-card pl-reveal">
+          <span class="material-symbols-outlined pl-pillar-icon">lock</span>
+          <h3 class="pl-pillar-name" data-i18n="landing.pillar1.title">Immutable<br>Ownership</h3>
+          <p class="pl-pillar-desc" data-i18n="landing.pillar1.body">Your identity is locked on the ledger. No alterations, no takebacks. Pure, unapologetic ownership.</p>
+        </article>
+        <article class="pl-glass-card pl-reveal">
+          <span class="material-symbols-outlined pl-pillar-icon">diamond</span>
+          <h3 class="pl-pillar-name" data-i18n="landing.pillar2.title">Rare<br>Scarcity</h3>
+          <p class="pl-pillar-desc" data-i18n="landing.pillar2.body">Only a finite number of POXY identities will ever exist. Claim your space before the grid is full.</p>
+        </article>
+        <article class="pl-glass-card pl-reveal">
+          <span class="material-symbols-outlined pl-pillar-icon">group</span>
+          <h3 class="pl-pillar-name" data-i18n="landing.pillar3.title">POXY<br>Club</h3>
+          <p class="pl-pillar-desc" data-i18n="landing.pillar3.body">Exclusive access to underground digital galleries, private drops, and the neo-brutalist collective.</p>
+        </article>
+      </div>
+    </section>
+    <section class="pl-cta" id="landing-cta">
+      <div class="pl-marquee" aria-hidden="true">
+        <div class="pl-marquee-track">
+          <span>POXY WORLD • THE AWAKENING • </span><span>POXY WORLD • THE AWAKENING • </span><span>POXY WORLD • THE AWAKENING • </span><span>POXY WORLD • THE AWAKENING • </span>
+        </div>
+      </div>
+      <div class="pl-cta-inner pl-reveal">
+        <h2 class="pl-cta-headline" data-i18n="landing.cta.title">Join the<br>Revolution</h2>
+        <button type="button" class="pl-btn pl-btn--outline" data-pl-auth data-i18n="landing.cta.button">Sign In / Join Now</button>
+      </div>
+    </section>
+  </main>
+  <footer class="pl-footer">
+    <div class="pl-logo" aria-hidden="true">POXY</div>
+    <nav class="pl-footer-links" aria-label="Legal">
+      <a href="#" onclick="event.preventDefault()" data-i18n="landing.footer.privacy">Privacy Policy</a>
+      <a href="#" onclick="event.preventDefault()" data-i18n="landing.footer.terms">Terms of Service</a>
+      <a href="#" onclick="event.preventDefault()" data-i18n="landing.footer.contact">Contact</a>
+    </nav>
+    <p class="pl-footer-copy" data-i18n="landing.footer.copy">© 2024 POXY World. All rights reserved.</p>
+  </footer>
+</div>
+
 <!-- AUTH — X-style split (POXY dark) -->
-<div class="auth-overlay poxy-auth-overlay" id="authOverlay" role="dialog" aria-labelledby="authHeadline">
+<div class="auth-overlay poxy-auth-overlay" id="authOverlay" role="dialog" aria-labelledby="authHeadline" aria-hidden="true">
+  <div class="poxy-auth-backdrop" aria-hidden="true"></div>
+  <button type="button" class="poxy-auth-close" aria-label="Close sign in" onclick="typeof closePoxyAuth==='function'&&closePoxyAuth()"><span class="material-symbols-outlined">close</span></button>
   <div class="poxy-auth-shell">
     <section class="poxy-auth-panel">
       <div class="poxy-auth-panel-logo-mobile" aria-hidden="true">
@@ -3735,10 +3861,23 @@ function updateAuthModeUI(){
 window.updateAuthModeUi=updateAuthModeUI;
 function setLoggedOutUI(){
   authSessionBootstrapped=false;
+  if(typeof showPoxyLanding==='function')showPoxyLanding();
+  else{
+    const landing=$('poxyLanding');
+    if(landing)landing.hidden=false;
+    document.body.classList.add('poxy-landing-active');
+  }
   const overlay=$('authOverlay');
-  if(overlay){overlay.classList.remove('hidden');overlay.style.display='flex';overlay.setAttribute('aria-hidden','false');}
+  if(overlay){
+    overlay.classList.remove('hidden','poxy-auth-overlay--open');
+    overlay.style.display='';
+    overlay.setAttribute('aria-hidden','true');
+  }
+  if((location.search||'').indexOf('auth=1')>=0){
+    setTimeout(function(){if(typeof openPoxyAuth==='function')openPoxyAuth();},120);
+  }
   updateAuthModeUI();
-  document.body.classList.remove('poxy-app-dark','poxy-stitch-dash','ranks-tab-active');
+  document.body.classList.remove('poxy-app-dark','poxy-stitch-dash','ranks-tab-active','poxy-auth-modal-open');
   const ub=$('userBar');
   if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
   const bn=$('bottomNav');if(bn)bn.style.display='none';
@@ -3755,8 +3894,19 @@ function setLoggedOutUI(){
   if(sidebarOpen)closeSidebar();
 }
 function setLoggedInUI(){
+  if(typeof hidePoxyLanding==='function')hidePoxyLanding();
+  else{
+    const landing=$('poxyLanding');
+    if(landing)landing.hidden=true;
+    document.body.classList.remove('poxy-landing-active','poxy-auth-modal-open');
+  }
   const overlay=$('authOverlay');
-  if(overlay){overlay.classList.add('hidden');overlay.style.display='none';overlay.setAttribute('aria-hidden','true');}
+  if(overlay){
+    overlay.classList.add('hidden');
+    overlay.classList.remove('poxy-auth-overlay--open');
+    overlay.style.display='none';
+    overlay.setAttribute('aria-hidden','true');
+  }
   document.body.classList.add('poxy-app-dark','poxy-stitch-dash');
   const ub=$('userBar');
   if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
