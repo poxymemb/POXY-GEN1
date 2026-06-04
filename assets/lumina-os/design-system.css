@@ -1455,6 +1455,39 @@
   gap: 20px;
 }
 
+.lo-settings-field-lang {
+  grid-column: 1 / -1;
+}
+
+.lo-lang-picker {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.lo-lang-btn {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--lo-outline-variant);
+  background: var(--lo-surface-container-low);
+  color: var(--lo-on-surface);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--lo-transition),
+    color var(--lo-transition),
+    background var(--lo-transition);
+}
+
+.lo-lang-btn.active {
+  border-color: color-mix(in srgb, var(--lo-primary) 45%, transparent);
+  color: var(--lo-primary);
+  background: color-mix(in srgb, var(--lo-primary) 12%, transparent);
+}
+
 @media (max-width: 640px) {
   .lo-settings-fields {
     grid-template-columns: 1fr;

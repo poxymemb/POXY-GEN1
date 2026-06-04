@@ -22,7 +22,7 @@
     squadsSort: 'winRate',
     activityFeed: [],
     notifications: [],
-    preferences: { sounds: true, enterToSend: true, marketingEmails: false },
+    preferences: { sounds: true, enterToSend: true, marketingEmails: false, locale: null },
   };
 
   let state = { ...initial };

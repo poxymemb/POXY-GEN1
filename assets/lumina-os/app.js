@@ -614,7 +614,14 @@
     const icon = btn.querySelector('.material-symbols-outlined');
     if (icon) icon.textContent = r === 'dark' ? 'light_mode' : 'dark_mode';
     const label = btn.querySelector('.lo-theme-toggle-label');
-    if (label) label.textContent = r === 'dark' ? 'Light mode' : 'Dark mode';
+    if (label) {
+      const I = global.PoxyI18n;
+      label.textContent = I
+        ? I.t(r === 'dark' ? 'lo.nav.lightMode' : 'lo.nav.darkMode')
+        : r === 'dark'
+          ? 'Light mode'
+          : 'Dark mode';
+    }
   }
 
   async function mount(opts) {
@@ -624,6 +631,18 @@
     Store.setUserId(user.id);
     if (global.LuminaOSPanels) global.LuminaOSPanels.ensureSeeded();
     const st0 = Store.getState();
+    if (global.PoxyI18n) {
+      const loc =
+        (st0.preferences && st0.preferences.locale) || global.PoxyI18n.getLocale();
+      if (loc && loc !== global.PoxyI18n.getLocale()) {
+        global.PoxyI18n.setLocale(loc, {
+          persist: false,
+          rerenderSettings: false,
+        });
+      } else {
+        global.PoxyI18n.applyLuminaChrome();
+      }
+    }
     if (global.LuminaOSTheme) {
       const mode =
         st0.theme === 'dark' ||
@@ -683,6 +702,7 @@
     openMessagesWith,
     getRuntime: () => runtime,
     toast,
+    syncThemeToggleLabel,
   };
 
   global.openLuminaOS = function (userId, nav) {

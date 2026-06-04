@@ -19,6 +19,29 @@
     }
   }
 
+  function loT(key) {
+    return global.PoxyI18n ? global.PoxyI18n.t(key) : key;
+  }
+
+  function currentLocale() {
+    if (global.PoxyI18n) return global.PoxyI18n.getLocale();
+    const st = Store.getState();
+    return st.preferences && st.preferences.locale ? st.preferences.locale : 'en';
+  }
+
+  function setLocale(loc) {
+    if (typeof global.selectSettingsLocale === 'function') {
+      global.selectSettingsLocale(loc);
+      return;
+    }
+    if (global.PoxyI18n) global.PoxyI18n.setLocale(loc);
+    const st = Store.getState();
+    Store.setState({
+      preferences: { ...st.preferences, locale: loc },
+    });
+    renderSettings();
+  }
+
   function getFriends() {
     const rt = global.LuminaOSApp && global.LuminaOSApp.getRuntime
       ? global.LuminaOSApp.getRuntime()
@@ -624,16 +647,16 @@
     const canvas = C.el('div', 'lo-module-canvas lo-settings-page');
     canvas.appendChild(
       C.moduleTopBar({
-        placeholder: 'Search settings...',
+        placeholder: loT('lo.nav.searchSettings'),
         onNotifications: () => global.LuminaOSApp?.setNav?.('notifications'),
       })
     );
     const scroll = C.el('div', 'lo-module-scroll');
     const pageHead = C.el('div', 'lo-page-header');
-    pageHead.appendChild(C.el('h2', 'lo-module-title', { text: 'Global Settings' }));
+    pageHead.appendChild(C.el('h2', 'lo-module-title', { text: loT('lo.settings.title') }));
     pageHead.appendChild(
       C.el('p', 'lo-module-sub', {
-        text: 'Manage your ecosystem preferences and account security.',
+        text: loT('lo.settings.subtitle'),
       })
     );
     scroll.appendChild(pageHead);
@@ -670,7 +693,7 @@
     who.appendChild(whoInner);
     profileRow.appendChild(who);
     profileRow.appendChild(
-      C.secondaryButton('Edit Profile', {
+      C.secondaryButton(loT('lo.settings.editProfile'), {
         onClick: () => {
           if (typeof global.openProfileSettings === 'function') {
             global.LuminaOSRouter.exit();
@@ -682,33 +705,53 @@
     profile.appendChild(profileRow);
     const fields = C.el('div', 'lo-settings-fields');
     const f1 = C.el('div', '');
-    f1.appendChild(C.el('label', 'lo-field-label', { text: 'Display Name' }));
+    f1.appendChild(C.el('label', 'lo-field-label', { text: loT('lo.settings.displayName') }));
     f1.appendChild(
       C.el('div', 'lo-field-value lo-silk-inset', {
         text: rt?.profile ? U.displayNameFromProf(rt.profile) : 'Alex Sterling',
       })
     );
     const f2 = C.el('div', '');
-    f2.appendChild(C.el('label', 'lo-field-label', { text: 'Timezone' }));
+    f2.appendChild(C.el('label', 'lo-field-label', { text: loT('lo.settings.timezone') }));
     const tz = C.el('div', 'lo-field-value lo-silk-inset');
     tz.appendChild(document.createTextNode('UTC -05:00 (EST)'));
     tz.appendChild(C.icon('expand_more'));
     f2.appendChild(tz);
+    const fLang = C.el('div', 'lo-settings-field-lang');
+    fLang.appendChild(C.el('label', 'lo-field-label', { text: loT('lo.settings.language') }));
+    const langRow = C.el('div', 'lo-lang-picker');
+    const locCur = currentLocale();
+    [
+      ['en', loT('settings.language.en')],
+      ['ru', loT('settings.language.ru')],
+    ].forEach(([loc, label]) => {
+      const btn = C.el(
+        'button',
+        'lo-lang-btn lo-silk-raised' + (locCur === loc ? ' active' : '')
+      );
+      btn.type = 'button';
+      btn.dataset.locale = loc;
+      btn.textContent = label;
+      btn.onclick = () => setLocale(loc);
+      langRow.appendChild(btn);
+    });
+    fLang.appendChild(langRow);
     fields.appendChild(f1);
     fields.appendChild(f2);
+    fields.appendChild(fLang);
     profile.appendChild(fields);
     bento.appendChild(profile);
 
     const security = C.glassCard(null, {});
     security.classList.add('lo-settings-card', 'lo-settings-card--4');
-    security.appendChild(C.el('h3', 'lo-settings-card-title', { text: 'Security Pulse' }));
+    security.appendChild(C.el('h3', 'lo-settings-card-title', { text: loT('lo.settings.security') }));
     const sec1 = C.el('div', 'lo-security-row');
     const sec1Icon = C.el('div', 'lo-sec-icon-wrap lo-silk-inset');
     sec1Icon.appendChild(C.icon('verified_user', 'lo-sec-icon lo-sec-icon--ok'));
     sec1.appendChild(sec1Icon);
     const s1t = C.el('div', '');
-    s1t.appendChild(C.el('p', 'lo-sec-title', { text: '2FA Enabled' }));
-    s1t.appendChild(C.el('p', 'lo-sec-sub', { text: 'Protecting your data' }));
+    s1t.appendChild(C.el('p', 'lo-sec-title', { text: loT('lo.settings.2fa') }));
+    s1t.appendChild(C.el('p', 'lo-sec-sub', { text: loT('lo.settings.2faSub') }));
     sec1.appendChild(s1t);
     security.appendChild(sec1);
     const sec2 = C.el('div', 'lo-security-row');
@@ -716,12 +759,12 @@
     sec2Icon.appendChild(C.icon('report_problem', 'lo-sec-icon lo-sec-icon--warn'));
     sec2.appendChild(sec2Icon);
     const s2t = C.el('div', '');
-    s2t.appendChild(C.el('p', 'lo-sec-title', { text: 'Recovery Key' }));
-    s2t.appendChild(C.el('p', 'lo-sec-sub', { text: 'Not yet backed up' }));
+    s2t.appendChild(C.el('p', 'lo-sec-title', { text: loT('lo.settings.recovery') }));
+    s2t.appendChild(C.el('p', 'lo-sec-sub', { text: loT('lo.settings.recoverySub') }));
     sec2.appendChild(s2t);
     security.appendChild(sec2);
     security.appendChild(
-      C.el('p', 'lo-sec-foot', { text: 'Last activity: 2 hours ago from NYC' })
+      C.el('p', 'lo-sec-foot', { text: loT('lo.settings.lastActivity') })
     );
     bento.appendChild(security);
 
@@ -732,7 +775,9 @@
     appearance.classList.add('lo-settings-card');
     appearance.appendChild(
       C.el('h3', 'lo-settings-card-title', {
-        html: '<span class="material-symbols-outlined">palette</span> Appearance',
+        html:
+          '<span class="material-symbols-outlined">palette</span> ' +
+          loT('lo.settings.appearance'),
       })
     );
     const themeRow = C.el('div', 'lo-theme-picker');
@@ -741,9 +786,9 @@
         ? global.LuminaOSTheme.getTheme()
         : st.theme;
     [
-      ['light', 'Light'],
-      ['dark', 'Dark'],
-      ['system', 'System'],
+      ['light', loT('lo.settings.theme.light')],
+      ['dark', loT('lo.settings.theme.dark')],
+      ['system', loT('lo.settings.theme.system')],
     ].forEach(([mode, label]) => {
       themeRow.appendChild(
         C.themePreviewOption(mode, label, curTheme === mode, () => {
@@ -761,22 +806,23 @@
     prefs.appendChild(
       C.el('h3', 'lo-settings-card-title', {
         html:
-          '<span class="material-symbols-outlined">notifications_active</span> Smart Notifications',
+          '<span class="material-symbols-outlined">notifications_active</span> ' +
+          loT('lo.settings.smartNotif'),
       })
     );
     const pref1 = C.el('div', 'lo-pref-row');
     const pref1Text = C.el('div', '');
-    pref1Text.appendChild(C.el('strong', '', { text: 'System Alerts' }));
+    pref1Text.appendChild(C.el('strong', '', { text: loT('lo.settings.alerts') }));
     pref1Text.appendChild(
-      C.el('small', '', { text: 'Major OS updates and warnings' })
+      C.el('small', '', { text: loT('lo.settings.alertsSub') })
     );
     pref1.appendChild(pref1Text);
     pref1.appendChild(C.silkSwitch('loPrefSounds', st.preferences.sounds));
     const pref2 = C.el('div', 'lo-pref-row');
     const pref2Text = C.el('div', '');
-    pref2Text.appendChild(C.el('strong', '', { text: 'Marketing Emails' }));
+    pref2Text.appendChild(C.el('strong', '', { text: loT('lo.settings.marketing') }));
     pref2Text.appendChild(
-      C.el('small', '', { text: 'Special offers and ecosystem news' })
+      C.el('small', '', { text: loT('lo.settings.marketingSub') })
     );
     pref2.appendChild(pref2Text);
     pref2.appendChild(
@@ -784,9 +830,9 @@
     );
     const pref3 = C.el('div', 'lo-pref-row');
     const pref3Text = C.el('div', '');
-    pref3Text.appendChild(C.el('strong', '', { text: 'Enter to send' }));
+    pref3Text.appendChild(C.el('strong', '', { text: loT('lo.settings.enterSend') }));
     pref3Text.appendChild(
-      C.el('small', '', { text: 'Send messages with Enter key' })
+      C.el('small', '', { text: loT('lo.settings.enterSendSub') })
     );
     pref3.appendChild(pref3Text);
     pref3.appendChild(C.silkSwitch('loPrefEnter', st.preferences.enterToSend));
@@ -801,14 +847,15 @@
     privacy.classList.add('lo-settings-card', 'lo-settings-card--12');
     privacy.appendChild(
       C.el('h3', 'lo-settings-card-title', {
-        html: '<span class="material-symbols-outlined">lock</span> Privacy & Data',
+        html:
+          '<span class="material-symbols-outlined">lock</span> ' + loT('lo.settings.privacy'),
       })
     );
     const privacyGrid = C.el('div', 'lo-settings-privacy-grid');
     const privacyLeft = C.el('div', '');
     const storageHead = C.el('div', 'lo-storage-head');
-    storageHead.appendChild(C.el('span', '', { text: 'Data Storage Limit' }));
-    const pctLabel = C.el('span', 'lo-storage-pct', { text: '85% Full' });
+    storageHead.appendChild(C.el('span', '', { text: loT('lo.settings.storage') }));
+    const pctLabel = C.el('span', 'lo-storage-pct', { text: loT('lo.settings.storagePct') });
     storageHead.appendChild(pctLabel);
     privacyLeft.appendChild(storageHead);
     const track = C.el('div', 'lo-storage-track lo-silk-inset');
@@ -817,14 +864,16 @@
     track.appendChild(fill);
     privacyLeft.appendChild(track);
     privacyLeft.appendChild(
-      C.el('p', 'lo-storage-meta', { text: '17.2 GB of 20 GB used' })
+      C.el('p', 'lo-storage-meta', { text: loT('lo.settings.storageMeta') })
     );
     const storageActions = C.el('div', 'lo-storage-actions');
     storageActions.appendChild(
-      C.secondaryButton('Manage Storage', { onClick: () => toast('Storage manager — coming soon.') })
+      C.secondaryButton(loT('lo.settings.manageStorage'), {
+        onClick: () => toast('Storage manager — coming soon.'),
+      })
     );
     storageActions.appendChild(
-      C.secondaryButton('Export Data', {
+      C.secondaryButton(loT('lo.settings.exportData'), {
         onClick: () => toast('Export started — you will receive an email.'),
       })
     );
@@ -834,10 +883,10 @@
     const privacyRight = C.el('div', 'lo-cloud-sync lo-silk-inset');
     privacyRight.appendChild(C.icon('cloud_done'));
     const cloudBody = C.el('div', 'lo-cloud-sync-body');
-    cloudBody.appendChild(C.el('p', 'lo-cloud-title', { text: 'Cloud Synchronization' }));
+    cloudBody.appendChild(C.el('p', 'lo-cloud-title', { text: loT('lo.settings.cloud') }));
     cloudBody.appendChild(
       C.el('p', 'lo-cloud-desc', {
-        text: 'Sync settings across all Lumina devices seamlessly.',
+        text: loT('lo.settings.cloudDesc'),
       })
     );
     const tags = C.el('div', 'lo-device-tags');
@@ -852,13 +901,13 @@
 
     const actions = C.el('div', 'lo-settings-actions');
     actions.appendChild(
-      C.secondaryButton('Discard Changes', {
-        onClick: () => toast('Changes discarded.'),
+      C.secondaryButton(loT('lo.settings.discard'), {
+        onClick: () => toast(loT('lo.toast.discarded')),
       })
     );
     actions.appendChild(
-      C.primaryButton('Save All Changes', {
-        onClick: () => toast('Settings saved.'),
+      C.primaryButton(loT('lo.settings.save'), {
+        onClick: () => toast(loT('lo.toast.saved')),
       })
     );
     bento.appendChild(actions);
