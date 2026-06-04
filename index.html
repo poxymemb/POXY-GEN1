@@ -60,9 +60,11 @@
 <link rel="stylesheet" href="assets/poxy-landing-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
+<link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
+<script src="assets/poxy-trust-motion.js?v=1" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -3741,6 +3743,18 @@ const VIP_TIERS = [
 
 const ALL_TIERS = TIERS.concat(VIP_TIERS);
 const TIER_BY_ID = {};ALL_TIERS.forEach(t=>{TIER_BY_ID[t.id]=t;});
+
+// Read-only live bridge for the Trust-in-Motion UX layer (assets/poxy-trust-motion.js).
+// Exposes existing lexical state without changing any game logic.
+window.PoxyTrustBridge = {
+  get TIERS(){return TIERS;},
+  get SPIN_MS(){return SPIN_MS;},
+  get sb(){return sb;},
+  get currentProfile(){return currentProfile;},
+  get currentTier(){return currentTier;},
+  get currentSerial(){return currentSerial;},
+  get pendingSpinTier(){return pendingSpinTier;}
+};
 
 const STANDARD_CASE_PRICE = 1.00;
 const VIP_CASE_PRICE = 5.00;
