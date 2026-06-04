@@ -32,7 +32,7 @@
 <title>POXY WORLD</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
-<link rel="stylesheet" href="assets/stitch-dashboard.css?v=3">
+<link rel="stylesheet" href="assets/stitch-dashboard.css?v=4">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=2">
@@ -1366,8 +1366,8 @@ body.dark-club .club-sub{color:#888}
 <div id="poxyAppShell" style="display:none">
   <nav class="st-nav st-nav--global" id="stGlobalNav" aria-label="POXY World">
       <div class="st-nav-inner">
-        <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
-        <div class="st-nav-left">
+        <div class="st-nav-zone st-nav-zone--left">
+          <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
           <button type="button" class="st-brand-link" id="psdNavBrand" onclick="showStitchTab('dashboard')" data-i18n="nav.brand">POXY WORLD</button>
           <div class="st-nav-primary" aria-label="Main">
             <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')" data-i18n="nav.explore">Explore</button>
@@ -1375,22 +1375,22 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()" data-i18n="nav.store">Store</button>
             <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')" data-i18n="nav.news">News</button>
           </div>
-          <div class="st-nav-secondary" aria-label="More">
-            <div class="st-nav-pills">
-              <button type="button" class="st-nav-pill" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span><span data-i18n="nav.dash">Dash</span></button>
-              <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span><span data-i18n="nav.market">Market</span></button>
-              <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span><span data-i18n="nav.club">Club</span></button>
-              <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span><span data-i18n="nav.ranks">Ranks</span></button>
-              <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span><span data-i18n="nav.collection">Collection</span></button>
-              <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
-            </div>
+        </div>
+        <div class="st-nav-zone st-nav-zone--center" aria-label="App navigation">
+          <div class="st-nav-pills">
+            <button type="button" class="st-nav-pill" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span><span data-i18n="nav.dash">Dash</span></button>
+            <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span><span data-i18n="nav.market">Market</span></button>
+            <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span><span data-i18n="nav.club">Club</span></button>
+            <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span><span data-i18n="nav.ranks">Ranks</span></button>
+            <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span><span data-i18n="nav.collection">Collection</span></button>
+            <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
           </div>
         </div>
-        <div class="st-nav-right">
+        <div class="st-nav-zone st-nav-zone--right">
           <button type="button" class="st-wallet-capsule balance-badge st-balance st-spring-interactive gpu-accel" id="balanceBadge" onclick="scrollToTreasury()" data-i18n-aria="nav.wallet" aria-label="Wallet balance">
-            <span class="st-wallet-gem" aria-hidden="true"><span class="st-wallet-gem-core"></span></span>
+            <span class="st-wallet-icon material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
             <span class="st-wallet-amount" id="stBalanceText">0 PC</span>
-            <span class="st-wallet-plus" aria-hidden="true">+</span>
+            <span class="st-wallet-plus material-symbols-outlined" aria-hidden="true">add</span>
           </button>
           <div class="st-nav-actions" role="group" data-i18n-aria="nav.quickActions" aria-label="Quick actions">
             <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavNotify" data-i18n-aria="nav.notifications" aria-label="Notifications" onclick="openNotifyHub()">
@@ -1402,14 +1402,15 @@ body.dark-club .club-sub{color:#888}
               <span class="st-nav-badge" id="notifyChatDot" hidden aria-hidden="true"></span>
             </button>
             <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavGrid" data-i18n-aria="nav.menu" aria-label="Open menu" onclick="openSidebar()">
-              <span class="material-symbols-outlined">apps</span>
+              <span class="material-symbols-outlined">grid_view</span>
             </button>
           </div>
-          <!-- Profile header: avatar → username/role (single username source: userUsernameEl) -->
           <div class="user-bar st-user st-profile-zone" id="userBar" role="group" aria-label="Account">
-            <button type="button" class="st-nav-user-chip st-spring-interactive" onclick="showPage('profile')" data-i18n-title="nav.profile.title" title="My profile">
-              <span class="st-profile-glow" aria-hidden="true"></span>
-              <div class="st-user-avatar-ring user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
+            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" data-i18n-title="nav.profile.title" title="My profile">
+              <div class="st-nav-avatar-slot">
+                <span class="st-profile-glow" aria-hidden="true"></span>
+                <div class="user-bar-avatar gpu-accel avatar-frame-target st-nav-avatar-frame" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
+              </div>
             </button>
             <div class="st-user-meta">
               <div class="st-user-name" id="userUsernameEl">Player</div>

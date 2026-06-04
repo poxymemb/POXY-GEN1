@@ -157,10 +157,10 @@
 }
 /* ── USER BAR header avatar — localized alignment only (#userBar scope) ── */
 #userBar #userBarAvatarWrap.avatar-frame-target{
-  width:28px;
-  height:28px;
-  min-width:28px;
-  min-height:28px;
+  width:44px;
+  height:44px;
+  min-width:44px;
+  min-height:44px;
   display:flex;
   align-items:center;
   justify-content:center;

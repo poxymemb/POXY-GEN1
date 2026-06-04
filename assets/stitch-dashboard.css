@@ -59,7 +59,7 @@
 .st-nav--global{position:fixed;top:0;left:0;right:0;z-index:320}
 .st-nav:not(.st-nav--global){position:sticky;top:0;z-index:120}
 
-/* Stretch to full width with comfortable gutters */
+/* Three-zone bar: brand | pill tabs | utilities (Stitch Lumina nav) */
 .st-nav-inner{
   max-width:none;
   width:100%;
@@ -67,12 +67,58 @@
   margin:0;
   padding:0 20px;
   height:var(--st-nav-h-val);
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:12px 16px;
+}
+@media(min-width:1024px){.st-nav-inner{padding:0 32px;gap:12px 24px}}
+@media(min-width:1440px){.st-nav-inner{padding:0 48px}}
+.st-nav-zone--left{
   display:flex;
   align-items:center;
   gap:16px;
+  min-width:0;
+  justify-self:start;
 }
-@media(min-width:1024px){.st-nav-inner{padding:0 32px;gap:20px}}
-@media(min-width:1440px){.st-nav-inner{padding:0 48px}}
+@media(min-width:1024px){.st-nav-zone--left{gap:20px}}
+.st-nav-zone--center{
+  display:flex;
+  justify-self:center;
+  min-width:0;
+  max-width:100%;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.st-nav-zone--center::-webkit-scrollbar{display:none}
+@media(max-width:899px){
+  .st-nav-inner{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:auto auto;
+    row-gap:8px;
+    height:auto;
+    min-height:var(--st-nav-h-val);
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  .st-nav-zone--center{
+    grid-column:1/-1;
+    justify-self:stretch;
+    justify-content:flex-start;
+  }
+  #poxyAppShell{--st-nav-h-val:112px}
+}
+.st-nav-zone--right{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:12px;
+  min-width:0;
+  justify-self:end;
+}
+@media(min-width:768px){.st-nav-zone--right{gap:16px}}
+@media(min-width:1024px){.st-nav-zone--right{gap:24px}}
 /* ── elastic micro-interactions (spring ≈ stiffness 300, damping 15) ── */
 .st-spring-interactive{
   transform:scale(1);
@@ -103,7 +149,7 @@
 @media(prefers-reduced-motion:reduce){
   .st-spring-interactive,.st-spring-interactive:hover,.st-spring-interactive:active{transform:none!important;transition:none}
   .st-nav-badge:not([hidden]){animation:none}
-  .st-profile-zone:hover .st-user-avatar-ring{animation:none}
+  .st-profile-zone:hover .st-nav-avatar-frame{animation:none}
 }
 
 .st-nav-user-chip{
@@ -143,7 +189,6 @@
   filter:drop-shadow(0 0 16px rgba(249,171,255,0.55));
   background-position:100% 0;
 }
-.st-nav-left{display:flex;align-items:center;gap:20px;flex:1;min-width:0}
 .st-nav-primary{display:none;align-items:center;gap:28px}
 @media(min-width:860px){.st-nav-primary{display:flex}}
 .st-nav-link{
@@ -168,16 +213,7 @@
   text-shadow:0 0 12px rgba(249,171,255,0.55),0 0 24px rgba(249,171,255,0.28);
 }
 
-/* ── pill row ── */
-.st-nav-secondary{
-  display:flex;
-  align-items:center;
-  overflow-x:auto;
-  overflow-y:visible;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-}
-.st-nav-secondary::-webkit-scrollbar{display:none}
+/* ── center pill row ── */
 .st-nav-pills{
   display:flex;
   gap:3px;
@@ -234,99 +270,77 @@
 #psdNavLuminaOs.active .material-symbols-outlined,
 #psdNavLuminaOs:hover .material-symbols-outlined{color:var(--st-electric-cyan)}
 
-.st-nav-right{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  flex-shrink:0;
-}
-@media(min-width:1024px){.st-nav-right{gap:16px}}
-
-/* Wallet capsule */
+/* Wallet capsule — single horizontal glass pill */
 .st-wallet-capsule,
 .st-balance.st-wallet-capsule{
   display:none;
   align-items:center;
-  gap:10px;
-  padding:8px 14px 8px 10px;
+  gap:8px;
+  height:40px;
+  padding:0 14px 0 12px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
   cursor:pointer;
-  font-family:'JetBrains Mono',monospace;
-  color:var(--st-on-surface);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:0.02em;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  color:#fff;
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:0.03em;
   white-space:nowrap;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
 }
 .st-wallet-capsule.visible,
 .st-balance.st-wallet-capsule.visible{display:inline-flex}
-.st-wallet-capsule:hover{
-  background:rgba(255,255,255,0.07);
-}
-.st-wallet-gem{
-  width:30px;height:30px;
-  border-radius:9px;
+.st-wallet-icon{
+  font-size:18px!important;
+  color:rgba(244,114,182,0.85);
+  font-variation-settings:'FILL' 1;
   flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(145deg,rgba(251,207,232,0.35),rgba(244,114,182,0.22));
-  border:1px solid rgba(244,114,182,0.25);
-  box-shadow:0 0 14px rgba(244,114,182,0.2);
 }
-.st-wallet-gem-core{
-  width:14px;height:14px;border-radius:4px;
-  background:linear-gradient(135deg,var(--st-electric-cyan),#38bdf8);
-  box-shadow:0 0 10px rgba(0,229,255,0.55);
-}
-.st-wallet-amount{line-height:1;padding-right:2px}
+.st-wallet-amount{line-height:1;font-variant-numeric:tabular-nums}
 .st-wallet-plus{
-  display:flex;align-items:center;justify-content:center;
-  width:22px;height:22px;
-  border-radius:50%;
-  font-size:15px;font-weight:700;line-height:1;
-  color:rgba(255,255,255,0.75);
-  background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.1);
-  transition:background 0.22s ease,color 0.22s ease;
+  font-size:18px!important;
+  color:rgba(255,255,255,0.4);
+  margin-left:2px;
+  flex-shrink:0;
+  transition:color 0.22s ease;
 }
-.st-wallet-capsule:hover .st-wallet-plus{
-  color:#fff;
-  background:rgba(244,114,182,0.18);
-  border-color:rgba(244,114,182,0.35);
-}
+.st-wallet-capsule:hover .st-wallet-plus{color:rgba(255,255,255,0.9)}
 
-/* Circular icon actions */
+/* Frosted glass circular utilities */
 .st-nav-actions{
   display:none;
   align-items:center;
-  gap:8px;
+  gap:12px;
 }
 @media(min-width:768px){.st-nav-actions{display:flex}}
 .st-nav-icon-btn,
 .st-nav-notify{
   position:relative;
-  width:42px;height:42px;
+  width:40px;
+  height:40px;
   padding:0;
   border-radius:50%;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  color:rgba(229,226,225,0.85);
+  border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  color:rgba(255,255,255,0.6);
   cursor:pointer;
   display:inline-flex;
   align-items:center;
   justify-content:center;
   flex-shrink:0;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
 }
-.st-nav-icon-btn .material-symbols-outlined{font-size:20px}
-.st-nav-icon-btn:hover{color:#fff}
+.st-nav-icon-btn .material-symbols-outlined{font-size:20px;line-height:1}
+.st-nav-icon-btn:hover{
+  color:rgba(255,255,255,0.95);
+  background:rgba(255,255,255,0.05);
+}
 #stNavGrid{display:none}
 @media(min-width:768px){#stNavGrid{display:inline-flex}}
 @media(min-width:768px){#hamburgerBtn{display:none!important}}
@@ -372,70 +386,101 @@
 .st-user.psd-user-active{display:flex}
 .st-profile-zone{
   position:relative;
-  padding:4px 6px 4px 4px;
-  border-radius:999px;
-  transition:background 0.3s ease;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0;
+  border-radius:0;
+  cursor:pointer;
+  transition:opacity 0.25s ease;
 }
-.st-profile-zone:hover{
-  background:rgba(255,255,255,0.03);
+.st-profile-zone:hover{opacity:0.98}
+.st-nav-user-chip{
+  border:none;
+  background:transparent;
+  padding:0;
+  cursor:pointer;
+  line-height:0;
 }
+.st-nav-avatar-slot{
+  position:relative;
+  width:44px;
+  height:44px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+/* Ambient hover glow — does not replace custom frame rings in frames.css */
 .st-profile-glow{
   position:absolute;
-  left:0;
-  top:50%;
-  width:56px;
-  height:56px;
-  transform:translateY(-50%);
+  inset:-6px;
   border-radius:50%;
-  background:radial-gradient(circle,rgba(244,114,182,0.45) 0%,rgba(249,171,255,0.12) 42%,transparent 72%);
-  filter:blur(10px);
+  background:radial-gradient(circle,rgba(255,120,40,0.42) 0%,rgba(255,69,0,0.18) 38%,transparent 70%);
+  filter:blur(12px);
   opacity:0;
   pointer-events:none;
+  z-index:0;
   transition:opacity 0.35s ease;
 }
 .st-profile-zone:hover .st-profile-glow,
 .st-nav-user-chip:hover .st-profile-glow{opacity:1}
+.st-profile-zone:has([data-frame]) .st-profile-glow{opacity:0.55}
+.st-nav-avatar-frame,
+#userBar #userBarAvatarWrap.st-nav-avatar-frame{
+  position:relative;
+  z-index:1;
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  min-height:44px!important;
+  border-radius:50%;
+  overflow:visible;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(12,12,16,0.9);
+  box-shadow:none;
+  padding:0;
+  margin:0;
+}
+/* Never paint a default ring over equipped cosmetics */
+#userBar #userBarAvatarWrap.avatar-frame-target[data-frame]{
+  box-shadow:none;
+}
+.st-nav-avatar-frame img,
+#userBar #userBarAvatarWrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
 .st-user-meta{
-  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
-  gap:2px;min-width:0;text-align:left;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:2px;
+  min-width:0;
+  text-align:left;
 }
 .st-user-name{
   font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:15px;font-weight:700;line-height:1.2;letter-spacing:-0.01em;
+  font-size:14px;
+  font-weight:700;
+  line-height:1.15;
+  letter-spacing:-0.01em;
   color:#fff;
-  transition:text-shadow 0.3s ease,color 0.3s ease;
-}
-.st-profile-zone:hover .st-user-name{
-  color:var(--st-primary,#f9abff);
-  text-shadow:0 0 18px rgba(244,114,182,0.45);
 }
 .st-user-role{
-  font-family:'JetBrains Mono','Hanken Grotesk',monospace;
-  font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--st-pink-soft);
-  line-height:1;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:rgba(213,193,210,0.55);
+  line-height:1.2;
 }
-.st-user-avatar-ring{
-  position:relative;
-  z-index:1;
-  display:flex;align-items:center;justify-content:center;
-  padding:3px;border-radius:50%;
-  box-shadow:0 0 0 2px rgba(244,114,182,0.25),0 0 12px rgba(244,114,182,0.15);
-  transition:box-shadow 0.35s ease;
-}
-.st-profile-zone:hover .st-user-avatar-ring,
-.st-nav-user-chip:hover .st-user-avatar-ring{
-  animation:stProfileRingPulse 1.6s ease-in-out infinite;
-}
-@keyframes stProfileRingPulse{
-  0%,100%{box-shadow:0 0 0 2px rgba(244,114,182,0.3),0 0 14px rgba(244,114,182,0.2)}
-  50%{box-shadow:0 0 0 2px rgba(244,114,182,0.65),0 0 26px rgba(244,114,182,0.42),0 0 40px rgba(249,171,255,0.15)}
-}
-.st-user-avatar-ring .user-bar-avatar{
-  width:40px;height:40px;border-radius:50%;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;background:rgba(12,12,16,0.9);
-}
-.st-user-avatar-ring .user-bar-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .st-logout-btn{
   margin-left:auto;flex-shrink:0;
   display:inline-flex;align-items:center;gap:6px;

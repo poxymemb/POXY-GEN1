@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Lumina OS Header Utility Bar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdcc3",
+                        "on-secondary-container": "#6e5c00",
+                        "secondary-fixed-dim": "#e9c400",
+                        "outline-variant": "#cfc4c5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#c76c00",
+                        "on-primary-fixed": "#1b1b1b",
+                        "on-background": "#1a1c1c",
+                        "surface-dim": "#dadada",
+                        "on-primary-fixed-variant": "#474747",
+                        "tertiary": "#000000",
+                        "outline": "#7e7576",
+                        "surface-tint": "#5e5e5e",
+                        "surface-container": "#eeeeee",
+                        "surface-container-low": "#f3f3f3",
+                        "secondary": "#705d00",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "surface": "#f9f9f9",
+                        "on-surface-variant": "#4c4546",
+                        "on-secondary-fixed-variant": "#544600",
+                        "surface-variant": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f1f1f1",
+                        "tertiary-fixed-dim": "#ffb77d",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary-container": "#fcd400",
+                        "surface-container-high": "#e8e8e8",
+                        "inverse-primary": "#c6c6c6",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-container": "#848484",
+                        "on-tertiary-fixed-variant": "#6e3900",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#2f1500",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#221b00",
+                        "inverse-surface": "#2f3131",
+                        "primary": "#000000",
+                        "secondary-fixed": "#ffe16d",
+                        "on-surface": "#1a1c1c",
+                        "primary-fixed": "#e2e2e2",
+                        "background": "#f9f9f9",
+                        "primary-container": "#1b1b1b",
+                        "tertiary-container": "#2f1500"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "32px",
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "stack-lg": "80px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-xl": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+                        "label-lg": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-xl": ["80px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "900" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #080809; }
+        .glass-circle {
+            @apply w-10 h-10 rounded-full flex items-center justify-center bg-white/[0.04] backdrop-blur-md border border-white/[0.06] transition-all duration-300 ease-out;
+        }
+        .glass-circle:hover {
+            @apply scale-105 border-pink-400/40 shadow-[inset_0_0_12px_rgba(244,114,182,0.2)];
+        }
+        .glass-capsule {
+            @apply flex items-center h-10 px-4 rounded-full bg-white/[0.04] backdrop-blur-md border border-white/[0.06] transition-all duration-300 ease-out;
+        }
+        .glass-capsule:hover {
+            @apply scale-105 border-pink-400/40 shadow-[inset_0_0_12px_rgba(244,114,182,0.2)];
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-start justify-center p-8 font-sans">
+<!-- Top Header Utility Bar -->
+<header class="w-full max-w-4xl flex items-center justify-end gap-6 bg-[#080809]">
+<!-- Wallet & Top Up -->
+<div class="bg-white/[0.04] backdrop-blur-md border border-white/[0.08] rounded-full px-4 py-1.5 flex items-center gap-2 cursor-pointer transition-all duration-300 hover:scale-105">
+  <span class="material-symbols-outlined text-pink-400/80 text-sm">account_balance_wallet</span>
+  <span class="text-white font-medium text-sm tracking-wide">56353.29 PC</span>
+  <button class="flex items-center justify-center ml-1 hover:text-white transition-colors">
+    <span class="material-symbols-outlined text-white/40 text-sm">add</span>
+  </button>
+</div>
+<!-- Utilities -->
+<div class="flex items-center gap-3"><button class="w-10 h-10 rounded-full bg-white/[0.04] backdrop-blur-md border border-white/[0.06] flex items-center justify-center transition-transform hover:scale-105">
+  <span class="material-symbols-outlined text-white/60 text-[20px]">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-white/[0.04] backdrop-blur-md border border-white/[0.06] flex items-center justify-center transition-transform hover:scale-105">
+  <span class="material-symbols-outlined text-white/60 text-[20px]">chat_bubble</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-white/[0.04] backdrop-blur-md border border-white/[0.06] flex items-center justify-center transition-transform hover:scale-105">
+  <span class="material-symbols-outlined text-white/60 text-[20px]">grid_view</span>
+</button></div>
+<!-- User Profile -->
+<div class="flex items-center gap-3 ml-2 cursor-pointer group">
+  <div class="relative w-11 h-11 rounded-full bg-white/[0.03] transition-all duration-300 ease-out shadow-[0_0_20px_rgba(244,114,182,0.3)] group-hover:shadow-[0_0_30px_rgba(244,114,182,0.5)] group-hover:scale-105 overflow-hidden">
+    <div class="w-full h-full rounded-full overflow-hidden">
+      <img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXrjAB6i3cuYteQvk-oqG0pFSB8pMxAlrgWdTMHLxGUGxiSvK2RmOIIZPImke2dZerKvB52bSAxqoBsAurg5PTXBa5qpp5LpD4VBSvKHzal0HRxiYhH8Em5HQD2uz9B80vwtcX7i2Lmy1wAQ3vOScfLQPROUFtdwACpcdnWkTGVhk763VwV8-e2bHNVBPbrApvKiA18KUQPlpUTSSmjNyC_uA8qmkpAZHSeTihN7kPKwU51iLHI_jeTkFa4xWC6sqXdcDYfrsAyw">
+    </div>
+  </div>
+  <div class="flex flex-col justify-center">
+    <span class="text-white font-bold text-sm leading-tight">Syntax</span>
+    <span class="text-[10px] tracking-[0.2em] uppercase text-pink-400 font-semibold leading-tight">ELITE MEMBER</span>
+  </div>
+</div>
+</header>
+
+
+</body></html>
