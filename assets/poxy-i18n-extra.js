@@ -54,6 +54,8 @@
       'landing.nav.heritage': 'Heritage',
       'landing.nav.pillars': 'Pillars',
       'landing.nav.signIn': 'Sign In',
+      'landing.nav.back': 'Back to app',
+      'nav.sitePreview': 'Site preview',
       'landing.hero.kicker': 'Digital heritage',
       'landing.hero.title': 'Own your\nPOXY identity',
       'landing.hero.lead':
@@ -361,6 +363,8 @@
       'landing.nav.heritage': 'Наследие',
       'landing.nav.pillars': 'Столпы',
       'landing.nav.signIn': 'Войти',
+      'landing.nav.back': 'В приложение',
+      'nav.sitePreview': 'Превью сайта',
       'landing.hero.kicker': 'Цифровое наследие',
       'landing.hero.title': 'Владей своей\nPOXY-идентичностью',
       'landing.hero.lead':

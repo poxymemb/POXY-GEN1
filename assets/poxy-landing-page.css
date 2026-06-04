@@ -38,6 +38,23 @@ body.poxy-landing-active #poxyLanding{
 }
 #poxyLanding[hidden]{display:none!important}
 
+/* Logged-in site preview overlay (grid button in app nav) */
+body.poxy-landing-preview{
+  overflow:hidden;
+}
+body.poxy-landing-preview #poxyLanding{
+  display:block!important;
+  position:fixed;
+  inset:0;
+  z-index:360;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+body.poxy-landing-preview #plPreviewBack{
+  display:inline-flex!important;
+}
+
 .pl-ambient{
   position:fixed;
   inset:0;

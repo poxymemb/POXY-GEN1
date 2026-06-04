@@ -58,7 +58,7 @@
 <link rel="stylesheet" href="assets/lumina-os-overrides.css?v=12">
 <link rel="stylesheet" href="assets/poxy-landing-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
-<script src="assets/poxy-landing-page.js?v=1" defer></script>
+<script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <style>
@@ -1201,6 +1201,7 @@ body.dark-club .club-sub{color:#888}
       <a class="pl-nav-link" href="#landing-heritage" data-i18n="landing.nav.heritage">Heritage</a>
       <a class="pl-nav-link" href="#landing-pillars" data-i18n="landing.nav.pillars">Pillars</a>
     </nav>
+    <button type="button" class="pl-btn pl-btn--ghost" id="plPreviewBack" hidden data-i18n="landing.nav.back">Back to app</button>
     <button type="button" class="pl-btn pl-btn--ghost" data-pl-auth data-i18n="landing.nav.signIn">Sign In</button>
   </header>
   <main class="pl-main">
@@ -1401,7 +1402,7 @@ body.dark-club .club-sub{color:#888}
               <span class="material-symbols-outlined">chat_bubble</span>
               <span class="st-nav-badge" id="notifyChatDot" hidden aria-hidden="true"></span>
             </button>
-            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavGrid" data-i18n-aria="nav.menu" aria-label="Open menu" onclick="openSidebar()">
+            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavGrid" data-i18n-aria="nav.sitePreview" aria-label="Site preview" onclick="openPoxyLandingPreview()">
               <span class="material-symbols-outlined">grid_view</span>
             </button>
           </div>

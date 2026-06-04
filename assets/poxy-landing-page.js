@@ -35,9 +35,20 @@
     document.querySelectorAll('[data-pl-auth]').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
+        if (document.body.classList.contains('poxy-landing-preview') && isLoggedInApp()) {
+          closeLandingPreview();
+          return;
+        }
         openPoxyAuth();
       });
     });
+    const back = $('plPreviewBack');
+    if (back) {
+      back.addEventListener('click', function (e) {
+        e.preventDefault();
+        closeLandingPreview();
+      });
+    }
   }
 
   function bindNavScroll() {
@@ -121,25 +132,81 @@
       if (e.key === 'Escape' && overlay.classList.contains('poxy-auth-overlay--open')) {
         closePoxyAuth();
       }
+      if (e.key === 'Escape' && landingPreviewOpen) {
+        closeLandingPreview();
+      }
     });
+  }
+
+  var landingPreviewOpen = false;
+
+  function isLoggedInApp() {
+    const shell = $('poxyAppShell');
+    return !!(shell && shell.style.display !== 'none');
+  }
+
+  function refreshLandingPreviewChrome() {
+    const back = $('plPreviewBack');
+    const signIn = document.querySelector('#poxyLanding .pl-nav .pl-btn--ghost[data-pl-auth]');
+    if (back) back.hidden = !landingPreviewOpen;
+    if (signIn) signIn.hidden = landingPreviewOpen && isLoggedInApp();
   }
 
   function showLanding() {
     const landing = $('poxyLanding');
     if (landing) landing.hidden = false;
     document.body.classList.add('poxy-landing-active');
+    document.body.classList.remove('poxy-landing-preview');
+    landingPreviewOpen = false;
     closePoxyAuth();
+    refreshLandingPreviewChrome();
   }
 
   function hideLanding() {
     const landing = $('poxyLanding');
     if (landing) landing.hidden = true;
-    document.body.classList.remove('poxy-landing-active', 'poxy-auth-modal-open');
+    document.body.classList.remove('poxy-landing-active', 'poxy-landing-preview', 'poxy-auth-modal-open');
+    landingPreviewOpen = false;
     closePoxyAuth();
+    refreshLandingPreviewChrome();
+  }
+
+  /** Logged-in preview: grid button opens the public landing overlay without signing out */
+  function openLandingPreview() {
+    const landing = $('poxyLanding');
+    if (!landing) return;
+    landing.hidden = false;
+    landingPreviewOpen = true;
+    document.body.classList.add('poxy-landing-preview');
+    document.body.classList.remove('poxy-auth-modal-open');
+    closePoxyAuth();
+    refreshLandingPreviewChrome();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    landing.querySelectorAll('.pl-reveal').forEach(function (n) {
+      n.classList.add('is-visible');
+    });
+  }
+
+  function closeLandingPreview() {
+    if (!landingPreviewOpen) return;
+    const landing = $('poxyLanding');
+    if (landing) landing.hidden = true;
+    landingPreviewOpen = false;
+    document.body.classList.remove('poxy-landing-preview', 'poxy-auth-modal-open');
+    closePoxyAuth();
+    refreshLandingPreviewChrome();
+  }
+
+  function toggleLandingPreview() {
+    if (landingPreviewOpen) closeLandingPreview();
+    else openLandingPreview();
   }
 
   global.showPoxyLanding = showLanding;
   global.hidePoxyLanding = hideLanding;
+  global.openPoxyLandingPreview = openLandingPreview;
+  global.closePoxyLandingPreview = closeLandingPreview;
+  global.togglePoxyLandingPreview = toggleLandingPreview;
 
   function init() {
     bindLandingCtas();
