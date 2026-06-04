@@ -32,7 +32,7 @@
 <title>POXY WORLD</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
-<link rel="stylesheet" href="assets/stitch-dashboard.css?v=5">
+<link rel="stylesheet" href="assets/stitch-dashboard.css?v=6">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=2">
@@ -114,7 +114,8 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .balance-badge.visible{display:block}
 .balance-badge.pop{animation:balancePop 0.3s ease}
 body.poxy-stitch-dash .balance-badge{position:static;display:none}
-body.poxy-stitch-dash .balance-badge.visible{display:inline-flex}
+body.poxy-stitch-dash .balance-badge.visible,
+body.poxy-stitch-dash .st-wallet-capsule.visible{display:inline-flex}
 body.poxy-stitch-dash .hamburger-btn.visible{display:none}
 body.poxy-stitch-dash .poxy-text-logo.visible{display:none}
 body.poxy-stitch-dash{background:#0a0a0e;color:#e8e8ec}
@@ -1388,11 +1389,15 @@ body.dark-club .club-sub{color:#888}
           </div>
         </div>
         <div class="st-nav-zone st-nav-zone--right">
-          <button type="button" class="st-wallet-capsule balance-badge st-balance st-spring-interactive gpu-accel" id="balanceBadge" onclick="scrollToTreasury()" data-i18n-aria="nav.wallet" aria-label="Wallet balance">
-            <span class="st-wallet-icon material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
-            <span class="st-wallet-amount" id="stBalanceText">0 PC</span>
-            <span class="st-wallet-plus material-symbols-outlined" aria-hidden="true">add</span>
-          </button>
+          <div class="st-wallet-capsule balance-badge st-balance st-spring-interactive gpu-accel" id="balanceBadgeGroup">
+            <button type="button" class="st-wallet-body" id="balanceBadge" onclick="scrollToTreasury()" data-i18n-aria="nav.wallet" aria-label="Wallet balance">
+              <span class="st-wallet-icon material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+              <span class="st-wallet-amount" id="stBalanceText">0 PC</span>
+            </button>
+            <button type="button" class="st-wallet-plus-btn st-spring-interactive" id="balanceTopUpBtn" onclick="scrollToTreasury()" data-i18n-aria="nav.topUp" aria-label="Add funds">
+              <span class="material-symbols-outlined" aria-hidden="true">add</span>
+            </button>
+          </div>
           <div class="st-nav-actions" role="group" data-i18n-aria="nav.quickActions" aria-label="Quick actions">
             <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavNotify" data-i18n-aria="nav.notifications" aria-label="Notifications" onclick="openNotifyHub()">
               <span class="material-symbols-outlined">notifications</span>
@@ -1490,7 +1495,7 @@ body.dark-club .club-sub{color:#888}
           </div>
         </div>
       </section>
-      <section>
+      <section class="st-glass-surface st-collection-block">
         <div class="st-col-hdr">
           <div>
             <h2><span class="material-symbols-outlined">inventory_2</span> <span data-i18n="dash.collection.title">My Collection</span></h2>
@@ -1534,15 +1539,6 @@ body.dark-club .club-sub{color:#888}
             </div>
             <button type="button" class="btn-primary btn-pay-card" id="btnPayCard"><span class="material-symbols-outlined">lock</span> Add Funds (Test)</button>
           </div>
-        </section>
-        <section class="st-panel st-legal">
-          <h3><span class="material-symbols-outlined">policy</span> Protocols &amp; Terms</h3>
-          <h4><span class="material-symbols-outlined">security</span> Privacy Policy</h4>
-          <p><strong>Data Collection:</strong> POXY World collects email, username, avatar URL, and usage metadata strictly for platform operation. No personal data is sold to third parties.</p>
-          <hr>
-          <h4><span class="material-symbols-outlined">gavel</span> Terms of Service</h4>
-          <p><strong>Platform Utilisation:</strong> Access requires acceptance of these terms. PC has no cash value. Automated bots and market manipulation are prohibited.</p>
-          <button type="button" class="st-view-all" onclick="showStitchTab('explore');switchExploreSection('legal')">Full legal docs in Explore →</button>
         </section>
       </div>
       <section class="poxy-store-embed" id="dashStoreSection" aria-label="Tactical Terminal">
@@ -1840,6 +1836,13 @@ body.dark-club .club-sub{color:#888}
     <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
+    <footer class="st-site-footer" id="stSiteFooter">
+      <nav class="st-site-footer-legal" aria-label="Legal">
+        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')" data-i18n="dash.footer.privacy">Privacy Policy</a>
+        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')" data-i18n="dash.footer.terms">Terms of Service</a>
+      </nav>
+      <p class="st-site-footer-copy" data-i18n="dash.footer.copy">© 2024 POXY World. All rights reserved.</p>
+    </footer>
   </div>
 </div>
 
@@ -3564,14 +3567,15 @@ function formatPC(amount){
   return n.toFixed(2)+' PC';
 }
 function updateBalanceBadge(bal){
-  const b=$('balanceBadge');
+  const grp=$('balanceBadgeGroup');
   const txt=$('stBalanceText');
   const formatted=formatPC(bal);
   if(txt)txt.textContent=formatted;
-  if(b)b.innerHTML='<span class="material-symbols-outlined">account_balance_wallet</span> <span id="stBalanceText">'+formatted+'</span>';
-  b.classList.add('visible');
-  b.classList.remove('pop');
-  requestAnimationFrame(()=>b.classList.add('pop'));
+  if(grp){
+    grp.classList.add('visible');
+    grp.classList.remove('pop');
+    requestAnimationFrame(()=>grp.classList.add('pop'));
+  }
   syncStoreData();
 }
 function syncStoreData(){
@@ -3982,7 +3986,7 @@ function setLoggedOutUI(){
   const ub=$('userBar');
   if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
   const bn=$('bottomNav');if(bn)bn.style.display='none';
-  $('balanceBadge')?.classList.remove('visible');
+  $('balanceBadgeGroup')?.classList.remove('visible');
   const shell=$('poxyAppShell');if(shell)shell.style.display='none';
   const hunt=$('huntPage');if(hunt)hunt.style.display='none';
   if(typeof LuminaOSRouter!=='undefined'){
@@ -4011,7 +4015,7 @@ function setLoggedInUI(){
   document.body.classList.add('poxy-app-dark','poxy-stitch-dash');
   const ub=$('userBar');
   if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
-  $('balanceBadge')?.classList.add('visible');
+  $('balanceBadgeGroup')?.classList.add('visible');
   var skipLumina=false;
   try{skipLumina=sessionStorage.getItem('poxy_skip_lumina')==='1';}catch(e){}
   if(!skipLumina&&typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive()){
