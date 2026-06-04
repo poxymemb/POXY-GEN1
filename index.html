@@ -49,7 +49,7 @@
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=4">
-<script src="assets/poxy-i18n-extra.js?v=3"></script>
+<script src="assets/poxy-i18n-extra.js?v=4"></script>
 <script src="assets/poxy-i18n.js?v=4"></script>
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
@@ -1255,7 +1255,6 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span><span data-i18n="nav.club">Club</span></button>
               <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span><span data-i18n="nav.ranks">Ranks</span></button>
               <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span><span data-i18n="nav.collection">Collection</span></button>
-              <button type="button" class="st-nav-pill" id="psdNavFriends" onclick="showPage('friends')"><span class="material-symbols-outlined">group</span><span data-i18n="nav.friends">Friends</span></button>
               <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
             </div>
           </div>
@@ -2935,8 +2934,6 @@ body.dark-club .club-sub{color:#888}
   <div class="nav-sep"></div>
   <button class="nav-btn" id="navCollection" onclick="showPage('collection')" data-i18n="nav.legacy.collect">COLLECT</button>
   <div class="nav-sep"></div>
-  <button class="nav-btn" id="navFriends" onclick="showPage('friends')" data-i18n="nav.legacy.friends">FRIENDS</button>
-  <div class="nav-sep"></div>
   <button class="nav-btn" id="navMarket" onclick="showPage('market')" data-i18n="nav.legacy.market">MARKET</button>
   <div class="nav-sep"></div>
   <button class="nav-btn" id="navBank" onclick="showPage('bank')" data-i18n="nav.legacy.bank">BANK</button>
@@ -3597,7 +3594,7 @@ function persistActiveRoute(){
   let route=null;
   if($('settingsPage')?.classList.contains('visible'))route={kind:'page',page:'settings'};
   else{
-    const pages=['collection','friends','profile'];
+    const pages=['collection','profile'];
     const vis=pages.find(p=>$(p+'Page')?.classList.contains('visible'));
     if(vis)route={kind:'page',page:vis};
     else route={kind:'stitch',tab:activeStitchTab||'dashboard'};
@@ -3621,6 +3618,10 @@ function restoreActiveRoute(){
       if(route.page==='settings'){
         showPage('profile');
         openProfileSettings();
+        return true;
+      }
+      if(route.page==='friends'){
+        if(typeof openLuminaOS==='function')openLuminaOS(null,'friends');
         return true;
       }
       showPage(route.page);
@@ -4627,7 +4628,7 @@ function showPoxyAppShell(){
 }
 const STITCH_TAB_MAP={
   dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavExplore',
-  collection:'psdNavCollection',friends:'psdNavFriends',profile:'psdNavDashboard',
+  collection:'psdNavCollection',friends:'psdNavLuminaOs',profile:'psdNavDashboard',
   market:'psdNavMarket',club:'psdNavClub',news:'psdNavNews',
   tierlist:'psdNavRarity',rarity:'psdNavRarity',ranks:'psdNavRanks'
 };
@@ -5002,6 +5003,9 @@ window.showPage=function(page){
   if(page==='settings')window._allowSettingsPage=false;
   if(page==='bank'){showStitchTab('dashboard');scrollToTreasury();return;}
   if(page==='store'){scrollToStore();return;}
+  if(page==='friends'){
+    if(typeof openLuminaOS==='function'){openLuminaOS(null,'friends');return;}
+  }
   const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks'};
   if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
   showPoxyAppShell();
@@ -6244,8 +6248,26 @@ function closeFriendProfileView(){
   if(hub)hub.classList.remove('is-hidden');
   if(view){view.hidden=true;view.classList.remove('is-active');}
 }
+function ensureFriendsPageForProfile(){
+  if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive())LuminaOSRouter.exit();
+  if($('friendsPage')?.classList.contains('visible'))return;
+  showPoxyAppShell();
+  document.body.classList.add('poxy-stitch-dash');
+  $('huntPage').style.display='none';
+  $('bottomNav').style.display='none';
+  document.querySelectorAll('.st-spa-panel').forEach(p=>{p.hidden=true;p.classList.remove('st-spa-panel--active','st-spa-panel--leaving');});
+  ['profile','collection','friends','settings'].forEach(p=>{
+    const el=$(p+'Page');
+    if(el)el.classList.toggle('visible',p==='friends');
+  });
+  syncPsdTopNav('friends');
+  closeFriendProfileView();
+  loadFriends();loadPendingRequests();
+  updatePresenceTrack();
+}
 window.openFriendProfileView=window.openUserPassport=async function(userId){
   if(!userId)return;
+  ensureFriendsPageForProfile();
   friendProfileUserId=userId;
   const hub=$('friendsHubView'),view=$('friendProfileView');
   if(hub)hub.classList.add('is-hidden');
@@ -6787,7 +6809,7 @@ async function openChatUserInspect(userId,anchorEl,e){
     acts.innerHTML='';
     const vBtn=document.createElement('button');
     vBtn.textContent='Full Profile';
-    vBtn.onclick=()=>{closeChatInspectPopover();showPage('friends');openFriendProfileView(userId);};
+    vBtn.onclick=()=>{closeChatInspectPopover();openFriendProfileView(userId);};
     const mBtn=document.createElement('button');
     mBtn.textContent='Message';
     mBtn.onclick=()=>{closeChatInspectPopover();openDmOverlay(userId,prof.username,prof.avatar_url);};
@@ -6840,7 +6862,7 @@ window.searchUsers=async function(){
           }catch(e){this.disabled=false;logAndToast('add-friend',e);}
         });
       }
-      card.addEventListener('click',function(){showPage('friends');openFriendProfileView(p.id);});
+      card.addEventListener('click',function(){openFriendProfileView(p.id);});
       card.appendChild(avEl);card.appendChild(info);card.appendChild(btn);cont.appendChild(card);
     });
   }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">Error: '+sanitizeText(e.message||'unknown')+'</div>';}
@@ -7065,7 +7087,7 @@ function poxyIdBuildDock(dockEl,opts){
       +'<button type="button" class="poxy-id-more-item qp-profile-more-item" data-act="full"><span class="material-symbols-outlined">badge</span> Full Profile</button>'
       +'<button type="button" class="poxy-id-more-item qp-profile-more-item" data-act="copy"><span class="material-symbols-outlined">content_copy</span> Copy User ID</button>';
     menu.querySelector('[data-act="trade"]').onclick=()=>{closeInspectModal();openTradeModal(userId,prof.username);};
-    menu.querySelector('[data-act="full"]').onclick=()=>{closeInspectModal();showPage('friends');openFriendProfileView(userId);};
+    menu.querySelector('[data-act="full"]').onclick=()=>{closeInspectModal();openFriendProfileView(userId);};
     menu.querySelector('[data-act="copy"]').onclick=()=>{
       navigator.clipboard?.writeText(userId).then(()=>showToast('User ID copied.')).catch(()=>showToast(userId));
       closeInspectMoreMenu();
@@ -10438,7 +10460,7 @@ function bootApp(){
 <script src="assets/lumina-os/data.js?v=12"></script>
 <script src="assets/lumina-os/components.js?v=13"></script>
 <script src="assets/lumina-os/store.js?v=14"></script>
-<script src="assets/lumina-os/panels.js?v=15"></script>
+<script src="assets/lumina-os/panels.js?v=16"></script>
 <script src="assets/lumina-os/router.js?v=12"></script>
 <script src="assets/lumina-os/app.js?v=13"></script>
 <script>

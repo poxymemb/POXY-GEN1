@@ -157,10 +157,12 @@
     addCard.appendChild(C.el('h3', '', { text: loT('lo.friends.add.title') }));
     addCard.appendChild(C.el('p', '', { text: loT('lo.friends.add.sub') }));
     addCard.onclick = () => {
-      if (typeof global.showPage === 'function') {
-        global.LuminaOSRouter.exit();
-        global.showPage('friends');
+      const inp = document.getElementById('loFriendsSearch');
+      if (inp) {
+        inp.focus();
+        inp.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
+      toast(loT('lo.friends.add.focusSearch'));
     };
     grid.appendChild(addCard);
     scroll.appendChild(grid);
