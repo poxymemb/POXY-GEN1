@@ -5511,13 +5511,30 @@ function openWinRevealModal(tier){
   triggerRevealFX(t.id);
   setBodyBg(t.id);
 }
+// --- POXY Cryptographic Core (best-effort signed mint + ledger) -------------
+// Mints a signed cryptographic twin + genesis ledger event for a freshly created
+// user_poxy. Non-blocking: if the signing key isn't configured yet, gameplay is
+// unaffected and we just log a notice.
+function poxyEnvelope(action){
+  const nonce=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now()+'-'+Math.random().toString(16).slice(2));
+  return {nonce,timestamp:new Date().toISOString(),action};
+}
+async function cryptoMint(userPoxyId,tier,collectionId){
+  if(!userPoxyId||!tier)return null;
+  try{
+    const{data,error}=await sb.functions.invoke('mint_poxy',{body:{envelope:poxyEnvelope('mint_poxy'),tier,collection_id:collectionId||'genesis',link_user_poxy_id:userPoxyId}});
+    if(error||!data?.ok){console.warn('[poxy-crypto] mint skipped:',error?.message||data?.error||error);return null;}
+    return data; // { poxy_hash, signature, event_hash, seq, ... }
+  }catch(e){console.warn('[poxy-crypto] mint skipped:',e?.message||e);return null;}
+}
 async function addCurrentDropToCollection(sourceBtn){
   if(!currentTier||!currentUser||!currentSerial)return;
   const orig=sourceBtn?sourceBtn.textContent:'';
   if(sourceBtn){sourceBtn.disabled=true;sourceBtn.textContent='Saving...';}
   try{
-    const{error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial});
+    const{data:inserted,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial}).select('id').single();
     if(error)throw error;
+    cryptoMint(inserted&&inserted.id,currentTier.id).catch(()=>{});
     showToast('Saved to collection!');
     if(currentTier.id==='mythic'){hasMythic=true;toggleClubAccess(true);}
     if(['legendary','mythic'].includes(currentTier.id))refreshPremiumFrame();
@@ -9571,10 +9588,12 @@ async function buyFlashSale(sale,tier,btn){
     if(VIP_TIERS.find(t=>t.id===sale.poxy_tier)){
       const{data,error}=await sb.rpc('open_vip_case',{p_user_id:currentUser.id,p_tier:sale.poxy_tier,p_serial:null});
       if(error)throw error;if(!data.ok)throw new Error(data.error);
+      cryptoMint(data.new_id,sale.poxy_tier,'vip').catch(()=>{});
     } else {
       const serial=genSerial();
-      const{error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:sale.poxy_tier,serial_number:serial,case_origin:'vip'});
+      const{data:inserted,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:sale.poxy_tier,serial_number:serial,case_origin:'vip'}).select('id').single();
       if(error)throw error;
+      cryptoMint(inserted&&inserted.id,sale.poxy_tier,'vip').catch(()=>{});
     }
     showToast('Flash drop claimed!');
     loadFlashSales();
@@ -10640,6 +10659,7 @@ async function performCraft(){
     const{data,error}=await sb.rpc('craft_upgrade',{p_user_id:currentUser.id,p_poxy_ids:ids});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);
+    cryptoMint(data.new_id,'uncommon','craft').catch(()=>{});
     showToast('Crafted! +1 Uncommon ('+(data.serial||'')+')');
     craftSelection=new Set();
     resetCraftSockets(false);

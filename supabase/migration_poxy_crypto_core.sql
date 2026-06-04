@@ -1127,6 +1127,11 @@ create or replace view public.poxy_assets_public as
          signature, key_version, current_owner_id, asset_state, genesis_event_id, created_at
   from public.poxy_assets;
 
+-- Views must honor the querying user's RLS (not the creator's), otherwise they
+-- silently bypass row-level security. security_invoker requires Postgres 15+.
+alter view public.rng_rounds_public set (security_invoker = on);
+alter view public.poxy_assets_public set (security_invoker = on);
+
 -- =============================================================================
 -- 15. GRANTS
 -- =============================================================================
