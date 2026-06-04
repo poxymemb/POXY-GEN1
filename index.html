@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
-<link rel="stylesheet" href="assets/poxy-profile-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-profile-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -1619,20 +1619,24 @@ body.dark-club .club-sub{color:#888}
           <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
           <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
         </div>
-        <div class="poxy-profile-grid-2">
-          <section class="poxy-profile-panel">
-            <h2 class="poxy-profile-section-label">Featured POXY</h2>
-            <div id="featuredPoxyDisplay" class="poxy-featured-slot empty">
-              <p class="featured-poxy-empty">Select one from Collection</p>
+        <section class="poxy-profile-panel poxy-showcase-section" id="profileShowcaseSection" aria-label="Profile showcase matrix">
+          <h2 class="poxy-profile-section-label">Profile Showcase Matrix</h2>
+          <p class="poxy-showcase-hint">Pin up to five POXY from your collection. Hover pinned slots for tier ambient glow.</p>
+          <div class="poxy-showcase-slots" id="profileShowcaseSlots" role="list"></div>
+        </section>
+        <section class="poxy-profile-panel poxy-profile-quests-stack">
+          <div class="poxy-streak-widget" id="profileStreakWidget" aria-label="7-day streak and multiplier">
+            <div class="poxy-streak-widget-head">
+              <h2 class="poxy-streak-title">7-Day Streak &amp; Multiplier</h2>
+              <span class="poxy-streak-mult" id="profileStreakMult">×1.00</span>
             </div>
-          </section>
-          <section class="poxy-profile-panel">
-            <h2 class="poxy-profile-section-label">Daily Quests</h2>
-            <div id="dailyQuestList" class="poxy-quest-list">
-              <p class="poxy-quest-loading">Sign in to load quests…</p>
-            </div>
-          </section>
-        </div>
+            <div class="poxy-streak-nodes" id="profileStreakNodes" role="list"></div>
+          </div>
+          <h2 class="poxy-profile-section-label">Daily Quests</h2>
+          <div id="dailyQuestList" class="poxy-quest-list">
+            <p class="poxy-quest-loading">Sign in to load quests…</p>
+          </div>
+        </section>
         <div class="frame-cosmetic-panel frame-selector-section poxy-profile-frames" id="frameSelectorSection">
           <button type="button" class="frame-selector-header poxy-profile-frames-banner" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
             <span class="frame-selector-header-text">
@@ -2373,6 +2377,19 @@ body.dark-club .club-sub{color:#888}
       <button type="button" class="btn-modal-cancel" onclick="closeTradeModal()">Cancel</button>
       <button type="button" class="btn-modal-ok" id="btnSubmitTrade" onclick="submitTradeOffer()">Send Offer</button>
     </div>
+  </div>
+</div>
+
+<!-- Profile showcase picker -->
+<div class="poxy-showcase-picker" id="showcasePickerOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="showcasePickerTitle">
+  <div class="poxy-showcase-picker-backdrop" data-close="showcase"></div>
+  <div class="poxy-showcase-picker-card">
+    <header class="poxy-showcase-picker-head">
+      <h3 id="showcasePickerTitle">Select showcase asset</h3>
+      <button type="button" class="poxy-showcase-picker-close" id="showcasePickerClose" aria-label="Close">&times;</button>
+    </header>
+    <p class="poxy-showcase-picker-sub" id="showcasePickerSub">Choose a POXY from your collection.</p>
+    <div class="poxy-showcase-picker-grid" id="showcasePickerGrid"></div>
   </div>
 </div>
 
@@ -3171,56 +3188,287 @@ async function renderMythicClubTracker(){
     }
   }catch(e){const s=$('mctStatus');if(s)s.textContent='Club tracker unavailable.';}
 }
+const PROFILE_SHOWCASE_SLOTS=5;
+const SHOWCASE_STORAGE_KEY='poxy_showcase_slots_v1';
+const STREAK_STORAGE_KEY='poxy_daily_streak_v1';
+let profileShowcaseSlots=[null,null,null,null,null];
+let activeShowcaseSlotIndex=null;
+let expandedBadgeId=null;
+
+const PROFILE_BADGE_DEFS={
+  market_baron:{label:'Market Baron',icon:'payments',chipClass:'market_baron',accent:'#eab308'},
+  first_drop_set:{label:'First Drop Set',icon:'check_circle',chipClass:'first_drop_set',accent:'#f9abff'},
+  founder:{label:'Founder',icon:'emoji_events',chipClass:'founder',accent:'#f97316'},
+  developer:{label:'Developer',icon:'bolt',chipClass:'developer',accent:'#ef4444'},
+  vip_club:{label:'VIP',icon:'local_play',chipClass:'vip_club',accent:'#d70357'}
+};
+
+function tierGlowMeta(tierId){
+  const t=TIERS.find(x=>x.id===tierId)||TIERS[0];
+  const glowMap={
+    common:'rgba(192,192,192,0.35)',
+    uncommon:'rgba(76,175,80,0.35)',
+    rare:'rgba(41,182,246,0.4)',
+    epic:'rgba(171,71,188,0.42)',
+    legendary:'rgba(255,202,40,0.45)',
+    mythic:'rgba(255,82,82,0.55)',
+    secret:'rgba(249,171,255,0.55)',
+    stellar:'rgba(180,220,255,0.4)',
+    diamond:'rgba(185,242,255,0.45)'
+  };
+  return{tier:t, glow:glowMap[tierId]||t.glow||'rgba(249,171,255,0.35)'};
+}
+
+function loadProfileShowcaseSlots(){
+  profileShowcaseSlots=[null,null,null,null,null];
+  try{
+    const raw=localStorage.getItem(SHOWCASE_STORAGE_KEY);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed)){
+        parsed.slice(0,PROFILE_SHOWCASE_SLOTS).forEach((id,i)=>{profileShowcaseSlots[i]=id||null;});
+      }
+    }
+  }catch(e){}
+  if(currentProfile?.favorite_poxy_id&&!profileShowcaseSlots[0]){
+    profileShowcaseSlots[0]=currentProfile.favorite_poxy_id;
+  }
+}
+
+function saveProfileShowcaseSlots(){
+  try{localStorage.setItem(SHOWCASE_STORAGE_KEY,JSON.stringify(profileShowcaseSlots));}catch(e){}
+}
+
+function resolveShowcaseItem(poxyId){
+  if(!poxyId)return null;
+  return(colData||[]).find(i=>String(i.id)===String(poxyId))||null;
+}
+
+function buildShowcaseSlotHtml(item){
+  if(!item)return '<span class="poxy-showcase-empty-icon material-symbols-outlined" aria-hidden="true">add</span><span class="poxy-showcase-empty-label">Add Asset</span>';
+  const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
+  const serial=sanitizeText(item.serial_number||'–');
+  return '<span class="poxy-showcase-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</span>'
+    +'<span class="poxy-showcase-icon" aria-hidden="true">'+tier.icon+'</span>'
+    +'<span class="poxy-showcase-serial">'+serial+'</span>';
+}
+
+function renderProfileShowcaseMatrix(){
+  const wrap=$('profileShowcaseSlots');
+  if(!wrap)return;
+  loadProfileShowcaseSlots();
+  wrap.innerHTML='';
+  for(let i=0;i<PROFILE_SHOWCASE_SLOTS;i++){
+    const item=resolveShowcaseItem(profileShowcaseSlots[i]);
+    const tierId=item?.poxy_tier||'empty';
+    const meta=tierGlowMeta(tierId);
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='poxy-showcase-slot gpu-accel'+(item?' is-pinned':' is-empty');
+    btn.setAttribute('role','listitem');
+    btn.dataset.slot=String(i);
+    btn.dataset.tier=tierId;
+    if(item){
+      btn.style.setProperty('--showcase-glow',meta.glow);
+      btn.style.setProperty('--showcase-accent',meta.tier.color);
+    }
+    btn.innerHTML=buildShowcaseSlotHtml(item);
+    btn.addEventListener('click',()=>openShowcasePicker(i));
+    wrap.appendChild(btn);
+  }
+}
+
+function closeShowcasePicker(){
+  const ov=$('showcasePickerOverlay');
+  if(ov)ov.hidden=true;
+  activeShowcaseSlotIndex=null;
+  document.body.style.overflow='';
+}
+
+function openShowcasePicker(slotIndex){
+  if(!currentUser){showToast('Sign in first.');return;}
+  activeShowcaseSlotIndex=slotIndex;
+  const ov=$('showcasePickerOverlay');
+  const grid=$('showcasePickerGrid');
+  const title=$('showcasePickerTitle');
+  const sub=$('showcasePickerSub');
+  if(!ov||!grid)return;
+  if(title)title.textContent='Showcase slot '+(slotIndex+1);
+  if(sub)sub.textContent='Select a POXY from your collection to pin in this slot.';
+  grid.innerHTML='';
+  const items=(colData||[]).slice();
+  if(!items.length){
+    grid.innerHTML='<p class="poxy-showcase-picker-empty">Open Collection first or spin cases to fill your inventory.</p>';
+  }else{
+    items.forEach(item=>{
+      const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
+      const card=document.createElement('button');
+      card.type='button';
+      card.className='poxy-showcase-picker-item gpu-accel';
+      card.dataset.tier=item.poxy_tier;
+      card.style.setProperty('--showcase-accent',tier.color);
+      const pinnedElsewhere=profileShowcaseSlots.findIndex((id,idx)=>id&&String(id)===String(item.id)&&idx!==slotIndex);
+      if(pinnedElsewhere>=0)card.classList.add('is-pinned-elsewhere');
+      card.innerHTML='<span class="poxy-showcase-picker-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</span>'
+        +'<span class="poxy-showcase-picker-icon">'+tier.icon+'</span>'
+        +'<span class="poxy-showcase-picker-serial">'+sanitizeText(item.serial_number||'–')+'</span>';
+      card.addEventListener('click',()=>pinShowcaseItem(slotIndex,item));
+      grid.appendChild(card);
+    });
+    const clearBtn=document.createElement('button');
+    clearBtn.type='button';
+    clearBtn.className='poxy-showcase-picker-clear';
+    clearBtn.textContent='Clear slot';
+    clearBtn.addEventListener('click',()=>pinShowcaseItem(slotIndex,null));
+    grid.appendChild(clearBtn);
+  }
+  ov.hidden=false;
+  document.body.style.overflow='hidden';
+  if(!colData.length)loadCollection().then(()=>{
+    if(activeShowcaseSlotIndex===slotIndex)openShowcasePicker(slotIndex);
+  });
+}
+
+async function pinShowcaseItem(slotIndex,item){
+  profileShowcaseSlots[slotIndex]=item?item.id:null;
+  saveProfileShowcaseSlots();
+  if(slotIndex===0){
+    const newId=item?item.id:null;
+    if(newId!==null&&!isUuid(newId)){showToast('Invalid item id — refresh or run migration.');return;}
+    try{
+      const{error}=await sb.from('profiles').update({favorite_poxy_id:newId}).eq('id',currentUser.id);
+      if(error)throw error;
+      if(currentProfile)currentProfile.favorite_poxy_id=newId;
+      if(activeClubSubTab==='profile')renderClubProfileFeatured();
+    }catch(e){logAndToast('showcase',e);return;}
+  }
+  closeShowcasePicker();
+  renderProfileShowcaseMatrix();
+  showToast(item?'Pinned to showcase slot '+(slotIndex+1)+'.':'Showcase slot cleared.');
+}
+
+function recordDailyStreak(){
+  const today=new Date().toISOString().slice(0,10);
+  let data={days:0,lastDate:null,history:[]};
+  try{
+    const raw=localStorage.getItem(STREAK_STORAGE_KEY);
+    if(raw)data=Object.assign(data,JSON.parse(raw));
+  }catch(e){}
+  if(data.lastDate===today){
+    return data;
+  }
+  const yesterday=new Date();
+  yesterday.setDate(yesterday.getDate()-1);
+  const yStr=yesterday.toISOString().slice(0,10);
+  if(data.lastDate===yStr){
+    data.days=Math.min(7,(data.days||0)+1);
+  }else{
+    data.days=1;
+  }
+  data.lastDate=today;
+  data.history=(data.history||[]).filter(d=>d!==today);
+  data.history.push(today);
+  data.history=data.history.slice(-7);
+  try{localStorage.setItem(STREAK_STORAGE_KEY,JSON.stringify(data));}catch(e){}
+  return data;
+}
+
+function renderProfileStreakWidget(){
+  const nodes=$('profileStreakNodes');
+  const multEl=$('profileStreakMult');
+  if(!nodes)return;
+  const data=recordDailyStreak();
+  const activeCount=Math.min(7,Math.max(0,data.days||0));
+  const mult=(1+activeCount*0.05).toFixed(2);
+  if(multEl)multEl.textContent='×'+mult;
+  nodes.innerHTML='';
+  for(let i=0;i<7;i++){
+    const node=document.createElement('span');
+    node.className='poxy-streak-node'+(i<activeCount?' is-active':'');
+    node.setAttribute('role','listitem');
+    node.setAttribute('aria-label','Day '+(i+1)+(i<activeCount?' complete':' pending'));
+    node.innerHTML='<span class="material-symbols-outlined" aria-hidden="true">'+(i<activeCount?'check':'radio_button_unchecked')+'</span>';
+    nodes.appendChild(node);
+  }
+}
+
+function badgeSerialFor(key){
+  const seed=String(currentUser?.id||'guest')+':'+key;
+  let h=0;
+  for(let i=0;i<seed.length;i++){h=((h<<5)-h)+seed.charCodeAt(i);h|=0;}
+  return '#'+String(Math.abs(h)%10000).padStart(4,'0');
+}
+
+function formatBadgeIssuedDate(){
+  const src=currentProfile?.created_at||currentProfile?.updated_at;
+  if(!src){
+    const d=new Date();
+    return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
+  }
+  const d=new Date(src);
+  return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear();
+}
+
+async function collectProfileBadges(){
+  const badges=[];
+  const{data:listings}=await sb.from('marketplace').select('id').eq('seller_id',currentUser.id).limit(1);
+  if(listings&&listings.length)badges.push('market_baron');
+  const{data:tiers}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+  const tierSet=new Set((tiers||[]).map(t=>t.poxy_tier));
+  if(['common','uncommon','rare','epic','legendary'].every(t=>tierSet.has(t)))badges.push('first_drop_set');
+  if(tierSet.has('mythic'))badges.push('founder');
+  if(isClubMember())badges.push('vip_club');
+  if(currentProfile?.is_verified_employee)badges.push('developer');
+  return badges;
+}
+
+function toggleBadgeExpand(badgeId){
+  expandedBadgeId=expandedBadgeId===badgeId?null:badgeId;
+  renderBadgeWallet();
+}
+
 async function renderBadgeWallet(){
   const list=$('badgeList');
   if(!list||!currentUser)return;
+  list.className='poxy-profile-badges poxy-badge-wallet';
   try{
-    const badges=[];
-    const{data:listings}=await sb.from('marketplace').select('id').eq('seller_id',currentUser.id).limit(1);
-    if(listings&&listings.length)badges.push('market_baron');
-    const{data:tiers}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
-    const tierSet=new Set((tiers||[]).map(t=>t.poxy_tier));
-    if(['common','uncommon','rare','epic','legendary'].every(t=>tierSet.has(t)))badges.push('first_drop_set');
-    if(tierSet.has('mythic'))badges.push('founder');
-    if(!badges.length&&!currentProfile?.is_verified_employee){list.innerHTML='<span class="badge-none">No badges yet.</span>';return;}
-    list.innerHTML='';
-    const badgeDefs={market_baron:{label:'Market Baron',emoji:'💰'},first_drop_set:{label:'First Drop Set',emoji:'🎯'},founder:{label:'Founder',emoji:'🏆'}};
-    badges.forEach(b=>{
-      const d=badgeDefs[b];if(!d)return;
-      const chip=document.createElement('span');chip.className='badge-chip '+b;chip.textContent=d.emoji+' '+d.label;
-      list.appendChild(chip);
-    });
-    if(currentProfile?.is_verified_employee===true){
-      const devChip=document.createElement('span');devChip.className='badge-chip developer';devChip.textContent='⚡ Developer';
-      list.appendChild(devChip);
-    }
-  }catch(e){list.innerHTML='<span class="badge-none">Error loading badges.</span>';}
-}
-async function renderFeaturedPoxyDisplay(){
-  const el=$('featuredPoxyDisplay');
-  if(!el||!currentProfile)return;
-  if(!currentProfile.favorite_poxy_id){
-    el.className='poxy-featured-slot empty';
-    el.innerHTML='<p class="featured-poxy-empty">Select one from Collection</p>';
-    return;
-  }
-  try{
-    const{data,error}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('id',currentProfile.favorite_poxy_id).single();
-    if(error||!data){
-      el.className='poxy-featured-slot empty';
-      el.innerHTML='<p class="featured-poxy-empty">Featured POXY not found.</p>';
+    const badges=await collectProfileBadges();
+    if(!badges.length){
+      list.innerHTML='<span class="badge-none">No badges yet.</span>';
       return;
     }
-    const tier=TIERS.find(t=>t.id===data.poxy_tier)||TIERS[0];
-    el.className='poxy-featured-slot';
-    el.innerHTML='<span class="material-symbols-outlined poxy-featured-gem" aria-hidden="true" style="font-variation-settings:\'FILL\' 1">diamond</span>'
-      +'<div class="poxy-featured-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</div>'
-      +'<span class="poxy-featured-icon" aria-hidden="true">'+tier.icon+'</span>'
-      +'<span class="poxy-featured-serial">'+sanitizeText(data.serial_number||'–')+'</span>';
+    list.innerHTML='';
+    const issued=formatBadgeIssuedDate();
+    badges.forEach(b=>{
+      const d=PROFILE_BADGE_DEFS[b];
+      if(!d)return;
+      const serial=badgeSerialFor(b);
+      const isOpen=expandedBadgeId===b;
+      const row=document.createElement('div');
+      row.className='poxy-badge-row'+(isOpen?' is-open':'');
+      const chip=document.createElement('button');
+      chip.type='button';
+      chip.className='poxy-badge-chip-toggle badge-chip '+d.chipClass;
+      chip.setAttribute('aria-expanded',isOpen?'true':'false');
+      chip.innerHTML='<span class="poxy-badge-chip-left"><span class="material-symbols-outlined" aria-hidden="true" style="font-variation-settings:\'FILL\' 1">'+d.icon+'</span><span>'+sanitizeText(d.label)+'</span></span>'
+        +'<span class="material-symbols-outlined poxy-badge-chevron" aria-hidden="true">expand_more</span>';
+      chip.addEventListener('click',()=>toggleBadgeExpand(b));
+      const panel=document.createElement('div');
+      panel.className='poxy-badge-expand';
+      panel.innerHTML='<div class="poxy-badge-mini-card">'
+        +'<div class="poxy-badge-asset-stage" aria-hidden="true"><span class="material-symbols-outlined">view_in_ar</span><span class="poxy-badge-asset-label">3D Asset Stage</span></div>'
+        +'<div class="poxy-badge-meta"><span class="poxy-badge-meta-line">Issued: '+issued+'</span><span class="poxy-badge-meta-line">ID: '+serial+'</span></div>'
+        +'</div>';
+      row.append(chip,panel);
+      list.appendChild(row);
+    });
   }catch(e){
-    el.className='poxy-featured-slot empty';
-    el.innerHTML='<p class="featured-poxy-empty">Could not load featured POXY.</p>';
+    list.innerHTML='<span class="badge-none">Error loading badges.</span>';
   }
+}
+
+async function renderFeaturedPoxyDisplay(){
+  renderProfileShowcaseMatrix();
 }
 function toggleProfilePwdSection(forceOpen){
   const sec=$('pwdSection'),tog=$('pwdSectionToggle');
@@ -3715,7 +3963,12 @@ window.showPage=function(page){
   syncPsdTopNav(page);
   if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
   if(page==='friends'){loadFriends();loadPendingRequests();}
-  if(page==='profile'){renderProfilePage();renderProfileStats();applyPremiumFrameUI();renderMythicClubTracker();renderBadgeWallet();renderFeaturedPoxyDisplay();loadDailyQuests();}
+  if(page==='profile'){
+    renderProfilePage();renderProfileStats();applyPremiumFrameUI();
+    renderMythicClubTracker();renderProfileStreakWidget();renderProfileShowcaseMatrix();
+    renderBadgeWallet();loadDailyQuests();
+    if(!colData.length)loadCollection().then(()=>renderProfileShowcaseMatrix());
+  }
   document.body.classList.remove('dark-club');
   window.scrollTo(0,0);
 };
@@ -4205,7 +4458,10 @@ async function toggleFeaturePoxy(userPoxyId){
     if(error)throw error;
     if(currentProfile)currentProfile.favorite_poxy_id=newId;
     if(activeClubSubTab==='profile')renderClubProfileFeatured();
-    renderFeaturedPoxyDisplay();
+    loadProfileShowcaseSlots();
+    profileShowcaseSlots[0]=newId;
+    saveProfileShowcaseSlots();
+    renderProfileShowcaseMatrix();
     showToast(newId?'Featured in profile!':'Removed from profile.');
     renderCollection();
   }catch(e){logAndToast('feature',e);}
@@ -7565,6 +7821,8 @@ function setupGlobalEscapeClose(){
     if($('dmOverlay')&&!$('dmOverlay').classList.contains('hidden')){closeDmOverlay();return;}
     if($('inspectModal')&&!$('inspectModal').classList.contains('hidden')){closeInspectModal();return;}
     if($('craftModal')&&!$('craftModal').classList.contains('hidden')){closeCraftModal();return;}
+    const showcase=$('showcasePickerOverlay');
+    if(showcase&&!showcase.hidden){closeShowcasePicker();return;}
     if($('priceModal')&&!$('priceModal').classList.contains('hidden')){closeModal();return;}
     if(sidebarOpen)closeSidebar();
   });
@@ -7574,6 +7832,11 @@ function setupGlobalEscapeClose(){
   if(insp)insp.addEventListener('click',function(e){if(e.target===insp)closeInspectModal();});
   const tr=$('tradeModal');
   if(tr)tr.addEventListener('click',function(e){if(e.target===tr)closeTradeModal();});
+  const showcaseOv=$('showcasePickerOverlay');
+  if(showcaseOv){
+    showcaseOv.querySelector('[data-close="showcase"]')?.addEventListener('click',closeShowcasePicker);
+    $('showcasePickerClose')?.addEventListener('click',closeShowcasePicker);
+  }
 }
 
 function bootApp(){
