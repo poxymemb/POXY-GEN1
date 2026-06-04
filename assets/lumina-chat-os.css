@@ -102,16 +102,15 @@ body.lumina-os-active {
 }
 
 /* Shell */
+#luminaOsRoot .lc-shell,
 .lc-shell {
   display: grid;
   grid-template-columns: var(--lc-nav-w) 1fr var(--lc-context-w);
-  height: 100vh;
-  height: 100dvh;
+  height: 100%;
+  min-height: 100dvh;
   background: var(--lc-bg);
-  opacity: 0;
-  transition: opacity var(--lc-dur) var(--lc-ease);
 }
-.lc-shell.is-ready {
+#luminaOsRoot .lc-shell {
   opacity: 1;
 }
 .lc-shell.context-hidden {

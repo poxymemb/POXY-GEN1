@@ -98,10 +98,15 @@
     const lcShell = document.getElementById('lcShell');
     if (root) {
       root.removeAttribute('hidden');
-      root.classList.add('is-mounted', 'is-entering');
+      root.classList.add('is-mounted', 'is-ready');
+      root.classList.remove('is-exiting');
       requestAnimationFrame(() => {
-        root.classList.add('is-ready');
-        root.classList.remove('is-entering');
+        root.classList.add('is-entering');
+        root.addEventListener(
+          'animationend',
+          () => root.classList.remove('is-entering'),
+          { once: true }
+        );
       });
     }
     if (lcShell) lcShell.classList.add('is-ready');
@@ -176,8 +181,15 @@
     persistRoute();
     try {
       if (global.LuminaOSApp && !mounted) {
-        global.LuminaOSApp.mount(opts);
         mounted = true;
+        Promise.resolve(global.LuminaOSApp.mount(opts)).catch((err) => {
+          console.error('[LuminaOS] mount failed', err);
+          mounted = false;
+          if (typeof global.showToast === 'function') {
+            global.showToast('Lumina OS failed to load. Try refreshing.');
+          }
+          showMainLayout();
+        });
       } else if (global.LuminaOSApp) {
         global.LuminaOSApp.activate(opts);
       }

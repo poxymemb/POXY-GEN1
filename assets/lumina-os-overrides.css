@@ -51,32 +51,24 @@ body.lumina-os-active .page {
   inset: 0;
   z-index: 9500;
   background: var(--lc-bg, #0e0e0e);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--lo-transition);
-  display: flex;
+  display: none;
   flex-direction: column;
 }
 
 #luminaOsRoot:not([hidden]) {
   display: flex;
-}
-
-#luminaOsRoot.is-mounted {
+  opacity: 1;
   pointer-events: auto;
 }
 
-#luminaOsRoot.is-ready {
+#luminaOsRoot:not([hidden]) .lc-shell {
   opacity: 1;
-}
-
-#luminaOsRoot .lc-shell {
   flex: 1;
   min-height: 0;
   width: 100%;
 }
 
-#luminaOsRoot.is-entering {
+#luminaOsRoot.is-entering:not([hidden]) {
   animation: lo-enter var(--lo-transition) forwards;
 }
 
@@ -108,10 +100,6 @@ body.lumina-os-active .page {
     filter: blur(8px);
     transform: scale(0.985);
   }
-}
-
-#luminaOsRoot .lc-shell.is-ready {
-  opacity: 1;
 }
 
 #luminaOsRoot .lc-nav-brand-text::after {
