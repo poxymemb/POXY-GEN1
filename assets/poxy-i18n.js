@@ -1,5 +1,5 @@
 /**
- * POXY / Lumina OS — lightweight UI locale (en | ru).
+ * POXY / Lumina OS — UI locale (en | ru).
  */
 (function (global) {
   const PREFS_KEY = 'poxy_settings_prefs_v1';
@@ -200,6 +200,16 @@
 
   let locale = 'en';
 
+  function mergeExtraCatalog() {
+    const extra = global.POXY_I18N_EXTRA;
+    if (!extra) return;
+    SUPPORTED.forEach((loc) => {
+      if (extra[loc]) Object.assign(STRINGS[loc], extra[loc]);
+    });
+  }
+
+  mergeExtraCatalog();
+
   function readPrefs() {
     try {
       const raw = localStorage.getItem(PREFS_KEY);
@@ -227,7 +237,8 @@
     const saved = normalizeLocale(readPrefs().locale);
     if (saved) return saved;
     const nav =
-      (global.navigator && (global.navigator.language || global.navigator.userLanguage)) ||
+      (global.navigator &&
+        (global.navigator.language || global.navigator.userLanguage)) ||
       'en';
     return String(nav).toLowerCase().startsWith('ru') ? 'ru' : 'en';
   }
@@ -244,6 +255,17 @@
     return out;
   }
 
+  function translateToast(msg) {
+    if (typeof msg !== 'string') return msg;
+    const map = global.POXY_I18N_TOAST_KEYS || {};
+    const key = map[msg];
+    if (key) return t(key);
+    if (msg.indexOf('Friend added:') === 0) {
+      return t('toast.friends.added', { name: msg.slice('Friend added:'.length).trim() });
+    }
+    return msg;
+  }
+
   function apply(root) {
     root = root || document;
     root.querySelectorAll('[data-i18n]').forEach((el) => {
@@ -257,11 +279,20 @@
       const key = el.getAttribute('data-i18n-placeholder');
       if (key) el.placeholder = t(key);
     });
+    root.querySelectorAll('[data-i18n-title]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-title');
+      if (key) el.title = t(key);
+    });
+    root.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-aria');
+      if (key) el.setAttribute('aria-label', t(key));
+    });
   }
 
   function applyLuminaChrome() {
     const root = document.getElementById('luminaOsRoot');
     if (!root) return;
+    apply(root);
     const map = {
       messages: 'lo.nav.messages',
       friends: 'lo.nav.friends',
@@ -275,17 +306,6 @@
       const label = btn.querySelector('.lo-nav-label');
       if (key && label) label.textContent = t(key);
     });
-    const exit = root.querySelector('#lcExitOs');
-    if (exit) {
-      const lbl = exit.querySelector('.lo-nav-label');
-      if (lbl) lbl.textContent = t('lo.nav.exit');
-    }
-    const help = root.querySelector('#lcNavHelp span:last-child');
-    if (help) help.textContent = t('lo.nav.help');
-    const logout = root.querySelector('#lcNavLogout span:last-child');
-    if (logout) logout.textContent = t('lo.nav.logout');
-    const search = document.getElementById('lcConvSearch');
-    if (search) search.placeholder = t('lo.nav.searchConv');
     if (global.LuminaOSApp && typeof global.LuminaOSApp.syncThemeToggleLabel === 'function') {
       global.LuminaOSApp.syncThemeToggleLabel();
     }
@@ -296,6 +316,58 @@
     if (!page) return;
     apply(page);
     syncLangButtons();
+  }
+
+  function applyApp() {
+    apply(document.getElementById('authOverlay'));
+    apply(document.getElementById('poxyAppShell'));
+    apply(document.getElementById('sidebarPanel'));
+    apply(document.getElementById('bottomNav'));
+    apply(document.getElementById('huntPage'));
+    applyLuminaChrome();
+    applySettingsNav();
+  }
+
+  function refreshUi() {
+    applyApp();
+    try {
+      if (typeof global.refreshStitchDashboardChrome === 'function') {
+        global.refreshStitchDashboardChrome();
+      }
+      if (typeof global.renderColContent === 'function') {
+        const col = document.getElementById('collectionPage');
+        if (col && col.classList.contains('visible')) global.renderColContent();
+      }
+      if (typeof global.renderMarket === 'function') {
+        const mp = document.getElementById('marketPage');
+        if (mp && mp.classList.contains('visible')) global.renderMarket();
+      }
+      if (typeof global.renderSettingsPage === 'function') {
+        const sp = document.getElementById('settingsPage');
+        if (sp && sp.classList.contains('visible')) {
+          global.renderSettingsPage();
+          if (typeof global.applySettingsPrefsUi === 'function') {
+            global.applySettingsPrefsUi();
+          }
+          if (typeof global.switchSettingsTab === 'function' && typeof global.getActiveSettingsTab === 'function') {
+            global.switchSettingsTab(global.getActiveSettingsTab());
+          }
+        }
+      }
+      if (global.LuminaOSStore && global.LuminaOSPanels) {
+        const st = global.LuminaOSStore.getState();
+        const nav = st && st.activeNav;
+        if (nav && nav !== 'messages' && global.LuminaOSPanels.render) {
+          global.LuminaOSPanels.render(nav);
+        }
+      }
+      if (typeof global.syncNavUsernameLabels === 'function') {
+        global.syncNavUsernameLabels();
+      }
+      if (typeof global.updateAuthModeUi === 'function') global.updateAuthModeUi();
+    } catch (e) {
+      console.warn('i18n refreshUi', e);
+    }
   }
 
   function syncLangButtons() {
@@ -323,12 +395,7 @@
     document.documentElement.lang = locale;
     document.documentElement.setAttribute('data-locale', locale);
     if (opts.persist !== false) writePrefsLocale(locale);
-    applySettingsNav();
-    applyLuminaChrome();
-    if (opts.rerenderSettings !== false && global.LuminaOSPanels) {
-      const st = global.LuminaOSStore && global.LuminaOSStore.getState();
-      if (st && st.activeNav === 'settings') global.LuminaOSPanels.render('settings');
-    }
+    refreshUi();
     try {
       global.dispatchEvent(
         new CustomEvent('poxy:locale-change', { detail: { locale: next } })
@@ -345,6 +412,7 @@
     locale = detectDefault();
     document.documentElement.lang = locale;
     document.documentElement.setAttribute('data-locale', locale);
+    mergeExtraCatalog();
   }
 
   bootstrap();
@@ -352,6 +420,9 @@
   const PoxyI18n = {
     t,
     apply,
+    applyApp,
+    refreshUi,
+    translateToast,
     getLocale,
     setLocale,
     bootstrap,
@@ -364,4 +435,10 @@
 
   global.PoxyI18n = PoxyI18n;
   global.t = t;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => applyApp());
+  } else {
+    setTimeout(applyApp, 0);
+  }
 })(window);

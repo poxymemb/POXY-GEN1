@@ -84,7 +84,7 @@
     const canvas = C.el('div', 'lo-module-canvas lo-friends-page');
     canvas.appendChild(
       C.moduleTopBar({
-        placeholder: 'Search friends or groups...',
+        placeholder: loT('lo.friends.search'),
         searchId: 'loFriendsSearch',
         searchValue: st.friendsSearch || '',
         onSearch: (v) => {
@@ -101,10 +101,10 @@
 
     const scroll = C.el('div', 'lo-module-scroll');
     const pageHead = C.el('div', 'lo-page-header');
-    pageHead.appendChild(C.el('h2', 'lo-module-title', { text: 'Friends Hub' }));
+    pageHead.appendChild(C.el('h2', 'lo-module-title', { text: loT('lo.friends.title') }));
     pageHead.appendChild(
       C.el('p', 'lo-module-sub', {
-        text: 'Connect, trade, and play with your inner circle.',
+        text: loT('lo.friends.sub'),
       })
     );
     scroll.appendChild(pageHead);
@@ -127,22 +127,22 @@
       );
       const actions = C.el('div', 'lo-friend-actions');
       actions.appendChild(
-        C.silkIconAction('Message', 'chat_bubble', 'primary', () => {
+        C.silkIconAction(loT('lo.friends.message'), 'chat_bubble', 'primary', () => {
           if (global.LuminaOSApp && global.LuminaOSApp.openMessagesWith) {
             global.LuminaOSApp.openMessagesWith(f.id);
           }
         })
       );
       actions.appendChild(
-        C.silkIconAction('Trade', 'swap_horizontal_circle', 'tertiary', () => {
-          toast('Trade flow opens from POXY Market.');
+        C.silkIconAction(loT('lo.friends.trade'), 'swap_horizontal_circle', 'tertiary', () => {
+          toast(loT('lo.friends.toast.tradeMarket'));
         })
       );
       actions.appendChild(
-        C.silkIconAction('Profile', 'person', 'muted', () => {
+        C.silkIconAction(loT('lo.friends.profile'), 'person', 'muted', () => {
           if (typeof global.openFriendProfileView === 'function') {
             global.openFriendProfileView(f.id);
-          } else toast('Open profile from POXY Friends page.');
+          } else toast(loT('lo.friends.toast.profilePoxy'));
         })
       );
       card.appendChild(actions);
@@ -154,8 +154,8 @@
     const addIcon = C.el('div', 'lo-friend-add-icon lo-silk-inset');
     addIcon.appendChild(C.icon('person_add'));
     addCard.appendChild(addIcon);
-    addCard.appendChild(C.el('h3', '', { text: 'Add New Friend' }));
-    addCard.appendChild(C.el('p', '', { text: 'Expand your network' }));
+    addCard.appendChild(C.el('h3', '', { text: loT('lo.friends.add.title') }));
+    addCard.appendChild(C.el('p', '', { text: loT('lo.friends.add.sub') }));
     addCard.onclick = () => {
       if (typeof global.showPage === 'function') {
         global.LuminaOSRouter.exit();
@@ -170,7 +170,7 @@
     activityPanel.classList.add('lo-bento-panel');
     const actTitle = C.el('h3', 'lo-bento-title');
     actTitle.appendChild(C.icon('history'));
-    actTitle.appendChild(document.createTextNode(' Recent Activity'));
+    actTitle.appendChild(document.createTextNode(' ' + loT('lo.friends.recentActivity')));
     activityPanel.appendChild(actTitle);
     const feedList = C.el('div', 'lo-feed-list');
     const feedItems = (st.activityFeed || Data.seedActivity()).slice(0, 2);
@@ -212,7 +212,7 @@
 
     const worldPanel = C.glassCard(null, {});
     worldPanel.classList.add('lo-bento-panel', 'lo-world-panel');
-    worldPanel.appendChild(C.el('h3', 'lo-bento-title', { text: 'World Status' }));
+    worldPanel.appendChild(C.el('h3', 'lo-bento-title', { text: loT('lo.friends.worldStatus') }));
     const iconWrap = C.el('div', 'lo-world-icon-wrap lo-silk-inset');
     iconWrap.appendChild(C.icon('public', 'lo-world-icon'));
     worldPanel.appendChild(iconWrap);
@@ -222,9 +222,9 @@
       })
     );
     worldPanel.appendChild(
-      C.el('p', 'lo-world-label', { text: 'Friends Online Globally' })
+      C.el('p', 'lo-world-label', { text: loT('lo.friends.onlineGlobally') })
     );
-    const cta = C.el('button', 'lo-world-cta', { type: 'button', text: 'Join Global Hub' });
+    const cta = C.el('button', 'lo-world-cta', { type: 'button', text: loT('lo.friends.joinHub') });
     cta.onclick = () => toast('Global hub opens soon.');
     worldPanel.appendChild(cta);
     bento.appendChild(worldPanel);
@@ -245,17 +245,17 @@
     const canvas = C.el('div', 'lo-module-canvas lo-squads-page');
     canvas.appendChild(
       C.moduleTopBar({
-        placeholder: 'Search squads...',
+        placeholder: loT('lo.squads.search'),
         onNotifications: () => global.LuminaOSApp?.setNav?.('notifications'),
       })
     );
     const scroll = C.el('div', 'lo-module-scroll');
     const headRow = C.el('div', 'lo-page-header-row');
     const headText = C.el('div', '');
-    headText.appendChild(C.el('h2', 'lo-module-title', { text: 'Tactical Squads' }));
+    headText.appendChild(C.el('h2', 'lo-module-title', { text: loT('lo.squads.title') }));
     headText.appendChild(
       C.el('p', 'lo-module-sub', {
-        text: 'Coordinate, dominate, and climb the global leaderboards with your specialized strike team.',
+        text: loT('lo.squads.sub'),
       })
     );
     headRow.appendChild(headText);
@@ -264,7 +264,7 @@
     chip1.type = 'button';
     chip1.appendChild(C.icon('filter_list', ''));
     chip1.appendChild(
-      document.createTextNode(st.squadsFilter === 'all' ? 'All Regions' : st.squadsFilter)
+      document.createTextNode(st.squadsFilter === 'all' ? loT('lo.squads.filter.all') : st.squadsFilter)
     );
     chip1.onclick = () => {
       const order = ['all', 'EU-WEST', 'NA-EAST', 'APAC'];
@@ -275,9 +275,7 @@
     const chip2 = C.el('button', 'lo-silk-raised lo-filter-chip');
     chip2.type = 'button';
     chip2.appendChild(C.icon('sort', ''));
-    chip2.appendChild(
-      document.createTextNode('Win Rate')
-    );
+    chip2.appendChild(document.createTextNode(loT('lo.squads.sort.winRate')));
     chip2.onclick = () => {
       Store.setState({
         squadsSort: st.squadsSort === 'winRate' ? 'totalPc' : 'winRate',
@@ -319,13 +317,17 @@
       const stats = C.el('div', 'lo-squad-stats');
       const w1 = C.glassCard(null, { inset: true });
       w1.innerHTML =
-        '<span class="lo-stat-label">Win Rate</span><span class="lo-stat-val lo-stat-val--primary">' +
+        '<span class="lo-stat-label">' +
+        loT('lo.squads.stat.winRate') +
+        '</span><span class="lo-stat-val lo-stat-val--primary">' +
         sq.winRate +
         '%</span>';
       w1.appendChild(C.winRateChart(sq.winRate));
       const w2 = C.glassCard(null, { inset: true });
       w2.innerHTML =
-        '<span class="lo-stat-label">Total PC</span><span class="lo-stat-val">' +
+        '<span class="lo-stat-label">' +
+        loT('lo.squads.stat.totalPc') +
+        '</span><span class="lo-stat-val">' +
         sq.totalPc.toLocaleString() +
         '</span>';
       stats.appendChild(w1);
@@ -338,15 +340,15 @@
       });
       foot.appendChild(avRow);
       const req = (st.squadRequests || {})[sq.id] || sq.joinState || 'idle';
-      let btnLabel = 'Join Squad';
+      let btnLabel = loT('lo.squads.join');
       let disabled = false;
       if (sq.active >= sq.capacity) {
-        btnLabel = 'Squad Full';
+        btnLabel = loT('lo.squads.full');
         disabled = true;
-      } else if (req === 'pending') btnLabel = 'Pending…';
-      else if (req === 'accepted') btnLabel = 'Joined';
+      } else if (req === 'pending') btnLabel = loT('lo.squads.pending');
+      else if (req === 'accepted') btnLabel = loT('lo.squads.joined');
       else if (req === 'rejected') {
-        btnLabel = 'Request Denied';
+        btnLabel = loT('lo.squads.denied');
         disabled = true;
       }
       const joinBtn = C.primaryButton(btnLabel, {
@@ -375,7 +377,11 @@
     const createCard = C.glassCard(null, { inset: true });
     createCard.classList.add('lo-squad-create');
     createCard.innerHTML =
-      '<span class="material-symbols-outlined">add</span><h3>Form New Squad</h3><p>Gather your friends and climb the ranks.</p>';
+      '<span class="material-symbols-outlined">add</span><h3>' +
+      loT('lo.squads.create.title') +
+      '</h3><p>' +
+      loT('lo.squads.create.sub') +
+      '</p>';
     createCard.onclick = () => openCreateSquadModal();
     grid.appendChild(createCard);
     scroll.appendChild(grid);
@@ -399,14 +405,14 @@
     form.appendChild(nameInp);
     form.appendChild(mottoInp);
     C.modalBase(
-      'Create Tactical Squad',
+      loT('lo.squads.modal.title'),
       form,
       [
-        C.secondaryButton('Cancel', {
+        C.secondaryButton(loT('lo.squads.modal.cancel'), {
           onClick: () =>
             document.querySelector('.lo-modal-overlay')?.remove(),
         }),
-        C.primaryButton('Create', {
+        C.primaryButton(loT('lo.squads.modal.create'), {
           onClick: () => {
             const name = nameInp.value.trim();
             if (!name) {
@@ -448,23 +454,23 @@
     const canvas = C.el('div', 'lo-module-canvas lo-activity-page');
     canvas.appendChild(
       C.moduleTopBar({
-        placeholder: 'Search activities...',
+        placeholder: loT('lo.activity.search'),
         onNotifications: () => global.LuminaOSApp?.setNav?.('notifications'),
       })
     );
     const scroll = C.el('div', 'lo-module-scroll');
     const headRow = C.el('div', 'lo-page-header-row');
     const headText = C.el('div', '');
-    headText.appendChild(C.el('h2', 'lo-module-title', { text: 'Recent Activity' }));
+    headText.appendChild(C.el('h2', 'lo-module-title', { text: loT('lo.activity.title') }));
     headText.appendChild(
       C.el('p', 'lo-module-sub', {
-        text: 'Tracking your digital evolution in Lumina OS',
+        text: loT('lo.activity.sub'),
       })
     );
     headRow.appendChild(headText);
     const tools = C.el('div', 'lo-module-toolbar');
-    tools.appendChild(C.secondaryButton('Filter', { icon: 'filter_list' }));
-    tools.appendChild(C.primaryButton('Export', { icon: 'download' }));
+    tools.appendChild(C.secondaryButton(loT('lo.activity.filter'), { icon: 'filter_list' }));
+    tools.appendChild(C.primaryButton(loT('lo.activity.export'), { icon: 'download' }));
     headRow.appendChild(tools);
     scroll.appendChild(headRow);
 
@@ -509,8 +515,8 @@
         body.appendChild(C.el('p', '', { text: it.body }));
         if (it.actions) {
           const acts = C.el('div', 'lo-timeline-actions');
-          acts.appendChild(C.primaryButton('Accept', { small: true }));
-          acts.appendChild(C.secondaryButton('Decline', { small: true }));
+          acts.appendChild(C.primaryButton(loT('lo.activity.accept'), { small: true }));
+          acts.appendChild(C.secondaryButton(loT('lo.activity.decline'), { small: true }));
           body.appendChild(acts);
         }
         card.appendChild(body);
@@ -542,19 +548,16 @@
     const scroll = C.el('div', 'lo-module-scroll lo-notif-feed');
     const headRow = C.el('div', 'lo-notif-head-row');
     const headText = C.el('div', '');
-    headText.appendChild(C.el('h2', 'lo-module-title', { text: 'Notifications' }));
+    headText.appendChild(C.el('h2', 'lo-module-title', { text: loT('lo.notif.title') }));
     headText.appendChild(
       C.el('p', 'lo-module-sub', {
-        html:
-          'You have <span class="lo-text-primary">' +
-          unread +
-          ' unread</span> messages across your ecosystem.',
+        text: loT('lo.notif.unreadLine', { n: unread }),
       })
     );
     headRow.appendChild(headText);
     const tools = C.el('div', 'lo-module-toolbar');
     tools.appendChild(
-      C.secondaryButton('Mark as Read', {
+      C.secondaryButton(loT('lo.notif.markRead'), {
         icon: 'done_all',
         onClick: () => {
           const next = list.map((n) => ({ ...n, unread: false }));
@@ -565,7 +568,7 @@
       })
     );
     tools.appendChild(
-      C.secondaryButton('Clear All', {
+      C.secondaryButton(loT('lo.notif.clearAll'), {
         icon: 'delete_sweep',
         onClick: () => {
           Store.setState({ notifications: [] });
@@ -608,8 +611,8 @@
         body.appendChild(C.el('p', '', { text: n.body }));
         if (n.unread && n.icon === 'chat') {
           const acts = C.el('div', 'lo-notif-actions');
-          acts.appendChild(C.secondaryButton('Reply', { small: true }));
-          acts.appendChild(C.secondaryButton('Archive', { small: true }));
+          acts.appendChild(C.secondaryButton(loT('lo.notif.reply'), { small: true }));
+          acts.appendChild(C.secondaryButton(loT('lo.notif.archive'), { small: true }));
           body.appendChild(acts);
         }
         card.appendChild(body);

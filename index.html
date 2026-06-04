@@ -49,7 +49,8 @@
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=4">
-<script src="assets/poxy-i18n.js?v=2"></script>
+<script src="assets/poxy-i18n-extra.js?v=2"></script>
+<script src="assets/poxy-i18n.js?v=4"></script>
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/lumina-chat-os.css?v=12">
@@ -1178,26 +1179,26 @@ body.dark-club .club-sub{color:#888}
       <div class="poxy-auth-panel-logo-mobile" aria-hidden="true">
         <span class="auth-hero-l">PO</span><span class="auth-hero-x">X</span><span class="auth-hero-y">Y</span>
       </div>
-      <h1 class="poxy-auth-headline" id="authHeadline">Enter POXY WORLD.</h1>
+      <h1 class="poxy-auth-headline" id="authHeadline" data-i18n="auth.headline">Enter POXY WORLD.</h1>
       <div class="poxy-auth-oauth-stack">
         <button type="button" class="poxy-auth-oauth poxy-auth-oauth--google" onclick="handleAuthOAuth('google')">
           <span class="poxy-auth-oauth-icon" aria-hidden="true"></span>
-          Continue with Google
+          <span data-i18n="auth.oauth.google">Continue with Google</span>
         </button>
         <button type="button" class="poxy-auth-oauth poxy-auth-oauth--apple" onclick="handleAuthOAuth('apple')">
           <span class="poxy-auth-oauth-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg></span>
-          Continue with Apple
+          <span data-i18n="auth.oauth.apple">Continue with Apple</span>
         </button>
         <button type="button" class="poxy-auth-oauth poxy-auth-oauth--phone" onclick="showToast('Phone login — coming soon.')">
           <span class="poxy-auth-oauth-icon material-symbols-outlined" style="font-size:18px">phone_iphone</span>
-          Continue with phone
+          <span data-i18n="auth.oauth.phone">Continue with phone</span>
         </button>
       </div>
-      <div class="poxy-auth-sep" aria-hidden="true"><span>or</span></div>
-      <label class="visually-hidden" for="authEmail">Email or username</label>
-      <input class="poxy-auth-field auth-input" type="text" id="authEmail" placeholder="Email or username" autocomplete="username">
-      <label class="visually-hidden" for="authPassword">Password</label>
-      <input class="poxy-auth-field auth-input" type="password" id="authPassword" placeholder="Password" autocomplete="current-password">
+      <div class="poxy-auth-sep" aria-hidden="true"><span data-i18n="auth.sep.or">or</span></div>
+      <label class="visually-hidden" for="authEmail" data-i18n="auth.email.placeholder">Email or username</label>
+      <input class="poxy-auth-field auth-input" type="text" id="authEmail" data-i18n-placeholder="auth.email.placeholder" placeholder="Email or username" autocomplete="username">
+      <label class="visually-hidden" for="authPassword" data-i18n="auth.password.placeholder">Password</label>
+      <input class="poxy-auth-field auth-input" type="password" id="authPassword" data-i18n-placeholder="auth.password.placeholder" placeholder="Password" autocomplete="current-password">
       <button type="button" class="poxy-auth-continue is-primary auth-btn" id="authSubmitBtn">Continue</button>
       <button type="button" class="poxy-auth-mode-switch" id="authModeSwitch">Create account</button>
       <div class="auth-msg poxy-auth-msg" id="authMsg" role="status"></div>
@@ -1212,11 +1213,11 @@ body.dark-club .club-sub{color:#888}
   </div>
   <footer class="poxy-auth-footer">
     <nav aria-label="Auth footer">
-      <a href="#" onclick="event.preventDefault()">About</a>
-      <a href="#" onclick="event.preventDefault()">POXY CLUB</a>
-      <a href="#" onclick="event.preventDefault()">Help</a>
-      <a href="#" onclick="event.preventDefault()">Terms</a>
-      <a href="#" onclick="event.preventDefault()">Privacy</a>
+      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.about">About</a>
+      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.club">POXY CLUB</a>
+      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.help">Help</a>
+      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.terms">Terms</a>
+      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.privacy">Privacy</a>
     </nav>
   </footer>
 </div>
@@ -1227,32 +1228,32 @@ body.dark-club .club-sub{color:#888}
       <div class="st-nav-inner">
         <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
         <div class="st-nav-left">
-          <button type="button" class="st-brand-link" id="psdNavBrand" onclick="showStitchTab('dashboard')">POXY WORLD</button>
+          <button type="button" class="st-brand-link" id="psdNavBrand" onclick="showStitchTab('dashboard')" data-i18n="nav.brand">POXY WORLD</button>
           <div class="st-nav-primary" aria-label="Main">
-            <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')">Explore</button>
-            <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')">Rarity</button>
-            <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()">Store</button>
-            <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')">News</button>
+            <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')" data-i18n="nav.explore">Explore</button>
+            <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')" data-i18n="nav.rarity">Rarity</button>
+            <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()" data-i18n="nav.store">Store</button>
+            <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')" data-i18n="nav.news">News</button>
           </div>
           <div class="st-nav-secondary" aria-label="More">
             <div class="st-nav-pills">
-              <button type="button" class="st-nav-pill" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span> Dash</button>
-              <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span> Market</button>
-              <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span> Club</button>
-              <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span> Ranks</button>
-              <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span> Collection</button>
-              <button type="button" class="st-nav-pill" id="psdNavFriends" onclick="showPage('friends')"><span class="material-symbols-outlined">group</span> Friends</button>
-              <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span> Lumina OS</button>
+              <button type="button" class="st-nav-pill" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span><span data-i18n="nav.dash">Dash</span></button>
+              <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span><span data-i18n="nav.market">Market</span></button>
+              <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span><span data-i18n="nav.club">Club</span></button>
+              <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span><span data-i18n="nav.ranks">Ranks</span></button>
+              <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span><span data-i18n="nav.collection">Collection</span></button>
+              <button type="button" class="st-nav-pill" id="psdNavFriends" onclick="showPage('friends')"><span class="material-symbols-outlined">group</span><span data-i18n="nav.friends">Friends</span></button>
+              <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
             </div>
           </div>
         </div>
         <div class="st-nav-right">
           <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">account_balance_wallet</span> <span id="stBalanceText">0 PC</span></button>
-          <button type="button" class="st-nav-notify" id="stNavNotify" aria-label="Notifications" onclick="openNotifyHub()"><span class="material-symbols-outlined">notifications</span><span class="poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span></button>
-          <button type="button" class="st-topup-btn" onclick="scrollToTreasury()">Top Up</button>
+          <button type="button" class="st-nav-notify" id="stNavNotify" data-i18n-aria="nav.notifications" aria-label="Notifications" onclick="openNotifyHub()"><span class="material-symbols-outlined">notifications</span><span class="poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span></button>
+          <button type="button" class="st-topup-btn" onclick="scrollToTreasury()" data-i18n="nav.topUp">Top Up</button>
           <!-- Profile header: avatar → username/role (single username source: userUsernameEl) -->
           <div class="user-bar st-user" id="userBar" role="group" aria-label="Account">
-            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" title="My profile">
+            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" data-i18n-title="nav.profile.title" title="My profile">
               <div class="st-user-avatar-ring user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
             </button>
             <div class="st-user-meta">
@@ -1268,14 +1269,14 @@ body.dark-club .club-sub{color:#888}
     <div class="st-win-reveal-backdrop" aria-hidden="true"></div>
     <div class="st-win-reveal-card" id="stWinRevealCard">
       <div class="st-win-reveal-flare" id="stWinFlare" aria-hidden="true"></div>
-      <div class="st-win-reveal-kicker" id="stWinRevealTitle">Win Reveal</div>
+      <div class="st-win-reveal-kicker" id="stWinRevealTitle" data-i18n="dash.winReveal.title">Win Reveal</div>
       <div class="st-win-reveal-icon" id="stWinIcon"></div>
       <div class="st-win-reveal-name" id="stWinName"></div>
       <div class="st-win-reveal-rarity" id="stWinRarity"></div>
       <div class="st-win-reveal-serial" id="stWinSerial"></div>
       <div class="st-win-reveal-actions">
-        <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd">Add to Collection</button>
-        <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard">Discard</button>
+        <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd" data-i18n="dash.winReveal.add">Add to Collection</button>
+        <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard" data-i18n="dash.winReveal.discard">Discard</button>
       </div>
     </div>
   </div>
@@ -1288,7 +1289,7 @@ body.dark-club .club-sub{color:#888}
         <div class="st-hero-glow" aria-hidden="true"></div>
         <div class="st-hero-inner">
           <div class="logo-row" id="logoRow" style="display:none" aria-hidden="true"><span class="l-letter l-p">P</span><span class="l-letter l-o">O</span><span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span></div>
-          <h1>Spin</h1>
+          <h1 data-i18n="dash.spin.title">Spin</h1>
           <div class="fomo" id="fomoText" hidden aria-hidden="true">Mythic POXY claimed this month: 0/10</div>
           <div id="greatBurnCounter" hidden aria-hidden="true">🔥 The Great Burn — 0 POXY</div>
           <div class="st-hero-playfield" id="stHeroPlayfield">
@@ -1322,12 +1323,12 @@ body.dark-club .club-sub{color:#888}
             </div>
           </div>
           <div class="cta-wrap">
-            <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> OPEN BOX <span class="st-open-price" id="btnOpenPrice">1 PC</span></button>
+            <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> <span data-i18n="dash.openBox">OPEN BOX</span> <span class="st-open-price" id="btnOpenPrice">1 PC</span></button>
             <div class="post-btns" id="postBtns">
-              <button type="button" class="btn-add" id="btnAdd">ADD TO COLLECTION</button>
-              <button type="button" class="btn-discard" id="btnDiscard">DISCARD</button>
+              <button type="button" class="btn-add" id="btnAdd" data-i18n="dash.addToCollection">ADD TO COLLECTION</button>
+              <button type="button" class="btn-discard" id="btnDiscard" data-i18n="dash.discard">DISCARD</button>
             </div>
-            <button type="button" class="btn-list-market" id="btnListFromHunt">LIST ON MARKET INSTEAD</button>
+            <button type="button" class="btn-list-market" id="btnListFromHunt" data-i18n="dash.listOnMarket">LIST ON MARKET INSTEAD</button>
           </div>
           </div>
         </div>
@@ -1335,11 +1336,11 @@ body.dark-club .club-sub{color:#888}
       <section>
         <div class="st-col-hdr">
           <div>
-            <h2><span class="material-symbols-outlined">inventory_2</span> My Collection</h2>
-            <p class="st-col-sub">Manage your digital heritage.</p>
+            <h2><span class="material-symbols-outlined">inventory_2</span> <span data-i18n="dash.collection.title">My Collection</span></h2>
+            <p class="st-col-sub" data-i18n="dash.collection.sub">Manage your digital heritage.</p>
           </div>
           <div class="st-completion">
-            <div class="st-completion-label">COMPLETION</div>
+            <div class="st-completion-label" data-i18n="dash.completion">COMPLETION</div>
             <div class="st-completion-row">
               <div class="st-completion-bar"><div class="st-completion-fill" id="dashColCompletionBar" style="width:0%"></div></div>
               <span class="st-completion-val" id="dashColCompletionPct">0%</span>
@@ -1347,13 +1348,13 @@ body.dark-club .club-sub{color:#888}
           </div>
         </div>
         <div class="st-col-grid" id="dashColGrid"></div>
-        <button type="button" class="st-view-all" onclick="showPage('collection')">View full collection →</button>
+        <button type="button" class="st-view-all" onclick="showPage('collection')" data-i18n="dash.viewAllCollection">View full collection →</button>
       </section>
       <div class="st-bottom">
         <section class="st-panel" id="psdTreasury">
-          <span class="st-test-tag">TEST MODE</span>
-          <h3><span class="material-symbols-outlined">account_balance_wallet</span> Treasury &amp; Funds</h3>
-          <p class="st-col-sub" style="margin-bottom:16px">Deposit Poxy Coins (PC) — 1 PC per unit deposited.</p>
+          <span class="st-test-tag" data-i18n="dash.treasury.testMode">TEST MODE</span>
+          <h3><span class="material-symbols-outlined">account_balance_wallet</span> <span data-i18n="dash.treasury.title">Treasury &amp; Funds</span></h3>
+          <p class="st-col-sub" style="margin-bottom:16px" data-i18n="dash.treasury.sub">Deposit Poxy Coins (PC) — 1 PC per unit deposited.</p>
           <div class="bank-amounts" id="bankAmounts"></div>
           <div class="psd-pay-methods" id="psdPayMethods">
             <div class="bank-form-label">Payment method</div>
@@ -1806,7 +1807,7 @@ body.dark-club .club-sub{color:#888}
 <div class="page poxy-page-profile" id="profilePage">
   <div class="poxy-profile-shell">
     <header class="poxy-profile-header">
-      <h1 class="poxy-profile-title">MY PROFILE</h1>
+      <h1 class="poxy-profile-title" data-i18n="profile.title">MY PROFILE</h1>
       <button type="button" class="poxy-profile-settings-link" onclick="openProfileSettings()"><span class="material-symbols-outlined">settings</span> Settings</button>
     </header>
     <div class="poxy-profile-layout">
@@ -2176,15 +2177,15 @@ body.dark-club .club-sub{color:#888}
   <div class="poxy-col-shell">
     <header class="poxy-col-header">
       <div class="poxy-col-header-main">
-        <h1 class="poxy-col-title">Tactical Archive</h1>
+        <h1 class="poxy-col-title" data-i18n="col.title">Tactical Archive</h1>
         <div class="poxy-col-meta">
-          <span>Inventory</span>
+          <span data-i18n="col.inventory">Inventory</span>
           <span class="poxy-col-meta-count" id="colCount">—</span>
         </div>
       </div>
       <div class="poxy-col-header-actions" id="colHeaderBulk" hidden>
-        <span class="poxy-col-bulk-count" id="bulkCount">0 selected</span>
-        <button type="button" class="poxy-col-bulk-burn" id="btnBulkDust">Burn All Selected</button>
+        <span class="poxy-col-bulk-count" id="bulkCount" data-i18n="col.bulk.selected" data-i18n-vars="n:0">0 selected</span>
+        <button type="button" class="poxy-col-bulk-burn" id="btnBulkDust" data-i18n="col.bulk.burnAll">Burn All Selected</button>
       </div>
     </header>
     <div class="poxy-col-controls">
@@ -2193,31 +2194,31 @@ body.dark-club .club-sub{color:#888}
         <div class="poxy-col-sort-wrap">
           <button type="button" class="poxy-col-sort-btn" id="colSortBtn" aria-haspopup="listbox" aria-expanded="false">
             <span class="material-symbols-outlined" aria-hidden="true">sort</span>
-            <span id="colSortLabel">Sort</span>
+            <span id="colSortLabel" data-i18n="col.sort">Sort</span>
           </button>
           <div class="poxy-col-sort-menu hidden" id="colSortMenu" role="listbox">
-            <button type="button" class="poxy-col-sort-opt" data-sort="default" role="option">Default (Pinned)</button>
-            <button type="button" class="poxy-col-sort-opt" data-sort="duplicates" role="option">Duplicates First</button>
-            <button type="button" class="poxy-col-sort-opt" data-sort="recent" role="option">Recently Acquired</button>
-            <button type="button" class="poxy-col-sort-opt" data-sort="value" role="option">Highest Estimated Value</button>
+            <button type="button" class="poxy-col-sort-opt" data-sort="default" role="option" data-i18n="col.sort.default">Default (Pinned)</button>
+            <button type="button" class="poxy-col-sort-opt" data-sort="duplicates" role="option" data-i18n="col.sort.duplicates">Duplicates First</button>
+            <button type="button" class="poxy-col-sort-opt" data-sort="recent" role="option" data-i18n="col.sort.recent">Recently Acquired</button>
+            <button type="button" class="poxy-col-sort-opt" data-sort="value" role="option" data-i18n="col.sort.value">Highest Estimated Value</button>
           </div>
         </div>
       </div>
       <div class="poxy-col-toolbar">
-        <button type="button" class="poxy-col-multi-toggle" id="btnColMultiSelect" aria-pressed="false">Select Multiple Mode</button>
+        <button type="button" class="poxy-col-multi-toggle" id="btnColMultiSelect" aria-pressed="false" data-i18n="col.multiSelect">Select Multiple Mode</button>
         <button type="button" class="poxy-col-forge" id="btnColCraftMode">
           <span class="material-symbols-outlined" aria-hidden="true">auto_fix_high</span>
-          Craft (5 Common → 1 Uncommon)
+          <span data-i18n="col.craft.label">Craft (5 Common → 1 Uncommon)</span>
         </button>
       </div>
       <div class="poxy-col-capsule-row">
-        <button type="button" class="poxy-col-capsule poxy-col-capsule-burn" id="btnColBurnCapsule" disabled>BURN</button>
-        <button type="button" class="poxy-col-capsule poxy-col-capsule-craft" id="btnColCraftCapsule" disabled>CRAFT</button>
+        <button type="button" class="poxy-col-capsule poxy-col-capsule-burn" id="btnColBurnCapsule" disabled data-i18n="col.burn">BURN</button>
+        <button type="button" class="poxy-col-capsule poxy-col-capsule-craft" id="btnColCraftCapsule" disabled data-i18n="col.craft">CRAFT</button>
       </div>
       <div class="poxy-col-burn-panel">
         <div class="poxy-col-burn-label">
           <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
-          Burn → PC
+          <span data-i18n="col.burn.label">Burn → PC</span>
         </div>
         <div class="poxy-col-burn-rates">
           <span class="poxy-col-burn-chip">Common 0.10</span>
@@ -2247,19 +2248,19 @@ body.dark-club .club-sub{color:#888}
 <div class="page poxy-friends-page" id="friendsPage">
   <div class="poxy-friends-hub" id="friendsHubView">
     <div class="poxy-friends-shell">
-      <h1 class="poxy-friends-title">Friends &amp; Social</h1>
-      <p class="poxy-friends-sub">Compact roster with live presence, hot-key macros, and full profile viewports.</p>
+      <h1 class="poxy-friends-title" data-i18n="friends.title">Friends &amp; Social</h1>
+      <p class="poxy-friends-sub" data-i18n="friends.sub">Compact roster with live presence, hot-key macros, and full profile viewports.</p>
       <div id="pendingRequestsContainer"></div>
       <div class="search-bar">
-        <input class="search-input" id="friendSearch" placeholder="Search by exact username..." onkeydown="if(event.key==='Enter')searchUsers()">
-        <button class="btn-search" onclick="searchUsers()">Find</button>
+        <input class="search-input" id="friendSearch" data-i18n-placeholder="friends.search.placeholder" placeholder="Search by exact username..." onkeydown="if(event.key==='Enter')searchUsers()">
+        <button class="btn-search" onclick="searchUsers()" data-i18n="friends.search.find">Find</button>
       </div>
-      <div class="search-hint">Enter exact username (letters, numbers, underscores).</div>
+      <div class="search-hint" data-i18n="friends.search.hint">Enter exact username (letters, numbers, underscores).</div>
       <div style="margin-top:12px;margin-bottom:16px">
-        <div class="section-label">Search results</div>
-        <div id="searchResults"><div style="font-size:12px;color:#9d8b9b;padding:6px 0">Enter a username and press Find</div></div>
+        <div class="section-label" data-i18n="friends.search.results">Search results</div>
+        <div id="searchResults"><div style="font-size:12px;color:#9d8b9b;padding:6px 0" data-i18n="friends.search.prompt">Enter a username and press Find</div></div>
       </div>
-      <div class="section-label">My friends</div>
+      <div class="section-label" data-i18n="friends.roster">My friends</div>
       <div class="poxy-friends-roster" id="friendsList"></div>
     </div>
   </div>
@@ -2917,17 +2918,17 @@ body.dark-club .club-sub{color:#888}
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottomNav" style="display:none">
-  <button class="nav-btn active" id="navHunt" onclick="showPage('hunt')">HUNT</button>
+  <button class="nav-btn active" id="navHunt" onclick="showPage('hunt')" data-i18n="nav.legacy.hunt">HUNT</button>
   <div class="nav-sep"></div>
-  <button class="nav-btn" id="navCollection" onclick="showPage('collection')">COLLECT</button>
+  <button class="nav-btn" id="navCollection" onclick="showPage('collection')" data-i18n="nav.legacy.collect">COLLECT</button>
   <div class="nav-sep"></div>
-  <button class="nav-btn" id="navFriends" onclick="showPage('friends')">FRIENDS</button>
+  <button class="nav-btn" id="navFriends" onclick="showPage('friends')" data-i18n="nav.legacy.friends">FRIENDS</button>
   <div class="nav-sep"></div>
-  <button class="nav-btn" id="navMarket" onclick="showPage('market')">MARKET</button>
+  <button class="nav-btn" id="navMarket" onclick="showPage('market')" data-i18n="nav.legacy.market">MARKET</button>
   <div class="nav-sep"></div>
-  <button class="nav-btn" id="navBank" onclick="showPage('bank')">BANK</button>
+  <button class="nav-btn" id="navBank" onclick="showPage('bank')" data-i18n="nav.legacy.bank">BANK</button>
   <div class="nav-sep" id="clubNavSep" style="display:none"></div>
-  <button class="nav-btn club-tab" id="navClub" onclick="showPage('club')">CLUB</button>
+  <button class="nav-btn club-tab" id="navClub" onclick="showPage('club')" data-i18n="nav.legacy.club">CLUB</button>
 </div>
 
 <!-- PRICE MODAL -->
@@ -3538,7 +3539,8 @@ function playDrop(id){try{const ac=getAC(),freq={common:200,uncommon:280,rare:35
 function genSerial(){const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';let s='PX-';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
 function setBodyBg(id){const cls=document.body.className.replace(/bg-\S+/g,'').trim();document.body.className=cls;const map={rare:'bg-rare',epic:'bg-epic',legendary:'bg-legendary',mythic:'bg-mythic'};if(map[id])document.body.classList.add(map[id]);}
 function clearBg(){if(!document.body.classList.contains('dark-club')){const cls=document.body.className.replace(/bg-\S+/g,'').trim();document.body.className=cls;}}
-function showToast(msg,dur=2800){const t=$('toast');t.textContent=String(msg||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function showToast(msg,dur=2800){if(window.PoxyI18n)msg=PoxyI18n.translateToast(msg);const t=$('toast');t.textContent=String(msg||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function poxyApplyI18n(){if(window.PoxyI18n)PoxyI18n.applyApp();}
 function pickTier(){let r=Math.random(),acc=0;for(const t of TIERS){acc+=t.prob;if(r<acc)return t;}return TIERS[TIERS.length-1];}
 function pickVipTier(){let r=Math.random(),acc=0;for(const t of VIP_TIERS){acc+=t.prob;if(r<acc)return t;}return VIP_TIERS[VIP_TIERS.length-1];}
 function isFounder(){return!!(currentUser&&currentUser.email&&currentUser.email.toLowerCase()===FOUNDER_EMAIL);}
@@ -3689,7 +3691,8 @@ let authSessionBootstrapped=false;
 function resetAuthBtn(btn){
   if(!btn)return;
   btn.disabled=false;
-  btn.textContent=authMode.v==='login'?'Continue':'Create account';
+  const I=window.PoxyI18n;
+  btn.textContent=I?(authMode.v==='login'?I.t('auth.submit.continue'):I.t('auth.submit.create')):(authMode.v==='login'?'Continue':'Create account');
   btn.classList.add('is-primary');
   syncAuthContinueState();
 }
@@ -3702,18 +3705,20 @@ function syncAuthContinueState(){
 }
 function updateAuthModeUI(){
   const m=authMode.v;
+  const I=window.PoxyI18n;
   const headline=$('authHeadline'),modeBtn=$('authModeSwitch'),btn=$('authSubmitBtn');
   const email=$('authEmail');
-  if(headline)headline.textContent=m==='login'?'Enter POXY WORLD.':'Join the hunt.';
-  if(modeBtn)modeBtn.textContent=m==='login'?'Create account':'Already have an account? Sign in';
-  if(btn){btn.textContent=m==='login'?'Continue':'Create account';btn.classList.add('is-primary');}
+  if(headline)headline.textContent=I?(m==='login'?I.t('auth.headline'):I.t('auth.headline.signup')):(m==='login'?'Enter POXY WORLD.':'Join the hunt.');
+  if(modeBtn)modeBtn.textContent=I?(m==='login'?I.t('auth.mode.switchToSignup'):I.t('auth.mode.switchToLogin')):(m==='login'?'Create account':'Already have an account? Sign in');
+  if(btn){btn.textContent=I?(m==='login'?I.t('auth.submit.continue'):I.t('auth.submit.create')):(m==='login'?'Continue':'Create account');btn.classList.add('is-primary');}
   if(email){
-    email.placeholder=m==='login'?'Email or username':'Email';
+    email.placeholder=I?(m==='login'?I.t('auth.email.placeholder'):I.t('settings.account.email')):(m==='login'?'Email or username':'Email');
     email.type=m==='login'?'text':'email';
     email.autocomplete=m==='login'?'username':'email';
   }
   syncAuthContinueState();
 }
+window.updateAuthModeUi=updateAuthModeUI;
 function setLoggedOutUI(){
   authSessionBootstrapped=false;
   const overlay=$('authOverlay');
@@ -3782,6 +3787,7 @@ async function applyAuthSession(session){
   if(!user){setLoggedOutUI();return;}
   const em=$('userEmailEl');if(em)em.textContent=user.email||'';
   setLoggedInUI();
+  poxyApplyI18n();
   if(!authSessionBootstrapped){
     authSessionBootstrapped=true;
     bootstrapAfterLogin();
@@ -3829,9 +3835,9 @@ window.handleAuth=async function(){
   let identifier=$('authEmail').value.trim();
   const pw=$('authPassword').value;
   const msg=$('authMsg'),btn=$('authSubmitBtn');
-  if(!identifier||!pw){msg.className='auth-msg poxy-auth-msg error';msg.textContent='Please fill in all fields.';return;}
+  if(!identifier||!pw){msg.className='auth-msg poxy-auth-msg error';msg.textContent=window.PoxyI18n?PoxyI18n.t('toast.auth.fillFields'):'Please fill in all fields.';return;}
   btn.disabled=true;msg.className='auth-msg poxy-auth-msg';msg.textContent='';
-  btn.textContent=authMode.v==='login'?'Signing in…':'Creating account…';
+  btn.textContent=window.PoxyI18n?(authMode.v==='login'?PoxyI18n.t('toast.auth.signingIn'):PoxyI18n.t('toast.auth.creating')):(authMode.v==='login'?'Signing in…':'Creating account…');
   try{
     let res;
     if(authMode.v==='login'){
@@ -3971,6 +3977,7 @@ function setBarAvatar(av){
 }
 const SETTINGS_PREFS_KEY='poxy_settings_prefs_v1';
 let activeSettingsTab='account';
+window.getActiveSettingsTab=function(){return activeSettingsTab;};
 const SETTINGS_TAB_COPY={
   account:{title:'Your Account',desc:'Username, email, password, and account status.'},
   security:{title:'Security & Account Access',desc:'2FA, sessions, and login history.'},
@@ -4712,6 +4719,7 @@ window.showStitchTab=function(tab){
   }
   syncNavUsernameLabels();
   persistActiveRoute();
+  poxyApplyI18n();
 };
 
 function syncNavUsernameLabels(){
@@ -5019,7 +5027,10 @@ window.showPage=function(page){
   document.body.classList.remove('dark-club');
   window.scrollTo(0,0);
   persistActiveRoute();
+  poxyApplyI18n();
 };
+
+document.addEventListener('poxy:locale-change',function(){poxyApplyI18n();});
 
 // ── LOGO ──
 $('lX').addEventListener('mouseenter',()=>$('logoRow').classList.add('x-active'));
@@ -5708,7 +5719,10 @@ function renderCollection(){
   colDisplayOrder=[];
 
   if(!normalItems.length&&!vipItems.length){
-    cont.innerHTML='<div class="poxy-col-empty col-empty"><div class="poxy-col-empty-icon col-empty-icon"><span class="material-symbols-outlined">inventory_2</span></div><h2>Archive empty</h2><p>'+(colFilter==='all'?'Your collection is empty. Hunt your first POXY!':'No '+colFilter+' POXY in this filter.')+'</p></div>';
+    const I=window.PoxyI18n;
+    const emptyTitle=I?I.t('col.empty.title'):'Archive empty';
+    const emptyBody=I?(colFilter==='all'?I.t('col.empty.all'):I.t('col.empty.filter',{tier:colFilter})):(colFilter==='all'?'Your collection is empty. Hunt your first POXY!':'No '+colFilter+' POXY in this filter.');
+    cont.innerHTML='<div class="poxy-col-empty col-empty"><div class="poxy-col-empty-icon col-empty-icon"><span class="material-symbols-outlined">inventory_2</span></div><h2>'+sanitizeText(emptyTitle)+'</h2><p>'+sanitizeText(emptyBody)+'</p></div>';
     updateColActionCapsules();
     return;
   }
@@ -5918,7 +5932,7 @@ function updateBulkBar(){
   const strip=$('colHeaderBulk'),cnt=$('bulkCount');
   const n=selectedForDust.size;
   if(strip)strip.hidden=n===0;
-  if(cnt)cnt.textContent=n+' selected';
+  if(cnt)cnt.textContent=window.PoxyI18n?PoxyI18n.t('col.bulk.selected',{n:n}):(n+' selected');
 }
 function runColBulkBurn(){
   if(!selectedForDust.size)return;
@@ -7365,7 +7379,10 @@ function initMarketFilters(){
 function renderMarketEmpty(message){
   const cont=$('marketContent');
   if(!cont)return;
-  cont.innerHTML='<div class="poxy-market-empty"><div class="poxy-market-empty-icon"><span class="material-symbols-outlined">lock</span></div><h2>Secure Vault Empty</h2><p>'+sanitizeText(message||'No matching listings found for your current filter parameters. Adjust your terminal settings to explore more assets.')+'</p></div>';
+  const I=window.PoxyI18n;
+  const title=I?I.t('market.empty.title'):'Secure Vault Empty';
+  const body=I?I.t('market.empty.body'):(message||'No matching listings found for your current filter parameters. Adjust your terminal settings to explore more assets.');
+  cont.innerHTML='<div class="poxy-market-empty"><div class="poxy-market-empty-icon"><span class="material-symbols-outlined">lock</span></div><h2>'+sanitizeText(title)+'</h2><p>'+sanitizeText(body)+'</p></div>';
 }
 function buildMarketCard(item,opts){
   const tier=opts.tier;
@@ -10357,7 +10374,7 @@ function bootApp(){
 <script src="assets/lumina-os/data.js?v=12"></script>
 <script src="assets/lumina-os/components.js?v=13"></script>
 <script src="assets/lumina-os/store.js?v=14"></script>
-<script src="assets/lumina-os/panels.js?v=14"></script>
+<script src="assets/lumina-os/panels.js?v=15"></script>
 <script src="assets/lumina-os/router.js?v=12"></script>
 <script src="assets/lumina-os/app.js?v=13"></script>
 <script>
