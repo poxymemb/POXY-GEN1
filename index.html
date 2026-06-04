@@ -32,7 +32,7 @@
 <title>POXY WORLD</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
-<link rel="stylesheet" href="assets/stitch-dashboard.css?v=2">
+<link rel="stylesheet" href="assets/stitch-dashboard.css?v=3">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=2">
@@ -51,7 +51,7 @@
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=5">
 <script src="assets/poxy-i18n-extra.js?v=5"></script>
 <script src="assets/poxy-i18n.js?v=5"></script>
-<link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
+<link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/lumina-chat-os.css?v=12">
 <link rel="stylesheet" href="assets/lumina-os/design-system.css?v=14">
@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-landing-page.js?v=1" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
+<script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1386,12 +1387,28 @@ body.dark-club .club-sub{color:#888}
           </div>
         </div>
         <div class="st-nav-right">
-          <button type="button" class="balance-badge st-balance gpu-accel" id="balanceBadge" onclick="scrollToTreasury()"><span class="material-symbols-outlined">account_balance_wallet</span> <span id="stBalanceText">0 PC</span></button>
-          <button type="button" class="st-nav-notify" id="stNavNotify" data-i18n-aria="nav.notifications" aria-label="Notifications" onclick="openNotifyHub()"><span class="material-symbols-outlined">notifications</span><span class="poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span></button>
-          <button type="button" class="st-topup-btn" onclick="scrollToTreasury()" data-i18n="nav.topUp">Top Up</button>
+          <button type="button" class="st-wallet-capsule balance-badge st-balance st-spring-interactive gpu-accel" id="balanceBadge" onclick="scrollToTreasury()" data-i18n-aria="nav.wallet" aria-label="Wallet balance">
+            <span class="st-wallet-gem" aria-hidden="true"><span class="st-wallet-gem-core"></span></span>
+            <span class="st-wallet-amount" id="stBalanceText">0 PC</span>
+            <span class="st-wallet-plus" aria-hidden="true">+</span>
+          </button>
+          <div class="st-nav-actions" role="group" data-i18n-aria="nav.quickActions" aria-label="Quick actions">
+            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavNotify" data-i18n-aria="nav.notifications" aria-label="Notifications" onclick="openNotifyHub()">
+              <span class="material-symbols-outlined">notifications</span>
+              <span class="st-nav-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
+            </button>
+            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavChat" data-i18n-aria="nav.messages" aria-label="Messages" onclick="openLuminaOS(null,'messages')">
+              <span class="material-symbols-outlined">chat_bubble</span>
+              <span class="st-nav-badge" id="notifyChatDot" hidden aria-hidden="true"></span>
+            </button>
+            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavGrid" data-i18n-aria="nav.menu" aria-label="Open menu" onclick="openSidebar()">
+              <span class="material-symbols-outlined">apps</span>
+            </button>
+          </div>
           <!-- Profile header: avatar → username/role (single username source: userUsernameEl) -->
-          <div class="user-bar st-user" id="userBar" role="group" aria-label="Account">
-            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" data-i18n-title="nav.profile.title" title="My profile">
+          <div class="user-bar st-user st-profile-zone" id="userBar" role="group" aria-label="Account">
+            <button type="button" class="st-nav-user-chip st-spring-interactive" onclick="showPage('profile')" data-i18n-title="nav.profile.title" title="My profile">
+              <span class="st-profile-glow" aria-hidden="true"></span>
               <div class="st-user-avatar-ring user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
             </button>
             <div class="st-user-meta">
