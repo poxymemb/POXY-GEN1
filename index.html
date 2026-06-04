@@ -5946,7 +5946,7 @@ async function sharePoxy(poxyId,rarity,serialNumber){
         });
         return;
       }
-      if(menu)menu.classList.remove('open');
+      if(menu){menu.classList.remove('open');menu.classList.remove('is-fixed');menu.style.position='';menu.style.top='';menu.style.left='';}
       if(action==='pin'){togglePinPoxy(item.id,item.pinned_at);return;}
       if(action==='feature'){toggleFeaturePoxy(item.id);return;}
       if(action==='list'){
@@ -5980,11 +5980,10 @@ async function sharePoxy(poxyId,rarity,serialNumber){
   // Outside-click: close every open dropdown anywhere on the page
   document.addEventListener('click',function(e){
     if(e.target.closest('.col-card-kebab')||e.target.closest('.col-card-menu'))return;
-    document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
+    if(typeof closeAllColCardMenus==='function')closeAllColCardMenus();
   });
-  // ESC closes any open dropdown
   document.addEventListener('keydown',function(e){
-    if(e.key==='Escape')document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
+    if(e.key==='Escape'&&typeof closeAllColCardMenus==='function')closeAllColCardMenus();
   });
 })();
 function updateBulkBar(){
