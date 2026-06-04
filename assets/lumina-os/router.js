@@ -148,8 +148,6 @@
     root.style.flexDirection = 'column';
     root.classList.add('is-mounted', 'is-ready');
     root.classList.remove('is-exiting', 'is-entering');
-    const escapeBar = document.getElementById('lcEscapeBar');
-    if (escapeBar) escapeBar.style.display = 'flex';
     if (lcShell) lcShell.classList.add('is-ready');
     return true;
   }

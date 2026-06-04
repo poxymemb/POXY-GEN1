@@ -54,42 +54,6 @@ body.lumina-os-active .page {
   display: none !important;
 }
 
-.lc-escape-bar {
-  display: none;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 16px;
-  background: linear-gradient(90deg, rgba(255, 0, 138, 0.2), rgba(198, 0, 255, 0.15));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 10001;
-}
-.lc-escape-bar-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 999px;
-  background: var(--lc-grad, linear-gradient(135deg, #ff008a, #c600ff));
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-}
-.lc-escape-hint {
-  font-size: 11px;
-  color: var(--lc-muted, #9ca3af);
-}
-.lc-escape-hint code {
-  font-size: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
 #luminaOsRoot {
   position: fixed;
   inset: 0;
@@ -112,11 +76,6 @@ body.lumina-os-active .page {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
-}
-
-#luminaOsRoot:not([hidden]) .lc-escape-bar {
-  display: flex;
-  flex-shrink: 0;
 }
 
 #luminaOsRoot:not([hidden]) .lc-shell {

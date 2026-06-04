@@ -1504,15 +1504,6 @@
   background: var(--lo-surface-container);
 }
 
-#luminaOsRoot .lc-escape-bar {
-  background: color-mix(in srgb, var(--lo-primary) 12%, var(--lo-surface));
-  border-bottom: 1px solid var(--lo-outline-variant);
-}
-
-#luminaOsRoot .lc-escape-bar-btn {
-  background: linear-gradient(135deg, var(--lo-primary), var(--lo-tertiary));
-}
-
 #luminaOsRoot .lc-vault-card {
   background: color-mix(in srgb, var(--lo-primary) 8%, var(--lo-surface-container));
   border: 1px solid var(--lo-outline-variant);
