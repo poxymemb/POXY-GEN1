@@ -53,12 +53,16 @@ body.lumina-os-active .page {
   background: var(--lc-bg, #0e0e0e);
   display: none;
   flex-direction: column;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 #luminaOsRoot:not([hidden]) {
-  display: flex;
-  opacity: 1;
-  pointer-events: auto;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 #luminaOsRoot:not([hidden]) .lc-shell {

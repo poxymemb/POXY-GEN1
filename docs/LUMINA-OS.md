@@ -1,13 +1,13 @@
 # Lumina OS
 
-Immersive communication environment embedded in the POXY SPA at **`/lumina-os`**.
+Immersive communication environment embedded in the POXY SPA at **`#/lumina-os`** (hash route; works on all static hosts).
 
 ## Layout architecture
 
 | Layout | DOM | Visible when |
 |--------|-----|----------------|
 | **MainLayout** | `#poxyAppShell`, `.page` | Feed, Vault, Discover, Profile, etc. |
-| **LuminaOSLayout** | `#luminaOsRoot` | `/lumina-os` route |
+| **LuminaOSLayout** | `#luminaOsRoot` | `#/lumina-os` (also `/lumina-os` on Vercel via rewrite) |
 
 Entering Lumina OS **unmounts** MainLayout (hidden via `body.lumina-os-active`). Exiting restores the previous route from `localStorage`.
 

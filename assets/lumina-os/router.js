@@ -1,36 +1,51 @@
 /**
  * Lumina OS — SPA layout router (MainLayout ↔ LuminaOSLayout).
+ * Uses hash #/lumina-os so static hosts never serve the lumina-os/ folder by mistake.
  */
 (function (global) {
-  const SEGMENT = '/lumina-os';
+  const HASH_PREFIX = '#/lumina-os';
+  const PATH_SEGMENT = '/lumina-os';
   let mounted = false;
   let exiting = false;
 
   function appBase() {
     if (global.POXY_APP_BASE !== undefined) return global.POXY_APP_BASE || '';
     const p = global.location.pathname || '';
-    const lo = p.indexOf(SEGMENT);
+    const lo = p.indexOf(PATH_SEGMENT);
     if (lo >= 0) return p.slice(0, lo);
     return '';
   }
 
-  function fullPath() {
-    return appBase() + SEGMENT;
+  function homePath() {
+    const b = appBase();
+    return b ? (b.endsWith('/') ? b : b + '/') : '/';
   }
 
-  function normalizePath(p) {
-    return (p || global.location.pathname || '').replace(/\/+$/, '') || '/';
+  function parseHashQuery() {
+    const raw = (global.location.hash || '').replace(/^#/, '');
+    const qIdx = raw.indexOf('?');
+    const qs = qIdx >= 0 ? raw.slice(qIdx + 1) : '';
+    const params = new URLSearchParams(qs);
+    return {
+      user: params.get('user') || params.get('with') || null,
+      nav: params.get('nav') || null,
+    };
   }
 
-  function isLuminaOSPath() {
-    const target = normalizePath(fullPath());
-    const p = normalizePath(global.location.pathname);
-    if (p === target || p.startsWith(target + '/')) return true;
-    const h = (global.location.hash || '').replace(/^#/, '');
-    return h === SEGMENT.slice(1) || h.startsWith(SEGMENT.slice(1) + '?');
+  function parseQuery() {
+    const fromHash = parseHashQuery();
+    const fromPath = new URLSearchParams(global.location.search);
+    return {
+      user:
+        fromHash.user ||
+        fromPath.get('user') ||
+        fromPath.get('with') ||
+        null,
+      nav: fromHash.nav || fromPath.get('nav') || null,
+    };
   }
 
-  function buildUrl(opts) {
+  function buildHash(opts) {
     opts = opts || {};
     const params = new URLSearchParams();
     if (opts.user && global.LuminaChatUtil?.isUuid(opts.user)) {
@@ -38,15 +53,28 @@
     }
     if (opts.nav) params.set('nav', opts.nav);
     const q = params.toString();
-    return fullPath() + (q ? '?' + q : '');
+    return HASH_PREFIX + (q ? '?' + q : '');
   }
 
-  function parseQuery() {
-    const params = new URLSearchParams(global.location.search);
-    return {
-      user: params.get('user') || params.get('with') || null,
-      nav: params.get('nav') || null,
+  function isLuminaOSPath() {
+    const h = global.location.hash || '';
+    if (h === HASH_PREFIX || h.startsWith(HASH_PREFIX + '?')) return true;
+    const target = (appBase() + PATH_SEGMENT).replace(/\/+$/, '') || PATH_SEGMENT;
+    const p = (global.location.pathname || '').replace(/\/+$/, '');
+    return p === target || p.startsWith(target + '/');
+  }
+
+  function syncUrl(opts, replace) {
+    opts = opts || {};
+    const hash = buildHash(opts);
+    const state = {
+      layout: 'lumina-os',
+      user: opts.user || null,
+      nav: opts.nav || null,
     };
+    const url = homePath() + hash;
+    if (replace) global.history.replaceState(state, '', url);
+    else global.history.pushState(state, '', url);
   }
 
   function hideMainLayout() {
@@ -58,7 +86,7 @@
       el.style.display = 'none';
     });
     const hunt = document.getElementById('huntPage');
-    if (hunt && !shell?.contains(hunt)) {
+    if (shell && hunt && !shell.contains(hunt)) {
       hunt.dataset.loPrevDisplay = hunt.style.display || '';
       hunt.style.display = 'none';
     }
@@ -72,9 +100,8 @@
     if (root) {
       root.classList.remove('is-mounted', 'is-entering', 'is-ready', 'is-exiting');
       root.setAttribute('hidden', '');
+      root.style.display = '';
     }
-    const lcShell = document.getElementById('lcShell');
-    if (lcShell) lcShell.classList.remove('is-ready');
     const shell = document.getElementById('poxyAppShell');
     if (shell && global.currentUser) shell.style.display = 'block';
     document.querySelectorAll('.page').forEach((el) => {
@@ -96,20 +123,16 @@
   function showOsRoot() {
     const root = document.getElementById('luminaOsRoot');
     const lcShell = document.getElementById('lcShell');
-    if (root) {
-      root.removeAttribute('hidden');
-      root.classList.add('is-mounted', 'is-ready');
-      root.classList.remove('is-exiting');
-      requestAnimationFrame(() => {
-        root.classList.add('is-entering');
-        root.addEventListener(
-          'animationend',
-          () => root.classList.remove('is-entering'),
-          { once: true }
-        );
-      });
+    if (!root) {
+      console.error('[LuminaOS] #luminaOsRoot missing from page');
+      return false;
     }
+    root.removeAttribute('hidden');
+    root.style.display = 'flex';
+    root.classList.add('is-mounted', 'is-ready');
+    root.classList.remove('is-exiting', 'is-entering');
     if (lcShell) lcShell.classList.add('is-ready');
+    return true;
   }
 
   function persistRoute() {
@@ -129,11 +152,15 @@
     if (resolveUser()) return resolveUser();
     if (!global.sb?.auth?.getSession) return null;
     try {
-      const { data: { session } } = await global.sb.auth.getSession();
+      const {
+        data: { session },
+      } = await global.sb.auth.getSession();
       if (session?.user) {
         global.currentUser = session.user;
         if (typeof global.applyAuthSession === 'function') {
           await global.applyAuthSession(session);
+        } else {
+          global.currentUser = session.user;
         }
         return session.user;
       }
@@ -147,13 +174,16 @@
     if (!user) {
       ensureUser().then((u) => {
         if (u) enter(opts);
-        else if (typeof global.showToast === 'function') {
+        else {
           const overlay = document.getElementById('authOverlay');
           if (overlay) {
             overlay.classList.remove('hidden');
             overlay.style.display = 'flex';
+            overlay.style.zIndex = '10000';
           }
-          global.showToast('Sign in to open Lumina OS.');
+          if (typeof global.showToast === 'function') {
+            global.showToast('Sign in to open Lumina OS.');
+          }
         }
       });
       return;
@@ -164,42 +194,32 @@
       }
       return;
     }
-    const url = buildUrl(opts);
-    const state = {
-      layout: 'lumina-os',
-      user: opts.user || null,
-      nav: opts.nav || null,
-    };
-    if (opts.replace) {
-      global.history.replaceState(state, '', url);
-    } else {
-      global.history.pushState(state, '', url);
-    }
+    const onPath =
+      (global.location.pathname || '').indexOf(PATH_SEGMENT) >= 0;
+    syncUrl(opts, onPath);
     hideMainLayout();
-    showOsRoot();
+    if (!showOsRoot()) {
+      hideMainLayout();
+      document.body.classList.remove('lumina-os-active');
+      if (typeof global.showToast === 'function') {
+        global.showToast('Lumina OS UI failed to load. Refresh the page.');
+      }
+      return;
+    }
     document.title = 'Lumina OS';
     persistRoute();
-    try {
-      if (global.LuminaOSApp && !mounted) {
-        mounted = true;
-        Promise.resolve(global.LuminaOSApp.mount(opts)).catch((err) => {
-          console.error('[LuminaOS] mount failed', err);
-          mounted = false;
-          if (typeof global.showToast === 'function') {
-            global.showToast('Lumina OS failed to load. Try refreshing.');
-          }
-          showMainLayout();
-        });
-      } else if (global.LuminaOSApp) {
-        global.LuminaOSApp.activate(opts);
-      }
-    } catch (e) {
-      console.error('[LuminaOS] mount failed', e);
-      if (typeof global.showToast === 'function') {
-        global.showToast('Lumina OS failed to load. Try refreshing.');
-      }
-      showMainLayout();
-      mounted = false;
+    if (global.LuminaOSApp && !mounted) {
+      mounted = true;
+      Promise.resolve(global.LuminaOSApp.mount(opts)).catch((err) => {
+        console.error('[LuminaOS] mount failed', err);
+        mounted = false;
+        if (typeof global.showToast === 'function') {
+          global.showToast('Lumina OS failed to load. Try refreshing.');
+        }
+        exit({ skipHistory: true });
+      });
+    } else if (global.LuminaOSApp) {
+      global.LuminaOSApp.activate(opts);
     }
   }
 
@@ -207,8 +227,6 @@
     opts = opts || {};
     if (exiting) return;
     exiting = true;
-    const root = document.getElementById('luminaOsRoot');
-    if (root) root.classList.add('is-exiting');
     const done = () => {
       mounted = false;
       if (global.LuminaOSApp) global.LuminaOSApp.deactivate();
@@ -230,12 +248,8 @@
         }
       } catch (e) {}
       if (!opts.skipHistory) {
-        const back = global.history.state?.layout === 'lumina-os';
-        if (back) global.history.back();
-        else {
-          const home = appBase() || '/';
-          global.history.pushState({ layout: 'main' }, '', home);
-        }
+        const home = homePath();
+        global.history.pushState({ layout: 'main' }, '', home);
       }
       if (global.currentUser && typeof global.restoreActiveRoute === 'function') {
         if (!global.restoreActiveRoute()) {
@@ -245,12 +259,11 @@
         }
       }
       exiting = false;
-      if (root) root.classList.remove('is-exiting');
     };
-    setTimeout(done, 280);
+    setTimeout(done, 80);
   }
 
-  function onPopState() {
+  function onRouteChange() {
     if (isLuminaOSPath()) {
       if (resolveUser()) enter({ replace: true, ...parseQuery() });
       else {
@@ -259,12 +272,9 @@
           else showMainLayout();
         });
       }
-      return;
     } else if (mounted) {
       mounted = false;
       if (global.LuminaOSApp) global.LuminaOSApp.deactivate();
-      showMainLayout();
-    } else {
       showMainLayout();
     }
   }
@@ -282,11 +292,12 @@
   }
 
   global.LuminaOSRouter = {
-    SEGMENT,
-    fullPath,
+    HASH_PREFIX,
+    PATH_SEGMENT,
     appBase,
+    homePath,
     isActive: isLuminaOSPath,
-    buildUrl,
+    buildHash,
     parseQuery,
     enter,
     exit,
@@ -295,5 +306,6 @@
     showMainLayout,
   };
 
-  global.addEventListener('popstate', onPopState);
+  global.addEventListener('popstate', onRouteChange);
+  global.addEventListener('hashchange', onRouteChange);
 })(window);

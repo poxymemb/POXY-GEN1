@@ -10,6 +10,7 @@
   var lo=p.indexOf('/lumina-os');
   if(lo>=0)base=p.slice(0,lo);
   else if(/index\.html$/i.test(p))base=p.replace(/\/index\.html$/i,'');
+  if(/\/$/.test(p)&&p.length>1&&lo<0)base=p.replace(/\/$/,'');
   window.POXY_APP_BASE=base;
   var href=base?((base.endsWith('/')?base:base+'/')):'/';
   var el=document.createElement('base');
@@ -3700,9 +3701,7 @@ function setLoggedOutUI(){
   const hunt=$('huntPage');if(hunt)hunt.style.display='none';
   if(typeof LuminaOSRouter!=='undefined'){
     LuminaOSRouter.showMainLayout();
-    if(LuminaOSRouter.isActive()){
-      try{history.replaceState({layout:'main'},'',LuminaOSRouter.appBase()||'/');}catch(e){}
-    }
+    try{history.replaceState({layout:'main'},'',LuminaOSRouter.homePath?LuminaOSRouter.homePath():'/');}catch(e){}
   }
   document.body.classList.remove('lumina-os-active');
   teardownRealtimeSubscriptions();
@@ -10287,14 +10286,14 @@ function bootApp(){
     if(pop&&!pop.hidden&&!e.target.closest('#chatUserInspectPopover')&&!e.target.closest('.pcm-name')&&!e.target.closest('.pcm-avatar'))closeChatInspectPopover();
   });
   if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
-  if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive()&&currentUser){
-    LuminaOSRouter.enter({replace:true,...LuminaOSRouter.parseQuery()});
+  if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive()){
+    LuminaOSRouter.bootstrapFromUrl();
   }
 }
 </script>
 <script src="assets/lumina-chat-config.js?v=3"></script>
 <script src="assets/lumina-os/store.js?v=2"></script>
-<script src="assets/lumina-os/router.js?v=4"></script>
+<script src="assets/lumina-os/router.js?v=5"></script>
 <script src="assets/lumina-os/app.js?v=3"></script>
 <script>
 bootApp();
