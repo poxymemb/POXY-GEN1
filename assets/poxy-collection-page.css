@@ -574,6 +574,11 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   color:#f9abff!important;
 }
 .poxy-collection-page .col-card-vip-serial{color:#f9abff!important;border-color:rgba(249,171,255,0.45)!important}
+.poxy-collection-page .col-card-menu:not(.open){
+  visibility:hidden;
+  pointer-events:none!important;
+}
+.poxy-collection-page .col-card-menu.open{visibility:visible}
 .poxy-collection-page .col-card-menu-item.active{background:rgba(249,171,255,0.12);color:#f9abff}
 .poxy-collection-page .col-card-kebab{background:rgba(10,10,14,0.75)}
 

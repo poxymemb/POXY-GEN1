@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=3">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
@@ -4580,25 +4580,44 @@ function syncColMultiToggleUi(){
   }
   document.body.classList.toggle('col-multi-select-active',colMultiSelectMode);
 }
-function toggleColMultiSelectMode(){
+function normalizeColItemId(id){return String(id||'');}
+function isColItemSelected(id){return selectedForDust.has(normalizeColItemId(id));}
+function syncColCardSelectionUi(){
+  const root=$('colContent');
+  if(!root)return;
+  root.querySelectorAll('.col-card[data-id]').forEach(card=>{
+    const id=normalizeColItemId(card.dataset.id);
+    const on=selectedForDust.has(id);
+    card.classList.toggle('selected-for-dust',on);
+    card.classList.toggle('col-inv-selected',on);
+  });
+}
+function toggleColMultiSelectMode(e){
+  if(e){e.preventDefault();e.stopPropagation();}
   colMultiSelectMode=!colMultiSelectMode;
-  if(!colMultiSelectMode){selectedForDust.clear();colLastSelectIndex=-1;}
+  if(!colMultiSelectMode){
+    selectedForDust.clear();
+    colLastSelectIndex=-1;
+    syncColCardSelectionUi();
+  }else{
+    showToast('Multi-select on — click cards to select. Shift+click for range.');
+  }
   syncColMultiToggleUi();
-  renderCollection();
   updateColActionCapsules();
 }
 function toggleColSelection(itemId,index,shiftKey){
-  const id=String(itemId);
+  const id=normalizeColItemId(itemId);
+  if(!id)return;
   if(shiftKey&&colLastSelectIndex>=0&&index>=0){
     const a=Math.min(colLastSelectIndex,index),b=Math.max(colLastSelectIndex,index);
     for(let i=a;i<=b;i++){
       const rid=colDisplayOrder[i];
-      if(rid)selectedForDust.add(rid);
+      if(rid)selectedForDust.add(normalizeColItemId(rid));
     }
   }else if(selectedForDust.has(id))selectedForDust.delete(id);
   else selectedForDust.add(id);
   colLastSelectIndex=index;
-  renderCollection();
+  syncColCardSelectionUi();
   updateColActionCapsules();
 }
 function closeColSortMenu(){
@@ -4674,7 +4693,7 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
   const isPinned=!!item.pinned_at;
   const isFeatured=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
   const inForge=findCraftSocketForItem(item.id)>=0;
-  const isSelected=selectedForDust.has(item.id);
+  const isSelected=isColItemSelected(item.id);
 
   const card=document.createElement('div');
   card.className='col-card col-inv-card poxy-col-card tilt-3d'+
@@ -4832,6 +4851,7 @@ function renderCollection(){
     const gridEl=cont.querySelector('.poxy-col-inventory-grid')||cont.querySelector('#colGrid');
     if(gridEl)PoxyHudAudio.bindCollectionGrid(gridEl);
   }
+  syncColCardSelectionUi();
 }
 
 // ── PIN TOGGLE ──
@@ -4920,8 +4940,13 @@ async function sharePoxy(poxyId,rarity,serialNumber){
       e.stopPropagation();
       const id=mi.dataset.id;
       const action=mi.dataset.action;
-      const item=colData.find(i=>String(i.id)===String(id));
-      const card=root.querySelector('.col-card[data-id="'+CSS.escape(id)+'"]');
+      if(colMultiSelectMode&&['feature','pin','list','share'].includes(action)){
+        showToast('Turn off Select Multiple Mode to use this action.');
+        mi.closest('.col-card-menu')?.classList.remove('open');
+        return;
+      }
+      const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(id));
+      const card=root.querySelector('.col-card[data-id="'+CSS.escape(String(id))+'"]');
       const menu=mi.closest('.col-card-menu');
       if(!item)return;
       if(action==='share'){
@@ -4959,7 +4984,10 @@ async function sharePoxy(poxyId,rarity,serialNumber){
     if(e.target.closest('.col-card-menu')){e.stopPropagation();return;}
     const card=e.target.closest('.col-card');
     if(card&&root.contains(card)){
+      e.stopPropagation();
+      e.preventDefault();
       closeAllMenusExcept(null);
+      if(e.target.closest('.col-card-kebab'))return;
       if(colMultiSelectMode){
         const idx=parseInt(card.dataset.index,10);
         toggleColSelection(card.dataset.id,Number.isNaN(idx)?-1:idx,e.shiftKey);
