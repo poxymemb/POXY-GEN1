@@ -107,8 +107,11 @@ body.lumina-os-active {
   display: grid;
   grid-template-columns: var(--lc-nav-w) 1fr var(--lc-context-w);
   height: 100%;
-  min-height: 100dvh;
+  min-height: 0;
   background: var(--lc-bg);
+}
+#luminaOsRoot .lc-shell {
+  min-height: 0;
 }
 #luminaOsRoot .lc-shell {
   opacity: 1;

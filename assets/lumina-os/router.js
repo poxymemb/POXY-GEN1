@@ -84,8 +84,17 @@
     else global.history.pushState(state, '', url);
   }
 
+  function ensureLuminaOnBody() {
+    const root = document.getElementById('luminaOsRoot');
+    if (root && root.parentElement !== document.body) {
+      document.body.appendChild(root);
+    }
+    return root;
+  }
+
   function hideMainLayout() {
     document.body.classList.add('lumina-os-active');
+    ensureLuminaOnBody();
     const shell = document.getElementById('poxyAppShell');
     if (shell) shell.style.display = 'none';
     document.querySelectorAll('.page').forEach((el) => {
@@ -128,7 +137,7 @@
   }
 
   function showOsRoot() {
-    const root = document.getElementById('luminaOsRoot');
+    const root = ensureLuminaOnBody();
     const lcShell = document.getElementById('lcShell');
     if (!root) {
       console.error('[LuminaOS] #luminaOsRoot missing from page');
