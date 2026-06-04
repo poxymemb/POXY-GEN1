@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=4">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=5">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=4">
@@ -788,7 +788,8 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
   border:1px solid rgba(255,255,255,0.12);
   border-radius:12px;
   box-shadow:0 14px 36px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.05) inset;
-  padding:6px;
+  padding:8px 10px;
+  box-sizing:border-box;
   z-index:9999;
   opacity:0;
   transform:translateY(-4px) scale(0.95);
@@ -813,11 +814,12 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-card-menu-item{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:10px;
   width:100%;
   min-height:36px;
   text-align:left;
-  padding:10px 12px;
+  padding:10px 12px 10px 10px;
+  box-sizing:border-box;
   border:none;
   background:transparent;
   color:#f1f1f1;
@@ -838,7 +840,7 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-card-menu-item.active{background:rgba(255,180,40,0.18);color:#ffce6a}
 .col-card-menu-item.danger{color:#ff7373}
 .col-card-menu-item.danger:hover{background:rgba(255,80,80,0.16);color:#ff5555}
-.col-card-menu-item .ic{font-size:13px;width:14px;display:inline-flex;justify-content:center;flex-shrink:0;pointer-events:none}
+.col-card-menu-item .ic{font-size:14px;width:20px;min-width:20px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;pointer-events:none;line-height:1}
 .col-card.pinned{box-shadow:0 0 22px rgba(255,180,40,0.32),inset 0 0 0 1px rgba(255,180,40,0.45)!important}
 .col-card-pin-badge{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#ffb840,#ff7e36);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,165,40,0.5);z-index:7;pointer-events:none;line-height:1}
 
@@ -917,8 +919,8 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-club-grid .col-card-kebab{top:6px;right:6px;width:20px;height:20px;font-size:13px;border-radius:6px;line-height:0.9;padding:0 0 1px 0;z-index:12}
 .col-club-grid .col-card-menu{top:30px;right:6px;left:auto;width:168px;min-width:168px;max-width:calc(100vw - 24px);z-index:20;transform-origin:top right}
 .col-club-grid .col-card-menu.open{transform:translateY(0) scale(1)}
-.col-club-grid .col-card-menu-item{font-size:10.5px;padding:8px 10px;min-height:32px;gap:7px;white-space:normal;line-height:1.25}
-.col-club-grid .col-card-menu-item .ic{font-size:11px;width:13px;flex-shrink:0}
+.col-club-grid .col-card-menu-item{font-size:10.5px;padding:8px 10px 8px 8px;min-height:32px;gap:10px;white-space:normal;line-height:1.25;box-sizing:border-box}
+.col-club-grid .col-card-menu-item .ic{font-size:12px;width:18px;min-width:18px;flex-shrink:0;justify-content:center}
 .col-club-grid .col-card-pin-badge{top:6px;left:6px;width:20px;height:20px;font-size:10px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.22);box-shadow:0 4px 12px rgba(0,0,0,0.22),inset 0 1px 0 rgba(255,255,255,0.16)}
 .col-club-grid .col-card-vip-serial{top:8px;left:50%;transform:translateX(-50%)}
 .col-club-cta{width:100%;margin-top:6px;padding:13px 16px;border:1px solid rgba(255,140,0,0.6);border-radius:12px;background:linear-gradient(135deg,rgba(255,180,40,0.15),rgba(255,80,80,0.1));color:#ffce6a;font-family:inherit;font-size:11px;font-weight:900;letter-spacing:2.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;will-change:transform}
