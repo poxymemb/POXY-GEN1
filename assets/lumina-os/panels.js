@@ -653,14 +653,14 @@
     }
     const meta = C.el('div', '');
     meta.appendChild(
-      C.el('h4', '', {
+      C.el('h4', 'lo-settings-display-name', {
         text: rt?.profile
           ? U.displayNameFromProf(rt.profile)
           : 'Alex Sterling',
       })
     );
     meta.appendChild(
-      C.el('p', '', {
+      C.el('p', 'lo-settings-email', {
         text: rt?.profile?.email || 'alex.sterling@lumina.io',
       })
     );
@@ -703,14 +703,18 @@
     security.classList.add('lo-settings-card', 'lo-settings-card--4');
     security.appendChild(C.el('h3', 'lo-settings-card-title', { text: 'Security Pulse' }));
     const sec1 = C.el('div', 'lo-security-row');
-    sec1.appendChild(C.icon('verified_user', 'lo-sec-icon lo-sec-icon--ok'));
+    const sec1Icon = C.el('div', 'lo-sec-icon-wrap lo-silk-inset');
+    sec1Icon.appendChild(C.icon('verified_user', 'lo-sec-icon lo-sec-icon--ok'));
+    sec1.appendChild(sec1Icon);
     const s1t = C.el('div', '');
     s1t.appendChild(C.el('p', 'lo-sec-title', { text: '2FA Enabled' }));
     s1t.appendChild(C.el('p', 'lo-sec-sub', { text: 'Protecting your data' }));
     sec1.appendChild(s1t);
     security.appendChild(sec1);
     const sec2 = C.el('div', 'lo-security-row');
-    sec2.appendChild(C.icon('report_problem', 'lo-sec-icon lo-sec-icon--warn'));
+    const sec2Icon = C.el('div', 'lo-sec-icon-wrap lo-silk-inset');
+    sec2Icon.appendChild(C.icon('report_problem', 'lo-sec-icon lo-sec-icon--warn'));
+    sec2.appendChild(sec2Icon);
     const s2t = C.el('div', '');
     s2t.appendChild(C.el('p', 'lo-sec-title', { text: 'Recovery Key' }));
     s2t.appendChild(C.el('p', 'lo-sec-sub', { text: 'Not yet backed up' }));
@@ -721,61 +725,162 @@
     );
     bento.appendChild(security);
 
+    const row2 = C.el('div', 'lo-settings-row-2');
+    const inner3 = C.el('div', 'lo-settings-inner-3');
+
     const appearance = C.glassCard(null, {});
-    appearance.classList.add('lo-settings-card', 'lo-settings-card--4');
+    appearance.classList.add('lo-settings-card');
     appearance.appendChild(
       C.el('h3', 'lo-settings-card-title', {
         html: '<span class="material-symbols-outlined">palette</span> Appearance',
       })
     );
     const themeRow = C.el('div', 'lo-theme-picker');
-    ['light', 'dark', 'system'].forEach((mode) => {
-      const cur =
-        global.LuminaOSTheme && global.LuminaOSTheme.getTheme
-          ? global.LuminaOSTheme.getTheme()
-          : st.theme;
-      const btn = C.el('button', 'lo-theme-opt' + (cur === mode ? ' is-active' : ''));
-      btn.type = 'button';
-      btn.textContent =
-        mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'System';
-      btn.onclick = () => {
-        Store.setState({ theme: mode });
-        if (global.setTheme) global.setTheme(mode);
-        renderSettings();
-      };
-      themeRow.appendChild(btn);
+    const curTheme =
+      global.LuminaOSTheme && global.LuminaOSTheme.getTheme
+        ? global.LuminaOSTheme.getTheme()
+        : st.theme;
+    [
+      ['light', 'Light'],
+      ['dark', 'Dark'],
+      ['system', 'System'],
+    ].forEach(([mode, label]) => {
+      themeRow.appendChild(
+        C.themePreviewOption(mode, label, curTheme === mode, () => {
+          Store.setState({ theme: mode });
+          if (global.setTheme) global.setTheme(mode);
+          renderSettings();
+        })
+      );
     });
     appearance.appendChild(themeRow);
-    bento.appendChild(appearance);
+    inner3.appendChild(appearance);
 
     const prefs = C.glassCard(null, {});
-    prefs.classList.add('lo-settings-card', 'lo-settings-card--8');
-    prefs.innerHTML =
-      '<h3 class="lo-settings-card-title"><span class="material-symbols-outlined">notifications_active</span> Smart Notifications</h3>';
-    const sounds = C.el('label', 'lo-switch-row');
-    sounds.innerHTML =
-      '<span><strong>System Alerts</strong><br><small>Major OS updates and warnings</small></span><input type="checkbox" id="loPrefSounds"' +
-      (st.preferences.sounds ? ' checked' : '') +
-      '>';
-    const enter = C.el('label', 'lo-switch-row');
-    enter.innerHTML =
-      '<span><strong>Enter to send</strong><br><small>Send messages with Enter key</small></span><input type="checkbox" id="loPrefEnter"' +
-      (st.preferences.enterToSend ? ' checked' : '') +
-      '>';
-    prefs.appendChild(sounds);
-    prefs.appendChild(enter);
-    bento.appendChild(prefs);
+    prefs.classList.add('lo-settings-card');
+    prefs.appendChild(
+      C.el('h3', 'lo-settings-card-title', {
+        html:
+          '<span class="material-symbols-outlined">notifications_active</span> Smart Notifications',
+      })
+    );
+    const pref1 = C.el('div', 'lo-pref-row');
+    const pref1Text = C.el('div', '');
+    pref1Text.appendChild(C.el('strong', '', { text: 'System Alerts' }));
+    pref1Text.appendChild(
+      C.el('small', '', { text: 'Major OS updates and warnings' })
+    );
+    pref1.appendChild(pref1Text);
+    pref1.appendChild(C.silkSwitch('loPrefSounds', st.preferences.sounds));
+    const pref2 = C.el('div', 'lo-pref-row');
+    const pref2Text = C.el('div', '');
+    pref2Text.appendChild(C.el('strong', '', { text: 'Marketing Emails' }));
+    pref2Text.appendChild(
+      C.el('small', '', { text: 'Special offers and ecosystem news' })
+    );
+    pref2.appendChild(pref2Text);
+    pref2.appendChild(
+      C.silkSwitch('loPrefMarketing', !!st.preferences.marketingEmails)
+    );
+    const pref3 = C.el('div', 'lo-pref-row');
+    const pref3Text = C.el('div', '');
+    pref3Text.appendChild(C.el('strong', '', { text: 'Enter to send' }));
+    pref3Text.appendChild(
+      C.el('small', '', { text: 'Send messages with Enter key' })
+    );
+    pref3.appendChild(pref3Text);
+    pref3.appendChild(C.silkSwitch('loPrefEnter', st.preferences.enterToSend));
+    prefs.appendChild(pref1);
+    prefs.appendChild(pref2);
+    prefs.appendChild(pref3);
+    inner3.appendChild(prefs);
+    row2.appendChild(inner3);
+    bento.appendChild(row2);
+
+    const privacy = C.glassCard(null, {});
+    privacy.classList.add('lo-settings-card', 'lo-settings-card--12');
+    privacy.appendChild(
+      C.el('h3', 'lo-settings-card-title', {
+        html: '<span class="material-symbols-outlined">lock</span> Privacy & Data',
+      })
+    );
+    const privacyGrid = C.el('div', 'lo-settings-privacy-grid');
+    const privacyLeft = C.el('div', '');
+    const storageHead = C.el('div', 'lo-storage-head');
+    storageHead.appendChild(C.el('span', '', { text: 'Data Storage Limit' }));
+    const pctLabel = C.el('span', 'lo-storage-pct', { text: '85% Full' });
+    storageHead.appendChild(pctLabel);
+    privacyLeft.appendChild(storageHead);
+    const track = C.el('div', 'lo-storage-track lo-silk-inset');
+    const fill = C.el('div', 'lo-storage-fill');
+    fill.style.width = '85%';
+    track.appendChild(fill);
+    privacyLeft.appendChild(track);
+    privacyLeft.appendChild(
+      C.el('p', 'lo-storage-meta', { text: '17.2 GB of 20 GB used' })
+    );
+    const storageActions = C.el('div', 'lo-storage-actions');
+    storageActions.appendChild(
+      C.secondaryButton('Manage Storage', { onClick: () => toast('Storage manager — coming soon.') })
+    );
+    storageActions.appendChild(
+      C.secondaryButton('Export Data', {
+        onClick: () => toast('Export started — you will receive an email.'),
+      })
+    );
+    privacyLeft.appendChild(storageActions);
+    privacyGrid.appendChild(privacyLeft);
+
+    const privacyRight = C.el('div', 'lo-cloud-sync lo-silk-inset');
+    privacyRight.appendChild(C.icon('cloud_done'));
+    const cloudBody = C.el('div', 'lo-cloud-sync-body');
+    cloudBody.appendChild(C.el('p', 'lo-cloud-title', { text: 'Cloud Synchronization' }));
+    cloudBody.appendChild(
+      C.el('p', 'lo-cloud-desc', {
+        text: 'Sync settings across all Lumina devices seamlessly.',
+      })
+    );
+    const tags = C.el('div', 'lo-device-tags');
+    ['IPHONE', 'MACBOOK PRO', 'LUMINA PAD'].forEach((t) => {
+      tags.appendChild(C.el('span', 'lo-device-tag', { text: t }));
+    });
+    cloudBody.appendChild(tags);
+    privacyRight.appendChild(cloudBody);
+    privacyGrid.appendChild(privacyRight);
+    privacy.appendChild(privacyGrid);
+    bento.appendChild(privacy);
+
+    const actions = C.el('div', 'lo-settings-actions');
+    actions.appendChild(
+      C.secondaryButton('Discard Changes', {
+        onClick: () => toast('Changes discarded.'),
+      })
+    );
+    actions.appendChild(
+      C.primaryButton('Save All Changes', {
+        onClick: () => toast('Settings saved.'),
+      })
+    );
+    bento.appendChild(actions);
 
     scroll.appendChild(bento);
     canvas.appendChild(scroll);
     root.appendChild(canvas);
 
     const ps = document.getElementById('loPrefSounds');
+    const pm = document.getElementById('loPrefMarketing');
     const pe = document.getElementById('loPrefEnter');
     if (ps) {
       ps.onchange = () => {
         Store.setState({
           preferences: { ...st.preferences, sounds: ps.checked },
+        });
+      };
+    }
+    if (pm) {
+      pm.onchange = () => {
+        Store.setState({
+          preferences: { ...st.preferences, marketingEmails: pm.checked },
         });
       };
     }

@@ -142,6 +142,38 @@
     return wrap;
   }
 
+  function silkSwitch(id, checked) {
+    const label = el('label', 'lo-silk-switch');
+    const input = el('input', 'sr-only');
+    input.type = 'checkbox';
+    if (id) input.id = id;
+    if (checked) input.checked = true;
+    label.appendChild(input);
+    label.appendChild(el('div', 'lo-silk-slider lo-silk-inset'));
+    return label;
+  }
+
+  function themePreviewOption(mode, label, active, onClick) {
+    const btn = el('button', 'lo-theme-preview' + (active ? ' is-active' : ''));
+    btn.type = 'button';
+    const box = el('div', 'lo-theme-preview-box lo-silk-inset');
+    if (mode === 'light') {
+      box.innerHTML = '<div class="lo-theme-preview-bar"></div>';
+    } else if (mode === 'dark') {
+      box.classList.add('lo-theme-preview-box--dark');
+      box.innerHTML =
+        '<div class="lo-theme-preview-bar"></div><div class="lo-theme-preview-bar lo-theme-preview-bar--short"></div>';
+    } else {
+      box.classList.add('lo-theme-preview-box--system');
+      box.innerHTML =
+        '<div class="lo-theme-preview-split"><span></span><span></span></div>';
+    }
+    btn.appendChild(box);
+    btn.appendChild(el('span', 'lo-theme-preview-label', { text: label }));
+    if (onClick) btn.onclick = onClick;
+    return btn;
+  }
+
   function moduleTopBar(cfg) {
     cfg = cfg || {};
     const bar = el('header', 'lo-module-topbar');
@@ -221,5 +253,7 @@
     silkIconAction,
     passportAvatar,
     moduleTopBar,
+    silkSwitch,
+    themePreviewOption,
   };
 })(window);
