@@ -101,20 +101,25 @@ body.lumina-os-active {
   filter: brightness(1.06);
 }
 
-/* Shell */
+/* Shell — full-height 3-column workspace */
 #luminaOsRoot .lc-shell,
 .lc-shell {
   display: grid;
-  grid-template-columns: var(--lc-nav-w) 1fr var(--lc-context-w);
-  height: 100%;
+  grid-template-columns: var(--lc-nav-w) minmax(0, 1fr) var(--lc-context-w);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
   min-height: 0;
   background: var(--lc-bg);
 }
 #luminaOsRoot .lc-shell {
-  min-height: 0;
-}
-#luminaOsRoot .lc-shell {
   opacity: 1;
+}
+#luminaOsRoot .lc-nav,
+#luminaOsRoot .lc-main,
+#luminaOsRoot .lc-context {
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
 }
 .lc-shell.context-hidden {
   grid-template-columns: var(--lc-nav-w) 1fr 0;
@@ -301,14 +306,18 @@ body.lumina-os-active {
   flex-direction: column;
   min-width: 0;
   min-height: 0;
+  flex: 1;
   background: var(--lc-bg);
 }
 .lc-main-head {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  flex: 1;
   min-height: 0;
+  min-width: 0;
   border-bottom: 1px solid var(--lc-border-strong);
-  flex-shrink: 0;
 }
 @media (max-width: 900px) {
   .lc-main-head {
@@ -339,6 +348,8 @@ body.lumina-os-active {
   border-right: 1px solid var(--lc-border-strong);
   background: var(--lc-surface);
   min-height: 0;
+  height: 100%;
+  overflow: hidden;
 }
 .lc-conv-search {
   padding: 14px;
