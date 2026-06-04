@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=6">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=7">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=4">
@@ -754,9 +754,9 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .btn-bulk-dust{padding:7px 16px;background:#FF5722;border:none;border-radius:20px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
 .btn-bulk-dust:hover{opacity:0.85}
 .col-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
-.col-grid-wide{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;gap:14px!important}
+.col-grid-wide{grid-template-columns:repeat(auto-fill,minmax(176px,1fr))!important;gap:16px!important}
 .col-card{width:100%;box-sizing:border-box;border-radius:16px;padding:14px 10px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1.5px solid transparent;transition:transform 0.2s,opacity 0.35s;cursor:default;animation:fadeIn 0.4s ease both;position:relative;text-align:center;overflow:visible}
-#colGrid.col-grid-wide .col-card{aspect-ratio:1/1;min-height:0;padding:14px 10px 10px}
+#colGrid.col-grid-wide .col-card{aspect-ratio:1/1;min-height:0;padding:16px 12px 12px}
 #colGrid .col-card-body{flex:1;justify-content:center}
 .col-card:hover{transform:translateY(-2px)}
 .col-card.selected-for-dust{outline:2px solid #FF5722;outline-offset:2px}
@@ -775,7 +775,6 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 /* Lift the entire card above its grid siblings while its dropdown is open,
    otherwise neighboring cards (separate stacking contexts due to .tilt-3d
    transform) paint over the dropdown regardless of its z-index. */
-.col-card:has(.col-card-menu.open){z-index:9999}
 .col-card-menu{
   position:absolute;
   top:36px;
@@ -810,18 +809,23 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
   transform:translateY(0) scale(1);
   pointer-events:auto;
 }
-.col-card-menu.is-fixed{
+.col-card-menu--portal{
+  display:none;
   position:fixed;
   z-index:100000;
   min-width:200px;
   width:max-content;
-  max-width:min(240px,calc(100vw - 16px));
-  transform:none!important;
+  max-width:min(260px,calc(100vw - 16px));
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+  visibility:visible;
 }
-.col-card-menu.is-fixed.open{
-  transform:none!important;
+.col-card-menu--portal.open{
+  display:flex;
 }
 .col-card-menu.open *{pointer-events:auto}
+.col-card.col-card--menu-open{z-index:9999}
 .col-card-menu-item{
   display:flex;
   align-items:center;
@@ -910,28 +914,24 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .col-club-bullet{font-size:14px;color:#ffce6a;will-change:opacity,transform;animation:vipObsidianPulse 4s ease-in-out infinite}
 .col-club-title{flex:1;font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;background:linear-gradient(90deg,#FFD700,#FF8C00,#FF4500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .col-club-count{font-size:10px;font-weight:800;color:#ffce6a;background:rgba(255,206,106,0.12);padding:3px 9px;border-radius:999px;border:1px solid rgba(255,206,106,0.25)}
-.col-club-grid{grid-template-columns:repeat(auto-fill,minmax(118px,1fr))!important;gap:14px!important;margin-bottom:14px;align-items:stretch;justify-items:stretch}
+.col-club-grid{grid-template-columns:repeat(auto-fill,minmax(152px,1fr))!important;gap:16px!important;margin-bottom:14px;align-items:stretch;justify-items:stretch}
 .col-club-grid .col-vip-locked-wrap{aspect-ratio:3/4;min-height:178px;width:100%;display:flex;align-items:stretch}
 .col-club-grid .col-vip-locked-wrap > .col-card{flex:1;width:100%;height:100%;min-height:100%;aspect-ratio:unset}
 .col-club-grid .col-card{aspect-ratio:3/4;min-height:178px;padding:0;gap:0;justify-content:flex-start;align-items:stretch;overflow:hidden}
-.col-club-grid .col-card:has(.col-card-menu.open){overflow:visible;z-index:9999}
-.col-club-grid .col-card[class*="poxy-vip-"]:has(.col-card-menu.open){overflow:visible}
+.col-club-grid .col-card.col-card--menu-open{overflow:visible;z-index:9999}
+.col-club-grid .col-card[class*="poxy-vip-"].col-card--menu-open{overflow:visible}
 .col-club-grid .col-card > .col-card-kebab,
-.col-club-grid .col-card > .col-card-menu,
 .col-club-grid .col-card > .col-card-pin-badge,
 .col-club-grid .col-card > .col-card-vip-serial{position:absolute;z-index:8}
 .col-club-grid .col-card > .col-card-vip-serial{z-index:6}
 .col-club-grid .col-card-body{position:absolute;inset:36px 8px 10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:auto;gap:7px;margin:0;padding:0;text-align:center;z-index:2}
-.col-club-grid .col-card:has(.col-card-menu.open) .col-card-body{opacity:0.35;pointer-events:none}
+.col-club-grid .col-card.col-card--menu-open .col-card-body{opacity:0.35;pointer-events:none}
 .col-club-grid .col-card-icon{font-size:30px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;margin:0}
 .col-club-grid .col-card-tier,
 .col-club-grid .col-card-date,
 .col-club-grid .col-card-serial{width:100%;text-align:center;margin:0}
 .col-club-grid .col-card-kebab{top:6px;right:6px;width:20px;height:20px;font-size:13px;border-radius:6px;line-height:0.9;padding:0 0 1px 0;z-index:12}
-.col-club-grid .col-card-menu{top:30px;right:6px;left:auto;width:168px;min-width:168px;max-width:calc(100vw - 24px);z-index:20;transform-origin:top right}
-.col-club-grid .col-card-menu.open{transform:translateY(0) scale(1)}
-.col-club-grid .col-card-menu-item{font-size:10.5px;padding:8px 10px 8px 8px;min-height:32px;gap:10px;white-space:normal;line-height:1.25;box-sizing:border-box}
-.col-club-grid .col-card-menu-item .ic{font-size:12px;width:18px;min-width:18px;flex-shrink:0;justify-content:center}
+#colCardMenuPortal.col-card-menu--portal .col-card-menu-item{font-size:11px}
 .col-club-grid .col-card-pin-badge{top:6px;left:6px;width:20px;height:20px;font-size:10px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.22);box-shadow:0 4px 12px rgba(0,0,0,0.22),inset 0 1px 0 rgba(255,255,255,0.16)}
 .col-club-grid .col-card-vip-serial{top:8px;left:50%;transform:translateX(-50%)}
 .col-club-cta{width:100%;margin-top:6px;padding:13px 16px;border:1px solid rgba(255,140,0,0.6);border-radius:12px;background:linear-gradient(135deg,rgba(255,180,40,0.15),rgba(255,80,80,0.1));color:#ffce6a;font-family:inherit;font-size:11px;font-weight:900;letter-spacing:2.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;will-change:transform}
@@ -5694,17 +5694,6 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
   topBar.appendChild(kebab);
   card.appendChild(topBar);
 
-  const menu=document.createElement('div');
-  menu.className='col-card-menu';menu.dataset.menuFor=item.id;menu.setAttribute('role','menu');
-  const tr=window.PoxyI18n?function(k){return PoxyI18n.t(k);}:function(k){return k;};
-  menu.innerHTML=
-    '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?tr('col.menu.unpin'):tr('col.menu.pin'))+'</button>'+
-    '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?tr('col.menu.unfeature'):tr('col.menu.feature'))+'</button>'+
-    '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>'+tr('col.menu.list')+'</button>'+
-    '<button type="button" class="col-card-menu-item" data-action="share" data-id="'+item.id+'" role="menuitem"><span class="ic">🔗</span>'+tr('col.menu.share')+'</button>'+
-    '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>'+tr('col.menu.burn')+'</button>';
-  card.appendChild(menu);
-
   if(lockedView){
     // Wrap so the LOCKED overlay sits OUTSIDE the blurred card and stays sharp.
     const wrap=document.createElement('div');
@@ -5717,6 +5706,19 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     return wrap;
   }
   return card;
+}
+
+function buildColCardMenuHtml(item){
+  const isPinned=!!item.pinned_at;
+  const isFeatured=currentProfile?.favorite_poxy_id===item.id;
+  const tr=window.PoxyI18n?function(k){return PoxyI18n.t(k);}:function(k){return k;};
+  return (
+    '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?tr('col.menu.unpin'):tr('col.menu.pin'))+'</button>'+
+    '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?tr('col.menu.unfeature'):tr('col.menu.feature'))+'</button>'+
+    '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>'+tr('col.menu.list')+'</button>'+
+    '<button type="button" class="col-card-menu-item" data-action="share" data-id="'+item.id+'" role="menuitem"><span class="ic">🔗</span>'+tr('col.menu.share')+'</button>'+
+    '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>'+tr('col.menu.burn')+'</button>'
+  );
 }
 
 function renderCollection(){
@@ -5851,81 +5853,89 @@ async function sharePoxy(poxyId,rarity,serialNumber){
   const root=document.getElementById('colContent');
   if(!root||root.dataset.delegated==='1')return;
   root.dataset.delegated='1';
-  function resetColCardMenuPosition(menu){
-    if(!menu)return;
-    menu.classList.remove('is-fixed');
-    menu.style.position='';
-    menu.style.top='';
-    menu.style.left='';
-    menu.style.right='';
-    menu.style.width='';
-    menu.style.minWidth='';
+  let colMenuPortal=document.getElementById('colCardMenuPortal');
+  if(!colMenuPortal){
+    colMenuPortal=document.createElement('div');
+    colMenuPortal.id='colCardMenuPortal';
+    colMenuPortal.className='col-card-menu col-card-menu--portal';
+    colMenuPortal.setAttribute('role','menu');
+    document.body.appendChild(colMenuPortal);
   }
-  function syncColCardMenuPosition(menu,kebab){
-    if(!menu||!kebab||!menu.classList.contains('open')){
-      resetColCardMenuPosition(menu);
-      return;
-    }
-    menu.classList.add('is-fixed');
-    menu.style.visibility='visible';
-    menu.style.opacity='1';
-    menu.style.pointerEvents='auto';
+  let colMenuAnchorKebab=null;
+  function setColMenuAnchorHighlight(id){
+    root.querySelectorAll('.col-card--menu-open').forEach(c=>c.classList.remove('col-card--menu-open'));
+    if(!id)return;
+    const card=root.querySelector('.col-card[data-id="'+CSS.escape(String(id))+'"]');
+    if(card)card.classList.add('col-card--menu-open');
+  }
+  function positionColMenuPortal(kebab){
+    if(!colMenuPortal||!kebab||!colMenuPortal.classList.contains('open'))return;
     const rect=kebab.getBoundingClientRect();
-    const menuW=Math.max(200,menu.offsetWidth||200);
+    colMenuPortal.style.visibility='hidden';
+    colMenuPortal.style.display='flex';
+    const menuW=Math.max(200,colMenuPortal.offsetWidth||200);
     let left=rect.right-menuW;
     left=Math.max(8,Math.min(left,window.innerWidth-menuW-8));
-    menu.style.position='fixed';
-    menu.style.top=(rect.bottom+6)+'px';
-    menu.style.left=left+'px';
-    menu.style.right='auto';
-    menu.style.width=menuW+'px';
-    menu.style.minWidth='200px';
-    menu.style.zIndex='100000';
+    let top=rect.bottom+6;
+    if(top+colMenuPortal.offsetHeight>window.innerHeight-8){
+      top=Math.max(8,rect.top-colMenuPortal.offsetHeight-6);
+    }
+    colMenuPortal.style.top=top+'px';
+    colMenuPortal.style.left=left+'px';
+    colMenuPortal.style.visibility='visible';
   }
-  function closeAllMenusExcept(keepId){
-    root.querySelectorAll('.col-card-menu.open').forEach(m=>{
-      if(!keepId||m.dataset.menuFor!==keepId){
-        m.classList.remove('open');
-        resetColCardMenuPosition(m);
-      }
+  function closeColCardMenuPortal(){
+    if(colMenuPortal){
+      colMenuPortal.classList.remove('open');
+      colMenuPortal.innerHTML='';
+      colMenuPortal.dataset.menuFor='';
+      colMenuPortal.style.cssText='';
+    }
+    colMenuAnchorKebab=null;
+    setColMenuAnchorHighlight(null);
+    document.querySelectorAll('.col-card-menu.open').forEach(m=>{
+      m.classList.remove('open');
+      m.classList.remove('is-fixed');
     });
   }
-  window.closeAllColCardMenus=function(){closeAllMenusExcept(null);};
-  window.addEventListener('resize',()=>closeAllMenusExcept(null));
-  window.addEventListener('scroll',()=>closeAllMenusExcept(null),true);
+  function openColCardMenuPortal(kebab,id){
+    const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(id));
+    if(!item||!colMenuPortal)return;
+    colMenuPortal.innerHTML=buildColCardMenuHtml(item);
+    colMenuPortal.dataset.menuFor=String(id);
+    colMenuPortal.classList.add('open');
+    colMenuAnchorKebab=kebab;
+    setColMenuAnchorHighlight(id);
+    requestAnimationFrame(()=>positionColMenuPortal(kebab));
+  }
+  window.closeAllColCardMenus=closeColCardMenuPortal;
+  window.addEventListener('resize',closeColCardMenuPortal);
+  window.addEventListener('scroll',closeColCardMenuPortal,true);
   root.addEventListener('click',function(e){
-    // Kebab → toggle this card's menu, close any other open ones
     const kebab=e.target.closest('.col-card-kebab');
     if(kebab&&root.contains(kebab)){
       e.stopPropagation();
       const id=kebab.dataset.id;
-      const menu=root.querySelector('.col-card-menu[data-menu-for="'+CSS.escape(id)+'"]');
-      const willOpen=menu&&!menu.classList.contains('open');
-      closeAllMenusExcept(willOpen?id:null);
-      if(menu){
-        menu.classList.toggle('open',willOpen);
-        if(willOpen){
-          requestAnimationFrame(()=>syncColCardMenuPosition(menu,kebab));
-        }else{
-          resetColCardMenuPosition(menu);
-        }
+      if(colMenuPortal.classList.contains('open')&&colMenuPortal.dataset.menuFor===String(id)){
+        closeColCardMenuPortal();
+      }else{
+        closeColCardMenuPortal();
+        openColCardMenuPortal(kebab,id);
       }
       return;
     }
-    // Menu item → dispatch on data-action, then close
     const mi=e.target.closest('.col-card-menu-item');
-    if(mi&&root.contains(mi)){
+    if(mi&&colMenuPortal&&colMenuPortal.contains(mi)){
       e.stopPropagation();
       const id=mi.dataset.id;
       const action=mi.dataset.action;
       if(colMultiSelectMode&&['feature','pin','list','share'].includes(action)){
         showToast('Turn off Select Multiple Mode to use this action.');
-        mi.closest('.col-card-menu')?.classList.remove('open');
+        closeColCardMenuPortal();
         return;
       }
       const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(id));
       const card=root.querySelector('.col-card[data-id="'+CSS.escape(String(id))+'"]');
-      const menu=mi.closest('.col-card-menu');
       if(!item)return;
       if(action==='share'){
         const tier=TIER_BY_ID[item.poxy_tier];
@@ -5935,18 +5945,15 @@ async function sharePoxy(poxyId,rarity,serialNumber){
         sharePoxy(item.id,rarityLabel,serialNum).then(function(ok){
           if(ok){
             mi.innerHTML='<span class="ic">✅</span>'+(window.PoxyI18n?PoxyI18n.t('col.menu.copied'):'Copied!')+' ✅';
-            setTimeout(function(){
-              mi.innerHTML=origHtml;
-              if(menu)menu.classList.remove('open');
-            },2000);
+            setTimeout(function(){closeColCardMenuPortal();},2000);
           }else{
             showToast('Could not copy link.');
-            if(menu)menu.classList.remove('open');
+            closeColCardMenuPortal();
           }
         });
         return;
       }
-      if(menu){menu.classList.remove('open');menu.classList.remove('is-fixed');menu.style.position='';menu.style.top='';menu.style.left='';}
+      closeColCardMenuPortal();
       if(action==='pin'){togglePinPoxy(item.id,item.pinned_at);return;}
       if(action==='feature'){toggleFeaturePoxy(item.id);return;}
       if(action==='list'){
@@ -5958,13 +5965,12 @@ async function sharePoxy(poxyId,rarity,serialNumber){
       if(action==='burn'){burnPoxySecure(item.id,card);return;}
       return;
     }
-    // Click inside the menu but not on an item — eat it (don't toggle dust select)
-    if(e.target.closest('.col-card-menu')){e.stopPropagation();return;}
+    if(e.target.closest('#colCardMenuPortal')){e.stopPropagation();return;}
     const card=e.target.closest('.col-card');
     if(card&&root.contains(card)){
       e.stopPropagation();
       e.preventDefault();
-      closeAllMenusExcept(null);
+      closeColCardMenuPortal();
       if(e.target.closest('.col-card-kebab'))return;
       if(colMultiSelectMode){
         const idx=parseInt(card.dataset.index,10);
@@ -5979,7 +5985,7 @@ async function sharePoxy(poxyId,rarity,serialNumber){
   });
   // Outside-click: close every open dropdown anywhere on the page
   document.addEventListener('click',function(e){
-    if(e.target.closest('.col-card-kebab')||e.target.closest('.col-card-menu'))return;
+    if(e.target.closest('.col-card-kebab')||e.target.closest('#colCardMenuPortal'))return;
     if(typeof closeAllColCardMenus==='function')closeAllColCardMenus();
   });
   document.addEventListener('keydown',function(e){

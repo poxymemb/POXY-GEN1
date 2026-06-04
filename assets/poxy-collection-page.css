@@ -34,7 +34,6 @@ body.poxy-stitch-dash .poxy-collection-page.page{
 .poxy-col-bulk-burn:hover{transform:scale(1.03);opacity:0.92}
 .col-card-topbar{display:flex;justify-content:flex-end;width:100%;min-height:22px;margin-bottom:2px;flex-shrink:0;position:relative;z-index:14}
 .poxy-collection-page .col-card-topbar .col-card-kebab{position:relative;top:0;right:0}
-.poxy-collection-page .col-inv-card .col-card-menu{top:24px;right:4px}
 .poxy-col-title{
   font-family:'Hanken Grotesk',Inter,sans-serif;
   font-size:clamp(1.5rem,3.5vw,2.25rem);
@@ -439,18 +438,18 @@ body.poxy-stitch-dash .poxy-collection-page.page{
 .poxy-col-inventory-grid,
 #collectionPage .poxy-col-inventory-grid{
   display:grid!important;
-  grid-template-columns:repeat(auto-fill,minmax(140px,1fr))!important;
-  gap:14px!important;
+  grid-template-columns:repeat(auto-fill,minmax(176px,1fr))!important;
+  gap:16px!important;
   align-items:stretch;
 }
 
 /* Matte titanium inventory cards */
 .poxy-collection-page .col-inv-card{
   content-visibility:auto;
-  contain-intrinsic-size:140px;
+  contain-intrinsic-size:176px;
   aspect-ratio:1/1;
   min-height:0;
-  padding:14px 10px 10px!important;
+  padding:16px 12px 12px!important;
   border-radius:12px!important;
   background:linear-gradient(145deg,#2a2a2e 0%,#1a1a1d 48%,#141416 100%)!important;
   border:1px solid rgba(255,255,255,0.08)!important;
@@ -495,7 +494,7 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   position:relative;
   flex:1 1 auto;
   min-height:0;
-  max-height:83px;
+  max-height:100px;
   width:100%;
   margin-bottom:5px;
   border-radius:8px;
@@ -524,9 +523,9 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   width:100%;
   padding:0 2px;
 }
-.col-inv-foot .col-card-tier{font-size:8px;font-weight:700;letter-spacing:0.14em}
-.col-inv-foot .col-card-serial{font-size:7px;color:#9d8b9b}
-.col-inv-foot .col-card-date{font-size:7px;color:#6a6568;margin-top:2px}
+.col-inv-foot .col-card-tier{font-size:9px;font-weight:700;letter-spacing:0.14em}
+.col-inv-foot .col-card-serial{font-size:8px;color:#9d8b9b}
+.col-inv-foot .col-card-date{font-size:8px;color:#6a6568;margin-top:2px}
 
 .poxy-collection-page .col-inv-card.selected-for-dust,
 .poxy-collection-page .col-inv-card.col-inv-selected{
@@ -583,36 +582,15 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   color:#f9abff!important;
 }
 .poxy-collection-page .col-card-vip-serial{color:#f9abff!important;border-color:rgba(249,171,255,0.45)!important}
-/* Open menu uses position:fixed (set in JS) — still lift card above neighbors */
-.poxy-collection-page .col-inv-card:has(.col-card-menu.open){
-  overflow:visible!important;
-  content-visibility:visible!important;
-  contain:none!important;
-  z-index:9999;
-}
-.poxy-collection-page .col-club-grid .col-vip-locked-wrap:has(.col-card-menu.open){
-  overflow:visible;
-  z-index:9999;
-}
-.poxy-collection-page .col-card-menu:not(.open){
-  visibility:hidden;
-  pointer-events:none!important;
-}
-.poxy-collection-page .col-card-menu.open{
-  visibility:visible;
-  transform:none!important;
-  opacity:1!important;
-}
-.poxy-collection-page .col-card-menu.is-fixed{
+.poxy-collection-page .col-inv-card.col-card--menu-open{z-index:9999}
+#colCardMenuPortal.col-card-menu--portal{
   position:fixed;
   z-index:100000;
   min-width:200px;
-  width:max-content;
-  max-width:min(240px,calc(100vw - 16px));
   padding:8px 10px;
   box-sizing:border-box;
 }
-.poxy-collection-page .col-card-menu-item{
+.poxy-collection-page #colCardMenuPortal .col-card-menu-item{
   padding:10px 14px;
   gap:10px;
   box-sizing:border-box;
