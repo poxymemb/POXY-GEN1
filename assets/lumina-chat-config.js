@@ -2,10 +2,11 @@
 window.LUMINA_CHAT = {
   SUPABASE_URL: 'https://rbrtjkfawdnomvvyxwvp.supabase.co',
   SUPABASE_KEY: 'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG',
-  STORAGE_PREFIX: 'lumina_chat_os_v1',
+  STORAGE_PREFIX: 'lumina_os_v1',
   FOUNDER_EMAIL: 'worldpoxy@gmail.com',
   MAIN_APP: '/',
-  CHAT_APP: '/chat/app/',
+  LUMINA_OS_PATH: '/lumina-os',
+  CHAT_APP: '/lumina-os',
 };
 
 window.LuminaChatUtil = {

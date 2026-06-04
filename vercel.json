@@ -1,6 +1,8 @@
 {
   "rewrites": [
-    { "source": "/chat/app", "destination": "/chat/app/index.html" },
-    { "source": "/chat/app/", "destination": "/chat/app/index.html" }
+    { "source": "/lumina-os", "destination": "/index.html" },
+    { "source": "/lumina-os/", "destination": "/index.html" },
+    { "source": "/chat/app", "destination": "/index.html" },
+    { "source": "/chat/app/", "destination": "/index.html" }
   ]
 }

@@ -25,6 +25,8 @@
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
+<link rel="stylesheet" href="assets/lumina-chat-os.css?v=2">
+<link rel="stylesheet" href="assets/lumina-os-overrides.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
 <style>
@@ -1212,7 +1214,7 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span> Ranks</button>
               <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span> Collection</button>
               <button type="button" class="st-nav-pill" id="psdNavFriends" onclick="showPage('friends')"><span class="material-symbols-outlined">group</span> Friends</button>
-              <button type="button" class="st-nav-pill" id="psdNavChat" onclick="openLuminaChatApp()"><span class="material-symbols-outlined">forum</span> Chat</button>
+              <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span> Lumina OS</button>
             </div>
           </div>
         </div>
@@ -1653,6 +1655,117 @@ body.dark-club .club-sub{color:#888}
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
   </div>
+</div>
+
+<!-- LUMINA OS — immersive communication environment (LuminaOSLayout) -->
+<div id="luminaOsRoot" class="lc-os" hidden aria-label="Lumina OS">
+  <div class="lc-shell" id="lcShell">
+    <aside class="lc-nav" aria-label="Lumina OS navigation">
+      <div class="lc-nav-brand">
+        <div class="lc-nav-brand-icon"><span class="material-symbols-outlined">hub</span></div>
+        <span class="lc-nav-brand-text">Lumina</span>
+      </div>
+      <button type="button" class="lc-nav-exit" id="lcExitOs"><span class="material-symbols-outlined">arrow_back</span> Exit to POXY</button>
+      <nav class="lc-nav-menu">
+        <button type="button" class="lc-nav-item is-active" data-nav="messages"><span class="material-symbols-outlined">chat_bubble</span> Messages</button>
+        <button type="button" class="lc-nav-item" data-nav="friends"><span class="material-symbols-outlined">group</span> Friends</button>
+        <button type="button" class="lc-nav-item" data-nav="squads"><span class="material-symbols-outlined">diversity_3</span> Squads</button>
+        <button type="button" class="lc-nav-item" data-nav="calls"><span class="material-symbols-outlined">call</span> Calls</button>
+        <button type="button" class="lc-nav-item" data-nav="activity"><span class="material-symbols-outlined">bolt</span> Activity</button>
+        <button type="button" class="lc-nav-item" data-nav="notifications"><span class="material-symbols-outlined">notifications</span> Notifications <span class="lc-nav-badge" id="lcNavNotifBadge" hidden>0</span></button>
+        <button type="button" class="lc-nav-item" data-nav="settings"><span class="material-symbols-outlined">settings</span> Settings</button>
+      </nav>
+      <div class="lc-nav-user">
+        <div class="lc-nav-user-av" id="lcNavUserAv">👾</div>
+        <div class="lc-nav-user-meta">
+          <div class="lc-nav-user-name" id="lcNavUserName">–</div>
+          <button type="button" class="lc-nav-user-status" id="lcUserStatusBtn" data-status="online"><span class="lc-nav-user-tier" id="lcNavUserTier">MEMBER</span> · <span id="lcNavUserStatus">Online</span></button>
+        </div>
+        <button type="button" class="lc-nav-logout" id="lcNavLogout" aria-label="Sign out"><span class="material-symbols-outlined">logout</span></button>
+      </div>
+    </aside>
+    <section class="lc-main" id="lcMain">
+      <div class="lc-main-head">
+        <div class="lc-conv-list">
+          <div class="lc-conv-search"><input type="search" id="lcConvSearch" placeholder="Search conversations…" autocomplete="off"></div>
+          <div class="lc-conv-scroll" id="lcConvList"></div>
+        </div>
+        <div class="lc-thread" id="lcThreadPanel">
+          <div class="lc-thread-empty" id="lcThreadEmpty">
+            <span class="material-symbols-outlined">chat</span>
+            <p>Select a conversation or message a friend from POXY.</p>
+          </div>
+          <header class="lc-thread-header" id="lcThreadHeader">
+            <button type="button" class="lc-thread-back" id="lcThreadBack" aria-label="Back"><span class="material-symbols-outlined">arrow_back</span></button>
+            <div class="lc-thread-av" id="lcThreadAv"></div>
+            <div class="lc-thread-ident">
+              <div class="lc-thread-display" id="lcThreadDisplay">–</div>
+              <div class="lc-thread-handle" id="lcThreadHandle"><span class="lc-at">@</span>–</div>
+              <div class="lc-thread-subtitle" id="lcThreadSubtitle">–</div>
+            </div>
+            <div class="lc-thread-actions">
+              <button type="button" class="lc-icon-btn" aria-label="Search"><span class="material-symbols-outlined">search</span></button>
+              <button type="button" class="lc-icon-btn" aria-label="Call"><span class="material-symbols-outlined">call</span></button>
+              <button type="button" class="lc-icon-btn" aria-label="Video"><span class="material-symbols-outlined">videocam</span></button>
+              <button type="button" class="lc-icon-btn" id="lcToggleContext" aria-label="Profile panel"><span class="material-symbols-outlined">info</span></button>
+            </div>
+          </header>
+          <div class="lc-messages" id="lcMessages"></div>
+          <div class="lc-typing" id="lcTyping"></div>
+          <div class="lc-compose-wrap">
+            <div class="lc-compose">
+              <button type="button" class="lc-compose-attach" id="lcComposeAttach" aria-label="Attach"><span class="material-symbols-outlined">add</span></button>
+              <input type="text" id="lcComposeInput" placeholder="Start a message…" maxlength="500" autocomplete="off">
+              <div class="lc-compose-tools">
+                <button type="button" class="lc-compose-tool" id="lcComposeGif" aria-label="GIF"><span class="material-symbols-outlined">gif_box</span></button>
+                <button type="button" class="lc-compose-tool" id="lcComposeEmoji" aria-label="Emoji"><span class="material-symbols-outlined">mood</span></button>
+                <button type="button" class="lc-compose-tool" id="lcComposeVoice" aria-label="Voice"><span class="material-symbols-outlined">mic</span></button>
+              </div>
+              <button type="button" class="lc-compose-send" id="lcComposeSend" disabled aria-label="Send"><span class="material-symbols-outlined">send</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <aside class="lc-context" id="lcContext" aria-label="Thread context">
+      <button type="button" class="lc-context-collapse" id="lcCollapseContext" aria-label="Collapse panel"><span class="material-symbols-outlined">chevron_right</span></button>
+      <div class="lc-context-profile">
+        <div class="lc-context-av" id="lcContextAv">👾</div>
+        <div class="lc-context-display" id="lcContextDisplay">–</div>
+        <div class="lc-context-handle" id="lcContextHandle">@–</div>
+        <div class="lc-context-title" id="lcContextTitle">POXY Member</div>
+      </div>
+      <div class="lc-context-section">
+        <h4>Shared Media</h4>
+        <div class="lc-media-grid">
+          <div class="lc-media-thumb"><span class="material-symbols-outlined">image</span></div>
+          <div class="lc-media-thumb"><span class="material-symbols-outlined">image</span></div>
+          <div class="lc-media-thumb"><span class="material-symbols-outlined">image</span></div>
+        </div>
+      </div>
+      <div class="lc-context-section">
+        <h4>Pinned Messages</h4>
+        <div class="lc-pinned-list" id="lcPinnedList">
+          <div class="lc-pinned-item">No pinned messages yet.</div>
+        </div>
+      </div>
+      <div class="lc-context-section">
+        <h4>Activity</h4>
+        <div class="lc-pinned-list" id="lcContextActivity"></div>
+      </div>
+      <div class="lc-context-section">
+        <button type="button" class="lc-context-action">Mute Chat <span class="material-symbols-outlined">chevron_right</span></button>
+        <button type="button" class="lc-context-action">Block user <span class="material-symbols-outlined">chevron_right</span></button>
+      </div>
+      <div class="lc-vault-card">
+        <span class="material-symbols-outlined">lock</span>
+        <h4>Vault Permissions</h4>
+        <p id="lcVaultText">Access granted to level 1 encrypted threads.</p>
+      </div>
+    </aside>
+    <div class="lc-panel-placeholder lc-hidden" id="lcNavPlaceholder"></div>
+  </div>
+  <div class="lc-toast" id="lcToast" role="status"></div>
 </div>
 
 <!-- PROFILE PAGE (Stitch — Refined Profile HUD) -->
@@ -3420,6 +3533,10 @@ function removeNotificationByOfferId(offerId){
 function routeStorageKey(){return POXY_ROUTE_LS+'_'+(currentUser?.id||'');}
 function persistActiveRoute(){
   if(!currentUser)return;
+  if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive()){
+    try{localStorage.setItem(routeStorageKey(),JSON.stringify({kind:'lumina-os'}));}catch(e){}
+    return;
+  }
   let route=null;
   if($('settingsPage')?.classList.contains('visible'))route={kind:'page',page:'settings'};
   else{
@@ -3435,6 +3552,10 @@ function restoreActiveRoute(){
     const raw=localStorage.getItem(routeStorageKey());
     if(!raw)return false;
     const route=JSON.parse(raw);
+    if(route?.kind==='lumina-os'){
+      if(typeof openLuminaOS==='function'){openLuminaOS();return true;}
+      return false;
+    }
     if(route?.kind==='stitch'&&route.tab){
       showStitchTab(route.tab);
       return true;
@@ -3563,6 +3684,8 @@ function setLoggedOutUI(){
   $('balanceBadge')?.classList.remove('visible');
   const shell=$('poxyAppShell');if(shell)shell.style.display='none';
   const hunt=$('huntPage');if(hunt)hunt.style.display='none';
+  if(typeof LuminaOSRouter!=='undefined')LuminaOSRouter.showMainLayout();
+  document.body.classList.remove('lumina-os-active');
   teardownRealtimeSubscriptions();
   if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
   if(sidebarOpen)closeSidebar();
@@ -3574,6 +3697,9 @@ function setLoggedInUI(){
   const ub=$('userBar');
   if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
   $('balanceBadge')?.classList.add('visible');
+  if(typeof LuminaOSRouter!=='undefined'&&(LuminaOSRouter.isActive()||LuminaOSRouter.bootstrapFromUrl())){
+    return;
+  }
   const shell=$('poxyAppShell');if(shell)shell.style.display='block';
   const hunt=$('huntPage');if(hunt)hunt.style.display='block';
   showPoxyAppShell();
@@ -7009,19 +7135,11 @@ window.closeInspectModal=function(){
   inspectTargetUserId=null;
 };
 
-// ── LUMINA CHATTING OS (isolated /chat/app) ──
-window.openLuminaChatApp=function(userId){
-  if(!currentUser){showToast('Sign in to open Lumina Chat.');return;}
-  if(userId&&String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
-  var url='/chat/app/';
-  if(userId&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(userId))){
-    url+='?user='+encodeURIComponent(userId);
-  }
-  window.open(url,'_blank','noopener,noreferrer');
-};
+// ── LUMINA OS (SPA /lumina-os — LuminaOSLayout) ──
+// openLuminaOS defined in assets/lumina-os/app.js after router loads
 window.openDmOverlay=function(userId,username,avatarUrl){
   if(!currentUser||!userId||String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
-  openLuminaChatApp(userId);
+  if(typeof openLuminaOS==='function')openLuminaOS(userId);
 };
 window.closeDmOverlay=function(){
   const o=$('dmOverlay');
@@ -10140,8 +10258,15 @@ function bootApp(){
     if(pop&&!pop.hidden&&!e.target.closest('#chatUserInspectPopover')&&!e.target.closest('.pcm-name')&&!e.target.closest('.pcm-avatar'))closeChatInspectPopover();
   });
   if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
+  if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive()&&currentUser){
+    LuminaOSRouter.enter({replace:true,...LuminaOSRouter.parseQuery()});
+  }
 }
-bootApp();
 </script>
+<script src="assets/lumina-chat-config.js?v=2"></script>
+<script src="assets/lumina-os/store.js?v=1"></script>
+<script src="assets/lumina-os/router.js?v=1"></script>
+<script src="assets/lumina-os/app.js?v=1"></script>
+<script>bootApp();</script>
 </body>
 </html>

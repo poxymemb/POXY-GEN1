@@ -1,0 +1,208 @@
+/* Lumina OS — SPA shell overrides (MainLayout unmount) */
+
+:root {
+  --lc-nav-w: 280px;
+  --lc-success: #22c55e;
+  --lc-warning: #f59e0b;
+  --lo-transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.lumina-os-active {
+  overflow: hidden !important;
+  background: #0e0e0e !important;
+  animation: none !important;
+}
+
+body.lumina-os-active #poxyAppShell,
+body.lumina-os-active .page {
+  display: none !important;
+}
+
+#luminaOsRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: var(--lc-bg, #0e0e0e);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--lo-transition);
+}
+
+#luminaOsRoot.is-mounted {
+  pointer-events: auto;
+}
+
+#luminaOsRoot.is-ready {
+  opacity: 1;
+}
+
+#luminaOsRoot.is-entering {
+  animation: lo-enter var(--lo-transition) forwards;
+}
+
+#luminaOsRoot.is-exiting {
+  animation: lo-exit var(--lo-transition) forwards;
+}
+
+@keyframes lo-enter {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes lo-exit {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    filter: blur(8px);
+    transform: scale(0.985);
+  }
+}
+
+#luminaOsRoot .lc-shell.is-ready {
+  opacity: 1;
+}
+
+#luminaOsRoot .lc-nav-brand-text::after {
+  content: ' OS';
+  -webkit-text-fill-color: var(--lc-muted, #9ca3af);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.lc-nav-exit {
+  margin: 0 10px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: calc(100% - 20px);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--lc-border-strong, #222);
+  background: transparent;
+  color: var(--lc-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--lc-dur), transform var(--lc-dur), color var(--lc-dur);
+}
+
+.lc-nav-exit:hover {
+  background: var(--lc-surface-hover);
+  color: var(--lc-text);
+  transform: scale(1.03);
+}
+
+.lc-nav-user-status {
+  font-size: 11px;
+  color: var(--lc-success);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.lc-nav-user-status[data-status='away'] {
+  color: var(--lc-warning);
+}
+
+.lc-nav-user-status[data-status='busy'] {
+  color: #ef4444;
+}
+
+.lc-nav-user-status[data-status='invisible'] {
+  color: var(--lc-muted);
+}
+
+.lc-shell.context-collapsed {
+  grid-template-columns: var(--lc-nav-w) 1fr 0 !important;
+}
+
+.lc-shell.context-collapsed .lc-context {
+  display: none;
+}
+
+.lc-context-collapse {
+  position: absolute;
+  top: 12px;
+  left: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--lc-border-strong);
+  background: var(--lc-surface);
+  color: var(--lc-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform var(--lc-dur), background var(--lc-dur);
+}
+
+.lc-context-collapse:hover {
+  transform: scale(1.03);
+  background: var(--lc-surface-hover);
+  color: var(--lc-text);
+}
+
+.lc-context {
+  position: relative;
+}
+
+.lc-pinned-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lc-pinned-item {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--lc-surface-hover);
+  border: 1px solid var(--lc-border);
+  font-size: 12px;
+  color: var(--lc-muted);
+  transition: transform var(--lc-dur), box-shadow var(--lc-dur);
+}
+
+.lc-pinned-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.lc-empty-hint,
+.lc-loading {
+  padding: 16px;
+  color: #9ca3af;
+  font-size: 13px;
+  text-align: center;
+}
+
+.lc-nav-item:hover,
+.lc-compose-tool:hover,
+.lc-compose-attach:hover,
+.lc-compose-send:not(:disabled):hover,
+.lc-icon-btn:hover,
+.lc-context-action:hover {
+  transform: scale(1.03);
+}
+
+.lc-conv-item:hover {
+  transform: translateY(-2px);
+}
+
+#luminaOsRoot .lc-bubble {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+}
