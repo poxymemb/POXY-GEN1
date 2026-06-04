@@ -2,6 +2,12 @@
   "plugins": {
     "supabase": {
       "enabled": true
+    },
+    "linear": {
+      "enabled": true
+    },
+    "neon-postgres": {
+      "enabled": true
     }
   }
 }
