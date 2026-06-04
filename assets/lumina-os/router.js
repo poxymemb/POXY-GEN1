@@ -2,20 +2,32 @@
  * Lumina OS — SPA layout router (MainLayout ↔ LuminaOSLayout).
  */
 (function (global) {
-  const PATH = '/lumina-os';
+  const SEGMENT = '/lumina-os';
   let mounted = false;
   let exiting = false;
 
+  function appBase() {
+    if (global.POXY_APP_BASE !== undefined) return global.POXY_APP_BASE || '';
+    const p = global.location.pathname || '';
+    const lo = p.indexOf(SEGMENT);
+    if (lo >= 0) return p.slice(0, lo);
+    return '';
+  }
+
+  function fullPath() {
+    return appBase() + SEGMENT;
+  }
+
   function normalizePath(p) {
-    const base = (p || global.location.pathname || '').replace(/\/+$/, '') || '/';
-    return base;
+    return (p || global.location.pathname || '').replace(/\/+$/, '') || '/';
   }
 
   function isLuminaOSPath() {
+    const target = normalizePath(fullPath());
     const p = normalizePath(global.location.pathname);
-    if (p === PATH || p.startsWith(PATH + '/')) return true;
+    if (p === target || p.startsWith(target + '/')) return true;
     const h = (global.location.hash || '').replace(/^#/, '');
-    return h === PATH || h.startsWith(PATH + '?');
+    return h === SEGMENT.slice(1) || h.startsWith(SEGMENT.slice(1) + '?');
   }
 
   function buildUrl(opts) {
@@ -26,7 +38,7 @@
     }
     if (opts.nav) params.set('nav', opts.nav);
     const q = params.toString();
-    return PATH + (q ? '?' + q : '');
+    return fullPath() + (q ? '?' + q : '');
   }
 
   function parseQuery() {
@@ -58,9 +70,11 @@
     document.body.classList.remove('lumina-os-active');
     const root = document.getElementById('luminaOsRoot');
     if (root) {
-      root.classList.remove('is-mounted', 'is-entering', 'is-ready');
+      root.classList.remove('is-mounted', 'is-entering', 'is-ready', 'is-exiting');
       root.setAttribute('hidden', '');
     }
+    const lcShell = document.getElementById('lcShell');
+    if (lcShell) lcShell.classList.remove('is-ready');
     const shell = document.getElementById('poxyAppShell');
     if (shell && global.currentUser) shell.style.display = 'block';
     document.querySelectorAll('.page').forEach((el) => {
@@ -79,8 +93,22 @@
     }
   }
 
+  function showOsRoot() {
+    const root = document.getElementById('luminaOsRoot');
+    const lcShell = document.getElementById('lcShell');
+    if (root) {
+      root.removeAttribute('hidden');
+      root.classList.add('is-mounted', 'is-entering');
+      requestAnimationFrame(() => {
+        root.classList.add('is-ready');
+        root.classList.remove('is-entering');
+      });
+    }
+    if (lcShell) lcShell.classList.add('is-ready');
+  }
+
   function persistRoute() {
-    if (!global.currentUser || typeof global.persistActiveRoute !== 'function') return;
+    if (!global.currentUser) return;
     try {
       const key =
         (global.POXY_ROUTE_LS || 'poxy_active_route') + '_' + global.currentUser.id;
@@ -96,39 +124,41 @@
       }
       return;
     }
-    if (
-      opts.user &&
-      String(opts.user) === String(global.currentUser.id)
-    ) {
+    if (opts.user && String(opts.user) === String(global.currentUser.id)) {
       if (typeof global.showToast === 'function') {
         global.showToast('Cannot message yourself.');
       }
       return;
     }
     const url = buildUrl(opts);
-    const state = { layout: 'lumina-os', user: opts.user || null, nav: opts.nav || null };
+    const state = {
+      layout: 'lumina-os',
+      user: opts.user || null,
+      nav: opts.nav || null,
+    };
     if (opts.replace) {
       global.history.replaceState(state, '', url);
-    } else if (normalizePath(global.location.pathname) !== PATH || global.location.search) {
+    } else {
       global.history.pushState(state, '', url);
     }
     hideMainLayout();
-    const root = document.getElementById('luminaOsRoot');
-    if (root) {
-      root.removeAttribute('hidden');
-      root.classList.add('is-mounted', 'is-entering');
-      requestAnimationFrame(() => {
-        root.classList.add('is-ready');
-        root.classList.remove('is-entering');
-      });
-    }
+    showOsRoot();
     document.title = 'Lumina OS';
     persistRoute();
-    if (global.LuminaOSApp && !mounted) {
-      global.LuminaOSApp.mount(opts);
-      mounted = true;
-    } else if (global.LuminaOSApp) {
-      global.LuminaOSApp.activate(opts);
+    try {
+      if (global.LuminaOSApp && !mounted) {
+        global.LuminaOSApp.mount(opts);
+        mounted = true;
+      } else if (global.LuminaOSApp) {
+        global.LuminaOSApp.activate(opts);
+      }
+    } catch (e) {
+      console.error('[LuminaOS] mount failed', e);
+      if (typeof global.showToast === 'function') {
+        global.showToast('Lumina OS failed to load. Try refreshing.');
+      }
+      showMainLayout();
+      mounted = false;
     }
   }
 
@@ -143,20 +173,40 @@
       if (global.LuminaOSApp) global.LuminaOSApp.deactivate();
       showMainLayout();
       document.title = 'POXY WORLD';
+      try {
+        if (global.currentUser) {
+          const key =
+            (global.POXY_ROUTE_LS || 'poxy_active_route') +
+            '_' +
+            global.currentUser.id;
+          const raw = localStorage.getItem(key);
+          if (raw && JSON.parse(raw)?.kind === 'lumina-os') {
+            localStorage.setItem(
+              key,
+              JSON.stringify({ kind: 'stitch', tab: 'dashboard' })
+            );
+          }
+        }
+      } catch (e) {}
       if (!opts.skipHistory) {
         const back = global.history.state?.layout === 'lumina-os';
         if (back) global.history.back();
-        else global.history.pushState({ layout: 'main' }, '', '/');
+        else {
+          const home = appBase() || '/';
+          global.history.pushState({ layout: 'main' }, '', home);
+        }
       }
       if (global.currentUser && typeof global.restoreActiveRoute === 'function') {
         if (!global.restoreActiveRoute()) {
-          if (typeof global.showStitchTab === 'function') global.showStitchTab('dashboard');
+          if (typeof global.showStitchTab === 'function') {
+            global.showStitchTab('dashboard');
+          }
         }
       }
       exiting = false;
       if (root) root.classList.remove('is-exiting');
     };
-    setTimeout(done, 300);
+    setTimeout(done, 280);
   }
 
   function onPopState() {
@@ -165,8 +215,8 @@
       else showMainLayout();
     } else if (mounted) {
       mounted = false;
-      showMainLayout();
       if (global.LuminaOSApp) global.LuminaOSApp.deactivate();
+      showMainLayout();
     } else {
       showMainLayout();
     }
@@ -181,7 +231,9 @@
   }
 
   global.LuminaOSRouter = {
-    PATH,
+    SEGMENT,
+    fullPath,
+    appBase,
     isActive: isLuminaOSPath,
     buildUrl,
     parseQuery,

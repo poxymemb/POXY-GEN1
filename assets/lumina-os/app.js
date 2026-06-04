@@ -561,4 +561,10 @@
     Router.enter({ user: userId, nav: nav });
   };
   global.openLuminaChatApp = global.openLuminaOS;
+
+  if (global._luminaOsPending) {
+    const p = global._luminaOsPending;
+    global._luminaOsPending = null;
+    global.openLuminaOS(p.user, p.nav);
+  }
 })(window);

@@ -13,6 +13,34 @@ body.lumina-os-active {
   animation: none !important;
 }
 
+/* Ensure scroll works inside Lumina OS panels */
+#luminaOsRoot .lc-nav {
+  min-height: 0;
+  overflow: hidden;
+}
+#luminaOsRoot .lc-nav-menu {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+#luminaOsRoot .lc-main,
+#luminaOsRoot .lc-main-head,
+#luminaOsRoot .lc-conv-list,
+#luminaOsRoot .lc-thread {
+  min-height: 0;
+}
+#luminaOsRoot .lc-conv-scroll,
+#luminaOsRoot .lc-messages {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+#luminaOsRoot .lc-context {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 body.lumina-os-active #poxyAppShell,
 body.lumina-os-active .page {
   display: none !important;
@@ -26,6 +54,12 @@ body.lumina-os-active .page {
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--lo-transition);
+  display: flex;
+  flex-direction: column;
+}
+
+#luminaOsRoot:not([hidden]) {
+  display: flex;
 }
 
 #luminaOsRoot.is-mounted {
@@ -34,6 +68,12 @@ body.lumina-os-active .page {
 
 #luminaOsRoot.is-ready {
   opacity: 1;
+}
+
+#luminaOsRoot .lc-shell {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
 }
 
 #luminaOsRoot.is-entering {

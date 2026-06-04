@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script>
+(function(){
+  var p=location.pathname||'/';
+  var base='';
+  var lo=p.indexOf('/lumina-os');
+  if(lo>=0)base=p.slice(0,lo);
+  else if(/index\.html$/i.test(p))base=p.replace(/\/index\.html$/i,'');
+  window.POXY_APP_BASE=base;
+  var href=base?((base.endsWith('/')?base:base+'/')):'/';
+  var el=document.createElement('base');
+  el.href=href;
+  document.head.appendChild(el);
+})();
+</script>
 <title>POXY WORLD</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
@@ -25,8 +39,8 @@
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
-<link rel="stylesheet" href="assets/lumina-chat-os.css?v=2">
-<link rel="stylesheet" href="assets/lumina-os-overrides.css?v=1">
+<link rel="stylesheet" href="assets/lumina-chat-os.css?v=3">
+<link rel="stylesheet" href="assets/lumina-os-overrides.css?v=2">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
 <style>
@@ -7136,7 +7150,14 @@ window.closeInspectModal=function(){
 };
 
 // ── LUMINA OS (SPA /lumina-os — LuminaOSLayout) ──
-// openLuminaOS defined in assets/lumina-os/app.js after router loads
+window.openLuminaOS=function(userId,nav){
+  if(!currentUser){showToast('Sign in to open Lumina OS.');return;}
+  if(userId&&String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
+  if(typeof LuminaOSRouter!=='undefined'){LuminaOSRouter.enter({user:userId,nav:nav});return;}
+  window._luminaOsPending={user:userId,nav:nav};
+  showToast('Loading Lumina OS…');
+};
+window.openLuminaChatApp=window.openLuminaOS;
 window.openDmOverlay=function(userId,username,avatarUrl){
   if(!currentUser||!userId||String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
   if(typeof openLuminaOS==='function')openLuminaOS(userId);
@@ -10263,10 +10284,16 @@ function bootApp(){
   }
 }
 </script>
-<script src="assets/lumina-chat-config.js?v=2"></script>
-<script src="assets/lumina-os/store.js?v=1"></script>
-<script src="assets/lumina-os/router.js?v=1"></script>
-<script src="assets/lumina-os/app.js?v=1"></script>
-<script>bootApp();</script>
+<script src="assets/lumina-chat-config.js?v=3"></script>
+<script src="assets/lumina-os/store.js?v=2"></script>
+<script src="assets/lumina-os/router.js?v=2"></script>
+<script src="assets/lumina-os/app.js?v=2"></script>
+<script>
+bootApp();
+if(window._luminaOsPending&&typeof openLuminaOS==='function'){
+  var p=window._luminaOsPending;window._luminaOsPending=null;
+  openLuminaOS(p.user,p.nav);
+}
+</script>
 </body>
 </html>

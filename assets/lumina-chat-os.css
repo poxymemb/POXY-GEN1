@@ -25,17 +25,19 @@
   padding: 0;
 }
 
-html,
-body {
+/* Scoped to Lumina OS only — do not lock scroll on the main POXY site */
+#luminaOsRoot {
   height: 100%;
+  height: 100dvh;
   overflow: hidden;
-}
-
-body.lc-os {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--lc-bg);
   color: var(--lc-text);
   -webkit-font-smoothing: antialiased;
+}
+
+body.lumina-os-active {
+  overflow: hidden;
 }
 
 .lc-hidden {
