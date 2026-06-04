@@ -432,23 +432,30 @@
     document.querySelectorAll('#luminaOsRoot .lc-nav-item').forEach((btn) => {
       btn.classList.toggle('is-active', btn.dataset.nav === nav);
     });
-    const main = U.$('lcMain');
-    const ph = U.$('lcNavPlaceholder');
-    if (nav === 'messages') {
-      main?.classList.remove('lc-hidden');
-      ph?.classList.add('lc-hidden');
-    } else {
-      main?.classList.add('lc-hidden');
-      ph?.classList.remove('lc-hidden');
-      const labels = {
-        friends: 'Friends roster syncs from POXY — open Messages to chat.',
-        squads: 'Squads — group spaces coming soon.',
-        calls: 'Voice & video calls — coming soon.',
-        activity: 'Activity feed — coming soon.',
-        notifications: 'Notifications — coming soon.',
-        settings: 'Account settings live on the main POXY app.',
-      };
-      if (ph) ph.textContent = labels[nav] || 'Coming soon.';
+    if (global.LuminaOSPanels) {
+      global.LuminaOSPanels.render(nav);
+    }
+    try {
+      const hash = global.LuminaOSRouter.buildHash({
+        nav: nav,
+        user: runtime.selectedId || undefined,
+      });
+      if (global.location.hash !== hash.replace(/^#/, '#')) {
+        global.history.replaceState(
+          { layout: 'lumina-os', nav: nav },
+          '',
+          (global.LuminaOSRouter.homePath
+            ? global.LuminaOSRouter.homePath()
+            : '/') + hash.replace(/^#/, '')
+        );
+      }
+    } catch (e) {}
+  }
+
+  function openMessagesWith(userId) {
+    setNav('messages');
+    if (userId && U.isUuid(userId)) {
+      selectConversation(userId);
     }
   }
 
@@ -521,6 +528,29 @@
       renderNavUser();
     });
     Store.subscribe(() => applyContextCollapsed());
+    const themeBtn = U.$('lcThemeToggle');
+    if (themeBtn) {
+      themeBtn.onclick = () => {
+        if (global.toggleTheme) global.toggleTheme();
+        if (global.LuminaOSTheme) {
+          Store.setState({ theme: global.LuminaOSTheme.getTheme() });
+        }
+        syncThemeToggleLabel();
+      };
+    }
+    if (global.LuminaOSTheme) {
+      global.LuminaOSTheme.subscribe(() => syncThemeToggleLabel());
+    }
+  }
+
+  function syncThemeToggleLabel() {
+    const btn = U.$('lcThemeToggle');
+    if (!btn || !global.LuminaOSTheme) return;
+    const r = global.LuminaOSTheme.getResolvedTheme();
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (icon) icon.textContent = r === 'dark' ? 'light_mode' : 'dark_mode';
+    const label = btn.querySelector('.lo-theme-toggle-label');
+    if (label) label.textContent = r === 'dark' ? 'Light mode' : 'Dark mode';
   }
 
   async function mount(opts) {
@@ -528,10 +558,23 @@
     const user = currentUser();
     if (!user) return;
     Store.setUserId(user.id);
+    if (global.LuminaOSPanels) global.LuminaOSPanels.ensureSeeded();
+    const st0 = Store.getState();
+    if (global.LuminaOSTheme) {
+      const mode =
+        st0.theme === 'dark' ||
+        st0.theme === 'light' ||
+        st0.theme === 'system'
+          ? st0.theme
+          : global.LuminaOSTheme.getTheme();
+      global.LuminaOSTheme.setTheme(mode);
+      if (st0.theme !== mode) Store.setState({ theme: mode });
+    }
     bindUi();
+    syncThemeToggleLabel();
     const st = Store.getState();
-    if (st.activeNav) setNav(st.activeNav);
-    else setNav('messages');
+    const nav = opts.nav || Router.parseQuery().nav || st.activeNav || 'messages';
+    setNav(nav);
     applyContextCollapsed();
     await loadProfile();
     try {
@@ -567,7 +610,16 @@
     runtime.selectedId = null;
   }
 
-  global.LuminaOSApp = { mount, activate, deactivate, selectConversation };
+  global.LuminaOSApp = {
+    mount,
+    activate,
+    deactivate,
+    selectConversation,
+    setNav,
+    openMessagesWith,
+    getRuntime: () => runtime,
+    toast,
+  };
 
   global.openLuminaOS = function (userId, nav) {
     if (!currentUser()) {

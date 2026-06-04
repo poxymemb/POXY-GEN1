@@ -14,10 +14,11 @@ html:has(body.lumina-os-active) {
 
 body.lumina-os-active {
   overflow: hidden !important;
-  background: #0e0e0e !important;
+  background: var(--lo-background, #0e0e0e) !important;
   animation: none !important;
   min-height: 100dvh;
   height: 100dvh;
+  transition: background var(--lo-transition, 500ms ease-in-out);
 }
 
 /* Ensure scroll works inside Lumina OS panels */
