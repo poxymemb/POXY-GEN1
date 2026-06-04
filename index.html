@@ -17,7 +17,12 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=3">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=1">
+<link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
+<link rel="stylesheet" href="assets/poxy-news-page.css?v=1">
+<link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
+<script src="assets/poxy-hud-audio.js" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1158,6 +1163,7 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')">Explore</button>
             <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')">Rarity</button>
             <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()">Store</button>
+            <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')">News</button>
           </div>
           <div class="st-nav-secondary" aria-label="More">
             <div class="st-nav-pills">
@@ -1454,6 +1460,25 @@ body.dark-club .club-sub{color:#888}
       </div>
     </section>
 
+    <section class="st-spa-panel" id="stPanelNews" data-st-tab="news" hidden>
+      <div class="page poxy-news-page" id="newsPage">
+        <header class="poxy-news-header">
+          <h1 class="poxy-news-title">POXY World News</h1>
+          <p class="poxy-news-desc">Patch notes, economy updates, and platform broadcasts — Steam-style intel feed.</p>
+        </header>
+        <div id="newsCreateFormContainer"></div>
+        <div class="poxy-news-feed" id="newsPostsList"><div class="news-empty">Loading news…</div></div>
+        <div class="poxychat-section">
+          <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
+          <div class="poxychat-input-row">
+            <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world…" maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
+            <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
+          </div>
+          <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
+        </div>
+      </div>
+    </section>
+
     <section class="st-spa-panel" id="stPanelExplore" data-st-tab="explore" hidden>
       <div class="page poxy-explore-page" id="explorePage">
         <div class="poxy-explore-shell">
@@ -1467,7 +1492,7 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-explore-nav-btn" data-explore="codex" onclick="switchExploreSection('codex')"><span class="material-symbols-outlined">menu_book</span> Codex</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="legal" onclick="switchExploreSection('legal')"><span class="material-symbols-outlined">gavel</span> Legal</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="policies" onclick="switchExploreSection('policies')"><span class="material-symbols-outlined">policy</span> Policies</button>
-              <button type="button" class="poxy-explore-nav-btn" data-explore="news" onclick="switchExploreSection('news')"><span class="material-symbols-outlined">newspaper</span> Poxy World News</button>
+              <button type="button" class="poxy-explore-nav-btn" data-explore="news" onclick="showStitchTab('news')"><span class="material-symbols-outlined">newspaper</span> Poxy World News</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="updates" onclick="switchExploreSection('updates')"><span class="material-symbols-outlined">update</span> Updates</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="contact" onclick="switchExploreSection('contact')"><span class="material-symbols-outlined">mail</span> Contact</button>
             </nav>
@@ -1524,15 +1549,10 @@ body.dark-club .club-sub{color:#888}
                 </div>
               </div>
               <div id="exploreSectionNews" class="poxy-explore-section">
-                <div id="newsCreateFormContainer"></div>
-                <div id="newsPostsList"><div class="news-empty">Loading news…</div></div>
-                <div class="poxychat-section">
-                  <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
-                  <div class="poxychat-input-row">
-                    <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world…" maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
-                    <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
-                  </div>
-                  <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
+                <div class="poxy-explore-card">
+                  <h2><span class="material-symbols-outlined">newspaper</span> News &amp; POXY Chat</h2>
+                  <p>The news feed and global POXY CHAT now live on the top-level <strong>News</strong> route in the main header.</p>
+                  <button type="button" class="btn-primary" style="margin-top:12px" onclick="showStitchTab('news')">Open News Feed →</button>
                 </div>
               </div>
               <div id="exploreSectionUpdates" class="poxy-explore-section">
@@ -1612,6 +1632,10 @@ body.dark-club .club-sub{color:#888}
             Security
           </button>
         </div>
+        <div class="poxy-profile-hud-sound">
+          <label for="poxyHudSoundToggle">HUD inventory hover sounds</label>
+          <input type="checkbox" id="poxyHudSoundToggle" checked onchange="PoxyHudAudio&&PoxyHudAudio.setEnabled(this.checked)">
+        </div>
       </aside>
       <div class="poxy-profile-main">
         <div class="profile-stats poxy-profile-stats">
@@ -1679,48 +1703,147 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- COLLECTION PAGE -->
-<div class="page page-collection-wide poxy-page-collection" id="collectionPage">
-  <div class="col-sticky-bar gpu-accel" id="colStickyBar">
-    <div class="col-header">
-      <div class="col-title">MY COLLECTION</div>
-      <div class="col-count" id="colCount"></div>
+<!-- COLLECTION PAGE — Tactical Archive -->
+<div class="page page-collection-wide poxy-page-collection poxy-collection-page" id="collectionPage">
+  <div class="poxy-col-shell">
+    <header class="poxy-col-header">
+      <h1 class="poxy-col-title">Tactical Archive</h1>
+      <div class="poxy-col-meta">
+        <span>Inventory</span>
+        <span class="poxy-col-meta-count" id="colCount">—</span>
+      </div>
+    </header>
+    <div class="poxy-col-controls">
+      <div class="poxy-col-filter-dock">
+        <div class="poxy-col-filters filter-row" id="filterRow"></div>
+        <div class="poxy-col-sort-wrap">
+          <button type="button" class="poxy-col-sort-btn" id="colSortBtn" aria-haspopup="listbox" aria-expanded="false">
+            <span class="material-symbols-outlined" aria-hidden="true">sort</span>
+            <span id="colSortLabel">Sort</span>
+          </button>
+          <div class="poxy-col-sort-menu hidden" id="colSortMenu" role="listbox">
+            <button type="button" class="poxy-col-sort-opt" data-sort="default" role="option">Default (Pinned)</button>
+            <button type="button" class="poxy-col-sort-opt" data-sort="duplicates" role="option">Duplicates First</button>
+            <button type="button" class="poxy-col-sort-opt" data-sort="recent" role="option">Recently Acquired</button>
+            <button type="button" class="poxy-col-sort-opt" data-sort="value" role="option">Highest Estimated Value</button>
+          </div>
+        </div>
+      </div>
+      <div class="poxy-col-toolbar">
+        <button type="button" class="poxy-col-multi-toggle" id="btnColMultiSelect" aria-pressed="false">Select Multiple Mode</button>
+        <button type="button" class="poxy-col-forge" id="btnColCraftMode">
+          <span class="material-symbols-outlined" aria-hidden="true">auto_fix_high</span>
+          Craft (5 Common → 1 Uncommon)
+        </button>
+      </div>
+      <div class="poxy-col-capsule-row">
+        <button type="button" class="poxy-col-capsule poxy-col-capsule-burn" id="btnColBurnCapsule" disabled>BURN</button>
+        <button type="button" class="poxy-col-capsule poxy-col-capsule-craft" id="btnColCraftCapsule" disabled>CRAFT</button>
+      </div>
+      <div class="poxy-col-burn-panel">
+        <div class="poxy-col-burn-label">
+          <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+          Burn → PC
+        </div>
+        <div class="poxy-col-burn-rates">
+          <span class="poxy-col-burn-chip">Common 0.10</span>
+          <span class="poxy-col-burn-chip">Mythic 40</span>
+          <span class="poxy-col-burn-chip">Secret 100</span>
+        </div>
+      </div>
+      <div class="poxy-col-craft-zone" id="colCraftZone" aria-hidden="true">
+        <div class="poxy-col-craft-zone-head">
+          <div>
+            <h2>Alchemical Processing Zone</h2>
+            <p>Drag 5 Common POXY from the grid into the sockets below.</p>
+          </div>
+          <button type="button" class="poxy-col-craft-close" id="btnColCraftClose" aria-label="Close craft zone">✕</button>
+        </div>
+        <div class="poxy-col-craft-sockets" id="colCraftSockets"></div>
+        <button type="button" class="poxy-col-craft-execute" id="btnCraftExecute" disabled>CRAFT</button>
+      </div>
+      <div class="bulk-bar" id="bulkBar" hidden aria-hidden="true">
+        <span class="bulk-count" id="bulkCount">0 selected</span>
+        <button class="btn-bulk-dust" id="btnBulkDust">Burn All Selected</button>
+      </div>
     </div>
-    <div class="dust-bar">
-      <span style="font-size:14px">🔥</span>
-      <span style="font-size:11px;font-weight:600;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-left:4px">Burn → PC:</span>
-      <span class="dust-val" id="dustVal" style="display:none">0</span>
-      <span class="dust-tip">Common 0.10 · Mythic 40 · Secret 100</span>
-    </div>
-    <div class="filter-row" id="filterRow"></div>
-    <div class="bulk-bar" id="bulkBar">
-      <span class="bulk-count" id="bulkCount">0 selected</span>
-      <button class="btn-bulk-dust" id="btnBulkDust">🔥 Burn All Selected</button>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
-      <button class="filter-btn" onclick="openCraftModal()" style="--fc:#9C27B0;--fb:rgba(156,39,176,0.10);background:rgba(156,39,176,0.08);color:#9C27B0;border:1px solid #9C27B055">⚒ Craft (5 Common → 1 Uncommon)</button>
-    </div>
+    <main class="poxy-col-main">
+      <div id="colContent"><div class="col-loading poxy-col-loading"><div class="col-spinner"></div></div></div>
+    </main>
   </div>
-  <div id="colContent"><div class="col-loading"><div class="col-spinner"></div></div></div>
 </div>
 
 <!-- FRIENDS PAGE -->
-<div class="page" id="friendsPage">
-  <div class="page-title">FRIENDS</div>
-  <div id="pendingRequestsContainer"></div>
-  <div class="search-bar">
-    <input class="search-input" id="friendSearch" placeholder="Search by exact username..." onkeydown="if(event.key==='Enter')searchUsers()">
-    <button class="btn-search" onclick="searchUsers()">Find</button>
+<div class="page poxy-friends-page" id="friendsPage">
+  <div class="poxy-friends-hub" id="friendsHubView">
+    <div class="poxy-friends-shell">
+      <h1 class="poxy-friends-title">Friends &amp; Social</h1>
+      <p class="poxy-friends-sub">Compact roster with live presence, hot-key macros, and full profile viewports.</p>
+      <div id="pendingRequestsContainer"></div>
+      <div class="search-bar">
+        <input class="search-input" id="friendSearch" placeholder="Search by exact username..." onkeydown="if(event.key==='Enter')searchUsers()">
+        <button class="btn-search" onclick="searchUsers()">Find</button>
+      </div>
+      <div class="search-hint">Enter exact username (letters, numbers, underscores).</div>
+      <div style="margin-top:12px;margin-bottom:16px">
+        <div class="section-label">Search results</div>
+        <div id="searchResults"><div style="font-size:12px;color:#9d8b9b;padding:6px 0">Enter a username and press Find</div></div>
+      </div>
+      <div class="section-label">My friends</div>
+      <div class="poxy-friends-roster" id="friendsList"></div>
+    </div>
   </div>
-  <div class="search-hint">Enter exact username (letters, numbers, underscores).</div>
-  <div style="margin-top:4px;margin-bottom:16px">
-    <div class="section-label">Search results</div>
-    <div id="searchResults"><div style="font-size:12px;color:#C8C8C8;padding:6px 0">Enter a username and press Find</div></div>
+  <div class="poxy-friend-profile-view" id="friendProfileView" hidden>
+    <div class="poxy-friends-shell">
+      <div class="pfp-toolbar">
+        <button type="button" class="pfp-back" id="btnFriendProfileBack"><span class="material-symbols-outlined" style="font-size:16px">arrow_back</span> Roster</button>
+      </div>
+      <div class="pfp-banner" id="friendProfileBanner" aria-hidden="true"></div>
+      <div class="pfp-hero">
+        <div class="pfp-avatar" id="friendProfileAvatar">👾</div>
+        <div>
+          <h2 class="pfp-name" id="friendProfileName">–</h2>
+          <p class="pfp-rank" id="friendProfileRank">–</p>
+          <div class="poxy-friend-presence" id="friendProfilePresence"></div>
+        </div>
+      </div>
+      <div class="pfp-stats" id="friendProfileStats"></div>
+      <div class="pfp-trade-split">
+        <div class="pfp-trade-col">
+          <h3>Your Items</h3>
+          <div id="friendTradeMine"><div class="pfp-trade-empty">Select items via Initiate Trade</div></div>
+        </div>
+        <div class="pfp-trade-col">
+          <h3 id="friendTradeTheirLabel">Friend's Items</h3>
+          <div id="friendTradeTheirs"><div class="pfp-trade-empty">Preview only — offers via trade modal</div></div>
+        </div>
+      </div>
+      <div class="pfp-actions" id="friendProfileActions"></div>
+    </div>
   </div>
-  <div>
-    <div class="section-label">My friends</div>
-    <div id="friendsList"></div>
+</div>
+<div class="poxy-gift-overlay" id="giftPickerOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="giftPickerTitle">
+  <div class="poxy-gift-card">
+    <h3 id="giftPickerTitle" style="margin:0 0 8px;font-size:14px;color:#f9abff">Send a Gift</h3>
+    <p style="margin:0 0 12px;font-size:12px;color:#9d8b9b" id="giftPickerSub">Choose an item from your inventory.</p>
+    <div class="poxy-gift-preview"><div class="poxy-gift-box" id="giftBoxPreview"><div class="poxy-gift-ribbon" aria-hidden="true"></div><span id="giftBoxIcon" style="font-size:36px">🎁</span></div></div>
+    <div id="giftPickerGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;max-height:200px;overflow-y:auto;margin-bottom:12px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button type="button" class="btn-modal-cancel" onclick="closeGiftPicker()">Cancel</button>
+      <button type="button" class="btn-modal-ok" id="btnSendGiftConfirm" disabled onclick="confirmSendGift()">Send Gift</button>
+    </div>
   </div>
+</div>
+<div class="poxy-gift-particle-layer" id="giftParticleLayer" aria-hidden="true"></div>
+<div class="poxy-chat-inspect-popover" id="chatUserInspectPopover" hidden role="dialog" aria-label="Quick profile">
+  <div class="poxy-chat-inspect-head">
+    <div class="poxy-chat-inspect-av" id="chatInspectAvatar">👾</div>
+    <div>
+      <div class="poxy-chat-inspect-name" id="chatInspectName">–</div>
+      <div class="poxy-chat-inspect-rank" id="chatInspectRank">–</div>
+    </div>
+  </div>
+  <div class="poxy-chat-inspect-actions" id="chatInspectActions"></div>
 </div>
 
 <!-- MARKETPLACE PAGE (Stitch) -->
@@ -2646,7 +2769,10 @@ let spinAnim=null, particleLoop=null, particles=[];
 let selectedAvatar=AVATARS[0], marketTab='buy';
 let pendingListItem=null, pendingBuyItem=null;
 let selectedBankAmt=10;
-let colFilter='all', selectedForDust=new Set();
+let colFilter='all', selectedForDust=new Set(), selectedItems=selectedForDust;
+let colMultiSelectMode=false, colSortPreset='default', colCraftZoneOpen=false;
+let colDisplayOrder=[], colLastSelectIndex=-1;
+let craftSockets=[null,null,null,null,null];
 let marketSort='newest', hasPremiumFrame=false, pendingSpinTier=null;
 let marketBuyCache=[];
 let marketSearchQuery='', marketRarityFilter='all';
@@ -2661,12 +2787,17 @@ window.switchExploreSection=function(section){
   activeExploreSection=section;
   document.querySelectorAll('.poxy-explore-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.explore===section));
   Object.keys(EXPLORE_SECTION_MAP).forEach(k=>{const el=$(EXPLORE_SECTION_MAP[k]);if(el)el.classList.toggle('active',k===section);});
-  if(section==='news'){loadNewsFeedTab();loadPoxyChat();}
+  if(section==='news')showStitchTab('news');
 };
 function loadExplorePanel(){switchExploreSection(activeExploreSection||'support');}
 let leaderboardMode='balance';
 let friendIncoming=[], friendOutgoing=[], friendAccepted=[];
 let inspectTargetUserId=null;
+let friendProfileUserId=null;
+let giftTargetUserId=null;
+let giftSelectedItemId=null;
+let friendPresenceMap={};
+let presenceChannel=null;
 let realtimeSubs=[];
 let friendPollInterval=null;
 let spinStartTime=0;
@@ -2676,7 +2807,7 @@ let activeFlashSales=[];
 // social
 let chatMessages=[];
 // economy + crafting + quests + global burn
-let craftSelection=new Set();
+let craftSelection=new Set(); /* legacy modal; forge uses craftSockets */
 let dailyQuests=[];
 let greatBurnTotal=0;
 // notifications queue (Phase 1)
@@ -3162,6 +3293,7 @@ function renderProfilePage(){
   $('profileUsername').value=currentProfile?.username||'';
   renderFrameSelector();
   updateGlobalFrames();
+  if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
 }
 async function renderProfileStats(){
   try{
@@ -3597,7 +3729,7 @@ function showPoxyAppShell(){
 const STITCH_TAB_MAP={
   dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavExplore',
   collection:'psdNavCollection',friends:'psdNavFriends',profile:'psdNavDashboard',
-  market:'psdNavMarket',club:'psdNavClub',
+  market:'psdNavMarket',club:'psdNavClub',news:'psdNavNews',
   tierlist:'psdNavRarity',rarity:'psdNavRarity',ranks:'psdNavRanks'
 };
 
@@ -3623,6 +3755,7 @@ function syncPsdTopNav(page){
   if(tab==='explore'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
   else if(tab==='rarity'||tab==='tierlist'){const r=$('psdNavRarity');if(r)r.classList.add('active');}
   else if(tab==='store'){const s=$('psdNavStore');if(s)s.classList.add('active');}
+  else if(tab==='news'){const n=$('psdNavNews');if(n)n.classList.add('active');}
   else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'){}
 }
 
@@ -3678,7 +3811,9 @@ window.showStitchTab=function(tab){
   }
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
+  if(next==='news'){loadNewsFeedTab();loadPoxyChat();}
   if(next==='tierlist')loadTierListPanel();
+  updatePresenceTrack();
   if(next==='ranks'){
     ensureRanksPanelReady();
     requestAnimationFrame(()=>{
@@ -3961,8 +4096,19 @@ window.showPage=function(page){
     if(el)el.classList.toggle('visible',page===p);
   });
   syncPsdTopNav(page);
-  if(page==='collection'){colFilter='all';selectedForDust=new Set();loadCollection();refreshPremiumFrame();}
-  if(page==='friends'){loadFriends();loadPendingRequests();}
+  if(page==='collection'){
+    colFilter='all';colSortPreset='default';colMultiSelectMode=false;colCraftZoneOpen=false;
+    selectedForDust=new Set();selectedItems=selectedForDust;colLastSelectIndex=-1;
+    resetCraftSockets(false);closeColSortMenu();syncColMultiToggleUi();setColCraftZoneOpen(false);
+    loadCollection().then(()=>{const c=$('colContent');if(c&&window.PoxyHudAudio)PoxyHudAudio.bindCollectionGrid(c);});
+    refreshPremiumFrame();
+    updatePresenceTrack();
+  }
+  if(page==='friends'){
+    closeFriendProfileView();
+    loadFriends();loadPendingRequests();
+    updatePresenceTrack();
+  }
   if(page==='profile'){
     renderProfilePage();renderProfileStats();applyPremiumFrameUI();
     renderMythicClubTracker();renderProfileStreakWidget();renderProfileShowcaseMatrix();
@@ -4250,36 +4396,31 @@ function toggleClubAccess(has){
   updatePsdMemberBadge();
 }
 
-// ── COLLECTION ──
+// ── COLLECTION (Tactical Archive) ──
 let colData=[];
-async function loadCollection(){
-  const cont=$('colContent'),cnt=$('colCount');
-  cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
-  selectedForDust=new Set();updateBulkBar();
-  try{
-    const{data,error}=await sb.from('user_poxy').select('*').eq('user_id',currentUser.id).order('dropped_at',{ascending:false});
-    if(error)throw error;
-    colData=data||[];
-    renderFilterButtons();renderCollection();
-    renderDashColPreview();
-    cnt.textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
-    syncStoreData();
-    if($('storeGrid')&&currentProfile)renderStoreGrid();
-  }catch(e){cont.innerHTML='<div class="col-empty">Failed to load.</div>';}
+function colDuplicateKey(it){
+  if(!it)return'';
+  return String(it.poxy_tier||'')+'|'+String(it.serial_number||'').replace(/\d+$/,'').trim();
 }
-function renderFilterButtons(){
-  const row=$('filterRow');row.innerHTML='';
-  const tiers=['all',...TIERS.map(t=>t.id)];
-  tiers.forEach(id=>{
-    const tier=TIERS.find(t=>t.id===id);
-    const btn=document.createElement('button');
-    btn.className='filter-btn'+(id===colFilter?' active':'');
-    btn.textContent=id==='all'?'All':tier?.label||id;
-    btn.style.setProperty('--fc',tier?.color||'#f9abff');
-    btn.style.setProperty('--fb',tier?tier.glow:'rgba(249,171,255,0.12)');
-    btn.onclick=()=>{colFilter=id;selectedForDust=new Set();updateBulkBar();renderCollection();document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');};
-    row.appendChild(btn);
-  });
+function applyColSortPreset(arr){
+  const list=Array.isArray(arr)?arr.slice():[];
+  if(colSortPreset==='recent'){
+    return list.sort((a,b)=>new Date(b.dropped_at||0)-new Date(a.dropped_at||0));
+  }
+  if(colSortPreset==='value'){
+    return list.sort((a,b)=>(TIER_BY_ID[b.poxy_tier]?.burn||0)-(TIER_BY_ID[a.poxy_tier]?.burn||0));
+  }
+  if(colSortPreset==='duplicates'){
+    const counts={};
+    list.forEach(i=>{const k=colDuplicateKey(i);counts[k]=(counts[k]||0)+1;});
+    return list.sort((a,b)=>{
+      const ka=colDuplicateKey(a),kb=colDuplicateKey(b);
+      if((counts[kb]||0)!==(counts[ka]||0))return(counts[kb]||0)-(counts[ka]||0);
+      if(ka!==kb)return ka.localeCompare(kb);
+      return new Date(b.dropped_at||0)-new Date(a.dropped_at||0);
+    });
+  }
+  return list;
 }
 function applyPinSort(arr){
   // Stable partition: pinned first (sorted by pinned_at DESC), then unpinned
@@ -4288,7 +4429,228 @@ function applyPinSort(arr){
   const pinned=[];const rest=[];
   for(const it of arr){if(it&&it.pinned_at)pinned.push(it);else rest.push(it);}
   pinned.sort((a,b)=>new Date(b.pinned_at).getTime()-new Date(a.pinned_at).getTime());
-  return pinned.concat(rest);
+  const merged=pinned.concat(rest);
+  if(colSortPreset==='default')return merged;
+  return applyColSortPreset(merged);
+}
+function estimateBurnPayout(ids){
+  let sum=0;
+  ids.forEach(id=>{
+    const it=colData.find(i=>String(i.id)===String(id));
+    if(it)sum+=TIER_BY_ID[it.poxy_tier]?.burn||0;
+  });
+  return sum;
+}
+function resetCraftSockets(rerender){
+  craftSockets=[null,null,null,null,null];
+  if(rerender!==false)renderCraftSockets();
+  updateColActionCapsules();
+}
+function getCraftSocketIds(){return craftSockets.filter(Boolean);}
+function setColCraftZoneOpen(open){
+  colCraftZoneOpen=!!open;
+  const zone=$('colCraftZone');
+  if(zone){
+    zone.classList.toggle('is-open',colCraftZoneOpen);
+    zone.setAttribute('aria-hidden',colCraftZoneOpen?'false':'true');
+  }
+  document.body.classList.toggle('col-craft-zone-active',colCraftZoneOpen);
+  if(colCraftZoneOpen)renderCraftSockets();
+  else resetCraftSockets(false);
+  renderCollection();
+  updateColActionCapsules();
+}
+function renderCraftSockets(){
+  const row=$('colCraftSockets');if(!row)return;
+  row.innerHTML='';
+  for(let i=0;i<5;i++){
+    const id=craftSockets[i];
+    const item=id?colData.find(x=>String(x.id)===String(id)):null;
+    const tier=item?TIER_BY_ID[item.poxy_tier]:TIERS[0];
+    const sock=document.createElement('div');
+    sock.className='poxy-col-craft-socket'+(id?' is-filled':'')+(id?' socket-pop':'');
+    sock.dataset.socketIndex=String(i);
+    sock.setAttribute('role','listitem');
+    sock.addEventListener('dragover',onCraftSocketDragOver);
+    sock.addEventListener('dragleave',onCraftSocketDragLeave);
+    sock.addEventListener('drop',onCraftSocketDrop);
+    if(id&&item){
+      const inner=document.createElement('div');
+      inner.className='poxy-col-craft-socket-inner';
+      inner.draggable=true;
+      inner.dataset.dragKind='socket';
+      inner.dataset.itemId=id;
+      inner.dataset.socketIndex=String(i);
+      inner.addEventListener('dragstart',onColItemDragStart);
+      inner.innerHTML='<span class="poxy-col-craft-socket-icon" style="color:'+tier.color+'">'+tier.icon+'</span><span class="poxy-col-craft-socket-ser">'+sanitizeText(item.serial_number||'–')+'</span>';
+      inner.addEventListener('dblclick',()=>clearCraftSocket(i));
+      sock.appendChild(inner);
+    }else{
+      const ph=document.createElement('span');
+      ph.className='poxy-col-craft-socket-ph';
+      ph.textContent=String(i+1);
+      sock.appendChild(ph);
+    }
+    row.appendChild(sock);
+  }
+  const exec=$('btnCraftExecute');
+  const filled=getCraftSocketIds().length;
+  if(exec){
+    exec.disabled=filled!==5;
+    exec.classList.toggle('is-ignited',filled===5);
+    exec.textContent=filled===5?'EXECUTE CRAFT → 1 UNCOMMON':'CRAFT ('+filled+' / 5)';
+  }
+  updateColActionCapsules();
+}
+function clearCraftSocket(idx){
+  if(craftSockets[idx]==null)return;
+  craftSockets[idx]=null;
+  renderCraftSockets();
+  renderCollection();
+}
+function findCraftSocketForItem(itemId){
+  return craftSockets.findIndex(x=>x&&String(x)===String(itemId));
+}
+function onColItemDragStart(e){
+  const el=e.currentTarget;
+  const id=el.dataset.itemId||el.closest('.col-card')?.dataset.id;
+  if(!id)return;
+  const item=colData.find(i=>String(i.id)===String(id));
+  if(!item||item.poxy_tier!=='common'){e.preventDefault();showToast('Only Common POXY can be forged.');return;}
+  e.dataTransfer.setData('text/poxy-item-id',id);
+  e.dataTransfer.setData('text/poxy-drag-from',el.dataset.dragKind||'grid');
+  if(el.dataset.socketIndex!=null)e.dataTransfer.setData('text/poxy-socket-index',el.dataset.socketIndex);
+  e.dataTransfer.effectAllowed='move';
+  el.classList.add('is-dragging');
+}
+function onColItemDragEnd(e){e.currentTarget.classList.remove('is-dragging');}
+function onCraftSocketDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  e.currentTarget.classList.add('is-drag-over');
+}
+function onCraftSocketDragLeave(e){e.currentTarget.classList.remove('is-drag-over');}
+function onCraftSocketDrop(e){
+  e.preventDefault();
+  e.currentTarget.classList.remove('is-drag-over');
+  const itemId=e.dataTransfer.getData('text/poxy-item-id');
+  if(!itemId)return;
+  const item=colData.find(i=>String(i.id)===String(itemId));
+  if(!item||item.poxy_tier!=='common'){showToast('Only Common POXY fit the forge.');return;}
+  const socketIdx=parseInt(e.currentTarget.dataset.socketIndex,10);
+  if(Number.isNaN(socketIdx)||socketIdx<0||socketIdx>4)return;
+  const fromSock=e.dataTransfer.getData('text/poxy-socket-index');
+  const prevIdx=findCraftSocketForItem(itemId);
+  if(prevIdx>=0&&prevIdx!==socketIdx)craftSockets[prevIdx]=null;
+  craftSockets[socketIdx]=itemId;
+  if(fromSock!==''){const fi=parseInt(fromSock,10);if(!Number.isNaN(fi)&&fi!==socketIdx)craftSockets[fi]=null;}
+  renderCraftSockets();
+  renderCollection();
+}
+function updateColActionCapsules(){
+  const n=selectedForDust.size;
+  const payout=estimateBurnPayout([...selectedForDust]);
+  const burnBtn=$('btnColBurnCapsule');
+  const craftBtn=$('btnColCraftCapsule');
+  if(burnBtn){
+    burnBtn.disabled=n===0;
+    burnBtn.textContent=n?'BURN '+n+' SELECTED ITEMS → +'+formatPC(payout):'BURN';
+    burnBtn.classList.toggle('poxy-capsule-ready',n>0);
+  }
+  if(craftBtn){
+    const filled=getCraftSocketIds().length;
+    if(colCraftZoneOpen){
+      craftBtn.disabled=filled!==5;
+      craftBtn.textContent=filled===5?'CRAFT 5 → 1 UNCOMMON':'CRAFT '+filled+' / 5 IN FORGE';
+      craftBtn.classList.toggle('poxy-capsule-ready',filled===5);
+    }else{
+      const commons=[...selectedForDust].filter(id=>colData.find(i=>String(i.id)===String(id))?.poxy_tier==='common').length;
+      craftBtn.disabled=false;
+      craftBtn.textContent=n?'CRAFT ('+commons+' COMMON IN SELECTION)':'CRAFT (5 COMMON → 1 UNCOMMON)';
+      craftBtn.classList.toggle('poxy-capsule-ready',commons>=5);
+    }
+  }
+  updateBulkBar();
+}
+function syncColMultiToggleUi(){
+  const btn=$('btnColMultiSelect');
+  if(btn){
+    btn.classList.toggle('is-active',colMultiSelectMode);
+    btn.setAttribute('aria-pressed',colMultiSelectMode?'true':'false');
+  }
+  document.body.classList.toggle('col-multi-select-active',colMultiSelectMode);
+}
+function toggleColMultiSelectMode(){
+  colMultiSelectMode=!colMultiSelectMode;
+  if(!colMultiSelectMode){selectedForDust.clear();colLastSelectIndex=-1;}
+  syncColMultiToggleUi();
+  renderCollection();
+  updateColActionCapsules();
+}
+function toggleColSelection(itemId,index,shiftKey){
+  const id=String(itemId);
+  if(shiftKey&&colLastSelectIndex>=0&&index>=0){
+    const a=Math.min(colLastSelectIndex,index),b=Math.max(colLastSelectIndex,index);
+    for(let i=a;i<=b;i++){
+      const rid=colDisplayOrder[i];
+      if(rid)selectedForDust.add(rid);
+    }
+  }else if(selectedForDust.has(id))selectedForDust.delete(id);
+  else selectedForDust.add(id);
+  colLastSelectIndex=index;
+  renderCollection();
+  updateColActionCapsules();
+}
+function closeColSortMenu(){
+  const menu=$('colSortMenu'),btn=$('colSortBtn');
+  if(menu)menu.classList.add('hidden');
+  if(btn)btn.setAttribute('aria-expanded','false');
+}
+const COL_SORT_LABELS={default:'Sort: Default',duplicates:'Sort: Duplicates First',recent:'Sort: Recent',value:'Sort: Highest Value'};
+async function loadCollection(){
+  const cont=$('colContent'),cnt=$('colCount');
+  cont.innerHTML='<div class="col-loading poxy-col-loading"><div class="col-spinner"></div></div>';
+  if(!colMultiSelectMode){selectedForDust=new Set();selectedItems=selectedForDust;}
+  updateColActionCapsules();
+  try{
+    const{data,error}=await sb.from('user_poxy').select('*').eq('user_id',currentUser.id).order('dropped_at',{ascending:false});
+    if(error)throw error;
+    colData=data||[];
+    renderFilterButtons();renderCollection();
+    renderDashColPreview();
+    if(cnt)cnt.textContent=colData.length?String(colData.length):'0';
+    syncStoreData();
+    if($('storeGrid')&&currentProfile)renderStoreGrid();
+  }catch(e){cont.innerHTML='<div class="poxy-col-empty">Failed to load archive.</div>';}
+}
+function renderFilterButtons(){
+  const row=$('filterRow');if(!row)return;
+  row.innerHTML='';
+  const tiers=['all',...TIERS.map(t=>t.id)];
+  tiers.forEach(id=>{
+    const tier=TIERS.find(t=>t.id===id);
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='poxy-col-filter-tab filter-btn'+(id===colFilter?' active':'');
+    btn.textContent=id==='all'?'All':tier?.label||id;
+    btn.style.setProperty('--fc',tier?.color||'#f9abff');
+    btn.style.setProperty('--fb',tier?tier.glow:'rgba(249,171,255,0.12)');
+    btn.onclick=()=>{
+      colFilter=id;
+      if(!colMultiSelectMode){selectedForDust=new Set();selectedItems=selectedForDust;}
+      colLastSelectIndex=-1;
+      updateColActionCapsules();
+      renderCollection();
+      row.querySelectorAll('.poxy-col-filter-tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    row.appendChild(btn);
+  });
+  const lbl=$('colSortLabel');
+  if(lbl)lbl.textContent=COL_SORT_LABELS[colSortPreset]||'Sort';
+  document.querySelectorAll('.poxy-col-sort-opt').forEach(b=>{
+    b.classList.toggle('is-active',b.dataset.sort===colSortPreset);
+  });
 }
 // VIP rarity → CSS class mapping (Phase 1 / Phase 3 spec)
 const VIP_TIER_IDS=new Set(VIP_TIERS.map(t=>t.id));
@@ -4304,32 +4666,69 @@ function vipClassFor(item){
 // overlay for non-members. No event listeners are attached: the existing
 // delegated handler on #colContent (kebab + menu items + body select) keeps
 // owning every interaction.
-function buildCollectionCard(item,index,lockedView){
+function buildCollectionCard(item,index,lockedView,displayIndex){
   const tier=TIER_BY_ID[item.poxy_tier]||TIERS[0];
   const vipTier=VIP_TIERS.find(t=>t.id===item.poxy_tier);
   const isVip=!!vipTier||item.is_vip===true;
   const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
   const isPinned=!!item.pinned_at;
   const isFeatured=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
+  const inForge=findCraftSocketForItem(item.id)>=0;
+  const isSelected=selectedForDust.has(item.id);
 
   const card=document.createElement('div');
-  card.className='col-card tilt-3d'+
+  card.className='col-card col-inv-card poxy-col-card tilt-3d'+
     (isPinned?' pinned':'')+
     (isVip?' col-card-vip':'')+
     (vipTier?' '+vipClassFor(item):'')+
-    (lockedView?' poxy-club-teaser':'');
+    (item.poxy_tier==='legendary'?' poxy-col-card-legendary':'')+
+    (lockedView?' poxy-club-teaser':'')+
+    (isSelected?' selected-for-dust col-inv-selected':'')+
+    (inForge?' col-inv-in-forge':'');
   card.dataset.id=item.id;
+  card.dataset.index=displayIndex!=null?String(displayIndex):'';
+  card.dataset.tier=item.poxy_tier||'';
   card.dataset.pinnedAt=item.pinned_at||'';
-  if(selectedForDust.has(item.id))card.classList.add('selected-for-dust');
-  card.style.cssText='background:'+tier.glow+';border-color:'+tier.color+'55;box-shadow:0 0 18px '+tier.glow+';animation-delay:'+(index*0.04)+'s';
+  card.style.setProperty('--rarity-color',tier.color);
+  card.style.setProperty('--rarity-glow',tier.glow);
+  card.style.animationDelay=(index*0.04)+'s';
 
-  const ico=document.createElement('div');ico.className='col-card-icon';ico.textContent=tier.icon;
-  const lbl=document.createElement('div');lbl.className='col-card-tier';lbl.style.color=tier.color;lbl.textContent=tier.label;
-  const dt=document.createElement('div');dt.className='col-card-date';dt.textContent=ds;
-  const ser=document.createElement('div');ser.className='col-card-serial';ser.textContent=item.serial_number||'–';
-  const body=document.createElement('div');body.className='col-card-body';
-  body.appendChild(ico);body.appendChild(lbl);body.appendChild(dt);body.appendChild(ser);
-  card.appendChild(body);
+  const thumb=document.createElement('div');
+  thumb.className='col-inv-thumb poxy-col-preview';
+  const glow=document.createElement('div');
+  glow.className='col-inv-thumb-glow';
+  glow.style.background='radial-gradient(ellipse at 50% 80%,'+tier.glow+',transparent 70%)';
+  const ico=document.createElement('div');
+  ico.className='col-card-icon poxy-col-preview-icon';
+  ico.style.color=tier.color;
+  ico.textContent=tier.icon;
+  thumb.appendChild(glow);
+  thumb.appendChild(ico);
+  card.appendChild(thumb);
+
+  const foot=document.createElement('div');
+  foot.className='col-inv-foot poxy-col-foot';
+  const lbl=document.createElement('div');
+  lbl.className='col-card-tier';
+  lbl.style.color=tier.color;
+  lbl.textContent=tier.label;
+  const ser=document.createElement('div');
+  ser.className='col-card-serial';
+  ser.textContent=item.serial_number||'–';
+  const dt=document.createElement('div');
+  dt.className='col-card-date';
+  dt.textContent=ds;
+  foot.appendChild(lbl);
+  foot.appendChild(ser);
+  foot.appendChild(dt);
+  card.appendChild(foot);
+
+  if(colCraftZoneOpen&&item.poxy_tier==='common'&&!lockedView&&!inForge){
+    card.draggable=true;
+    card.dataset.dragKind='grid';
+    card.addEventListener('dragstart',onColItemDragStart);
+    card.addEventListener('dragend',onColItemDragEnd);
+  }
 
   if(isPinned){const pb=document.createElement('div');pb.className='col-card-pin-badge';pb.textContent='📌';card.appendChild(pb);}
 
@@ -4373,62 +4772,65 @@ function buildCollectionCard(item,index,lockedView){
 
 function renderCollection(){
   const cont=$('colContent');
+  if(!cont)return;
   document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
-  const filtered=applyPinSort(colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter));
-
-  // Phase 2 partition — VIP items go to the Poxy Club Exclusives section.
-  // Only partition when no specific tier filter is applied; otherwise the
-  // user explicitly asked for one tier and we keep the existing flat behavior.
+  const base=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
+  const filtered=applyPinSort(base);
   const splitClubSection=colFilter==='all';
-  const normalItems=splitClubSection?filtered.filter(i=>!isVipPoxyItem(i)):filtered;
-  const vipItems=splitClubSection?filtered.filter(i=> isVipPoxyItem(i)):[];
+  const normalItems=splitClubSection?filtered.filter(i=>!isVipPoxyItem(i)&&findCraftSocketForItem(i.id)<0):filtered.filter(i=>findCraftSocketForItem(i.id)<0);
+  const vipItems=splitClubSection?filtered.filter(i=>isVipPoxyItem(i)):[];
 
   cont.innerHTML='';
+  colDisplayOrder=[];
 
   if(!normalItems.length&&!vipItems.length){
-    cont.innerHTML='<div class="col-empty"><div class="col-empty-icon">✸</div>'+(colFilter==='all'?'Your collection is empty.<br>Hunt your first POXY!':'No '+colFilter+' POXY found.')+'</div>';
+    cont.innerHTML='<div class="poxy-col-empty col-empty"><div class="poxy-col-empty-icon col-empty-icon"><span class="material-symbols-outlined">inventory_2</span></div><h2>Archive empty</h2><p>'+(colFilter==='all'?'Your collection is empty. Hunt your first POXY!':'No '+colFilter+' POXY in this filter.')+'</p></div>';
+    updateColActionCapsules();
     return;
   }
 
-  // Standard inventory grid (non-VIP items, or whatever the filter selected).
   if(normalItems.length){
-    const grid=document.createElement('div');grid.className='col-grid col-grid-wide';grid.id='colGrid';
-    normalItems.forEach((item,i)=>grid.appendChild(buildCollectionCard(item,i,false)));
+    const grid=document.createElement('div');
+    grid.className='col-grid col-grid-wide poxy-col-inventory-grid';
+    grid.id='colGrid';
+    normalItems.forEach((item,i)=>{
+      colDisplayOrder.push(item.id);
+      grid.appendChild(buildCollectionCard(item,i,false,i));
+    });
     cont.appendChild(grid);
   }
 
-  // POXY CLUB EXCLUSIVES — only when no tier filter is active and the user
-  // owns at least one VIP item. Member view = full rarity; non-member view =
-  // teaser + LOCKED overlay + JOIN CLUB CTA.
   if(splitClubSection&&vipItems.length){
     const member=isClubMember();
     const section=document.createElement('div');
     section.id='colClubSection';
     section.className='col-club-section';
-
     const header=document.createElement('div');
     header.className='col-club-header';
     header.innerHTML='<span class="col-club-bullet">✸</span><span class="col-club-title">Poxy Club Exclusives</span><span class="col-club-count">'+vipItems.length+'</span>';
     section.appendChild(header);
-
     const vipGrid=document.createElement('div');
-    vipGrid.className='col-grid col-grid-wide col-club-grid';
+    vipGrid.className='col-grid col-grid-wide col-club-grid poxy-col-inventory-grid';
     vipGrid.id='colClubGrid';
-    vipItems.forEach((item,i)=>vipGrid.appendChild(buildCollectionCard(item,i,!member)));
+    vipItems.forEach((item,i)=>{
+      colDisplayOrder.push(item.id);
+      vipGrid.appendChild(buildCollectionCard(item,i,!member,colDisplayOrder.length-1));
+    });
     section.appendChild(vipGrid);
-
     if(!member){
       const cta=document.createElement('button');
       cta.type='button';
       cta.className='col-club-cta';
       cta.innerHTML='<span class="ic">🔓</span><span>JOIN CLUB TO UNLOCK</span>';
-      cta.addEventListener('click',function(){
-        if(typeof window.showPage==='function')window.showPage('club');
-      });
+      cta.addEventListener('click',()=>{if(typeof window.showPage==='function')window.showPage('club');});
       section.appendChild(cta);
     }
-
     cont.appendChild(section);
+  }
+  updateColActionCapsules();
+  if(window.PoxyHudAudio){
+    const gridEl=cont.querySelector('.poxy-col-inventory-grid')||cont.querySelector('#colGrid');
+    if(gridEl)PoxyHudAudio.bindCollectionGrid(gridEl);
   }
 }
 
@@ -4555,14 +4957,18 @@ async function sharePoxy(poxyId,rarity,serialNumber){
     }
     // Click inside the menu but not on an item — eat it (don't toggle dust select)
     if(e.target.closest('.col-card-menu')){e.stopPropagation();return;}
-    // Plain card body click → existing select-for-dust toggle (unchanged behavior)
     const card=e.target.closest('.col-card');
     if(card&&root.contains(card)){
       closeAllMenusExcept(null);
-      const id=card.dataset.id;
-      if(selectedForDust.has(id)){selectedForDust.delete(id);card.classList.remove('selected-for-dust');}
-      else{selectedForDust.add(id);card.classList.add('selected-for-dust');}
-      updateBulkBar();
+      if(colMultiSelectMode){
+        const idx=parseInt(card.dataset.index,10);
+        toggleColSelection(card.dataset.id,Number.isNaN(idx)?-1:idx,e.shiftKey);
+        return;
+      }
+      if(colCraftZoneOpen&&card.dataset.tier==='common'){
+        showToast('Drag this Common into a forge socket.');
+        return;
+      }
     }
   });
   // Outside-click: close every open dropdown anywhere on the page
@@ -4580,6 +4986,19 @@ function updateBulkBar(){
   const n=selectedForDust.size;
   if(bar)bar.classList.toggle('show',n>0);
   if(cnt)cnt.textContent=n+' selected';
+}
+function runColBulkBurn(){
+  if(!selectedForDust.size)return;
+  $('btnBulkDust')?.click();
+}
+function fillCraftFromSelection(){
+  const commons=[...selectedForDust].filter(id=>colData.find(i=>String(i.id)===String(id))?.poxy_tier==='common');
+  if(commons.length<5){showToast('Select at least 5 Common POXY.');return;}
+  resetCraftSockets(false);
+  commons.slice(0,5).forEach((id,i)=>{craftSockets[i]=id;});
+  setColCraftZoneOpen(true);
+  renderCraftSockets();
+  renderCollection();
 }
 const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function burnPoxySecure(itemId,cardEl){
@@ -4599,7 +5018,7 @@ async function burnPoxySecure(itemId,cardEl){
     setTimeout(()=>{
       cardEl.remove();
       colData=colData.filter(i=>i.id!==itemId);
-      selectedForDust.delete(itemId);updateBulkBar();
+      selectedForDust.delete(itemId);updateColActionCapsules();
       if(currentProfile){currentProfile.balance=parseFloat(data.new_balance);}
       updateBalanceBadge(currentProfile?.balance||0);
       const rem=document.querySelectorAll('.col-card').length;
@@ -4625,15 +5044,51 @@ $('btnBulkDust').addEventListener('click',async function(){
     colData=colData.filter(i=>!ids.includes(i.id));
     if(currentProfile)currentProfile.balance=parseFloat(data.new_balance);
     updateBalanceBadge(currentProfile?.balance||0);
-    selectedForDust=new Set();updateBulkBar();renderCollection();
+    selectedForDust=new Set();selectedItems=selectedForDust;updateColActionCapsules();renderCollection();
     $('colCount').textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
     showToast('+'+formatPC(data.payout)+' for '+data.count+' items 🔥');
     greatBurnTotal+=data.count;updateGreatBurnUI();
     refreshPremiumFrame();
     if(commonsBeingBurned>0)bumpQuest('burn_5_commons',commonsBeingBurned);
   }catch(e){showToast('Bulk burn failed: '+(e.message||'error'));}
-  btn.disabled=false;btn.textContent='🔥 Burn All Selected';
+  btn.disabled=false;btn.textContent='Burn All Selected';
+  updateColActionCapsules();
 });
+
+(function initCollectionArchiveUi(){
+  $('btnColMultiSelect')?.addEventListener('click',toggleColMultiSelectMode);
+  $('btnColCraftMode')?.addEventListener('click',()=>{
+    setColCraftZoneOpen(!colCraftZoneOpen);
+  });
+  $('btnColCraftClose')?.addEventListener('click',()=>setColCraftZoneOpen(false));
+  $('btnColBurnCapsule')?.addEventListener('click',runColBulkBurn);
+  $('btnColCraftCapsule')?.addEventListener('click',()=>{
+    if(colCraftZoneOpen&&getCraftSocketIds().length===5)performCraft();
+    else if(getCraftSocketIds().length===5)performCraft();
+    else if([...selectedForDust].filter(id=>colData.find(i=>String(i.id)===String(id))?.poxy_tier==='common').length>=5)fillCraftFromSelection();
+    else setColCraftZoneOpen(true);
+  });
+  $('btnCraftExecute')?.addEventListener('click',performCraft);
+  const sortBtn=$('colSortBtn'),sortMenu=$('colSortMenu');
+  sortBtn?.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(sortMenu)sortMenu.classList.toggle('hidden');
+    const open=sortMenu&&!sortMenu.classList.contains('hidden');
+    sortBtn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  sortMenu?.querySelectorAll('.poxy-col-sort-opt').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      colSortPreset=opt.dataset.sort||'default';
+      closeColSortMenu();
+      renderFilterButtons();
+      renderCollection();
+    });
+  });
+  document.addEventListener('click',e=>{
+    if(e.target.closest('.poxy-col-sort-wrap'))return;
+    closeColSortMenu();
+  });
+})();
 
 // ── FRIENDS (rebuilt) ──
 async function loadPendingRequests(){
@@ -4687,6 +5142,200 @@ async function loadPendingRequests(){
     });
   }catch(e){if(cont)cont.innerHTML='';}
 }
+// ── Presence (Supabase Realtime) ──
+function getLocalActivityState(){
+  if(document.hidden)return'offline';
+  if($('collectionPage')?.classList.contains('visible'))return'inventory';
+  if($('friendsPage')?.classList.contains('visible'))return'online';
+  return'online';
+}
+function presenceLabel(state){
+  if(state==='inventory')return'In Inventory Hub';
+  if(state==='online')return'Online / In-Game';
+  return'Offline';
+}
+function syncFriendPresenceFromChannel(){
+  if(!presenceChannel)return;
+  const state=presenceChannel.presenceState();
+  friendPresenceMap={};
+  Object.keys(state).forEach(key=>{
+    (state[key]||[]).forEach(p=>{
+      if(p.user_id)friendPresenceMap[p.user_id]=p.state||'online';
+    });
+  });
+  document.querySelectorAll('.poxy-friend-row[data-user-id]').forEach(row=>{
+    const uid=row.dataset.userId;
+    const dot=row.querySelector('.poxy-friend-presence-dot');
+    const lbl=row.querySelector('.poxy-friend-presence-label');
+    const st=friendPresenceMap[uid]||'offline';
+    if(dot){dot.className='poxy-friend-presence-dot poxy-friend-presence-dot--'+(st==='inventory'?'inventory':st==='online'?'online':'offline');}
+    if(lbl)lbl.textContent=presenceLabel(st);
+  });
+}
+function updatePresenceTrack(){
+  if(!presenceChannel||!currentUser)return;
+  const state=getLocalActivityState();
+  presenceChannel.track({user_id:currentUser.id,state,ts:Date.now()}).catch(()=>{});
+}
+function setupPresenceChannel(){
+  if(!currentUser)return;
+  if(presenceChannel){try{sb.removeChannel(presenceChannel);}catch(e){}presenceChannel=null;}
+  presenceChannel=sb.channel('poxy-presence-lobby',{config:{presence:{key:currentUser.id}}});
+  presenceChannel.on('presence',{event:'sync'},syncFriendPresenceFromChannel);
+  presenceChannel.subscribe(async status=>{
+    if(status==='SUBSCRIBED')await updatePresenceTrack();
+  });
+  document.addEventListener('visibilitychange',updatePresenceTrack);
+}
+
+// ── Chat rank styling ──
+const CHAT_RANK_STYLES=[
+  {test:p=>p?.email&&p.email.toLowerCase()===FOUNDER_EMAIL,color:'#FF0080',badge:'🏆',label:'Founder'},
+  {test:p=>p?.is_verified_employee,color:'#FF5252',badge:'⚡',label:'Staff'},
+  {test:p=>p?.is_club_member,color:'#FFD700',badge:'✸',label:'VIP'},
+  {test:p=>{const r=leaderboardRankByUser[p?.id];return r&&r<=10;},color:'#00E5FF',badge:'★',label:'Top 10'},
+  {test:p=>{const r=leaderboardRankByUser[p?.id];return r&&r<=100;},color:'#AB47BC',badge:'◆',label:'Ranked'}
+];
+function getChatRankStyle(prof){
+  if(!prof)return{color:'#ff416c',badge:'◇',label:'Member'};
+  for(const s of CHAT_RANK_STYLES){if(s.test(prof))return s;}
+  return{color:'#ff416c',badge:'◇',label:'Member'};
+}
+function renderNewsMarkdown(raw){
+  let s=sanitizeText(raw||'');
+  s=s.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>');
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  s=s.replace(/\n/g,'<br>');
+  return s;
+}
+function inferNewsCategory(title){
+  const t=String(title||'').toLowerCase();
+  if(t.includes('patch')||t.includes('hotfix'))return'PATCH NOTES';
+  if(t.includes('economy')||t.includes('pc '))return'ECONOMY';
+  if(t.includes('club')||t.includes('vip'))return'CLUB INTEL';
+  return'ANNOUNCEMENT';
+}
+
+function closeFriendProfileView(){
+  friendProfileUserId=null;
+  const hub=$('friendsHubView'),view=$('friendProfileView');
+  if(hub)hub.classList.remove('is-hidden');
+  if(view){view.hidden=true;view.classList.remove('is-active');}
+}
+window.openFriendProfileView=async function(userId){
+  if(!userId)return;
+  friendProfileUserId=userId;
+  const hub=$('friendsHubView'),view=$('friendProfileView');
+  if(hub)hub.classList.add('is-hidden');
+  if(view){view.hidden=false;view.classList.add('is-active');}
+  $('friendProfileName').textContent='Loading…';
+  $('friendProfileStats').innerHTML='';
+  $('friendTradeMine').innerHTML='<div class="pfp-trade-empty">Loading…</div>';
+  $('friendTradeTheirs').innerHTML='<div class="pfp-trade-empty">Loading…</div>';
+  $('friendProfileActions').innerHTML='';
+  try{
+    const[{data:prof},{data:poxyData}]=await Promise.all([
+      sb.from('profiles').select('*').eq('id',userId).single(),
+      sb.from('user_poxy').select('poxy_tier,serial_number').eq('user_id',userId).order('dropped_at',{ascending:false}).limit(8)
+    ]);
+    if(!prof){closeFriendProfileView();showToast('Profile not found.');return;}
+    const av=$('friendProfileAvatar');
+    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))av.innerHTML='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="">';
+    else av.textContent=prof.avatar_url||'👾';
+    $('friendProfileName').textContent=sanitizeText(prof.username||'Anonymous');
+    const rk=leaderboardRankByUser[userId];
+    $('friendProfileRank').textContent=rk?'Global Rank #'+rk:'Unranked Player';
+    const pst=friendPresenceMap[userId]||'offline';
+    $('friendProfilePresence').innerHTML='<span class="poxy-friend-presence-dot poxy-friend-presence-dot--'+(pst==='inventory'?'inventory':pst==='online'?'online':'offline')+'"></span><span>'+presenceLabel(pst)+'</span>';
+    const rare=(poxyData||[]).filter(d=>!['common','uncommon'].includes(d.poxy_tier)).length;
+    $('friendProfileStats').innerHTML=
+      '<div class="pfp-stat"><div class="pfp-stat-val">'+(poxyData?.length||0)+'</div><div class="pfp-stat-lbl">Items</div></div>'+
+      '<div class="pfp-stat"><div class="pfp-stat-val">'+rare+'</div><div class="pfp-stat-lbl">Rare+</div></div>'+
+      '<div class="pfp-stat"><div class="pfp-stat-val">'+formatPC(prof.balance||0)+'</div><div class="pfp-stat-lbl">Balance</div></div>';
+    const mine=$('friendTradeMine');
+    mine.innerHTML='';
+    (colData||[]).slice(0,4).forEach(it=>{
+      const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];
+      mine.innerHTML+='<div class="pfp-trade-slot"><span style="color:'+t.color+'">'+t.icon+'</span> '+sanitizeText(it.serial_number||'–')+'</div>';
+    });
+    if(!colData.length)mine.innerHTML='<div class="pfp-trade-empty">Load collection to preview your offers</div>';
+    const theirs=$('friendTradeTheirs');
+    theirs.innerHTML='';
+    (poxyData||[]).slice(0,4).forEach(it=>{
+      const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];
+      theirs.innerHTML+='<div class="pfp-trade-slot"><span style="color:'+t.color+'">'+t.icon+'</span> '+sanitizeText(it.serial_number||'–')+'</div>';
+    });
+    if(!poxyData?.length)theirs.innerHTML='<div class="pfp-trade-empty">No public items</div>';
+    $('friendTradeTheirLabel').textContent=(prof.username||'Friend')+"'s Items";
+    const actions=$('friendProfileActions');
+    actions.innerHTML='';
+    const giftBtn=document.createElement('button');
+    giftBtn.type='button';giftBtn.className='pfp-btn-gift';
+    giftBtn.textContent='Send a Gift';
+    giftBtn.onclick=()=>openGiftPicker(userId,prof.username);
+    actions.appendChild(giftBtn);
+    const dmBtn=document.createElement('button');
+    dmBtn.type='button';dmBtn.className='pfp-back';
+    dmBtn.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">chat</span> Message';
+    dmBtn.onclick=()=>openDmOverlay(userId,prof.username,prof.avatar_url);
+    actions.appendChild(dmBtn);
+    const trBtn=document.createElement('button');
+    trBtn.type='button';trBtn.className='pfp-back';
+    trBtn.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">swap_horiz</span> Trade';
+    trBtn.onclick=()=>openTradeModal(userId,prof.username);
+    actions.appendChild(trBtn);
+  }catch(e){showToast('Could not load friend profile.');closeFriendProfileView();}
+};
+
+function buildFriendRow(p,premIds){
+  const row=document.createElement('div');
+  row.className='poxy-friend-row';
+  row.dataset.userId=p.id;
+  const av=document.createElement('div');
+  av.className='poxy-friend-row-avatar';
+  renderUserCardAvatar(av,p.avatar_url,premIds.has(p.id),p.id);
+  const main=document.createElement('div');
+  main.className='poxy-friend-row-main';
+  const pst=friendPresenceMap[p.id]||'offline';
+  main.innerHTML='<div class="poxy-friend-row-name">'+sanitizeText(p.username||'Anonymous')+'</div>'+
+    '<div class="poxy-friend-row-meta"><span class="poxy-friend-presence"><span class="poxy-friend-presence-dot poxy-friend-presence-dot--'+(pst==='inventory'?'inventory':pst==='online'?'online':'offline')+'"></span><span class="poxy-friend-presence-label">'+presenceLabel(pst)+'</span></span> · '+(p.is_club_member?'VIP':'Member')+'</div>';
+  const tray=document.createElement('div');
+  tray.className='poxy-friend-hotkey-tray';
+  const btnMsg=document.createElement('button');
+  btnMsg.type='button';btnMsg.className='poxy-friend-hotkey-btn';
+  btnMsg.textContent='Send Message';
+  btnMsg.onclick=e=>{e.stopPropagation();openDmOverlay(p.id,p.username,p.avatar_url);};
+  const btnTrade=document.createElement('button');
+  btnTrade.type='button';btnTrade.className='poxy-friend-hotkey-btn';
+  btnTrade.textContent='Initiate Trade';
+  btnTrade.onclick=e=>{e.stopPropagation();openTradeModal(p.id,p.username);};
+  const btnCopy=document.createElement('button');
+  btnCopy.type='button';btnCopy.className='poxy-friend-hotkey-btn';
+  btnCopy.textContent='Copy User ID';
+  btnCopy.onclick=e=>{e.stopPropagation();navigator.clipboard?.writeText(p.id).then(()=>showToast('User ID copied.')).catch(()=>showToast(p.id));};
+  tray.appendChild(btnMsg);tray.appendChild(btnTrade);tray.appendChild(btnCopy);
+  const removeBtn=document.createElement('button');
+  removeBtn.className='poxy-friend-remove';removeBtn.textContent='Remove';
+  removeBtn.onclick=async function(e){
+    e.stopPropagation();
+    if(!confirm('Remove '+(p.username||'this friend')+'?'))return;
+    if(!isUuid(p.id)){logAndToast('remove-friend',new Error('user id not UUID'));return;}
+    removeBtn.disabled=true;
+    try{
+      const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:p.id});
+      if(re)throw re;
+      if(data&&data.ok===false)throw new Error(data.error||'Could not remove');
+      showToast('Friend removed.');
+      row.remove();
+      friendAccepted=friendAccepted.filter(x=>x!==p.id);
+      if(friendProfileUserId===p.id)closeFriendProfileView();
+    }catch(err){logAndToast('remove-friend',err);removeBtn.disabled=false;}
+  };
+  row.onclick=()=>openFriendProfileView(p.id);
+  row.appendChild(av);row.appendChild(main);row.appendChild(tray);row.appendChild(removeBtn);
+  return row;
+}
 async function loadFriends(){
   const cont=$('friendsList');
   if(!cont||!currentUser)return;
@@ -4694,39 +5343,154 @@ async function loadFriends(){
   try{
     const{data:rows,error}=await sb.from('friendships').select('*').or('user_a_id.eq.'+currentUser.id+',user_b_id.eq.'+currentUser.id);
     if(error)throw error;
-    if(!rows||!rows.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">No friends yet.</div>';friendAccepted=[];return;}
+    if(!rows||!rows.length){cont.innerHTML='<div style="font-size:12px;color:#9d8b9b;padding:12px 0">No friends yet.</div>';friendAccepted=[];return;}
     const ids=rows.map(r=>r.user_a_id===currentUser.id?r.user_b_id:r.user_a_id);
     friendAccepted=ids.slice();
     const{data:profs}=await sb.from('profiles').select('id,username,avatar_url,is_club_member').in('id',ids);
     const premIds=new Set();
     try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic','diamond','secret']);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
     cont.innerHTML='';
-    (profs||[]).forEach(p=>{
-      const card=document.createElement('div');card.className='user-card user-card-clickable';
-      const avEl=document.createElement('div');avEl.className='user-card-avatar';
-      renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id),p.id);
-      const info=document.createElement('div');info.className='user-card-info';
-      info.innerHTML='<div class="user-card-name">'+sanitizeText(p.username||'Anonymous')+'</div><div class="user-card-sub">'+(p.is_club_member?'VIP Club Member':'Friend')+'</div>';
-      const removeBtn=document.createElement('button');removeBtn.className='btn-remove-friend';removeBtn.textContent='Remove';
-      removeBtn.addEventListener('click',async function(e){
-        e.stopPropagation();
-        if(!confirm('Remove '+(p.username||'this friend')+'? This is bidirectional.'))return;
-        if(!isUuid(p.id)){logAndToast('remove-friend',new Error('user id not UUID'));return;}
-        removeBtn.disabled=true;removeBtn.textContent='...';
-        try{
-          const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:p.id});
-          if(re)throw re;
-          if(data&&data.ok===false)throw new Error(data.error||'Could not remove');
-          showToast('Friend removed.');
-          card.remove();
-          friendAccepted=friendAccepted.filter(x=>x!==p.id);
-        }catch(e){logAndToast('remove-friend',e);removeBtn.disabled=false;removeBtn.textContent='Remove';}
-      });
-      card.addEventListener('click',function(){openInspectModal(p.id);});
-      card.appendChild(avEl);card.appendChild(info);card.appendChild(removeBtn);cont.appendChild(card);
-    });
+    (profs||[]).forEach(p=>cont.appendChild(buildFriendRow(p,premIds)));
+    syncFriendPresenceFromChannel();
     updateGlobalFrames();
   }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63">Error loading friends.</div>';}
+}
+
+// ── Gifts ──
+window.openGiftPicker=async function(userId,username){
+  giftTargetUserId=userId;
+  giftSelectedItemId=null;
+  $('giftPickerSub').textContent='Gift for '+sanitizeText(username||'friend')+'. Pick one item.';
+  $('btnSendGiftConfirm').disabled=true;
+  const box=$('giftBoxPreview');
+  if(box)box.classList.remove('is-wrapped');
+  $('giftBoxIcon').textContent='🎁';
+  const grid=$('giftPickerGrid');
+  grid.innerHTML='<div class="col-spinner" style="margin:20px auto"></div>';
+  $('giftPickerOverlay').hidden=false;
+  if(!colData.length)await loadCollection();
+  grid.innerHTML='';
+  const items=(colData||[]).slice(0,24);
+  if(!items.length){grid.innerHTML='<p style="font-size:11px;color:#9d8b9b">No items to gift.</p>';return;}
+  items.forEach(it=>{
+    const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.style.cssText='padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:#1a1a1e;color:#e5e2e1;cursor:pointer;font-size:11px';
+    btn.innerHTML='<div style="font-size:20px;color:'+t.color+'">'+t.icon+'</div><div style="font-size:8px;margin-top:4px">'+sanitizeText(it.serial_number||'')+'</div>';
+    btn.onclick=()=>{
+      giftSelectedItemId=it.id;
+      $('btnSendGiftConfirm').disabled=false;
+      grid.querySelectorAll('button').forEach(b=>b.style.borderColor='rgba(255,255,255,0.1)');
+      btn.style.borderColor='#f9abff';
+      $('giftBoxIcon').textContent=t.icon;
+      $('giftBoxIcon').style.color=t.color;
+      box?.classList.add('is-wrapped');
+    };
+    grid.appendChild(btn);
+  });
+};
+window.closeGiftPicker=function(){$('giftPickerOverlay').hidden=true;giftTargetUserId=null;giftSelectedItemId=null;};
+window.confirmSendGift=async function(){
+  if(!giftTargetUserId||!giftSelectedItemId||!currentUser)return;
+  const item=colData.find(i=>String(i.id)===String(giftSelectedItemId));
+  const tier=item?TIER_BY_ID[item.poxy_tier]:TIERS[0];
+  const btn=$('btnSendGiftConfirm');
+  if(btn)btn.disabled=true;
+  try{
+    if(giftBroadcastCh){
+      await giftBroadcastCh.send({
+        type:'broadcast',
+        event:'gift',
+        payload:{
+          to_id:giftTargetUserId,
+          from_id:currentUser.id,
+          from_name:currentProfile?.username||'Player',
+          item_id:giftSelectedItemId,
+          tier:item?.poxy_tier,
+          serial:item?.serial_number,
+          icon:tier?.icon
+        }
+      });
+    }
+    showToast('Gift sent! Recipient sees celebration particles.');
+    closeGiftPicker();
+    if(String(giftTargetUserId)===String(friendProfileUserId))showToast('Wrapped in matte-black box with magenta ribbon.');
+  }catch(e){showToast('Gift send failed.');}
+  if(btn)btn.disabled=false;
+};
+function triggerGiftParticleBurst(){
+  const layer=$('giftParticleLayer');if(!layer)return;
+  layer.innerHTML='';
+  const cx=window.innerWidth/2,cy=window.innerHeight/2;
+  for(let i=0;i<48;i++){
+    const p=document.createElement('div');
+    p.className='poxy-gift-particle';
+    const ang=(Math.PI*2*i)/48;
+    const dist=80+Math.random()*160;
+    p.style.left=cx+'px';
+    p.style.top=cy+'px';
+    p.style.setProperty('--gx',Math.cos(ang)*dist+'px');
+    p.style.setProperty('--gy',Math.sin(ang)*dist+'px');
+    if(i%3===0)p.style.background='#d70357';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>{layer.innerHTML='';},1300);
+}
+let giftBroadcastCh=null;
+function setupGiftBroadcastListener(){
+  if(!currentUser||giftBroadcastCh)return;
+  giftBroadcastCh=sb.channel('poxy-gifts-lobby');
+  giftBroadcastCh.on('broadcast',{event:'gift'},payload=>{
+    const p=payload?.payload;
+    if(!p||String(p.to_id)!==String(currentUser.id))return;
+    triggerGiftParticleBurst();
+    showToast('🎁 Gift from '+sanitizeText(p.from_name||'a friend')+'!');
+  }).subscribe();
+  realtimeSubs.push(giftBroadcastCh);
+}
+
+// ── Chat quick inspect ──
+let chatInspectUserId=null;
+function closeChatInspectPopover(){
+  const pop=$('chatUserInspectPopover');
+  if(pop)pop.hidden=true;
+  chatInspectUserId=null;
+}
+async function openChatUserInspect(userId,anchorEl,e){
+  if(e){e.stopPropagation();e.preventDefault();}
+  if(!userId||String(userId)===String(currentUser?.id))return;
+  chatInspectUserId=userId;
+  const pop=$('chatUserInspectPopover');
+  $('chatInspectName').textContent='Loading…';
+  pop.hidden=false;
+  const rect=anchorEl?.getBoundingClientRect?.();
+  if(rect){
+    pop.style.left=Math.min(rect.left,window.innerWidth-300)+'px';
+    pop.style.top=(rect.bottom+8)+'px';
+  }
+  try{
+    const{data:prof}=await sb.from('profiles').select('id,username,avatar_url,is_club_member').eq('id',userId).single();
+    if(!prof){closeChatInspectPopover();return;}
+    const style=getChatRankStyle(prof);
+    const av=$('chatInspectAvatar');
+    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))av.innerHTML='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="">';
+    else av.textContent=prof.avatar_url||'✸';
+    const nm=$('chatInspectName');
+    nm.textContent=sanitizeText(prof.username||'');
+    nm.style.color=style.color;
+    const rk=leaderboardRankByUser[userId];
+    $('chatInspectRank').textContent=(style.label||'Member')+(rk?' · #'+rk:'');
+    const acts=$('chatInspectActions');
+    acts.innerHTML='';
+    const vBtn=document.createElement('button');
+    vBtn.textContent='Full Profile';
+    vBtn.onclick=()=>{closeChatInspectPopover();showPage('friends');openFriendProfileView(userId);};
+    const mBtn=document.createElement('button');
+    mBtn.textContent='Message';
+    mBtn.onclick=()=>{closeChatInspectPopover();openDmOverlay(userId,prof.username,prof.avatar_url);};
+    acts.appendChild(vBtn);acts.appendChild(mBtn);
+  }catch(err){closeChatInspectPopover();}
 }
 window.searchUsers=async function(){
   const q=$('friendSearch').value.trim();
@@ -4774,7 +5538,7 @@ window.searchUsers=async function(){
           }catch(e){this.disabled=false;logAndToast('add-friend',e);}
         });
       }
-      card.addEventListener('click',function(){openInspectModal(p.id);});
+      card.addEventListener('click',function(){showPage('friends');openFriendProfileView(p.id);});
       card.appendChild(avEl);card.appendChild(info);card.appendChild(btn);cont.appendChild(card);
     });
   }catch(e){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">Error: '+sanitizeText(e.message||'unknown')+'</div>';}
@@ -6901,13 +7665,18 @@ async function loadNewsFeedTab(){
   }catch(e){listEl.innerHTML='<div class="news-empty">Failed to load news.</div>';}
 }
 function renderNewsPostCard(post,container){
-  const card=document.createElement('div');card.className='news-post-card';card.id='news-post-'+post.id;
-  let html='';
-  if(post.image_url&&validateUrl(post.image_url)){html+='<img class="news-post-image" src="'+sanitizeText(post.image_url)+'" alt="" onerror="this.style.display=\'none\'">';}
-  html+='<div class="news-post-body">';
-  html+='<div class="news-post-title-text">'+sanitizeText(post.title)+'</div>';
-  html+='<div class="news-post-content-text">'+sanitizeText(post.content)+'</div>';
-  html+='<div class="news-post-meta"><span class="news-post-author">'+sanitizeText(post.author_username||'Staff')+'</span><span>'+timeSince(post.created_at)+'</span></div>';
+  const card=document.createElement('div');card.className='poxy-news-card news-post-card';card.id='news-post-'+post.id;
+  const cat=inferNewsCategory(post.title);
+  let thumb='<div class="poxy-news-thumb-wrap">';
+  if(post.image_url&&validateUrl(post.image_url)){
+    thumb+='<img src="'+sanitizeText(post.image_url)+'" alt="" onerror="this.parentElement.querySelector(\'.poxy-news-thumb-ph\').style.display=\'flex\'">';
+  }
+  thumb+='<div class="poxy-news-thumb-ph"'+(post.image_url&&validateUrl(post.image_url)?' style="display:none"':'')+'><span class="material-symbols-outlined">newspaper</span></div></div>';
+  let html=thumb+'<div class="poxy-news-body news-post-body">';
+  html+='<span class="poxy-news-badge">'+cat+'</span>';
+  html+='<h2 class="poxy-news-card-title news-post-title-text">'+sanitizeText(post.title)+'</h2>';
+  html+='<div class="poxy-news-card-content news-post-content-text">'+renderNewsMarkdown(post.content)+'</div>';
+  html+='<div class="poxy-news-meta news-post-meta"><span class="poxy-news-meta-author news-post-author">'+sanitizeText(post.author_username||'Staff')+'</span><span>'+timeSince(post.created_at)+'</span></div>';
   html+='<div class="news-post-actions" id="npa-'+post.id+'">';
   const myLike=(post.likes||[]).includes(currentUser?.id);
   const myDislike=(post.dislikes||[]).includes(currentUser?.id);
@@ -7065,6 +7834,7 @@ async function loadPoxyChat(){
     let profMap={};
     if(ids.length){
       const{data:profs}=await sb.from('profiles').select('id,username,avatar_url,is_club_member,is_verified_employee,email,badges').in('id',ids);
+      await loadLeaderboardData().catch(()=>{});
       (profs||[]).forEach(p=>{profMap[p.id]=p;});
     }
     list.innerHTML='';
@@ -7074,27 +7844,33 @@ async function loadPoxyChat(){
   }catch(e){list.innerHTML='<div class="poxychat-empty">Could not load chat.</div>';}
 }
 function renderChatMsg(m,prof,list){
+  const rankStyle=getChatRankStyle(prof);
   const isFounderMsg=prof?.email&&prof.email.toLowerCase()===FOUNDER_EMAIL;
   const isClubMsg=prof?.is_club_member===true;
   const isSelf=m.author_id===currentUser?.id;
   const el=document.createElement('div');el.className='poxychat-msg'+(isFounderMsg?' founder-msg':isClubMsg?' club-msg':'');
   el.id='pcm-'+m.id;
   const head=document.createElement('div');head.className='pcm-head';
+  const badge=document.createElement('span');
+  badge.className='pcm-micro-badge';
+  badge.textContent=rankStyle.badge;
+  badge.title=rankStyle.label;
+  head.appendChild(badge);
   const avWrap=document.createElement('div');
   avWrap.className='pcm-avatar'+(isSelf?' avatar-frame-target':'');
   if(prof?.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(prof.avatar_url)+'" alt="">';
   else avWrap.textContent=prof?.avatar_url||'✸';
-  const openAuthorProfile=()=>{if(m.author_id&&m.author_id!==currentUser?.id)openInspectModal(m.author_id);};
+  const openInspect=(e)=>{if(m.author_id&&m.author_id!==currentUser?.id)openChatUserInspect(m.author_id,name,e);};
   avWrap.style.cursor='pointer';
-  avWrap.addEventListener('click',e=>{e.stopPropagation();openAuthorProfile();});
+  avWrap.addEventListener('click',openInspect);
   head.appendChild(avWrap);
-  const name=document.createElement('span');name.className='pcm-name';name.textContent=sanitizeText(prof?.username||'Anonymous');
+  const name=document.createElement('span');
+  name.className='pcm-name pcm-name--ranked';
+  name.textContent=sanitizeText(prof?.username||'Anonymous');
+  name.style.color=rankStyle.color;
   name.style.cursor='pointer';
-  name.addEventListener('click',e=>{e.stopPropagation();openAuthorProfile();});
+  name.addEventListener('click',openInspect);
   head.appendChild(name);
-  if(isFounderMsg){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FFCA28;font-weight:800';f.textContent='FOUNDER';head.appendChild(f);}
-  else if(prof?.is_verified_employee){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FF5252;font-weight:800';f.textContent='STAFF';head.appendChild(f);}
-  else if(isClubMsg){const f=document.createElement('span');f.style.cssText='font-size:9px;color:#FF6E40;font-weight:800';f.textContent='VIP';head.appendChild(f);}
   const t=document.createElement('span');t.className='pcm-time';t.textContent=timeSince(m.created_at);head.appendChild(t);
   if(m.author_id===currentUser?.id||isFounder()){
     const del=document.createElement('button');del.className='pcm-del';del.title='Delete';del.textContent='✕';
@@ -7579,6 +8355,8 @@ window.purchaseCustomization=async function(itemId){
 function setupRealtimeSubscriptions(){
   teardownRealtimeSubscriptions();
   if(!currentUser)return;
+  setupPresenceChannel();
+  setupGiftBroadcastListener();
   try{
     // Incoming friend requests
     const friendReqSub=sb.channel('friend-requests-'+currentUser.id)
@@ -7643,7 +8421,7 @@ function setupRealtimeSubscriptions(){
     // News posts realtime (for sidebar news tab)
     const newsSub=sb.channel('news-posts-global')
       .on('postgres_changes',{event:'*',schema:'public',table:'news_posts'},()=>{
-        if(activeStitchTab==='explore'&&activeExploreSection==='news')loadNewsFeedTab();
+        if(activeStitchTab==='news')loadNewsFeedTab();
       })
       .subscribe();
     realtimeSubs.push(newsSub);
@@ -7661,6 +8439,8 @@ function setupRealtimeSubscriptions(){
 function teardownRealtimeSubscriptions(){
   realtimeSubs.forEach(sub=>{try{sb.removeChannel(sub);}catch(e){}});
   realtimeSubs=[];
+  if(presenceChannel){try{sb.removeChannel(presenceChannel);}catch(e){}presenceChannel=null;}
+  giftBroadcastCh=null;
 }
 
 // ── PHASE 10 — 3D tilt cards (delegated, RAF-throttled) ──
@@ -7753,28 +8533,34 @@ async function claimQuestReward(qid){
 // ── PHASE 11 — CRAFTING (5 commons → 1 uncommon) ──
 async function performCraft(){
   if(!currentUser)return;
-  const ids=[...craftSelection];
+  const socketIds=getCraftSocketIds();
+  const ids=socketIds.length?socketIds:[...craftSelection];
   if(ids.length!==5){showToast('Pick exactly 5 Common POXY.');return;}
-  const allCommon=colData.filter(i=>ids.includes(i.id)).every(i=>i.poxy_tier==='common');
+  const allCommon=ids.every(rid=>{
+    const it=colData.find(i=>String(i.id)===String(rid));
+    return it&&it.poxy_tier==='common';
+  });
   if(!allCommon){showToast('All 5 must be Common.');return;}
-  const btn=$('btnCraftDoIt');if(btn){btn.disabled=true;btn.textContent='Crafting...';}
+  const btn=$('btnCraftExecute')||$('btnCraftDoIt');
+  if(btn){btn.disabled=true;btn.textContent='Crafting...';}
   try{
     const{data,error}=await sb.rpc('craft_upgrade',{p_user_id:currentUser.id,p_poxy_ids:ids});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);
     showToast('Crafted! +1 Uncommon ('+(data.serial||'')+')');
     craftSelection=new Set();
+    resetCraftSockets(false);
+    setColCraftZoneOpen(false);
     await loadCollection();
     closeCraftModal();
   }catch(e){showToast('Craft failed: '+(e.message||'error'));}
-  if(btn){btn.disabled=false;btn.textContent='Craft Now';}
+  if(btn){btn.disabled=false;btn.classList.remove('is-ignited');btn.textContent='CRAFT';}
 }
 window.openCraftModal=function(){
   if(!currentUser)return;
-  const o=$('craftModal');if(!o)return;
-  craftSelection=new Set();
-  renderCraftPool();
-  o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
+  resetCraftSockets(false);
+  setColCraftZoneOpen(true);
+  if(typeof showPage==='function')showPage('collection');
 };
 window.closeCraftModal=function(){
   const o=$('craftModal');if(!o)return;
@@ -7820,6 +8606,12 @@ function setupGlobalEscapeClose(){
     if($('tradeModal')&&!$('tradeModal').classList.contains('hidden')){closeTradeModal();return;}
     if($('dmOverlay')&&!$('dmOverlay').classList.contains('hidden')){closeDmOverlay();return;}
     if($('inspectModal')&&!$('inspectModal').classList.contains('hidden')){closeInspectModal();return;}
+    if(colCraftZoneOpen){setColCraftZoneOpen(false);return;}
+    const giftOv=$('giftPickerOverlay');
+    if(giftOv&&!giftOv.hidden){closeGiftPicker();return;}
+    const chatPop=$('chatUserInspectPopover');
+    if(chatPop&&!chatPop.hidden){closeChatInspectPopover();return;}
+    if($('friendProfileView')&&!$('friendProfileView').hidden){closeFriendProfileView();return;}
     if($('craftModal')&&!$('craftModal').classList.contains('hidden')){closeCraftModal();return;}
     const showcase=$('showcasePickerOverlay');
     if(showcase&&!showcase.hidden){closeShowcasePicker();return;}
@@ -7872,6 +8664,13 @@ function bootApp(){
   updateAuthModeUI();
   setupAuthStateListener();
   updateGlobalFrames();
+  $('btnFriendProfileBack')?.addEventListener('click',closeFriendProfileView);
+  $('giftPickerOverlay')?.addEventListener('click',e=>{if(e.target===$('giftPickerOverlay'))closeGiftPicker();});
+  document.addEventListener('click',e=>{
+    const pop=$('chatUserInspectPopover');
+    if(pop&&!pop.hidden&&!e.target.closest('#chatUserInspectPopover')&&!e.target.closest('.pcm-name')&&!e.target.closest('.pcm-avatar'))closeChatInspectPopover();
+  });
+  if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
 }
 bootApp();
 </script>

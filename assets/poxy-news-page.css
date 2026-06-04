@@ -1,0 +1,115 @@
+/* POXY News — Steam-style feed route */
+.poxy-news-page{
+  padding:24px 16px 56px!important;
+  max-width:min(900px,100%)!important;
+  margin:0 auto;
+  color:#e5e2e1;
+}
+.poxy-news-header{margin-bottom:28px}
+.poxy-news-title{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:clamp(1.75rem,4vw,2.5rem);
+  font-weight:700;
+  margin:0 0 8px;
+  color:#fafafa;
+}
+.poxy-news-desc{font-size:15px;color:#9d8b9b;margin:0;line-height:1.5}
+
+.poxy-news-feed{display:flex;flex-direction:column;gap:16px}
+.poxy-news-card{
+  display:grid;
+  grid-template-columns:minmax(0,280px) 1fr;
+  gap:0;
+  border-radius:14px;
+  overflow:hidden;
+  background:linear-gradient(145deg,#1e1e22,#141416);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),box-shadow 0.3s;
+}
+.poxy-news-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 40px rgba(0,0,0,0.45);
+}
+@media(max-width:720px){
+  .poxy-news-card{grid-template-columns:1fr}
+}
+.poxy-news-thumb-wrap{
+  position:relative;
+  aspect-ratio:16/9;
+  min-height:140px;
+  background:#0a0a0c;
+  overflow:hidden;
+}
+.poxy-news-thumb-wrap img{
+  width:100%;height:100%;
+  object-fit:cover;
+  filter:blur(6px) brightness(0.55);
+  transform:scale(1.08);
+}
+.poxy-news-thumb-ph{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,rgba(156,39,176,0.2),rgba(10,10,12,0.9));
+}
+.poxy-news-thumb-ph .material-symbols-outlined{font-size:48px;color:rgba(249,171,255,0.35)}
+.poxy-news-body{padding:20px 22px;min-width:0}
+.poxy-news-badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:6px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:#f9abff;
+  background:rgba(214,3,87,0.15);
+  border:1px solid rgba(249,171,255,0.35);
+  margin-bottom:10px;
+}
+.poxy-news-card-title{
+  font-size:clamp(1.1rem,2.5vw,1.35rem);
+  font-weight:800;
+  color:#fafafa;
+  margin:0 0 12px;
+  line-height:1.3;
+  letter-spacing:-0.01em;
+}
+.poxy-news-card-content{
+  font-size:14px;
+  line-height:1.65;
+  color:#c8c4c3;
+}
+.poxy-news-card-content strong{color:#fafafa}
+.poxy-news-card-content em{color:#f9abff;font-style:italic}
+.poxy-news-card-content h2,.poxy-news-card-content h3{
+  font-size:15px;
+  color:#fafafa;
+  margin:12px 0 6px;
+}
+.poxy-news-card-content a{color:#f9abff;text-decoration:underline}
+.poxy-news-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:14px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:#6a6568;
+}
+.poxy-news-meta-author{color:#f9abff}
+
+.poxy-news-page .news-create-form{
+  margin-bottom:24px;
+  border-radius:14px;
+  border:1px solid rgba(249,171,255,0.2);
+  background:#141416;
+}
+.poxy-news-page .poxychat-section{
+  margin-top:40px;
+  padding-top:28px;
+  border-top:1px solid rgba(255,255,255,0.1);
+}
