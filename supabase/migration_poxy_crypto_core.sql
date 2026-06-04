@@ -37,7 +37,7 @@ returns text
 language sql
 immutable
 as $$
-  select encode(digest(convert_to(coalesce(p, ''), 'UTF8'), 'sha256'), 'hex');
+  select encode(extensions.digest(convert_to(coalesce(p, ''), 'UTF8'), 'sha256'), 'hex');
 $$;
 
 -- The canonical POXY identity hash.
