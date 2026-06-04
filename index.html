@@ -10,18 +10,18 @@
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
 <link rel="stylesheet" href="assets/poxy-ranks-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-rarity-page.css">
+<link rel="stylesheet" href="assets/poxy-rarity-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-club-gold.css">
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=3">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=3">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=3">
-<link rel="stylesheet" href="assets/poxy-notify-hub.css?v=1">
+<link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -971,9 +971,20 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .bank-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .bank-input{width:100%;padding:11px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-family:inherit;font-size:13px;color:#1a1a1a;outline:none;background:#fff;transition:border-color 0.2s;margin-bottom:8px}
 .bank-input:focus{border-color:#FF5722}
-.btn-apple-pay{width:100%;padding:14px;background:#000;border:none;border-radius:50px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;transition:transform 0.15s,opacity 0.2s}
-.btn-apple-pay:hover{transform:scale(1.02);opacity:0.88}
-.btn-apple-pay:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.psd-pay-methods{margin-bottom:4px}
+.psd-wallet-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.psd-pay-divider{text-align:center;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6a6a7a;margin:14px 0 12px;position:relative}
+.psd-pay-divider span{background:#0a0a0c;padding:0 10px;position:relative;z-index:1}
+.psd-pay-divider::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,0.08)}
+.btn-apple-pay,.btn-paypal-pay{width:100%;min-height:44px;padding:0 14px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:transform 0.15s,opacity 0.2s,box-shadow 0.2s}
+.btn-apple-pay{background:#fff;color:#000;box-shadow:0 1px 3px rgba(0,0,0,0.35)}
+.btn-apple-pay:hover{transform:scale(1.02);opacity:0.92}
+.btn-apple-pay:disabled,.btn-paypal-pay:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.apple-pay-mark{display:block;width:100%;max-width:52px;height:20px;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'%3E%3Cpath fill='%23000' d='M9.6 3.4c-.6.7-1.6 1.3-2.6 1.2-.1-1 .4-2.1 1-2.8.6-.8 1.7-1.3 2.5-1.3.1 1.1-.3 2.2-1 2.9zm1 1.6c-1.4-.1-2.6.8-3.3.8-.7 0-1.7-.7-2.8-.7-1.4 0-2.8.8-3.5 2.1-1.5 2.6-.4 6.4 1.1 8.5.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.1 0 1.9-1 2.6-2.1.8-1.2 1.1-2.4 1.1-2.5-2.2-.8-2.2-4.2.1-5.2zM18.2 4.8v10.4h1.8V9.6h.1l3.4 5.6h2.1l-3.7-5.8c1.9-.3 3-1.6 3-3.5 0-2.3-1.8-3.5-4.8-3.5h-3.1zm1.8 1.5h1.2c1.8 0 2.8.7 2.8 2.1s-1 2.2-2.9 2.2h-1.1V6.3zm11.5 9.1c1.2 0 2.3-.6 2.8-1.6h.1v1.4h1.7V4.8H32v1.5h-.1c-.5-1-1.6-1.6-2.8-1.6-2.5 0-4.2 2.2-4.2 5.2 0 3.1 1.6 5.3 4.1 5.3zm.4-1.5c-1.6 0-2.6-1.4-2.6-3.7 0-2.3 1-3.8 2.6-3.8 1.7 0 2.6 1.5 2.6 3.8 0 2.4-1 3.7-2.6 3.7zm8.5 1.5c1.4 0 2.2-.7 2.7-1.8h.1c0 .5.1 1 .2 1.4h1.6c-.2-1-.3-2.2-.3-3.6V4.8H43v1.5h-.1c-.5-1-1.4-1.6-2.5-1.6-2.2 0-3.6 1.7-3.6 4.2 0 2.6 1.3 4.3 3.5 4.3zm.3-1.5c-1.3 0-2-1.1-2-2.8v-.2c0-1.8.8-2.9 2-2.9 1.4 0 2 1.2 2 2.9 0 1.8-.7 3-2 3z'/%3E%3C/svg%3E")}
+.btn-paypal-pay{background:#ffc439;color:#003087;box-shadow:0 1px 3px rgba(0,0,0,0.25)}
+.btn-paypal-pay:hover{transform:scale(1.02);filter:brightness(1.03)}
+.paypal-mark{font-size:15px;font-weight:800;letter-spacing:-0.02em;font-family:'Helvetica Neue',Arial,sans-serif}
+.btn-pay-card{margin-top:12px;width:100%}
 .bank-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .bank-divider::before,.bank-divider::after{content:'';flex:1;height:1px;background:#e8e8e8}
 .bank-divider span{font-size:11px;color:#B0B0B0;font-weight:600}
@@ -1184,7 +1195,7 @@ body.dark-club .club-sub{color:#888}
           <button type="button" class="st-topup-btn" onclick="scrollToTreasury()">Top Up</button>
           <!-- Profile header: avatar → username/role (single username source: userUsernameEl) -->
           <div class="user-bar st-user" id="userBar" role="group" aria-label="Account">
-            <button type="button" class="st-nav-user-chip" onclick="showPage('settings')" title="Settings">
+            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" title="My profile">
               <div class="st-user-avatar-ring user-bar-avatar gpu-accel avatar-frame-target" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
             </button>
             <div class="st-user-meta">
@@ -1287,16 +1298,23 @@ body.dark-club .club-sub{color:#888}
           <h3><span class="material-symbols-outlined">account_balance_wallet</span> Treasury &amp; Funds</h3>
           <p class="st-col-sub" style="margin-bottom:16px">Deposit Poxy Coins (PC) — 1 PC per unit deposited.</p>
           <div class="bank-amounts" id="bankAmounts"></div>
-          <div class="bank-form">
-            <div class="bank-form-label">Card Number</div>
-            <input class="bank-input" id="bankCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
-            <div class="bank-form-row">
-              <div><div class="bank-form-label">Expiry</div><input class="bank-input" id="bankExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" style="margin-bottom:0"></div>
-              <div><div class="bank-form-label">CVV</div><input class="bank-input" id="bankCVV" placeholder="123" maxlength="4" type="password" style="margin-bottom:0"></div>
+          <div class="psd-pay-methods" id="psdPayMethods">
+            <div class="bank-form-label">Payment method</div>
+            <div class="psd-wallet-row">
+              <button type="button" class="btn-apple-pay" id="btnApplePay" aria-label="Pay with Apple Pay"><span class="apple-pay-mark" aria-hidden="true"></span></button>
+              <button type="button" class="btn-paypal-pay" id="btnPayPal" aria-label="Pay with PayPal"><span class="paypal-mark" aria-hidden="true">PayPal</span></button>
             </div>
+            <p class="psd-pay-divider" aria-hidden="true"><span>or pay with card</span></p>
+            <div class="bank-form">
+              <div class="bank-form-label">Card Number</div>
+              <input class="bank-input" id="bankCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+              <div class="bank-form-row">
+                <div><div class="bank-form-label">Expiry</div><input class="bank-input" id="bankExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" style="margin-bottom:0"></div>
+                <div><div class="bank-form-label">CVV</div><input class="bank-input" id="bankCVV" placeholder="123" maxlength="4" type="password" style="margin-bottom:0"></div>
+              </div>
+            </div>
+            <button type="button" class="btn-primary btn-pay-card" id="btnPayCard"><span class="material-symbols-outlined">lock</span> Add Funds (Test)</button>
           </div>
-          <button type="button" class="btn-apple-pay" id="btnApplePay" style="display:none"></button>
-          <button type="button" class="btn-primary" id="btnPayCard" style="margin-top:12px"><span class="material-symbols-outlined">lock</span> Add Funds (Test)</button>
         </section>
         <section class="st-panel st-legal">
           <h3><span class="material-symbols-outlined">policy</span> Protocols &amp; Terms</h3>
@@ -1611,7 +1629,7 @@ body.dark-club .club-sub{color:#888}
   <div class="poxy-profile-shell">
     <header class="poxy-profile-header">
       <h1 class="poxy-profile-title">MY PROFILE</h1>
-      <button type="button" class="poxy-profile-settings-link" onclick="showPage('settings')"><span class="material-symbols-outlined">settings</span> Settings</button>
+      <button type="button" class="poxy-profile-settings-link" onclick="openProfileSettings()"><span class="material-symbols-outlined">settings</span> Settings</button>
     </header>
     <div class="poxy-profile-layout">
       <aside class="poxy-profile-sidebar">
@@ -1961,10 +1979,16 @@ body.dark-club .club-sub{color:#888}
 <div class="page page-collection-wide poxy-page-collection poxy-collection-page" id="collectionPage">
   <div class="poxy-col-shell">
     <header class="poxy-col-header">
-      <h1 class="poxy-col-title">Tactical Archive</h1>
-      <div class="poxy-col-meta">
-        <span>Inventory</span>
-        <span class="poxy-col-meta-count" id="colCount">—</span>
+      <div class="poxy-col-header-main">
+        <h1 class="poxy-col-title">Tactical Archive</h1>
+        <div class="poxy-col-meta">
+          <span>Inventory</span>
+          <span class="poxy-col-meta-count" id="colCount">—</span>
+        </div>
+      </div>
+      <div class="poxy-col-header-actions" id="colHeaderBulk" hidden>
+        <span class="poxy-col-bulk-count" id="bulkCount">0 selected</span>
+        <button type="button" class="poxy-col-bulk-burn" id="btnBulkDust">Burn All Selected</button>
       </div>
     </header>
     <div class="poxy-col-controls">
@@ -2015,10 +2039,6 @@ body.dark-club .club-sub{color:#888}
         </div>
         <div class="poxy-col-craft-sockets" id="colCraftSockets"></div>
         <button type="button" class="poxy-col-craft-execute" id="btnCraftExecute" disabled>CRAFT</button>
-      </div>
-      <div class="bulk-bar" id="bulkBar" hidden aria-hidden="true">
-        <span class="bulk-count" id="bulkCount">0 selected</span>
-        <button class="btn-bulk-dust" id="btnBulkDust">Burn All Selected</button>
       </div>
     </div>
     <main class="poxy-col-main">
@@ -2181,8 +2201,8 @@ body.dark-club .club-sub{color:#888}
         <span class="club-topbar-brand">POXY CLUB</span>
         <div class="club-topbar-actions">
           <span class="club-topbar-balance" id="clubTopBalance">0 PC</span>
-          <button type="button" class="club-topbar-icon" title="Notifications"><span class="material-symbols-outlined">notifications</span></button>
-          <button type="button" class="club-topbar-icon" title="Security"><span class="material-symbols-outlined">shield</span></button>
+          <button type="button" class="club-topbar-icon" id="clubTopBell" title="Club notifications" onclick="openClubNotifyHub()"><span class="material-symbols-outlined">notifications</span></button>
+          <button type="button" class="club-topbar-icon" id="clubTopShield" title="Security status" onclick="openClubShieldStatus()"><span class="material-symbols-outlined">shield</span></button>
         </div>
       </header>
       <div class="club-airgap-banner" id="clubAirgapBanner" hidden>Air-Gap: transfers frozen 24h after new session.</div>
@@ -2377,6 +2397,11 @@ body.dark-club .club-sub{color:#888}
               <div class="poxy-club-vault-section">
                 <p class="poxy-club-muted" id="clubVaultHint">Mystery vaults — 1 unlock per 10 VIP opens</p>
                 <div class="poxy-club-mystery-row" id="clubBoxes"></div>
+              </div>
+              <div class="poxy-club-glass poxy-club-inventory-vault-block">
+                <h2 class="poxy-club-kicker"><span class="material-symbols-outlined">inventory_2</span> Poxy Club Vault</h2>
+                <p class="poxy-club-muted">Private reserve — flash drops, cosmetics, and collectibles.</p>
+                <div class="poxy-club-inventory-vault" id="clubInventoryVaultGrid"></div>
               </div>
             </div>
             <div class="poxy-club-grid-2">
@@ -3118,6 +3143,10 @@ let pendingGifts=[];
 let activeNotifyTab='activity';
 let unboxingGiftId=null;
 const PENDING_GIFTS_LS='poxy_pending_gifts_v1';
+const NOTIFY_QUEUE_LS='poxy_notify_queue_v1';
+const POXY_ROUTE_LS='poxy_active_route_v1';
+const CLUB_VAULT_LS='poxy_club_vault_v1';
+let clubVaultItems=[];
 
 // ── SANITIZATION ──
 function sanitizeText(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
@@ -3247,12 +3276,76 @@ function pickTier(){let r=Math.random(),acc=0;for(const t of TIERS){acc+=t.prob;
 function pickVipTier(){let r=Math.random(),acc=0;for(const t of VIP_TIERS){acc+=t.prob;if(r<acc)return t;}return VIP_TIERS[VIP_TIERS.length-1];}
 function isFounder(){return!!(currentUser&&currentUser.email&&currentUser.email.toLowerCase()===FOUNDER_EMAIL);}
 function isClubMember(){return!!(currentProfile&&(currentProfile.is_club_member||hasMythic));}
+function notifyQueueStorageKey(){return NOTIFY_QUEUE_LS+'_'+(currentUser?.id||'');}
+function loadNotificationQueue(){
+  notificationQueue=[];
+  try{
+    const raw=localStorage.getItem(notifyQueueStorageKey());
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed))notificationQueue=parsed;
+    }
+  }catch(e){}
+}
+function saveNotificationQueue(){
+  if(!currentUser)return;
+  try{localStorage.setItem(notifyQueueStorageKey(),JSON.stringify(notificationQueue));}catch(e){}
+}
 function pushNotification(type,payload){
+  if(type==='trade_request'&&payload?.offer_id){
+    const dup=notificationQueue.some(n=>n.type==='trade_request'&&n.payload?.offer_id===payload.offer_id);
+    if(dup)return;
+  }
   notificationQueue.unshift({type,payload,t:Date.now(),read:false});
   if(notificationQueue.length>50)notificationQueue.length=50;
+  saveNotificationQueue();
   updateNotifyBellDot();
   if($('notifyHubOverlay')?.classList.contains('is-open'))renderNotifyActivityList();
 }
+function removeNotificationByOfferId(offerId){
+  notificationQueue=notificationQueue.filter(n=>!(n.type==='trade_request'&&n.payload?.offer_id===offerId));
+  saveNotificationQueue();
+  updateNotifyBellDot();
+  renderNotifyActivityList();
+}
+function routeStorageKey(){return POXY_ROUTE_LS+'_'+(currentUser?.id||'');}
+function persistActiveRoute(){
+  if(!currentUser)return;
+  let route=null;
+  if($('settingsPage')?.classList.contains('visible'))route={kind:'page',page:'settings'};
+  else{
+    const pages=['collection','friends','profile'];
+    const vis=pages.find(p=>$(p+'Page')?.classList.contains('visible'));
+    if(vis)route={kind:'page',page:vis};
+    else route={kind:'stitch',tab:activeStitchTab||'dashboard'};
+  }
+  try{localStorage.setItem(routeStorageKey(),JSON.stringify(route));}catch(e){}
+}
+function restoreActiveRoute(){
+  try{
+    const raw=localStorage.getItem(routeStorageKey());
+    if(!raw)return false;
+    const route=JSON.parse(raw);
+    if(route?.kind==='stitch'&&route.tab){
+      showStitchTab(route.tab);
+      return true;
+    }
+    if(route?.kind==='page'&&route.page){
+      if(route.page==='settings'){
+        showPage('profile');
+        openProfileSettings();
+        return true;
+      }
+      showPage(route.page);
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+window.openProfileSettings=function(){
+  window._allowSettingsPage=true;
+  showPage('settings');
+};
 function timeSince(iso){const s=Math.floor((Date.now()-new Date(iso))/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
 function maskSerial(serial,showFull){if(showFull)return serial||'–';if(!serial)return'XXXX-XXXX';const s=String(serial);if(s.length<=4)return'XXXX-XXXX';return'XXXX-'+s.slice(-4);}
 function isUuid(v){return!!(v&&typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v));}
@@ -3375,7 +3468,9 @@ function setLoggedInUI(){
   const shell=$('poxyAppShell');if(shell)shell.style.display='block';
   const hunt=$('huntPage');if(hunt)hunt.style.display='block';
   showPoxyAppShell();
-  try{showStitchTab('dashboard');}catch(e){console.error('showStitchTab:',e);}
+  try{
+    if(!restoreActiveRoute())showStitchTab('dashboard');
+  }catch(e){console.error('showStitchTab:',e);showStitchTab('dashboard');}
 }
 function bootstrapAfterLogin(){
   return (async()=>{
@@ -3385,8 +3480,11 @@ function bootstrapAfterLogin(){
       await loadCollection();
       renderStorePage();
     }catch(e){console.error('post-login bootstrap:',e);}
+    loadNotificationQueue();
+    loadClubVault();
     setupRealtimeSubscriptions();
     loadPendingGifts();
+    await syncTradeOffersToNotifications();
     updateNotifyBellDot();
     startFriendPoll();
     setTimeout(()=>{loadDailyQuests();},800);
@@ -4161,8 +4259,15 @@ if(settingsAvatarInp)settingsAvatarInp.addEventListener('change',e=>handleAvatar
 const DASH_COL_GOAL=20;
 window.scrollToTreasury=function(){
   showStitchTab('dashboard');
-  const el=$('psdTreasury');
-  if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'start'}));
+  const scrollTreasury=()=>{
+    const el=$('psdTreasury')||$('psdPayMethods');
+    const nav=$('stGlobalNav');
+    if(!el)return;
+    const navH=nav?Math.ceil(nav.getBoundingClientRect().height):72;
+    const top=el.getBoundingClientRect().top+window.scrollY-navH-16;
+    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+  };
+  requestAnimationFrame(()=>requestAnimationFrame(scrollTreasury));
 };
 window.scrollToStore=function(){
   showStitchTab('dashboard');
@@ -4255,6 +4360,8 @@ window.showStitchTab=function(tab){
   document.body.classList.add('poxy-stitch-dash');
   $('huntPage').style.display='block';
   $('bottomNav').style.display='none';
+  const settingsEl=$('settingsPage');
+  if(settingsEl)settingsEl.classList.remove('visible');
   ['profile','collection','friends','market','bank'].forEach(p=>{
     const el=$(p+'Page');
     if(el&&el.parentElement&&el.id!=='marketPage')el.classList.remove('visible');
@@ -4299,6 +4406,7 @@ window.showStitchTab=function(tab){
     });
   }
   syncNavUsernameLabels();
+  persistActiveRoute();
 };
 
 function syncNavUsernameLabels(){
@@ -4395,6 +4503,7 @@ function renderRarityTierStack(){
 
 window.switchRarityLeaderboard=function(mode){
   rarityLbMode=mode;
+  leaderboardMode=mode;
   $('rarityLbBtnBalance')?.classList.toggle('active',mode==='balance');
   $('rarityLbBtnCollection')?.classList.toggle('active',mode==='collection');
   syncLeaderboardToggleUI();
@@ -4474,7 +4583,6 @@ async function loadTierListPanel(){
   stack.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
   await loadGlobalTierCounts();
   renderRarityTierStack();
-  rarityLbMode=leaderboardMode;
   syncLeaderboardToggleUI();
   $('rarityLbBtnBalance')?.classList.toggle('active',rarityLbMode==='balance');
   $('rarityLbBtnCollection')?.classList.toggle('active',rarityLbMode==='collection');
@@ -4487,7 +4595,7 @@ function syncLeaderboardToggleUI(){
   ['lbBtnCollection','spaLbBtnCollection','rarityLbBtnCollection'].forEach(id=>{const b=$(id);if(b)b.classList.toggle('active',!bal);});
   const rt=$('ranksModeToggle');
   if(rt)rt.classList.toggle('ranks-page-toggle--collection',!bal);
-  rarityLbMode=leaderboardMode;
+  if(activeStitchTab==='tierlist')rarityLbMode=leaderboardMode;
 }
 
 function getLeaderboardListEl(){
@@ -4560,6 +4668,12 @@ function refreshStitchDashboardChrome(){
 // ── NAVIGATION ──
 window.showPage=function(page){
   if(!currentUser){showToast('Sign in first.');return;}
+  if(page==='settings'&&!window._allowSettingsPage){
+    showPage('profile');
+    showToast('Open Settings from your profile.');
+    return;
+  }
+  if(page==='settings')window._allowSettingsPage=false;
   if(page==='bank'){showStitchTab('dashboard');scrollToTreasury();return;}
   if(page==='store'){scrollToStore();return;}
   const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks'};
@@ -4599,6 +4713,7 @@ window.showPage=function(page){
   }
   document.body.classList.remove('dark-club');
   window.scrollTo(0,0);
+  persistActiveRoute();
 };
 
 // ── LOGO ──
@@ -5241,11 +5356,14 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     card.appendChild(vb);
   }
 
+  const topBar=document.createElement('div');
+  topBar.className='col-card-topbar';
   const kebab=document.createElement('button');
   kebab.type='button';kebab.className='col-card-kebab';kebab.textContent='⋮';
   kebab.setAttribute('aria-label','Open actions menu');
   kebab.dataset.action='kebab';kebab.dataset.id=item.id;
-  card.appendChild(kebab);
+  topBar.appendChild(kebab);
+  card.appendChild(topBar);
 
   const menu=document.createElement('div');
   menu.className='col-card-menu';menu.dataset.menuFor=item.id;menu.setAttribute('role','menu');
@@ -5492,9 +5610,9 @@ async function sharePoxy(poxyId,rarity,serialNumber){
   });
 })();
 function updateBulkBar(){
-  const bar=$('bulkBar'),cnt=$('bulkCount');
+  const strip=$('colHeaderBulk'),cnt=$('bulkCount');
   const n=selectedForDust.size;
-  if(bar)bar.classList.toggle('show',n>0);
+  if(strip)strip.hidden=n===0;
   if(cnt)cnt.textContent=n+' selected';
 }
 function runColBulkBurn(){
@@ -5805,6 +5923,25 @@ window.openFriendProfileView=async function(userId){
     trBtn.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">swap_horiz</span> Trade';
     trBtn.onclick=()=>openTradeModal(userId,prof.username);
     actions.appendChild(trBtn);
+    const rmBtn=document.createElement('button');
+    rmBtn.type='button';
+    rmBtn.className='pfp-btn-danger';
+    rmBtn.textContent='Remove Friend';
+    rmBtn.onclick=async()=>{
+      if(!confirm('Remove '+(prof.username||'this friend')+' from your list?'))return;
+      if(!isUuid(userId)){logAndToast('remove-friend',new Error('user id not UUID'));return;}
+      rmBtn.disabled=true;
+      try{
+        const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:userId});
+        if(re)throw re;
+        if(data&&data.ok===false)throw new Error(data.error||'Could not remove');
+        showToast('Friend removed.');
+        friendAccepted=friendAccepted.filter(x=>x!==userId);
+        closeFriendProfileView();
+        loadFriends();
+      }catch(err){logAndToast('remove-friend',err);rmBtn.disabled=false;}
+    };
+    actions.appendChild(rmBtn);
   }catch(e){showToast('Could not load friend profile.');closeFriendProfileView();}
 };
 
@@ -5835,25 +5972,8 @@ function buildFriendRow(p,premIds){
   btnCopy.textContent='Copy User ID';
   btnCopy.onclick=e=>{e.stopPropagation();navigator.clipboard?.writeText(p.id).then(()=>showToast('User ID copied.')).catch(()=>showToast(p.id));};
   tray.appendChild(btnMsg);tray.appendChild(btnTrade);tray.appendChild(btnCopy);
-  const removeBtn=document.createElement('button');
-  removeBtn.className='poxy-friend-remove';removeBtn.textContent='Remove';
-  removeBtn.onclick=async function(e){
-    e.stopPropagation();
-    if(!confirm('Remove '+(p.username||'this friend')+'?'))return;
-    if(!isUuid(p.id)){logAndToast('remove-friend',new Error('user id not UUID'));return;}
-    removeBtn.disabled=true;
-    try{
-      const{data,error:re}=await sb.rpc('remove_friend',{p_other_user_id:p.id});
-      if(re)throw re;
-      if(data&&data.ok===false)throw new Error(data.error||'Could not remove');
-      showToast('Friend removed.');
-      row.remove();
-      friendAccepted=friendAccepted.filter(x=>x!==p.id);
-      if(friendProfileUserId===p.id)closeFriendProfileView();
-    }catch(err){logAndToast('remove-friend',err);removeBtn.disabled=false;}
-  };
   row.onclick=()=>openFriendProfileView(p.id);
-  row.appendChild(av);row.appendChild(main);row.appendChild(tray);row.appendChild(removeBtn);
+  row.appendChild(av);row.appendChild(main);row.appendChild(tray);
   return row;
 }
 async function loadFriends(){
@@ -5981,7 +6101,7 @@ function updateNotifyBellDot(){
   const dot=$('notifyBellDot');
   const badge=$('notifyGiftsTabBadge');
   const n=countPendingGifts();
-  const hasUnreadActivity=notificationQueue.some(x=>!x.read);
+  const hasUnreadActivity=notificationQueue.some(x=>!x.read||(x.type==='trade_request'&&x.payload?.offer_id));
   if(dot)dot.hidden=!(n>0||hasUnreadActivity);
   if(badge){
     if(n>0){badge.hidden=false;badge.textContent=String(n);}
@@ -6010,11 +6130,62 @@ function addIncomingGift(p){
   triggerGiftParticleBurst();
   showToast('🎁 Gift from '+sanitizeText(gift.from_name)+' — open the bell icon.');
 }
+async function syncTradeOffersToNotifications(){
+  if(!currentUser)return;
+  try{
+    const{data:offers,error}=await sb.from('poxy_trade_offers').select('id,from_id,offered_poxy_ids,message,created_at,status').eq('to_id',currentUser.id).eq('status','pending').order('created_at',{ascending:false}).limit(20);
+    if(error)throw error;
+    const rows=offers||[];
+    if(!rows.length)return;
+    const fromIds=[...new Set(rows.map(r=>r.from_id))];
+    const{data:profs}=await sb.from('profiles').select('id,username').in('id',fromIds);
+    const names={};(profs||[]).forEach(p=>{names[p.id]=p.username;});
+    rows.forEach(o=>{
+      pushNotification('trade_request',{
+        offer_id:o.id,
+        from_id:o.from_id,
+        from_name:names[o.from_id]||'Player',
+        item_count:(o.offered_poxy_ids||[]).length,
+        message:o.message||null
+      });
+    });
+  }catch(e){console.warn('syncTradeOffersToNotifications',e);}
+}
+async function handleIncomingTradeOffer(offer){
+  if(!offer||offer.to_id!==currentUser?.id||offer.status!=='pending')return;
+  let fromName='Player';
+  try{
+    const{data:prof}=await sb.from('profiles').select('username').eq('id',offer.from_id).single();
+    if(prof)fromName=prof.username||fromName;
+  }catch(e){}
+  pushNotification('trade_request',{
+    offer_id:offer.id,
+    from_id:offer.from_id,
+    from_name:fromName,
+    item_count:(offer.offered_poxy_ids||[]).length,
+    message:offer.message||null
+  });
+  showToast('Trade offer from @'+sanitizeText(fromName));
+  updateNotifyBellDot();
+}
+window.respondTradeOffer=async function(offerId,accept){
+  if(!offerId||!currentUser)return;
+  const status=accept?'accepted':'declined';
+  try{
+    const{error}=await sb.from('poxy_trade_offers').update({status,updated_at:new Date().toISOString()}).eq('id',offerId).eq('to_id',currentUser.id).eq('status','pending');
+    if(error)throw error;
+    removeNotificationByOfferId(offerId);
+    pushNotification(accept?'trade_accepted':'trade_declined',{offer_id:offerId});
+    showToast(accept?'Trade accepted.':'Trade declined.');
+    if(accept)loadCollection().catch(console.error);
+  }catch(e){logAndToast('trade-response',e);}
+};
 window.openNotifyHub=function(){
   if(!currentUser){showToast('Sign in first.');return;}
   const ov=$('notifyHubOverlay');
   if(!ov)return;
-  notificationQueue.forEach(n=>{n.read=true;});
+  notificationQueue.forEach(n=>{if(n.type!=='trade_request')n.read=true;});
+  saveNotificationQueue();
   updateNotifyBellDot();
   ov.hidden=false;
   ov.setAttribute('aria-hidden','false');
@@ -6045,12 +6216,30 @@ function renderNotifyActivityList(){
   if(empty)empty.hidden=true;
   list.innerHTML='';
   items.forEach(n=>{
+    if(n.type==='trade_request'&&n.payload?.offer_id){
+      const card=document.createElement('article');
+      card.className='poxy-notify-trade-card';
+      const count=n.payload.item_count||0;
+      const from=sanitizeText(n.payload.from_name||'Player');
+      card.innerHTML='<div class="poxy-notify-trade-head"><span class="material-symbols-outlined">swap_horiz</span><div><p class="poxy-notify-trade-title">Trade offer</p><p class="poxy-notify-trade-sub">@'+from+' · '+count+' item'+(count===1?'':'s')+'</p></div><time>'+timeSince(new Date(n.t).toISOString())+'</time></div>'
+        +(n.payload.message?'<p class="poxy-notify-trade-msg">'+sanitizeText(n.payload.message)+'</p>':'')
+        +'<div class="poxy-notify-trade-actions">'
+        +'<button type="button" class="poxy-notify-trade-decline">Decline</button>'
+        +'<button type="button" class="poxy-notify-trade-accept">Accept</button></div>';
+      card.querySelector('.poxy-notify-trade-accept')?.addEventListener('click',()=>respondTradeOffer(n.payload.offer_id,true));
+      card.querySelector('.poxy-notify-trade-decline')?.addEventListener('click',()=>respondTradeOffer(n.payload.offer_id,false));
+      list.appendChild(card);
+      return;
+    }
     const el=document.createElement('div');
     el.className='poxy-notify-activity-item';
     let text='Activity';
     if(n.type==='gift_received')text='🎁 Gift received from '+sanitizeText(n.payload?.from_name||'a friend');
     else if(n.type==='gift_sent')text='You sent a gift';
     else if(n.type==='gift_claimed')text='Gift added to your collection';
+    else if(n.type==='club_flash_claimed')text='Flash drop secured in Poxy Club Vault';
+    else if(n.type==='trade_accepted')text='Trade offer accepted';
+    else if(n.type==='trade_declined')text='Trade offer declined';
     else text=String(n.type||'update').replace(/_/g,' ');
     el.innerHTML=sanitizeText(text)+'<time>'+timeSince(new Date(n.t).toISOString())+'</time>';
     list.appendChild(el);
@@ -6507,7 +6696,8 @@ window.submitTradeOffer=async function(){
     const{data,error}=await sb.rpc('create_trade_offer',{p_to_id:tradeTargetUserId,p_poxy_ids:ids,p_message:msg});
     if(error)throw error;
     if(data&&data.ok===false)throw new Error(data.error||'Trade failed');
-    showToast('Trade offer sent!');
+    pushNotification('trade_sent',{to_id:tradeTargetUserId,offer_id:data?.id,item_count:ids.length});
+    showToast('Trade offer sent — awaiting response.');
     closeTradeModal();
   }catch(e){showToast(e.message||'Trade offer failed. Apply migration_social_spa.sql if needed.');}
   if(btn)btn.disabled=false;
@@ -6834,15 +7024,26 @@ async function processTopup(){
 }
 $('btnPayCard').addEventListener('click',async function(){
   if(!validateCard())return;
-  const btn=$('btnPayCard');btn.disabled=true;btn.textContent='Processing...';
+  const btn=$('btnPayCard');btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined">hourglass_top</span> Processing…';
   try{await processTopup();}catch(e){showToast(e.message||'Payment failed.');}
-  btn.disabled=false;btn.textContent='Pay with Card';
+  btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined">lock</span> Add Funds (Test)';
 });
 $('btnApplePay').addEventListener('click',async function(){
-  const btn=$('btnApplePay');btn.disabled=true;btn.innerHTML='<span style="font-size:18px">🍎</span> Processing...';
+  const btn=$('btnApplePay');btn.disabled=true;btn.textContent='Processing…';
   await new Promise(r=>setTimeout(r,900));
   try{await processTopup();}catch(e){showToast(e.message||'Apple Pay failed.');}
-  btn.disabled=false;btn.innerHTML='<span style="font-size:18px">🍎</span> Apple Pay';
+  btn.disabled=false;btn.innerHTML='<span class="apple-pay-mark" aria-hidden="true"></span>';
+});
+const btnPayPalEl=$('btnPayPal');
+if(btnPayPalEl)btnPayPalEl.addEventListener('click',async function(){
+  btnPayPalEl.disabled=true;
+  const label=btnPayPalEl.querySelector('.paypal-mark');
+  const prev=label?label.textContent:'PayPal';
+  if(label)label.textContent='Processing…';
+  await new Promise(r=>setTimeout(r,900));
+  try{await processTopup();}catch(e){showToast(e.message||'PayPal failed.');}
+  btnPayPalEl.disabled=false;
+  if(label)label.textContent=prev;
 });
 window.formatCard=function(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;};
 window.formatExpiry=function(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
@@ -7770,9 +7971,68 @@ function scheduleClubFlashClaim(){
   };
   clubFlashClaimIv=setInterval(()=>{if(Math.random()<0.08)show();},45000);
 }
+function clubVaultStorageKey(){return CLUB_VAULT_LS+'_'+(currentUser?.id||'');}
+function loadClubVault(){
+  clubVaultItems=[];
+  try{
+    const raw=localStorage.getItem(clubVaultStorageKey());
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(Array.isArray(parsed))clubVaultItems=parsed;
+    }
+  }catch(e){}
+  renderClubInventoryVault();
+}
+function saveClubVault(){
+  if(!currentUser)return;
+  try{localStorage.setItem(clubVaultStorageKey(),JSON.stringify(clubVaultItems));}catch(e){}
+}
+function addToClubVault(item){
+  clubVaultItems.unshift(item);
+  if(clubVaultItems.length>48)clubVaultItems.length=48;
+  saveClubVault();
+  renderClubInventoryVault();
+}
+function renderClubInventoryVault(){
+  const grid=$('clubInventoryVaultGrid');if(!grid)return;
+  if(!clubVaultItems.length){
+    grid.innerHTML='<p class="poxy-club-muted">Vault empty — claim flash drops and VIP rewards to fill your reserve.</p>';
+    return;
+  }
+  grid.innerHTML='';
+  clubVaultItems.forEach(it=>{
+    const tier=TIER_BY_ID[it.tier]||TIERS[0];
+    const cell=document.createElement('div');
+    cell.className='poxy-club-vault-item';
+    cell.innerHTML='<span class="poxy-club-vault-icon" style="color:'+tier.color+'">'+(it.icon||tier.icon)+'</span>'
+      +'<div class="poxy-club-vault-meta"><strong>'+sanitizeText(it.name||'Club item')+'</strong><span>'+sanitizeText(it.kind||'collectible')+' · '+tier.label+'</span></div>';
+    grid.appendChild(cell);
+  });
+}
+window.openClubNotifyHub=function(){
+  openNotifyHub();
+  switchNotifyTab('activity');
+};
+window.openClubShieldStatus=function(){
+  const priv=getClubPrivacy();
+  const levels=['Standard','Elevated','High','Maximum'];
+  const label=levels[Math.min(3,Math.max(0,priv.shieldLevel||0))]||'Standard';
+  showToast('Club shield: '+label+(priv.otcDoubleConfirm?' · OTC double-confirm on':''));
+  openClubSettingsOverlay();
+};
 window.claimClubFlashDrop=function(){
   const wrap=$('clubFlashClaimWrap');if(wrap)wrap.hidden=true;
-  showToast('Flash cosmetic claimed — added to Atelier inventory (demo).');
+  const drop={
+    id:'flash_'+Date.now(),
+    kind:'cosmetic',
+    name:'Flash Elite Cosmetic',
+    tier:'epic',
+    icon:'⚡',
+    t:Date.now()
+  };
+  addToClubVault(drop);
+  pushNotification('club_flash_claimed',{name:drop.name});
+  showToast('Flash cosmetic claimed — deposited to Poxy Club Vault.');
   bumpClubBounty('club_post_2_feed',1);
 };
 window.submitClubOtcTransfer=function(){
@@ -8112,6 +8372,7 @@ async function initClubLuxuryModules(){
   scheduleClubFlashClaim();
   checkClubAirgap();
   renderClubVaultSlots();
+  renderClubInventoryVault();
   renderClubForge();
   renderClubOtcDesk();
   renderClubGovernance();
@@ -9195,6 +9456,13 @@ function setupRealtimeSubscriptions(){
       })
       .subscribe();
     realtimeSubs.push(newsSub);
+
+    const tradeSub=sb.channel('trade-offers-'+currentUser.id)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'poxy_trade_offers',filter:'to_id=eq.'+currentUser.id},payload=>{
+        if(payload.new)handleIncomingTradeOffer(payload.new);
+      })
+      .subscribe();
+    realtimeSubs.push(tradeSub);
 
     // News comments realtime (per-post refresh on visible open posts)
     const commentSub=sb.channel('news-comments-global')

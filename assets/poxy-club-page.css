@@ -204,6 +204,21 @@ body.club-passport-open{overflow:hidden}
 .poxy-club-btn-liquid::after{content:'';position:absolute;inset:2px;border-radius:12px;background:var(--st-surface-low);z-index:-1}
 .poxy-club-btn-title{font-weight:600;font-size:1.1rem;color:var(--st-on-surface)}
 .poxy-club-btn-price{color:var(--club-cyan)!important;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
+.poxy-club-inventory-vault-block{margin-top:20px}
+.poxy-club-inventory-vault{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:12px}
+.poxy-club-vault-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(249,171,255,0.15);
+}
+.poxy-club-vault-icon{font-size:22px;line-height:1;flex-shrink:0}
+.poxy-club-vault-meta{display:flex;flex-direction:column;gap:2px;min-width:0}
+.poxy-club-vault-meta strong{font-size:11px;color:#e5e2e1}
+.poxy-club-vault-meta span{font-size:9px;color:#9d8b9b;text-transform:uppercase;letter-spacing:0.06em}
 .poxy-club-mystery-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:12px}
 .poxy-club-mystery-slot,.mini-box.poxy-club-mystery-slot{width:4.25rem;height:4.25rem;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;background:var(--st-surface-bright);border:1px solid var(--club-glass);transition:all 0.3s var(--club-ease)}
 .poxy-club-mystery-slot.revealed{animation:prize-pulse 1.15s ease-in-out infinite;border:2px solid var(--club-cyan)!important}

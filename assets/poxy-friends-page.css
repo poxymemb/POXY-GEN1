@@ -252,6 +252,20 @@
 }
 .pfp-trade-empty{font-size:11px;color:#6a6568;padding:8px 0}
 .pfp-actions{display:flex;flex-wrap:wrap;gap:10px}
+.pfp-btn-danger{
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,80,80,0.35);
+  background:rgba(40,12,16,0.85);
+  color:#ff8a8a;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.pfp-btn-danger:hover{border-color:rgba(255,100,100,0.55);color:#ffb0b0}
 .pfp-btn-gift{
   padding:12px 22px;
   border-radius:999px;

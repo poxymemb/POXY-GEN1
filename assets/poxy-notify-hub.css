@@ -232,6 +232,37 @@
 }
 .poxy-notify-btn-collection:hover{transform:scale(1.04)}
 
+.poxy-notify-trade-card{
+  padding:14px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(249,171,255,0.2);
+  margin-bottom:8px;
+}
+.poxy-notify-trade-head{display:flex;align-items:flex-start;gap:10px}
+.poxy-notify-trade-head .material-symbols-outlined{color:#f9abff;font-size:22px}
+.poxy-notify-trade-title{font-size:13px;font-weight:700;color:#e5e2e1;margin:0 0 2px}
+.poxy-notify-trade-sub{font-size:11px;color:#9d8b9b;margin:0}
+.poxy-notify-trade-head time{margin-left:auto;font-size:10px;color:#6a6568;white-space:nowrap}
+.poxy-notify-trade-msg{font-size:11px;color:#d5c1d2;margin:10px 0 0;line-height:1.4}
+.poxy-notify-trade-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+.poxy-notify-trade-decline,
+.poxy-notify-trade-accept{
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.12);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  cursor:pointer;
+  font-family:inherit;
+}
+.poxy-notify-trade-decline{background:transparent;color:#9d8b9b}
+.poxy-notify-trade-decline:hover{border-color:rgba(255,255,255,0.25);color:#e5e2e1}
+.poxy-notify-trade-accept{background:linear-gradient(135deg,#9c27b0,#d70357);border:none;color:#fff}
+.poxy-notify-trade-accept:hover{transform:scale(1.03)}
+
 /* Full-screen unboxing (Framer-style spring via CSS) */
 .poxy-gift-unbox-overlay{
   position:fixed;

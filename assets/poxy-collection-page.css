@@ -25,7 +25,16 @@ body.poxy-stitch-dash .poxy-collection-page.page{
 
 .poxy-col-shell{width:100%;max-width:min(1280px,100%);margin:0 auto;min-width:0}
 
-.poxy-col-header{margin-bottom:24px}
+.poxy-col-header{margin-bottom:24px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.poxy-col-header-main{min-width:0}
+.poxy-col-header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.poxy-col-header-actions[hidden]{display:none!important}
+.poxy-col-bulk-count{font-size:11px;font-weight:700;color:#f9abff;letter-spacing:0.04em}
+.poxy-col-bulk-burn{padding:8px 16px;border:none;border-radius:999px;background:linear-gradient(90deg,#e91e8c,#ff416c);color:#fff;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform 0.15s,opacity 0.2s}
+.poxy-col-bulk-burn:hover{transform:scale(1.03);opacity:0.92}
+.col-card-topbar{display:flex;justify-content:flex-end;width:100%;min-height:22px;margin-bottom:2px;flex-shrink:0;position:relative;z-index:14}
+.poxy-collection-page .col-card-topbar .col-card-kebab{position:relative;top:0;right:0}
+.poxy-collection-page .col-inv-card .col-card-menu{top:24px;right:4px}
 .poxy-col-title{
   font-family:'Hanken Grotesk',Inter,sans-serif;
   font-size:clamp(1.5rem,3.5vw,2.25rem);
@@ -486,7 +495,7 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   position:relative;
   flex:1 1 auto;
   min-height:0;
-  max-height:72px;
+  max-height:83px;
   width:100%;
   margin-bottom:5px;
   border-radius:8px;
@@ -503,7 +512,7 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   opacity:0.85;
 }
 .poxy-collection-page .col-inv-card .poxy-col-preview-icon{
-  font-size:28px!important;
+  font-size:32px!important;
   line-height:1;
   position:relative;
   z-index:1;

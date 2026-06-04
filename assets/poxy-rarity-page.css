@@ -24,9 +24,17 @@
   gap:32px;
 }
 @media(min-width:1200px){
-  .rarity-page-layout{flex-direction:row;align-items:flex-start;gap:24px}
-  .rarity-page-main{flex:1;min-width:0}
-  .rarity-page-aside{width:100%;max-width:380px;flex-shrink:0}
+  .rarity-page-layout{flex-direction:row;align-items:flex-start;gap:24px;position:relative}
+  .rarity-page-main{flex:1;min-width:0;max-width:calc(100% - 400px);padding-right:8px}
+  .rarity-page-aside{
+    position:fixed;
+    right:max(20px,calc((100vw - 1280px) / 2 + 24px));
+    top:calc(var(--st-nav-h, 72px) + 28px);
+    width:min(360px,calc(100vw - 40px));
+    max-width:380px;
+    flex-shrink:0;
+    z-index:40;
+  }
 }
 
 .rarity-page-header{max-width:640px;margin-bottom:32px}
