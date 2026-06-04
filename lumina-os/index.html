@@ -4,16 +4,12 @@
   <meta charset="UTF-8">
   <title>Lumina OS</title>
   <script>
-    (function () {
-      var base = location.pathname.replace(/\/lumina-os\/?.*$/i, '') || '';
-      if (base && !base.endsWith('/')) base += '/';
-      if (!base) base = '/';
-      var q = location.search || '';
-      location.replace(base + '#/lumina-os' + q);
-    })();
+    var base = location.pathname.replace(/\/lumina-os\/?.*$/i, '') || '';
+    var href = base ? (base.endsWith('/') ? base : base + '/') : '/';
+    location.replace(href + '?main=1');
   </script>
 </head>
 <body>
-  <p>Redirecting to Lumina OS…</p>
+  <p><a href="../?main=1">Return to POXY World</a></p>
 </body>
 </html>

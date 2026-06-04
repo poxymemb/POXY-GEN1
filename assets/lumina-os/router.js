@@ -57,12 +57,18 @@
     return HASH_PREFIX + (q ? '?' + q : '');
   }
 
+  function shouldSkipLumina() {
+    try {
+      return global.sessionStorage.getItem('poxy_skip_lumina') === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
   function isLuminaOSPath() {
+    if (shouldSkipLumina()) return false;
     const h = global.location.hash || '';
-    if (h === HASH_PREFIX || h.startsWith(HASH_PREFIX + '?')) return true;
-    const target = (appBase() + PATH_SEGMENT).replace(/\/+$/, '') || PATH_SEGMENT;
-    const p = (global.location.pathname || '').replace(/\/+$/, '');
-    return p === target || p.startsWith(target + '/');
+    return h === HASH_PREFIX || h.startsWith(HASH_PREFIX + '?');
   }
 
   function syncUrl(opts, replace) {
@@ -130,19 +136,17 @@
     }
     root.removeAttribute('hidden');
     root.style.display = 'flex';
+    root.style.flexDirection = 'column';
     root.classList.add('is-mounted', 'is-ready');
     root.classList.remove('is-exiting', 'is-entering');
+    const escapeBar = document.getElementById('lcEscapeBar');
+    if (escapeBar) escapeBar.style.display = 'flex';
     if (lcShell) lcShell.classList.add('is-ready');
     return true;
   }
 
   function persistRoute() {
-    if (!global.currentUser) return;
-    try {
-      const key =
-        (global.POXY_ROUTE_LS || 'poxy_active_route') + '_' + global.currentUser.id;
-      localStorage.setItem(key, JSON.stringify({ kind: 'lumina-os' }));
-    } catch (e) {}
+    /* Intentionally no-op: do not trap users on Lumina OS after refresh */
   }
 
   function resolveUser() {
@@ -202,10 +206,11 @@
       }
       return;
     }
+    try {
+      global.sessionStorage.removeItem('poxy_skip_lumina');
+    } catch (e) {}
     entering = true;
-    const onPath =
-      (global.location.pathname || '').indexOf(PATH_SEGMENT) >= 0;
-    syncUrl(opts, onPath);
+    syncUrl(opts, true);
     hideMainLayout();
     if (!showOsRoot()) {
       entering = false;
@@ -292,7 +297,19 @@
     }
   }
 
+  function forceExit() {
+    try {
+      global.sessionStorage.setItem('poxy_skip_lumina', '1');
+    } catch (e) {}
+    exit({ force: true });
+    const home = homePath() + '?main=1';
+    try {
+      global.location.replace(home);
+    } catch (e) {}
+  }
+
   function bootstrapFromUrl() {
+    if (shouldSkipLumina()) return false;
     if (!isLuminaOSPath()) return false;
     if (resolveUser()) {
       enter({ replace: true, ...parseQuery() });
@@ -314,10 +331,24 @@
     parseQuery,
     enter,
     exit,
+    forceExit,
     bootstrapFromUrl,
     hideMainLayout,
     showMainLayout,
   };
+
+  global.forceExitLuminaOS =
+    global.forceExitLuminaOS ||
+    function () {
+      forceExit();
+    };
+
+  global.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && (mounted || isLuminaOSPath())) {
+      e.preventDefault();
+      forceExit();
+    }
+  });
 
   global.addEventListener('popstate', onRouteChange);
   global.addEventListener('hashchange', onRouteChange);
