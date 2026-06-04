@@ -420,6 +420,86 @@
       .subscribe();
   }
 
+  const MODULE_DEFS = {
+    friends: {
+      icon: 'group',
+      title: 'Friends',
+      subtitle: 'Your social network',
+      desc: 'Your friends list syncs automatically from POXY World. Open a friend\'s profile to start a conversation.',
+      action: 'Open Messages',
+      actionNav: 'messages',
+      accent: '#22c55e',
+      badge: null,
+    },
+    squads: {
+      icon: 'diversity_3',
+      title: 'Squads',
+      subtitle: 'Group spaces — coming soon',
+      desc: 'Create and join squads to collaborate, play, and share with groups of friends. Launching in a future update.',
+      action: null,
+      accent: '#a855f7',
+      badge: 'Soon',
+    },
+    activity: {
+      icon: 'bolt',
+      title: 'Activity',
+      subtitle: 'Recent events',
+      desc: 'Track likes, new followers, squad invites, and system alerts all in one place. Activity feed is being built.',
+      action: null,
+      accent: '#f59e0b',
+      badge: 'Soon',
+    },
+    notifications: {
+      icon: 'notifications',
+      title: 'Notifications',
+      subtitle: 'Your alerts',
+      desc: 'Friend requests, mentions, and system alerts will appear here. Notification hub is being built.',
+      action: null,
+      accent: '#60a5fa',
+      badge: 'Soon',
+    },
+    settings: {
+      icon: 'settings',
+      title: 'Settings',
+      subtitle: 'Preferences & account',
+      desc: 'Manage your account, privacy, appearance, and notification settings from the POXY main app.',
+      action: 'Open POXY Settings',
+      actionExit: true,
+      accent: '#9ca3af',
+      badge: null,
+    },
+  };
+
+  function renderModulePage(nav) {
+    const def = MODULE_DEFS[nav];
+    if (!def) return `<div class="lc-module-placeholder-inner"><p>Unknown module.</p></div>`;
+    const accentRgb = def.accent;
+    const friends = nav === 'friends' ? state.friends.slice(0, 18) : null;
+    const friendsHtml = friends && friends.length
+      ? `<div class="lc-module-friends-grid">${friends.map((f) => `
+        <button type="button" class="lc-module-friend-card" onclick="window.LuminaChatOS.openChatWith('${f.id}')">
+          <div class="lc-module-friend-av">${f.avatar_emoji || '👾'}</div>
+          <span class="lc-module-friend-name">${U.esc(f.display_name || f.username || 'Friend')}</span>
+          <span class="lc-module-friend-handle">@${U.esc(f.username || '–')}</span>
+        </button>`).join('')}</div>`
+      : '';
+    return `
+      <div class="lc-module-placeholder-inner">
+        <div class="lc-module-hero-glow" style="--accent:${accentRgb}"></div>
+        <div class="lc-module-hero-icon-wrap" style="--accent:${accentRgb}">
+          <span class="material-symbols-outlined lc-module-hero-icon">${def.icon}</span>
+          ${def.badge ? `<span class="lc-module-hero-badge">${def.badge}</span>` : ''}
+        </div>
+        <h2 class="lc-module-hero-title">${def.title}</h2>
+        <p class="lc-module-hero-sub">${def.subtitle}</p>
+        <p class="lc-module-hero-desc">${def.desc}</p>
+        ${def.action ? `<button type="button" class="lc-module-hero-action" style="--accent:${accentRgb}" onclick="${def.actionExit ? `document.getElementById('lcExitOs')?.click()` : `window.LuminaChatOS_setNav&&window.LuminaChatOS_setNav('${def.actionNav}')`}">${def.action}</button>` : ''}
+        ${friendsHtml}
+      </div>`;
+  }
+
+  window.LuminaChatOS_setNav = null;
+
   function setNav(nav) {
     state.activeNav = nav;
     savePersisted({ activeNav: nav });
@@ -427,24 +507,29 @@
       btn.classList.toggle('is-active', btn.dataset.nav === nav);
     });
     const main = U.$('lcMain');
-    const ph = U.$('lcNavPlaceholder');
+    const moduleHost = U.$('lcModuleHost');
+    const shell = U.$('lcShell');
     if (nav === 'messages') {
       main?.classList.remove('lc-hidden');
-      ph?.classList.add('lc-hidden');
+      if (moduleHost) { moduleHost.classList.add('lc-hidden'); moduleHost.innerHTML = ''; }
+      shell?.classList.remove('layout-module');
+      shell?.classList.add('layout-messages');
     } else {
       main?.classList.add('lc-hidden');
-      ph?.classList.remove('lc-hidden');
-      if (ph) {
-        const labels = {
-          friends: 'Friends roster syncs from POXY — open Messages to chat.',
-          squads: 'Squads — coming soon.',
-          achievements: 'Achievements — coming soon.',
-          notifications: 'Notifications — coming soon.',
-          settings: 'Settings — use POXY main app for account controls.',
-        };
-        ph.textContent = labels[nav] || 'Coming soon.';
+      shell?.classList.remove('layout-messages');
+      shell?.classList.add('layout-module');
+      if (moduleHost) {
+        moduleHost.classList.remove('lc-hidden');
+        moduleHost.innerHTML = renderModulePage(nav);
+        moduleHost.style.animation = 'none';
+        requestAnimationFrame(() => {
+          moduleHost.style.animation = '';
+          moduleHost.classList.add('lc-module-entering');
+          setTimeout(() => moduleHost.classList.remove('lc-module-entering'), 350);
+        });
       }
     }
+    window.LuminaChatOS_setNav = (n) => setNav(n);
   }
 
   function bindUi() {

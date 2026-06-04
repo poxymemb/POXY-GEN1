@@ -148,6 +148,9 @@ body.lumina-os-active .page {
   grid-column: 1 / -1;
   min-height: 0;
   height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 #luminaOsRoot .lc-nav {
@@ -206,10 +209,6 @@ body.lumina-os-active .page {
   overflow-y: auto;
 }
 
-#luminaOsRoot .lc-vault-card {
-  margin-top: auto;
-  flex-shrink: 0;
-}
 
 #luminaOsRoot.is-entering:not([hidden]) {
   animation: lo-enter var(--lo-transition) forwards;
