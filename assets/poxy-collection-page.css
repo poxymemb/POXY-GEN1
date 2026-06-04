@@ -583,9 +583,11 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   color:#f9abff!important;
 }
 .poxy-collection-page .col-card-vip-serial{color:#f9abff!important;border-color:rgba(249,171,255,0.45)!important}
-/* Dropdown must paint outside card — overflow:hidden on .col-inv-card clips icons otherwise */
+/* Open menu uses position:fixed (set in JS) — still lift card above neighbors */
 .poxy-collection-page .col-inv-card:has(.col-card-menu.open){
   overflow:visible!important;
+  content-visibility:visible!important;
+  contain:none!important;
   z-index:9999;
 }
 .poxy-collection-page .col-club-grid .col-vip-locked-wrap:has(.col-card-menu.open){
@@ -596,20 +598,30 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
   visibility:hidden;
   pointer-events:none!important;
 }
-.poxy-collection-page .col-card-menu.open{visibility:visible}
-.poxy-collection-page .col-card-menu{
+.poxy-collection-page .col-card-menu.open{
+  visibility:visible;
+  transform:none!important;
+  opacity:1!important;
+}
+.poxy-collection-page .col-card-menu.is-fixed{
+  position:fixed;
+  z-index:100000;
+  min-width:200px;
+  width:max-content;
+  max-width:min(240px,calc(100vw - 16px));
   padding:8px 10px;
   box-sizing:border-box;
 }
 .poxy-collection-page .col-card-menu-item{
-  padding:10px 12px 10px 10px;
+  padding:10px 14px;
   gap:10px;
   box-sizing:border-box;
+  white-space:nowrap;
 }
 .poxy-collection-page .col-card-menu-item .ic{
-  width:20px;
-  min-width:20px;
-  font-size:14px;
+  width:22px;
+  min-width:22px;
+  font-size:15px;
   justify-content:center;
   align-items:center;
 }

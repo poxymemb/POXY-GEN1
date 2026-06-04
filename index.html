@@ -45,11 +45,11 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=5">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=4">
-<script src="assets/poxy-i18n-extra.js?v=2"></script>
+<script src="assets/poxy-i18n-extra.js?v=3"></script>
 <script src="assets/poxy-i18n.js?v=4"></script>
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
@@ -809,6 +809,17 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
   opacity:1;
   transform:translateY(0) scale(1);
   pointer-events:auto;
+}
+.col-card-menu.is-fixed{
+  position:fixed;
+  z-index:100000;
+  min-width:200px;
+  width:max-content;
+  max-width:min(240px,calc(100vw - 16px));
+  transform:none!important;
+}
+.col-card-menu.is-fixed.open{
+  transform:none!important;
 }
 .col-card-menu.open *{pointer-events:auto}
 .col-card-menu-item{
@@ -5685,12 +5696,13 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
 
   const menu=document.createElement('div');
   menu.className='col-card-menu';menu.dataset.menuFor=item.id;menu.setAttribute('role','menu');
+  const tr=window.PoxyI18n?function(k){return PoxyI18n.t(k);}:function(k){return k;};
   menu.innerHTML=
-    '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?'Unpin':'Pin to top')+'</button>'+
-    '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?'Unfeature':'Feature in Profile')+'</button>'+
-    '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>List on Market</button>'+
-    '<button type="button" class="col-card-menu-item" data-action="share" data-id="'+item.id+'" role="menuitem"><span class="ic">🔗</span>Share Link</button>'+
-    '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>Burn</button>';
+    '<button type="button" class="col-card-menu-item'+(isPinned?' active':'')+'" data-action="pin" data-id="'+item.id+'" role="menuitem"><span class="ic">📌</span>'+(isPinned?tr('col.menu.unpin'):tr('col.menu.pin'))+'</button>'+
+    '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?tr('col.menu.unfeature'):tr('col.menu.feature'))+'</button>'+
+    '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>'+tr('col.menu.list')+'</button>'+
+    '<button type="button" class="col-card-menu-item" data-action="share" data-id="'+item.id+'" role="menuitem"><span class="ic">🔗</span>'+tr('col.menu.share')+'</button>'+
+    '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>'+tr('col.menu.burn')+'</button>';
   card.appendChild(menu);
 
   if(lockedView){
@@ -5710,7 +5722,8 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
 function renderCollection(){
   const cont=$('colContent');
   if(!cont)return;
-  document.querySelectorAll('.col-card-menu.open').forEach(m=>m.classList.remove('open'));
+  if(typeof closeAllColCardMenus==='function')closeAllColCardMenus();
+  else document.querySelectorAll('.col-card-menu.open').forEach(m=>{m.classList.remove('open');m.classList.remove('is-fixed');});
   const base=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
   const filtered=applyPinSort(base);
   const splitClubSection=colFilter==='all';
@@ -5838,11 +5851,48 @@ async function sharePoxy(poxyId,rarity,serialNumber){
   const root=document.getElementById('colContent');
   if(!root||root.dataset.delegated==='1')return;
   root.dataset.delegated='1';
+  function resetColCardMenuPosition(menu){
+    if(!menu)return;
+    menu.classList.remove('is-fixed');
+    menu.style.position='';
+    menu.style.top='';
+    menu.style.left='';
+    menu.style.right='';
+    menu.style.width='';
+    menu.style.minWidth='';
+  }
+  function syncColCardMenuPosition(menu,kebab){
+    if(!menu||!kebab||!menu.classList.contains('open')){
+      resetColCardMenuPosition(menu);
+      return;
+    }
+    menu.classList.add('is-fixed');
+    menu.style.visibility='visible';
+    menu.style.opacity='1';
+    menu.style.pointerEvents='auto';
+    const rect=kebab.getBoundingClientRect();
+    const menuW=Math.max(200,menu.offsetWidth||200);
+    let left=rect.right-menuW;
+    left=Math.max(8,Math.min(left,window.innerWidth-menuW-8));
+    menu.style.position='fixed';
+    menu.style.top=(rect.bottom+6)+'px';
+    menu.style.left=left+'px';
+    menu.style.right='auto';
+    menu.style.width=menuW+'px';
+    menu.style.minWidth='200px';
+    menu.style.zIndex='100000';
+  }
   function closeAllMenusExcept(keepId){
     root.querySelectorAll('.col-card-menu.open').forEach(m=>{
-      if(!keepId||m.dataset.menuFor!==keepId)m.classList.remove('open');
+      if(!keepId||m.dataset.menuFor!==keepId){
+        m.classList.remove('open');
+        resetColCardMenuPosition(m);
+      }
     });
   }
+  window.closeAllColCardMenus=function(){closeAllMenusExcept(null);};
+  window.addEventListener('resize',()=>closeAllMenusExcept(null));
+  window.addEventListener('scroll',()=>closeAllMenusExcept(null),true);
   root.addEventListener('click',function(e){
     // Kebab → toggle this card's menu, close any other open ones
     const kebab=e.target.closest('.col-card-kebab');
@@ -5852,7 +5902,14 @@ async function sharePoxy(poxyId,rarity,serialNumber){
       const menu=root.querySelector('.col-card-menu[data-menu-for="'+CSS.escape(id)+'"]');
       const willOpen=menu&&!menu.classList.contains('open');
       closeAllMenusExcept(willOpen?id:null);
-      if(menu)menu.classList.toggle('open',willOpen);
+      if(menu){
+        menu.classList.toggle('open',willOpen);
+        if(willOpen){
+          requestAnimationFrame(()=>syncColCardMenuPosition(menu,kebab));
+        }else{
+          resetColCardMenuPosition(menu);
+        }
+      }
       return;
     }
     // Menu item → dispatch on data-action, then close
@@ -5877,7 +5934,7 @@ async function sharePoxy(poxyId,rarity,serialNumber){
         const origHtml=mi.innerHTML;
         sharePoxy(item.id,rarityLabel,serialNum).then(function(ok){
           if(ok){
-            mi.innerHTML='<span class="ic">✅</span>Copied! ✅';
+            mi.innerHTML='<span class="ic">✅</span>'+(window.PoxyI18n?PoxyI18n.t('col.menu.copied'):'Copied!')+' ✅';
             setTimeout(function(){
               mi.innerHTML=origHtml;
               if(menu)menu.classList.remove('open');
