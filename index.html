@@ -59,6 +59,7 @@
 <link rel="stylesheet" href="assets/lumina-features.css?v=1">
 <link rel="stylesheet" href="assets/poxy-landing-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
+<link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
@@ -1377,6 +1378,7 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')" data-i18n="nav.rarity">Rarity</button>
             <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()" data-i18n="nav.store">Store</button>
             <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')" data-i18n="nav.news">News</button>
+            <button type="button" class="st-nav-link" id="psdNavVerify" onclick="openPoxyCryptoOverlay('verify')" title="Cryptographic verification playground">Verify</button>
           </div>
         </div>
         <div class="st-nav-zone st-nav-zone--center" aria-label="App navigation">
@@ -1734,6 +1736,8 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-explore-nav-btn" data-explore="news" onclick="showStitchTab('news')"><span class="material-symbols-outlined">newspaper</span> Poxy World News</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="updates" onclick="switchExploreSection('updates')"><span class="material-symbols-outlined">update</span> Updates</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="contact" onclick="switchExploreSection('contact')"><span class="material-symbols-outlined">mail</span> Contact</button>
+              <button type="button" class="poxy-explore-nav-btn" onclick="openPoxyCryptoOverlay('docs')"><span class="material-symbols-outlined">lock</span> Crypto Whitepaper</button>
+              <button type="button" class="poxy-explore-nav-btn" onclick="openPoxyCryptoOverlay('verify')"><span class="material-symbols-outlined">verified</span> Verify Asset</button>
             </nav>
             <div class="poxy-explore-main">
               <div id="exploreSectionSupport" class="poxy-explore-section active">
@@ -3145,6 +3149,370 @@ body.dark-club .club-sub{color:#888}
     </div>
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     POXY CRYPTO TRANSPARENCY OVERLAY
+     Accessible at  #/crypto-docs  and  #/verify  — no login required.
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="poxyCryptoOverlay" class="poxy-crypto-overlay" role="dialog" aria-modal="true" aria-label="POXY Cryptographic Transparency">
+
+  <!-- Top bar -->
+  <div class="pcd-topbar">
+    <div class="pcd-topbar-brand">
+      <span class="material-symbols-outlined" style="font-size:16px">lock</span>
+      POXY CRYPTO CORE
+    </div>
+    <div class="pcd-topbar-sep"></div>
+    <div class="pcd-topbar-tabs">
+      <button class="pcd-tab-btn active" id="pcdTabDocs" onclick="pcdSwitchTab('docs')">
+        <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">menu_book</span> Whitepaper
+      </button>
+      <button class="pcd-tab-btn" id="pcdTabVerify" onclick="pcdSwitchTab('verify')">
+        <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-3px">verified</span> Verify
+      </button>
+    </div>
+    <button class="pcd-close-btn" onclick="closePoxyCryptoOverlay()" aria-label="Close">✕</button>
+  </div>
+
+  <!-- Panel container -->
+  <div class="pcd-panels">
+
+    <!-- ─── DOCS PANEL ────────────────────────────────────────────────────── -->
+    <div class="pcd-panel active" id="pcdPanelDocs">
+      <div class="pcd-docs-shell">
+
+        <div class="pcd-docs-hero">
+          <div class="pcd-docs-kicker">Cryptographic Whitepaper · v1.0</div>
+          <h1 class="pcd-docs-title">POXY Cryptographic<br>Core System</h1>
+          <p class="pcd-docs-subtitle">A production-grade cryptographic integrity system running inside Supabase. Every POXY asset is uniquely hashed, ED25519-signed, and anchored into an append-only Merkle-verified ledger — providing blockchain-grade tamper-resistance inside a centralized database.</p>
+        </div>
+
+        <!-- Section nav -->
+        <nav class="pcd-section-nav" aria-label="Documentation sections">
+          <button class="pcd-snav-btn active" onclick="pcdSection('overview')">Overview</button>
+          <button class="pcd-snav-btn" onclick="pcdSection('identity')">Identity Hash</button>
+          <button class="pcd-snav-btn" onclick="pcdSection('signatures')">Signatures</button>
+          <button class="pcd-snav-btn" onclick="pcdSection('ledger')">Event Ledger</button>
+          <button class="pcd-snav-btn" onclick="pcdSection('rng')">RNG System</button>
+          <button class="pcd-snav-btn" onclick="pcdSection('trust')">Trust Model</button>
+          <button class="pcd-snav-btn" onclick="pcdSection('threats')">Threat Model</button>
+        </nav>
+
+        <!-- SECTION: OVERVIEW -->
+        <div class="pcd-section active" id="pcdSectionOverview">
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">architecture</span> System Architecture</div>
+            <p>POXY uses a layered cryptographic stack. Each layer independently verifies the one below it — no single point of trust can corrupt the system without breaking the chain.</p>
+            <pre class="pcd-arch">┌─────────────────────────────────────────────────────────────────┐
+│                  PUBLIC TRANSPARENCY LAYER                       │
+│         /verify — anyone can audit any asset or event           │
+├─────────────────────────────────────────────────────────────────┤
+│                    EDGE FUNCTION LAYER                           │
+│  ┌───────────────┐  ┌────────────────┐  ┌──────────────────┐   │
+│  │  mint_poxy    │  │ transfer_poxy  │  │  public_verify   │   │
+│  │  (JWT req.)   │  │  (JWT req.)    │  │  (public, anon)  │   │
+│  └───────┬───────┘  └───────┬────────┘  └────────┬─────────┘   │
+│          │ ED25519 sign      │ ED25519 sign        │ ED25519 verify│
+├──────────┼───────────────────┼─────────────────────┼─────────────┤
+│                   DATABASE INTEGRITY LAYER                        │
+│  ┌──────────────┐ ┌─────────────────┐ ┌──────────────────────┐  │
+│  │ poxy_assets  │ │  ledger_events  │ │     merkle_roots     │  │
+│  │ (SHA-256 id) │ │ (hash-chained)  │ │  (state snapshots)   │  │
+│  │ immutable    │ │ append-only     │ │  every 24h           │  │
+│  └──────────────┘ └─────────────────┘ └──────────────────────┘  │
+│  ┌──────────────┐ ┌─────────────────┐ ┌──────────────────────┐  │
+│  │  crypto_keys │ │   rng_rounds    │ │  security_audit_log  │  │
+│  │ (pub keys)   │ │ (commit-reveal) │ │  (every action)      │  │
+│  └──────────────┘ └─────────────────┘ └──────────────────────┘  │
+│  Triggers block UPDATE/DELETE · RLS restricts access             │
+└─────────────────────────────────────────────────────────────────┘
+│                  CRYPTOGRAPHIC PRIMITIVES                         │
+│   SHA-256 (identity + chaining)  ·  ED25519 (signing)           │
+│   Merkle Trees (bulk integrity)  ·  Commit-Reveal (fair RNG)    │
+└─────────────────────────────────────────────────────────────────┘</pre>
+          </div>
+          <div class="pcd-primitives">
+            <div class="pcd-primitive">
+              <div class="pcd-primitive-icon">🔐</div>
+              <div class="pcd-primitive-name">SHA-256</div>
+              <div class="pcd-primitive-desc">Deterministic 256-bit fingerprint for asset identity and event chaining. Collision-resistant and standardized.</div>
+            </div>
+            <div class="pcd-primitive">
+              <div class="pcd-primitive-icon">✍️</div>
+              <div class="pcd-primitive-name">ED25519</div>
+              <div class="pcd-primitive-desc">Elliptic-curve digital signature. 128-bit security, 64-byte signatures, constant-time verification.</div>
+            </div>
+            <div class="pcd-primitive">
+              <div class="pcd-primitive-icon">🌲</div>
+              <div class="pcd-primitive-name">Merkle Trees</div>
+              <div class="pcd-primitive-desc">Binary hash tree over all assets and events. A single root hash proves the integrity of the entire dataset.</div>
+            </div>
+            <div class="pcd-primitive">
+              <div class="pcd-primitive-icon">🎲</div>
+              <div class="pcd-primitive-name">Commit-Reveal</div>
+              <div class="pcd-primitive-desc">Two-phase RNG protocol. Server commits to a seed before the client provides theirs — neither party can bias the output.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: IDENTITY -->
+        <div class="pcd-section" id="pcdSectionIdentity">
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">fingerprint</span> POXY Identity Hash System</div>
+            <p>Every POXY receives a <strong>deterministic, permanent SHA-256 identity hash</strong> at the moment of minting. This hash is the asset's cryptographic fingerprint — immutable forever, impossible to forge without all 7 inputs.</p>
+            <p>The hash pre-image is constructed from fields controlled entirely server-side:</p>
+            <pre class="pcd-formula">hash_input = creator_id
+           + "|" + mint_timestamp_microseconds
+           + "|" + serial_number
+           + "|" + rarity_seed
+           + "|" + collection_id
+           + "|" + generation_version
+           + "|" + server_salt
+
+poxy_hash = SHA256(UTF8(hash_input))  →  64 lowercase hex characters</pre>
+            <p><strong>Why is this safe?</strong> SHA-256 is a one-way function. Given only the hash, it is computationally infeasible to reconstruct the inputs (pre-image resistance). The <code>server_salt</code> is a randomly generated per-asset secret that is never published — making brute-force enumeration impossible even if an attacker knows all other fields.</p>
+            <p><strong>What prevents duplication?</strong> The combination of timestamp (microsecond precision) + server_salt has negligible collision probability. Additionally, <code>poxy_hash</code> has a <code>UNIQUE</code> constraint in the database, enforced at the storage layer.</p>
+            <p><strong>What makes it immutable?</strong> PostgreSQL triggers block any <code>UPDATE</code> or <code>DELETE</code> on the <code>poxy_assets</code> table. The hash cannot be changed after insertion without a physical database attack, which would be visible to the audit log.</p>
+          </div>
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">verified_user</span> Hash Verification</div>
+            <p>Anyone with the <code>poxy_hash</code> can request a verification. The system recomputes the hash server-side (the salt stays inside the database) and confirms the stored value matches. Use the <strong>Verify</strong> tab to do this interactively.</p>
+            <pre class="pcd-formula">verify:  recomputed_hash = SHA256(all_7_inputs)
+         ok = (recomputed_hash == stored_poxy_hash)</pre>
+          </div>
+        </div>
+
+        <!-- SECTION: SIGNATURES -->
+        <div class="pcd-section" id="pcdSectionSignatures">
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">key</span> ED25519 Signature System</div>
+            <p>Every POXY hash is <strong>digitally signed</strong> by the server's ED25519 private key at the moment of minting. This proves the asset was created by the legitimate server — not injected directly into the database.</p>
+            <pre class="pcd-formula">At mint time:
+  signature = ED25519_SIGN(server_private_key, poxy_hash)
+
+At verification time:
+  valid = ED25519_VERIFY(registered_public_key, poxy_hash, signature)
+  → true  iff signature was produced by the matching private key</pre>
+            <p><strong>Key separation:</strong> The private key exists <em>only</em> inside Edge Function secrets (Supabase's encrypted environment). It never touches the database. The public key is registered in <code>crypto_keys</code> and is publicly readable for audit.</p>
+            <p><strong>What this proves:</strong> A valid signature over a valid hash means both: (1) the hash was not tampered with after signing, and (2) a legitimate server process performed the mint. A database administrator with direct table access cannot forge a valid signature without the private key.</p>
+          </div>
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">autorenew</span> Key Rotation</div>
+            <p>Every signature permanently records its <code>key_version</code>. When a key is rotated:</p>
+            <p>1. A new keypair is generated and the new public key is registered with dual-control approval.<br>
+               2. New signatures use the new key. Old signatures remain verifiable forever — the old public key stays in <code>crypto_keys</code>.<br>
+               3. The old private key secret is retired from Edge Function secrets.</p>
+            <p>Signature history is never lost. Any asset can be verified against its original key, regardless of how many rotations have occurred since.</p>
+          </div>
+        </div>
+
+        <!-- SECTION: LEDGER -->
+        <div class="pcd-section" id="pcdSectionLedger">
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">receipt_long</span> Append-Only Event Ledger</div>
+            <p>All system actions — mints, transfers, trades, upgrades, destructions — are recorded in <code>ledger_events</code>. This table is <strong>strictly append-only</strong>: PostgreSQL triggers reject any <code>UPDATE</code> or <code>DELETE</code> with an unrecoverable error.</p>
+            <p>Each event is chained to its predecessor via SHA-256, forming a structure equivalent to a blockchain hash chain:</p>
+            <pre class="pcd-formula">event_hash[0] = SHA256("GENESIS\n" + canonical_body[0])
+
+event_hash[n] = SHA256(event_hash[n-1] + "\n" + canonical_body[n])
+
+canonical_body = stableStringify({
+  type, asset_id, from, to, nonce, timestamp, ...payload
+})</pre>
+            <p><strong>Why is this tamper-evident?</strong> Changing any event's content changes its hash. Because subsequent events include the previous hash, <em>every event after it also changes</em>. A verifier comparing stored hashes to recomputed hashes immediately detects any alteration.</p>
+            <p><strong>Concurrency protection:</strong> A <code>pg_advisory_xact_lock</code> serializes all ledger writes, preventing two concurrent transactions from computing a hash chain fork (the same prev_event_hash used twice).</p>
+          </div>
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">event_list</span> Event Types</div>
+            <p>The ledger records the following event types, each with a fully canonical JSON body:</p>
+            <p><strong>MINT</strong> — new asset created. <strong>TRANSFER</strong> — ownership changed by admin. <strong>TRADE</strong> — peer-to-peer swap. <strong>UPGRADE</strong> — rarity elevation. <strong>FUSION</strong> — two assets combined. <strong>DESTROY</strong> — asset burned. <strong>ADMIN_ACTION</strong> — privileged operation.</p>
+            <p>The state machine enforces valid transitions: e.g., a <code>DESTROYED</code> asset cannot be transferred. Invalid transitions are rejected at the database layer before any event is written.</p>
+          </div>
+        </div>
+
+        <!-- SECTION: RNG -->
+        <div class="pcd-section" id="pcdSectionRng">
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">casino</span> Provably Fair RNG System</div>
+            <p>POXY uses a <strong>commit-reveal protocol</strong> for random number generation. This means neither the server nor the player can bias the outcome:</p>
+            <pre class="pcd-formula">Phase 1 – COMMIT (before player input):
+  server_seed  = cryptographically random 32 bytes
+  commit_hash  = SHA256(server_seed)
+  → commit_hash is published; server_seed is hidden
+
+Phase 2 – REVEAL (after player provides client_seed + nonce):
+  result_hash  = SHA256(server_seed || client_seed || nonce)
+  server_seed  is revealed
+
+Verification (anyone can do this):
+  check_commit = SHA256(revealed_server_seed) == commit_hash  ✓
+  check_result = SHA256(server_seed || client_seed || nonce) == result_hash  ✓</pre>
+            <p><strong>Why can't the server cheat?</strong> The server commits to its seed before the player's input is known. Changing the seed after seeing the player's input would change the <code>commit_hash</code> — which was already published and is immutable in the database.</p>
+            <p><strong>Why can't the player cheat?</strong> The player provides their seed after the server's commit is already published. The server's seed is hidden until after the player's seed is submitted. Neither party alone controls the final <code>result_hash</code>.</p>
+          </div>
+        </div>
+
+        <!-- SECTION: TRUST -->
+        <div class="pcd-section" id="pcdSectionTrust">
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">balance</span> Trust Architecture — Honest Disclosure</div>
+            <p>We believe in mathematical honesty. Here is precisely what is and is not guaranteed:</p>
+          </div>
+          <div class="pcd-card" style="border-left:3px solid #4ade80">
+            <div class="pcd-card-title" style="color:#4ade80"><span class="material-symbols-outlined">check_circle</span> Cryptographically Enforced</div>
+            <p><strong>Hash integrity:</strong> The poxy_hash is a mathematical commitment to the 7 identity fields. It cannot be altered without detection.</p>
+            <p><strong>Signature authenticity:</strong> An ED25519 signature cannot be forged without the private key. A valid signature proves server origin.</p>
+            <p><strong>Ledger tamper-evidence:</strong> The hash chain means any event modification breaks every subsequent hash — detectable by anyone.</p>
+            <p><strong>RNG fairness:</strong> The commit-reveal protocol is information-theoretically fair — verified mathematically, not by trust.</p>
+          </div>
+          <div class="pcd-card" style="border-left:3px solid #fbbf24">
+            <div class="pcd-card-title" style="color:#fbbf24"><span class="material-symbols-outlined">warning</span> Tamper-Resistant, Not Trustless</div>
+            <p><strong>Centralized custody:</strong> POXY runs on Supabase (PostgreSQL + Deno Edge). It is not a decentralized blockchain. The operator controls the infrastructure.</p>
+            <p><strong>Private key trust:</strong> The ED25519 private key is held by the server. If the server is compromised, an attacker could sign fraudulent assets — though the hash chain would still reveal unauthorized events.</p>
+            <p><strong>Audit, not consensus:</strong> There is no peer-to-peer consensus. Integrity is enforced by cryptographic constraints and auditing, not distributed agreement.</p>
+            <p>A <strong>blockchain migration roadmap</strong> exists for anchoring Merkle roots to Ethereum or a public L2, enabling true trustless verification while keeping the gaming database centralized.</p>
+          </div>
+          <div class="pcd-card" style="border-left:3px solid #00e5ff">
+            <div class="pcd-card-title" style="color:#00e5ff"><span class="material-symbols-outlined">visibility</span> Publicly Auditable</div>
+            <p><strong>Public key:</strong> The ED25519 public key is in <code>crypto_keys</code>. Anyone can verify any signature without contacting the server.</p>
+            <p><strong>Event hashes:</strong> Ledger event hashes are publicly readable. Anyone can reconstruct the hash chain from scratch.</p>
+            <p><strong>Merkle roots:</strong> Daily state snapshots (Merkle roots over all assets and events) are stored immutably and publicly readable.</p>
+            <p><strong>RNG proofs:</strong> Every RNG round's server seed, client seed, nonce, and result are published after reveal. The fairness proof is fully reproducible offline.</p>
+          </div>
+        </div>
+
+        <!-- SECTION: THREATS -->
+        <div class="pcd-section" id="pcdSectionThreats">
+          <div class="pcd-card">
+            <div class="pcd-card-title"><span class="material-symbols-outlined">security</span> Threat Model</div>
+            <p>The following threats are explicitly addressed. Each is described with the attack vector and the technical countermeasure.</p>
+            <table class="pcd-threat-table">
+              <thead><tr><th>Threat</th><th>Countermeasure</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Duplicate minting</td>
+                  <td>UNIQUE constraint on poxy_hash. Even if two mint calls run concurrently, identical hashes are rejected at the DB layer.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Enforced</span></td>
+                </tr>
+                <tr>
+                  <td>Replay attacks</td>
+                  <td>Every signed request carries a unique nonce + ISO timestamp. The nonce is consumed atomically; reuse or stale timestamps are rejected.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Enforced</span></td>
+                </tr>
+                <tr>
+                  <td>Signature forgery</td>
+                  <td>ED25519 signature security is 128-bit. The private key exists only in Edge Function secrets — not in the database, not in source code.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Enforced</span></td>
+                </tr>
+                <tr>
+                  <td>Event rewriting</td>
+                  <td>INSERT-only triggers reject UPDATE/DELETE on ledger_events. Hash chain verification detects any storage-level tampering.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Enforced</span></td>
+                </tr>
+                <tr>
+                  <td>Database tampering</td>
+                  <td>Hash chain and signatures are verifiable from the public key alone. A DB admin inserting a fraudulent event cannot forge a valid ED25519 signature.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Cryptographic</span></td>
+                </tr>
+                <tr>
+                  <td>RNG manipulation</td>
+                  <td>Commit-reveal: server commits before seeing client input. Server cannot change seed; client cannot predict it. Result is deterministic from both inputs.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Provably fair</span></td>
+                </tr>
+                <tr>
+                  <td>Admin abuse</td>
+                  <td>Dual-control key approval required for key changes. All admin actions are logged in security_audit_log with hash-chained entries.</td>
+                  <td><span class="pcd-badge pcd-badge-amber">⚠ Logged + audited</span></td>
+                </tr>
+                <tr>
+                  <td>Client spoofing</td>
+                  <td>All state transitions require a valid user JWT. Ownership verification is enforced by the Edge Function before any DB write.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Enforced</span></td>
+                </tr>
+                <tr>
+                  <td>Race conditions</td>
+                  <td>pg_advisory_xact_lock serializes all ledger writes. Prevents concurrent hash chain forks at the transaction level.</td>
+                  <td><span class="pcd-badge pcd-badge-green">✓ Serialized</span></td>
+                </tr>
+                <tr>
+                  <td>Server compromise</td>
+                  <td>A compromised server could sign fraudulent assets. However, unauthorized events are detectable in the public ledger. Key rotation immediately invalidates the compromised key.</td>
+                  <td><span class="pcd-badge pcd-badge-amber">⚠ Detectable</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /.pcd-docs-shell -->
+    </div><!-- /#pcdPanelDocs -->
+
+    <!-- ─── VERIFY PANEL ──────────────────────────────────────────────────── -->
+    <div class="pcd-panel" id="pcdPanelVerify">
+      <div class="pcd-verify-shell">
+
+        <div class="pcd-verify-hero">
+          <h2 class="pcd-verify-title">Verification Playground</h2>
+          <p class="pcd-verify-subtitle">Enter a POXY hash, event ID, or RNG round ID to receive a step-by-step cryptographic proof. No login required.</p>
+        </div>
+
+        <!-- Verification type selector -->
+        <div class="pcd-verify-types">
+          <button class="pcd-vtype-btn active" id="pcdVtypeAsset" onclick="pcdSelectType('asset')">
+            <span class="material-symbols-outlined">token</span> POXY Asset
+          </button>
+          <button class="pcd-vtype-btn" id="pcdVtypeEvent" onclick="pcdSelectType('event')">
+            <span class="material-symbols-outlined">receipt_long</span> Ledger Event
+          </button>
+          <button class="pcd-vtype-btn" id="pcdVtypeRng" onclick="pcdSelectType('rng')">
+            <span class="material-symbols-outlined">casino</span> RNG Round
+          </button>
+        </div>
+
+        <!-- Input -->
+        <div class="pcd-verify-input-row">
+          <input
+            class="pcd-verify-input"
+            id="pcdVerifyInput"
+            type="text"
+            placeholder="Enter poxy_hash (64 hex chars)…"
+            spellcheck="false"
+            autocomplete="off"
+            onkeydown="if(event.key==='Enter')runPoxyVerify()"
+          />
+          <button class="pcd-verify-btn" id="pcdVerifyBtn" onclick="runPoxyVerify()">
+            <span class="material-symbols-outlined" style="font-size:16px;vertical-align:-3px">search</span>
+            Verify
+          </button>
+        </div>
+
+        <!-- Loading -->
+        <div class="pcd-spinner" id="pcdSpinner">
+          <div class="pcd-spinner-ring"></div>
+          <span>Running cryptographic verification…</span>
+        </div>
+
+        <!-- Error -->
+        <div class="pcd-error" id="pcdError"></div>
+
+        <!-- Results -->
+        <div class="pcd-verify-results" id="pcdResults">
+          <div class="pcd-result-header" id="pcdResultHeader">
+            <div class="pcd-result-icon" id="pcdResultIcon"></div>
+            <div>
+              <div class="pcd-result-status" id="pcdResultStatus"></div>
+              <div class="pcd-result-summary" id="pcdResultSummary"></div>
+              <div class="pcd-result-meta" id="pcdResultMeta"></div>
+            </div>
+          </div>
+          <div class="pcd-steps" id="pcdSteps"></div>
+        </div>
+
+      </div><!-- /.pcd-verify-shell -->
+    </div><!-- /#pcdPanelVerify -->
+
+  </div><!-- /.pcd-panels -->
+</div><!-- /#poxyCryptoOverlay -->
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottomNav" style="display:none">
@@ -5511,6 +5879,251 @@ function openWinRevealModal(tier){
   triggerRevealFX(t.id);
   setBodyBg(t.id);
 }
+// =============================================================================
+// POXY CRYPTO TRANSPARENCY LAYER — /docs/cryptography + /verify
+// =============================================================================
+(function(){
+  const OVERLAY_ID = 'poxyCryptoOverlay';
+  const FUNCTIONS_BASE = 'https://rbrtjkfawdnomvvyxwvp.functions.supabase.co';
+  let currentVerifyType = 'asset';
+
+  // ── Overlay open/close ──────────────────────────────────────────────────
+  window.openPoxyCryptoOverlay = function(tab) {
+    const el = document.getElementById(OVERLAY_ID);
+    if (!el) return;
+    el.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    if (tab === 'verify') pcdSwitchTab('verify');
+    else pcdSwitchTab('docs');
+  };
+  window.closePoxyCryptoOverlay = function() {
+    const el = document.getElementById(OVERLAY_ID);
+    if (el) el.classList.remove('is-open');
+    document.body.style.overflow = '';
+    // clean up URL if needed
+    if (location.hash === '#/verify' || location.hash === '#/crypto-docs') {
+      try { history.replaceState({}, '', location.pathname || '/'); } catch(e) {}
+    }
+  };
+
+  // ── Tab switching ───────────────────────────────────────────────────────
+  window.pcdSwitchTab = function(tab) {
+    ['docs','verify'].forEach(t => {
+      const btn = document.getElementById('pcdTab' + t.charAt(0).toUpperCase() + t.slice(1));
+      const panel = document.getElementById('pcdPanel' + t.charAt(0).toUpperCase() + t.slice(1));
+      const active = t === tab;
+      if (btn) btn.classList.toggle('active', active);
+      if (panel) panel.classList.toggle('active', active);
+    });
+  };
+
+  // ── Docs section nav ────────────────────────────────────────────────────
+  const SECTIONS = ['overview','identity','signatures','ledger','rng','trust','threats'];
+  window.pcdSection = function(id) {
+    SECTIONS.forEach(s => {
+      const el = document.getElementById('pcdSection' + s.charAt(0).toUpperCase() + s.slice(1));
+      if (el) el.classList.toggle('active', s === id);
+    });
+    document.querySelectorAll('.pcd-snav-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', SECTIONS[i] === id);
+    });
+  };
+
+  // ── Verify type selector ────────────────────────────────────────────────
+  const TYPE_PLACEHOLDERS = {
+    asset:  'Enter poxy_hash (64 lowercase hex chars)…',
+    event:  'Enter event UUID (e.g. 3214fa99-7079-…)',
+    rng:    'Enter RNG round UUID…',
+  };
+  window.pcdSelectType = function(type) {
+    currentVerifyType = type;
+    ['asset','event','rng'].forEach(t => {
+      const btn = document.getElementById('pcdVtype' + t.charAt(0).toUpperCase() + t.slice(1));
+      if (btn) btn.classList.toggle('active', t === type);
+    });
+    const input = document.getElementById('pcdVerifyInput');
+    if (input) { input.placeholder = TYPE_PLACEHOLDERS[type]; input.value = ''; }
+    // reset results
+    const res = document.getElementById('pcdResults');
+    const err = document.getElementById('pcdError');
+    if (res) res.classList.remove('visible');
+    if (err) { err.classList.remove('visible'); err.textContent = ''; }
+  };
+
+  // ── Verification engine ─────────────────────────────────────────────────
+  window.runPoxyVerify = async function() {
+    const input = document.getElementById('pcdVerifyInput');
+    const btn   = document.getElementById('pcdVerifyBtn');
+    const spinner = document.getElementById('pcdSpinner');
+    const errEl = document.getElementById('pcdError');
+    const results = document.getElementById('pcdResults');
+    const val = (input && input.value || '').trim();
+    if (!val) { showVerifyError('Please enter a value to verify.'); return; }
+
+    // UI loading state
+    if (btn) btn.disabled = true;
+    if (spinner) spinner.classList.add('visible');
+    if (errEl) { errEl.classList.remove('visible'); errEl.textContent = ''; }
+    if (results) results.classList.remove('visible');
+
+    try {
+      const payload = currentVerifyType === 'asset'
+        ? { type: 'asset', hash: val }
+        : { type: currentVerifyType, id: val };
+
+      const resp = await fetch(`${FUNCTIONS_BASE}/public_verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await resp.json();
+      if (!resp.ok && !data) throw new Error('Server error ' + resp.status);
+      renderVerifyResults(data);
+    } catch (e) {
+      showVerifyError(e?.message || String(e));
+    } finally {
+      if (btn) btn.disabled = false;
+      if (spinner) spinner.classList.remove('visible');
+    }
+  };
+
+  function showVerifyError(msg) {
+    const el = document.getElementById('pcdError');
+    if (el) { el.textContent = '⚠ ' + msg; el.classList.add('visible'); }
+  }
+
+  function renderVerifyResults(data) {
+    const results = document.getElementById('pcdResults');
+    const icon    = document.getElementById('pcdResultIcon');
+    const status  = document.getElementById('pcdResultStatus');
+    const summary = document.getElementById('pcdResultSummary');
+    const meta    = document.getElementById('pcdResultMeta');
+    const steps   = document.getElementById('pcdSteps');
+    if (!results) return;
+
+    const ok = data.ok;
+    if (icon) {
+      icon.className = 'pcd-result-icon ' + (ok ? 'ok' : 'fail');
+      icon.textContent = ok ? '✓' : '✗';
+    }
+    if (status) {
+      status.className = 'pcd-result-status ' + (ok ? 'ok' : 'fail');
+      status.textContent = ok ? 'VERIFIED' : 'FAILED';
+    }
+    if (summary) summary.textContent = data.summary || (ok ? 'Verification passed.' : 'Verification failed.');
+
+    // Meta chips
+    if (meta) {
+      meta.innerHTML = '';
+      const metaFields = [
+        data.poxy_hash    && ['Hash', data.poxy_hash.slice(0,12) + '…'],
+        data.asset_id     && ['Asset ID', data.asset_id.slice(0,8) + '…'],
+        data.event_id     && ['Event ID', data.event_id.slice(0,8) + '…'],
+        data.round_id     && ['Round ID', data.round_id.slice(0,8) + '…'],
+        data.poxy_tier    && ['Tier', data.poxy_tier],
+        data.asset_state  && ['State', data.asset_state],
+        data.event_type   && ['Type', data.event_type],
+        data.seq != null  && ['Seq', '#' + data.seq],
+      ].filter(Boolean);
+      metaFields.forEach(([label, val]) => {
+        meta.insertAdjacentHTML('beforeend',
+          `<span class="pcd-meta-chip"><span>${label}:</span> <strong>${val}</strong></span>`);
+      });
+    }
+
+    // Steps
+    if (steps) {
+      steps.innerHTML = '';
+      (data.steps || []).forEach(step => {
+        const stepOk = step.ok === true ? 'ok' : step.ok === false ? 'fail' : 'pending';
+        const badge  = step.ok === true ? 'PASS' : step.ok === false ? 'FAIL' : 'PENDING';
+        let fields = '';
+
+        // Common fields to render
+        const fieldDefs = [
+          ['Formula',           step.formula],
+          ['Stored Hash',       step.stored_hash],
+          ['Computed Hash',     step.computed_hash],
+          ['Stored Commit',     step.stored_commit],
+          ['Recomputed Commit', step.recomputed_commit],
+          ['Stored Result',     step.stored_result],
+          ['Computed Result',   step.computed_result],
+          ['Public Key',        step.public_key],
+          ['Signature',         step.signature ? step.signature.slice(0,24) + '…' : null],
+          ['Genesis Event ID',  step.genesis_event_id],
+          ['Genesis Type',      step.genesis_event_type],
+          ['Prev Event Hash',   step.prev_event_hash],
+          ['Commit Hash',       step.commit_hash],
+          ['Server Seed',       step.server_seed],
+          ['Client Seed',       step.client_seed],
+        ];
+
+        fieldDefs.forEach(([label, value]) => {
+          if (!value) return;
+          let cls = '';
+          if ((label === 'Computed Hash' && step.stored_hash) || (label === 'Recomputed Commit' && step.stored_commit) || (label === 'Computed Result' && step.stored_result)) {
+            cls = (value === (step.stored_hash || step.stored_commit || step.stored_result)) ? 'match' : 'miss';
+          }
+          fields += `<div class="pcd-step-field">
+            <div class="pcd-step-field-label">${label}</div>
+            <div class="pcd-step-field-value ${cls}">${escHtml(value)}</div>
+          </div>`;
+        });
+
+        steps.insertAdjacentHTML('beforeend', `
+          <div class="pcd-step">
+            <div class="pcd-step-head">
+              <div class="pcd-step-num ${stepOk}">${step.step}</div>
+              <div class="pcd-step-name">${escHtml(step.name)}</div>
+              <div class="pcd-step-badge ${stepOk}">${badge}</div>
+            </div>
+            <div class="pcd-step-body">
+              <div class="pcd-step-desc">${escHtml(step.description || '')}</div>
+              ${fields}
+              ${step.result ? `<div class="pcd-step-result ${stepOk}"><span>${step.ok === true ? '✓' : step.ok === false ? '✗' : '⟳'}</span> ${escHtml(step.result)}</div>` : ''}
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    results.classList.add('visible');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Hash-based routing: #/verify and #/crypto-docs ──────────────────────
+  function handleCryptoHashRoute() {
+    const h = location.hash;
+    if (h === '#/verify') {
+      openPoxyCryptoOverlay('verify');
+      return true;
+    }
+    if (h === '#/crypto-docs') {
+      openPoxyCryptoOverlay('docs');
+      return true;
+    }
+    return false;
+  }
+
+  // Check on load and on hash change (before lumina-os router processes it)
+  window.addEventListener('hashchange', handleCryptoHashRoute, false);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', handleCryptoHashRoute);
+  } else {
+    handleCryptoHashRoute();
+  }
+
+  // ESC closes the overlay
+  window.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById(OVERLAY_ID)?.classList.contains('is-open')) {
+      closePoxyCryptoOverlay();
+    }
+  });
+})();
+
 // --- POXY Cryptographic Core (best-effort signed mint + ledger) -------------
 // Mints a signed cryptographic twin + genesis ledger event for a freshly created
 // user_poxy. Non-blocking: if the signing key isn't configured yet, gameplay is

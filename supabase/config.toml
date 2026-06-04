@@ -33,3 +33,7 @@ verify_jwt = true
 # snapshot can be triggered by cron (x-cron-secret header) or by the founder JWT.
 [functions.snapshot]
 verify_jwt = false
+
+# public_verify is the unauthenticated transparency endpoint — no JWT required.
+[functions.public_verify]
+verify_jwt = false
