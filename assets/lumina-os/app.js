@@ -461,7 +461,66 @@
     if (el) el.onclick = fn;
   }
 
+  /** Upgrade cached Lumina HTML from older deploys without a full page reload. */
+  function migrateLuminaShellDom() {
+    const root = document.getElementById('luminaOsRoot');
+    if (!root) return;
+
+    document.getElementById('lcEscapeBar')?.remove();
+    root.querySelector('[data-nav="calls"]')?.remove();
+
+    const tier = document.getElementById('lcNavUserTier');
+    if (tier) {
+      const next = tier.nextSibling;
+      if (next && next.nodeType === 3 && /·/.test(next.textContent || '')) {
+        next.remove();
+      }
+      tier.remove();
+    }
+
+    const statusBtn = document.getElementById('lcUserStatusBtn');
+    const statusLabel = document.getElementById('lcNavUserStatus');
+    if (statusBtn && !statusBtn.querySelector('.lc-status-dot')) {
+      const text = (statusLabel && statusLabel.textContent) || 'Online';
+      statusBtn.innerHTML =
+        '<span class="lc-status-dot" aria-hidden="true"></span><span id="lcNavUserStatus">' +
+        U.sanitizeText(text) +
+        '</span>';
+    }
+
+    if (!document.getElementById('lcNavHelp')) {
+      const nav = root.querySelector('.lc-nav');
+      const userBlock = root.querySelector('.lc-nav-user');
+      const logout = document.getElementById('lcNavLogout');
+      if (nav && userBlock && logout) {
+        const footer = document.createElement('div');
+        footer.className = 'lc-nav-footer';
+        const help = document.createElement('button');
+        help.type = 'button';
+        help.className = 'lc-nav-footer-btn';
+        help.id = 'lcNavHelp';
+        help.innerHTML =
+          '<span class="material-symbols-outlined">help</span><span>Help</span>';
+        footer.appendChild(help);
+        if (logout.parentElement === userBlock) {
+          logout.className = 'lc-nav-footer-btn lc-nav-footer-btn--logout';
+          logout.innerHTML =
+            '<span class="material-symbols-outlined">logout</span><span>Logout</span>';
+          footer.appendChild(logout);
+        }
+        nav.insertBefore(footer, userBlock);
+      }
+    }
+
+    const attach = document.getElementById('lcComposeAttach');
+    if (attach) {
+      attach.style.background = 'transparent';
+      attach.style.boxShadow = 'none';
+    }
+  }
+
   function bindUi() {
+    migrateLuminaShellDom();
     if (runtime.bound) return;
     runtime.bound = true;
     document.querySelectorAll('#luminaOsRoot .lc-nav-item').forEach((btn) => {
