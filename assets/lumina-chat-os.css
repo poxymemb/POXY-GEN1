@@ -11,8 +11,9 @@
   --lc-text: #ffffff;
   --lc-muted: #9ca3af;
   --lc-in: #1a1a1a;
-  --lc-nav-w: 260px;
-  --lc-context-w: 300px;
+  --lc-nav-w: 220px;
+  --lc-context-w: 272px;
+  --lc-workspace-max: 1300px;
   --lc-ease: cubic-bezier(0.4, 0, 0.2, 1);
   --lc-dur: 250ms;
 }
@@ -101,11 +102,11 @@ body.lumina-os-active {
   filter: brightness(1.06);
 }
 
-/* Shell — full-height 3-column workspace */
+/* Shell — nav + centered workspace (chat | context inside max-width frame) */
 #luminaOsRoot .lc-shell,
 .lc-shell {
   display: grid;
-  grid-template-columns: var(--lc-nav-w) minmax(0, 1fr) var(--lc-context-w);
+  grid-template-columns: var(--lc-nav-w) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   align-items: stretch;
   min-height: 0;
@@ -121,8 +122,8 @@ body.lumina-os-active {
   max-height: 100%;
   overflow: hidden;
 }
-.lc-shell.context-hidden {
-  grid-template-columns: var(--lc-nav-w) 1fr 0;
+.lc-shell.context-hidden .lc-workspace-inner {
+  grid-template-columns: minmax(0, 1fr);
 }
 .lc-shell.context-hidden .lc-context {
   display: none;
@@ -153,14 +154,14 @@ body.lumina-os-active {
   display: flex;
   flex-direction: column;
   background: var(--lc-surface);
-  border-right: 1px solid var(--lc-border-strong);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
   min-height: 0;
 }
 .lc-nav-brand {
-  padding: 20px 18px 12px;
+  padding: 16px 14px 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 .lc-nav-brand-icon {
   width: 36px;
@@ -189,17 +190,17 @@ body.lumina-os-active {
 .lc-nav-menu {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 10px;
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 .lc-nav-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: none;
   border-radius: 10px;
   background: transparent;
@@ -247,8 +248,8 @@ body.lumina-os-active {
   justify-content: center;
 }
 .lc-nav-user {
-  padding: 14px;
-  border-top: 1px solid var(--lc-border-strong);
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -290,13 +291,12 @@ body.lumina-os-active {
 }
 .lc-main-head {
   display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  grid-template-columns: minmax(200px, 236px) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
   align-items: stretch;
   flex: 1;
   min-height: 0;
   min-width: 0;
-  border-bottom: 1px solid var(--lc-border-strong);
 }
 @media (max-width: 900px) {
   .lc-main-head {
@@ -324,15 +324,15 @@ body.lumina-os-active {
 .lc-conv-list {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--lc-border-strong);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
   background: var(--lc-surface);
   min-height: 0;
   height: 100%;
   overflow: hidden;
 }
 .lc-conv-search {
-  padding: 14px;
-  border-bottom: 1px solid var(--lc-border);
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .lc-conv-search input {
   width: 100%;
@@ -351,14 +351,14 @@ body.lumina-os-active {
 .lc-conv-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
+  padding: 6px;
 }
 .lc-conv-item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  padding: 12px;
+  padding: 9px 10px;
   border: none;
   border-radius: 12px;
   background: transparent;
@@ -425,11 +425,32 @@ body.lumina-os-active {
 }
 
 .lc-thread {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
   flex: 1;
+  isolation: isolate;
+}
+.lc-thread-ambient {
+  position: absolute;
+  inset: 8% 4% 12% 2%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, rgba(88, 28, 135, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 75% 70%, rgba(236, 72, 153, 0.06) 0%, transparent 60%);
+  filter: blur(90px);
+  opacity: 0.9;
+}
+.lc-thread-empty,
+.lc-thread-header,
+.lc-messages,
+.lc-typing,
+.lc-compose-wrap {
+  position: relative;
+  z-index: 1;
 }
 .lc-thread-empty {
   flex: 1;
@@ -449,10 +470,10 @@ body.lumina-os-active {
 .lc-thread-header {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--lc-border-strong);
-  background: rgba(21, 21, 21, 0.85);
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(21, 21, 21, 0.72);
   backdrop-filter: blur(12px);
   flex-shrink: 0;
 }
@@ -539,10 +560,10 @@ body.lumina-os-active {
 .lc-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   min-height: 0;
 }
 .lc-date-divider {
@@ -647,9 +668,9 @@ body.lumina-os-active {
 
 /* Composer */
 .lc-compose-wrap {
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--lc-border-strong);
-  background: rgba(14, 14, 14, 0.92);
+  padding: 10px 14px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(14, 14, 14, 0.88);
   flex-shrink: 0;
 }
 .lc-compose {
@@ -747,16 +768,16 @@ body.lumina-os-active {
 /* RIGHT — context */
 .lc-context {
   background: var(--lc-surface);
-  border-left: 1px solid var(--lc-border-strong);
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow-y: auto;
 }
 .lc-context-profile {
-  padding: 24px 20px;
+  padding: 18px 16px;
   text-align: center;
-  border-bottom: 1px solid var(--lc-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .lc-context-av {
   width: 120px;
@@ -790,8 +811,8 @@ body.lumina-os-active {
   margin-top: 8px;
 }
 .lc-context-section {
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--lc-border);
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .lc-context-section h4 {
   font-size: 11px;

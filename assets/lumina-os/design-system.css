@@ -8,7 +8,7 @@
 #luminaOsRoot {
   --lo-transition: 500ms ease-in-out;
   --lo-nav-w: 256px;
-  --lo-context-w: 320px;
+  --lo-context-w: 272px;
   font-family: var(--lo-font-family, 'Plus Jakarta Sans', Inter, system-ui, sans-serif);
   color: var(--lo-on-surface, #2e3040);
   background: var(--lo-background, #e8eaf0);
@@ -33,10 +33,7 @@
   transition: background-color var(--lo-transition);
 }
 
-#luminaOsRoot .lc-shell.layout-messages {
-  grid-template-columns: var(--lo-nav-w) minmax(0, 1fr) var(--lo-context-w);
-}
-
+#luminaOsRoot .lc-shell.layout-messages,
 #luminaOsRoot .lc-shell.layout-module {
   grid-template-columns: var(--lo-nav-w) minmax(0, 1fr);
 }
