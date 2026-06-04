@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
-<link rel="stylesheet" href="assets/poxy-identity.css?v=1">
+<link rel="stylesheet" href="assets/poxy-identity.css?v=2">
 <link rel="stylesheet" href="assets/poxy-quick-profile.css?v=5">
 <link rel="stylesheet" href="assets/poxy-ranks-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css?v=3">
@@ -2117,21 +2117,26 @@ body.dark-club .club-sub{color:#888}
         <div class="poxy-id-banner-readability" aria-hidden="true"></div>
       </div>
       <div class="poxy-id-hero-inner">
-        <div class="poxy-id-hero-main">
-          <div class="poxy-id-avatar-wrap" id="friendProfileAvatarWrap"><span id="friendProfileAvatarInner">👾</span><span class="poxy-id-avatar-verified material-symbols-outlined" id="friendProfileVerified" hidden>verified</span><span class="poxy-id-presence" id="friendProfilePresenceDot" hidden></span></div>
-          <div class="poxy-id-head">
-            <div class="poxy-id-username-row">
-              <h1 class="poxy-id-username" id="friendProfileUsername">–</h1>
-            </div>
-            <div class="poxy-id-meta" id="friendProfileMeta">
-              <span class="poxy-id-meta-primary" id="friendProfileRank">–</span>
-              <span class="poxy-id-meta-dot" aria-hidden="true"></span>
-              <span class="poxy-id-meta-secondary" id="friendProfileMember">POXY Member</span>
-            </div>
-            <div class="poxy-id-stats" id="friendProfileStats"></div>
+        <div class="poxy-id-hero-top">
+          <div class="poxy-id-avatar-slot">
+            <div class="poxy-id-avatar-wrap" id="friendProfileAvatarWrap"><span id="friendProfileAvatarInner">👾</span><span class="poxy-id-avatar-verified material-symbols-outlined" id="friendProfileVerified" hidden>verified</span><span class="poxy-id-presence" id="friendProfilePresenceDot" hidden></span></div>
+          </div>
+          <div class="poxy-id-dock-wrap">
+            <div class="poxy-id-dock" id="friendProfileDock"></div>
           </div>
         </div>
-        <div class="poxy-id-dock" id="friendProfileDock"></div>
+        <div class="poxy-id-hero-body">
+          <div class="poxy-id-names">
+            <h1 class="poxy-id-display-name" id="friendProfileDisplayName">–</h1>
+            <p class="poxy-id-handle" id="friendProfileHandle"><span class="poxy-id-at">@</span>–</p>
+          </div>
+          <div class="poxy-id-meta" id="friendProfileMeta">
+            <span class="poxy-id-meta-primary" id="friendProfileRank">–</span>
+            <span class="poxy-id-meta-dot" aria-hidden="true"></span>
+            <span class="poxy-id-meta-secondary" id="friendProfileMember">POXY Member</span>
+          </div>
+          <div class="poxy-id-stats" id="friendProfileStats"></div>
+        </div>
       </div>
     </header>
     <div class="poxy-id-body">
@@ -2806,7 +2811,7 @@ body.dark-club .club-sub{color:#888}
 </div>
 
 <!-- EXPANDED PLAYER PROFILE MODAL (X-style Quick Profile) -->
-<div class="modal-overlay hidden profile-expanded-backdrop" id="inspectModal" role="dialog" aria-modal="true" aria-labelledby="inspectUsernameText">
+<div class="modal-overlay hidden profile-expanded-backdrop" id="inspectModal" role="dialog" aria-modal="true" aria-labelledby="inspectDisplayName">
   <button type="button" class="qp-profile-close" onclick="closeInspectModal()" aria-label="Close profile"><span class="material-symbols-outlined">close</span></button>
   <div class="modal-card qp-profile-card poxy-id-shell poxy-id-shell--modal">
     <header class="poxy-id-hero">
@@ -2822,9 +2827,12 @@ body.dark-club .club-sub{color:#888}
           <span class="poxy-id-tier-pill qp-profile-tier-pill" id="inspectTierPill" hidden>Elite Tier</span>
         </div>
         <div class="poxy-id-head qp-profile-identity">
-          <div class="poxy-id-username-row qp-profile-name-row">
-            <h2 class="poxy-id-username qp-profile-name" id="inspectUsernameText">–</h2>
-            <span class="material-symbols-outlined poxy-id-verified qp-profile-verified" id="inspectVerified" hidden>verified</span>
+          <div class="poxy-id-names">
+            <div class="poxy-id-username-row qp-profile-name-row">
+              <h2 class="poxy-id-display-name qp-profile-name" id="inspectDisplayName">–</h2>
+              <span class="material-symbols-outlined poxy-id-verified qp-profile-verified" id="inspectVerified" hidden>verified</span>
+            </div>
+            <p class="poxy-id-handle" id="inspectHandle"><span class="poxy-id-at">@</span>–</p>
           </div>
           <div class="poxy-id-meta qp-profile-rank-row">
             <span class="poxy-id-meta-primary qp-profile-rank-primary" id="inspectRankText">Unranked</span>
@@ -5969,7 +5977,7 @@ window.openFriendProfileView=window.openUserPassport=async function(userId){
   const hub=$('friendsHubView'),view=$('friendProfileView');
   if(hub)hub.classList.add('is-hidden');
   if(view){view.hidden=false;view.classList.add('is-active');}
-  $('friendProfileUsername').innerHTML=formatPoxyHandle('Loading');
+  poxyIdSetIdentity($('friendProfileDisplayName'),$('friendProfileHandle'),{username:'Loading'});
   $('friendProfileStats').innerHTML='';
   $('friendProfileDock').innerHTML='';
   $('friendProfileBadges').innerHTML='';
@@ -5996,7 +6004,7 @@ window.openFriendProfileView=window.openUserPassport=async function(userId){
     const poxyData=poxyAll||[];
     poxyIdRenderAvatar($('friendProfileAvatarWrap'),prof,false,isPrem);
     await poxyIdHydrateAura($('friendProfileAvatarWrap'),poxyData,'friendProfileBannerAura','friendProfileBannerRank');
-    $('friendProfileUsername').innerHTML=formatPoxyHandle(prof.username);
+    poxyIdSetIdentity($('friendProfileDisplayName'),$('friendProfileHandle'),prof);
     const rk=leaderboardRankByUser[userId];
     $('friendProfileRank').textContent=rk?'Global Rank #'+rk:'Unranked';
     $('friendProfileRankVal').textContent=rk?'#'+String(rk).padStart(4,'0'):'–';
@@ -6590,6 +6598,43 @@ window.formatPoxyHandle=function(username){
   const u=String(username||'Anonymous').replace(/^@/,'').trim()||'Anonymous';
   return '<span class="poxy-id-at">@</span>'+sanitizeText(u);
 };
+function poxyIdHandleFromProf(prof){
+  return String(prof?.username||'Anonymous').replace(/^@/,'').trim()||'Anonymous';
+}
+function poxyIdDisplayNameFromProf(prof){
+  let dn='';
+  try{
+    const priv=typeof prof?.club_privacy==='string'?JSON.parse(prof.club_privacy):prof?.club_privacy;
+    if(priv&&typeof priv.display_name==='string')dn=priv.display_name.trim();
+    else if(priv&&typeof priv.displayName==='string')dn=priv.displayName.trim();
+  }catch(e){}
+  if(!dn&&prof?.display_name&&typeof prof.display_name==='string')dn=prof.display_name.trim();
+  const handle=poxyIdHandleFromProf(prof);
+  if(!dn)dn=handle;
+  return dn;
+}
+function poxyIdApplyNameGradient(el,gradient){
+  if(!el)return;
+  if(gradient&&typeof gradient==='string'){
+    el.style.setProperty('--ug',gradient);
+    el.classList.add('username-gradient-active');
+  }else{
+    el.style.removeProperty('--ug');
+    el.classList.remove('username-gradient-active');
+  }
+}
+function poxyIdSetIdentity(displayEl,handleEl,prof){
+  const handle=poxyIdHandleFromProf(prof);
+  const displayName=poxyIdDisplayNameFromProf(prof);
+  if(displayEl){
+    displayEl.textContent=displayName;
+    poxyIdApplyNameGradient(displayEl,prof?.name_gradient);
+  }
+  if(handleEl){
+    handleEl.innerHTML='<span class="poxy-id-at">@</span>'+sanitizeText(handle);
+  }
+  return{displayName,handle};
+}
 function poxyIdHighestTierId(poxyData){
   for(const id of QP_INSPECT_TIER_ORDER){
     if(poxyData?.some(d=>d.poxy_tier===id))return id;
@@ -6882,7 +6927,7 @@ async function openInspectModal(userId){
   if(!userId)return;
   inspectTargetUserId=userId;
   const modal=$('inspectModal');
-  $('inspectUsernameText').innerHTML=formatPoxyHandle('Loading');
+  poxyIdSetIdentity($('inspectDisplayName'),$('inspectHandle'),{username:'Loading'});
   $('inspectRankText').textContent='Loading…';
   $('inspectMemberText').textContent='';
   $('inspectStatsGrid').innerHTML='';
@@ -6914,7 +6959,7 @@ async function openInspectModal(userId){
     prof.id=userId;
     poxyIdRenderAvatar($('inspectAvatarWrap'),prof,isSelfInspect,isPrem);
     await poxyIdHydrateAura($('inspectAvatarWrap'),poxyData,'inspectBannerAura','inspectBannerRank');
-    $('inspectUsernameText').innerHTML=formatPoxyHandle(prof.username);
+    poxyIdSetIdentity($('inspectDisplayName'),$('inspectHandle'),prof);
     const verified=$('inspectVerified');
     if(verified)verified.hidden=!(prof.is_verified_employee||(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL));
     const rk=leaderboardRankByUser[userId];
