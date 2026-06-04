@@ -253,13 +253,34 @@
 /* Buttons — gold primary */
 .poxy-club-page .poxy-club-btn-gold,
 .poxy-club-page .poxy-club-feed-post,
-.poxy-club-page .poxy-club-bounty-claim,
+.poxy-club-page .poxy-club-bounty-claim--ready,
 .poxy-club-page .poxy-club-submit{
-  background:var(--club-primary);
-  color:var(--club-on-primary);
+  background:linear-gradient(180deg,#f2ca50 0%,#d4af37 100%);
+  color:#1a1408;
   font-weight:700;
-  box-shadow:0 0 16px rgba(242,202,80,0.25);
-  border:none;
+  box-shadow:0 2px 12px rgba(212,175,55,0.35),0 0 20px rgba(242,202,80,0.2);
+  border:1px solid rgba(255,235,160,0.35);
+}
+.poxy-club-page .poxy-club-bounty-claim--ready:hover:not(:disabled){
+  box-shadow:0 4px 18px rgba(212,175,55,0.45),0 0 24px rgba(242,202,80,0.28);
+}
+.poxy-club-page .poxy-club-bounty-claim--pending{
+  background:rgba(212,175,55,0.08);
+  color:rgba(242,202,80,0.75);
+  border:1px solid rgba(212,175,55,0.22);
+  box-shadow:none;
+}
+.poxy-club-page .poxy-club-bounty-claim--claimed{
+  background:rgba(20,18,14,0.6);
+  color:rgba(212,175,55,0.45);
+  border:1px solid rgba(212,175,55,0.12);
+  box-shadow:none;
+}
+.poxy-club-page .poxy-club-bounty-progress{color:rgba(242,202,80,0.85)}
+.poxy-club-page .poxy-club-bounty-reward{color:rgba(212,175,55,0.65)}
+.poxy-club-page .poxy-club-bounty-row{
+  border-color:rgba(212,175,55,0.18);
+  background:linear-gradient(145deg,rgba(22,20,16,0.85),rgba(14,14,14,0.75));
 }
 .poxy-club-page .poxy-club-btn-gold:hover,
 .poxy-club-page .poxy-club-feed-post:hover{filter:brightness(1.08);transform:translateY(-2px)}

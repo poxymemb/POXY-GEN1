@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
 <link rel="stylesheet" href="assets/poxy-ranks-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-rarity-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-rarity-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
 <link rel="stylesheet" href="assets/poxy-club-gold.css">
 <link rel="stylesheet" href="assets/poxy-market-page.css">
@@ -8122,15 +8122,18 @@ async function loadClubBounties(){
     list.innerHTML='';
     clubBounties.forEach(q=>{
       const pct=Math.min(100,(q.progress/q.goal)*100);
+      const done=q.progress>=q.goal;
+      const btnLabel=q.claimed?'Claimed':done?'Claim':'In progress';
+      const btnClass=q.claimed?'poxy-club-bounty-claim--claimed':done?'poxy-club-bounty-claim--ready':'poxy-club-bounty-claim--pending';
       const row=document.createElement('div');
       row.className='poxy-club-bounty-row';
-      row.innerHTML='<div class="poxy-club-bounty-head"><span class="poxy-club-bounty-title">'+(CLUB_BOUNTY_LABELS[q.quest_key]||q.quest_key)+'</span><span class="poxy-club-bounty-progress">'+q.progress+' / '+q.goal+'</span></div>'
+      row.innerHTML='<div class="poxy-club-bounty-head"><span class="poxy-club-bounty-title">'+sanitizeText(CLUB_BOUNTY_LABELS[q.quest_key]||q.quest_key)+'</span><span class="poxy-club-bounty-progress">'+q.progress+' / '+q.goal+'</span></div>'
         +'<div class="poxy-club-bounty-bar"><div style="width:'+pct+'%"></div></div>'
         +'<div class="poxy-club-bounty-foot"><span class="poxy-club-bounty-reward">+'+q.reward_tokens+' token'+(q.reward_tokens!==1?'s':'')+' · +'+q.reward_xp+' XP</span>'
-        +'<button type="button" class="poxy-club-bounty-claim" data-id="'+q.id+'">'+(q.claimed?'Claimed':q.progress>=q.goal?'Claim':'In progress')+'</button></div>';
+        +'<button type="button" class="poxy-club-bounty-claim '+btnClass+'" data-id="'+q.id+'">'+btnLabel+'</button></div>';
       const btn=row.querySelector('.poxy-club-bounty-claim');
-      btn.disabled=q.claimed||q.progress<q.goal;
-      btn.addEventListener('click',()=>claimClubBounty(q.id));
+      btn.disabled=q.claimed||!done;
+      if(!q.claimed&&done)btn.addEventListener('click',()=>claimClubBounty(q.id));
       list.appendChild(row);
     });
   }catch(e){list.innerHTML='<div class="poxy-club-muted">Bounties unavailable. Apply migration_club_p0.sql</div>';}
