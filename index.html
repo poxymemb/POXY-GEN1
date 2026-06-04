@@ -64,7 +64,7 @@
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
-<script src="assets/poxy-trust-motion.js?v=1" defer></script>
+<script src="assets/poxy-trust-motion.js?v=2" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -3748,6 +3748,7 @@ const TIER_BY_ID = {};ALL_TIERS.forEach(t=>{TIER_BY_ID[t.id]=t;});
 // Exposes existing lexical state without changing any game logic.
 window.PoxyTrustBridge = {
   get TIERS(){return TIERS;},
+  get TIER_BY_ID(){return TIER_BY_ID;},
   get SPIN_MS(){return SPIN_MS;},
   get sb(){return sb;},
   get currentProfile(){return currentProfile;},
@@ -6682,6 +6683,7 @@ function buildColCardMenuHtml(item){
     '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?tr('col.menu.unfeature'):tr('col.menu.feature'))+'</button>'+
     '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>'+tr('col.menu.list')+'</button>'+
     '<button type="button" class="col-card-menu-item" data-action="share" data-id="'+item.id+'" role="menuitem"><span class="ic">🔗</span>'+tr('col.menu.share')+'</button>'+
+    '<button type="button" class="col-card-menu-item" data-action="crypto" data-id="'+item.id+'" role="menuitem"><span class="ic">🔐</span>Crypto info</button>'+
     '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>'+tr('col.menu.burn')+'</button>'
   );
 }
@@ -6919,6 +6921,7 @@ async function sharePoxy(poxyId,rarity,serialNumber){
         return;
       }
       closeColCardMenuPortal();
+      if(action==='crypto'){if(window.PoxyTrust&&PoxyTrust.inspect)PoxyTrust.inspect(item);else showToast('Crypto layer loading…');return;}
       if(action==='pin'){togglePinPoxy(item.id,item.pinned_at);return;}
       if(action==='feature'){toggleFeaturePoxy(item.id);return;}
       if(action==='list'){

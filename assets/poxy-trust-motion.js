@@ -355,6 +355,8 @@
   function openDrawer() {
     ensureRound();
     buildDrawer();
+    var sub = drawer.querySelector('.pxt-drawer-sub');
+    if (sub) sub.textContent = 'Audit this POXY without leaving the screen';
     renderDrawer();
     requestAnimationFrame(function () {
       scrim.classList.add('is-open');
@@ -373,6 +375,55 @@
     body.innerHTML = receiptHtml() + verifyHtml();
     wireReceipt(body);
     wireVerify(body);
+    // Inspect mode: auto-expand and run the signature proof for instant trust.
+    if (current.inspecting && current.asset && current.asset.poxy_hash) {
+      var sigAcc = body.querySelector('.pxt-acc[data-acc="sig"]');
+      if (sigAcc) sigAcc.classList.add('open');
+      var sigBtn = body.querySelector('.pxt-verify-run[data-run="sig"]');
+      if (sigBtn) runSigProof(sigBtn);
+    }
+  }
+
+  // Inspect an already-owned collection POXY: fetch its on-chain twin and open
+  // the same receipt + verification surface, driven by real ledger data.
+  async function inspect(item) {
+    if (!item) return;
+    buildDrawer();
+    var tmap = bridge('TIER_BY_ID', {});
+    var tier = tmap[item.poxy_tier] || { label: String(item.poxy_tier || 'POXY'), icon: '◆', color: '#b78bfa' };
+    var serial = (item.vip_serial != null) ? ('VIP-' + item.vip_serial) : (item.serial_number || '—');
+    current = {
+      inspecting: true, tier: tier, serial: serial,
+      serverSeed: null, clientSeed: null, nonce: null, commitHash: null, resultHash: null,
+      startedAt: item.dropped_at ? new Date(item.dropped_at) : new Date(),
+      committedAt: null, asset: null, ready: Promise.resolve()
+    };
+    setTint(tier);
+    var sub = drawer.querySelector('.pxt-drawer-sub');
+    if (sub) sub.textContent = 'On-chain record · ' + (tier.label || 'POXY') + ' · ' + serial;
+    var body = drawer.querySelector('#pxtDrawerBody');
+    if (body) body.innerHTML = '<div style="display:flex;align-items:center;gap:10px;color:var(--pxt-muted);' +
+      'font-size:13px;padding:26px 4px"><span class="pxt-mini-spin"></span>Loading cryptographic record…</div>';
+    requestAnimationFrame(function () { scrim.classList.add('is-open'); drawer.classList.add('is-open'); });
+
+    var sbc = bridge('sb');
+    if (sbc && sbc.from) {
+      try {
+        var res = await sbc.from('poxy_assets_public').select('*').eq('user_poxy_id', item.id).maybeSingle();
+        var a = res && res.data;
+        if (a) {
+          current.asset = {
+            poxy_hash: a.poxy_hash, signature: a.signature, asset_id: a.id,
+            event_id: a.genesis_event_id, key_version: a.key_version,
+            asset_state: a.asset_state, collection_id: a.collection_id,
+            generation_version: a.generation_version,
+            mint_ts: a.mint_ts_canonical || a.mint_timestamp
+          };
+          current.committedAt = a.mint_timestamp ? new Date(a.mint_timestamp) : current.startedAt;
+        }
+      } catch (e) { /* keep the not-anchored state */ }
+    }
+    renderDrawer();
   }
 
   /* ── cryptographic receipt (financial-audit × futuristic) ────────────── */
@@ -385,6 +436,7 @@
   }
 
   function receiptHtml() {
+    if (current.inspecting) return inspectReceiptHtml();
     var r = current, a = r.asset || {};
     var tier = r.tier || {};
     var minted = !!a.poxy_hash;
@@ -420,6 +472,37 @@
     '</div>';
   }
 
+  // Identity certificate for an already-owned collection POXY (inspect mode).
+  function inspectReceiptHtml() {
+    var r = current, a = r.asset, tier = r.tier || {};
+    var prob = typeof tier.prob === 'number' ? (tier.prob * 100).toFixed(tier.prob < 0.01 ? 2 : 1) + '%' : '—';
+    var statusBlock = a
+      ? '<div class="pxt-receipt-status"><span class="s">Anchored &amp; signed</span>' +
+        '<div class="t">key v' + esc(a.key_version) + ' · ' + esc(a.asset_state || 'minted') + '</div></div>'
+      : '<div class="pxt-receipt-status"><span class="t" style="color:var(--pxt-amber)">Not yet anchored</span></div>';
+    var rows = a
+      ? row('poxy_hash', esc(shortHash(a.poxy_hash, 14, 10)), { accent: true, copy: a.poxy_hash }) +
+        row('signature', esc(shortHash(a.signature, 14, 10)), { copy: a.signature }) +
+        row('genesis event', a.event_id ? esc(shortHash(a.event_id, 14, 10)) : '—', { copy: a.event_id || '' }) +
+        row('key version', 'v' + esc(a.key_version), {}) +
+        row('asset state', esc(a.asset_state || 'minted'), {}) +
+        row('collection', esc(a.collection_id || 'genesis') + ' · gen ' + esc(a.generation_version || 1), {}) +
+        row('minted', esc(fmtTime(a.mint_ts || r.startedAt)), {}) +
+        row('rarity proof', esc(tier.label || '—') + ' · drop odds ' + prob, {})
+      : '<div class="pxt-rrow" style="grid-template-columns:1fr"><span class="pxt-rrow-v dim">This POXY predates the cryptographic core, or its on-chain twin was never minted. Newly opened POXYs are anchored automatically when you add them to your collection.</span></div>';
+    return '<div class="pxt-receipt">' +
+      '<div class="pxt-receipt-head">' +
+        '<div class="pxt-receipt-seal">' + (tier.icon || '◆') + '</div>' +
+        '<div class="pxt-receipt-titles">' +
+          '<div class="pxt-receipt-kicker">POXY Identity Certificate</div>' +
+          '<div class="pxt-receipt-name">' + esc(tier.label || 'POXY') + ' · ' + esc(r.serial || '—') + '</div>' +
+        '</div>' + statusBlock +
+      '</div>' +
+      '<div class="pxt-receipt-body">' + rows + '</div>' +
+      '<div class="pxt-receipt-foot">Pulled live from the cryptographic ledger. <b>Expand the proofs below to re-verify</b> the signature and event chain yourself.</div>' +
+    '</div>';
+  }
+
   function wireReceipt(scope) {
     scope.querySelectorAll('.pxt-copy[data-copy]').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -450,7 +533,40 @@
     '</div>';
   }
 
+  function lifecycleBtn() {
+    return '<button type="button" class="pxt-cta" id="pxtDrawerLife" style="align-self:flex-start;margin-top:2px">' +
+      icon('account_tree') + 'View lifecycle &amp; provenance</button>';
+  }
+
+  // Verification accordions for an already-owned collection POXY (inspect mode).
+  function inspectVerifyHtml() {
+    var a = current.asset || {};
+    if (!a.poxy_hash) {
+      return '<div class="pxt-verify-block">' +
+        '<p class="pxt-locked-note">' + icon('lock') + 'No on-chain twin found for this POXY, so there is nothing to verify yet. Open a new POXY and add it to your collection to anchor it cryptographically.</p>' +
+        lifecycleBtn() + '</div>';
+    }
+    var sigPanel = '<p class="pxt-verify-intro">The POXY identity hash was signed at mint time with the server\'s <b>ED25519</b> key. Verify it against the public key on record.</p>' +
+      '<button type="button" class="pxt-verify-run" data-run="sig">' + icon('bolt') + 'Verify signature</button><div id="pxtOut-sig"></div>';
+    var evtPanel = a.event_id
+      ? '<p class="pxt-verify-intro">The genesis <b>MINT</b> event is hash-chained into the append-only ledger. Verify its chain linkage.</p>' +
+        '<div class="pxt-proof-kv"><span class="pxt-proof-kl">genesis event</span><span class="pxt-proof-kvv accent">' + esc(a.event_id) + '</span></div>' +
+        '<button type="button" class="pxt-verify-run" data-run="evt">' + icon('bolt') + 'Verify event chain</button><div id="pxtOut-evt"></div>'
+      : '<p class="pxt-locked-note">' + icon('lock') + 'No genesis event recorded for this asset.</p>';
+    var idPanel = '<p class="pxt-verify-intro">The identity hash is SHA-256 over 7 immutable fields. The <b>server_salt</b> stays secret — only the resulting hash is published, yet the fingerprint is fully collision-resistant.</p>' +
+      '<div class="pxt-proof-kv"><span class="pxt-proof-kl">formula</span><span class="pxt-proof-kvv">SHA256(creator · timestamp · serial · rarity_seed · collection · gen · server_salt)</span></div>' +
+      '<div class="pxt-proof-kv"><span class="pxt-proof-kl">poxy_hash</span><span class="pxt-proof-kvv accent">' + esc(a.poxy_hash) + '</span></div>';
+    return '<div class="pxt-verify-block">' +
+      '<p class="pxt-verify-intro">This POXY is backed by real cryptographic proofs. <b>Verify them right here</b> — no need to leave your collection.</p>' +
+      acc('sig', 'draw', 'Signature proof', 'ED25519 over the identity hash', sigPanel) +
+      acc('evt', 'link', 'Event-chain proof', 'Append-only ledger linkage', evtPanel) +
+      acc('idn', 'fingerprint', 'Identity hash', 'SHA-256 over 7 immutable fields', idPanel) +
+      lifecycleBtn() +
+    '</div>';
+  }
+
   function verifyHtml() {
+    if (current.inspecting) return inspectVerifyHtml();
     var a = current.asset || {};
     var sigPanel = a.poxy_hash
       ? '<p class="pxt-verify-intro">The POXY hash was signed at mint time with the server\'s <b>ED25519</b> key and verified here against the public key on record.</p>' +
@@ -473,6 +589,7 @@
         '<div id="pxtOut-rng"></div>') +
       acc('sig', 'draw', 'Signature proof', 'ED25519 over the POXY identity hash', sigPanel) +
       acc('evt', 'link', 'Event-chain proof', 'Append-only ledger linkage', evtPanel) +
+      lifecycleBtn() +
     '</div>';
   }
 
@@ -499,6 +616,8 @@
         else if (which === 'evt') runEvtProof(btn);
       });
     });
+    var lifeBtn = scope.querySelector('#pxtDrawerLife');
+    if (lifeBtn) lifeBtn.addEventListener('click', function () { openLifecycle(); });
   }
 
   function proofStep(n, ok, name, desc, kvs, verdict) {
@@ -795,6 +914,7 @@
     onMint: onMint,
     openDrawer: openDrawer,
     openLifecycle: openLifecycle,
+    inspect: inspect,
     reset: reset,
     _state: function () { return current; }
   };
