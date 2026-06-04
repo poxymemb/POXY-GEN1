@@ -1212,6 +1212,7 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span> Ranks</button>
               <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span> Collection</button>
               <button type="button" class="st-nav-pill" id="psdNavFriends" onclick="showPage('friends')"><span class="material-symbols-outlined">group</span> Friends</button>
+              <button type="button" class="st-nav-pill" id="psdNavChat" onclick="openLuminaChatApp()"><span class="material-symbols-outlined">forum</span> Chat</button>
             </div>
           </div>
         </div>
@@ -7008,19 +7009,19 @@ window.closeInspectModal=function(){
   inspectTargetUserId=null;
 };
 
-// ── DIRECT MESSAGES ──
-window.openDmOverlay=async function(userId,username,avatarUrl){
+// ── LUMINA CHATTING OS (isolated /chat/app) ──
+window.openLuminaChatApp=function(userId){
+  if(!currentUser){showToast('Sign in to open Lumina Chat.');return;}
+  if(userId&&String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
+  var url='/chat/app/';
+  if(userId&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(userId))){
+    url+='?user='+encodeURIComponent(userId);
+  }
+  window.open(url,'_blank','noopener,noreferrer');
+};
+window.openDmOverlay=function(userId,username,avatarUrl){
   if(!currentUser||!userId||String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
-  dmTargetUserId=userId;
-  $('dmHeaderName').textContent=sanitizeText(username||'Player');
-  const av=$('dmHeaderAvatar');
-  if(avatarUrl&&avatarUrl.startsWith('http'))av.innerHTML='<img src="'+sanitizeText(avatarImgUrl(avatarUrl))+'" alt="">';
-  else av.textContent=avatarUrl||'👾';
-  $('dmMessages').innerHTML='<div class="poxychat-empty">Loading…</div>';
-  $('dmOverlay').classList.remove('hidden');
-  requestAnimationFrame(()=>$('dmOverlay').classList.add('show'));
-  await loadDmThread();
-  setTimeout(()=>$('dmInput')?.focus(),400);
+  openLuminaChatApp(userId);
 };
 window.closeDmOverlay=function(){
   const o=$('dmOverlay');
