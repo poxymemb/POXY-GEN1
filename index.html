@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=1">
-<link rel="stylesheet" href="assets/poxy-news-page.css?v=1">
+<link rel="stylesheet" href="assets/poxy-news-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -1462,12 +1462,15 @@ body.dark-club .club-sub{color:#888}
 
     <section class="st-spa-panel" id="stPanelNews" data-st-tab="news" hidden>
       <div class="page poxy-news-page" id="newsPage">
-        <header class="poxy-news-header">
-          <h1 class="poxy-news-title">POXY World News</h1>
-          <p class="poxy-news-desc">Patch notes, economy updates, and platform broadcasts — Steam-style intel feed.</p>
+        <header class="poxy-news-hero">
+          <h1 class="poxy-news-title poxy-news-title-glow">Latest Updates</h1>
+          <p class="poxy-news-desc">Stay informed with the newest patches, seasonal events, and crucial system overhauls in the POXY WORLD ecosystem.</p>
         </header>
         <div id="newsCreateFormContainer"></div>
         <div class="poxy-news-feed" id="newsPostsList"><div class="news-empty">Loading news…</div></div>
+        <div class="poxy-news-load-wrap">
+          <button type="button" class="poxy-news-load-more" id="btnNewsLoadMore" onclick="loadNewsFeedTab(true)">Load previous archives</button>
+        </div>
         <div class="poxychat-section">
           <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
           <div class="poxychat-input-row">
@@ -5239,11 +5242,21 @@ function renderNewsMarkdown(raw){
 }
 function inferNewsCategory(title){
   const t=String(title||'').toLowerCase();
-  if(t.includes('patch')||t.includes('hotfix'))return'PATCH NOTES';
-  if(t.includes('economy')||t.includes('pc '))return'ECONOMY';
-  if(t.includes('club')||t.includes('vip'))return'CLUB INTEL';
-  return'ANNOUNCEMENT';
+  if(t.includes('major')||t.includes('overhaul')||t.includes('protocol')||t.includes('route'))return{label:'MAJOR UPDATE',mod:'major'};
+  if(t.includes('hotfix')||t.includes('fix'))return{label:'HOTFIX',mod:'hotfix'};
+  if(t.includes('patch'))return{label:'PATCH NOTES',mod:'patch'};
+  if(t.includes('economy')||t.includes('balance'))return{label:'ECONOMY',mod:'patch'};
+  if(t.includes('club')||t.includes('vip'))return{label:'CLUB INTEL',mod:'announce'};
+  return{label:'ANNOUNCEMENT',mod:'announce'};
 }
+function formatNewsDate(iso){
+  if(!iso)return'';
+  try{
+    const d=new Date(iso);
+    return d.toLocaleString('en-US',{month:'short',day:'numeric'}).toUpperCase();
+  }catch(e){return'';}
+}
+let newsFeedLimit=30;
 
 function closeFriendProfileView(){
   friendProfileUserId=null;
@@ -7671,56 +7684,71 @@ window.postToFeed=async function(){
   }catch(e){showToast('Post failed.');}
 };
 
-// ── NEWS FEED ──
-async function loadNewsFeedTab(){
+// ── NEWS FEED (Stitch Global News layout) ──
+async function loadNewsFeedTab(loadMore){
   if(!currentUser)return;
   const listEl=$('newsPostsList');
   const formEl=$('newsCreateFormContainer');
   if(!listEl)return;
+  if(loadMore)newsFeedLimit=Math.min(60,newsFeedLimit+20);
   const canPost=currentProfile?.is_verified_employee===true||isFounder();
   if(formEl){
     if(canPost){
       formEl.innerHTML='<div class="news-create-form"><div class="news-create-title">'+(isFounder()?'Founder Broadcast':'Publish News Post')+'</div><input class="news-input" id="newsInputTitle" placeholder="Post title..." maxlength="200"><textarea class="news-textarea" id="newsInputContent" placeholder="Post content..." maxlength="5000"></textarea><input class="news-input" id="newsInputImage" placeholder="Image URL (optional)..." maxlength="1000"><button class="btn-news-publish" id="btnNewsPublish" onclick="submitNewsPost()">Publish Post</button></div>';
     } else {formEl.innerHTML='';}
   }
-  listEl.innerHTML='<div class="news-empty"><div class="col-spinner" style="border-top-color:#ff416c;margin:0 auto 12px"></div></div>';
+  if(!loadMore)listEl.innerHTML='<div class="news-empty"><div class="col-spinner" style="border-top-color:#f9abff;margin:0 auto 12px"></div></div>';
   try{
-    const{data,error}=await sb.from('news_posts').select('*').order('created_at',{ascending:false}).limit(30);
+    const{data,error}=await sb.from('news_posts').select('*').order('created_at',{ascending:false}).limit(newsFeedLimit);
     if(error)throw error;
-    if(!data||!data.length){listEl.innerHTML='<div class="news-empty">No news posts yet.</div>';return;}
+    if(!data||!data.length){
+      listEl.innerHTML='<div class="news-empty">No news posts yet. Check back after the next patch.</div>';
+      return;
+    }
     listEl.innerHTML='';
-    for(const post of data){renderNewsPostCard(post,listEl);}
+    data.forEach((post,i)=>renderNewsPostCard(post,listEl,i===0));
+    const loadBtn=$('btnNewsLoadMore');
+    if(loadBtn)loadBtn.style.display=data.length>=newsFeedLimit?'':'none';
   }catch(e){listEl.innerHTML='<div class="news-empty">Failed to load news.</div>';}
 }
-function renderNewsPostCard(post,container){
-  const card=document.createElement('div');card.className='poxy-news-card news-post-card';card.id='news-post-'+post.id;
+function renderNewsPostCard(post,container,isFeatured){
   const cat=inferNewsCategory(post.title);
-  let thumb='<div class="poxy-news-thumb-wrap">';
+  const article=document.createElement('article');
+  article.className='poxy-news-card news-post-card'+(isFeatured?' poxy-news-card--featured':' poxy-news-card--standard');
+  article.id='news-post-'+post.id;
+  let media='<div class="poxy-news-media">';
   if(post.image_url&&validateUrl(post.image_url)){
-    thumb+='<img src="'+sanitizeText(post.image_url)+'" alt="" onerror="this.parentElement.querySelector(\'.poxy-news-thumb-ph\').style.display=\'flex\'">';
+    media+='<img src="'+sanitizeText(post.image_url)+'" alt="" onerror="this.nextElementSibling.style.display=\'flex\'">';
   }
-  thumb+='<div class="poxy-news-thumb-ph"'+(post.image_url&&validateUrl(post.image_url)?' style="display:none"':'')+'><span class="material-symbols-outlined">newspaper</span></div></div>';
-  let html=thumb+'<div class="poxy-news-body news-post-body">';
-  html+='<span class="poxy-news-badge">'+cat+'</span>';
-  html+='<h2 class="poxy-news-card-title news-post-title-text">'+sanitizeText(post.title)+'</h2>';
-  html+='<div class="poxy-news-card-content news-post-content-text">'+renderNewsMarkdown(post.content)+'</div>';
-  html+='<div class="poxy-news-meta news-post-meta"><span class="poxy-news-meta-author news-post-author">'+sanitizeText(post.author_username||'Staff')+'</span><span>'+timeSince(post.created_at)+'</span></div>';
-  html+='<div class="news-post-actions" id="npa-'+post.id+'">';
+  media+='<div class="poxy-news-thumb-ph"'+(post.image_url&&validateUrl(post.image_url)?' style="display:none"':'')+'><span class="material-symbols-outlined">newspaper</span></div></div>';
   const myLike=(post.likes||[]).includes(currentUser?.id);
   const myDislike=(post.dislikes||[]).includes(currentUser?.id);
-  html+='<button class="btn-news-action'+(myLike?' liked':'')+'" onclick="toggleNewsLike('+post.id+',true)">👍 '+((post.likes||[]).length)+'</button>';
-  html+='<button class="btn-news-action'+(myDislike?' disliked':'')+'" onclick="toggleNewsLike('+post.id+',false)">👎 '+((post.dislikes||[]).length)+'</button>';
-  html+='<button class="btn-toggle-comments" onclick="toggleNewsComments('+post.id+')">💬 Comments</button>';
   const canDelete=currentProfile?.is_verified_employee===true||isFounder()||post.author_id===currentUser?.id;
-  if(canDelete){html+='<button class="btn-news-delete" onclick="deleteNewsPost('+post.id+')">'+(isFounder()&&post.author_id!==currentUser?.id?'Founder Delete':'Delete')+'</button>';}
-  html+='</div>';
-  html+='<div class="news-comments-section" id="ncs-'+post.id+'">';
-  html+='<div class="news-comment-input-row"><input class="news-comment-input" id="nci-'+post.id+'" placeholder="Add a comment..." maxlength="1000"><button class="btn-comment-submit" onclick="submitNewsComment('+post.id+',null)">Post</button></div>';
-  html+='<div id="ncl-'+post.id+'"><div style="font-size:10px;color:#333;padding:8px 0">Loading comments...</div></div>';
-  html+='</div>';
-  html+='</div>';
-  card.innerHTML=html;
-  container.appendChild(card);
+  let body='<div class="poxy-news-content">';
+  body+='<div class="poxy-news-meta-row"><span class="poxy-news-badge poxy-news-badge--'+cat.mod+'">'+cat.label+'</span><time class="poxy-news-time">'+formatNewsDate(post.created_at)+' · '+timeSince(post.created_at)+'</time></div>';
+  body+='<h2 class="poxy-news-card-title news-post-title-text">'+sanitizeText(post.title)+'</h2>';
+  body+='<div class="poxy-news-card-content news-post-content-text">'+renderNewsMarkdown(post.content)+'</div>';
+  if(isFeatured){
+    body+='<span class="poxy-news-read-cta">Read full patch notes <span class="material-symbols-outlined">arrow_forward</span></span>';
+  }
+  body+='<div class="poxy-news-card-footer">';
+  body+='<span class="poxy-news-meta-author">'+sanitizeText(post.author_username||'Staff')+'</span>';
+  body+='<div class="news-post-actions" id="npa-'+post.id+'">';
+  body+='<button type="button" class="btn-news-action'+(myLike?' liked':'')+'" onclick="event.stopPropagation();toggleNewsLike('+post.id+',true)">👍 '+((post.likes||[]).length)+'</button>';
+  body+='<button type="button" class="btn-news-action'+(myDislike?' disliked':'')+'" onclick="event.stopPropagation();toggleNewsLike('+post.id+',false)">👎 '+((post.dislikes||[]).length)+'</button>';
+  body+='<button type="button" class="btn-toggle-comments" onclick="event.stopPropagation();toggleNewsComments('+post.id+')">Comments</button>';
+  if(canDelete){body+='<button type="button" class="btn-news-delete" onclick="event.stopPropagation();deleteNewsPost('+post.id+')">Delete</button>';}
+  body+='</div>';
+  body+='<div class="news-comments-section" id="ncs-'+post.id+'" onclick="event.stopPropagation()">';
+  body+='<div class="news-comment-input-row"><input class="news-comment-input" id="nci-'+post.id+'" placeholder="Add a comment..." maxlength="1000"><button type="button" class="btn-comment-submit" onclick="submitNewsComment('+post.id+',null)">Post</button></div>';
+  body+='<div id="ncl-'+post.id+'"><div style="font-size:10px;color:#9d8b9b;padding:8px 0">Loading comments…</div></div>';
+  body+='</div></div></div>';
+  article.innerHTML=media+body;
+  article.addEventListener('click',function(e){
+    if(e.target.closest('button')||e.target.closest('input')||e.target.closest('a'))return;
+    toggleNewsComments(post.id);
+  });
+  container.appendChild(article);
 }
 async function toggleNewsComments(postId){
   const sec=$('ncs-'+postId);

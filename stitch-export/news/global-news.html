@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY WORLD - News</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#d70357",
+                        "on-secondary-container": "#ffeced",
+                        "on-background": "#e5e2e1",
+                        "primary-container": "#9c27b0",
+                        "outline-variant": "#514250",
+                        "on-primary-container": "#ffcaff",
+                        "on-secondary": "#660025",
+                        "surface-container-lowest": "#0e0e0e",
+                        "secondary-fixed-dim": "#ffb2be",
+                        "on-surface-variant": "#d5c1d2",
+                        "tertiary": "#99ccf5",
+                        "on-primary": "#570066",
+                        "surface-container": "#20201f",
+                        "surface-bright": "#393939",
+                        "on-surface": "#e5e2e1",
+                        "background": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#900038",
+                        "on-primary-fixed-variant": "#7b008f",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#ffd9de",
+                        "tertiary-fixed-dim": "#99ccf5",
+                        "surface-container-highest": "#353535",
+                        "surface-variant": "#353535",
+                        "secondary": "#ffb2be",
+                        "on-tertiary-fixed": "#001e2f",
+                        "on-tertiary": "#00344e",
+                        "tertiary-container": "#2e6589",
+                        "surface-tint": "#f9abff",
+                        "on-primary-fixed": "#35003f",
+                        "inverse-primary": "#9a25ae",
+                        "surface-container-high": "#2a2a2a",
+                        "surface": "#131313",
+                        "on-tertiary-container": "#bbe0ff",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#cae6ff",
+                        "on-tertiary-fixed-variant": "#074b6e",
+                        "surface-dim": "#131313",
+                        "surface-container-low": "#1c1b1b",
+                        "outline": "#9d8b9b",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#ffd6fe",
+                        "primary-fixed-dim": "#f9abff",
+                        "inverse-on-surface": "#313030",
+                        "primary": "#f9abff",
+                        "on-secondary-fixed": "#400014",
+                        "on-error": "#690005",
+                        "glass-stroke": "rgba(255, 255, 255, 0.1)"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "base": "8px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(32, 32, 31, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--tw-colors-glass-stroke);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(249, 171, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-surface/70 dark:bg-surface/70 backdrop-blur-xl border-b border-glass-stroke shadow-[0_0_20px_rgba(249,171,255,0.1)]">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="font-display-lg text-headline-md font-black tracking-tighter text-primary dark:text-surface-tint">
+                POXY WORLD
+            </div>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant font-medium hover:scale-[1.02] hover:text-primary transition-all duration-300" href="#">Explore</a>
+<a class="text-on-surface-variant font-medium hover:scale-[1.02] hover:text-primary transition-all duration-300" href="#">Rarity</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">News</a>
+<a class="text-on-surface-variant font-medium hover:scale-[1.02] hover:text-primary transition-all duration-300" href="#">Store</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high border border-glass-stroke text-on-surface hover:text-primary hover:border-primary/50 transition-all cursor-pointer active:scale-95">
+<span class="font-label-caps text-label-caps">Top Up</span>
+</button>
+<div class="flex items-center gap-3">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-glass-stroke cursor-pointer active:scale-95 hover:scale-[1.02] transition-all">
+<img alt="Nikita's Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATfczY3GC2EizMo4K9PiRLQMHVGOIEVzdRqdnD3xtQituGKhqFoTEo8ek9TPxzqoz7LHtMdnM6LhF7R2x8fTyZLvi8-7MJB87ZI0ERr4e0usvP85bAo7rd3IjGrhKSxM7YNf5f4W-Iez4jytEMD0dHhD2rXJRgjnNHsRmCLibAMVZ4ZaLeANpk4WELy8mm0LfIspHgw6F6e87f_GXbO6UwvuEVvy6GDqyLhYUEdNjrBbvoKe687WQT3n0m590G1GU-DbWVFZC4SQ"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[100px] pb-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Page Header -->
+<header class="mb-16 mt-8 md:mt-16">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface text-glow mb-4">Latest Updates</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Stay informed with the newest patches, seasonal events, and crucial system overhauls in the POXY WORLD ecosystem.</p>
+</header>
+<!-- Feed Container -->
+<div class="flex flex-col gap-8 md:gap-12">
+<!-- Featured Update Card (Large) -->
+<article class="glass-panel rounded-3xl overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:bg-surface-container-highest/40 transition-all duration-300">
+<!-- Media Block -->
+<div class="md:w-5/12 h-64 md:h-auto relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/10 mix-blend-overlay z-10 group-hover:bg-transparent transition-all duration-500"></div>
+<img alt="Update Cover" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out filter brightness-75 group-hover:brightness-100" data-alt="A highly detailed, cinematic rendering of a futuristic, dark metallic server room bathed in neon magenta and electric cyan lighting. The aesthetic is cyber-luxury, featuring sleek graphite surfaces reflecting sharp, geometric light patterns. A subtle hardware-accelerated motion blur effect suggests high-speed data transfer, fitting the premium, deep charcoal theme of the interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8LDFNr52E6nxtVEY6Bzv-S_dLwK-cmBvpGwbxFihCLn1xqZIRkQgo7V7ZrifVR93dFsQjOx8LaAca7RFqBtU2uHhxt0SLzG2ek0lfS5zHXQ0AEvl_PBEqWi_t8abKhKvmBSOPnRrnxRUGIpRdN6uR4yHbaygQzTTXyPhcE3rEmnO57siu4e5ZQFEZNiWGy9JNhWxHpO6x8SCOU9V7LBa9El4YbyJ8Ry9obZT6Mc-ZNlHMe4DHt3whmzq0zD9t6aDy3o17MAzZ4w"/>
+</div>
+<!-- Content Block -->
+<div class="p-6 md:p-10 md:w-7/12 flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-4">
+<span class="inline-block px-3 py-1 bg-secondary-container/20 text-secondary font-label-caps text-label-caps rounded-full border border-secondary/30">MAJOR UPDATE</span>
+<time class="font-label-caps text-label-caps text-outline">v2.4.0 • OCT 24</time>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-4 group-hover:text-primary transition-colors duration-300">The Obsidian Protocol: Route Overhaul</h2>
+<div class="font-body-md text-body-md text-on-surface-variant space-y-4 mb-8 line-clamp-3">
+<p>We've completely rewritten the core navigation routing logic. Say goodbye to the legacy red admin dashboards. The new framework introduces hardware-accelerated transitions and a refined, deep graphite aesthetic across all terminal interfaces.</p>
+</div>
+<div class="mt-auto">
+<span class="text-primary font-label-caps text-label-caps group-hover:tracking-widest transition-all duration-300 flex items-center gap-2">
+                            READ FULL PATCH NOTES <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</span>
+</div>
+</div>
+</article>
+<!-- Standard Update Card 1 -->
+<article class="glass-panel rounded-2xl overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:bg-surface-container-highest/40 transition-all duration-300">
+<!-- Media Block -->
+<div class="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
+<img alt="Patch Notes Thumbnail" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out filter brightness-75 group-hover:brightness-100" data-alt="A minimalist, abstract composition of dark obsidian glass shards floating in a void, illuminated from behind by a soft, ethereal violet glow. The lighting highlights the sharp edges and smooth surfaces, creating a sense of luxury and technological sophistication in a deep, dark mode setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3dyxI66GscIZipjvkNDaVmuw7n5h9n4oKGGD3VnJJAehoNWpah5xWqzhwEvtIxV3lSElWdj1u9ttpGEWJu0HXRNYnTv4WOXW9faP4gT8LPbipxxvTWtBgvHecu_z_V0ghDJmIJ4ao-GacM74OpDiZgKj-9MfbavXSspLj1SF_bdUNqiajvmwg5Bibqe-XUxCz2znuPsgPKoat702oUMg0MDSoH1LfVV8Qy6e2pqeUJTeSJQYyuD9VBYt7OnlwwDLR4umszr2Isg"/>
+</div>
+<!-- Content Block -->
+<div class="p-6 md:p-8 md:w-2/3 flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-block px-3 py-1 bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps rounded-full border border-glass-stroke">PATCH NOTES</span>
+<time class="font-label-caps text-label-caps text-outline">v2.3.5 • OCT 18</time>
+</div>
+<h3 class="font-headline-md text-[24px] leading-[32px] text-on-surface mb-3 group-hover:text-primary transition-colors duration-300">Economy Balance Adjustments</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Adjusted drop rates for rare synthetic materials across Tier 3 zones. Market friction algorithms have been optimized to ensure smoother high-volume transactions.</p>
+</div>
+</article>
+<!-- Standard Update Card 2 -->
+<article class="glass-panel rounded-2xl overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:bg-surface-container-highest/40 transition-all duration-300">
+<!-- Media Block -->
+<div class="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
+<img alt="Hotfix Thumbnail" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out filter brightness-75 group-hover:brightness-100" data-alt="A macro shot of intricate, dark matte-black circuitry with microscopic traces glowing with a faint, pulsing electric magenta light. The depth of field is shallow, creating a heavy blur on the edges while the central microchip remains razor-sharp, embodying a premium, high-tech dark theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAULoDZlR6oCAMUKUqUDHzXl7O2BuX5-GShMP9-_Zmg45cUz9hDN95RjymrCItZw2NmN5maVNTrFOxV_XOAABoZhrNizCgEJmRLee5PP9e3QfLpyY_HDRbYStMgChSmLQ_AzbBwe7rfoN6vXOavsD-Aqss97A1fpFZEyKL3b2CT3uJLAzHeTEM5VMBCwZK7K9GeqN4xEs-zj_njdWN9MKC5h8cCMGWyJ5cPbFMgQlsr-j69YcIscsZ40tMs7nHCcCK7BAR3lrIZxw"/>
+</div>
+<!-- Content Block -->
+<div class="p-6 md:p-8 md:w-2/3 flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-3">
+<span class="inline-block px-3 py-1 bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps rounded-full border border-glass-stroke">HOTFIX</span>
+<time class="font-label-caps text-label-caps text-outline">v2.3.4 • OCT 12</time>
+</div>
+<h3 class="font-headline-md text-[24px] leading-[32px] text-on-surface mb-3 group-hover:text-primary transition-colors duration-300">Authentication Gateway Stability</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Resolved intermittent latency issues affecting login handshakes during peak load periods. Improved caching layer performance for user profile retrieval.</p>
+</div>
+</article>
+</div>
+<!-- Load More -->
+<div class="mt-12 flex justify-center">
+<button class="px-8 py-4 rounded-full bg-surface-container border border-glass-stroke text-on-surface hover:bg-surface-container-high hover:border-primary/50 hover:text-primary transition-all duration-300 hover:scale-[1.02] active:scale-95 font-label-caps text-label-caps tracking-widest">
+                LOAD PREVIOUS ARCHIVES
+            </button>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-surface-container-lowest/80 dark:bg-surface-container-lowest/80 backdrop-blur-2xl w-full rounded-t-3xl md:rounded-t-[3rem] border-t border-glass-stroke mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-8 gap-base max-w-container-max mx-auto">
+<div class="font-display-lg text-body-lg font-bold text-on-surface">
+                POXY WORLD
+            </div>
+<div class="flex flex-wrap justify-center gap-6 my-4 md:my-0">
+<a class="font-label-caps text-label-caps text-outline font-medium hover:text-[#00ffff] transition-colors duration-200 opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-outline font-medium hover:text-[#00ffff] transition-colors duration-200 opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-outline font-medium hover:text-[#00ffff] transition-colors duration-200 opacity-80 hover:opacity-100" href="#">Discord Community</a>
+<a class="font-label-caps text-label-caps text-outline font-medium hover:text-[#00ffff] transition-colors duration-200 opacity-80 hover:opacity-100" href="#">Support</a>
+</div>
+<div class="font-label-caps text-label-caps text-outline">
+                © 2024 POXY WORLD. All Rights Reserved.
+            </div>
+</div>
+</footer>
+</body></html>
