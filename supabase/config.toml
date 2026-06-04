@@ -1,0 +1,35 @@
+# =============================================================================
+# Supabase project config — POXY Cryptographic Core Edge Functions.
+# All crypto functions require a valid user JWT except `snapshot`, which also
+# accepts an internal cron secret header.
+# =============================================================================
+
+project_id = "rbrtjkfawdnomvvyxwvp"
+
+[functions.mint_poxy]
+verify_jwt = true
+
+[functions.transfer_poxy]
+verify_jwt = true
+
+[functions.verify_poxy]
+verify_jwt = true
+
+[functions.verify_event_chain]
+verify_jwt = true
+
+[functions.verify_merkle_tree]
+verify_jwt = true
+
+[functions.rng_commit]
+verify_jwt = true
+
+[functions.rng_reveal]
+verify_jwt = true
+
+[functions.export_proof]
+verify_jwt = true
+
+# snapshot can be triggered by cron (x-cron-secret header) or by the founder JWT.
+[functions.snapshot]
+verify_jwt = false
