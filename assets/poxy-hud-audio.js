@@ -20,7 +20,7 @@ window.PoxyHudAudio=(function(){
     enabled=!!on;
     localStorage.setItem(LS_KEY,enabled?'1':'0');
     if(!enabled)stopMythicHum();
-    ['poxyHudSoundToggle','settingsHudSound'].forEach(id=>{
+    ['settingsHudSound'].forEach(id=>{
       const el=document.getElementById(id);
       if(el)el.checked=enabled;
     });
@@ -119,7 +119,7 @@ window.PoxyHudAudio=(function(){
   }
 
   function syncToggleUi(){
-    ['poxyHudSoundToggle','settingsHudSound'].forEach(id=>{
+    ['settingsHudSound'].forEach(id=>{
       const el=document.getElementById(id);
       if(el)el.checked=enabled;
     });

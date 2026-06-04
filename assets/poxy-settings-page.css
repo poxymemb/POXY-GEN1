@@ -209,6 +209,32 @@
 }
 .poxy-settings-profile-link:hover{text-decoration:underline}
 
+.poxy-settings-username-hint{
+  margin:8px 0 0;
+  font-size:12px;
+  line-height:1.45;
+  color:#9ca3af;
+}
+.poxy-settings-username-status{
+  margin:8px 0 0;
+  font-size:12px;
+  font-weight:600;
+  line-height:1.4;
+}
+.poxy-settings-username-status.is-checking{color:#99ccf5}
+.poxy-settings-username-status.is-available{color:#8bc99a}
+.poxy-settings-username-status.is-current{color:#9ca3af}
+.poxy-settings-username-status.is-taken{color:#ffb4ab}
+.poxy-settings-username-status.is-invalid{color:#ffb4ab}
+.poxy-settings-input.is-available{border-color:rgba(139,201,154,0.55)!important}
+.poxy-settings-input.is-taken{border-color:rgba(255,180,171,0.65)!important}
+.poxy-settings-input.is-invalid{border-color:rgba(255,180,171,0.5)!important}
+#btnSettingsLogout{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
 .poxy-settings-panels{display:flex;flex-direction:column;gap:0}
 .poxy-settings-panel[hidden]{display:none!important}
 

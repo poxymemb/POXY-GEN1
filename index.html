@@ -44,13 +44,13 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css">
 <link rel="stylesheet" href="assets/poxy-store-page.css">
 <link rel="stylesheet" href="assets/poxy-explore-page.css">
-<link rel="stylesheet" href="assets/poxy-profile-page.css?v=4">
+<link rel="stylesheet" href="assets/poxy-profile-page.css?v=5">
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=7">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=3">
-<link rel="stylesheet" href="assets/poxy-settings-page.css?v=4">
+<link rel="stylesheet" href="assets/poxy-settings-page.css?v=5">
 <script src="assets/poxy-i18n-extra.js?v=5"></script>
-<script src="assets/poxy-i18n.js?v=4"></script>
+<script src="assets/poxy-i18n.js?v=5"></script>
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=2">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/lumina-chat-os.css?v=12">
@@ -1962,28 +1962,12 @@ body.dark-club .club-sub{color:#888}
               <div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target poxy-profile-avatar-frame">
                 <div id="profileBigAvatar" class="poxy-profile-avatar-inner"></div>
               </div>
-              <label for="avatarUpload" class="poxy-profile-camera-btn" title="Upload photo">
-                <span class="material-symbols-outlined" aria-hidden="true">photo_camera</span>
-              </label>
             </div>
           </div>
-          <input type="file" id="avatarUpload" accept="image/*" hidden>
-          <div id="uploadStatus" class="poxy-profile-upload-status"></div>
         </div>
-        <div class="profile-field poxy-profile-field">
-          <label class="profile-label poxy-profile-field-label" for="profileUsername">Username</label>
-          <input class="profile-input poxy-profile-username-input" id="profileUsername" placeholder="Choose a username" maxlength="24" autocomplete="username">
-        </div>
-        <div class="poxy-profile-actions">
-          <button type="button" class="poxy-profile-btn poxy-profile-btn--primary" id="btnSaveProfile">Save Profile</button>
-          <button type="button" class="poxy-profile-btn poxy-profile-btn--ghost" id="pwdSectionToggle" aria-expanded="false" aria-controls="pwdSection">
-            <span class="material-symbols-outlined" aria-hidden="true">security</span>
-            Security
-          </button>
-        </div>
-        <div class="poxy-profile-hud-sound">
-          <label for="poxyHudSoundToggle">HUD inventory hover sounds</label>
-          <input type="checkbox" id="poxyHudSoundToggle" checked onchange="PoxyHudAudio&&PoxyHudAudio.setEnabled(this.checked)">
+        <div class="poxy-profile-identity-readonly">
+          <div class="poxy-profile-identity-handle" id="profileDisplayHandle">@player</div>
+          <button type="button" class="poxy-profile-edit-settings" onclick="openProfileSettings()"><span class="material-symbols-outlined">edit</span><span data-i18n="profile.editInSettings">Edit in Settings</span></button>
         </div>
       </aside>
       <div class="poxy-profile-main">
@@ -2033,20 +2017,6 @@ body.dark-club .club-sub{color:#888}
           <h2 class="badge-wallet-label poxy-profile-section-label">Badge Wallet</h2>
           <div class="badge-list poxy-profile-badges" id="badgeList"><span class="badge-none">No badges yet.</span></div>
         </section>
-        <div class="poxy-profile-card poxy-profile-security" id="pwdSection" hidden>
-        <div class="poxy-profile-security-head">
-          <h3>Change Password</h3>
-          <button type="button" class="poxy-profile-btn poxy-profile-btn--ghost poxy-profile-btn--compact" id="pwdSectionClose" aria-label="Close">Close</button>
-        </div>
-        <div class="pwd-form">
-          <input class="profile-input" type="password" id="pwdNewPassword" placeholder="New password" autocomplete="new-password">
-          <input class="profile-input" type="password" id="pwdConfirmPassword" placeholder="Confirm new password" autocomplete="new-password">
-          <div class="poxy-profile-actions" style="margin-top:10px">
-            <button type="button" class="poxy-profile-btn poxy-profile-btn--compact" id="btnChangePassword">Update Password</button>
-          </div>
-          <div class="pwd-msg" id="pwdMsg"></div>
-        </div>
-      </div>
       </div>
     </div>
   </div>
@@ -2097,9 +2067,11 @@ body.dark-club .club-sub{color:#888}
               </div>
             </div>
             <div class="poxy-settings-field-grid">
-              <div class="poxy-settings-field">
+              <div class="poxy-settings-field poxy-settings-field--username">
                 <label class="poxy-settings-label" for="settingsUsername" data-i18n="settings.account.username">Username</label>
-                <input class="poxy-settings-input" id="settingsUsername" type="text" maxlength="24" autocomplete="username" placeholder="@username">
+                <input class="poxy-settings-input" id="settingsUsername" type="text" maxlength="24" autocomplete="username" placeholder="username" spellcheck="false" autocapitalize="off">
+                <p class="poxy-settings-username-hint" id="settingsUsernameHint" data-i18n="settings.account.usernameHint">Usernames are unique across POXY WORLD, like on X. Letters, numbers, and underscores only.</p>
+                <p class="poxy-settings-username-status" id="settingsUsernameStatus" aria-live="polite" hidden></p>
               </div>
               <div class="poxy-settings-field">
                 <label class="poxy-settings-label" for="settingsEmail" data-i18n="settings.account.email">Email</label>
@@ -2143,6 +2115,15 @@ body.dark-club .club-sub{color:#888}
             </div>
             <div class="poxy-settings-msg" id="settingsPwdMsg"></div>
           </form>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title" data-i18n="settings.session.title">Session</h3>
+          <div class="poxy-settings-glass">
+            <p class="poxy-settings-toggle-desc" data-i18n="settings.session.desc">Sign out of POXY WORLD on this device. You can sign back in anytime.</p>
+            <div class="poxy-settings-actions-row">
+              <button type="button" class="poxy-settings-btn-outline" id="btnSettingsLogout" onclick="handleLogout()"><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;margin-right:6px">logout</span><span data-i18n="settings.session.logout">Log out</span></button>
+            </div>
+          </div>
           </section>
           <section class="poxy-settings-block poxy-settings-block--danger">
           <h3 class="poxy-settings-section-title poxy-settings-section-title--danger" data-i18n="settings.danger.title">Danger Zone</h3>
@@ -3587,20 +3568,121 @@ function syncStoreData(){
   }
 }
 
-// ── USERNAME VALIDATION ──
+// ── USERNAME VALIDATION (unique handles — X-style) ──
+function normalizeUsernameInput(raw){
+  return String(raw||'').trim().replace(/^@+/,'');
+}
 function validateUsername(u){
-  if(!u)return{ok:false,msg:'Username is required.'};
-  if(u.length<3)return{ok:false,msg:'Username must be at least 3 characters.'};
-  if(u.length>24)return{ok:false,msg:'Username must be 24 characters or less.'};
-  if(/\s/.test(u))return{ok:false,msg:'Username cannot contain spaces.'};
-  if(!/^[a-zA-Z0-9_]+$/.test(u))return{ok:false,msg:'Use letters, numbers, and underscores only.'};
-  return{ok:true};
+  const name=normalizeUsernameInput(u);
+  if(!name)return{ok:false,msg:'Username is required.'};
+  if(name.length<3)return{ok:false,msg:'Username must be at least 3 characters.'};
+  if(name.length>24)return{ok:false,msg:'Username must be 24 characters or less.'};
+  if(/\s/.test(name))return{ok:false,msg:'Username cannot contain spaces.'};
+  if(!/^[a-zA-Z0-9_]+$/.test(name))return{ok:false,msg:'Use letters, numbers, and underscores only.'};
+  return{ok:true,value:name};
 }
 function usernameTakenMessage(err){
   if(!err)return'That username is already taken.';
   const c=err.code||'',m=(err.message||'').toLowerCase();
   if(c==='23505'||m.includes('unique')||m.includes('duplicate'))return'That username is already taken.';
   return err.message||'Could not save username.';
+}
+let settingsUsernameCheckTimer=null;
+let settingsUsernameCheckSeq=0;
+let settingsUsernameAvailability={status:'idle',username:''};
+function settingsUsernameStatusCopy(status){
+  const I=window.PoxyI18n;
+  const t=I?function(k){return I.t(k);}:function(k){return k;};
+  if(status==='checking')return{cls:'is-checking',text:t('settings.account.usernameChecking')};
+  if(status==='available')return{cls:'is-available',text:t('settings.account.usernameAvailable')};
+  if(status==='current')return{cls:'is-current',text:t('settings.account.usernameCurrent')};
+  if(status==='taken')return{cls:'is-taken',text:t('settings.account.usernameTaken')};
+  if(status==='invalid')return{cls:'is-invalid',text:settingsUsernameAvailability.msg||t('settings.account.usernameInvalid')};
+  return{cls:'',text:''};
+}
+function setSettingsUsernameStatusUI(result){
+  const el=$('settingsUsernameStatus');
+  const inp=$('settingsUsername');
+  const saveBtn=$('btnSettingsSaveProfile');
+  if(!el)return;
+  settingsUsernameAvailability=result||{status:'idle',username:''};
+  if(!result||result.status==='idle'){
+    el.hidden=true;
+    el.textContent='';
+    el.className='poxy-settings-username-status';
+    if(inp)inp.classList.remove('is-taken','is-available','is-invalid');
+    if(saveBtn)saveBtn.disabled=false;
+    return;
+  }
+  const copy=settingsUsernameStatusCopy(result.status);
+  el.hidden=false;
+  el.className='poxy-settings-username-status '+copy.cls;
+  el.textContent=result.msg||copy.text;
+  if(inp){
+    inp.classList.remove('is-taken','is-available','is-invalid');
+    if(result.status==='taken')inp.classList.add('is-taken');
+    else if(result.status==='available')inp.classList.add('is-available');
+    else if(result.status==='invalid')inp.classList.add('is-invalid');
+  }
+  if(saveBtn){
+    const blocked=['checking','taken','invalid'].includes(result.status);
+    const dirty=normalizeUsernameInput(inp?.value)!==normalizeUsernameInput(currentProfile?.username);
+    saveBtn.disabled=blocked||(!dirty&&result.status==='current');
+  }
+}
+async function resolveUsernameAvailability(username){
+  const v=validateUsername(username);
+  if(!v.ok)return{status:'invalid',username:'',msg:v.msg};
+  const name=v.value;
+  const current=normalizeUsernameInput(currentProfile?.username);
+  if(name.toLowerCase()===current.toLowerCase())return{status:'current',username:name};
+  try{
+    const{data,error}=await sb.from('profiles').select('id,username').ilike('username',name).limit(5);
+    if(error)throw error;
+    const hit=(data||[]).find(p=>String(p.id)!==String(currentUser?.id)&&String(p.username||'').toLowerCase()===name.toLowerCase());
+    if(hit)return{status:'taken',username:name};
+    return{status:'available',username:name};
+  }catch(e){
+    return{status:'invalid',username:name,msg:e.message||'Could not check username.'};
+  }
+}
+function scheduleSettingsUsernameCheck(){
+  const inp=$('settingsUsername');
+  if(!inp)return;
+  const name=normalizeUsernameInput(inp.value);
+  if(settingsUsernameCheckTimer)clearTimeout(settingsUsernameCheckTimer);
+  const seq=++settingsUsernameCheckSeq;
+  if(!name){
+    setSettingsUsernameStatusUI({status:'idle',username:''});
+    return;
+  }
+  const v=validateUsername(name);
+  if(!v.ok){
+    setSettingsUsernameStatusUI({status:'invalid',username:name,msg:v.msg});
+    return;
+  }
+  const current=normalizeUsernameInput(currentProfile?.username);
+  if(name.toLowerCase()===current.toLowerCase()){
+    setSettingsUsernameStatusUI({status:'current',username:name});
+    return;
+  }
+  setSettingsUsernameStatusUI({status:'checking',username:name});
+  settingsUsernameCheckTimer=setTimeout(async function(){
+    const result=await resolveUsernameAvailability(name);
+    if(seq!==settingsUsernameCheckSeq)return;
+    setSettingsUsernameStatusUI(result);
+  },380);
+}
+function wireSettingsUsernameField(){
+  const inp=$('settingsUsername');
+  if(!inp||inp.dataset.usernameWired==='1')return;
+  inp.dataset.usernameWired='1';
+  inp.addEventListener('input',scheduleSettingsUsernameCheck);
+  inp.addEventListener('blur',function(){
+    const v=validateUsername(inp.value);
+    if(v.ok)inp.value=v.value;
+    scheduleSettingsUsernameCheck();
+  });
 }
 
 // ── AUDIO ──
@@ -4262,14 +4344,20 @@ function renderSettingsAvatar(){
   }
   updateGlobalFrames();
 }
+function syncProfileIdentityReadonly(){
+  const un=currentProfile?.username||'';
+  const handle=$('profileDisplayHandle');
+  if(handle)handle.textContent=un?'@'+un:'@player';
+  const sh=$('settingsDisplayHandle');
+  if(sh)sh.textContent=un?'@'+un:'@player';
+}
 function renderSettingsPage(){
   if(!currentUser)return;
   renderSettingsAvatar();
+  wireSettingsUsernameField();
   const un=currentProfile?.username||'';
   const su=$('settingsUsername');if(su)su.value=un;
-  const pu=$('profileUsername');if(pu)pu.value=un;
-  const handle=$('settingsDisplayHandle');
-  if(handle)handle.textContent=un?'@'+un:'@player';
+  syncProfileIdentityReadonly();
   const em=$('settingsEmail');if(em)em.value=currentUser.email||'';
   const joined=$('settingsJoinedText');
   if(joined&&currentUser.created_at){
@@ -4278,6 +4366,7 @@ function renderSettingsPage(){
   }
   applySettingsPrefsUi();
   if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
+  scheduleSettingsUsernameCheck();
 }
 function renderProfilePage(){
   if(currentProfile?.avatar_url&&!isBrokenAvatarUrl(currentProfile.avatar_url))selectedAvatar=currentProfile.avatar_url;
@@ -4298,10 +4387,9 @@ function renderProfilePage(){
     });
   }
   else{bigAv.innerHTML='<span class="profile-menu-avatar-face">'+selectedAvatar+'</span>';}
-  $('profileUsername').value=currentProfile?.username||'';
+  syncProfileIdentityReadonly();
   renderFrameSelector();
   updateGlobalFrames();
-  if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
   renderSettingsAvatar();
   refreshProfileAuraBanner();
 }
@@ -4612,35 +4700,6 @@ async function renderBadgeWallet(){
 async function renderFeaturedPoxyDisplay(){
   renderProfileShowcaseMatrix();
 }
-function toggleProfilePwdSection(forceOpen){
-  const sec=$('pwdSection'),tog=$('pwdSectionToggle');
-  if(!sec)return;
-  const open=forceOpen!==undefined?!!forceOpen:!!sec.hidden;
-  sec.hidden=!open;
-  if(tog)tog.setAttribute('aria-expanded',open?'true':'false');
-  if(!open){$('pwdNewPassword').value='';$('pwdConfirmPassword').value='';const m=$('pwdMsg');if(m){m.textContent='';m.className='pwd-msg';}}
-}
-$('btnSaveProfile').addEventListener('click',async function(){
-  const username=$('profileUsername').value.trim();
-  const v=validateUsername(username);
-  if(!v.ok){showToast(v.msg);return;}
-  const btn=$('btnSaveProfile');btn.disabled=true;
-  try{
-    const{error}=await sb.from('profiles').upsert({id:currentUser.id,username,avatar_url:selectedAvatar});
-    if(error)throw error;
-    currentProfile={...currentProfile,username,avatar_url:selectedAvatar};
-    $('userUsernameEl').textContent=username;
-    syncNavUsernameLabels();
-    setBarAvatar(selectedAvatar);
-    syncStoreData();
-    showToast('Profile saved!');
-  }catch(e){showToast(usernameTakenMessage(e));}
-  btn.disabled=false;
-});
-const pwdToggle=$('pwdSectionToggle');
-if(pwdToggle)pwdToggle.addEventListener('click',()=>toggleProfilePwdSection());
-const pwdClose=$('pwdSectionClose');
-if(pwdClose)pwdClose.addEventListener('click',()=>toggleProfilePwdSection(false));
 async function updateUserPassword(np,cp,msgEl,btn,onSuccess){
   if(msgEl){msgEl.textContent='';msgEl.className='poxy-settings-msg';}
   if(!np||np.length<6){if(msgEl){msgEl.className='poxy-settings-msg error';msgEl.textContent='Password must be at least 6 characters.';}return;}
@@ -4652,8 +4711,6 @@ async function updateUserPassword(np,cp,msgEl,btn,onSuccess){
     const{error}=await sb.auth.updateUser({password:np});
     if(error)throw error;
     if(msgEl){msgEl.className='poxy-settings-msg success';msgEl.textContent='Password updated successfully.';}
-    if($('pwdNewPassword'))$('pwdNewPassword').value='';
-    if($('pwdConfirmPassword'))$('pwdConfirmPassword').value='';
     if($('settingsPwdCurrent'))$('settingsPwdCurrent').value='';
     if($('settingsPwdNew'))$('settingsPwdNew').value='';
     if($('settingsPwdConfirm'))$('settingsPwdConfirm').value='';
@@ -4661,31 +4718,30 @@ async function updateUserPassword(np,cp,msgEl,btn,onSuccess){
   }catch(e){if(msgEl){msgEl.className='poxy-settings-msg error';msgEl.textContent=e.message||'Update failed.';}}
   if(btn){btn.disabled=false;btn.textContent='Update Password';}
 }
-$('btnChangePassword').addEventListener('click',async function(){
-  const msg=$('pwdMsg');
-  await updateUserPassword($('pwdNewPassword').value,$('pwdConfirmPassword').value,msg,$('btnChangePassword'),()=>setTimeout(()=>toggleProfilePwdSection(false),1200));
-  if(msg&&msg.classList.contains('success')){msg.className='pwd-msg success';}
-  else if(msg&&msg.classList.contains('error')){msg.className='pwd-msg error';}
-});
 const btnSettingsPwd=$('btnSettingsUpdatePassword');
 if(btnSettingsPwd)btnSettingsPwd.addEventListener('click',()=>updateUserPassword($('settingsPwdNew').value,$('settingsPwdConfirm').value,$('settingsPwdMsg'),btnSettingsPwd,null));
 const btnSettingsSave=$('btnSettingsSaveProfile');
 if(btnSettingsSave)btnSettingsSave.addEventListener('click',async function(){
-  const inp=$('settingsUsername')||$('profileUsername');
-  const username=(inp?.value||'').trim();
+  const username=normalizeUsernameInput($('settingsUsername')?.value);
   const v=validateUsername(username);
   if(!v.ok){showToast(v.msg);return;}
+  const avail=await resolveUsernameAvailability(username);
+  setSettingsUsernameStatusUI(avail);
+  if(avail.status==='taken'){showToast(usernameTakenMessage(null));return;}
+  if(avail.status==='invalid'){showToast(avail.msg||'Invalid username.');return;}
+  if(avail.status==='current'){showToast(window.PoxyI18n?PoxyI18n.t('settings.account.usernameCurrent'):'This is already your username.');return;}
   btnSettingsSave.disabled=true;
   try{
-    const{error}=await sb.from('profiles').update({username}).eq('id',currentUser.id);
+    const{error}=await sb.from('profiles').update({username:v.value}).eq('id',currentUser.id);
     if(error)throw error;
-    currentProfile.username=username;
-    $('profileUsername').value=username;
-    $('settingsDisplayHandle').textContent='@'+username;
-    $('userUsernameEl').textContent=username;
+    currentProfile.username=v.value;
+    if($('settingsUsername'))$('settingsUsername').value=v.value;
+    syncProfileIdentityReadonly();
+    $('userUsernameEl').textContent=v.value;
     syncNavUsernameLabels();
-    showToast('Profile saved!');
-  }catch(e){showToast(usernameTakenMessage(e));}
+    setSettingsUsernameStatusUI({status:'current',username:v.value});
+    showToast(window.PoxyI18n?PoxyI18n.t('settings.account.saved'):'Profile saved!');
+  }catch(e){showToast(usernameTakenMessage(e));scheduleSettingsUsernameCheck();}
   btnSettingsSave.disabled=false;
 });
 async function handleAvatarFileUpload(file,inputEl,statusEl){
@@ -4727,7 +4783,6 @@ async function handleAvatarFileUpload(file,inputEl,statusEl){
   }
   if(inputEl)inputEl.value='';
 }
-document.getElementById('avatarUpload').addEventListener('change',e=>handleAvatarFileUpload(e.target.files[0],e.target,$('uploadStatus')));
 const settingsAvatarInp=$('settingsAvatarUpload');
 if(settingsAvatarInp)settingsAvatarInp.addEventListener('change',e=>handleAvatarFileUpload(e.target.files[0],e.target,null));
 

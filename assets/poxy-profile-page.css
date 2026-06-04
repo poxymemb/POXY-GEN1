@@ -145,12 +145,54 @@
   font-size:4rem;
   line-height:1;
 }
+.poxy-profile-identity-readonly{
+  width:100%;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+@media(min-width:1024px){
+  .poxy-profile-identity-readonly{align-items:flex-start;text-align:left}
+}
+.poxy-profile-identity-handle{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1.125rem;
+  font-weight:700;
+  color:var(--prof-primary);
+  letter-spacing:0.02em;
+}
+.poxy-profile-edit-settings{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 14px;
+  border-radius:9999px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);
+  color:var(--prof-muted);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  cursor:pointer;
+  font-family:inherit;
+  transition:background 0.2s,color 0.2s,border-color 0.2s,transform 0.2s;
+}
+.poxy-profile-edit-settings:hover{
+  color:var(--prof-primary);
+  border-color:rgba(249,171,255,0.35);
+  background:rgba(156,39,176,0.12);
+  transform:scale(1.02);
+}
+.poxy-profile-edit-settings .material-symbols-outlined{font-size:16px}
 #profilePage .poxy-profile-camera-btn{
   position:absolute;
   bottom:2px;
   left:76px;
   z-index:10;
-  display:flex;
+  display:none;
   align-items:center;
   justify-content:center;
   width:40px;
