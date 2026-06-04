@@ -788,32 +788,10 @@
     }
   }
 
-  function renderCalls() {
-    const root = host();
-    if (!root) return;
-    root.innerHTML = '';
-    const scroll = C.el('div', 'lo-module-scroll lo-placeholder-page');
-    scroll.appendChild(C.el('h2', 'lo-module-title', { text: 'Calls' }));
-    scroll.appendChild(
-      C.el('p', 'lo-module-sub', {
-        text: 'Voice and video channels — routing ready, media stack coming soon.',
-      })
-    );
-    scroll.appendChild(
-      C.glassCard(
-        C.el('p', '', {
-          text: 'Start a call from Messages using the call buttons in the thread header.',
-        })
-      )
-    );
-    root.appendChild(scroll);
-  }
-
   const renderers = {
     messages: null,
     friends: renderFriends,
     squads: renderSquads,
-    calls: renderCalls,
     activity: renderActivity,
     notifications: renderNotifications,
     settings: renderSettings,

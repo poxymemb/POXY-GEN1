@@ -167,8 +167,127 @@
 
 #luminaOsRoot[data-lo-theme='dark'] .lc-nav-item.is-active {
   color: var(--lo-primary);
-  background: rgba(34, 211, 238, 0.1);
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.15);
+  background: rgba(156, 39, 176, 0.14);
+  box-shadow: 0 0 24px rgba(215, 3, 87, 0.18);
+}
+
+#luminaOsRoot .lc-nav-footer {
+  flex-shrink: 0;
+  padding: 8px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid var(--lo-outline-variant);
+}
+
+#luminaOsRoot .lc-nav-footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: var(--lo-radius-md, 12px);
+  background: transparent;
+  color: var(--lo-on-surface-variant);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--lo-font-family);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color var(--lo-transition),
+    background var(--lo-transition);
+}
+
+#luminaOsRoot .lc-nav-footer-btn .material-symbols-outlined {
+  font-size: 22px;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+#luminaOsRoot .lc-nav-footer-btn:hover {
+  color: var(--lo-on-surface);
+  background: color-mix(in srgb, var(--lo-surface-container-high) 55%, transparent);
+}
+
+#luminaOsRoot .lc-nav-footer-btn--logout:hover {
+  color: var(--lo-secondary);
+}
+
+#luminaOsRoot .lc-nav-user {
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+#luminaOsRoot .lc-nav-user-name {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+}
+
+#luminaOsRoot .lc-nav-user-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--lo-outline);
+  border-radius: 8px;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', 'Plus Jakarta Sans', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lo-on-surface-variant);
+  cursor: pointer;
+  transition:
+    border-color var(--lo-transition),
+    color var(--lo-transition);
+}
+
+#luminaOsRoot .lc-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #22c55e;
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='online'] {
+  color: #16a34a;
+  border-color: color-mix(in srgb, #22c55e 35%, var(--lo-outline-variant));
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='online'] .lc-status-dot {
+  background: #22c55e;
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='away'] {
+  color: #d97706;
+  border-color: color-mix(in srgb, #f59e0b 35%, var(--lo-outline-variant));
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='away'] .lc-status-dot {
+  background: #f59e0b;
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='busy'] {
+  color: #dc2626;
+  border-color: color-mix(in srgb, #ef4444 35%, var(--lo-outline-variant));
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='busy'] .lc-status-dot {
+  background: #ef4444;
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='invisible'] {
+  color: var(--lo-on-surface-variant);
+}
+
+#luminaOsRoot .lc-nav-user-status[data-status='invisible'] .lc-status-dot {
+  background: var(--lo-on-surface-variant);
 }
 
 #luminaOsRoot .lo-theme-toggle {
@@ -1443,8 +1562,8 @@
   --lc-text: var(--lo-on-surface);
   --lc-muted: var(--lo-on-surface-variant);
   --lc-in: var(--lo-surface-container);
-  --lc-grad: linear-gradient(135deg, #22d3ee, #8b5cf6);
-  --lc-grad-2: linear-gradient(135deg, #0e7490, #5b21b6);
+  --lc-grad: linear-gradient(135deg, var(--lo-primary), var(--lo-secondary));
+  --lc-grad-2: linear-gradient(135deg, var(--lo-primary-container), var(--lo-tertiary));
 }
 
 /* Messages — theme-aware overrides */
@@ -1480,9 +1599,68 @@
 
 #luminaOsRoot .lc-conv-search input,
 #luminaOsRoot .lc-compose input {
-  background: var(--lo-surface-container-lowest);
-  border-color: var(--lo-outline-variant);
+  background: transparent;
+  border: none;
   color: var(--lo-on-surface);
+}
+
+#luminaOsRoot[data-lo-theme='light'] .lc-compose {
+  background: rgba(245, 246, 250, 0.85);
+  border-color: var(--lo-outline-variant);
+}
+
+#luminaOsRoot[data-lo-theme='dark'] .lc-compose {
+  background: var(--lo-surface-container-low);
+  border-color: var(--lo-outline-variant);
+}
+
+#luminaOsRoot .lc-compose-attach {
+  width: 40px;
+  height: 40px;
+  margin-left: 4px;
+  border-radius: 50%;
+  border: none;
+  background: transparent !important;
+  color: var(--lo-on-surface);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
+  transition: color var(--lo-transition), transform 150ms ease;
+}
+
+#luminaOsRoot .lc-compose-attach .material-symbols-outlined {
+  font-size: 26px;
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+#luminaOsRoot .lc-compose-attach:hover {
+  color: var(--lo-primary);
+  transform: none;
+  background: transparent !important;
+}
+
+#luminaOsRoot .lc-compose-tool {
+  background: transparent;
+  color: var(--lo-on-surface-variant);
+}
+
+#luminaOsRoot .lc-compose-tool:hover {
+  color: var(--lo-on-surface);
+  background: transparent;
+}
+
+#luminaOsRoot .lc-compose-send {
+  background: linear-gradient(135deg, var(--lo-primary), var(--lo-tertiary));
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--lo-primary) 35%, transparent);
+}
+
+#luminaOsRoot[data-lo-theme='light'] .lc-compose-send:not(:disabled) {
+  background: linear-gradient(135deg, #a5b4fc, #818cf8);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
 }
 
 #luminaOsRoot[data-lo-theme='light'] .lc-msg-row.is-mine .lc-bubble {
@@ -1497,7 +1675,8 @@
 }
 
 #luminaOsRoot[data-lo-theme='dark'] .lc-msg-row.is-mine .lc-bubble {
-  background: linear-gradient(135deg, #22d3ee, #8b5cf6);
+  background: linear-gradient(135deg, var(--lo-primary-container), var(--lo-secondary));
+  color: #fff;
 }
 
 #luminaOsRoot[data-lo-theme='dark'] .lc-msg-row.is-theirs .lc-bubble {

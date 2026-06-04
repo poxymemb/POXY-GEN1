@@ -278,27 +278,6 @@ body.lumina-os-active {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.lc-nav-user-tier {
-  font-size: 10px;
-  color: var(--lc-muted);
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.lc-nav-logout {
-  border: none;
-  background: transparent;
-  color: var(--lc-muted);
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 8px;
-  transition: background var(--lc-dur), color var(--lc-dur), transform var(--lc-dur);
-}
-.lc-nav-logout:hover {
-  background: var(--lc-surface-hover);
-  color: #fff;
-  transform: scale(1.03);
-}
 
 /* CENTER */
 .lc-main {
@@ -689,21 +668,23 @@ body.lumina-os-active {
   box-shadow: 0 0 0 1px rgba(198, 0, 255, 0.2);
 }
 .lc-compose-attach {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
-  background: var(--lc-surface-hover);
+  background: transparent;
   color: var(--lc-text);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: transform var(--lc-dur);
+  padding: 0;
+  transition: color var(--lc-dur);
 }
 .lc-compose-attach:hover {
-  transform: scale(1.03);
+  color: var(--lc-muted);
+  transform: none;
 }
 .lc-compose input {
   flex: 1;

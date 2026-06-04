@@ -151,7 +151,6 @@
   function renderNavUser() {
     const av = U.$('lcNavUserAv');
     const name = U.$('lcNavUserName');
-    const tier = U.$('lcNavUserTier');
     if (!av || !state.profile) return;
     if (state.profile.avatar_url?.startsWith('http')) {
       av.innerHTML =
@@ -160,8 +159,6 @@
         '" alt="">';
     } else av.textContent = state.profile.avatar_url || '👾';
     if (name) name.textContent = U.displayNameFromProf(state.profile);
-    if (tier)
-      tier.textContent = state.profile.is_club_member ? 'PRO ELITE' : 'MEMBER';
   }
 
   function renderConvList(filter) {

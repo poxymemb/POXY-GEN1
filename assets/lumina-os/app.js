@@ -126,8 +126,8 @@
   function renderNavUser() {
     const av = U.$('lcNavUserAv');
     const name = U.$('lcNavUserName');
-    const tier = U.$('lcNavUserTier');
     const status = U.$('lcNavUserStatus');
+    const statusBtn = U.$('lcUserStatusBtn');
     const st = Store.getState();
     if (!av || !runtime.profile) return;
     if (runtime.profile.avatar_url?.startsWith('http')) {
@@ -137,9 +137,6 @@
         '" alt="">';
     } else av.textContent = runtime.profile.avatar_url || '👾';
     if (name) name.textContent = U.displayNameFromProf(runtime.profile);
-    if (tier) {
-      tier.textContent = runtime.profile.is_club_member ? 'PRO ELITE' : 'MEMBER';
-    }
     if (status) {
       const labels = {
         online: 'Online',
@@ -148,7 +145,7 @@
         invisible: 'Invisible',
       };
       status.textContent = labels[st.userStatus] || 'Online';
-      status.dataset.status = st.userStatus || 'online';
+      if (statusBtn) statusBtn.dataset.status = st.userStatus || 'online';
     }
   }
 
@@ -517,6 +514,14 @@
       applyContextCollapsed();
     });
     bindClick('lcExitOs', () => Router.exit());
+    bindClick('lcNavHelp', () => {
+      Router.exit();
+      if (typeof global.showStitchTab === 'function') {
+        global.showStitchTab('explore');
+      } else {
+        toast('Open POXY World → Explore for help and support.');
+      }
+    });
     bindClick('lcNavLogout', async () => {
       await sb().auth.signOut();
     });

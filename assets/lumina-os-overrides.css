@@ -21,6 +21,11 @@ body.lumina-os-active {
   transition: background var(--lo-transition, 500ms ease-in-out);
 }
 
+html[data-lo-theme='dark'] body.lumina-os-active,
+html[data-lo-theme='dark'] #luminaOsRoot {
+  background: #000000 !important;
+}
+
 /* Ensure scroll works inside Lumina OS panels */
 #luminaOsRoot .lc-nav {
   min-height: 0;
@@ -212,26 +217,6 @@ body.lumina-os-active .page {
   transform: scale(1.03);
 }
 
-.lc-nav-user-status {
-  font-size: 11px;
-  color: var(--lc-success);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-}
-
-.lc-nav-user-status[data-status='away'] {
-  color: var(--lc-warning);
-}
-
-.lc-nav-user-status[data-status='busy'] {
-  color: #ef4444;
-}
-
-.lc-nav-user-status[data-status='invisible'] {
-  color: var(--lc-muted);
-}
 
 .lc-shell.context-collapsed {
   grid-template-columns: var(--lc-nav-w) 1fr 0 !important;

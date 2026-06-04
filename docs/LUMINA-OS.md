@@ -49,7 +49,6 @@ docs/
 | Messages | Live DMs (Supabase) | `#lcMain` + `#lcContext` |
 | Friends | Roster from POXY friendships | `#lcModuleHost` |
 | Squads | Cards, filters, join states, create modal | `#lcModuleHost` |
-| Calls | Placeholder | `#lcModuleHost` |
 | Activity | Timeline feed | `#lcModuleHost` |
 | Notifications | Grouped feed + badge | `#lcModuleHost` |
 | Settings | Theme + preferences | `#lcModuleHost` |
