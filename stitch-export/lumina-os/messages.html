@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #e8eaf0;
+            color: #2e3040;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .neomorph-raised {
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6);
+        }
+        .neomorph-inset {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5);
+        }
+        .neomorph-active {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5);
+            transform: scale(0.98);
+        }
+        @keyframes breathing {
+            0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+        }
+        .glow-pulse {
+            animation: breathing 3s ease-in-out infinite;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4d6dc;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#d4d6dc",
+                        "surface-container-low": "#e5e7ed",
+                        "inverse-on-surface": "#e8eaf0",
+                        "primary-fixed": "#e0e2ff",
+                        "on-tertiary-fixed": "#2e1065",
+                        "on-error-container": "#991b1b",
+                        "secondary-container": "#d8dae6",
+                        "on-primary": "#ffffff",
+                        "error-container": "#fee2e2",
+                        "secondary": "#6c6e7e",
+                        "on-primary-fixed-variant": "#4338ca",
+                        "primary": "#6366f1",
+                        "surface-bright": "#edeef4",
+                        "on-secondary-fixed": "#1a1b26",
+                        "on-secondary": "#ffffff",
+                        "error": "#dc2626",
+                        "secondary-fixed-dim": "#b8baca",
+                        "surface-variant": "#dcdee4",
+                        "on-tertiary-container": "#3b1f63",
+                        "on-surface-variant": "#585a68",
+                        "on-primary-fixed": "#1e1b4b",
+                        "on-secondary-container": "#585a68",
+                        "outline-variant": "#d0d2dc",
+                        "inverse-primary": "#a5b4fc",
+                        "inverse-surface": "#2e3040",
+                        "surface-tint": "#6366f1",
+                        "surface-container-lowest": "#f0f2f8",
+                        "on-surface": "#2e3040",
+                        "surface-container": "#e2e4ea",
+                        "primary-container": "#818cf8",
+                        "on-primary-container": "#e0e2ff",
+                        "surface-container-highest": "#d6d8de",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#404252",
+                        "background": "#e8eaf0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#c4b5fd",
+                        "surface": "#e8eaf0",
+                        "on-tertiary-fixed-variant": "#5b21b6",
+                        "tertiary-fixed": "#ede9fe",
+                        "surface-container-high": "#dcdee4",
+                        "tertiary-container": "#a78bfa",
+                        "on-background": "#2e3040",
+                        "outline": "#8a8c9a",
+                        "tertiary": "#7c3aed",
+                        "secondary-fixed": "#d8dae6",
+                        "primary-fixed-dim": "#a5b4fc"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface h-screen flex overflow-hidden">
+<!-- Left Sidebar: SideNavBar -->
+<aside class="fixed left-0 top-0 flex flex-col h-full py-8 space-y-4 bg-surface w-64 rounded-r-xl shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] z-50">
+<div class="px-6 mb-6 flex items-center space-x-3">
+<div class="w-10 h-10 rounded-xl bg-surface shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+</div>
+<div>
+<h1 class="text-2xl font-headline font-semibold text-primary">Lumina</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Premium Ecosystem</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Dashboard (Inactive) -->
+<button class="w-full flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg group">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-body font-medium">Dashboard</span>
+</button>
+<!-- Social (Active) -->
+<button class="w-full flex items-center px-4 py-3 shadow-[inset_4px_4px_8px_rgba(0,0,0,0.06),inset_-4px_-4px_8px_rgba(255,255,255,0.5)] text-primary rounded-lg">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-body font-medium">Social</span>
+</button>
+<button class="w-full flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg">
+<span class="material-symbols-outlined mr-3">sports_esports</span>
+<span class="font-body font-medium">Play</span>
+</button>
+<button class="w-full flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg">
+<span class="material-symbols-outlined mr-3">subscriptions</span>
+<span class="font-body font-medium">Library</span>
+</button>
+<button class="w-full flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-body font-medium">Settings</span>
+</button>
+</nav>
+<div class="px-6 py-4">
+<button class="w-full py-3 rounded-xl bg-surface shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] text-primary font-semibold text-sm active:scale-95 transition-transform">
+                Go Pro
+            </button>
+</div>
+<div class="px-4 pt-4 border-t border-surface-variant/20 space-y-1">
+<button class="w-full flex items-center px-4 py-2 text-on-surface-variant text-sm hover:text-primary transition-all">
+<span class="material-symbols-outlined mr-3 text-lg">help</span>
+<span>Help</span>
+</button>
+<button class="w-full flex items-center px-4 py-2 text-on-surface-variant text-sm hover:text-error transition-all">
+<span class="material-symbols-outlined mr-3 text-lg">logout</span>
+<span>Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas (Triple Pane) -->
+<main class="ml-64 flex-1 flex h-full">
+<!-- Center Pane: Active Conversation -->
+<section class="flex-1 flex flex-col min-w-0 bg-surface">
+<!-- Header -->
+<header class="h-16 flex justify-between items-center px-8 sticky top-0 z-40 bg-surface shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)]">
+<div class="flex items-center space-x-4">
+<div class="relative">
+<img alt="User profile" class="w-10 h-10 rounded-xl object-cover shadow-[4px_4px_8px_rgba(0,0,0,0.1)]" data-alt="A close-up portrait of a stylish young man with a focused expression, set against a blurred urban background. The lighting is soft and natural, emphasizing a high-end, contemporary aesthetic. The color palette features cool tones and subtle warm highlights, perfectly matching a professional Lumina OS dashboard interface in a soft UI neomorphic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOV1OTW0znRoJpQi4_qB1Go0wnfMfTBxIU2nBFXCct1lrg-dr17vcnPBThy5A8uqv9wJmsCp31BJJJBzQyZCokvD4ziVDUYUrcuLersSUl5uiPVzXwiYyO6onEqHcaoEqrG6VitJuV3gpmzmYH34D5VczgtUEv4LAzi9ovansGeJjY5VCrYnRCNjEL2jO5-SzcXRvHpw_nbA0OYGX9q-_oS4RDGH2d5QYGzl2BJOpTviOFP16X_VFKr3XLaqYwDx-vttarESqJ_g"/>
+<span class="absolute bottom-[-2px] right-[-2px] w-3 h-3 bg-green-500 border-2 border-surface rounded-full"></span>
+</div>
+<div>
+<h2 class="font-headline font-semibold text-on-surface">Julian Vance</h2>
+<span class="text-xs text-on-surface-variant">Active now — Creative Director</span>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="p-2 rounded-lg bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] text-on-surface-variant hover:text-primary transition-shadow">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="p-2 rounded-lg bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] text-on-surface-variant hover:text-primary transition-shadow">
+<span class="material-symbols-outlined">call</span>
+</button>
+<button class="p-2 rounded-lg bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] text-on-surface-variant hover:text-primary transition-shadow">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Chat Messages -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<!-- Receiver -->
+<div class="flex flex-col items-start max-w-[70%]">
+<div class="p-4 rounded-2xl bg-surface shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] text-on-surface">
+<p class="text-sm leading-relaxed">Hey! I've just uploaded the new brand guidelines to the Lumina vault. Can you take a quick look at the indigo variations?</p>
+</div>
+<span class="mt-2 ml-2 text-[10px] text-on-surface-variant font-medium">10:24 AM</span>
+</div>
+<!-- Sender -->
+<div class="flex flex-col items-end self-end max-w-[70%]">
+<div class="p-4 rounded-2xl bg-surface shadow-[inset_4px_4px_8px_rgba(99,102,241,0.1),6px_6px_12px_rgba(0,0,0,0.05)] text-primary">
+<p class="text-sm leading-relaxed font-medium">On it right now. The soft UI treatment on the buttons looks incredible. Are we sticking with the 12px radius throughout?</p>
+</div>
+<div class="mt-2 mr-2 flex items-center space-x-1">
+<span class="text-[10px] text-on-surface-variant font-medium">10:26 AM</span>
+<span class="material-symbols-outlined text-[12px] text-primary" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+<!-- Receiver with Media -->
+<div class="flex flex-col items-start max-w-[70%]">
+<div class="p-2 rounded-2xl bg-surface shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] space-y-2">
+<img alt="Design preview" class="rounded-xl w-full object-cover" data-alt="An abstract 3D render of soft, flowing organic shapes in shades of indigo and violet, featuring a distinct neomorphic texture that looks like extruded clay. The lighting is diffused and professional, showcasing soft shadows and highlights that emphasize depth. This image represents the 'Silk' design system concept within the Lumina OS dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3oil2Diz6P_fVY-X8iwpEoWPGW1wea2lxXsRsVTPIEmDTtP-tuJwoHmKnOC-kVM5cj-qe4ynXQof6x_0qB2bmjni8BAOZfIMSbHGWLN3A6uttUd3SiK9sLXEsbk-mB_B-qwWfvjR2AdUWe4l_rYtsg-4siIfQnElXJGgrW8_4I_XooSD2qUgSfFXTH8WnELoVPbyqzywld06XpqncsZG-UpXrkFlhJ73Xvavm3v6uO33VsWlSwM8qqONGcENBiJ9oqQwzcQqKxw"/>
+<div class="p-2">
+<p class="text-sm text-on-surface">Yes, 12px is the anchor. Check out this motion study for the vault breathing effect.</p>
+</div>
+</div>
+<span class="mt-2 ml-2 text-[10px] text-on-surface-variant font-medium">10:27 AM</span>
+</div>
+<!-- Typing indicator -->
+<div class="flex items-center space-x-2 opacity-50">
+<div class="w-8 h-8 rounded-full bg-surface shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05)] flex items-center justify-center space-x-1">
+<div class="w-1 h-1 bg-on-surface-variant rounded-full animate-bounce"></div>
+<div class="w-1 h-1 bg-on-surface-variant rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+<div class="w-1 h-1 bg-on-surface-variant rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<footer class="p-6 bg-surface">
+<div class="flex items-center p-2 rounded-2xl bg-surface shadow-[inset_6px_6px_12px_rgba(0,0,0,0.08),inset_-6px_-6px_12px_rgba(255,255,255,0.6)]">
+<button class="p-3 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 font-medium px-4" placeholder="Type a message..." type="text"/>
+<button class="p-3 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mood</span>
+</button>
+<button class="ml-2 w-10 h-10 rounded-xl bg-primary shadow-[4px_4px_10px_rgba(99,102,241,0.4)] flex items-center justify-center text-white active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</footer>
+</section>
+<!-- Right Pane: Intelligence Panel -->
+<section class="w-80 bg-surface-container-low p-6 overflow-y-auto hidden lg:block shadow-[-6px_0_12px_rgba(0,0,0,0.03)]">
+<!-- Profile Detail Card -->
+<div class="p-6 rounded-2xl bg-surface shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] text-center">
+<div class="relative inline-block mb-4">
+<img alt="Julian Vance large" class="w-24 h-24 rounded-3xl object-cover shadow-[8px_8px_16px_rgba(0,0,0,0.1),-8px_-8px_16px_rgba(255,255,255,0.8)]" data-alt="A high-resolution portrait of a creative professional in a modern studio environment. The subject is Julian Vance, appearing focused and friendly. The scene is illuminated with professional three-point lighting, casting soft, elegant shadows that define the facial structure. The background is a minimalist office with soft gray walls, maintaining the clean, neomorphic 'Silk' aesthetic of Lumina OS." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7zBxlq-rNUbU8aSkjMYZegKPrINTOqYGPcpliQpNVI69_zmPLJDKODLIyftuvjurrbql_o6spbqUoPrPr9AfQWd_79PyTDosSp-h532KLTo2P-W81BlpbRoI8v53TV6U8qB9uIWQkkXvbQIyuU61Y0GGZ6CQXr2jCd9X4Qwnk9HmwAwS2qEqVY0keG6YswU0elo8gu_72rOZwwJrdvGGWJXs5uVR6ANjpzxYvFMF94RyN9JvCSdvkVrvNrOkHYzsCx6MX6oaLBA"/>
+</div>
+<h3 class="text-xl font-headline font-bold text-on-surface">Julian Vance</h3>
+<p class="text-sm text-primary font-medium mb-4">@julian_v</p>
+<div class="flex justify-center space-x-3">
+<button class="w-10 h-10 rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] flex items-center justify-center text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined text-lg">mail</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] flex items-center justify-center text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined text-lg">videogame_asset</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] flex items-center justify-center text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined text-lg">notifications</span>
+</button>
+</div>
+</div>
+<!-- Vault Status Monitor -->
+<div class="mt-8">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Vault Status</h4>
+<span class="w-2 h-2 rounded-full bg-primary glow-pulse"></span>
+</div>
+<div class="p-5 rounded-2xl bg-surface shadow-[inset_4px_4px_8px_rgba(0,0,0,0.06),inset_-4px_-4px_8px_rgba(255,255,255,0.5)]">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-medium text-on-surface-variant">Encrypted Uptime</span>
+<span class="text-xs font-bold text-primary">99.9%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden shadow-[inset_1px_1px_2px_rgba(0,0,0,0.1)]">
+<div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+</div>
+<p class="mt-3 text-[10px] text-on-surface-variant italic leading-tight">Data synchronized via Lumina Quantum Mesh. Session is secure.</p>
+</div>
+</div>
+<!-- Neomorphic Media Previews -->
+<div class="mt-8">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Shared Assets</h4>
+<button class="text-xs font-bold text-primary hover:underline">View All</button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="aspect-square rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.08),-4px_-4px_8px_rgba(255,255,255,0.6)] overflow-hidden p-1 group cursor-pointer">
+<img alt="Asset 1" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500" data-alt="A minimalist 3D rendering of soft geometric spheres and cubes floating in a vacuum, using a palette of indigo, lavender, and soft grey. The objects have a velvet-like texture with subtle neomorphic highlights along their edges. This abstract composition represents high-fidelity digital assets for the Lumina OS ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEHWx5O8HPdz7cd2lNw1VJgZ5Qr-NJcSbpR4o5e5l3jJdUVZeTQiRL4WipM1D4ox0m7boaYJHDx0O7mrV1q78SyHRbXCFhnmiRMt1ZhE_waKl-Z_wfJ1esjrpedLNoGCSjmyq17IWFp3xXcH-zW9_E30YFx-nMXxZ3eQgmkHi5XLHYjRKF2VxVQhvRH_9tKC1B-osydwfdCROuIjm89pR1lKxqWV9m4ViTLsluYATt_wDetjqwbvrmJ_r87D9rcc9tbt1nDZ0dKQ"/>
+</div>
+<div class="aspect-square rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.08),-4px_-4px_8px_rgba(255,255,255,0.6)] overflow-hidden p-1 group cursor-pointer">
+<img alt="Asset 2" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500" data-alt="A clean, top-down photograph of high-end vintage electronics with a futuristic twist. The devices feature soft, rounded corners and a matte grey finish, arranged in a balanced, aesthetic composition. The lighting is bright and even, highlighting the tactile qualities of the buttons and surfaces in a neomorphic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5RkQBsxpq_zda8bvhAcj7GUJwAGpO6dQaf7nvwpbhwAEskhtSAaJAqnO1GbbqQfLfooCVAJtVS2Dk9au-0lsc4VtxWs7viCrVF4b_stCPnuLjJOMQTgmdBW4Rpu8lCUhODl-deGFb0RHPJtCBYAb0uGh9JJWCTfDnjnnqG8VR7QDDyZql128ayfr-8Y1Q_tIAXgF6YIrBZc8_F73d083aORPD6WkEfaOHYIRkAl4rjEiPeEoInV5UtFzcCIxd32RvPpQeIKHI0A"/>
+</div>
+<div class="aspect-square rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.08),-4px_-4px_8px_rgba(255,255,255,0.6)] overflow-hidden p-1 group cursor-pointer">
+<img alt="Asset 3" class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-500" data-alt="A stunning gradient background consisting of soft, flowing waves of indigo and violet, designed with a focus on depth and silk-like textures. The light catches the peaks of the waves, creating soft neomorphic shadows in the troughs. This visual represents the core aesthetic of the Silk design system used in modern dashboard UIs." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT_hskdSbCLZRxz3hWvB8EOXLfYqpClzBgCAWJkleUy6feA7tycAXFewWWE9bJOKPfarwmcplmnQ4htxYVHTGvM5RNSDPqo28t3BXjeGbJkCWtFYfGGc1bxFiVA7Xb9u1_0M_3BgTLZl1anYvW10luib4o6XTwxoLjSMHkjOJB1x3LvuDkEbtCYnvx4Uf375c1ROFltufsGtUPlmSipn0o_wsqCUt0T5y-ukWlwwjlivlOL5wo05xNKahxNaitj6Q8DOvbqdRS6w"/>
+</div>
+<div class="aspect-square rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.08),-4px_-4px_8px_rgba(255,255,255,0.6)] overflow-hidden p-1 group cursor-pointer flex items-center justify-center relative">
+<div class="absolute inset-0 bg-surface/80 flex items-center justify-center rounded-lg">
+<span class="text-sm font-bold text-primary">+12</span>
+</div>
+<img alt="Asset 4" class="w-full h-full object-cover rounded-lg" data-alt="A detailed digital illustration of futuristic interface components, showing buttons with soft shadows, extruded toggles, and glowing status indicators. The color palette is strictly controlled with indigo accents on a warm grey base, embodying the neomorphic 'Silk' aesthetic of high-fidelity messaging dashboards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0Wtb-xWGbyC7ByjXLNTvnSJ58Zu6V79tOMVszgZ4HY6FvgliBFq-rybdrS-BKjIMPl_4wCFaphkLKI3IzBRqnc3ifIMndYCzYrMRwdjf1d9fB5Z1BjrWFspKZEAlPfOFRWzqVZJnTdSeoe_QGC2YX-b3pKWiEdw_iRt5RF5ZIBYiVvWK5KnVuDMfq_5gJt2cFmVKQWdbGZOcwnwBGhLFgHToMl5OMISUHoXofjANZUAmHQZDUxGB6oMNuQqfC2oJyptsYRo7YbQ"/>
+</div>
+</div>
+</div>
+<!-- Action List -->
+<div class="mt-8 space-y-3 pb-8">
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05)] transition-all">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary mr-3">history</span>
+<span class="text-sm font-medium">Archived Chat</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-surface shadow-[4px_4px_8px_rgba(0,0,0,0.06),-4px_-4px_8px_rgba(255,255,255,0.6)] hover:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.05)] transition-all">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-error mr-3">block</span>
+<span class="text-sm font-medium text-error">Restrict User</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Soft click effect for neomorphic elements
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('neomorph-active');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('neomorph-active');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('neomorph-active');
+            });
+        });
+
+        // Hover atmosphere for chat messages
+        const chatBubbles = document.querySelectorAll('.flex-1.overflow-y-auto > div');
+        chatBubbles.forEach(bubble => {
+            bubble.addEventListener('mouseenter', () => {
+                bubble.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                bubble.style.transform = 'scale(1.01) translateX(4px)';
+            });
+            bubble.addEventListener('mouseleave', () => {
+                bubble.style.transform = 'scale(1) translateX(0px)';
+            });
+        });
+
+        // Auto-scroll to bottom of chat on load
+        const chatContainer = document.querySelector('.flex-1.overflow-y-auto');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    </script>
+</body></html>

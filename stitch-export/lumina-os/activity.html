@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina OS - Activity Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d4d6dc",
+                        "surface-container-low": "#e5e7ed",
+                        "inverse-on-surface": "#e8eaf0",
+                        "primary-fixed": "#e0e2ff",
+                        "on-tertiary-fixed": "#2e1065",
+                        "on-error-container": "#991b1b",
+                        "secondary-container": "#d8dae6",
+                        "on-primary": "#ffffff",
+                        "error-container": "#fee2e2",
+                        "secondary": "#6c6e7e",
+                        "on-primary-fixed-variant": "#4338ca",
+                        "primary": "#6366f1",
+                        "surface-bright": "#edeef4",
+                        "on-secondary-fixed": "#1a1b26",
+                        "on-secondary": "#ffffff",
+                        "error": "#dc2626",
+                        "secondary-fixed-dim": "#b8baca",
+                        "surface-variant": "#dcdee4",
+                        "on-tertiary-container": "#3b1f63",
+                        "on-surface-variant": "#585a68",
+                        "on-primary-fixed": "#1e1b4b",
+                        "on-secondary-container": "#585a68",
+                        "outline-variant": "#d0d2dc",
+                        "inverse-primary": "#a5b4fc",
+                        "inverse-surface": "#2e3040",
+                        "surface-tint": "#6366f1",
+                        "surface-container-lowest": "#f0f2f8",
+                        "on-surface": "#2e3040",
+                        "surface-container": "#e2e4ea",
+                        "primary-container": "#818cf8",
+                        "on-primary-container": "#e0e2ff",
+                        "surface-container-highest": "#d6d8de",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#404252",
+                        "background": "#e8eaf0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#c4b5fd",
+                        "surface": "#e8eaf0",
+                        "on-tertiary-fixed-variant": "#5b21b6",
+                        "tertiary-fixed": "#ede9fe",
+                        "surface-container-high": "#dcdee4",
+                        "tertiary-container": "#a78bfa",
+                        "on-background": "#2e3040",
+                        "outline": "#8a8c9a",
+                        "tertiary": "#7c3aed",
+                        "secondary-fixed": "#d8dae6",
+                        "primary-fixed-dim": "#a5b4fc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #e8eaf0;
+        }
+        .neomorph-raised {
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6);
+        }
+        .neomorph-inset {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5);
+        }
+        .neomorph-pressed {
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px -2px 5px rgba(255,255,255,0.4);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Sidebar Navigation Shell -->
+<aside class="fixed left-0 top-0 flex flex-col h-full py-8 space-y-4 bg-surface w-64 rounded-r-xl shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg neomorph-raised flex items-center justify-center bg-surface">
+<span class="material-symbols-outlined text-primary" data-icon="lens_blur">lens_blur</span>
+</div>
+<div>
+<h1 class="text-2xl font-headline font-semibold text-primary">Lumina</h1>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Premium Ecosystem</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-4">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<!-- Active Tab: Dashboard (Closest match to primary activity/feed) -->
+<a class="flex items-center gap-4 px-4 py-3 shadow-[inset_4px_4px_8px_rgba(0,0,0,0.06),inset_-4px_-4px_8px_rgba(255,255,255,0.5)] text-primary rounded-lg mx-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-medium">Activity</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="sports_esports">sports_esports</span>
+<span class="font-medium">Play</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium">Social</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="subscriptions">subscriptions</span>
+<span class="font-medium">Library</span>
+</a>
+</nav>
+<div class="px-6 py-4">
+<button class="w-full py-3 rounded-xl neomorph-raised text-primary font-bold text-sm hover:shadow-none active:shadow-inset transition-all active:scale-95">
+                Go Pro
+            </button>
+</div>
+<footer class="px-4 py-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm font-medium">Help</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</footer>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- Top Bar -->
+<header class="flex justify-between items-center px-8 h-16 sticky top-0 z-40 bg-surface shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)]">
+<div class="flex items-center bg-surface neomorph-inset rounded-full px-4 py-2 w-96">
+<span class="material-symbols-outlined text-on-surface-variant mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-on-surface-variant" placeholder="Search activities..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="w-10 h-10 rounded-full neomorph-raised flex items-center justify-center text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full neomorph-raised flex items-center justify-center text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+</button>
+<div class="h-10 w-10 rounded-full neomorph-raised p-0.5">
+<img alt="User profile" class="rounded-full" data-alt="A high-quality studio portrait of a friendly young man with soft lighting. The image has a clean, professional aesthetic with a soft-focus background, fitting a modern light-mode UI. The color palette is neutral and sophisticated, using subtle cool tones to complement the Lumina OS design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiGY1pkLcmB95YTYe62IBIRJdT3AvVbkAudJtqyJnwygvqU7FRuh0HLmyUm8K0_GpG2APqkNsnu-gl2p0skaSr9R105--dsPQ3Wt_pDvu5QenqzgDFtAZ305TbO5-4gZ2paCu-XzXHmLIGsG_a-zK-PWsOEmwa_UoHXBukDltTzyZIllhrBVZiQsUFgyGWsbWoX5JvY1m7LKaWOsHYCJSZ0bQJ47vO3QfxRjkpM_g3dtlxdbq4RD7mJ1BSssokqBsv19KnhKulIA"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<section class="p-10 max-w-5xl mx-auto">
+<div class="flex items-end justify-between mb-12">
+<div>
+<h2 class="text-4xl font-headline font-semibold text-on-surface tracking-tight">Recent Activity</h2>
+<p class="text-on-surface-variant mt-2 font-medium">Tracking your digital evolution in Lumina OS</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 rounded-xl neomorph-raised text-on-surface-variant text-sm font-semibold flex items-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        Filter
+                    </button>
+<button class="px-6 py-2.5 rounded-xl neomorph-raised text-primary text-sm font-semibold flex items-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export
+                    </button>
+</div>
+</div>
+<!-- Timeline Container -->
+<div class="relative">
+<!-- Timeline Track (Pressed Texture) -->
+<div class="absolute left-[39px] top-0 bottom-0 w-2 neomorph-pressed rounded-full bg-surface-container"></div>
+<!-- Event Groups -->
+<div class="space-y-12">
+<!-- Today -->
+<div class="relative">
+<div class="flex items-center gap-4 mb-8">
+<div class="z-10 w-5 h-5 rounded-full bg-primary border-4 border-surface shadow-[0_0_15px_rgba(99,102,241,0.5)] ml-[32px]"></div>
+<span class="text-xs font-extrabold uppercase tracking-widest text-primary">Today</span>
+</div>
+<div class="space-y-6 ml-20">
+<!-- Achievement Event -->
+<div class="neomorph-raised bg-surface rounded-2xl p-6 flex items-center gap-6 group hover:translate-x-2 transition-transform duration-300">
+<div class="w-16 h-16 shrink-0 rounded-2xl neomorph-inset flex items-center justify-center bg-surface">
+<span class="material-symbols-outlined text-3xl text-tertiary" data-icon="military_tech" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface">Achievement Unlocked: "Deep Diver"</h3>
+<span class="text-xs font-medium text-on-surface-variant">2h ago</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">You spent 10 consecutive hours in the Library catalog. Your dedication to discovery has earned you 500 Lumina XP.</p>
+</div>
+<button class="w-10 h-10 rounded-full neomorph-raised flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Squad Win Event -->
+<div class="neomorph-raised bg-surface rounded-2xl p-6 flex items-center gap-6 group hover:translate-x-2 transition-transform duration-300">
+<div class="w-16 h-16 shrink-0 rounded-2xl neomorph-inset flex items-center justify-center bg-surface overflow-hidden">
+<img alt="Squad Win" class="w-full h-full object-cover rounded-xl" data-alt="A cinematic low-angle shot of a group of diverse young gamers celebrating a victory in a neon-lit futuristic gaming lounge. The scene is filled with energy and high-contrast lighting, with soft purples and blues reflecting off polished surfaces. The mood is triumphant and modern, perfectly capturing a 'squad win' moment in a high-tech ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5HOloVj_QNHOw5_UR8pqZq-RvKtero697Ckof4gq2fDw2H_sB9QzneMsZE9DmMKheZs1Jtzk7sbdQRsXphQnPcIiEpixcCDQDvaa1MmwyQiPm9Pqy1JHXNG3YYfgUCcP_Ea05DiA3gegUEcWxXhfeVi8QUmC4aAFL0Opde7E2FXWhZcSuYRLQ0pbLsODUjIAdC3KIY3fKPjF-PucSb0T7JxWrSqHggx4-4dlEEKocOG5dQHTbty7rN721LPY5NgBtu5uHz8A4Hw"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface">Victory in CyberSector 7</h3>
+<span class="text-xs font-medium text-on-surface-variant">5h ago</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">Your squad <span class="text-primary font-bold">Alpha-Nine</span> secured 1st place in the regional qualifiers. New gear has been added to your inventory.</p>
+</div>
+<button class="w-10 h-10 rounded-full neomorph-raised flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="share">share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Yesterday -->
+<div class="relative">
+<div class="flex items-center gap-4 mb-8">
+<div class="z-10 w-5 h-5 rounded-full bg-surface-dim border-4 border-surface ml-[32px]"></div>
+<span class="text-xs font-extrabold uppercase tracking-widest text-on-surface-variant">Yesterday</span>
+</div>
+<div class="space-y-6 ml-20">
+<!-- Friend Request -->
+<div class="neomorph-raised bg-surface rounded-2xl p-6 flex items-center gap-6 group hover:translate-x-2 transition-transform duration-300">
+<div class="w-16 h-16 shrink-0 rounded-2xl neomorph-inset p-1 bg-surface">
+<img alt="Friend Profile" class="w-full h-full object-cover rounded-xl" data-alt="A warm, bright portrait of a young woman with a vibrant smile against a soft pastel background. The lighting is ethereal and flattering, creating a high-key, modern aesthetic. The colors are gentle, focusing on warm tones and soft indigo accents, aligning with the sophisticated, friendly atmosphere of the Lumina OS social features." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_wOPyyLXV9ktM7vbijcfmAqKo-VjHjxGWEj-2csfx8AS1hL6LnRQFqSQ51gFd6PcAn_cyuuF7pbzReTFDasyHljiLfSejR9xsXI7UDXmtD09PmaPilUVuvNCJHpW0wL7rDuu-jYmrDjtnOuXrHCW43IWL7_M_hqrKbOYpCYzATFpbyiUtAiJRQAqE27BFnT_sosJVluT8v7x-F6tcjRv1Oiex2KUv_ucUg0wLJQRlItbYkTjfAwC8E_ww6O_lTUhvuOtwZjI4fg"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface">New Connection: Sarah J.</h3>
+<span class="text-xs font-medium text-on-surface-variant">1d ago</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">Sarah sent you a friend request. You have 4 mutual connections including <span class="text-primary font-bold">Marcus V.</span></p>
+<div class="flex gap-4 mt-4">
+<button class="px-5 py-2 rounded-lg neomorph-raised bg-primary text-white text-xs font-bold hover:shadow-none transition-all">Accept</button>
+<button class="px-5 py-2 rounded-lg neomorph-inset text-on-surface-variant text-xs font-bold">Decline</button>
+</div>
+</div>
+</div>
+<!-- System Event -->
+<div class="neomorph-raised bg-surface rounded-2xl p-6 flex items-center gap-6 group hover:translate-x-2 transition-transform duration-300">
+<div class="w-16 h-16 shrink-0 rounded-2xl neomorph-inset flex items-center justify-center bg-surface">
+<span class="material-symbols-outlined text-3xl text-primary" data-icon="update">update</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface">System Update: v4.2.0 Complete</h3>
+<span class="text-xs font-medium text-on-surface-variant">1d ago</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">Lumina OS has been updated with enhanced neomorphic rendering and faster response times. Explore the new "Depth Layers" in Settings.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<div class="mt-16 flex justify-center">
+<button class="px-12 py-4 rounded-2xl neomorph-raised text-on-surface-variant font-bold hover:text-primary transition-all active:scale-95 active:shadow-inset">
+                    Show Older Activity
+                </button>
+</div>
+</section>
+</main>
+<!-- Floating Action Button - Only for Home/Dash context but active here for Interaction demo -->
+<button class="fixed bottom-10 right-10 w-16 h-16 rounded-full neomorph-raised bg-primary flex items-center justify-center text-white shadow-[0_10px_25px_rgba(99,102,241,0.4)] hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<script>
+        // Micro-interactions for neomorphic elements
+        document.querySelectorAll('.neomorph-raised').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.boxShadow = "inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5)";
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.boxShadow = "6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6)";
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.boxShadow = "6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6)";
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input');
+        const searchContainer = searchInput.parentElement;
+        searchInput.addEventListener('focus', () => {
+            searchContainer.style.boxShadow = "inset 6px 6px 10px rgba(0,0,0,0.08), inset -6px -6px 10px rgba(255,255,255,0.7)";
+        });
+        searchInput.addEventListener('blur', () => {
+            searchContainer.style.boxShadow = "inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5)";
+        });
+    </script>
+</body></html>

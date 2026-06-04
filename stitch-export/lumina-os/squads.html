@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina OS - Squads Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d4d6dc",
+                        "surface-container-low": "#e5e7ed",
+                        "inverse-on-surface": "#e8eaf0",
+                        "primary-fixed": "#e0e2ff",
+                        "on-tertiary-fixed": "#2e1065",
+                        "on-error-container": "#991b1b",
+                        "secondary-container": "#d8dae6",
+                        "on-primary": "#ffffff",
+                        "error-container": "#fee2e2",
+                        "secondary": "#6c6e7e",
+                        "on-primary-fixed-variant": "#4338ca",
+                        "primary": "#6366f1",
+                        "surface-bright": "#edeef4",
+                        "on-secondary-fixed": "#1a1b26",
+                        "on-secondary": "#ffffff",
+                        "error": "#dc2626",
+                        "secondary-fixed-dim": "#b8baca",
+                        "surface-variant": "#dcdee4",
+                        "on-tertiary-container": "#3b1f63",
+                        "on-surface-variant": "#585a68",
+                        "on-primary-fixed": "#1e1b4b",
+                        "on-secondary-container": "#585a68",
+                        "outline-variant": "#d0d2dc",
+                        "inverse-primary": "#a5b4fc",
+                        "inverse-surface": "#2e3040",
+                        "surface-tint": "#6366f1",
+                        "surface-container-lowest": "#f0f2f8",
+                        "on-surface": "#2e3040",
+                        "surface-container": "#e2e4ea",
+                        "primary-container": "#818cf8",
+                        "on-primary-container": "#e0e2ff",
+                        "surface-container-highest": "#d6d8de",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#404252",
+                        "background": "#e8eaf0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#c4b5fd",
+                        "surface": "#e8eaf0",
+                        "on-tertiary-fixed-variant": "#5b21b6",
+                        "tertiary-fixed": "#ede9fe",
+                        "surface-container-high": "#dcdee4",
+                        "tertiary-container": "#a78bfa",
+                        "on-background": "#2e3040",
+                        "outline": "#8a8c9a",
+                        "tertiary": "#7c3aed",
+                        "secondary-fixed": "#d8dae6",
+                        "primary-fixed-dim": "#a5b4fc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #e8eaf0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .neomorph-raised {
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6);
+        }
+        .neomorph-inset {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5);
+        }
+        .neomorph-active:active {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5);
+            transform: scale(0.98);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container">
+<!-- TopNavBar Execution -->
+<header class="flex justify-between items-center px-6 sticky top-0 z-50 bg-surface w-full h-16 shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)]">
+<div class="flex items-center gap-4">
+<span class="text-xl font-headline font-semibold text-primary">Lumina OS</span>
+<div class="hidden md:flex ml-8 items-center bg-surface neomorph-inset rounded-full px-4 py-1.5">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-body p-0 w-48 text-on-surface placeholder:text-outline" placeholder="Search squads..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<button class="neomorph-raised w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="neomorph-raised w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">videogame_asset</span>
+</button>
+<button class="neomorph-raised w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full neomorph-raised p-0.5">
+<img alt="User profile with soft depth avatar frame" class="rounded-full w-full h-full object-cover" data-alt="A close-up portrait of a professional gamer wearing a sleek, modern headset in a soft-lit room with cool indigo and violet ambient lighting. The person has a calm, focused expression, set against a background of high-tech geometric wall panels that reflect the Silk design aesthetic. The lighting is diffused and soft, emphasizing clean lines and a premium, neomorphic feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7CjjwSR1nPNtQB8sdVc1J4P8rAfwEopNSAAyzXpmCEEwXapj8eVYpGqOhJMxc_WpPXV2VD9MmvVKZRl7GV1ZAQdtGehBUuJoSF3B-128Uff6xNahvETU10S9O9xb3WsveyIuwqH5-q6rbmH7gnmLBx6aZqtY-9QZ5M4Yh8x7Pjrcqpf_kIofaFs48I0Ldp-b_q3eAm7fEd8aU9DT0dn2zZOci9DOCl3VlpFHOBmVKLOgP9iXUgSwuNz3Jo9Eon1rTPrsqmyFxTw"/>
+</div>
+</div>
+</header>
+<div class="flex">
+<!-- SideNavBar Execution -->
+<nav class="fixed left-0 top-0 hidden lg:flex flex-col h-full py-8 space-y-4 bg-surface h-screen w-64 rounded-r-xl shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] z-40">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 neomorph-raised rounded-lg flex items-center justify-center bg-surface">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+<div>
+<h1 class="text-lg font-headline font-semibold text-primary leading-tight">Lumina</h1>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-medium">Premium Ecosystem</p>
+</div>
+</div>
+</div>
+<div class="flex-1 px-4 space-y-3">
+<a class="flex items-center gap-3 px-4 py-3 font-body font-medium text-on-surface-variant hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body font-medium shadow-[inset_4px_4px_8px_rgba(0,0,0,0.06),inset_-4px_-4px_8px_rgba(255,255,255,0.5)] text-primary rounded-lg mx-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span>Social</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body font-medium text-on-surface-variant hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">sports_esports</span>
+<span>Play</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body font-medium text-on-surface-variant hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">subscriptions</span>
+<span>Library</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 font-body font-medium text-on-surface-variant hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="px-4 py-4 space-y-3 border-t border-surface-variant/30">
+<div class="neomorph-raised p-4 rounded-xl mb-4 bg-primary/5">
+<p class="text-xs font-semibold text-primary mb-1">Upgrade Available</p>
+<p class="text-[11px] text-on-surface-variant mb-3">Join the elite ranks with Pro features.</p>
+<button class="w-full py-2 bg-primary text-white text-xs font-bold rounded-lg shadow-lg hover:shadow-primary/20 active:scale-95 transition-all">Go Pro</button>
+</div>
+<a class="flex items-center gap-3 px-4 py-2 text-sm text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-sm text-on-surface-variant hover:text-error" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 lg:ml-64 p-8 min-h-screen">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+<div>
+<h2 class="text-3xl font-headline font-semibold text-on-surface mb-2">Tactical Squads</h2>
+<p class="text-on-surface-variant max-w-md">Coordinate, dominate, and climb the global leaderboards with your specialized strike team.</p>
+</div>
+<div class="flex gap-4">
+<div class="neomorph-raised px-4 py-2 rounded-xl flex items-center gap-2 bg-surface">
+<span class="material-symbols-outlined text-tertiary">filter_list</span>
+<span class="text-sm font-medium">All Regions</span>
+</div>
+<div class="neomorph-raised px-4 py-2 rounded-xl flex items-center gap-2 bg-surface">
+<span class="material-symbols-outlined text-primary">sort</span>
+<span class="text-sm font-medium">Win Rate</span>
+</div>
+</div>
+</div>
+<!-- Squads Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Squad Card 1 -->
+<div class="neomorph-raised rounded-xl p-6 bg-surface group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 neomorph-inset rounded-xl p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">shield</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-tighter text-tertiary mb-1">Platinum League</span>
+<div class="flex items-center gap-1 bg-surface-container neomorph-inset px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-[10px] font-bold text-on-surface">3/5 ACTIVE</span>
+</div>
+</div>
+</div>
+<h3 class="text-xl font-headline font-semibold text-on-surface mb-1">Iron Phalanx</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"Unbroken, unyielding, undeniable."</p>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="neomorph-inset p-3 rounded-xl bg-surface">
+<p class="text-[10px] uppercase text-outline font-bold mb-1">Win Rate</p>
+<p class="text-lg font-headline font-semibold text-primary">78.4%</p>
+</div>
+<div class="neomorph-inset p-3 rounded-xl bg-surface">
+<p class="text-[10px] uppercase text-outline font-bold mb-1">Total PC</p>
+<p class="text-lg font-headline font-semibold text-on-surface">12,450</p>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-3">
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A cinematic portrait of a young tactical strategist with neon indigo facial markings, wearing advanced fiber-optic armor. The background is a blurred high-tech command center with soft depth and ambient violet lighting. The image captures a sense of modern digital camaraderie in a high-fidelity gaming ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkhLq_e68d2SXsf0XAKPgPvVOL_8KpDSPE9ZR92Zgro1gwVnhQOa2DmMRCr3WP0_Z-ox3fj_2Y1fWxk_d7IsPFh3NcsONFOFdsxX--Qak2UTdYh4hp4GZ_8VsefSQV35jjTVBYgyMVyzR0E0Fzqtn2tIwkTVOzZg94bsrJvcxhfQvAtSS_6tcMf2dF0p2PcPHGd2R3wfXsSFugKz3u6JmR5alscLvf3HUgT7tEiew4PK-wiTU1upK4Gr5c0qVZHDLVwzxSFDcd6Q"/>
+</div>
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A portrait of a female cyber-athlete with vibrant violet hair and metallic interface implants near her temple. She is illuminated by a soft, directional light that creates subtle neomorphic shadows on her tech-focused attire. The overall mood is sophisticated and clean, echoing the modern Silk UI design language." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4sckpm_QIelufUdaIIrIrPzmo8Xn2L7_aA3mXNredGTlJGsf34JbAHbu0y47C1xiMDs6_xdYuwyNilEUjeDlmS5WPPRDGNI0B1yia9W9eEMHgrtkAUcyahlpts82jp5sg1PYCdPvuuxKrChJTKOQRSe5iPNwgvPYHNj5YGW2yfbYxXUgEVEOgnHzkBjPrzp5ZxaxtSiS5WGAiDkZTprPxQIiRJ3Dcg2fnOhfIF1PlfVM6Xmv0ZpkvtcvtQ1M80B85m6JSPJzqTA"/>
+</div>
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A portrait of a male gamer in his late 20s with a sharp, focused gaze and minimalist tech-wear. The lighting is soft and even, highlighting the clean, cool gray tones of the surrounding environment. The visual style is premium and high-fidelity, perfectly integrated into a modern gaming platform aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXF4v7rCFLBsKsHWnEdfP6kiD50-6DG0ot1kU8NDLjWrQULnexZNICeVJhwk0LSoCKcIKyPfssrKitDpbuMTxiy4Fk70DFeYhDMfAXQu9JT6RadaFsJ_0gSiKAtHHwKbiKvcwBZgn-HW9c9a5Lf8aoYNEdSVn467aSj08FUT3KvElzraJoPfQF_dsEZPYhune0KPGZMpI-oo4kmleGUTFKpld-nIXK4Md05EBTHQpBA0FK3wsO5c7V2El9iCwYbn4xcnxmY6xtDw"/>
+</div>
+<div class="w-9 h-9 rounded-full neomorph-inset bg-surface-container flex items-center justify-center text-[10px] font-bold text-on-surface-variant">
+                                +2
+                            </div>
+</div>
+<button class="neomorph-raised neomorph-active px-5 py-2.5 rounded-xl bg-surface text-primary font-bold text-sm transition-all">Join Squad</button>
+</div>
+</div>
+<!-- Squad Card 2 -->
+<div class="neomorph-raised rounded-xl p-6 bg-surface group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 neomorph-inset rounded-xl p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-3xl">bolt</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-tighter text-primary mb-1">Diamond Elite</span>
+<div class="flex items-center gap-1 bg-surface-container neomorph-inset px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+<span class="text-[10px] font-bold text-on-surface">5/5 FULL</span>
+</div>
+</div>
+</div>
+<h3 class="text-xl font-headline font-semibold text-on-surface mb-1">Viper Strike</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"Speed is the only variable that matters."</p>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="neomorph-inset p-3 rounded-xl bg-surface">
+<p class="text-[10px] uppercase text-outline font-bold mb-1">Win Rate</p>
+<p class="text-lg font-headline font-semibold text-tertiary">92.1%</p>
+</div>
+<div class="neomorph-inset p-3 rounded-xl bg-surface">
+<p class="text-[10px] uppercase text-outline font-bold mb-1">Total PC</p>
+<p class="text-lg font-headline font-semibold text-on-surface">28,900</p>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-3">
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A detailed portrait of a professional e-sports player with sleek, silver-toned glasses and a modern, minimalist headset. The background is a soft-focus digital workspace with indigo and violet light accents. The image conveys a sense of high-performance and technological elegance, consistent with a soft UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4vsBx8l4RLcz6NhPibQYZX6fBDm3rCJ5_lp0BDge8RqMfZw9rof_x99L8rW-0Jcc8nz8oc5iIYOag2lU9aaoKa4oZ1-OhstBzWUAUozAoXrc_RLLATSen1r0aC_ABLwNwJc_K1YNDty9Ydw3cZu3Po0P6HbFgta7mID8yHy0ltw1tQm2wPiFijGN28uulHsC4lXeNfeH9Spd3ZXXezG1FDaW_92jja5M67M2BvrLQAvQ5_fmt2vhXlqHSlWdDiuXkTVlgaVA3mA"/>
+</div>
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A portrait of a young woman with a focused expression, wearing tactical tech-wear with subtle glowing indigo seams. She is set against a pristine, minimalist backdrop with soft shadows that evoke a neomorphic depth. The lighting is clean and professional, emphasizing a modern gaming lifestyle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2cn3uHUWyiRINwI5JLLUjjb_BD4ddE5bpnAiCaRSfpGRQQxQeuQOIQpA0l73uLYBPHeNc-wpI4mKmzprph8L9n9c6K9_OxIfOqNsR2bGL8WoKRaNQC9g1agTjL_fHYr8fpIZ4ujI-jejZ4z9dYq5rSGmQ6XZeEUOaCgCzw6Z0L8GZvrmmRlBsINEbBOACE82uZUGMgizmlNiktxb5KZU9JmnMldg0g3DRJCd8qs_Y8XjnGKTSMfsFSbLTzLS-SObnJLpN7bTobQ"/>
+</div>
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A close-up of a diverse gamer with a determined look, wearing a high-quality indigo headset. The environment is clean and modern, with soft lighting and an extruded light aesthetic that complements a premium digital platform. The color palette is composed of cool grays, indigo, and violet." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9flLOOzSd_ItLdvWcHzH8xKTzKL8TO8uw5mmhju1VkFj56jXRDhELUodBcjldv63AarHbIKDWAH_9ZvdR7uKqp87MKjopAIrKZ5q5tZK9SQM-MMlinwwv-4crcjrLR36kmcqFhabevfEZ64XE8GPn_Skra_ngMJoz7VJb1xaohu8QPb2A9Tu9X0hlOisxLdwbJZyLKYlqTO_cjO7AqMXyHOWA3316NALdUVzD9QxpUwHuyLH7JzeQtXgmElP2JBZkWJBItlSykQ"/>
+</div>
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A portrait of a male cyber-athlete in a minimalist, high-tech gaming room. The scene is illuminated by soft, diffused light sources that create a tactile, neomorphic feel. His attire is sleek and functional, in a palette of deep grays and vibrant indigo accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDneXbLzeT35Yci43J4l-YHDORDWYD06559vtnKnJKgqMpXoGDD0NVE_6y5ra6j_YyiWbNfrsSvwp3DAnXphIH4NDRa1qc2hfygRe6e6-iW8TWs0RV6Rq0Rdtc7JHQ0qAgSwGR6EZ9SE3aLOsb0V5AW0crh1tXEMPh1Y9H5uIEU5i3nQLuMBHnEaL-YDra5MlPZRcqh1o0AOpIBXQ-Y_Hj_s5F6D-brXYm_bmRltM8le5593jfwzzZMOxPXytHEwAR8U6MOEob62A"/>
+</div>
+</div>
+<button class="neomorph-inset px-5 py-2.5 rounded-xl bg-surface text-on-surface-variant font-bold text-sm cursor-not-allowed">Squad Full</button>
+</div>
+</div>
+<!-- Squad Card 3 -->
+<div class="neomorph-raised rounded-xl p-6 bg-surface group hover:translate-y-[-4px] transition-transform duration-300">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 neomorph-inset rounded-xl p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">token</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-tighter text-outline mb-1">Gold Rank</span>
+<div class="flex items-center gap-1 bg-surface-container neomorph-inset px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-[10px] font-bold text-on-surface">1/5 ACTIVE</span>
+</div>
+</div>
+</div>
+<h3 class="text-xl font-headline font-semibold text-on-surface mb-1">Neon Ghosts</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"They won't see us until it's too late."</p>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="neomorph-inset p-3 rounded-xl bg-surface">
+<p class="text-[10px] uppercase text-outline font-bold mb-1">Win Rate</p>
+<p class="text-lg font-headline font-semibold text-on-surface-variant">52.8%</p>
+</div>
+<div class="neomorph-inset p-3 rounded-xl bg-surface">
+<p class="text-[10px] uppercase text-outline font-bold mb-1">Total PC</p>
+<p class="text-lg font-headline font-semibold text-on-surface">4,120</p>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-3">
+<div class="w-9 h-9 rounded-full neomorph-raised border-2 border-surface overflow-hidden">
+<img alt="Member" class="w-full h-full object-cover" data-alt="A portrait of a focused gamer with soft, natural lighting. The person wears a modern, sleek gaming headset. The background is a clean, minimalist room with subtle neomorphic textures and a palette dominated by cool grays and soft indigo, creating a premium and professional visual tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbSdr74z-mDkjCAw0NZ5wnSerG4LfDXqUcUgGVkBn5jrKKFlfpALsyWjtApe__7nqvfLIR76xiCpYaO4pNp5zROoVwh8OLqmcLkTaAUkq1HimV3uV3J9BtX3m0y112SQeVp7IqhgWlbKdrboy5t5r91YiXUuSuPtZkImg7ZQ_ZYr5f2E0GFDsvZitgcnWTbh6sAdzaH3R6lE5N155-wvs1bcF8kmU4O6TGHqtthNACe5gM75AkS2W8M_KSM5x9MceEvhsSxtn4HQ"/>
+</div>
+<div class="w-9 h-9 rounded-full neomorph-inset bg-surface-container flex items-center justify-center text-[10px] font-bold text-on-surface-variant">
+                                +0
+                            </div>
+</div>
+<button class="neomorph-raised neomorph-active px-5 py-2.5 rounded-xl bg-surface text-primary font-bold text-sm transition-all">Join Squad</button>
+</div>
+</div>
+<!-- Create Squad Feature (Interactive Card) -->
+<div class="neomorph-inset rounded-xl p-6 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="w-16 h-16 neomorph-raised rounded-full flex items-center justify-center bg-surface mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">add</span>
+</div>
+<h3 class="text-lg font-headline font-semibold text-on-surface">Form New Squad</h3>
+<p class="text-xs text-on-surface-variant text-center mt-2 max-w-[180px]">Gather your friends and start your journey to the top.</p>
+</div>
+<!-- Global Stats Card -->
+<div class="neomorph-raised rounded-xl p-6 bg-surface col-span-1 md:col-span-2 xl:col-span-2 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-10 -mt-10"></div>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h3 class="text-xl font-headline font-semibold text-on-surface">Community Performance</h3>
+<p class="text-sm text-on-surface-variant">Real-time engagement across Lumina OS Squads.</p>
+</div>
+<div class="flex gap-2">
+<span class="text-[10px] font-bold px-3 py-1 rounded-full bg-primary/10 text-primary">LIVE UPDATES</span>
+</div>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold text-outline">Total Squads</p>
+<p class="text-2xl font-headline font-semibold text-on-surface">12,402</p>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[65%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold text-outline">Active Matches</p>
+<p class="text-2xl font-headline font-semibold text-on-surface">1,845</p>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[42%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold text-outline">Avg. Win Rate</p>
+<p class="text-2xl font-headline font-semibold text-on-surface">54.2%</p>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-[54%]"></div>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold text-outline">Top Region</p>
+<p class="text-2xl font-headline font-semibold text-on-surface">EU-WEST</p>
+<div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[88%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Mobile Navigation (BottomNavBar) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-16 bg-surface shadow-[0_-6px_12px_rgba(0,0,0,0.08)] flex justify-around items-center px-4 z-50">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">DASH</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="text-[10px] font-bold">SOCIAL</span>
+</button>
+<div class="relative -top-6">
+<button class="w-14 h-14 bg-primary rounded-full shadow-lg shadow-primary/30 flex items-center justify-center text-white active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">sports_esports</span>
+</button>
+</div>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">subscriptions</span>
+<span class="text-[10px] font-bold">LIBRARY</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-bold">SETTS</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.neomorph-raised').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input');
+        const searchContainer = searchInput.parentElement;
+        
+        searchInput.addEventListener('focus', () => {
+            searchContainer.style.boxShadow = 'inset 6px 6px 12px rgba(0,0,0,0.08), inset -6px -6px 12px rgba(255,255,255,0.6)';
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            searchContainer.style.boxShadow = 'inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5)';
+        });
+    </script>
+</body></html>

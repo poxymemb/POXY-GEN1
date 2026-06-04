@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina OS - Friends Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #e8eaf0;
+            color: #2e3040;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .neomorph-raised {
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.08), -6px -6px 12px rgba(255,255,255,0.6);
+        }
+
+        .neomorph-inset {
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.5);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .active-inset {
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.1), inset -3px -3px 6px rgba(255,255,255,0.8);
+        }
+
+        .glass-highlight {
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d4d6dc",
+                        "surface-container-low": "#e5e7ed",
+                        "inverse-on-surface": "#e8eaf0",
+                        "primary-fixed": "#e0e2ff",
+                        "on-tertiary-fixed": "#2e1065",
+                        "on-error-container": "#991b1b",
+                        "secondary-container": "#d8dae6",
+                        "on-primary": "#ffffff",
+                        "error-container": "#fee2e2",
+                        "secondary": "#6c6e7e",
+                        "on-primary-fixed-variant": "#4338ca",
+                        "primary": "#6366f1",
+                        "surface-bright": "#edeef4",
+                        "on-secondary-fixed": "#1a1b26",
+                        "on-secondary": "#ffffff",
+                        "error": "#dc2626",
+                        "secondary-fixed-dim": "#b8baca",
+                        "surface-variant": "#dcdee4",
+                        "on-tertiary-container": "#3b1f63",
+                        "on-surface-variant": "#585a68",
+                        "on-primary-fixed": "#1e1b4b",
+                        "on-secondary-container": "#585a68",
+                        "outline-variant": "#d0d2dc",
+                        "inverse-primary": "#a5b4fc",
+                        "inverse-surface": "#2e3040",
+                        "surface-tint": "#6366f1",
+                        "surface-container-lowest": "#f0f2f8",
+                        "on-surface": "#2e3040",
+                        "surface-container": "#e2e4ea",
+                        "primary-container": "#818cf8",
+                        "on-primary-container": "#e0e2ff",
+                        "surface-container-highest": "#d6d8de",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#404252",
+                        "background": "#e8eaf0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#c4b5fd",
+                        "surface": "#e8eaf0",
+                        "on-tertiary-fixed-variant": "#5b21b6",
+                        "tertiary-fixed": "#ede9fe",
+                        "surface-container-high": "#dcdee4",
+                        "tertiary-container": "#a78bfa",
+                        "on-background": "#2e3040",
+                        "outline": "#8a8c9a",
+                        "tertiary": "#7c3aed",
+                        "secondary-fixed": "#d8dae6",
+                        "primary-fixed-dim": "#a5b4fc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 flex flex-col h-full py-8 space-y-4 bg-surface dark:bg-surface h-screen w-64 rounded-r-xl shadow-[6px_6px_12px_rgba(0,0,0,0.08),-6px_-6px_12px_rgba(255,255,255,0.6)] z-50">
+<div class="px-6 mb-8">
+<h1 class="text-2xl font-headline font-semibold text-primary dark:text-primary-fixed">Lumina</h1>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-widest mt-1">Premium Ecosystem</p>
+</div>
+<nav class="flex-1 px-4 space-y-3">
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-body font-medium">Dashboard</span>
+</a>
+<a class="flex items-center px-4 py-3 shadow-[inset_4px_4px_8px_rgba(0,0,0,0.06),inset_-4px_-4px_8px_rgba(255,255,255,0.5)] text-primary dark:text-primary-fixed rounded-lg mx-2" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-body font-medium">Social</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">sports_esports</span>
+<span class="font-body font-medium">Play</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">subscriptions</span>
+<span class="font-body font-medium">Library</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-body font-medium">Settings</span>
+</a>
+</nav>
+<div class="px-6 pt-6 border-t border-surface-container">
+<button class="w-full py-3 px-4 bg-surface neomorph-raised rounded-xl text-primary font-semibold flex items-center justify-center space-x-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">star</span>
+<span>Go Pro</span>
+</button>
+</div>
+<div class="px-4 mt-auto space-y-2">
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3">help</span>
+<span class="font-body font-medium">Help</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3">logout</span>
+<span class="font-body font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-8">
+<!-- Top App Bar Content -->
+<header class="flex justify-between items-center mb-12">
+<div class="flex-1 max-w-xl">
+<div class="neomorph-inset bg-surface rounded-full flex items-center px-6 py-3">
+<span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface w-full font-body placeholder-on-surface-variant/50" placeholder="Search friends or groups..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-6 ml-8">
+<button class="neomorph-raised p-3 rounded-full text-on-surface-variant hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="neomorph-raised p-3 rounded-full text-on-surface-variant hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined">videogame_asset</span>
+</button>
+<button class="neomorph-raised p-3 rounded-full text-on-surface-variant hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined">mail</span>
+</button>
+<div class="neomorph-raised p-1 rounded-full">
+<img alt="User profile" class="w-10 h-10 rounded-full" data-alt="A close-up portrait of a professional male with a kind expression, shot in a high-key studio setting. The lighting is soft and even, highlighting subtle textures in the skin. The background is a clean, minimalist off-white, matching a premium tech ecosystem aesthetic. The image is crisp, modern, and conveys a sense of approachable leadership." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1jOmLuvDSLEL-NBE0vnIzpyTDHkG5eFKDw8zoE1TCQ848_FPArnUFnl2rhQIMA4B-XTaX8Un5QQpUqSUJ_QBv833m7QYG_nKWa1tQbBrjzHT9MZA8V8ted5HaaIdHyIfZqfwp4YORfHek11G8ImYxv2GHJkOHAP8trB1EdtBepoZaBwhRn0mPTg74HC1_e7tPGjp6qypJn31MOd9GGMtpjDooCnteS3Nr9h9nw9QBcgsuBoHH8HbFvX4TaYC2_uCJ1zPXVk23cg"/>
+</div>
+</div>
+</header>
+<!-- Page Title -->
+<div class="mb-10">
+<h2 class="text-3xl font-headline font-semibold text-on-surface">Friends Hub</h2>
+<p class="text-on-surface-variant mt-1">Connect, trade, and play with your inner circle.</p>
+</div>
+<!-- Friends Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Friend Passport 1 -->
+<div class="neomorph-raised bg-surface rounded-xl p-6 flex flex-col items-center transition-all duration-300 hover:translate-y-[-4px]">
+<div class="relative mb-4">
+<div class="neomorph-raised p-2 rounded-full bg-surface">
+<img alt="Friend avatar" class="w-24 h-24 rounded-full object-cover" data-alt="A professional headshot of a woman with a confident smile, set against a soft, blurred urban background during the golden hour. The lighting is warm and cinematic, accentuating her features. The overall style is modern and high-end, fitting for a premium social network. The color palette includes soft warm tones and cool sky blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEKS3aMTRjZ3F2CSTgUNjhpyOdeaASTTg1MR2_eCWT-U7o_nIhgSu4Yodk8W9OiCep6o23ZqVLPTioaLw5-W4LHeCVtkLhOiOD6Lm0u34RMYHBHQ-PspNV08_Py1Q-tMf_a7rorBtYT17X6IQhOIcsekZ2NhWHz0whKlNQ0ODSwPJCDD-TywGqYni9JpReovhH5DDKZKI3HjoywlE6XlYb1D5b-8ptLUpmkwSx8PFZ9kL5ZMZ0xfNyxrHmnRkYIIulXltPUhuFNA"/>
+</div>
+<div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-surface rounded-full" title="Online"></div>
+</div>
+<h3 class="text-xl font-semibold text-on-surface">Elena Vance</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"Always ready for a co-op run!"</p>
+<div class="grid grid-cols-3 gap-4 w-full">
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-primary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Message</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-tertiary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">swap_horizontal_circle</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Trade</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-on-surface-variant flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">person</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Profile</span>
+</button>
+</div>
+</div>
+<!-- Friend Passport 2 -->
+<div class="neomorph-raised bg-surface rounded-xl p-6 flex flex-col items-center transition-all duration-300 hover:translate-y-[-4px]">
+<div class="relative mb-4">
+<div class="neomorph-raised p-2 rounded-full bg-surface">
+<img alt="Friend avatar" class="w-24 h-24 rounded-full object-cover" data-alt="A close-up portrait of a young man with glasses, looking thoughtfully off-camera. The lighting is soft and directional, creating gentle shadows that emphasize a sophisticated, intellectual vibe. The background is a minimalist studio grey, keeping the focus entirely on the subject. High-end, sharp detail, light-mode friendly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdZRyxrpI-qI-66cW1tqI-v84xbWRhttxzxV_5RomqRfnKatuEfWjXCOWWT5_AdsP5J471cKnLCmGC7XUw3kCErkfFmmrjrnLwV75jb7T65JHyiw9us8bSe0-o5oAbfYWJ0EvGmJIh25rK-WDNetWxMhmGqo6-T8qCl1g7sTVFMEK2vd4OuDYddxe-8vzT_fgZ73h9ky35eE-x3CzgLshHCi5IufnpJOsMKPxWOrpLigOLkk49Owb7cEi4QDDhdcCwCgFhqYal9A"/>
+</div>
+<div class="absolute bottom-1 right-1 w-5 h-5 bg-surface-dim border-4 border-surface rounded-full" title="Offline"></div>
+</div>
+<h3 class="text-xl font-semibold text-on-surface">Marcus Thorne</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"Currently studying the meta..."</p>
+<div class="grid grid-cols-3 gap-4 w-full">
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-primary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">chat_bubble</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Message</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-tertiary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">swap_horizontal_circle</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Trade</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-on-surface-variant flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">person</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Profile</span>
+</button>
+</div>
+</div>
+<!-- Friend Passport 3 -->
+<div class="neomorph-raised bg-surface rounded-xl p-6 flex flex-col items-center transition-all duration-300 hover:translate-y-[-4px]">
+<div class="relative mb-4">
+<div class="neomorph-raised p-2 rounded-full bg-surface">
+<img alt="Friend avatar" class="w-24 h-24 rounded-full object-cover" data-alt="A portrait of a woman in business casual attire, smiling warmly. The setting is a bright, airy modern office with lush green plants in the soft-focus background. The lighting is natural and bright, conveying a professional yet friendly atmosphere. The visual style is clean, crisp, and high-fidelity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMY0JNATd17eIg2SaxVniD5JPTgcwo3QmuQAMtXsXgN5vj7qzkaD6G4yIgSW_sKeHRmb8Uhfq6qvNYIrOW7KiYTKpk7RJ6chDeBIck_dZcWbHcXtzOvO2s1sH8Bx5pYvChf4U2J0mPlsdp1Tc8__lZv0FPVav1OEdOLurdlOmQLzyq0uwnTt_wKaC6Qx2h-j-kmreCboJst58lY_RN6vYCTRzkr5Y0370vFkczmZa6VbRB_VUG0MOF-DpUdV9gxpMwBheDMvqbVA"/>
+</div>
+<div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-surface rounded-full" title="Online"></div>
+</div>
+<h3 class="text-xl font-semibold text-on-surface">Sarah Chen</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"Playing: Lumina Quest IV"</p>
+<div class="grid grid-cols-3 gap-4 w-full">
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-primary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Message</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-tertiary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">swap_horizontal_circle</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Trade</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-on-surface-variant flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">person</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Profile</span>
+</button>
+</div>
+</div>
+<!-- Friend Passport 4 -->
+<div class="neomorph-raised bg-surface rounded-xl p-6 flex flex-col items-center transition-all duration-300 hover:translate-y-[-4px]">
+<div class="relative mb-4">
+<div class="neomorph-raised p-2 rounded-full bg-surface">
+<img alt="Friend avatar" class="w-24 h-24 rounded-full object-cover" data-alt="A headshot of a man with a beard and a friendly gaze. He is wearing a minimalist navy blue sweater. The background is a clean, neutral white wall with soft, natural light coming from the side, creating a classic and timeless portrait. High resolution, elegant and modern look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz84iokpQKP2R5CrMV-BRTf9kHl2pa-T9hwF2e5dywoit9QGci92EtPogrxfRmlQGZF1HviHccKBFEiZUoItGh_xVSL0SMu60Iy38FaqW1o27n174wfsYHzWPQAEQd2lwiJre3zxTmGIKreMKpnhH1r1R9uWk2mlcUIuETyOldSmAVxw09HqEvyji2trY7pbS1I1UnoKNz9PWjAQJI7FGoUvdtLadbm9DM0yxAQyZhLFVHkLyE6yKQF5GbLSz0hPe5NoyrRKigrg"/>
+</div>
+<div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-surface rounded-full" title="Online"></div>
+</div>
+<h3 class="text-xl font-semibold text-on-surface">Julian Rossi</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"LF someone to trade rare cores."</p>
+<div class="grid grid-cols-3 gap-4 w-full">
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-primary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Message</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-tertiary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90" style="font-variation-settings: 'FILL' 1;">swap_horizontal_circle</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Trade</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-on-surface-variant flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">person</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Profile</span>
+</button>
+</div>
+</div>
+<!-- Friend Passport 5 -->
+<div class="neomorph-raised bg-surface rounded-xl p-6 flex flex-col items-center transition-all duration-300 hover:translate-y-[-4px]">
+<div class="relative mb-4">
+<div class="neomorph-raised p-2 rounded-full bg-surface">
+<img alt="Friend avatar" class="w-24 h-24 rounded-full object-cover" data-alt="A portrait of a woman with a creative and artistic flair. She has colorful hair and a warm, expressive face. The background is a soft, pastel-colored studio setting that complements the modern, neomorphic UI design. The lighting is diffused and flattering, creating a premium feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMF3NBaqrFU4Xwv0js6vMJNBrvSVvvHTyMOTVrzCcQrs_yDrlgCrY04HRDzWUa10boHKOpZYOulgsiWUq4XiVbsjcArGpeTRJpZLFVYJfkFXXqHXYsZ_aYfuEFPOehck1R7Y48_0gfz6mvuiDNFdcjFElj5_w5EBhEZJSNljfL8zjhaSsjMqMdIP610GFzorAmKDP1QWcmplTRnnGQ96Nq8EwHtzJPXeud6Rl51pesAiyso7u1J0FYueUd3IwKvx4JPLbEVdUbGg"/>
+</div>
+<div class="absolute bottom-1 right-1 w-5 h-5 bg-orange-400 border-4 border-surface rounded-full" title="Away"></div>
+</div>
+<h3 class="text-xl font-semibold text-on-surface">Aria Sterling</h3>
+<p class="text-sm text-on-surface-variant mb-6 italic">"Be right back, grabbing coffee."</p>
+<div class="grid grid-cols-3 gap-4 w-full">
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-primary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">chat_bubble</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Message</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-tertiary flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">swap_horizontal_circle</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Trade</span>
+</button>
+<button class="neomorph-inset bg-surface p-3 rounded-lg text-on-surface-variant flex flex-col items-center justify-center transition-all active:scale-95 group">
+<span class="material-symbols-outlined text-xl group-active:scale-90">person</span>
+<span class="text-[10px] mt-1 font-bold uppercase tracking-tighter">Profile</span>
+</button>
+</div>
+</div>
+<!-- Add Friend Placeholder -->
+<div class="neomorph-raised bg-surface rounded-xl p-6 border-2 border-dashed border-outline-variant flex flex-col items-center justify-center group cursor-pointer active:scale-98 transition-all">
+<div class="neomorph-inset p-6 rounded-full bg-surface mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant">person_add</span>
+</div>
+<h3 class="text-lg font-semibold text-on-surface-variant">Add New Friend</h3>
+<p class="text-xs text-on-surface-variant/60">Expand your network</p>
+</div>
+</section>
+<!-- Activity Feed (Bento-like Section) -->
+<section class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 neomorph-raised bg-surface rounded-xl p-8">
+<h4 class="text-xl font-headline font-semibold mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2 text-primary">history</span>
+                    Recent Activity
+                </h4>
+<div class="space-y-4">
+<div class="neomorph-inset p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center">
+<img alt="Elena" class="w-8 h-8 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOOC-exFRbZTXSpqxVcQxTosumgzZuqRCDmF92MY7QwLOCP4SMt5QvsVO4IJBp-z_lrvv5OlnkRSvLF2-H1jg9kX7hWp41mfxHiBkHTEDTQrtXpRzWn9kYULPmKAgNKzkY8_EPBrO4TBQs4xHQEPROVixwyN6p7zWiQc3ULufPFGaaefTpoFvj--0u1rjr59O7QILFLyLLNNtdhPRG2eZtC0RZ7frduyc_rbhS3CrWtyjcjx79QabkaNsOf_5JaM9ilIui6Alm7g"/>
+<div>
+<p class="text-sm font-medium">Elena Vance <span class="text-on-surface-variant font-normal">unlocked a new achievement in</span> Lumina Quest</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">2 hours ago</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-tertiary">military_tech</span>
+</div>
+<div class="neomorph-inset p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center">
+<img alt="Sarah" class="w-8 h-8 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMA73Pr-CPijW0bjiI84vcElHGtXwMsSQwfYcWZtFFG4cIPbodxxCuTo9Ph85p8QsqOyZS2BUhqCRDjfaAUssMId27Wfd6kqKwK2mp044bMg--GASsPOAMjWXZvcIfG6Wlh3GvuGPE0gtso7CAFo79PKj9AKZtYqYhmjs5xFVJftcYbTjHgvYzyMMR0yeuwqWNgfhKkEtjGtTzEGYX0RyZaNYJfqr3omryH6e-KZS1xU8u6krUdwsT0dcy4V6yGwznJ67ZSxQfbQ"/>
+<div>
+<p class="text-sm font-medium">Sarah Chen <span class="text-on-surface-variant font-normal">invited you to a</span> Global Trade Hall</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">5 hours ago</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary">group_add</span>
+</div>
+</div>
+</div>
+<div class="neomorph-raised bg-surface rounded-xl p-8 flex flex-col">
+<h4 class="text-xl font-headline font-semibold mb-6">World Status</h4>
+<div class="flex-1 flex flex-col justify-center items-center text-center">
+<div class="neomorph-inset w-32 h-32 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-5xl text-primary" style="font-variation-settings: 'FILL' 1;">public</span>
+</div>
+<p class="text-2xl font-bold text-on-surface">1,204</p>
+<p class="text-sm text-on-surface-variant">Friends Online Globally</p>
+<button class="mt-8 py-3 px-6 neomorph-raised rounded-full text-sm font-semibold text-primary-container bg-primary active:scale-95 transition-all shadow-none">
+                        Join Global Hub
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Micro-interactions for neomorphic buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                if (button.classList.contains('neomorph-raised')) {
+                    button.classList.remove('neomorph-raised');
+                    button.classList.add('active-inset');
+                }
+            });
+            button.addEventListener('mouseup', () => {
+                if (button.classList.contains('active-inset')) {
+                    button.classList.remove('active-inset');
+                    button.classList.add('neomorph-raised');
+                }
+            });
+            button.addEventListener('mouseleave', () => {
+                if (button.classList.contains('active-inset')) {
+                    button.classList.remove('active-inset');
+                    button.classList.add('neomorph-raised');
+                }
+            });
+        });
+    </script>
+</body></html>

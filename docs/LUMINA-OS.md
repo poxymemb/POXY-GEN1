@@ -77,3 +77,9 @@ Uses the main app `sb` client and `currentUser` — no second login.
 ## Stitch reference
 
 Silk Edition screens (Messages, Friends, Squads, Activity, Notifications, Settings) are the visual source for light-mode tokens. Project ID `3452513058897199540` in Google Stitch.
+
+Canonical exports (HTML + PNG from MCP):
+
+- `stitch-export/lumina-os-screens.json`
+- `stitch-export/lumina-os/*.html`
+- Refresh: `node tools/fetch-lumina-os-stitch-screens.mjs`
