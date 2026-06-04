@@ -971,19 +971,43 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .bank-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .bank-input{width:100%;padding:11px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-family:inherit;font-size:13px;color:#1a1a1a;outline:none;background:#fff;transition:border-color 0.2s;margin-bottom:8px}
 .bank-input:focus{border-color:#FF5722}
-.psd-pay-methods{margin-bottom:4px}
-.psd-wallet-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.psd-pay-methods{margin-bottom:4px;width:100%}
+.psd-wallet-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px;width:100%}
+@media(max-width:420px){.psd-wallet-row{grid-template-columns:1fr}}
 .psd-pay-divider{text-align:center;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6a6a7a;margin:14px 0 12px;position:relative}
 .psd-pay-divider span{background:#0a0a0c;padding:0 10px;position:relative;z-index:1}
 .psd-pay-divider::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,0.08)}
-.btn-apple-pay,.btn-paypal-pay{width:100%;min-height:44px;padding:0 14px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:transform 0.15s,opacity 0.2s,box-shadow 0.2s}
-.btn-apple-pay{background:#fff;color:#000;box-shadow:0 1px 3px rgba(0,0,0,0.35)}
-.btn-apple-pay:hover{transform:scale(1.02);opacity:0.92}
-.btn-apple-pay:disabled,.btn-paypal-pay:disabled{opacity:0.4;cursor:not-allowed;transform:none}
-.apple-pay-mark{display:block;width:100%;max-width:52px;height:20px;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 20'%3E%3Cpath fill='%23000' d='M9.6 3.4c-.6.7-1.6 1.3-2.6 1.2-.1-1 .4-2.1 1-2.8.6-.8 1.7-1.3 2.5-1.3.1 1.1-.3 2.2-1 2.9zm1 1.6c-1.4-.1-2.6.8-3.3.8-.7 0-1.7-.7-2.8-.7-1.4 0-2.8.8-3.5 2.1-1.5 2.6-.4 6.4 1.1 8.5.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.1 0 1.9-1 2.6-2.1.8-1.2 1.1-2.4 1.1-2.5-2.2-.8-2.2-4.2.1-5.2zM18.2 4.8v10.4h1.8V9.6h.1l3.4 5.6h2.1l-3.7-5.8c1.9-.3 3-1.6 3-3.5 0-2.3-1.8-3.5-4.8-3.5h-3.1zm1.8 1.5h1.2c1.8 0 2.8.7 2.8 2.1s-1 2.2-2.9 2.2h-1.1V6.3zm11.5 9.1c1.2 0 2.3-.6 2.8-1.6h.1v1.4h1.7V4.8H32v1.5h-.1c-.5-1-1.6-1.6-2.8-1.6-2.5 0-4.2 2.2-4.2 5.2 0 3.1 1.6 5.3 4.1 5.3zm.4-1.5c-1.6 0-2.6-1.4-2.6-3.7 0-2.3 1-3.8 2.6-3.8 1.7 0 2.6 1.5 2.6 3.8 0 2.4-1 3.7-2.6 3.7zm8.5 1.5c1.4 0 2.2-.7 2.7-1.8h.1c0 .5.1 1 .2 1.4h1.6c-.2-1-.3-2.2-.3-3.6V4.8H43v1.5h-.1c-.5-1-1.4-1.6-2.5-1.6-2.2 0-3.6 1.7-3.6 4.2 0 2.6 1.3 4.3 3.5 4.3zm.3-1.5c-1.3 0-2-1.1-2-2.8v-.2c0-1.8.8-2.9 2-2.9 1.4 0 2 1.2 2 2.9 0 1.8-.7 3-2 3z'/%3E%3C/svg%3E")}
-.btn-paypal-pay{background:#ffc439;color:#003087;box-shadow:0 1px 3px rgba(0,0,0,0.25)}
-.btn-paypal-pay:hover{transform:scale(1.02);filter:brightness(1.03)}
-.paypal-mark{font-size:15px;font-weight:800;letter-spacing:-0.02em;font-family:'Helvetica Neue',Arial,sans-serif}
+.btn-wallet-pay{
+  width:100%;
+  height:48px;
+  min-height:48px;
+  padding:0 16px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  box-sizing:border-box;
+  transition:transform 0.15s,opacity 0.2s,box-shadow 0.2s;
+}
+.btn-wallet-pay:hover{transform:scale(1.02)}
+.btn-wallet-pay:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+.btn-apple-pay{background:#fff;color:#000;box-shadow:0 1px 2px rgba(0,0,0,0.28),inset 0 0 0 1px rgba(0,0,0,0.06)}
+.btn-apple-pay:hover{opacity:0.94}
+.btn-apple-pay .apple-pay-inner{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:88px;max-width:100%}
+.btn-apple-pay .apple-pay-icon{
+  flex:0 0 18px;
+  width:18px;
+  height:22px;
+  background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 814 1000'%3E%3Cpath fill='%23000' d='M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-163.3-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 125.8-297.5 249.8-297.5 65.5 0 120.1 43.1 161.2 43.1 37.9 0 98.1-45.7 172.5-45.7 27.7 0 127.5 2.6 193.6 99.2zm-234-181.6c27.1-32.4 46.7-77.3 46.7-122.2 0-6.2-.6-12.4-1.5-18.4-44.8 1.6-97.9 29.9-130 67.6-25.2 29.5-48.7 74.5-48.7 120.4 0 7.1.6 14.2 1.1 16.5 2.8.5 7.4 1.1 10.9 1.1 40.2 0 90.7-28.8 121.5-65z'/%3E%3C/svg%3E");
+}
+.btn-apple-pay .apple-pay-word{font-size:18px;font-weight:600;letter-spacing:-0.02em;line-height:1;white-space:nowrap}
+.btn-paypal-pay{background:#ffc439;color:#003087;box-shadow:0 1px 2px rgba(0,0,0,0.22)}
+.btn-paypal-pay:hover{filter:brightness(1.04)}
+.btn-paypal-pay .paypal-mark{font-size:18px;font-weight:700;letter-spacing:-0.03em;line-height:1;white-space:nowrap}
 .btn-pay-card{margin-top:12px;width:100%}
 .bank-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .bank-divider::before,.bank-divider::after{content:'';flex:1;height:1px;background:#e8e8e8}
@@ -1301,8 +1325,12 @@ body.dark-club .club-sub{color:#888}
           <div class="psd-pay-methods" id="psdPayMethods">
             <div class="bank-form-label">Payment method</div>
             <div class="psd-wallet-row">
-              <button type="button" class="btn-apple-pay" id="btnApplePay" aria-label="Pay with Apple Pay"><span class="apple-pay-mark" aria-hidden="true"></span></button>
-              <button type="button" class="btn-paypal-pay" id="btnPayPal" aria-label="Pay with PayPal"><span class="paypal-mark" aria-hidden="true">PayPal</span></button>
+              <button type="button" class="btn-wallet-pay btn-apple-pay" id="btnApplePay" aria-label="Pay with Apple Pay">
+                <span class="apple-pay-inner" aria-hidden="true"><span class="apple-pay-icon"></span><span class="apple-pay-word">Pay</span></span>
+              </button>
+              <button type="button" class="btn-wallet-pay btn-paypal-pay" id="btnPayPal" aria-label="Pay with PayPal">
+                <span class="paypal-mark" aria-hidden="true">PayPal</span>
+              </button>
             </div>
             <p class="psd-pay-divider" aria-hidden="true"><span>or pay with card</span></p>
             <div class="bank-form">
@@ -7028,11 +7056,12 @@ $('btnPayCard').addEventListener('click',async function(){
   try{await processTopup();}catch(e){showToast(e.message||'Payment failed.');}
   btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined">lock</span> Add Funds (Test)';
 });
+const APPLE_PAY_BTN_HTML='<span class="apple-pay-inner" aria-hidden="true"><span class="apple-pay-icon"></span><span class="apple-pay-word">Pay</span></span>';
 $('btnApplePay').addEventListener('click',async function(){
-  const btn=$('btnApplePay');btn.disabled=true;btn.textContent='Processing…';
+  const btn=$('btnApplePay');btn.disabled=true;btn.innerHTML='<span class="apple-pay-word" style="font-size:14px;font-weight:600">Processing…</span>';
   await new Promise(r=>setTimeout(r,900));
   try{await processTopup();}catch(e){showToast(e.message||'Apple Pay failed.');}
-  btn.disabled=false;btn.innerHTML='<span class="apple-pay-mark" aria-hidden="true"></span>';
+  btn.disabled=false;btn.innerHTML=APPLE_PAY_BTN_HTML;
 });
 const btnPayPalEl=$('btnPayPal');
 if(btnPayPalEl)btnPayPalEl.addEventListener('click',async function(){
