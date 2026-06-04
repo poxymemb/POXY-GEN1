@@ -18,7 +18,11 @@
   };
 
   function sb() {
-    return global.sb;
+    const client = global.sb;
+    if (!client) {
+      throw new Error('Supabase client not ready (window.sb missing)');
+    }
+    return client;
   }
 
   function currentUser() {

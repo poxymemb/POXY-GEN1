@@ -7,6 +7,7 @@
   const PATH_SEGMENT = '/lumina-os';
   let mounted = false;
   let exiting = false;
+  let entering = false;
 
   function appBase() {
     if (global.POXY_APP_BASE !== undefined) return global.POXY_APP_BASE || '';
@@ -170,6 +171,7 @@
 
   function enter(opts) {
     opts = opts || {};
+    if (entering || exiting) return;
     const user = resolveUser();
     if (!user) {
       ensureUser().then((u) => {
@@ -188,38 +190,56 @@
       });
       return;
     }
+    if (!global.sb) {
+      if (typeof global.showToast === 'function') {
+        global.showToast('Lumina OS still loading — try again in a moment.');
+      }
+      return;
+    }
     if (opts.user && String(opts.user) === String(user.id)) {
       if (typeof global.showToast === 'function') {
         global.showToast('Cannot message yourself.');
       }
       return;
     }
+    entering = true;
     const onPath =
       (global.location.pathname || '').indexOf(PATH_SEGMENT) >= 0;
     syncUrl(opts, onPath);
     hideMainLayout();
     if (!showOsRoot()) {
-      hideMainLayout();
+      entering = false;
       document.body.classList.remove('lumina-os-active');
+      showMainLayout();
       if (typeof global.showToast === 'function') {
         global.showToast('Lumina OS UI failed to load. Refresh the page.');
       }
       return;
     }
     document.title = 'Lumina OS';
-    persistRoute();
     if (global.LuminaOSApp && !mounted) {
-      mounted = true;
-      Promise.resolve(global.LuminaOSApp.mount(opts)).catch((err) => {
-        console.error('[LuminaOS] mount failed', err);
-        mounted = false;
-        if (typeof global.showToast === 'function') {
-          global.showToast('Lumina OS failed to load. Try refreshing.');
-        }
-        exit({ skipHistory: true });
-      });
+      Promise.resolve(global.LuminaOSApp.mount(opts))
+        .then(() => {
+          mounted = true;
+          persistRoute();
+          entering = false;
+        })
+        .catch((err) => {
+          console.error('[LuminaOS] mount failed', err);
+          mounted = false;
+          entering = false;
+          if (typeof global.showToast === 'function') {
+            global.showToast('Lumina OS failed to load. Try refreshing.');
+          }
+          exit({ failedMount: true });
+        });
     } else if (global.LuminaOSApp) {
+      mounted = true;
       global.LuminaOSApp.activate(opts);
+      persistRoute();
+      entering = false;
+    } else {
+      entering = false;
     }
   }
 
@@ -227,40 +247,33 @@
     opts = opts || {};
     if (exiting) return;
     exiting = true;
-    const done = () => {
-      mounted = false;
-      if (global.LuminaOSApp) global.LuminaOSApp.deactivate();
-      showMainLayout();
-      document.title = 'POXY WORLD';
+    entering = false;
+    mounted = false;
+    if (global.LuminaOSApp) global.LuminaOSApp.deactivate();
+    showMainLayout();
+    document.title = 'POXY WORLD';
+    const home = homePath();
+    try {
+      global.history.replaceState({ layout: 'main' }, '', home);
+    } catch (e) {}
+    try {
+      if (global.currentUser) {
+        const key =
+          (global.POXY_ROUTE_LS || 'poxy_active_route') +
+          '_' +
+          global.currentUser.id;
+        localStorage.setItem(
+          key,
+          JSON.stringify({ kind: 'stitch', tab: 'dashboard' })
+        );
+      }
+    } catch (e) {}
+    if (global.currentUser && typeof global.showStitchTab === 'function') {
       try {
-        if (global.currentUser) {
-          const key =
-            (global.POXY_ROUTE_LS || 'poxy_active_route') +
-            '_' +
-            global.currentUser.id;
-          const raw = localStorage.getItem(key);
-          if (raw && JSON.parse(raw)?.kind === 'lumina-os') {
-            localStorage.setItem(
-              key,
-              JSON.stringify({ kind: 'stitch', tab: 'dashboard' })
-            );
-          }
-        }
+        global.showStitchTab('dashboard');
       } catch (e) {}
-      if (!opts.skipHistory) {
-        const home = homePath();
-        global.history.pushState({ layout: 'main' }, '', home);
-      }
-      if (global.currentUser && typeof global.restoreActiveRoute === 'function') {
-        if (!global.restoreActiveRoute()) {
-          if (typeof global.showStitchTab === 'function') {
-            global.showStitchTab('dashboard');
-          }
-        }
-      }
-      exiting = false;
-    };
-    setTimeout(done, 80);
+    }
+    exiting = false;
   }
 
   function onRouteChange() {

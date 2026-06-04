@@ -3095,6 +3095,7 @@ const sb = supabase.createClient(
   'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG',
   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}}
 );
+window.sb=sb;
 const $=id=>document.getElementById(id);
 
 // ── ECONOMY ENGINE (PHASE 2 — deterministic) ──
@@ -10299,8 +10300,8 @@ function bootApp(){
 </script>
 <script src="assets/lumina-chat-config.js?v=3"></script>
 <script src="assets/lumina-os/store.js?v=2"></script>
-<script src="assets/lumina-os/router.js?v=5"></script>
-<script src="assets/lumina-os/app.js?v=6"></script>
+<script src="assets/lumina-os/router.js?v=7"></script>
+<script src="assets/lumina-os/app.js?v=7"></script>
 <script>
 bootApp();
 if(window._luminaOsPending&&typeof openLuminaOS==='function'){
