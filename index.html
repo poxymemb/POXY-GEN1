@@ -6878,6 +6878,54 @@ async function sharePoxy(poxyId,rarity,serialNumber){
   window.closeAllColCardMenus=closeColCardMenuPortal;
   window.addEventListener('resize',closeColCardMenuPortal);
   window.addEventListener('scroll',closeColCardMenuPortal,true);
+  function handleColMenuItem(mi,e){
+    if(e)e.stopPropagation();
+    const id=mi.dataset.id;
+    const action=mi.dataset.action;
+    if(colMultiSelectMode&&['feature','pin','list','share'].includes(action)){
+      showToast('Turn off Select Multiple Mode to use this action.');
+      closeColCardMenuPortal();
+      return;
+    }
+    const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(id));
+    const card=root.querySelector('.col-card[data-id="'+CSS.escape(String(id))+'"]');
+    if(!item)return;
+    if(action==='share'){
+      const tier=TIER_BY_ID[item.poxy_tier];
+      const rarityLabel=tier?tier.label:String(item.poxy_tier||'Poxy');
+      const serialNum=item.vip_serial!=null?item.vip_serial:(item.serial_number||'–');
+      sharePoxy(item.id,rarityLabel,serialNum).then(function(ok){
+        if(ok){
+          mi.innerHTML='<span class="ic">✅</span>'+(window.PoxyI18n?PoxyI18n.t('col.menu.copied'):'Copied!')+' ✅';
+          setTimeout(function(){closeColCardMenuPortal();},2000);
+        }else{
+          showToast('Could not copy link.');
+          closeColCardMenuPortal();
+        }
+      });
+      return;
+    }
+    closeColCardMenuPortal();
+    if(action==='crypto'){if(window.PoxyTrust&&PoxyTrust.inspect)PoxyTrust.inspect(item);else showToast('Crypto layer loading…');return;}
+    if(action==='pin'){togglePinPoxy(item.id,item.pinned_at);return;}
+    if(action==='feature'){toggleFeaturePoxy(item.id);return;}
+    if(action==='list'){
+      const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
+      pendingListItem={poxyId:item.id,tier,serial:item.serial_number||'',fromHunt:false};
+      openPriceModal();
+      return;
+    }
+    if(action==='burn'){burnPoxySecure(item.id,card);return;}
+  }
+  // The menu lives in a body-level portal, so its clicks never bubble to the
+  // collection root. Delegate menu-item actions on the portal directly.
+  if(colMenuPortal&&colMenuPortal.dataset.delegated!=='1'){
+    colMenuPortal.dataset.delegated='1';
+    colMenuPortal.addEventListener('click',function(e){
+      const mi=e.target.closest('.col-card-menu-item');
+      if(mi&&colMenuPortal.contains(mi))handleColMenuItem(mi,e);
+    });
+  }
   root.addEventListener('click',function(e){
     const kebab=e.target.closest('.col-card-kebab');
     if(kebab&&root.contains(kebab)){
@@ -6892,47 +6940,7 @@ async function sharePoxy(poxyId,rarity,serialNumber){
       return;
     }
     const mi=e.target.closest('.col-card-menu-item');
-    if(mi&&colMenuPortal&&colMenuPortal.contains(mi)){
-      e.stopPropagation();
-      const id=mi.dataset.id;
-      const action=mi.dataset.action;
-      if(colMultiSelectMode&&['feature','pin','list','share'].includes(action)){
-        showToast('Turn off Select Multiple Mode to use this action.');
-        closeColCardMenuPortal();
-        return;
-      }
-      const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(id));
-      const card=root.querySelector('.col-card[data-id="'+CSS.escape(String(id))+'"]');
-      if(!item)return;
-      if(action==='share'){
-        const tier=TIER_BY_ID[item.poxy_tier];
-        const rarityLabel=tier?tier.label:String(item.poxy_tier||'Poxy');
-        const serialNum=item.vip_serial!=null?item.vip_serial:(item.serial_number||'–');
-        const origHtml=mi.innerHTML;
-        sharePoxy(item.id,rarityLabel,serialNum).then(function(ok){
-          if(ok){
-            mi.innerHTML='<span class="ic">✅</span>'+(window.PoxyI18n?PoxyI18n.t('col.menu.copied'):'Copied!')+' ✅';
-            setTimeout(function(){closeColCardMenuPortal();},2000);
-          }else{
-            showToast('Could not copy link.');
-            closeColCardMenuPortal();
-          }
-        });
-        return;
-      }
-      closeColCardMenuPortal();
-      if(action==='crypto'){if(window.PoxyTrust&&PoxyTrust.inspect)PoxyTrust.inspect(item);else showToast('Crypto layer loading…');return;}
-      if(action==='pin'){togglePinPoxy(item.id,item.pinned_at);return;}
-      if(action==='feature'){toggleFeaturePoxy(item.id);return;}
-      if(action==='list'){
-        const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
-        pendingListItem={poxyId:item.id,tier,serial:item.serial_number||'',fromHunt:false};
-        openPriceModal();
-        return;
-      }
-      if(action==='burn'){burnPoxySecure(item.id,card);return;}
-      return;
-    }
+    if(mi&&colMenuPortal&&colMenuPortal.contains(mi)){handleColMenuItem(mi,e);return;}
     if(e.target.closest('#colCardMenuPortal')){e.stopPropagation();return;}
     const card=e.target.closest('.col-card');
     if(card&&root.contains(card)){
