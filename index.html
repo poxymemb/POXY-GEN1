@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="assets/stitch-dashboard.css">
 <link rel="stylesheet" href="assets/poxy-theme.css">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=4">
+<link rel="stylesheet" href="assets/poxy-quick-profile.css?v=1">
 <link rel="stylesheet" href="assets/poxy-ranks-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-club-page.css">
@@ -2753,24 +2754,38 @@ body.dark-club .club-sub{color:#888}
   </div>
 </div>
 
-<!-- EXPANDED PLAYER PROFILE MODAL -->
+<!-- EXPANDED PLAYER PROFILE MODAL (X-style Quick Profile) -->
 <div class="modal-overlay hidden profile-expanded-backdrop" id="inspectModal" role="dialog" aria-modal="true" aria-labelledby="inspectUsernameText">
-  <div class="modal-card profile-expanded-card">
-    <button type="button" class="profile-expanded-close" onclick="closeInspectModal()" aria-label="Close profile">✕</button>
-    <div class="profile-expanded-banner" aria-hidden="true"></div>
-    <div class="profile-expanded-body">
-      <div class="profile-expanded-avatar-row">
-        <div class="profile-expanded-avatar-wrap" id="inspectAvatarWrap"><span id="inspectAvatarInner">👾</span></div>
-        <div class="profile-expanded-meta">
-          <div class="inspect-username-text profile-expanded-name" id="inspectUsernameText">–</div>
-          <div class="profile-expanded-rank" id="inspectRankText">POXY Member</div>
-          <div class="profile-expanded-badges inspect-sub-text" id="inspectSubText"></div>
+  <button type="button" class="qp-profile-close" onclick="closeInspectModal()" aria-label="Close profile"><span class="material-symbols-outlined">close</span></button>
+  <div class="modal-card qp-profile-card">
+    <div class="qp-profile-banner" id="inspectBanner">
+      <img class="qp-profile-banner-img" id="inspectBannerImg" alt="" hidden>
+      <div class="qp-profile-banner-gradient" aria-hidden="true"></div>
+    </div>
+    <div class="qp-profile-content">
+      <div class="qp-profile-avatar-row">
+        <div class="qp-profile-avatar-wrap" id="inspectAvatarWrap"><span id="inspectAvatarInner">👾</span><span class="qp-profile-presence" id="inspectPresence" hidden></span></div>
+        <span class="qp-profile-tier-pill" id="inspectTierPill" hidden>Elite Tier</span>
+      </div>
+      <div class="qp-profile-identity">
+        <div class="qp-profile-name-row">
+          <h2 class="qp-profile-name" id="inspectUsernameText">–</h2>
+          <span class="material-symbols-outlined qp-profile-verified" id="inspectVerified" hidden>verified</span>
+        </div>
+        <div class="qp-profile-rank-row">
+          <span class="qp-profile-rank-primary" id="inspectRankText">Unranked</span>
+          <span class="qp-profile-rank-dot" aria-hidden="true"></span>
+          <span class="qp-profile-rank-secondary" id="inspectMemberText">POXY Member</span>
         </div>
       </div>
-      <div class="inspect-stats-grid" id="inspectStatsGrid"></div>
-      <div class="inspect-fav-poxy" id="inspectFavPoxy"><div class="inspect-fav-none">No featured POXY set.</div></div>
-      <div class="profile-expanded-actions" id="inspectActionsRow"></div>
+      <div class="qp-profile-stats-bar" id="inspectStatsGrid"></div>
+      <div class="qp-profile-bio-block" id="inspectBioBlock" hidden>
+        <p class="qp-profile-bio" id="inspectBioText"></p>
+      </div>
+      <div class="qp-profile-badges" id="inspectBadgesRow"></div>
+      <div class="qp-profile-featured" id="inspectFavPoxy" hidden></div>
     </div>
+    <div class="qp-profile-action-bar" id="inspectActionsRow"></div>
   </div>
 </div>
 
@@ -6505,21 +6520,154 @@ function startFriendPoll(){
   },60000);
 }
 
-// ── EXPANDED PLAYER PROFILE ──
+// ── EXPANDED PLAYER PROFILE (X-style Quick Profile) ──
+const QP_DEFAULT_BANNER='https://lh3.googleusercontent.com/aida/AP1WRLsv5xUYyi2QPfEH0OUSf_Dz_SzuiRIz5hGtAkP_Wdw_cKqWSIEpN6WQBpoOHIWpIe7Qy_-4X-R7pQHUqXbrbk5j-qsGbW2a1OT6Ce2r_ydwvUeoFY--2nYhZAnPYhXmSA_X7HgEU6-mNjd4MzvmJ1sSEq1XqpMm7kcXJ93q3fGIAYJrrli0uGydRrsONYTxgFmfua6z2BUw6aD8HqeS5bSkUwbbkSZ-iqHrB88rsOCsEEZkS_3DvPM2rg';
+const QP_INSPECT_TIER_ORDER=['secret','diamond','stellar','mythic','legendary','epic','rare','uncommon','common'];
+const QP_BADGE_DEFS={
+  founder:{icon:'workspace_premium',label:'FOUNDER',mod:'founder'},
+  vip_club:{icon:'diamond',label:'VIP',mod:'vip'},
+  developer:{icon:'terminal',label:'DEVELOPER',mod:'dev'},
+  market_baron:{icon:'payments',label:'BARON',mod:''},
+  first_drop_set:{icon:'target',label:'HUNTER',mod:''}
+};
+function qpInspectTierLabel(poxyData,isClub){
+  for(const id of QP_INSPECT_TIER_ORDER){
+    if(poxyData?.some(d=>d.poxy_tier===id)){
+      const t=TIER_BY_ID[id]||TIERS[0];
+      if(['mythic','legendary','diamond','secret','stellar'].includes(id))return t.label+' Tier';
+    }
+  }
+  if(isClub)return 'Elite Tier';
+  return '';
+}
+function qpInspectStatsHtml(total,rare,balance){
+  const n=parseFloat(balance||0);
+  const bal=Number.isInteger(n)?n.toLocaleString():n.toFixed(2);
+  return '<div class="qp-profile-stat"><span class="qp-profile-stat-val">'+total+'</span><span class="qp-profile-stat-label">Items</span></div>'
+    +'<div class="qp-profile-stat"><span class="qp-profile-stat-val">'+rare+'</span><span class="qp-profile-stat-label">Rare+</span></div>'
+    +'<div class="qp-profile-stat"><span class="qp-profile-stat-val">'+bal+'</span><span class="qp-profile-stat-label">PC</span></div>';
+}
+function qpInspectBadgesHtml(badgesArr){
+  if(!badgesArr.length)return '';
+  return badgesArr.map(b=>{
+    const d=QP_BADGE_DEFS[b]||{icon:'military_tech',label:b.replace(/_/g,' '),mod:''};
+    return '<span class="qp-profile-badge'+(d.mod?' qp-profile-badge--'+d.mod:'')+'"><span class="material-symbols-outlined">'+d.icon+'</span>'+sanitizeText(d.label)+'</span>';
+  }).join('');
+}
+function qpInspectBioFromProf(prof){
+  let bio='';
+  try{
+    const priv=typeof prof.club_privacy==='string'?JSON.parse(prof.club_privacy):prof.club_privacy;
+    if(priv&&typeof priv.bio==='string')bio=priv.bio.trim();
+  }catch(e){}
+  if(!bio&&prof.is_club_member)bio='Elite POXY Club member — collector and competitor on the global ladder.';
+  return bio;
+}
+function closeInspectMoreMenu(){
+  document.querySelectorAll('.qp-profile-more-menu.open').forEach(m=>m.classList.remove('open'));
+}
+window.toggleInspectMoreMenu=function(){
+  const m=$('inspectMoreMenu');
+  if(m)m.classList.toggle('open');
+};
+function buildInspectActionBar(opts){
+  const row=$('inspectActionsRow');
+  if(!row)return;
+  row.innerHTML='';
+  closeInspectMoreMenu();
+  const{isSelf,userId,prof,isFriend,existingReq}=opts;
+  if(isSelf){
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='qp-btn qp-btn--outline';
+    btn.style.flex='1';
+    btn.innerHTML='<span class="material-symbols-outlined">person</span> My Profile';
+    btn.onclick=()=>{closeInspectModal();showPage('profile');};
+    row.appendChild(btn);
+    return;
+  }
+  const primary=document.createElement('button');
+  primary.type='button';
+  primary.className='qp-btn qp-btn--primary';
+  if(isFriend){
+    primary.innerHTML='<span class="material-symbols-outlined">group</span> Friends';
+    primary.disabled=true;
+  }else if(existingReq&&existingReq.status==='pending'){
+    primary.innerHTML='<span class="material-symbols-outlined">schedule</span> Request Sent';
+    primary.disabled=true;
+  }else{
+    primary.innerHTML='<span class="material-symbols-outlined">person_add</span> Add Friend';
+    primary.addEventListener('click',async function(){
+      if(!isUuid(userId)){logAndToast('add-friend-modal',new Error('user id not UUID'));return;}
+      primary.disabled=true;
+      try{
+        const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
+        if(ie)throw ie;
+        if(data&&data.ok===false)throw new Error(data.error||'Could not send');
+        primary.innerHTML='<span class="material-symbols-outlined">schedule</span> Sent';
+        showToast('Friend request sent.');
+      }catch(e){logAndToast('add-friend-modal',e);primary.disabled=false;}
+    });
+  }
+  const msg=document.createElement('button');
+  msg.type='button';
+  msg.className='qp-btn qp-btn--outline';
+  msg.innerHTML='<span class="material-symbols-outlined">mail</span> Message';
+  msg.onclick=()=>{closeInspectModal();openDmOverlay(userId,prof.username,prof.avatar_url);};
+  const moreWrap=document.createElement('div');
+  moreWrap.className='qp-profile-more-wrap';
+  const moreBtn=document.createElement('button');
+  moreBtn.type='button';
+  moreBtn.className='qp-btn qp-btn--icon';
+  moreBtn.setAttribute('aria-label','More actions');
+  moreBtn.innerHTML='<span class="material-symbols-outlined">more_horiz</span>';
+  moreBtn.onclick=e=>{e.stopPropagation();toggleInspectMoreMenu();};
+  const menu=document.createElement('div');
+  menu.className='qp-profile-more-menu';
+  menu.id='inspectMoreMenu';
+  menu.innerHTML=
+    '<button type="button" class="qp-profile-more-item" data-act="trade"><span class="material-symbols-outlined">swap_horiz</span> Initiate Trade</button>'
+    +'<button type="button" class="qp-profile-more-item" data-act="full"><span class="material-symbols-outlined">badge</span> Full Profile</button>'
+    +'<button type="button" class="qp-profile-more-item" data-act="copy"><span class="material-symbols-outlined">content_copy</span> Copy User ID</button>';
+  menu.querySelector('[data-act="trade"]').onclick=()=>{closeInspectModal();openTradeModal(userId,prof.username);};
+  menu.querySelector('[data-act="full"]').onclick=()=>{closeInspectModal();showPage('friends');openFriendProfileView(userId);};
+  menu.querySelector('[data-act="copy"]').onclick=()=>{
+    navigator.clipboard?.writeText(userId).then(()=>showToast('User ID copied.')).catch(()=>showToast(userId));
+    closeInspectMoreMenu();
+  };
+  moreWrap.appendChild(moreBtn);
+  moreWrap.appendChild(menu);
+  row.appendChild(primary);
+  row.appendChild(msg);
+  row.appendChild(moreWrap);
+}
+if(!window._qpInspectMoreBound){
+  window._qpInspectMoreBound=true;
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.qp-profile-more-wrap'))closeInspectMoreMenu();
+  });
+}
 window.openExpandedProfile=openInspectModal;
 async function openInspectModal(userId){
   if(!userId)return;
   inspectTargetUserId=userId;
   const modal=$('inspectModal');
-  $('inspectUsernameText').textContent='Loading...';
-  const rankEl=$('inspectRankText');if(rankEl)rankEl.textContent='Loading rank…';
-  $('inspectSubText').innerHTML='';
+  $('inspectUsernameText').textContent='Loading…';
+  $('inspectRankText').textContent='Loading…';
+  $('inspectMemberText').textContent='';
   $('inspectStatsGrid').innerHTML='';
-  $('inspectFavPoxy').innerHTML='<div class="inspect-fav-none">Loading...</div>';
+  $('inspectBadgesRow').innerHTML='';
+  $('inspectBioBlock').hidden=true;
+  $('inspectFavPoxy').hidden=true;
+  $('inspectTierPill').hidden=true;
+  $('inspectVerified').hidden=true;
   $('inspectActionsRow').innerHTML='';
   const avWrap=$('inspectAvatarWrap');
-  if(avWrap){avWrap.className='profile-expanded-avatar-wrap';avWrap.innerHTML='<span id="inspectAvatarInner">👾</span>';}
-  modal.classList.remove('hidden');requestAnimationFrame(()=>modal.classList.add('show'));
+  if(avWrap){avWrap.className='qp-profile-avatar-wrap';avWrap.innerHTML='<span id="inspectAvatarInner">👾</span>';}
+  const bannerImg=$('inspectBannerImg');
+  if(bannerImg){bannerImg.src=QP_DEFAULT_BANNER;bannerImg.hidden=false;}
+  modal.classList.remove('hidden');
+  requestAnimationFrame(()=>modal.classList.add('show'));
   try{
     const isSelfInspect=String(userId)===String(currentUser?.id);
     const a=userId<currentUser.id?userId:currentUser.id;
@@ -6535,75 +6683,56 @@ async function openInspectModal(userId){
     const isPrem=!!(premData&&premData.length);
     const isFriend=!!(friendships&&friendships.length);
     const avWrap=$('inspectAvatarWrap');
-    avWrap.className='profile-expanded-avatar-wrap'+(isSelfInspect?' avatar-frame-target':'')+(isPrem&&!isSelfInspect?' inspect-prem':'');
-    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avWrap.innerHTML='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="">';
-    else avWrap.innerHTML='<span id="inspectAvatarInner">'+sanitizeText(prof.avatar_url||'👾')+'</span>';
+    const presence=friendPresenceMap[userId]||'offline';
+    avWrap.className='qp-profile-avatar-wrap'+(isSelfInspect?' avatar-frame-target':'')+(isPrem&&!isSelfInspect?' inspect-prem':'');
+    let avInner='<span id="inspectAvatarInner">'+sanitizeText(prof.avatar_url||'👾')+'</span>';
+    if(prof.avatar_url&&prof.avatar_url.startsWith('http'))avInner='<img src="'+sanitizeText(avatarImgUrl(prof.avatar_url))+'" alt="">';
+    const presHtml=(!isSelfInspect&&presence!=='offline')?'<span class="qp-profile-presence qp-profile-presence--'+(presence==='inventory'?'inventory':'online')+'"></span>':'';
+    avWrap.innerHTML=avInner+presHtml;
     if(isSelfInspect)updateGlobalFrames();
-    $('inspectUsernameText').textContent=sanitizeText(prof.username||'Anonymous');
-    const rankEl=$('inspectRankText');
-    if(rankEl){
-      const rk=leaderboardRankByUser[userId];
-      rankEl.textContent=rk?'Global Rank #'+rk:'Unranked Player';
+    const uname=sanitizeText(prof.username||'Anonymous');
+    $('inspectUsernameText').textContent='@'+uname.replace(/^@/,'');
+    const verified=$('inspectVerified');
+    if(verified)verified.hidden=!(prof.is_verified_employee||(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL));
+    const rk=leaderboardRankByUser[userId];
+    $('inspectRankText').textContent=rk?'Global Rank #'+rk:'Unranked';
+    $('inspectMemberText').textContent=prof.is_club_member?'Elite Member':'POXY Member';
+    const tierPill=$('inspectTierPill');
+    const tierLbl=qpInspectTierLabel(poxyData,!!prof.is_club_member);
+    if(tierPill){
+      if(tierLbl){tierPill.textContent=tierLbl;tierPill.hidden=false;}
+      else tierPill.hidden=true;
     }
     const totalItems=poxyData?.length||0;
     const rareItems=poxyData?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
+    $('inspectStatsGrid').innerHTML=qpInspectStatsHtml(totalItems,rareItems,prof.balance);
     const badgesArr=Array.isArray(prof.badges)?prof.badges.slice():[];
     if(prof.is_verified_employee&&!badgesArr.includes('developer'))badgesArr.push('developer');
     if(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL&&!badgesArr.includes('founder'))badgesArr.push('founder');
     if(prof.is_club_member&&!badgesArr.includes('vip_club'))badgesArr.push('vip_club');
-    const badgeIcons={market_baron:'💰',first_drop_set:'🎯',founder:'🏆',developer:'⚡',vip_club:'✸'};
-    const badgeChips=badgesArr.map(b=>'<span class="badge-chip '+b+'" style="font-size:9px;padding:2px 6px">'+(badgeIcons[b]||'⌬')+' '+b.replace(/_/g,' ')+'</span>').join(' ');
-    $('inspectSubText').innerHTML=badgeChips||'POXY Member';
-    const grid=$('inspectStatsGrid');
-    grid.innerHTML='<div class="inspect-stat"><div class="inspect-stat-val">'+totalItems+'</div><div class="inspect-stat-label">Items</div></div><div class="inspect-stat"><div class="inspect-stat-val">'+rareItems+'</div><div class="inspect-stat-label">Rare+</div></div><div class="inspect-stat"><div class="inspect-stat-val">'+formatPC(prof.balance||0)+'</div><div class="inspect-stat-label">Balance</div></div>';
+    $('inspectBadgesRow').innerHTML=qpInspectBadgesHtml(badgesArr);
+    const bio=qpInspectBioFromProf(prof);
+    const bioBlock=$('inspectBioBlock');
+    if(bio&&bioBlock){
+      $('inspectBioText').textContent=bio;
+      bioBlock.hidden=false;
+    }else if(bioBlock)bioBlock.hidden=true;
     const favEl=$('inspectFavPoxy');
-    if(prof.favorite_poxy_id){
+    if(prof.favorite_poxy_id&&favEl){
       try{
         const{data:fp}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('id',prof.favorite_poxy_id).single();
         if(fp){
           const ft=TIERS.find(t=>t.id===fp.poxy_tier)||TIERS[0];
-          favEl.innerHTML='<div class="inspect-fav-label">Featured POXY</div><div class="inspect-fav-icon">'+ft.icon+'</div><div class="inspect-fav-tier" style="color:'+ft.color+'">'+ft.label+'</div><div class="inspect-fav-serial">'+sanitizeText(fp.serial_number||'–')+'</div>';
-        } else {favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
-      }catch(e){favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
-    } else {favEl.innerHTML='<div class="inspect-fav-none">No featured POXY set.</div>';}
-    const actionsRow=$('inspectActionsRow');
-    if(!isSelfInspect){
-      const dmBtn=document.createElement('button');
-      dmBtn.className='btn-profile-action btn-profile-dm';
-      dmBtn.innerHTML='<span class="material-symbols-outlined">chat</span> Send Message';
-      dmBtn.onclick=()=>{closeInspectModal();openDmOverlay(userId,prof.username,prof.avatar_url);};
-      actionsRow.appendChild(dmBtn);
-      const tradeBtn=document.createElement('button');
-      tradeBtn.className='btn-profile-action btn-profile-trade';
-      tradeBtn.innerHTML='<span class="material-symbols-outlined">swap_horiz</span> Initiate Poxy Trade';
-      tradeBtn.onclick=()=>{closeInspectModal();openTradeModal(userId,prof.username);};
-      actionsRow.appendChild(tradeBtn);
-    }
-    const existingReq=reqs&&reqs[0];
-    if(!isSelfInspect){
-      if(isFriend){
-        const fb=document.createElement('button');fb.className='btn-profile-action btn-profile-friend sent';fb.textContent='Friends ✓';fb.disabled=true;actionsRow.appendChild(fb);
-      } else if(existingReq&&existingReq.status==='pending'){
-        const fb=document.createElement('button');fb.className='btn-profile-action btn-profile-friend sent';fb.textContent='Request Sent';fb.disabled=true;actionsRow.appendChild(fb);
-      } else {
-        const addBtn=document.createElement('button');addBtn.className='btn-profile-action btn-profile-friend';addBtn.textContent='+ Add Friend';
-        addBtn.addEventListener('click',async function(){
-          if(!isUuid(userId)){logAndToast('add-friend-modal',new Error('user id not UUID'));return;}
-          this.disabled=true;
-          try{
-            const{data,error:ie}=await sb.rpc('send_friend_request',{p_to_id:userId});
-            if(ie)throw ie;
-            if(data&&data.ok===false)throw new Error(data.error||'Could not send');
-            this.textContent='Sent';this.classList.add('sent');
-            showToast('Friend request sent.');
-          }catch(e){logAndToast('add-friend-modal',e);this.disabled=false;}
-        });
-        actionsRow.appendChild(addBtn);
-      }
-    }
+          favEl.innerHTML='<div class="qp-profile-featured-label">Featured POXY</div><div class="qp-profile-featured-icon" style="color:'+ft.color+'">'+ft.icon+'</div><div class="qp-profile-featured-tier" style="color:'+ft.color+'">'+ft.label+'</div><div class="qp-profile-featured-serial">'+sanitizeText(fp.serial_number||'–')+'</div>';
+          favEl.hidden=false;
+        }else favEl.hidden=true;
+      }catch(e){favEl.hidden=true;}
+    }else if(favEl)favEl.hidden=true;
+    buildInspectActionBar({isSelf:isSelfInspect,userId,prof,isFriend,existingReq:reqs&&reqs[0]});
   }catch(e){closeInspectModal();showToast('Could not load profile.');}
 }
 window.closeInspectModal=function(){
+  closeInspectMoreMenu();
   const modal=$('inspectModal');
   modal.classList.remove('show');
   setTimeout(()=>modal.classList.add('hidden'),280);
