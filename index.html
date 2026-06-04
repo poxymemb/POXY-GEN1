@@ -16,6 +16,12 @@
   var el=document.createElement('base');
   el.href=href;
   document.head.appendChild(el);
+  if(lo>=0){
+    var h=location.hash||'';
+    if(h.indexOf('#/lumina-os')!==0){
+      location.replace(href.replace(/\/?$/,'/')+'#/lumina-os'+location.search);
+    }
+  }
 })();
 </script>
 <title>POXY WORLD</title>
@@ -10294,7 +10300,7 @@ function bootApp(){
 <script src="assets/lumina-chat-config.js?v=3"></script>
 <script src="assets/lumina-os/store.js?v=2"></script>
 <script src="assets/lumina-os/router.js?v=5"></script>
-<script src="assets/lumina-os/app.js?v=3"></script>
+<script src="assets/lumina-os/app.js?v=6"></script>
 <script>
 bootApp();
 if(window._luminaOsPending&&typeof openLuminaOS==='function'){

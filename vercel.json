@@ -2,7 +2,9 @@
   "rewrites": [
     { "source": "/lumina-os", "destination": "/index.html" },
     { "source": "/lumina-os/", "destination": "/index.html" },
+    { "source": "/lumina-os/:path*", "destination": "/index.html" },
     { "source": "/chat/app", "destination": "/index.html" },
-    { "source": "/chat/app/", "destination": "/index.html" }
+    { "source": "/chat/app/", "destination": "/index.html" },
+    { "source": "/chat/app/:path*", "destination": "/index.html" }
   ]
 }

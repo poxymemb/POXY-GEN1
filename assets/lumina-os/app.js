@@ -448,62 +448,74 @@
     }
   }
 
+  function bindClick(id, fn) {
+    const el = U.$(id);
+    if (el) el.onclick = fn;
+  }
+
   function bindUi() {
     if (runtime.bound) return;
     runtime.bound = true;
     document.querySelectorAll('#luminaOsRoot .lc-nav-item').forEach((btn) => {
       btn.onclick = () => setNav(btn.dataset.nav);
     });
-    U.$('lcConvSearch')?.addEventListener('input', (e) => {
-      renderConvList(e.target.value);
-    });
-    U.$('lcComposeInput')?.addEventListener('input', (e) => {
-      const v = e.target.value;
-      if (runtime.selectedId) Store.setDraft(runtime.selectedId, v);
-      U.$('lcComposeSend').disabled = !v.trim();
-      const typing = U.$('lcTyping');
-      if (typing) typing.textContent = v ? 'You are typing…' : '';
-    });
-    U.$('lcComposeInput')?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-    U.$('lcComposeSend')?.onclick = sendMessage;
-    U.$('lcComposeGif')?.onclick = () => toast('GIF picker — coming soon.');
-    U.$('lcComposeEmoji')?.onclick = () => {
+    const convSearch = U.$('lcConvSearch');
+    if (convSearch) {
+      convSearch.addEventListener('input', (e) => {
+        renderConvList(e.target.value);
+      });
+    }
+    const composeInput = U.$('lcComposeInput');
+    const composeSend = U.$('lcComposeSend');
+    if (composeInput) {
+      composeInput.addEventListener('input', (e) => {
+        const v = e.target.value;
+        if (runtime.selectedId) Store.setDraft(runtime.selectedId, v);
+        if (composeSend) composeSend.disabled = !v.trim();
+        const typing = U.$('lcTyping');
+        if (typing) typing.textContent = v ? 'You are typing…' : '';
+      });
+      composeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+    }
+    bindClick('lcComposeSend', sendMessage);
+    bindClick('lcComposeGif', () => toast('GIF picker — coming soon.'));
+    bindClick('lcComposeEmoji', () => {
       const inp = U.$('lcComposeInput');
       if (inp) {
         inp.value += ' ✨';
         inp.dispatchEvent(new Event('input'));
         inp.focus();
       }
-    };
-    U.$('lcComposeVoice')?.onclick = () => toast('Hold to record — coming soon.');
-    U.$('lcComposeAttach')?.onclick = () => toast('Attachments — coming soon.');
-    U.$('lcThreadBack')?.onclick = () => {
+    });
+    bindClick('lcComposeVoice', () => toast('Hold to record — coming soon.'));
+    bindClick('lcComposeAttach', () => toast('Attachments — coming soon.'));
+    bindClick('lcThreadBack', () => {
       document.querySelector('#luminaOsRoot .lc-shell')?.classList.remove('conv-open');
-    };
-    U.$('lcToggleContext')?.onclick = () => {
+    });
+    bindClick('lcToggleContext', () => {
       document.querySelector('#luminaOsRoot .lc-shell')?.classList.toggle('context-open');
-    };
-    U.$('lcCollapseContext')?.onclick = () => {
+    });
+    bindClick('lcCollapseContext', () => {
       const next = !Store.getState().contextCollapsed;
       Store.setState({ contextCollapsed: next });
       applyContextCollapsed();
-    };
-    U.$('lcExitOs')?.onclick = () => Router.exit();
-    U.$('lcNavLogout')?.onclick = async () => {
+    });
+    bindClick('lcExitOs', () => Router.exit());
+    bindClick('lcNavLogout', async () => {
       await sb().auth.signOut();
-    };
-    U.$('lcUserStatusBtn')?.onclick = () => {
+    });
+    bindClick('lcUserStatusBtn', () => {
       const order = ['online', 'away', 'busy', 'invisible'];
       const cur = Store.getState().userStatus || 'online';
       const next = order[(order.indexOf(cur) + 1) % order.length];
       Store.setState({ userStatus: next });
       renderNavUser();
-    };
+    });
     Store.subscribe(() => applyContextCollapsed());
   }
 
