@@ -8,7 +8,14 @@
 import { adminClient } from "../_shared/supabase.ts";
 import { verifyMessage } from "../_shared/crypto.ts";
 
-const ORIGINS = ["https://poxygen1.vercel.app", "http://localhost:3000"];
+// Production URL must match the deployed Vercel hostname exactly.
+// poxygen1 is the old/stale URL — keep it in case of old bookmarks.
+const ORIGINS = [
+  "https://poxy-gens.vercel.app",
+  "https://poxygen1.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:8080",
+];
 
 function cors(req: Request) {
   const origin = req.headers.get("origin") ?? "";

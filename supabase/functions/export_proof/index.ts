@@ -15,7 +15,7 @@
 // }
 // =============================================================================
 
-import { adminClient, getUserId } from "../_shared/supabase.ts";
+import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
 import { merkleProof, merkleRoot } from "../_shared/crypto.ts";
 import { handleOptions, json } from "../_shared/http.ts";
 
@@ -37,7 +37,10 @@ Deno.serve(async (req) => {
     if (aErr || !asset) return json({ ok: false, error: "Asset not found" }, 404);
 
     // Authorization: owner, creator, or founder only.
-    const { data: founder } = await admin.rpc("is_founder");
+    // IMPORTANT: must use userClient (JWT context) so auth.uid() resolves correctly
+    // inside is_founder(). adminClient (service_role) has no auth.uid().
+    const userClient = userClientFromRequest(req);
+    const { data: founder } = await userClient.rpc("is_founder");
     if (asset.current_owner_id !== userId && asset.creator_id !== userId && !founder) {
       return json({ ok: false, error: "Not authorized to export this proof" }, 403);
     }
@@ -55,8 +58,14 @@ Deno.serve(async (req) => {
     const ownership = (assetEvents ?? []).filter((e) => ["TRANSFER", "TRADE"].includes(e.event_type));
 
     // Merkle inclusion proof for the genesis event in the global events tree.
+    // NOTE: Fetches all event hashes — O(n) as the ledger grows. This is acceptable
+    // for early launch but should be replaced with a pre-computed Merkle root stored
+    // in state_snapshots once the ledger exceeds ~10k events.
     const { data: allEvents } = await admin
-      .from("ledger_events").select("event_hash").order("seq", { ascending: true });
+      .from("ledger_events")
+      .select("event_hash")
+      .order("seq", { ascending: true })
+      .limit(50_000); // safety cap: prevents OOM on very large ledgers
     const leaves = (allEvents ?? []).map((r: { event_hash: string }) => r.event_hash);
     const eventRoot = await merkleRoot(leaves);
 

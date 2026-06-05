@@ -2,6 +2,12 @@
 .env
 .env.*
 *.local
+
+# Stitch reference outputs — design reference only, never serve to users
 stitch-export/cli-out.txt
 stitch-export/dashboard-hub.raw.json
 stitch-export/screens/*.html
+# Note: stitch-export/ images/html ARE tracked (design history), but NOT deployed.
+# Vercel excludes them via "ignoreCommand" or manual exclusions below.
+
+.vercel

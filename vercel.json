@@ -7,6 +7,15 @@
     { "source": "/chat/app/", "destination": "/index.html" },
     { "source": "/chat/app/:path*", "destination": "/index.html" }
   ],
+  "redirects": [
+    { "source": "/assets/stitch-(.*)", "destination": "/", "permanent": false },
+    { "source": "/stitch-export/(.*)", "destination": "/", "permanent": false },
+    { "source": "/lumina-os/react-scaffold/(.*)", "destination": "/", "permanent": false },
+    { "source": "/lumina-os/types.ts", "destination": "/", "permanent": false },
+    { "source": "/supabase/(.*)", "destination": "/", "permanent": false },
+    { "source": "/tools/(.*)", "destination": "/", "permanent": false },
+    { "source": "/docs/(.*)", "destination": "/", "permanent": false }
+  ],
   "headers": [
     {
       "source": "/index.html",
