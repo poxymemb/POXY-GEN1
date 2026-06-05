@@ -159,7 +159,6 @@
   background:radial-gradient(ellipse at 50% 50%,rgba(156,39,176,0.2),transparent 65%);
   pointer-events:none;
 }
-/* Auth footer: assets/poxy-site-footer.css */
 .poxy-auth-panel-logo-mobile{
   display:flex;align-items:baseline;margin-bottom:28px;
 }

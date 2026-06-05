@@ -19,7 +19,16 @@
   background:var(--st-bg);
   color:var(--st-on-surface);
   min-height:100vh;
+  min-height:100dvh;
+  padding-bottom:0;
 }
+#poxyAppShell #poxyStitchDashboard.poxy-stitch-dash{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+#poxyAppShell .st-spa-viewport{flex:1 1 auto;min-height:0}
 .poxy-stitch-dash .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;font-size:20px;line-height:1;vertical-align:middle}
 /* ── NAV SIZING TOKENS ── */
 :root{
@@ -35,7 +44,20 @@
   --st-pink-soft:rgba(251,207,232,0.55);
 }
 
-#poxyAppShell{--st-nav-h:var(--st-nav-h-val);min-height:100vh;padding-top:var(--st-nav-h)}
+#poxyAppShell{
+  --st-nav-h:var(--st-nav-h-val);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  min-height:100dvh;
+  padding-top:var(--st-nav-h);
+}
+#poxyAppShell>#huntPage{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
 #poxyAppShell>.page.visible,#poxyAppShell>#huntPage,#poxyAppShell>.club-page.visible{padding-top:0}
 
 .st-nav{
@@ -763,7 +785,6 @@ body.st-win-reveal-open{overflow:hidden}
   padding:22px;
   position:relative;
 }
-/* Site footer: assets/poxy-site-footer.css */
 .st-panel h3{font-family:'Hanken Grotesk',Inter,sans-serif;font-size:20px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:14px}
 .st-test-tag{position:absolute;top:0;right:0;background:var(--st-secondary-container);color:#ffeced;font-size:9px;font-weight:800;letter-spacing:0.1em;padding:6px 10px;border-bottom-left-radius:12px;font-family:'JetBrains Mono',monospace}
 .st-panel .bank-form-label{color:var(--st-on-surface-variant);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;font-family:'JetBrains Mono',monospace}

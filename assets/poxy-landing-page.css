@@ -25,13 +25,16 @@ body.poxy-landing-active{
   overflow-x:hidden;
 }
 body.poxy-landing-active #poxyLanding{
-  display:block;
+  display:flex;
+  flex-direction:column;
 }
 #poxyLanding{
   display:none;
   position:relative;
   z-index:1;
+  flex-direction:column;
   min-height:100vh;
+  min-height:100dvh;
   font-family:'Hanken Grotesk',Inter,system-ui,sans-serif;
   color:var(--pl-text);
   background:var(--pl-bg);
@@ -200,7 +203,7 @@ body.poxy-landing-preview #plPreviewBack{
   transform:scale(1.05);
 }
 
-.pl-main{position:relative;z-index:2}
+.pl-main{position:relative;z-index:2;flex:1 1 auto}
 
 /* Hero */
 .pl-hero{
@@ -639,7 +642,6 @@ body.poxy-landing-preview #plPreviewBack{
   text-shadow:0 0 24px rgba(255,255,255,0.2);
 }
 
-/* Landing footer: assets/poxy-site-footer.css (.pl-footer) */
 
 /* Scroll reveal */
 .pl-reveal{
