@@ -867,6 +867,417 @@
 }
 
 /* ================================================================
+   VERIFY TERMINAL v5 — STITCH PIXEL-PERFECT REBUILD
+   Source: Stitch b6f56d5030234256900bb1fb12e13d43
+   Every class maps 1:1 to the downloaded Stitch HTML/screenshot.
+   ================================================================ */
+
+/* ── Stitch: "fixed inset-0 flex items-center justify-center overflow-hidden" ── */
+.vt-ambient-center {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* Stitch: "w-[800px] h-[800px] bg-white opacity-[0.02] blur-[150px] rounded-full" */
+.vt-ambient-center__blob {
+  width: 800px;
+  height: 800px;
+  background: #ffffff;
+  opacity: 0.02;
+  filter: blur(150px);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Stitch: .bg-mesh (fixed, purple+pink 0.08 radials, meshFloat 20s alternate) ── */
+.vt-bg-mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(147,51,234,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(236,72,153,0.08) 0%, transparent 50%);
+  animation: vtMeshFloat 20s ease-in-out infinite alternate;
+}
+
+/* ── poxy-verify-page wrapper ── */
+.poxy-verify-page {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header+Input combined bento card ── */
+/* Stitch: "bento-card bg-[#0d0d0f] border border-white/5 rounded-3xl p-8 w-full
+           flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden" */
+.vt-input-bento {
+  background: #0d0d0f;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 1.5rem;
+  padding: 32px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+}
+@media (min-width: 1024px) {
+  .vt-input-bento {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+/* Stitch: "absolute w-[400px] h-[400px] bg-pink-400/5 rounded-full mix-blend-screen filter blur-[100px] animate-pulse" */
+.vt-input-bento__blob {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: rgba(244,114,182,0.05);
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: vtMeshFloat 4s ease-in-out infinite alternate;
+  z-index: 0;
+  top: 50%;
+  left: -50px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ── Left half: Protocol badge + Title + Desc ── */
+.vt-hdr-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+@media (min-width: 1024px) { .vt-hdr-left { width: 50%; } }
+
+/* Stitch: "bg-white/5 border border-white/20 text-white px-3 py-1 rounded-full
+           font-label-lg text-[10px] uppercase tracking-widest inline-flex items-center gap-2 self-start" */
+.vt-protocol-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.20);
+  color: #ffffff;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+.vt-protocol-badge .material-symbols-outlined { font-size: 14px; }
+
+/* Stitch: "font-headline-lg text-[48px] text-white uppercase leading-none tracking-tighter" */
+.vt-page-title {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: clamp(2rem, 5vw, 48px);
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+/* Stitch: "text-gray-400 max-w-lg border-l border-white/20 pl-4 py-1 text-sm" */
+.vt-page-desc {
+  color: #9ca3af;
+  max-width: 480px;
+  border-left: 1px solid rgba(255,255,255,0.20);
+  padding: 4px 0 4px 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+}
+
+/* ── Right half: filter tabs + search bar ── */
+.vt-search-area {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  align-items: flex-end;
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 1024px) { .vt-search-area { width: 50%; } }
+
+/* ── Filter pills (Stitch active = bg-white text-black) ── */
+/* Inactive pill: "bg-white/5 border border-white/10 text-gray-400" */
+/* Active pill:   "bg-white text-black border-white" */
+.vt-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(156,163,175,1);
+}
+.vt-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255,255,255,0.10);
+}
+.vt-tab-btn .material-symbols-outlined { font-size: 14px; }
+
+/* STITCH ACTIVE PILL: solid white with black text */
+.vt-tab-btn--active {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #080809 !important;
+}
+.vt-tab-btn--active .material-symbols-outlined { color: #080809 !important; }
+
+/* ── Search bar (Stitch: rounded-full dark input + absolute white VERIFY button) ── */
+.vt-search-bar {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+/* Stitch: "bg-[#050506] border border-white/10 h-14 rounded-3xl" */
+.vt-search-input {
+  width: 100%;
+  background: #050506;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 9999px;
+  padding: 0 130px 0 24px;
+  height: 56px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  box-sizing: border-box;
+}
+.vt-search-input::placeholder { color: rgba(156,163,175,0.5); font-size: 12px; }
+
+/* Stitch: "absolute right-1 top-1 bottom-1 bg-white text-[#080809] ... rounded-2xl" */
+.vt-search-btn {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  bottom: 4px;
+  background: #ffffff;
+  color: #080809;
+  border: none;
+  border-radius: 9999px;
+  padding: 0 24px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.vt-search-btn:hover { background: #fbcfe8; }
+.vt-search-btn .material-symbols-outlined { font-size: 16px; }
+
+/* ── Validation path panel ── */
+/* Stitch: "bento-card lg:col-span-4 bg-[#0d0d0f] border border-white/5 rounded-3xl p-6 relative overflow-hidden" */
+.vt-validation-panel {
+  background: #0d0d0f;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 1.5rem;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
+}
+@media (min-width: 1024px) { .vt-validation-panel { grid-column: span 4; } }
+
+/* Panel title (Stitch: "font-black text-white uppercase tracking-tight" with account_tree icon) */
+.vt-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+.vt-panel-title .material-symbols-outlined { color: #ffffff; font-size: 22px; }
+
+/* Stitch step timeline: "relative pl-4 mt-2 border-l border-white/10 flex flex-col gap-6 overflow-hidden" */
+.vt-steps {
+  position: relative;
+  padding-left: 16px;
+  border-left: 1px solid rgba(255,255,255,0.10);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+/* Stitch step (Stitch uses absolute positioned dot + body text) */
+.vt-step { position: relative; }
+.vt-step::before { display: none; } /* override old connector line */
+
+/* Stitch done dot: "absolute w-5 h-5 bg-white rounded-full -left-[27px] top-0 ... border-[3px] border-[#0d0d0f] status-glow" */
+.vt-step__icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  left: -27px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #0d0d0f;
+  z-index: 1;
+}
+/* STITCH: done icon is white, not pink */
+.vt-step__icon--done {
+  background: #ffffff !important;
+  border-color: #0d0d0f !important;
+  box-shadow: none;
+}
+.vt-step__icon--done .material-symbols-outlined {
+  color: #080809 !important;
+  font-size: 10px !important;
+}
+.vt-step__icon--pending {
+  background: #050506;
+  border: 1px solid rgba(255,255,255,0.20);
+}
+.vt-step__icon--pending::after {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.20);
+}
+
+.vt-step__body { padding-left: 4px; }
+.vt-step__name {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+.vt-step__desc {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.5;
+  margin-bottom: 6px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+}
+/* STITCH: hash box text is white (NOT pink) */
+.vt-step__hash {
+  background: #050506 !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 6px !important;
+  padding: 8px 10px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  color: #ffffff !important;          /* Stitch: text-white */
+  word-break: break-all;
+  margin-top: 4px;
+}
+
+/* ── Receipt panel ── */
+.vt-receipt {
+  background: #0d0d0f;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 1.5rem;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+/* ── Console terminal ── */
+.vt-console {
+  background: #0d0d0f;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  min-height: 140px;
+  margin-top: 8px;
+}
+
+/* ── Download button (Stitch: spring-transition, btn-magnetic) ── */
+.vt-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  color: #ffffff;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.vt-download-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.20); }
+.vt-download-btn .material-symbols-outlined { font-size: 14px; }
+
+/* ── Override old conflicting rules ── */
+/* Remove old amber/teal blobs (replaced by vt-ambient-center + vt-bg-mesh) */
+#stPanelVerify .vt-glow-blob--a,
+#stPanelVerify .vt-glow-blob--b,
+#stPanelVerify .vt-glow-wrap {
+  display: none !important;
+}
+/* Remove old ::before fixed mesh (replaced by .vt-bg-mesh element) */
+#stPanelVerify::before { display: none !important; }
+
+/* Remove old header-only and input-wrap-only styles */
+.vt-header__title,
+.vt-header::before { display: none !important; }
+
+/* Old poxy-verify-page centering → full-width for SPA context */
+.poxy-verify-page {
+  align-items: stretch !important;
+  max-width: 100% !important;
+}
+
+/* ================================================================
    VERIFY TERMINAL v4 — SCROLL FIX · CONTAINER RADIUS · GLOW · ANIMATIONS
    Exact sync with Stitch "Animated Unified Verify Terminal" b6f56d50
    ================================================================ */

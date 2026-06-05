@@ -64,7 +64,7 @@
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=2">
 <link rel="stylesheet" href="assets/poxy-telemetry.css?v=2">
 <link rel="stylesheet" href="assets/poxy-whitepaper.css?v=3">
-<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=4">
+<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=3">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -2228,50 +2228,66 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
          Stitch: 2065d064ee014e828f5a76d96c365997
          ══════════════════════════════════════════════════════ -->
     <section class="st-spa-panel" id="stPanelVerify" data-st-tab="verify" hidden>
-      <div class="vt-glow-wrap" aria-hidden="true">
-        <div class="vt-glow-blob vt-glow-blob--a"></div>
-        <div class="vt-glow-blob vt-glow-blob--b"></div>
-      </div>
-      <main class="poxy-verify-page">
-        <!-- Header -->
-        <header class="vt-header">
-          <h1 class="vt-header__title">Verification <em>Playground</em></h1>
-          <p class="vt-header__desc">Enter a POXY hash, event ID, or RNG round ID to receive a step-by-step cryptographic proof. No login required.</p>
-        </header>
 
-        <!-- Input -->
-        <section class="vt-input-wrap vt-bento-card" style="transition-delay:0.1s">
-          <div class="vt-tabs">
-            <button class="vt-tab-btn vt-tab-btn--active" id="vtTabAsset" onclick="vtSwitchTab('asset',this)">
-              <span class="material-symbols-outlined">deployed_code</span> POXY Asset
-            </button>
-            <button class="vt-tab-btn" onclick="vtSwitchTab('ledger',this)">
-              <span class="material-symbols-outlined">receipt_long</span> Ledger Event
-            </button>
-            <button class="vt-tab-btn" onclick="vtSwitchTab('rng',this)">
-              <span class="material-symbols-outlined">casino</span> RNG Round
-            </button>
+      <!-- ── Stitch-exact: centered white ambient glow (w-800 bg-white opacity-[0.02] blur-[150px]) ── -->
+      <div class="vt-ambient-center" aria-hidden="true">
+        <div class="vt-ambient-center__blob"></div>
+      </div>
+      <!-- ── Stitch: bg-mesh gradient (purple+pink radial at 0.08 opacity, meshFloat 20s) ── -->
+      <div class="vt-bg-mesh" aria-hidden="true"></div>
+
+      <main class="poxy-verify-page">
+
+        <!-- ══ HEADER + INPUT BENTO (single card, Stitch: flex-col lg:flex-row) ══ -->
+        <section class="vt-input-bento vt-bento-card" style="transition-delay:0.1s">
+          <!-- Pink ambient blob inside card (Stitch: w-[400px] bg-pink-400/5 blur-[100px] animate-pulse) -->
+          <div class="vt-input-bento__blob" aria-hidden="true"></div>
+
+          <!-- Left: Protocol badge + Title + Description -->
+          <div class="vt-hdr-left">
+            <div class="vt-protocol-badge">
+              <span class="material-symbols-outlined">shield</span>
+              VERIFICATION PROTOCOL
+            </div>
+            <h1 class="vt-page-title">Verification<br>Playground</h1>
+            <p class="vt-page-desc">Enter a POXY hash, event ID, or RNG round ID to receive a step-by-step cryptographic proof. No login required.</p>
           </div>
-          <div class="vt-search-bar">
-            <input class="vt-search-input vt-input-shimmer" id="vtHashInput" type="text" placeholder="Enter poxy_hash (64 lowercase hex chars)…">
-            <button class="vt-search-btn vt-btn-magnetic" onclick="vtRunVerify()">
-              <span class="material-symbols-outlined">search</span> Verify
-            </button>
+
+          <!-- Right: Filter pills + Search input -->
+          <div class="vt-search-area">
+            <div class="vt-tabs">
+              <button class="vt-tab-btn" id="vtTabAsset" onclick="vtSwitchTab('asset',this)">
+                <span class="material-symbols-outlined">deployed_code</span> POXY ASSET
+              </button>
+              <button class="vt-tab-btn" onclick="vtSwitchTab('ledger',this)">
+                <span class="material-symbols-outlined">receipt_long</span> LEDGER EVENT
+              </button>
+              <button class="vt-tab-btn vt-tab-btn--active" onclick="vtSwitchTab('rng',this)">
+                <span class="material-symbols-outlined">casino</span> RNG ROUND
+              </button>
+            </div>
+            <div class="vt-search-bar">
+              <input class="vt-search-input vt-input-shimmer" id="vtHashInput" type="text" placeholder="Enter RNG round ID (#xxxxxxx)...">
+              <button class="vt-search-btn vt-btn-magnetic" onclick="vtRunVerify()">
+                <span class="material-symbols-outlined">search</span> VERIFY
+              </button>
+            </div>
           </div>
         </section>
 
-        <!-- Dashboard grid -->
+        <!-- ══ MAIN TERMINAL GRID ══ -->
         <div class="vt-grid">
-          <!-- Validation Path -->
-          <div class="vt-validation-panel vt-glass vt-bento-card" style="transition-delay:0.2s">
-            <div class="vt-validation-panel__bg-icon"><span class="material-symbols-outlined">account_tree</span></div>
+
+          <!-- ── Left: Validation Path (col-span-4) ── -->
+          <div class="vt-validation-panel vt-bento-card" style="transition-delay:0.2s">
             <div class="vt-panel-title">
-              <span class="material-symbols-outlined">linear_scale</span>
+              <span class="material-symbols-outlined">account_tree</span>
               Validation Path
             </div>
+            <!-- Vertical timeline with data-pulse-line -->
             <div class="vt-steps">
               <div class="vt-data-pulse-line"></div>
-              <!-- Phase 1: Commit -->
+              <!-- Phase 1 -->
               <div class="vt-step vt-step--done">
                 <div class="vt-step__icon vt-step__icon--done vt-status-glow">
                   <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1">check</span>
@@ -2282,7 +2298,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
                   <div class="vt-step__hash">c_hash: 8f4e...2a1d</div>
                 </div>
               </div>
-              <!-- Phase 2: Entropy -->
+              <!-- Phase 2 -->
               <div class="vt-step vt-step--done">
                 <div class="vt-step__icon vt-step__icon--done vt-status-glow">
                   <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1">check</span>
@@ -2293,7 +2309,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
                   <div class="vt-step__hash">seed: 9b2c...5f4e</div>
                 </div>
               </div>
-              <!-- Phase 3: Reveal (pending) -->
+              <!-- Phase 3 (pending) -->
               <div class="vt-step" style="opacity:0.5">
                 <div class="vt-step__icon vt-step__icon--pending"></div>
                 <div class="vt-step__body">
@@ -2304,10 +2320,11 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
             </div>
           </div>
 
-          <!-- Right column -->
+          <!-- ── Right column (col-span-8) ── -->
           <div class="vt-right-col">
+
             <!-- Asset Proof Receipt -->
-            <div class="vt-receipt vt-glass vt-bento-card" style="transition-delay:0.3s">
+            <div class="vt-receipt vt-bento-card" style="transition-delay:0.3s">
               <div class="vt-receipt__corner-glow"></div>
               <div class="vt-receipt__top">
                 <div>
@@ -2326,34 +2343,28 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
               </div>
               <div class="vt-receipt__fields">
                 <div>
-                  <div class="vt-field__label">
-                    <span class="material-symbols-outlined">key</span> POXY Hash
-                  </div>
+                  <div class="vt-field__label"><span class="material-symbols-outlined">link</span> POXY Hash</div>
                   <div class="vt-field__value" id="vtReceiptHash">Enter a hash above and click Verify</div>
                 </div>
                 <div>
-                  <div class="vt-field__label">
-                    <span class="material-symbols-outlined">data_object</span> Ledger Event ID
-                  </div>
+                  <div class="vt-field__label"><span class="material-symbols-outlined">data_object</span> Ledger Event ID</div>
                   <div class="vt-field__value" id="vtReceiptEvent">—</div>
                 </div>
                 <div>
-                  <div class="vt-field__label">
-                    <span class="material-symbols-outlined">casino</span> RNG Round ID
-                  </div>
+                  <div class="vt-field__label"><span class="material-symbols-outlined">casino</span> RNG Round ID</div>
                   <div class="vt-field__value" id="vtReceiptRng">—</div>
                 </div>
                 <div style="display:flex;align-items:flex-end">
-                  <button class="vt-download-btn" id="vtDownloadBtn">
+                  <button class="vt-download-btn vt-btn-magnetic" id="vtDownloadBtn">
                     <span class="material-symbols-outlined">download</span>
-                    Download JSON Receipt
+                    DOWNLOAD JSON RECEIPT
                   </button>
                 </div>
               </div>
             </div>
 
             <!-- Live Log Console -->
-            <div class="vt-console vt-glass vt-bento-card" style="transition-delay:0.4s">
+            <div class="vt-console vt-bento-card" style="transition-delay:0.4s">
               <div class="vt-console__toolbar">
                 <span class="vt-console__dot vt-console__dot--r"></span>
                 <span class="vt-console__dot vt-console__dot--y"></span>
@@ -2361,17 +2372,17 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
                 <span class="vt-console__label">sys_log // poxy_crypto_core</span>
               </div>
               <div class="vt-console__body" id="vtConsoleBody">
-                &gt; initializing verification routine...<br>
-                &gt; parsing hash: 0x7a2b...9a0b<br>
-                &gt; <span class="vt-log-ok">[OK]</span> hash format valid<br>
-                &gt; querying ledger node tx_req_4421...<br>
-                &gt; <span class="vt-log-ok">[OK]</span> consensus reached (nodes: 42/42)<br>
-                <span class="vt-log-accent">&gt; checking entropy source signature...</span><br>
+                &gt; initializing poxy_crypto_core v2.4.1...<br>
+                &gt; awaiting input vector...<br>
+                &gt; <span class="vt-log-ok">[OK]</span> secure channel established<br>
+                &gt; listening on verification endpoint...<br>
+                <span class="vt-log-accent">&gt; status: ready — enter hash to begin</span><br>
                 &gt; <span class="vt-log-cursor">_</span>
               </div>
             </div>
-          </div>
-        </div>
+
+          </div><!-- /vt-right-col -->
+        </div><!-- /vt-grid -->
       </main>
     </section>
 
