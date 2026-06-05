@@ -7817,7 +7817,9 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     : _buildCollectionCardFallback(item, tier, ds); // graceful fallback
 
   // ── Preserve all existing class flags (forge, selection, VIP, locked) ──
-  card.className += ' col-inv-card poxy-col-card tilt-3d'+
+  // IMPORTANT: keep 'col-card' so the delegated click handler on #colContent
+  // can find this element with e.target.closest('.col-card').
+  card.className += ' col-card col-inv-card poxy-col-card tilt-3d'+
     (isPinned?' pinned':'')+
     (isVip?' col-card-vip':'')+
     (vipTier?' '+vipClassFor(item):'')+
