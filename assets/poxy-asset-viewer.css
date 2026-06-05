@@ -102,15 +102,29 @@
   gap: 0;
   padding: 28px 24px 28px;
   border-right: 1px solid rgba(255,255,255,0.05);
-  /* Stitch: gradient-to-b from-transparent to-black/40 */
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.05) 0%,
-    rgba(0,0,0,0.25) 50%,
-    rgba(0,0,0,0.55) 100%
-  );
+  /* Stitch: bg-gradient-to-b from-transparent to-black/40 */
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 100%);
   overflow: hidden;
-  min-height: 480px;
+  min-height: 500px;
+  /* Stitch: perspective on the stasis pod container */
+  perspective: 1000px;
+}
+
+/* Lower amber aura — Stitch: absolute bottom radial from-orange-500/30 blur-3xl */
+.avm-stage-lower-aura {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 50%;
+  background: radial-gradient(ellipse at center bottom,
+    rgba(249,115,22,0.30) 0%,
+    rgba(124,45,18,0.10) 40%,
+    transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Rarity ambient backlight */
@@ -179,13 +193,14 @@
 }
 
 /* ── Central asset frame — Stitch stasis-pod premium ───────────────
-   Metallic glass: diagonal gradient sheen + deep inset shadow + float */
+   Metallic glass: diagonal gradient sheen + deep inset shadow + float
+   Stitch: w-64 h-64 md:w-80 md:h-80 rounded-xl                     */
 .avm-asset-frame {
   position: relative;
   z-index: 2;
-  width: 260px;
-  height: 260px;
-  border-radius: 28px;
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;           /* rounded-xl */
   /* Stitch exact: metallic glass diagonal */
   background: linear-gradient(135deg,
     rgba(255,255,255,0.06) 0%,
@@ -256,35 +271,32 @@
   z-index: 3;
 }
 
-/* Amber diamond SVG glyph (injected by JS for non-image assets) */
+/* Amber diamond SVG glyph — Stitch .diamond-glyph exact */
 .avm-diamond-glyph {
   position: relative;
   z-index: 3;
-  animation: avmIconFloat 3s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 10px rgba(245,158,11,0.4));
+  transform: translateZ(50px);       /* Stitch: transform translateZ(50px) */
   transition: filter 0.3s;
 }
-.avm-diamond-glyph:hover {
-  filter: drop-shadow(0 0 24px rgba(245,158,11,0.8));
+/* Stitch pulseGlyph animation — exact 1:1 */
+@keyframes pulseGlyph {
+  0%   { filter: drop-shadow(0 0 10px rgba(245,158,11,0.4));  opacity: 0.8; transform: translateZ(50px) scale(0.95); }
+  100% { filter: drop-shadow(0 0 25px rgba(245,158,11,0.8));  opacity: 1;   transform: translateZ(50px) scale(1.05); }
 }
-/* Amber glow blob behind the glyph */
+/* Amber glow blob behind the glyph — Stitch: bg-amber-500/20 blur-xl */
 .avm-glyph-blob {
   position: absolute;
-  width: 90px; height: 90px;
+  width: 96px; height: 96px;
   border-radius: 50%;
   background: rgba(245,158,11,0.2);
   filter: blur(24px);
   pointer-events: none;
   z-index: 2;
-  animation: avmGlyphBlob 3s ease-in-out infinite alternate;
 }
-@keyframes avmGlyphBlob {
-  0%   { transform: scale(0.9); opacity: 0.6; }
-  100% { transform: scale(1.2); opacity: 1;   }
-}
+/* Keep avmDiamondPulse as alias */
 @keyframes avmDiamondPulse {
-  0%   { filter: drop-shadow(0 0 10px rgba(245,158,11,0.4)); opacity: 0.8; transform: scale(0.95); }
-  100% { filter: drop-shadow(0 0 28px rgba(245,158,11,0.85)); opacity: 1;  transform: scale(1.05); }
+  0%   { filter: drop-shadow(0 0 10px rgba(245,158,11,0.4)); opacity: 0.8; transform: translateZ(50px) scale(0.95); }
+  100% { filter: drop-shadow(0 0 25px rgba(245,158,11,0.8)); opacity: 1;   transform: translateZ(50px) scale(1.05); }
 }
 /* Hide default icon when a real image/model is loaded */
 .avm-asset-inner img ~ .avm-asset-icon,
@@ -337,12 +349,15 @@
   text-align: center;
 }
 
+/* Stitch: font-headline-md text-3xl font-bold tracking-tight */
 .avm-asset-number {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 28px;
+  font-family: 'Hanken Grotesk', 'Inter', system-ui, sans-serif;
+  font-size: 30px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  /* Stitch: drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] */
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
 .avm-owner-row {
@@ -373,13 +388,15 @@
   letter-spacing: 0.08em;
 }
 
-/* Particle field */
+/* Particle field — Stitch: mix-blend-screen opacity-80 */
 .avm-particles {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1;
   overflow: hidden;
+  mix-blend-mode: screen;
+  opacity: 0.8;
 }
 
 .avm-particle {

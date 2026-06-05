@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=6">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=7">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6108,7 +6108,7 @@ window.openAssetViewerModal = function(item) {
       // SVG diamond glyph (Stitch spec)
       const wrap = document.createElement('div');
       wrap.className = 'avm-diamond-glyph';
-      wrap.style.cssText = `width:90px;height:90px;color:${tierColor};animation:avmDiamondPulse 3s ease-in-out infinite alternate;`;
+      wrap.style.cssText = `width:96px;height:96px;color:${tierColor};animation:pulseGlyph 3s ease-in-out infinite alternate;transform-style:preserve-3d;`;
       wrap.innerHTML = `<svg viewBox="0 0 100 100" style="width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
         <polygon fill="none" points="50,10 90,50 50,90 10,50" stroke="currentColor" stroke-width="2.5"/>
         <polygon fill="none" opacity="0.5" points="50,26 74,50 50,74 26,50" stroke="currentColor" stroke-width="1.5"/>
@@ -6207,47 +6207,51 @@ window.openAssetViewerModal = function(item) {
   const burnBtn = $('avmBurnBtn');
   if(burnBtn){ burnBtn.onclick = ()=>{ closeAssetViewerModal(); const card=document.querySelector('.col-card[data-id="'+CSS.escape(String(item.id))+'"]'); burnPoxySecure(item.id, card); }; }
 
-  // ── Amber particle system — Stitch spec ──
+  // ── Particle system — Stitch 1:1: 100 particles, all amber, mix-blend-screen on container ──
   const pCont = $('avmParticles');
   if(pCont){
     pCont.innerHTML = '';
-    const isAmber = item.poxy_tier && ['vip','secret','legendary','mythic'].includes(item.poxy_tier);
-    const particleColor = isAmber ? 'rgba(245,158,11,0.8)' : (tier.glow || 'rgba(255,255,255,0.5)');
-    const sparkColor   = isAmber ? '#fbbf24' : (tier.color || '#fff');
-    const count = 40;
-    for(let i=0;i<count;i++){
-      const p = document.createElement('span');
-      const isSpark = Math.random() > 0.75;
+    const particleCount = 100;
+    for(let i=0;i<particleCount;i++){
+      const p = document.createElement('div');
+      const isSpark = Math.random() > 0.8;
       const size = isSpark ? Math.random()*2+1 : Math.random()*4+1;
+      const startX = Math.random()*100;
+      const startY = 80 + Math.random()*20;
+      const duration = Math.random()*6+4;
+      const delay = Math.random()*5;
       p.style.cssText = [
-        'position:absolute','border-radius:50%','pointer-events:none',
+        'position:absolute','border-radius:50%','pointer-events:none','will-change:transform,opacity',
         `width:${size}px`,`height:${size}px`,
-        `left:${Math.random()*100}%`,`top:${70+Math.random()*30}%`,
-        `background:${isSpark?sparkColor:particleColor}`,
-        `box-shadow:0 0 ${isSpark?8:14}px ${isSpark?sparkColor:particleColor}`,
-        `opacity:${isSpark?Math.random()*0.8+0.2:Math.random()*0.35+0.1}`,
-        'will-change:transform,opacity'
+        `left:${startX}%`,`top:${startY}%`,
+        `opacity:${isSpark ? Math.random()*0.8+0.2 : Math.random()*0.3+0.1}`,
+        `background:${isSpark ? '#fbbf24' : 'rgba(245,158,11,0.6)'}`,
+        `box-shadow:${isSpark ? '0 0 8px #fbbf24' : '0 0 15px rgba(245,158,11,0.4)'}`
       ].join(';');
       pCont.appendChild(p);
       p.animate([
         {transform:'translate(0,0) scale(1)',opacity:p.style.opacity},
-        {transform:`translate(${(Math.random()-0.5)*70}px,-${120+Math.random()*120}px) scale(${Math.random()*0.5+0.4})`,opacity:'0'}
-      ],{duration:(Math.random()*5+4)*1000,delay:Math.random()*5*1000,iterations:Infinity,easing:'cubic-bezier(0.4,0,0.2,1)'});
+        {transform:`translate(${(Math.random()-0.5)*80}px,-${150+Math.random()*150}px) scale(${Math.random()*0.5+0.5})`,opacity:'0'}
+      ],{duration:duration*1000,delay:delay*1000,iterations:Infinity,easing:'cubic-bezier(0.4,0,0.2,1)'});
     }
   }
 
-  // ── 3D parallax on stage ──
+  // ── 3D parallax — Stitch: perspective on stage, rotateX/Y on frame ──
   const stageEl = modal.querySelector('.avm-stage');
   const frameEl = $('avmAssetFrame');
   function _avmOnMouseMove(e){
     if(!frameEl||!stageEl) return;
     const r=stageEl.getBoundingClientRect();
-    const rx=((e.clientY-r.top)/r.height-0.5)*-14;
-    const ry=((e.clientX-r.left)/r.width-0.5)*14;
-    frameEl.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+    const rx=((e.clientY-r.top)/r.height-0.5)*-10;
+    const ry=((e.clientX-r.left)/r.width-0.5)*10;
+    frameEl.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`;
+    frameEl.style.transition='transform 0.1s cubic-bezier(0.4,0,0.2,1)';
   }
   function _avmOnMouseLeave(){
-    if(frameEl) frameEl.style.transform='perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)';
+    if(frameEl){
+      frameEl.style.transform='rotateX(0deg) rotateY(0deg)';
+      frameEl.style.transition='transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+    }
   }
   if(stageEl){
     stageEl.removeEventListener('mousemove',stageEl._avmMove);
@@ -12807,6 +12811,8 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       <div class="avm-stage-backlight" id="avmBacklight" aria-hidden="true"></div>
       <!-- Shimmer ring -->
       <div class="avm-stage-ring" id="avmRing" aria-hidden="true"></div>
+      <!-- Lower amber aura — Stitch: from-orange-500/30 via-orange-900/10 blur-3xl -->
+      <div class="avm-stage-lower-aura" aria-hidden="true"></div>
 
       <!-- POXY ID badge (top) -->
       <div class="avm-poxy-id-badge">
