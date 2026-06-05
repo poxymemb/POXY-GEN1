@@ -1,878 +1,41 @@
-/* ============================================================
-   POXY Secure Verification Terminal
-   Stitch screen: 2065d064ee014e828f5a76d96c365997
-   Obsidian dark · pink-accented crypto audit UI
-   ============================================================ */
-
-.poxy-verify-page {
-  --vt-bg:          #0e0e0f;
-  --vt-surface:     rgba(255,255,255,0.025);
-  --vt-surface2:    rgba(32,31,33,0.9);
-  --vt-surface-lo:  rgba(19,19,20,0.95);
-  --vt-border:      rgba(255,255,255,0.08);
-  --vt-border-hi:   rgba(255,255,255,0.12);
-  --vt-on:          #e5e2e3;
-  --vt-muted:       #c4c7c8;
-  --vt-dim:         #636565;
-  --vt-accent:      #ec4899;
-  --vt-accent-glow: rgba(236,72,153,0.25);
-  --vt-teal:        #14b8a6;
-  --vt-teal-dim:    rgba(20,184,166,0.20);
-  --vt-green:       #4ade80;
-  --vt-radius:      1rem;
-  --vt-radius-lg:   1.5rem;
-  --vt-spring:      cubic-bezier(0.175,0.885,0.32,1.275);
-  --vt-ease:        cubic-bezier(0.22,1,0.36,1);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  background: var(--vt-bg);
-  color: var(--vt-on);
-  font-family: 'Hanken Grotesk', Inter, system-ui, sans-serif;
-  padding: 32px 20px 80px;
-  box-sizing: border-box;
-  position: relative;
-  overflow-x: hidden;
-}
-@media (min-width: 768px) {
-  .poxy-verify-page { padding: 48px 40px 80px; }
-}
-@media (min-width: 1280px) {
-  .poxy-verify-page { max-width: 1440px; margin: 0 auto; padding: 56px 64px 80px; width: 100%; }
-}
-
-/* Ambient glows */
-.vt-glow-wrap { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
-.vt-glow-blob {
-  position:absolute;filter:blur(120px);border-radius:50%;
-  animation:vt-float 20s ease-in-out infinite alternate;
-}
-.vt-glow-blob--a {
-  width:600px;height:600px;
-  background:linear-gradient(135deg,#d97706,#14b8a6);
-  top:-100px;right:-100px;opacity:0.12;animation-delay:0s;
-}
-.vt-glow-blob--b {
-  width:500px;height:500px;
-  background:#ec4899;
-  bottom:-200px;left:10%;opacity:0.08;animation-delay:-5s;
-}
-@keyframes vt-float {
-  0%   { transform:translate(0,0) scale(1); }
-  100% { transform:translate(-50px,50px) scale(1.1); }
-}
-
-/* Glass helper */
-.vt-glass {
-  background:var(--vt-surface);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--vt-border);
-}
-
-/* ── Header ─────────────────────────────────────────────────── */
-.vt-header {
-  text-align: center;
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 1;
-  max-width: 640px;
-  width: 100%;
-}
-.vt-header__title {
-  font-size: clamp(2rem, 6vw, 4rem);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  color: #fff;
-  margin: 0 0 12px;
-  line-height: 1.1;
-}
-.vt-header__title em {
-  font-style: normal;
-  color: var(--vt-accent);
-}
-.vt-header__desc {
-  font-size: 16px;
-  color: var(--vt-muted);
-  line-height: 1.65;
-  margin: 0;
-}
-
-/* ── Input section ──────────────────────────────────────────── */
-.vt-input-wrap {
-  width: 100%;
-  max-width: 680px;
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 1;
-}
-.vt-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-.vt-tab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 999px;
-  border: 1px solid var(--vt-border);
-  background: var(--vt-surface);
-  color: var(--vt-muted);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
-  backdrop-filter: blur(8px);
-}
-.vt-tab-btn .material-symbols-outlined { font-size: 16px; }
-.vt-tab-btn:hover { color: #fff; border-color: var(--vt-border-hi); }
-.vt-tab-btn--active {
-  color: var(--vt-accent);
-  border-color: rgba(236,72,153,0.5);
-  background: rgba(236,72,153,0.08);
-  box-shadow: 0 0 16px rgba(236,72,153,0.1);
-}
-
-.vt-search-bar {
-  display: flex;
-  width: 100%;
-}
-.vt-search-input {
-  flex: 1;
-  padding: 16px 24px;
-  background: rgba(42,42,43,0.9);
-  border: 1px solid rgba(68,71,72,0.4);
-  border-right: none;
-  border-radius: var(--vt-radius) 0 0 var(--vt-radius);
-  color: #fff;
-  font-family: 'JetBrains Mono', 'Space Mono', monospace;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.25s, box-shadow 0.25s;
-}
-.vt-search-input::placeholder { color: var(--vt-dim); }
-.vt-search-input:focus {
-  border-color: rgba(236,72,153,0.5);
-  box-shadow: 0 0 0 3px rgba(236,72,153,0.08);
-}
-.vt-search-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 28px;
-  background: var(--vt-accent);
-  color: #fff;
-  border: none;
-  border-radius: 0 var(--vt-radius) var(--vt-radius) 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background 0.25s, filter 0.25s;
-}
-.vt-search-btn:hover { filter: brightness(1.1); background: #f472b6; }
-.vt-search-btn .material-symbols-outlined { font-size: 20px; }
-
-/* ── Dashboard grid ─────────────────────────────────────────── */
-.vt-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  width: 100%;
-  position: relative;
-  z-index: 1;
-}
-@media (min-width: 1024px) {
-  .vt-grid { grid-template-columns: repeat(12, 1fr); align-items: start; }
-}
-
-/* ── Validation path panel ──────────────────────────────────── */
-.vt-validation-panel {
-  border-radius: var(--vt-radius-lg);
-  padding: 28px;
-  height: 100%;
-  border-top: 2px solid rgba(236,72,153,0.4);
-  position: relative;
-  overflow: hidden;
-}
-@media (min-width: 1024px) { .vt-validation-panel { grid-column: span 4; } }
-
-.vt-validation-panel__bg-icon {
-  position: absolute; top: 0; right: 0;
-  padding: 16px; opacity: 0.06;
-  pointer-events: none;
-}
-.vt-validation-panel__bg-icon .material-symbols-outlined { font-size: 64px; }
-.vt-panel-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #fff;
-  margin: 0 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.vt-panel-title .material-symbols-outlined { color: var(--vt-accent); font-size: 22px; }
-
-/* Steps */
-.vt-steps { display: flex; flex-direction: column; gap: 24px; }
-.vt-step {
-  display: flex;
-  gap: 16px;
-  position: relative;
-}
-.vt-step::before {
-  content: '';
-  position: absolute;
-  left: 11px; top: 26px; bottom: -24px; width: 2px;
-  background: rgba(255,255,255,0.08);
-}
-.vt-step:last-child::before { display: none; }
-.vt-step--done::before {
-  background: linear-gradient(to bottom, var(--vt-accent), rgba(236,72,153,0.15));
-}
-.vt-step__icon {
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-  position: relative; z-index: 1;
-}
-.vt-step__icon--done {
-  background: var(--vt-accent);
-  box-shadow: 0 0 15px rgba(236,72,153,0.5);
-}
-.vt-step__icon--done .material-symbols-outlined { font-size: 14px; color: #fff; font-variation-settings: 'FILL' 1; }
-.vt-step__icon--pending {
-  border: 2px solid rgba(255,255,255,0.2);
-  background: #131314;
-}
-.vt-step__icon--pending::after {
-  content: '';
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  animation: vt-blink 1.5s ease-in-out infinite;
-}
-@keyframes vt-blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
-.vt-step__body { flex: 1; }
-.vt-step__name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #fff;
-  margin-bottom: 4px;
-}
-.vt-step__desc {
-  font-size: 13px;
-  color: var(--vt-muted);
-  margin-bottom: 8px;
-  line-height: 1.5;
-}
-.vt-step__hash {
-  background: #201f21;
-  border: 1px solid rgba(68,71,72,0.3);
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--vt-accent);
-  word-break: break-all;
-}
-
-/* ── Right column ───────────────────────────────────────────── */
-.vt-right-col {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-@media (min-width: 1024px) { .vt-right-col { grid-column: span 8; } }
-
-/* Receipt card */
-.vt-receipt {
-  border-radius: var(--vt-radius-lg);
-  padding: 36px;
-  border-left: 4px solid rgba(20,184,166,0.4);
-  position: relative;
-  overflow: hidden;
-}
-.vt-receipt__corner-glow {
-  position: absolute; right: -80px; bottom: -80px;
-  width: 256px; height: 256px;
-  background: rgba(20,184,166,0.08);
-  border-radius: 50%;
-  filter: blur(60px);
-  pointer-events: none;
-}
-.vt-receipt__top {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--vt-border);
-  position: relative; z-index: 1;
-}
-@media (min-width: 600px) { .vt-receipt__top { flex-direction: row; justify-content: space-between; align-items: flex-start; } }
-
-.vt-receipt__badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-.vt-receipt__badge {
-  padding: 5px 14px;
-  border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  border: 1px solid;
-}
-.vt-receipt__badge--sig {
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  border-color: rgba(255,255,255,0.14);
-}
-.vt-receipt__badge--ok {
-  background: rgba(20,184,166,0.12);
-  color: #5eead4;
-  border-color: rgba(20,184,166,0.25);
-}
-.vt-receipt__badge--ok .material-symbols-outlined { font-size: 13px; vertical-align: -2px; font-variation-settings: 'FILL' 1; }
-
-.vt-receipt__title {
-  font-size: clamp(1.25rem, 3vw, 2rem);
-  font-weight: 800;
-  color: #fff;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
-.vt-receipt__ts-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--vt-muted);
-  margin-bottom: 4px;
-}
-.vt-receipt__ts {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  color: #fff;
-}
-.vt-receipt__ts-wrap { text-align: right; flex-shrink: 0; }
-
-/* Data fields grid */
-.vt-receipt__fields {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  position: relative; z-index: 1;
-}
-@media (min-width: 600px) { .vt-receipt__fields { grid-template-columns: 1fr 1fr; } }
-
-.vt-field__label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--vt-muted);
-  margin-bottom: 8px;
-}
-.vt-field__label .material-symbols-outlined { font-size: 15px; }
-.vt-field__value {
-  background: rgba(14,14,15,0.6);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: #fff;
-  word-break: break-all;
-  line-height: 1.6;
-}
-
-/* Download button */
-.vt-download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 24px;
-  border-radius: 10px;
-  border: 1px solid var(--vt-border-hi);
-  background: rgba(255,255,255,0.04);
-  color: #fff;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  width: 100%;
-  justify-content: center;
-  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--vt-spring);
-  position: relative; z-index: 1;
-}
-.vt-download-btn:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
-  transform: scale(1.02);
-}
-.vt-download-btn .material-symbols-outlined { font-size: 18px; }
-
-/* ── Log console ────────────────────────────────────────────── */
-.vt-console {
-  border-radius: var(--vt-radius-lg);
-  padding: 0;
-  overflow: hidden;
-}
-.vt-console__toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--vt-border);
-}
-.vt-console__dot {
-  width: 12px; height: 12px; border-radius: 50%;
-}
-.vt-console__dot--r { background: rgba(239,68,68,0.5); }
-.vt-console__dot--y { background: rgba(234,179,8,0.5); }
-.vt-console__dot--g { background: rgba(34,197,94,0.5); }
-.vt-console__label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--vt-dim);
-  margin-left: 8px;
-}
-.vt-console__body {
-  background: #0e0e0f;
-  padding: 20px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.35);
-  min-height: 128px;
-  max-height: 160px;
-  overflow-y: auto;
-}
-.vt-console__body .vt-log-ok { color: rgba(74,222,128,0.7); }
-.vt-console__body .vt-log-accent { color: var(--vt-accent); }
-.vt-console__body .vt-log-cursor {
-  display: inline-block;
-  animation: vt-blink 1s step-end infinite;
-}
-/* scrollbar */
-.vt-console__body::-webkit-scrollbar { width:4px; }
-.vt-console__body::-webkit-scrollbar-track { background:#0e0e0f; }
-.vt-console__body::-webkit-scrollbar-thumb { background:#333; border-radius:2px; }
-.vt-console__body .vt-log-err { color: #f87171; }
-
-/* ──────────────────────────────────────────────────────────────
-   ANIMATED VERIFY TERMINAL — from Stitch: Animated Unified Verify
-   All animation layers from the b6f56d50 screen
-   ────────────────────────────────────────────────────────────── */
-
-/* Animated ambient mesh background */
-#stPanelVerify .vt-glow-wrap {
-  position: fixed;
-  pointer-events: none;
-  z-index: 0;
-  inset: 0;
-  background:
-    radial-gradient(circle at 15% 50%, rgba(147,51,234,0.05) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(236,72,153,0.06) 0%, transparent 50%);
-  animation: vtMeshFloat 20s ease-in-out infinite alternate;
-}
-@keyframes vtMeshFloat {
-  0%   { transform: scale(1)   translate(0,0); }
-  50%  { transform: scale(1.08) translate(1.5%, 1.5%); }
-  100% { transform: scale(1)   translate(-1.5%, -1.5%); }
-}
-
-/* Bento card staggered entrance */
-.vt-bento-card {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
-}
-.vt-bento-card.vt-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Data pulse line — animated left border on validation path */
-.vt-data-pulse-line {
-  position: absolute;
-  left: -1px;
-  top: 0;
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent, rgba(251,207,232,0.8), transparent);
-  transform: translateY(-100%);
-  animation: vtDataPulse 2.5s infinite linear;
-  opacity: 0.5;
-  pointer-events: none;
-}
-@keyframes vtDataPulse {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-/* Status glow — breathing pulse on done step icons */
-.vt-step__icon--done.vt-status-glow {
-  animation: vtBreathGlow 3s infinite ease-in-out;
-}
-@keyframes vtBreathGlow {
-  0%, 100% { box-shadow: 0 0 8px rgba(251,207,232,0.2); }
-  50%       { box-shadow: 0 0 20px rgba(251,207,232,0.6); }
-}
-
-/* Input shimmer on focus */
-.vt-search-input.vt-input-shimmer:focus {
-  animation: vtShimmerEdge 2s infinite;
-  outline: none;
-}
-@keyframes vtShimmerEdge {
-  0%,100% { border-color: rgba(255,255,255,0.10); box-shadow: 0 0 0 rgba(236,72,153,0); }
-  50%      { border-color: rgba(251,207,232,0.4);  box-shadow: 0 0 15px rgba(236,72,153,0.15); }
-}
-
-/* Magnetic button hover */
-.vt-btn-magnetic {
-  transition: transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.2s ease;
-}
-.vt-btn-magnetic:active { transform: scale(0.95) !important; }
-
-/* Phase step completion states */
-.vt-step__icon--fail {
-  background: rgba(248,113,113,0.15);
-  border: 2px solid rgba(248,113,113,0.4);
-  color: #f87171;
-}
-
-/* Filter pill active highlight for vtSwitchTab */
-.vt-tab-btn--active {
-  background: rgba(236,72,153,0.10) !important;
-  border-color: rgba(236,72,153,0.30) !important;
-  color: #fbcfe8 !important;
-}
-
-/* Validation path left-border overflow container */
-#stPanelVerify .vt-steps {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Reduce the outer panel vt-glow-blob opacity (already handled by reskin, belt+suspenders) */
-#stPanelVerify .vt-glow-blob {
-  opacity: 0.12 !important;
-  filter: blur(140px) !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .vt-bento-card, #stPanelVerify .vt-glow-wrap,
-  .vt-data-pulse-line, .vt-step__icon--done.vt-status-glow,
-  .vt-search-input.vt-input-shimmer:focus {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
-}
-
-/* ============================================================
-   VERIFY TERMINAL v3 — Stitch Animated Playground
-   split-color heading · pill filter tabs · mesh bg · glassmorphism
-   ============================================================ */
-
-/* Page background */
-#stPanelVerify,
-.poxy-verify-page {
-  background: #050506 !important;
-}
-
-/* Ambient mesh gradient */
-#stPanelVerify::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(circle at 15% 50%, rgba(147,51,234,0.07) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(236,72,153,0.07) 0%, transparent 50%);
-  animation: vtMeshFloat 20s ease-in-out infinite alternate;
-}
-@keyframes vtMeshFloat {
-  0%   { transform: scale(1) translate(0,0); }
-  50%  { transform: scale(1.05) translate(1%,1%); }
-  100% { transform: scale(1) translate(-1%,-1%); }
-}
-
-/* Header: split-color "Verification Playground" */
-.vt-header__title {
-  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
-  font-size: clamp(2rem,6vw,3.5rem) !important;
-  font-weight: 900 !important;
-  letter-spacing: -0.04em !important;
-  text-transform: uppercase !important;
-  line-height: 1 !important;
-  color: #fff !important;
-}
-/* em tag = "Playground" = pink gradient */
-.vt-header__title em {
-  font-style: normal;
-  background: linear-gradient(135deg, #ec4899 0%, #f9a8d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Header protocol badge */
-.vt-header::before {
-  content: '⬡ VERIFICATION PROTOCOL';
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Hanken Grotesk', Inter, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #f9a8d4;
-  background: rgba(236,72,153,0.10);
-  border: 1px solid rgba(236,72,153,0.20);
-  padding: 6px 16px;
-  border-radius: 999px;
-  margin-bottom: 16px;
-}
-
-/* Tab buttons → pill filter pills (Stitch style) */
-.vt-tabs {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  margin-bottom: 16px;
-}
-.vt-tab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 16px !important;
-  border-radius: 999px !important;
-  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  cursor: pointer;
-  transition: color 0.2s, background 0.2s, border-color 0.2s;
-}
-.vt-tab-btn:not(.vt-tab-btn--active) {
-  background: rgba(255,255,255,0.04) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  color: rgba(196,199,200,0.7) !important;
-}
-.vt-tab-btn:not(.vt-tab-btn--active):hover {
-  color: #fff !important;
-  background: rgba(255,255,255,0.08) !important;
-}
-.vt-tab-btn--active {
-  background: rgba(236,72,153,0.12) !important;
-  border: 1px solid rgba(236,72,153,0.22) !important;
-  color: #fbcfe8 !important;
-}
-.vt-tab-btn .material-symbols-outlined {
-  font-size: 14px !important;
-}
-
-/* Input wrap: search bar */
-.vt-search-bar {
-  display: flex;
-  align-items: center;
-  position: relative;
-  width: 100%;
-}
-.vt-search-input {
-  background: #050506 !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-  border-radius: 999px !important;
-  padding-left: 24px !important;
-  padding-right: 120px !important;
-  height: 52px !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 13px !important;
-  color: #fff !important;
-  width: 100% !important;
-}
-.vt-search-input::placeholder {
-  color: rgba(161,161,170,0.45) !important;
-  font-size: 12px !important;
-}
-.vt-search-btn {
-  position: absolute;
-  right: 4px;
-  top: 4px;
-  bottom: 4px;
-  background: #fff !important;
-  color: #080809 !important;
-  border: none !important;
-  border-radius: 999px !important;
-  padding: 0 24px !important;
-  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.vt-search-btn:hover {
-  background: #fbcfe8 !important;
-  transform: scale(1.01) !important;
-}
-
-/* Input section bento card */
-.vt-input-wrap {
-  background: #0d0d0f !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-radius: 1.5rem !important;
-  padding: 28px 32px !important;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-@media (min-width: 768px) {
-  .vt-input-wrap {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-  }
-  .vt-input-wrap .vt-header { margin-bottom: 0; flex: 1; }
-  .vt-tabs-search { flex: 1; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
-}
-
-/* Validation path panel */
-.vt-validation-panel {
-  background: #0d0d0f !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-radius: 1.5rem !important;
-}
-
-/* Receipt panel */
-.vt-receipt {
-  background: #0d0d0f !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-radius: 1.5rem !important;
-}
-
-/* Console terminal */
-.vt-console {
-  background: #0d0d0f !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-radius: 1.5rem !important;
-}
-
-/* Step icons — pink glow */
-.vt-step__icon--done {
-  background: #fbcfe8 !important;
-  border-color: #0d0d0f !important;
-}
-
-/* Step hash code */
-.vt-step__hash {
-  background: #050506 !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-radius: 6px !important;
-  color: #f9a8d4 !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 11px !important;
-  padding: 8px 10px !important;
-  margin-top: 6px !important;
-  word-break: break-all;
-}
-
-/* Receipt badges */
-.vt-receipt__badge--ok {
-  background: rgba(20,184,166,0.12) !important;
-  border-color: rgba(20,184,166,0.25) !important;
-  color: #2dd4bf !important;
-}
-
-/* Download button */
-.vt-download-btn {
-  background: rgba(255,255,255,0.03) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-  border-radius: 12px !important;
-  color: #fff !important;
-  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  display: flex; align-items: center; gap: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-  padding: 12px 18px !important;
-  width: 100%;
-  justify-content: center;
-}
-.vt-download-btn:hover { background: rgba(255,255,255,0.08) !important; }
-
-/* Console toolbar dots */
-.vt-console__dot--r { background: rgba(255,96,88,0.4) !important; }
-.vt-console__dot--y { background: rgba(255,189,68,0.3) !important; }
-.vt-console__dot--g { background: rgba(40,200,64,0.3) !important; }
-
-/* Receipt field values */
-.vt-field__value {
-  background: #050506 !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-radius: 12px !important;
-  padding: 12px 14px !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 12px !important;
-  color: rgba(196,199,200,0.6) !important;
-  word-break: break-all;
-}
-
 /* ================================================================
-   VERIFY TERMINAL v5 — STITCH PIXEL-PERFECT REBUILD
+   POXY Verify Terminal — Full CSS
    Source: Stitch b6f56d5030234256900bb1fb12e13d43
-   Every class maps 1:1 to the downloaded Stitch HTML/screenshot.
+   Every rule is a direct 1:1 translation of the Stitch Tailwind HTML.
+   No legacy overrides. No conflicts.
    ================================================================ */
 
-/* ── Stitch: "fixed inset-0 flex items-center justify-center overflow-hidden" ── */
+/* ── Panel wrapper ── */
+#stPanelVerify {
+  position: relative;
+  overflow: visible;
+  background: #050506;
+}
+
+/* ── Main canvas ──
+   Stitch: <main class="flex-grow pt-20 pb-6 px-6 w-full flex flex-col gap-4 z-10 relative">
+   pt-20 is for fixed nav (64px+) — in SPA context we use less top padding */
+.poxy-verify-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;                    /* gap-4 */
+  padding: 24px;                /* px-6 pb-6 */
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+  min-height: 60vh;
+  background: transparent;
+  align-items: stretch;
+  max-width: 100%;
+  color: #e5e2e3;
+  font-family: 'Hanken Grotesk', Inter, system-ui, sans-serif;
+}
+
+/* ── White centered ambient glow ──
+   Stitch: fixed inset-0 z-0 flex items-center justify-center overflow-hidden
+   → w-[800px] h-[800px] bg-white opacity-[0.02] blur-[150px] rounded-full */
 .vt-ambient-center {
   position: absolute;
   inset: 0;
@@ -883,7 +46,6 @@
   justify-content: center;
   overflow: hidden;
 }
-/* Stitch: "w-[800px] h-[800px] bg-white opacity-[0.02] blur-[150px] rounded-full" */
 .vt-ambient-center__blob {
   width: 800px;
   height: 800px;
@@ -894,42 +56,41 @@
   flex-shrink: 0;
 }
 
-/* ── Stitch: .bg-mesh (fixed, purple+pink 0.08 radials, meshFloat 20s alternate) ── */
+/* ── BG mesh gradient ──
+   Stitch: radial purple 0.08 at 15%/50% + radial pink 0.08 at 85%/30%
+   animation: meshFloat 20s ease-in-out infinite alternate */
 .vt-bg-mesh {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 15% 50%, rgba(147,51,234,0.08) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(236,72,153,0.08) 0%, transparent 50%);
+    radial-gradient(circle at 15% 50%, rgba(147, 51, 234, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
   animation: vtMeshFloat 20s ease-in-out infinite alternate;
 }
 
-/* ── poxy-verify-page wrapper ── */
-.poxy-verify-page {
-  position: relative;
-  z-index: 1;
-}
-
-/* ── Header+Input combined bento card ── */
-/* Stitch: "bento-card bg-[#0d0d0f] border border-white/5 rounded-3xl p-8 w-full
-           flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden" */
+/* ════════════════════════════════════════════════════════
+   HEADER + INPUT BENTO CARD (combined single card)
+   Stitch: bento-card bg-[#0d0d0f] border border-white/5
+           rounded-3xl p-8 w-full
+           flex flex-col lg:flex-row items-center justify-between
+           gap-8 relative overflow-hidden
+   ════════════════════════════════════════════════════════ */
 .vt-input-bento {
   background: #0d0d0f;
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 1.5rem;
-  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1.5rem;           /* rounded-3xl */
+  padding: 32px;                   /* p-8 */
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 32px;
+  gap: 32px;                       /* gap-8 */
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  margin-bottom: 24px;
 }
 @media (min-width: 1024px) {
   .vt-input-bento {
@@ -937,12 +98,14 @@
     align-items: center;
   }
 }
-/* Stitch: "absolute w-[400px] h-[400px] bg-pink-400/5 rounded-full mix-blend-screen filter blur-[100px] animate-pulse" */
+
+/* Pink ambient blob inside header card
+   Stitch: absolute w-[400px] h-[400px] bg-pink-400/5 rounded-full blur-[100px] animate-pulse */
 .vt-input-bento__blob {
   position: absolute;
   width: 400px;
   height: 400px;
-  background: rgba(244,114,182,0.05);
+  background: rgba(244, 114, 182, 0.05);
   border-radius: 50%;
   filter: blur(100px);
   animation: vtMeshFloat 4s ease-in-out infinite alternate;
@@ -953,28 +116,31 @@
   pointer-events: none;
 }
 
-/* ── Left half: Protocol badge + Title + Desc ── */
+/* ── Left side: badge + title + description ──
+   Stitch: flex flex-col gap-4 z-10 lg:w-1/2 */
 .vt-hdr-left {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 16px;                       /* gap-4 */
   position: relative;
   z-index: 1;
   width: 100%;
 }
 @media (min-width: 1024px) { .vt-hdr-left { width: 50%; } }
 
-/* Stitch: "bg-white/5 border border-white/20 text-white px-3 py-1 rounded-full
-           font-label-lg text-[10px] uppercase tracking-widest inline-flex items-center gap-2 self-start" */
+/* Protocol badge
+   Stitch: bg-white/5 border border-white/20 text-white px-3 py-1
+           rounded-full font-label-lg text-[10px] uppercase tracking-widest
+           inline-flex items-center gap-2 self-start */
 .vt-protocol-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   align-self: flex-start;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.20);
   color: #ffffff;
-  padding: 5px 14px;
+  padding: 5px 12px;
   border-radius: 9999px;
   font-family: 'Hanken Grotesk', Inter, sans-serif;
   font-size: 10px;
@@ -984,7 +150,9 @@
 }
 .vt-protocol-badge .material-symbols-outlined { font-size: 14px; }
 
-/* Stitch: "font-headline-lg text-[48px] text-white uppercase leading-none tracking-tighter" */
+/* Page title
+   Stitch: font-headline-lg text-[48px] text-white uppercase leading-none
+           drop-shadow-lg tracking-tighter */
 .vt-page-title {
   font-family: 'Hanken Grotesk', Inter, sans-serif;
   font-size: clamp(2rem, 5vw, 48px);
@@ -996,22 +164,24 @@
   margin: 0;
 }
 
-/* Stitch: "text-gray-400 max-w-lg border-l border-white/20 pl-4 py-1 text-sm" */
+/* Page description
+   Stitch: font-body-md text-gray-400 max-w-lg border-l pl-4 py-1 text-sm border-white/20 */
 .vt-page-desc {
   color: #9ca3af;
   max-width: 480px;
-  border-left: 1px solid rgba(255,255,255,0.20);
+  border-left: 1px solid rgba(255, 255, 255, 0.20);
   padding: 4px 0 4px 16px;
   font-size: 14px;
   line-height: 1.6;
   font-family: 'Hanken Grotesk', Inter, sans-serif;
 }
 
-/* ── Right half: filter tabs + search bar ── */
+/* ── Right side: filter tabs + search bar ──
+   Stitch: w-full lg:w-1/2 flex flex-col gap-4 items-end z-10 */
 .vt-search-area {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 16px;                       /* gap-4 */
   width: 100%;
   align-items: flex-end;
   position: relative;
@@ -1019,9 +189,17 @@
 }
 @media (min-width: 1024px) { .vt-search-area { width: 50%; } }
 
-/* ── Filter pills (Stitch active = bg-white text-black) ── */
-/* Inactive pill: "bg-white/5 border border-white/10 text-gray-400" */
-/* Active pill:   "bg-white text-black border-white" */
+/* Filter tabs container — Stitch: flex gap-2 */
+.vt-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Filter pill — inactive
+   Stitch: font-label-lg text-[10px] px-4 py-2 rounded-full
+           text-gray-400 bg-white/5 border border-white/10 */
 .vt-tab-btn {
   display: inline-flex;
   align-items: center;
@@ -1035,17 +213,18 @@
   text-transform: uppercase;
   cursor: pointer;
   transition: color 0.2s, background 0.2s, border-color 0.2s;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
-  color: rgba(156,163,175,1);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #9ca3af;
 }
 .vt-tab-btn:hover {
   color: #ffffff;
-  background: rgba(255,255,255,0.10);
+  background: rgba(255, 255, 255, 0.10);
 }
 .vt-tab-btn .material-symbols-outlined { font-size: 14px; }
 
-/* STITCH ACTIVE PILL: solid white with black text */
+/* Filter pill — ACTIVE
+   Stitch: bg-white text-black border border-white — solid white pill */
 .vt-tab-btn--active {
   background: #ffffff !important;
   border-color: #ffffff !important;
@@ -1053,21 +232,24 @@
 }
 .vt-tab-btn--active .material-symbols-outlined { color: #080809 !important; }
 
-/* ── Search bar (Stitch: rounded-full dark input + absolute white VERIFY button) ── */
+/* Search bar wrapper — Stitch: w-full flex relative group */
 .vt-search-bar {
   display: flex;
   align-items: center;
   position: relative;
   width: 100%;
 }
-/* Stitch: "bg-[#050506] border border-white/10 h-14 rounded-3xl" */
+
+/* Search input
+   Stitch: bg-[#050506] border border-white/10 text-white font-mono-style
+           px-6 h-14 rounded-3xl pl-6 pr-32 */
 .vt-search-input {
   width: 100%;
   background: #050506;
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 9999px;
   padding: 0 130px 0 24px;
-  height: 56px;
+  height: 56px;                    /* h-14 */
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   color: #ffffff;
@@ -1075,9 +257,11 @@
   transition: border-color 0.25s, box-shadow 0.25s;
   box-sizing: border-box;
 }
-.vt-search-input::placeholder { color: rgba(156,163,175,0.5); font-size: 12px; }
+.vt-search-input::placeholder { color: rgba(156, 163, 175, 0.5); font-size: 12px; }
 
-/* Stitch: "absolute right-1 top-1 bottom-1 bg-white text-[#080809] ... rounded-2xl" */
+/* VERIFY button
+   Stitch: absolute right-1 top-1 bottom-1 bg-white text-[#080809]
+           font-label-lg text-[12px] px-6 rounded-2xl hover:bg-pink-100 */
 .vt-search-btn {
   position: absolute;
   right: 4px;
@@ -1103,40 +287,63 @@
 .vt-search-btn:hover { background: #fbcfe8; }
 .vt-search-btn .material-symbols-outlined { font-size: 16px; }
 
-/* ── Validation path panel ── */
-/* Stitch: "bento-card lg:col-span-4 bg-[#0d0d0f] border border-white/5 rounded-3xl p-6 relative overflow-hidden" */
+/* ════════════════════════════════════════════════════════
+   MAIN TERMINAL GRID
+   Stitch: grid grid-cols-1 lg:grid-cols-12 w-full flex-grow gap-6
+   ════════════════════════════════════════════════════════ */
+.vt-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;                       /* gap-6 */
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 1024px) {
+  .vt-grid {
+    grid-template-columns: repeat(12, 1fr);
+    align-items: start;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   VALIDATION PATH PANEL  (col-span-4)
+   Stitch: bento-card lg:col-span-4 bg-[#0d0d0f] border border-white/5
+           rounded-3xl p-6 relative overflow-hidden
+   ════════════════════════════════════════════════════════ */
 .vt-validation-panel {
   background: #0d0d0f;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 1.5rem;
-  padding: 24px;
+  padding: 24px;                   /* p-6 */
   position: relative;
   overflow: hidden;
-  height: 100%;
   box-sizing: border-box;
 }
 @media (min-width: 1024px) { .vt-validation-panel { grid-column: span 4; } }
 
-/* Panel title (Stitch: "font-black text-white uppercase tracking-tight" with account_tree icon) */
+/* Panel title
+   Stitch: flex items-center gap-3 · icon text-white · text font-black text-white uppercase */
 .vt-panel-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-family: 'Hanken Grotesk', Inter, sans-serif;
   font-size: 20px;
   font-weight: 900;
   color: #ffffff;
   text-transform: uppercase;
   letter-spacing: -0.01em;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 .vt-panel-title .material-symbols-outlined { color: #ffffff; font-size: 22px; }
 
-/* Stitch step timeline: "relative pl-4 mt-2 border-l border-white/10 flex flex-col gap-6 overflow-hidden" */
+/* Vertical timeline
+   Stitch: relative pl-4 mt-2 border-l border-white/10 flex flex-col gap-6 overflow-hidden */
 .vt-steps {
   position: relative;
   padding-left: 16px;
-  border-left: 1px solid rgba(255,255,255,0.10);
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -1144,11 +351,13 @@
   margin-top: 8px;
 }
 
-/* Stitch step (Stitch uses absolute positioned dot + body text) */
-.vt-step { position: relative; }
-.vt-step::before { display: none; } /* override old connector line */
+.vt-step {
+  position: relative;
+}
 
-/* Stitch done dot: "absolute w-5 h-5 bg-white rounded-full -left-[27px] top-0 ... border-[3px] border-[#0d0d0f] status-glow" */
+/* Step icon (done)
+   Stitch: absolute w-5 h-5 rounded-full -left-[27px] top-0
+           border-[3px] border-[#0d0d0f] status-glow bg-white */
 .vt-step__icon {
   position: absolute;
   width: 20px;
@@ -1159,31 +368,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #0d0d0f;
   z-index: 1;
 }
-/* STITCH: done icon is white, not pink */
 .vt-step__icon--done {
-  background: #ffffff !important;
-  border-color: #0d0d0f !important;
-  box-shadow: none;
+  background: #ffffff;             /* bg-white — NOT pink */
+  border: 3px solid #0d0d0f;
 }
 .vt-step__icon--done .material-symbols-outlined {
-  color: #080809 !important;
-  font-size: 10px !important;
+  color: #080809;                  /* dark icon on white bubble */
+  font-size: 10px;
 }
 .vt-step__icon--pending {
   background: #050506;
-  border: 1px solid rgba(255,255,255,0.20);
+  border: 1px solid rgba(255, 255, 255, 0.20);
 }
 .vt-step__icon--pending::after {
   content: '';
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.20);
+  background: rgba(255, 255, 255, 0.20);
 }
 
 .vt-step__body { padding-left: 4px; }
+
+/* Phase name — Stitch: font-label-lg text-[11px] text-white uppercase font-black tracking-wider */
 .vt-step__name {
   font-family: 'Hanken Grotesk', Inter, sans-serif;
   font-size: 11px;
@@ -1193,6 +402,8 @@
   color: #ffffff;
   margin-bottom: 4px;
 }
+
+/* Phase description — Stitch: font-body-md text-gray-400 text-xs */
 .vt-step__desc {
   font-size: 12px;
   color: #9ca3af;
@@ -1200,41 +411,200 @@
   margin-bottom: 6px;
   font-family: 'Hanken Grotesk', Inter, sans-serif;
 }
-/* STITCH: hash box text is white (NOT pink) */
+
+/* Phase hash box
+   Stitch: bg-[#050506] border border-white/5 rounded-md p-2 mt-1
+           font-mono-style break-all text-[11px] text-white */
 .vt-step__hash {
-  background: #050506 !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-radius: 6px !important;
-  padding: 8px 10px !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 11px !important;
-  color: #ffffff !important;          /* Stitch: text-white */
+  background: #050506;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #ffffff;                  /* text-white — NOT pink */
   word-break: break-all;
   margin-top: 4px;
+  line-height: 1.5;
 }
 
-/* ── Receipt panel ── */
+/* Data pulse line — animated accent stripe on timeline border */
+.vt-data-pulse-line {
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(251, 207, 232, 0.8), transparent);
+  transform: translateY(-100%);
+  animation: vtDataPulse 2.5s infinite linear;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ════════════════════════════════════════════════════════
+   RIGHT COLUMN  (col-span-8)
+   Stitch: lg:col-span-8 flex flex-col gap-4
+   ════════════════════════════════════════════════════════ */
+.vt-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1024px) { .vt-right-col { grid-column: span 8; } }
+
+/* ── ASSET PROOF RECEIPT ──
+   Stitch: bento-card bg-[#0d0d0f] border border-white/5
+           rounded-3xl p-6 relative overflow-hidden flex-grow */
 .vt-receipt {
   background: #0d0d0f;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 1.5rem;
   padding: 24px;
   position: relative;
   overflow: hidden;
   flex-grow: 1;
+  box-sizing: border-box;
 }
 
-/* ── Console terminal ── */
-.vt-console {
-  background: #0d0d0f;
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 1.5rem;
-  overflow: hidden;
-  min-height: 140px;
-  margin-top: 8px;
+.vt-receipt__corner-glow {
+  position: absolute;
+  right: -80px;
+  bottom: -80px;
+  width: 256px;
+  height: 256px;
+  background: rgba(20, 184, 166, 0.08);
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
 }
 
-/* ── Download button (Stitch: spring-transition, btn-magnetic) ── */
+/* Receipt top row — Stitch: flex justify-between items-start border-b border-white/5 pb-4 mb-6 */
+.vt-receipt__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vt-receipt__badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+/* "Valid Signatures" badge
+   Stitch: bg-white/5 text-gray-300 rounded-full border border-white/5 text-[9px] */
+.vt-receipt__badge--sig {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d1d5db;
+}
+
+/* "Verified" badge — Stitch: bg-teal-500/10 text-teal-400 border border-teal-500/20 */
+.vt-receipt__badge--ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(20, 184, 166, 0.10);
+  border: 1px solid rgba(20, 184, 166, 0.20);
+  border-radius: 9999px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2dd4bf;
+}
+.vt-receipt__badge--ok .material-symbols-outlined { font-size: 10px; }
+
+/* Receipt title — Stitch: font-headline-md text-[24px] font-black text-white uppercase tracking-tight */
+.vt-receipt__title {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* Timestamp */
+.vt-receipt__ts-wrap { text-align: right; flex-shrink: 0; }
+.vt-receipt__ts-label {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 4px;
+  display: block;
+}
+.vt-receipt__ts {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+/* Data fields grid — Stitch: grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 */
+.vt-receipt__fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 600px) {
+  .vt-receipt__fields {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    row-gap: 16px;
+  }
+}
+
+/* Field label — Stitch: font-label-lg text-[9px] text-gray-500 uppercase flex items-center gap-1.5 tracking-wider */
+.vt-field__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+.vt-field__label .material-symbols-outlined { font-size: 12px; }
+
+/* Field value — Stitch: bg-[#050506] border border-white/5 rounded-xl p-3 font-mono-style text-gray-400 text-xs */
+.vt-field__value {
+  background: #050506;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #9ca3af;
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+/* Download button
+   Stitch: bg-white/[0.03] hover:bg-white/10 border border-white/10
+           text-white font-label-lg text-[10px] py-3 rounded-xl spring-transition btn-magnetic */
 .vt-download-btn {
   display: inline-flex;
   align-items: center;
@@ -1243,8 +613,8 @@
   width: 100%;
   padding: 12px 18px;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.03);
   color: #ffffff;
   font-family: 'Hanken Grotesk', Inter, sans-serif;
   font-size: 10px;
@@ -1252,207 +622,170 @@
   letter-spacing: 0.10em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.vt-download-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.20); }
+.vt-download-btn:hover { background: rgba(255, 255, 255, 0.10); }
 .vt-download-btn .material-symbols-outlined { font-size: 14px; }
 
-/* ── Override old conflicting rules ── */
-/* Remove old amber/teal blobs (replaced by vt-ambient-center + vt-bg-mesh) */
-#stPanelVerify .vt-glow-blob--a,
-#stPanelVerify .vt-glow-blob--b,
-#stPanelVerify .vt-glow-wrap {
-  display: none !important;
-}
-/* Remove old ::before fixed mesh (replaced by .vt-bg-mesh element) */
-#stPanelVerify::before { display: none !important; }
-
-/* Remove old header-only and input-wrap-only styles */
-.vt-header__title,
-.vt-header::before { display: none !important; }
-
-/* Old poxy-verify-page centering → full-width for SPA context */
-.poxy-verify-page {
-  align-items: stretch !important;
-  max-width: 100% !important;
+/* ── LIVE CONSOLE TERMINAL ──
+   Stitch: bento-card bg-[#0d0d0f] border border-white/5
+           rounded-3xl flex flex-col min-h-[140px] overflow-hidden mt-2 */
+.vt-console {
+  background: #0d0d0f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;
+  overflow: hidden;
 }
 
-/* ================================================================
-   VERIFY TERMINAL v4 — SCROLL FIX · CONTAINER RADIUS · GLOW · ANIMATIONS
-   Exact sync with Stitch "Animated Unified Verify Terminal" b6f56d50
-   ================================================================ */
-
-/* ── 1. SCROLL & OVERFLOW FIX ────────────────────────────────────
-   Root cause: position:fixed elements inside a transformed/filtered
-   ancestor create an extra scrollbar and trap the layout.
-   Fix: flip all internal fixed wrappers to absolute.
-   ─────────────────────────────────────────────────────────────── */
-#stPanelVerify {
-  position: relative !important;
-  overflow: visible !important;   /* never clip the panel itself */
+/* Terminal toolbar — Stitch: border-b border-white/5 px-4 py-2 flex items-center */
+.vt-console__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Flip the ::before ambient mesh from fixed → absolute */
-#stPanelVerify::before {
-  position: absolute !important;  /* was: fixed — caused double scrollbar */
-  inset: 0 !important;
-  width: auto !important;
-  height: auto !important;
+/* Traffic light dots — Stitch: w-2.5 h-2.5 rounded-full bg-white/10 */
+.vt-console__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.10);
+  flex-shrink: 0;
+}
+.vt-console__dot--r { background: rgba(255, 255, 255, 0.10); }
+.vt-console__dot--y { background: rgba(255, 255, 255, 0.10); }
+.vt-console__dot--g { background: rgba(255, 255, 255, 0.10); }
+
+/* Console label — Stitch: font-mono-style text-gray-500 text-[10px] tracking-wider */
+.vt-console__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #6b7280;
+  letter-spacing: 0.05em;
+  margin-left: 8px;
 }
 
-/* Flip the glow blob wrapper from fixed → absolute */
-#stPanelVerify .vt-glow-wrap {
-  position: absolute !important;  /* was: fixed */
-  inset: 0 !important;
-  overflow: hidden !important;
+/* Terminal body
+   Stitch: p-4 bg-transparent flex-grow font-mono-style text-gray-400 text-xs
+           flex flex-col gap-1 opacity-70 */
+.vt-console__body {
+  padding: 16px;
+  background: transparent;
+  flex-grow: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #9ca3af;
+  opacity: 0.7;
+  min-height: 80px;
+  max-height: 160px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.vt-console__body::-webkit-scrollbar { width: 4px; }
+.vt-console__body::-webkit-scrollbar-track { background: transparent; }
+.vt-console__body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 2px; }
+
+/* Log colors */
+.vt-log-ok     { color: rgba(74, 222, 128, 0.7); }
+.vt-log-accent { color: #ffffff; }
+.vt-log-err    { color: #f87171; }
+.vt-log-cursor {
+  display: inline-block;
+  animation: vtCursorBlink 1s step-end infinite;
 }
 
-/* The page element: never set a hard height; let content grow */
-.poxy-verify-page {
-  height: auto !important;
-  overflow: visible !important;    /* restore vertical scroll */
-  overflow-x: hidden !important;   /* keep horizontal clean */
-}
+/* ════════════════════════════════════════════════════════
+   ANIMATIONS  — exact Stitch timings, 1:1
+   ════════════════════════════════════════════════════════ */
 
-/* ── 2. CONTAINER BORDER-RADIUS (rounded-3xl = 1.5rem) ──────────
-   The dark foundation (#0e0e0f) sits inside the panel (#050506),
-   so rounding it reveals the outer bg — exactly the framed-card look.
-   Use border-radius WITHOUT overflow:hidden so glow blobs bleed out.
-   ─────────────────────────────────────────────────────────────── */
-.poxy-verify-page {
-  border-radius: 1.5rem !important;
-  /* White ambient backlight behind the rounded dark canvas */
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04),
-    0 0 120px 40px rgba(255,255,255,0.025);
-}
-
-/* ── 3. AMBIENT GLOW FIX ─────────────────────────────────────────
-   Replace harsh amber/teal blob with the Stitch spec:
-   subtle purple (#9333ea) + pink (#ec4899) at very low opacity.
-   ─────────────────────────────────────────────────────────────── */
-#stPanelVerify .vt-glow-blob--a {
-  background: radial-gradient(circle, rgba(147,51,234,0.20) 0%, transparent 70%) !important;
-  top: -80px !important;
-  right: -80px !important;
-  opacity: 0.10 !important;
-  filter: blur(140px) !important;
-  width: 600px !important;
-  height: 600px !important;
-}
-#stPanelVerify .vt-glow-blob--b {
-  background: radial-gradient(circle, rgba(236,72,153,0.20) 0%, transparent 70%) !important;
-  bottom: -160px !important;
-  left: 8% !important;
-  opacity: 0.08 !important;
-  filter: blur(140px) !important;
-  width: 500px !important;
-  height: 500px !important;
-}
-
-/* ── 4. ANIMATIONS — 1:1 sync with Stitch "Animated Verify" ─────
-   Timings, easing, stagger, and hover transitions match exactly.
-   ─────────────────────────────────────────────────────────────── */
-
-/* 4a. Bento card staggered entrance */
+/* Bento card staggered entrance
+   Stitch: opacity 0→1 translateY(20px)→0, 0.8s cubic-bezier(0.16,1,0.3,1) */
 .vt-bento-card {
-  opacity: 0 !important;
-  transform: translateY(20px) !important;
+  opacity: 0;
+  transform: translateY(20px);
   transition:
     opacity  0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .vt-bento-card.vt-visible {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* 4b. Data pulse line — animated accent stripe on validation path */
-.vt-data-pulse-line {
-  position: absolute !important;
-  left: -1px !important;
-  top: 0 !important;
-  width: 2px !important;
-  height: 100% !important;
-  background: linear-gradient(to bottom, transparent, rgba(251,207,232,0.8), transparent) !important;
-  transform: translateY(-100%) !important;
-  animation: vtDataPulse 2.5s infinite linear !important;
-  opacity: 0.5 !important;
-  pointer-events: none !important;
+/* Breath glow on done step icons — Stitch: breathGlow 3s infinite ease-in-out */
+.vt-status-glow {
+  animation: vtBreathGlow 3s infinite ease-in-out;
 }
+@keyframes vtBreathGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(251, 207, 232, 0.2); }
+  50%       { box-shadow: 0 0 20px rgba(251, 207, 232, 0.6); }
+}
+
+/* Data pulse — Stitch: dataPulse 2.5s infinite linear */
 @keyframes vtDataPulse {
   0%   { transform: translateY(-100%); }
   100% { transform: translateY(100%); }
 }
 
-/* 4c. Breath glow — pulsing box-shadow on completed step icons */
-.vt-status-glow,
-.vt-step__icon--done.vt-status-glow {
-  animation: vtBreathGlow 3s infinite ease-in-out !important;
-}
-@keyframes vtBreathGlow {
-  0%, 100% { box-shadow: 0 0 10px rgba(251,207,232,0.2); }
-  50%       { box-shadow: 0 0 20px rgba(251,207,232,0.6); }
-}
-
-/* 4d. Input shimmer — edge pulse while focused */
+/* Input shimmer on focus — Stitch: shimmerEdge 2s infinite */
 .vt-search-input.vt-input-shimmer:focus {
-  animation: vtShimmerEdge 2s infinite !important;
-  outline: none !important;
+  animation: vtShimmerEdge 2s infinite;
+  outline: none;
 }
 @keyframes vtShimmerEdge {
   0%, 100% {
-    border-color: rgba(255,255,255,0.10) !important;
-    box-shadow: 0 0 0 rgba(236,72,153,0) !important;
+    border-color: rgba(255, 255, 255, 0.10);
+    box-shadow: 0 0 0 rgba(236, 72, 153, 0);
   }
   50% {
-    border-color: rgba(251,207,232,0.40) !important;
-    box-shadow: 0 0 15px rgba(236,72,153,0.15) !important;
+    border-color: rgba(251, 207, 232, 0.40);
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.15);
   }
 }
 
-/* 4e. Magnetic button — spring + scale-down on press */
+/* Magnetic button — Stitch: transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94) */
 .vt-btn-magnetic {
   transition:
     transform  0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.2s ease !important;
+    box-shadow 0.2s ease;
 }
-.vt-btn-magnetic:active {
-  transform: scale(0.95) !important;
-}
+.vt-btn-magnetic:active { transform: scale(0.95) !important; }
 
-/* 4f. Mesh float — ambient bg layer (matches .bg-mesh in Stitch) */
-@keyframes vtMeshFloat {
-  0%   { transform: scale(1)    translate(0,    0);    }
-  50%  { transform: scale(1.10) translate(2%,   2%);   }
-  100% { transform: scale(1)    translate(-2%, -2%);   }
-}
-
-/* 4g. Terminal cursor blink — step-end so it snaps on/off */
-.vt-log-cursor {
-  display: inline-block !important;
-  animation: vtCursorBlink 1s step-end infinite !important;
-}
+/* Cursor blink — Stitch: blink 1s step-end infinite */
 @keyframes vtCursorBlink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
 
-/* 4h. Spring-transition helper */
-.vt-spring {
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+/* Mesh float — Stitch: meshFloat 20s ease-in-out infinite alternate */
+@keyframes vtMeshFloat {
+  0%   { transform: scale(1)    translate(0,   0);   }
+  50%  { transform: scale(1.10) translate(2%,  2%);  }
+  100% { transform: scale(1)    translate(-2%, -2%); }
 }
 
-/* Reduced motion: disable all custom animations, fade-in only */
+/* Spring transition helper */
+.vt-spring {
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .vt-bento-card,
   .vt-data-pulse-line,
   .vt-status-glow,
-  .vt-step__icon--done.vt-status-glow,
   .vt-search-input.vt-input-shimmer:focus,
   .vt-log-cursor,
-  #stPanelVerify::before,
-  #stPanelVerify .vt-glow-wrap {
+  .vt-bg-mesh,
+  .vt-input-bento__blob {
     animation: none !important;
     transition: opacity 0.3s ease !important;
     transform: none !important;
