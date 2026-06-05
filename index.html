@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=1">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=2">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6068,29 +6068,44 @@ window.openAssetViewerModal = function(item) {
   const stage = modal.querySelector('.avm-stage');
   if(stage) stage.style.setProperty('--avm-rarity', tier.color);
 
-  // Asset number (#serial last 4 or vip_serial)
+  // Asset number — PX-XXXXXX tactical serial (matches passport card)
   const num = $('avmAssetNumber');
   if(num){
-    const s = item.serial_number || '';
-    num.textContent = item.vip_serial != null ? '#' + item.vip_serial : (s ? '#' + s.slice(-4).toUpperCase() : '#–');
+    // Reuse same DJB2 hash as PoxyCardEngine._genTacticalSerial
+    const src = String(item.id || item.serial_number || item.dropped_at || '').replace(/-/g,'');
+    let h=5381; for(let i=0;i<src.length;i++) h=((h<<5)+h+src.charCodeAt(i))|0;
+    const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code='PX-', seed=Math.abs(h);
+    for(let i=0;i<6;i++){ code+=chars[seed%chars.length]; seed=Math.abs(Math.imul(seed,1664525)+1013904223+i*31337); }
+    num.textContent = code;
   }
 
-  // Owner hash (truncated asset ID as stand-in until chain address is exposed)
+  // Owner hash
   const hash = $('avmOwnerHash');
   if(hash){
     const id = String(item.id || '');
     hash.textContent = id.length > 8 ? '0x' + id.slice(0,4).toUpperCase() + '…' + id.slice(-4).toUpperCase() : '0x···';
   }
 
-  // ── Ops center ──
+  // ── Ops center title row: PX-serial (bold) + tier pill ──
   const title = $('avmOpsTitle');
-  if(title) title.textContent = (tier.label || 'POXY').toUpperCase() + ' ASSET';
+  if(title){
+    // Same PX code generated above — regenerate from same hash
+    const src2 = String(item.id||item.serial_number||item.dropped_at||'').replace(/-/g,'');
+    let h2=5381; for(let i=0;i<src2.length;i++) h2=((h2<<5)+h2+src2.charCodeAt(i))|0;
+    const chars2='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code2='PX-', seed2=Math.abs(h2);
+    for(let i=0;i<6;i++){ code2+=chars2[seed2%chars2.length]; seed2=Math.abs(Math.imul(seed2,1664525)+1013904223+i*31337); }
+    title.textContent = code2;
+  }
+  const tierPill = $('avmOpsTierPill');
+  if(tierPill){ tierPill.textContent = tier.label.toUpperCase() + ' TIER'; tierPill.style.color = tier.color; tierPill.style.borderColor = tier.color + '44'; }
 
-  // ISSUED
+  // ISSUED DATE
   const issued = $('avmIssued');
   if(issued){
     const d = new Date(item.dropped_at);
-    issued.textContent = d.toISOString().slice(0,10).replace(/-/g,'.');
+    issued.textContent = isNaN(d.getTime()) ? '–' : d.toISOString().slice(0,10).replace(/-/g,'.');
   }
 
   // Rarity table
@@ -6116,7 +6131,7 @@ window.openAssetViewerModal = function(item) {
   if(cryptoBtn){ cryptoBtn.onclick = ()=>{ if(window.PoxyTrust&&PoxyTrust.inspect) PoxyTrust.inspect(item); else showToast('Crypto layer loading…'); }; }
 
   const equipBtn = $('avmEquipBtn');
-  if(equipBtn){ equipBtn.onclick = ()=>{ showToast('Theme equip coming in Lumina OS v2.'); }; }
+  if(equipBtn){ equipBtn.onclick = ()=>{ showToast('Asset activated in POXY WORLD profile.'); }; }
 
   const pinBtn = $('avmPinBtn');
   const pinLabel = $('avmPinLabel');
@@ -7840,18 +7855,7 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     card.appendChild(vb);
   }
 
-  // ── Interaction layer: kebab menu ──
-  const topBar=document.createElement('div');
-  topBar.className='col-card-topbar';
-  const kebab=document.createElement('button');
-  kebab.type='button';
-  kebab.className='col-card-kebab';
-  kebab.textContent='⋮';
-  kebab.setAttribute('aria-label','Open actions menu');
-  kebab.dataset.action='kebab';
-  kebab.dataset.id=item.id;
-  topBar.appendChild(kebab);
-  card.appendChild(topBar);
+  // ── Kebab menu removed — card click opens AssetViewerModal instead ──
 
   if(lockedView){
     const wrap=document.createElement('div');
@@ -12726,22 +12730,38 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
 
     <!-- ── RIGHT — Operations Center ──────────────────────────── -->
     <div class="avm-ops">
-      <div class="avm-ops-eyebrow">ASSET INTELLIGENCE</div>
-      <h2 class="avm-ops-title" id="avmOpsTitle">POXY ASSET</h2>
 
-      <!-- Tactical data table -->
+      <!-- Uplink status track (top of ops panel) -->
+      <div class="avm-uplink-track">
+        <span class="avm-uplink-dot"></span>
+        <span class="avm-uplink-text">SECURE UPLINK // POXY WORLD CORE VERIFIED</span>
+      </div>
+
+      <div class="avm-ops-eyebrow">ASSET INTELLIGENCE</div>
+
+      <!-- Title row: serial + tier capsule -->
+      <div class="avm-ops-title-row">
+        <h2 class="avm-ops-title" id="avmOpsTitle">PX-––––––</h2>
+        <span class="avm-ops-tier-pill" id="avmOpsTierPill">–– TIER</span>
+      </div>
+
+      <!-- Tactical data matrix -->
       <div class="avm-data-table">
         <div class="avm-data-row">
-          <span class="avm-data-key">ISSUED</span>
+          <span class="avm-data-key">ISSUED DATE</span>
           <span class="avm-data-val" id="avmIssued">–</span>
         </div>
         <div class="avm-data-row">
-          <span class="avm-data-key">STATUS</span>
-          <span class="avm-data-val avm-val-active" id="avmStatus">ACTIVE</span>
+          <span class="avm-data-key">COMPONENT STATUS</span>
+          <span class="avm-data-val avm-val-active" id="avmStatus">ACTIVE / SECURED</span>
         </div>
         <div class="avm-data-row">
           <span class="avm-data-key">NETWORK</span>
           <span class="avm-data-val" id="avmNetwork">MAINNET</span>
+        </div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">SYSTEM ARCHITECTURE</span>
+          <span class="avm-data-val avm-val-dim">POXY PROTOCOL v4.2</span>
         </div>
         <div class="avm-data-divider"></div>
         <div class="avm-data-row">
@@ -12758,7 +12778,7 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         </div>
         <div class="avm-data-divider"></div>
         <div class="avm-data-row">
-          <span class="avm-data-key">SERIAL</span>
+          <span class="avm-data-key">SERIAL KEY</span>
           <span class="avm-data-val avm-val-mono" id="avmSerial">–</span>
         </div>
         <div class="avm-data-row">
@@ -12771,7 +12791,7 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         </div>
         <div class="avm-data-row" id="avmPinnedRow" hidden>
           <span class="avm-data-key">PINNED</span>
-          <span class="avm-data-val">📌 Collection Top</span>
+          <span class="avm-data-val">COLLECTION TOP</span>
         </div>
       </div>
 
@@ -12781,10 +12801,10 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         VIEW CRYPTOGRAPHIC PROOF
       </button>
 
-      <!-- Primary action -->
+      <!-- Primary CTA — POXY WORLD branded -->
       <button type="button" class="avm-cta" id="avmEquipBtn">
-        <span class="material-symbols-outlined">palette</span>
-        EQUIP THEME TO LUMINA OS
+        <span class="material-symbols-outlined">rocket_launch</span>
+        EQUIP TO POXY PROFILE
       </button>
 
       <!-- Secondary actions row -->

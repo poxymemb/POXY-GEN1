@@ -475,3 +475,64 @@
 .avm-backdrop:not(.avm-open) .avm-particle {
   animation-play-state: paused;
 }
+
+/* ── Uplink status track ──────────────────────────────────────────── */
+.avm-uplink-track {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+}
+.avm-uplink-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(74,222,128,0.7);
+  animation: avmUplinkPulse 2s ease-in-out infinite;
+}
+@keyframes avmUplinkPulse {
+  0%,100% { opacity: 1; } 50% { opacity: 0.45; }
+}
+.avm-uplink-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ── Ops title row: PX-serial + tier pill ──────────────────────────── */
+.avm-ops-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.avm-ops-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin: 0;
+}
+.avm-ops-tier-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid;
+  border-radius: 9999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
