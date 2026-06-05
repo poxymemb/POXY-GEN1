@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY - Gaming Leaderboard &amp; Ranks</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#074b6e",
+                      "on-tertiary": "#00344e",
+                      "error": "#ffb4ab",
+                      "error-container": "#93000a",
+                      "tertiary-container": "#2e6589",
+                      "surface-container-high": "#2a2a2a",
+                      "surface-container-highest": "#353535",
+                      "outline-variant": "#514250",
+                      "secondary": "#ffb2be",
+                      "surface": "#131313",
+                      "primary-fixed": "#ffd6fe",
+                      "primary": "#f9abff",
+                      "surface-dim": "#131313",
+                      "tertiary-fixed-dim": "#99ccf5",
+                      "surface-container-lowest": "#0e0e0e",
+                      "surface-variant": "#353535",
+                      "tertiary-fixed": "#cae6ff",
+                      "surface-container-low": "#1c1b1b",
+                      "on-error": "#690005",
+                      "on-secondary-container": "#ffeced",
+                      "inverse-surface": "#e5e2e1",
+                      "secondary-fixed-dim": "#ffb2be",
+                      "inverse-primary": "#9a25ae",
+                      "surface-bright": "#393939",
+                      "on-primary-fixed-variant": "#7b008f",
+                      "primary-fixed-dim": "#f9abff",
+                      "on-secondary-fixed": "#400014",
+                      "background": "#131313",
+                      "outline": "#9d8b9b",
+                      "on-surface": "#e5e2e1",
+                      "on-error-container": "#ffdad6",
+                      "inverse-on-surface": "#313030",
+                      "surface-tint": "#f9abff",
+                      "on-background": "#e5e2e1",
+                      "on-primary-container": "#ffcaff",
+                      "on-tertiary-fixed": "#001e2f",
+                      "surface-container": "#20201f",
+                      "on-tertiary-container": "#bbe0ff",
+                      "tertiary": "#99ccf5",
+                      "on-surface-variant": "#d5c1d2",
+                      "on-primary": "#570066",
+                      "primary-container": "#9c27b0",
+                      "on-primary-fixed": "#35003f",
+                      "secondary-fixed": "#ffd9de",
+                      "on-secondary-fixed-variant": "#900038",
+                      "secondary-container": "#d70357",
+                      "on-secondary": "#660025",
+                      "glass-stroke": "rgba(255, 255, 255, 0.05)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "gutter": "24px",
+                      "section-gap": "120px",
+                      "margin-desktop": "64px",
+                      "base": "8px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "label-caps": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-xl": ["Hanken Grotesk"],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-xl": ["80px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "900" }],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        /* Custom Utilities */
+        .spring-transition {
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+        }
+
+        .terminal-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 2.5rem;
+        }
+
+        .glowing-border {
+            position: relative;
+        }
+        .glowing-border::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            background: rgba(249, 171, 255, 0.3);
+            z-index: -1;
+            opacity: 0.8;
+            filter: blur(5px);
+        }
+
+        .ambient-glow {
+            box-shadow: 0 0 60px rgba(249, 171, 255, 0.05);
+        }
+
+        .desaturate {
+            filter: grayscale(100%) opacity(0.8);
+        }
+    </style>
+</head>
+<body class="bg-[#080809] text-gray-300 min-h-screen flex flex-col font-body-md overflow-x-hidden selection:bg-pink-200/30 selection:text-white relative">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-[#080809]/60 backdrop-blur-xl fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 border-b border-white/[0.08]">
+<div class="flex items-center gap-gutter">
+<span class="text-white font-headline-md font-black uppercase tracking-tighter">POXY WORLD</span>
+</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="font-label-caps text-[14px] text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">News</a>
+<a class="font-label-caps text-[14px] text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">Patches</a>
+<a class="font-label-caps text-[14px] text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">Terminal</a>
+<a class="font-label-caps text-[14px] text-white border-b border-pink-200 pb-1 hover:scale-105 spring-transition uppercase px-2 py-1" href="#">Market</a>
+</nav>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md flex items-center justify-center text-white hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<button class="w-10 h-10 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md flex items-center justify-center text-white hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="px-6 py-2 rounded-[2.5rem] border border-white/[0.08] bg-white/[0.03] backdrop-blur-md text-white font-label-caps text-[14px] uppercase tracking-widest hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition">
+                Connect Wallet
+            </button>
+<div class="w-12 h-12 rounded-full border border-white/20 overflow-hidden ml-2 spring-transition hover:scale-105">
+<img alt="User profile avatar" class="w-full h-full object-cover desaturate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFiIJuW9AKwxVHxZHKauenFXfLTExhjdW3HdkAXGV8im0apTAHLm_1VmrjOUm_kmGuSr42K9De9HCPseUOIwH7glc21VLtYwsHRnnQQcSz-Qs2tFtUVFjta21QgmhsbBSC1QiHjEhn92aNB3wriRkruF0gc9bQDemWBeWxqc2JEdbFyV5xZ9-g3AqrM1qO9lxhDelgfbU_osV-26dFOxPtL0bDey7YE-1ZwHAsTXK5be6S7OY0zFscCzDlNjTVbtj6Skc3am3oyw"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[120px] pb-section-gap px-margin-mobile md:px-margin-desktop max-w-[1600px] mx-auto w-full flex flex-col gap-12 relative z-10">
+<!-- Header & Toggle -->
+<section class="flex flex-col items-center justify-center pt-8 gap-6">
+<div class="text-center space-y-4">
+<h1 class="font-headline-xl text-headline-xl text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-200 uppercase leading-none drop-shadow-lg tracking-tighter">GLOBAL RANKS</h1>
+<p class="font-body-lg text-body-lg text-gray-400">Classified personnel database. The elite echelon of POXY WORLD.</p>
+</div>
+<!-- Capsule Toggle -->
+<div class="flex items-center bg-[#050506] p-1 rounded-sm border border-white/[0.08] w-fit mx-auto mt-4">
+<button class="px-6 py-2 font-label-caps text-[12px] bg-white/[0.05] text-white transition-all duration-300 ease-out uppercase tracking-widest border border-white/[0.08]">
+                    PC BALANCE
+                </button>
+<button class="px-6 py-2 font-label-caps text-[12px] text-gray-500 hover:text-white transition-all duration-300 ease-out uppercase tracking-widest">
+                    RARE+ COUNT
+                </button>
+</div>
+</section>
+<!-- HERO PODIUM (#1, #2, #3) -->
+<section class="flex flex-col md:flex-row justify-center items-end gap-6 md:gap-8 pt-12 pb-8 h-[400px]">
+<!-- Rank #2 -->
+<div class="bg-[#050506] border border-white/[0.05] rounded-xl p-6 flex flex-col items-center gap-4 w-full md:w-64 relative group hover:bg-white/[0.02] transition-colors duration-300 transform translate-y-8">
+<div class="font-label-caps text-[12px] text-gray-500 uppercase tracking-widest mb-2">[RANK: 02]</div>
+<div class="relative w-24 h-24 rounded-sm p-1 border border-white/[0.08] bg-[#050506]">
+<img alt="Rank 2 Player" class="w-full h-full object-cover desaturate" data-alt="A stylized portrait of a male gamer in a sleek, high-tech dark environment. Sharp lighting, deep shadows, intense expression, minimalist aesthetic. High resolution, professional photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbnLxtRVsr24lzm1-WES8-cREHfDNd8nk7o9QrbaylubFKfdwmyoSfK06VsAJHq2rvwv8YQQSMGnRieGgrv3KQdi0lUOgYWI2RJvD6WZTcbbZeSzEpbWr8IMMotQCxY2Fw9D4BJwS7_KDoMOCAzR0MwMn_H5_3Frl2C_kxdOlDDaGBMlaRiSXmPbR3tl7R4iQNjN5HhSrxlB1dOfUVnum354tKP9kXIEFS4bnydnTOwGsfBV6yCGto_IHr0JQN0UJi3wOpk4z0nA"/>
+</div>
+<div class="text-center">
+<h3 class="font-label-caps text-[14px] text-white uppercase tracking-widest">VoidWalker</h3>
+<p class="font-label-caps text-[12px] text-gray-400 mt-1">84,200 PC</p>
+</div>
+</div>
+<!-- Rank #1 (Center) -->
+<div class="bg-[#050506] border border-white/[0.05] rounded-xl p-8 flex flex-col items-center gap-5 w-full md:w-72 relative group hover:bg-white/[0.02] transition-colors duration-300 glowing-border z-10">
+<div class="font-label-caps text-[12px] text-pink-200 uppercase tracking-widest mb-2">[RANK: 01]</div>
+<div class="relative w-32 h-32 rounded-sm p-1 border border-white/[0.08] bg-[#050506] shadow-[0_0_30px_rgba(249,171,255,0.15)]">
+<img alt="Rank 1 Player" class="w-full h-full object-cover desaturate" data-alt="A dramatic portrait of a cybernetic character with glowing pink neon elements. High contrast lighting against a deep black background. Highly detailed, futuristic fashion, intense gaze, cinematic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMCBq85D3JmEOMVhToxEiuxFiGJaA_iFlNqWUYDe5r5Bjrpt5GcmerFcDyuEmI9go-AWCFahlnAF2tjKgxM6JqeJiLzQE1-wJ5UlwDEKuHRXX_iVM-kFntP4vaH4sWKRpsaXNktzrMSrArL2OUTxh5J40ivNyco6PnLFNQehBZGK73Dtde6BALtIPoNBFhfsko40K5WKTbbKpACEZABhsKJrNtUA9uLRpFHuozbZ7mEwm0PwrO8h-XdnT-dv851IQVAtmCByHL2g"/>
+</div>
+<div class="text-center">
+<h3 class="font-label-caps text-[16px] text-white uppercase tracking-widest">NeonPhantom</h3>
+<p class="font-label-caps text-[12px] text-pink-200 mt-2">120,500 PC</p>
+</div>
+</div>
+<!-- Rank #3 -->
+<div class="bg-[#050506] border border-white/[0.05] rounded-xl p-6 flex flex-col items-center gap-4 w-full md:w-64 relative group hover:bg-white/[0.02] transition-colors duration-300 transform translate-y-8">
+<div class="font-label-caps text-[12px] text-gray-500 uppercase tracking-widest mb-2">[RANK: 03]</div>
+<div class="relative w-24 h-24 rounded-sm p-1 border border-white/[0.08] bg-[#050506]">
+<img alt="Rank 3 Player" class="w-full h-full object-cover desaturate" data-alt="A cool, confident male character portrait in a dark sci-fi setting. Subtle ambient rim lighting, minimalist background. High quality, sharp focus, professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8R4EGSl3uLN3zw-UmaGQDEoCMxgTgj4Sk1JOH2eHd6syMj7YlRs0hamwZkIqxmyq7OMeB7trJGKKyit41IRzmeWSUIMKjERywsPU4TyBeY2KnPmIlitYRrkIw1UWz-JTstOqHBJZgPJtlLLY6HAyrcPx9yi1zrMv3j__X2vWqJbVQ_mLgwZPirvshuPpVtUydGhU35UNu46EqGwirdZOD_GXZPxIkeNI07fAV-g_fAO8tXqW3QDDYiPsAFTBVYKx4pr6HUpmJNw"/>
+</div>
+<div class="text-center">
+<h3 class="font-label-caps text-[14px] text-white uppercase tracking-widest">CyberRonin</h3>
+<p class="font-label-caps text-[12px] text-gray-400 mt-1">79,100 PC</p>
+</div>
+</div>
+</section>
+<!-- TWO-COLUMN GRID -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-gutter mt-12">
+<!-- LEFT COLUMN: Leaderboard List -->
+<div class="md:col-span-8 flex flex-col">
+<div class="bg-[#050506] border border-white/[0.08] rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-white/[0.08] bg-white/[0.02]">
+<h2 class="font-label-caps text-[14px] text-gray-400 uppercase tracking-widest">Top 100 Players</h2>
+</div>
+<!-- List Items (Muted Rules) -->
+<div class="flex flex-col">
+<!-- Item 4 -->
+<div class="flex items-center justify-between p-4 border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors duration-300 group cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="w-12 text-center font-label-caps text-[12px] text-gray-500 uppercase">04</span>
+<img alt="Player 4" class="w-8 h-8 rounded-sm object-cover desaturate border border-white/[0.08]" data-alt="A digital portrait of a female character with futuristic glasses. Soft neon lighting, dark background, detailed, modern tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBlIqK29rARId5jrk0lLFibAMNfeKD6_d81-FwNMEQR-hpR_fGrFP4Pj4L7gOShz-0relX4sLactZzDYZtYGnMjh4biNvp1L8JrGLdj10Lp6kFprPts8djbiyyl90vLzkwbU3t-cYi2cgc7uRgboXlBJMcmQwdtaj8S5j1j4K9iUKU0DpPSpXJ0toFnspWAauor-WQUjCR9iSmP1LwHd47WXrgNYVkYg9DsCOU0EDor0MH2t9mooSGQnDcs5QEboukZKEHaqzJGg"/>
+<span class="font-label-caps text-[14px] text-white uppercase tracking-wider">EchoShift</span>
+</div>
+<span class="font-label-caps text-[12px] text-gray-400 pr-4 group-hover:text-pink-200 transition-colors">75,000 PC</span>
+</div>
+<!-- Item 5 -->
+<div class="flex items-center justify-between p-4 border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors duration-300 group cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="w-12 text-center font-label-caps text-[12px] text-gray-500 uppercase">05</span>
+<img alt="Player 5" class="w-8 h-8 rounded-sm object-cover desaturate border border-white/[0.08]" data-alt="A minimalist digital portrait of a woman looking directly at the camera. Soft cool lighting, dark muted background, sharp, high quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCtYAh3FC75U8bbj9RqNY-4pJzHwPWi-khSGOacrnK76TCXMpcfQx3R7L5lf4pCQ79agaGDeJ3BW4VL6jD321E6zLJfslUfkzP-cBXP7VNQocT52WGMa-ovqYSSXRUsMEaLJJ3Oow52IFKWoQCPWDau9LY8blUHxb5Z0zEmoBhMH4--HY5mxIfZ30Meu-w-QWMRY7I9HrGFXy9N_9II4gUCcfK7FHg4X5Ld69om2o7LO-beUoRooAw2oBWE5VcJ_SiX-RJH4DbDQ"/>
+<span class="font-label-caps text-[14px] text-white uppercase tracking-wider">QuantumGhost</span>
+</div>
+<span class="font-label-caps text-[12px] text-gray-400 pr-4 group-hover:text-pink-200 transition-colors">72,400 PC</span>
+</div>
+<!-- Item 6 -->
+<div class="flex items-center justify-between p-4 border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors duration-300 group cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="w-12 text-center font-label-caps text-[12px] text-gray-500 uppercase">06</span>
+<img alt="Player 6" class="w-8 h-8 rounded-sm object-cover desaturate border border-white/[0.08]" data-alt="Portrait of a person in profile in a dark, moody environment with a singular strip of bright light illuminating their face. Artistic, minimalist." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKfJaJW7IE_P-LWQ8254IoyQQvICP12WnvMNogsPgwDg2NClN5sS__9AboHS6d193hP8l3qEbnI0bzdBIvo5itEca8FIyoBqLP2pxbhbtAPcRbwQ_O33pxH3_pqy5RjxoOUSWBjI29o-cm8wCdHIWWEQxWK8s_-J5MlC9-5UUG9QGdBU6NCkJ3bV-nzuEaCAkO763gvfAPHUfAIre5Bbbdav97I3pxa4fh8S6mRAme9VMW23JzeZHZrNRcjdt2SfjS0AQe08Lrvg"/>
+<span class="font-label-caps text-[14px] text-white uppercase tracking-wider">Starkiller</span>
+</div>
+<span class="font-label-caps text-[12px] text-gray-400 pr-4 group-hover:text-pink-200 transition-colors">68,900 PC</span>
+</div>
+<!-- Item 7 -->
+<div class="flex items-center justify-between p-4 border-white/[0.05] hover:bg-white/[0.02] transition-colors duration-300 group cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="w-12 text-center font-label-caps text-[12px] text-gray-500 uppercase">07</span>
+<div class="w-8 h-8 rounded-sm bg-white/[0.02] border border-white/[0.08] flex items-center justify-center">
+<span class="material-symbols-outlined text-gray-500 text-[16px]">person</span>
+</div>
+<span class="font-label-caps text-[14px] text-white uppercase tracking-wider">NullSector</span>
+</div>
+<span class="font-label-caps text-[12px] text-gray-400 pr-4 group-hover:text-pink-200 transition-colors">65,100 PC</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Your Standing Overview -->
+<div class="md:col-span-4 mt-8 md:mt-0">
+<article class="terminal-panel flex flex-col justify-between p-8 relative group spring-transition hover:scale-[1.01] hover:shadow-[0_0_40px_rgba(251,207,232,0.05)] sticky top-32">
+<div class="flex justify-between items-start mb-8 border-b border-white/[0.08] pb-4">
+<span class="bg-white/10 text-white font-label-caps text-[12px] px-3 py-1 rounded-sm uppercase backdrop-blur-md">STATUS</span>
+<span class="font-label-caps text-[12px] text-gray-400 bg-white/5 border border-white/10 px-3 py-1 rounded-sm">LIVE</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-white uppercase leading-tight mb-6">Your Standing Overview</h2>
+<!-- User Mini Profile -->
+<div class="flex items-center gap-4 mb-8">
+<img alt="User Profile" class="w-12 h-12 rounded-sm border border-white/[0.08] object-cover desaturate" data-alt="A futuristic cyberpunk portrait of a young woman with neon pink lighting accents, highly detailed, sharp focus, 8k resolution, cinematic lighting, sleek tech accessories." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBArvWWXEuQNTTj11Z0vGygQy7_16zrUim9LnzIzSpioz98OYTFDLHfqYasDTyUs9ctk25UJW3fvozPK6o96Z7JMpheEEHm4-hWhl5yAA9ukL1fNWDjC-iFijRPE5oYrjgmkJFvwPVI7Y1GOgWvxVV3SZona2M5KZCx_W86ms37J3ANvsOazxbvFW-OzMFca9MVTciKn428UMsogye8PGzqYU0q8Oe0gK8YG4XCC82pEuepH2rj21pbECUamqShu24wHnIJXQrrbQ"/>
+<div>
+<h3 class="font-label-caps text-[14px] text-white uppercase tracking-widest">Nikita</h3>
+<p class="font-label-caps text-[12px] text-pink-200 mt-1">Elite Tier</p>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="bg-white/[0.02] p-4 border border-white/[0.08] rounded-sm">
+<p class="font-label-caps text-[10px] text-gray-500 mb-2 uppercase">Global Rank</p>
+<p class="font-label-caps text-[18px] text-white uppercase">#42</p>
+</div>
+<div class="bg-white/[0.02] p-4 border border-white/[0.08] rounded-sm">
+<p class="font-label-caps text-[10px] text-gray-500 mb-2 uppercase">Total PC</p>
+<p class="font-label-caps text-[18px] text-pink-200 uppercase">24,500</p>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="mb-2 flex justify-between items-end">
+<span class="font-label-caps text-[10px] text-gray-500 uppercase">Progress to Rank #41</span>
+<span class="font-label-caps text-[10px] text-pink-200">85%</span>
+</div>
+<div class="w-full h-[2px] bg-white/[0.05] overflow-hidden mb-8">
+<div class="h-full bg-pink-200" style="width: 85%;"></div>
+</div>
+<!-- Action Button -->
+<button class="w-full py-3 border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.1] text-white font-label-caps text-[12px] uppercase tracking-widest transition-all duration-300 spring-transition">
+                        View Detailed Stats
+                    </button>
+</article>
+</div>
+</section>
+</main>
+</body></html>

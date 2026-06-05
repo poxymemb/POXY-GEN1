@@ -85,12 +85,12 @@
   }
 }
 .wp-sidebar__inner {
-  background: rgba(13,13,15,0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--wp-border);
-  border-radius: var(--wp-radius);
-  padding: 16px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2.5rem;
+  padding: 24px;
 }
 .wp-sidebar__label {
   font-family: 'JetBrains Mono', monospace;
@@ -159,13 +159,17 @@
 }
 
 .wp-page-title {
-  font-size: clamp(1.75rem, 5vw, 3.5rem);
+  font-size: clamp(2rem, 6vw, 5rem);
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
-  color: #fff;
+  line-height: 1;
   margin: 0 0 16px;
-  line-height: 1.1;
+  /* Gradient title — matching Obsidian v2 */
+  background: linear-gradient(135deg, #ffffff 35%, #fbcfe8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .wp-page-desc {
   font-size: 17px;
@@ -173,23 +177,31 @@
   color: var(--wp-muted);
   margin: 0 0 48px;
   max-width: 40rem;
+  border-left: 1px solid rgba(251,207,232,0.4);
+  padding-left: 16px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 /* Section blocks */
 .wp-section {
-  background: rgba(13,13,15,0.8);
-  border: 1px solid var(--wp-border);
-  border-radius: var(--wp-radius-lg);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2.5rem;
   padding: 36px;
   margin-bottom: 24px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  transition: border-color 0.3s;
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
 }
-.wp-section:hover { border-color: var(--wp-border-hi); }
+.wp-section:hover {
+  border-color: rgba(255,255,255,0.12);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
 .wp-section__hover-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(135deg, rgba(255,65,108,0.04), transparent);

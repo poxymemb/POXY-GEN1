@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY WORLD - Market Exchange</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#050506",
+                        "secondary": "#e5bad3",
+                        "surface-tint": "#c6c6c7",
+                        "surface-bright": "#3a393a",
+                        "on-secondary-container": "#d6adc5",
+                        "on-secondary-fixed-variant": "#5c3d51",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#636565",
+                        "surface-container-low": "#1c1b1d",
+                        "outline": "#8e9192",
+                        "secondary-fixed-dim": "#e5bad3",
+                        "on-error": "#690005",
+                        "surface-container-high": "#2a2a2b",
+                        "on-secondary": "#44273a",
+                        "surface-dim": "#131314",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "secondary-container": "#5f3f53",
+                        "on-primary-container": "#636565",
+                        "glow-pink": "rgba(244, 114, 182, 0.1)",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "primary-container": "#e2e2e2",
+                        "surface": "#131314",
+                        "primary": "#ffffff",
+                        "tertiary-container": "#e2e2e2",
+                        "on-tertiary": "#2f3131",
+                        "surface-glass": "rgba(255, 255, 255, 0.02)",
+                        "on-background": "#e5e2e3",
+                        "outline-variant": "#444748",
+                        "tertiary": "#ffffff",
+                        "inverse-primary": "#5d5f5f",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "border-glass": "rgba(255, 255, 255, 0.05)",
+                        "inverse-on-surface": "#313031",
+                        "secondary-fixed": "#ffd8ed",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#353436",
+                        "surface-variant": "#353436",
+                        "on-secondary-fixed": "#2c1325",
+                        "on-surface-variant": "#c4c7c8",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#1a1c1c",
+                        "primary-fixed": "#e2e2e2",
+                        "hotfix-accent": "#ec4899",
+                        "on-primary-fixed-variant": "#454747",
+                        "on-primary": "#2f3131",
+                        "surface-container-lowest": "#0e0e0f",
+                        "on-surface": "#e5e2e3",
+                        "inverse-surface": "#e5e2e3",
+                        "surface-container": "#201f21",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "stack-sm": "12px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "margin-mobile": "20px",
+                        "stack-md": "32px",
+                        "stack-lg": "80px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-xl": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                        "headline-xl": ["80px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "900" }],
+                        "headline-lg-mobile": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Ambient Background Blobs for Atmospheric Depth */
+        .ambient-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.2;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: rgba(244, 114, 182, 0.05); /* Derived from glow-pink vibe */
+        }
+        .blob-2 {
+            bottom: -20%;
+            right: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: var(--tw-colors-surface-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--tw-colors-border-glass);
+        }
+
+        /* Hover Transitions */
+        .spring-transition {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.02) translateY(-4px);
+            box-shadow: 0 20px 40px -10px var(--tw-colors-glow-pink);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Mesh Gradient Utility for Hero */
+        .mesh-bg {
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(32, 31, 33, 0.5) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(95, 63, 83, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(58, 57, 58, 0.4) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(5, 5, 6, 0.8) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-[#050506] text-on-background font-body-md text-body-md antialiased min-h-screen relative overflow-x-hidden selection:bg-secondary selection:text-on-secondary">
+<!-- Ambient Space -->
+<div class="ambient-blob blob-1"></div>
+<div class="ambient-blob blob-2"></div><header class="bg-[#080809]/60 backdrop-blur-xl fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 border-b border-white/[0.08]"><div class="flex items-center gap-gutter"><span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-200 font-headline-md font-black uppercase tracking-tighter">POXY WORLD</span></div><nav class="hidden md:flex gap-gutter items-center"><a class="font-label-lg text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">News</a><a class="font-label-lg text-white border-b border-pink-200 pb-1 hover:scale-105 spring-transition uppercase px-2 py-1" href="#">Patches</a><a class="font-label-lg text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">Terminal</a><a class="font-label-lg text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">Market</a></nav><div class="flex items-center gap-stack-sm"><button class="w-10 h-10 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md flex items-center justify-center text-white hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition"><span class="material-symbols-outlined">apps</span></button><button class="w-10 h-10 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md flex items-center justify-center text-white hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition"><span class="material-symbols-outlined">notifications</span></button><button class="px-6 py-2 rounded-[2.5rem] border border-white/[0.08] bg-white/[0.03] backdrop-blur-md text-white font-label-lg uppercase tracking-widest hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition">Connect Wallet</button><div class="w-12 h-12 rounded-full border border-white/20 overflow-hidden ml-2 spring-transition hover:scale-105"><img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFiIJuW9AKwxVHxZHKauenFXfLTExhjdW3HdkAXGV8im0apTAHLm_1VmrjOUm_kmGuSr42K9De9HCPseUOIwH7glc21VLtYwsHRnnQQcSz-Qs2tFtUVFjta21QgmhsbBSC1QiHjEhn92aNB3wriRkruF0gc9bQDemWBeWxqc2JEdbFyV5xZ9-g3AqrM1qO9lxhDelgfbU_osV-26dFOxPtL0bDey7YE-1ZwHAsTXK5be6S7OY0zFscCzDlNjTVbtj6Skc3am3oyw"/></div></div></header>
+<!-- TopNavBar (Generated from JSON) -->
+<!-- Main Marketplace Canvas -->
+<main class="pt-[120px] pb-stack-lg px-margin-mobile md:px-margin-desktop max-w-[1600px] mx-auto flex flex-col gap-stack-md">
+<!-- Header & Tabs -->
+<header class="flex flex-col gap-stack-sm"><div class="flex items-center justify-between w-full"><div class="bg-white/[0.05] border border-white/10 text-white px-4 py-2 rounded-full font-label-lg uppercase tracking-widest inline-flex items-center gap-2 backdrop-blur-md"><div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>Asset Exchange</div><div class="flex items-center gap-4"><button class="bg-white/10 text-white border border-white/20 px-4 py-1 rounded-full font-label-lg uppercase tracking-widest backdrop-blur-md">Buy</button><button class="text-gray-500 hover:text-white font-label-lg uppercase tracking-widest transition-colors">My Listings</button></div></div></header>
+<!-- Search & Filter Capsule -->
+<section class="bg-[#0d0d0f] border border-white/5 rounded-xl px-6 py-2 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-[90px] z-40 backdrop-blur-xl"><div class="flex items-center gap-3 w-full md:w-auto"><span class="material-symbols-outlined text-gray-500 text-[20px]">search</span><input class="bg-transparent border-none focus:ring-0 text-white placeholder-gray-600 font-body-md w-full md:w-[300px]" placeholder="SEARCH TERMINAL..." type="text"/></div><div class="flex items-center gap-6"><button class="text-gray-500 font-label-lg uppercase tracking-widest hover:text-white flex items-center gap-1">Type <span class="material-symbols-outlined text-[16px]">add</span></button><button class="text-gray-500 font-label-lg uppercase tracking-widest hover:text-white flex items-center gap-1">Rarity <span class="material-symbols-outlined text-[16px]">add</span></button><div class="w-[1px] h-4 bg-white/10"></div><button class="text-secondary font-label-lg uppercase tracking-widest flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">add</span> Price L-H</button></div></section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Hero Featured Listing (8 Cols) -->
+<article class="col-span-1 md:col-span-8 glass-panel rounded-3xl !border-white/5 overflow-hidden flex flex-col md:flex-row relative mesh-bg min-h-[400px] rounded-[2.5rem]">
+<div class="absolute inset-0 bg-background/50 backdrop-blur-sm z-0"></div>
+<!-- Visual Side -->
+<div class="w-full md:w-1/2 relative z-10 flex items-center justify-center p-8">
+<div class="w-[250px] h-[250px] rounded-full bg-gradient-to-tr from-secondary to-primary mix-blend-screen filter blur-3xl opacity-40 animate-pulse absolute"></div>
+<img class="w-[280px] h-[280px] object-cover rounded-full border-4 border-border-glass shadow-[0_0_40px_rgba(244,114,182,0.05)] relative z-20 spring-transition hover:scale-105" data-alt="A highly detailed 3D render of a futuristic cybernetic core floating in a dark obsidian void. The core emits a vibrant, high-key magenta and bright white glow, illuminating intricate circuit patterns on its polished metallic surface. The aesthetic perfectly matches a premium, dark-mode Web3 dashboard with vaporwave accents. Deep atmospheric depth and glassmorphism styling are prominent." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIfmBgobRvD5UBEtW25qlHEEPpK2s3wiZMcTG15xEaNymPdG7AXRDGnIIomlyUTBVyK17XVlfQtZOAtsI0L3E3cJknZXLTJbFR-PnlUCZ3WRMOo9Ju05Uysmek7kFeQZHG0pdrZp0gbzAfw99hzEsRCXs8LEsSYYgBpMM2rsjfoGT4QoL-eQHVgBfPVxIt_vQAb3o8m4KoigVam5OTKKb3pe72J5EmYoWxyey3M2CmGdd3lafgFyqfkL1L_FAo3VkgtopwexNi5g"/>
+</div>
+<!-- Content Side -->
+<div class="w-full md:w-1/2 p-8 flex flex-col justify-center relative z-10">
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-secondary/10 text-secondary border border-secondary/20 px-3 py-1 rounded-full font-label-lg text-label-lg uppercase tracking-wider backdrop-blur-md">Mythic Rare</span>
+<span class="text-outline font-label-lg text-label-lg flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">verified</span> Featured</span>
+</div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary leading-tight mb-2 tracking-tighter">VOID WALKER EXOSUIT</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6">Serial ID: #0001-ALPHA</p>
+<div class="flex flex-col gap-1 mb-8">
+<span class="font-label-lg text-label-lg text-outline">Current Ask</span>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-primary">85,000</span>
+<span class="font-body-lg text-body-lg text-secondary">PC</span>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="bg-white text-[#080809] font-label-lg px-8 py-3 rounded-full hover:bg-pink-100 spring-transition uppercase tracking-widest flex-1 text-center">
+                            Acquire Asset
+                        </button>
+<button class="glass-panel w-14 h-14 rounded-full flex items-center justify-center text-primary hover:bg-surface-bright spring-transition">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Activity/Stats Panel (4 Cols) -->
+<aside class="col-span-1 md:col-span-4 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-[2.5rem] p-8 flex flex-col h-full"><h3 class="font-headline-md text-white uppercase tracking-tighter mb-8">Market Pulse</h3><div class="flex flex-col gap-6"><div class="flex justify-between items-center border-b border-white/5 pb-2"><span class="font-label-lg text-gray-500 uppercase">24h Volume</span><span class="font-label-lg text-white">1.2M PC</span></div><div class="flex justify-between items-center border-b border-white/5 pb-2"><span class="font-label-lg text-gray-500 uppercase">Floor Price</span><span class="font-label-lg text-secondary">4,500 PC</span></div><div class="flex justify-between items-center border-b border-white/5 pb-2"><span class="font-label-lg text-gray-500 uppercase">Active Listings</span><span class="font-label-lg text-white">12,492</span></div></div><div class="mt-auto pt-8"><button class="w-full text-center font-label-lg text-gray-400 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2">View Full Analytics <span class="material-symbols-outlined text-[18px]">arrow_forward</span></button></div></aside>
+</div>
+<!-- Asset Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+<!-- Card 1 -->
+<article class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-[2.5rem] p-6 flex flex-col gap-4 card-hover relative overflow-hidden group spring-transition">
+<!-- Rarity Glow Backdrop -->
+<div class="absolute inset-0 bg-secondary opacity-0 group-hover:opacity-5 transition-opacity duration-500 blur-3xl z-0 pointer-events-none"></div>
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-background z-10 border border-white/5">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A glowing, holographic cyber-weapon suspended in a dark void. The item emits an intense neon pink and purple light, reflecting off its sleek, angular metallic surfaces. The overall aesthetic is high-octane vaporwave mixed with premium dark-mode glassmorphism, suitable for a futuristic gaming marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeXxe0TgzqP3uOmUG70NP3TSZoSTzruZ8YuQtOyjbf0O6YYjQBvDQ91moA2t5Iin6ZbbXNgBFOxJxEErzOz7omsfWxagLNVov8yrD5iptVhRNoS8s2lPZiTaA3j3ug3_tms1A11x0MJQwGnEZYGEK40awE-v1v_zU9oDAgWqvRdb8FM24OkxY5sp0bfPIhSkMy0vQ5rs9WT3MCNMyWlNItjfW3CWdDmEOTM4-3aeaRQ5dfcN8h4k3q0_bDshNIVSszv-26v6YaFQ"/>
+<div class="absolute top-2 left-2 bg-background/80 backdrop-blur-md border border-white/5 rounded-lg px-2 py-1 font-label-lg text-[10px] text-secondary tracking-wider uppercase">Epic</div>
+</div>
+<div class="flex flex-col gap-1 z-10 px-2">
+<h4 class="font-headline-md text-[20px] text-primary truncate tracking-tight">Plasma Caster V2</h4>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-[14px] text-outline">ID: #8842</span>
+<span class="font-body-md text-[14px] text-outline flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">shield</span> Rank A</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5 z-10 px-2 pb-1 flex justify-between items-end">
+<div class="flex flex-col">
+<span class="font-label-lg text-[10px] text-outline uppercase">Price</span>
+<span class="font-label-lg text-label-lg text-primary">12,000 <span class="text-secondary text-[12px]">PC</span></span>
+</div>
+<button class="bg-surface-glass border border-white/5 hover:bg-primary hover:text-on-primary text-primary w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-[2.5rem] p-6 flex flex-col gap-4 card-hover relative overflow-hidden group spring-transition">
+<div class="absolute inset-0 bg-surface-tint opacity-0 group-hover:opacity-5 transition-opacity duration-500 blur-3xl z-0 pointer-events-none"></div>
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-background z-10 border border-white/5">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A sleek, minimalist digital artifact resembling a metallic data drive, illuminated by a warm, golden ambient glow against a pitch-black background. The object has a highly polished, reflective surface with subtle glassmorphism layers and ultra-thin luminous borders, fitting a premium sci-fi trading interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNYpfLzWeRiW9bUuFfARuaVbCNL7TPozWTgU4wQIsoGp3GLicBMV8XPm2I_gDOrGVrhhNDfTglXxFVyW6eOeV9QZJ1Q6SJOA-hFuDfYTKaWq3ShVUru-IKyDC9hGGAJOxYZO3DnwNrJAYm7FKTd5J2RVXBBHrSPnZ3UGgQGuTDzBUkrpegLmAsY8YOMFl60mBWJVu49bL3TzcoNCm-AjH1zR3LqVnDS7cNyhoZjr2ZlstE4SwWj0k7itiPcTryT_f25QVPKGM-jw"/>
+<div class="absolute top-2 left-2 bg-background/80 backdrop-blur-md border border-white/5 rounded-lg px-2 py-1 font-label-lg text-[10px] text-surface-tint tracking-wider uppercase">Rare</div>
+</div>
+<div class="flex flex-col gap-1 z-10 px-2">
+<h4 class="font-headline-md text-[20px] text-primary truncate tracking-tight">Neural Node Module</h4>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-[14px] text-outline">ID: #1094</span>
+<span class="font-body-md text-[14px] text-outline flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">shield</span> Rank B</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5 z-10 px-2 pb-1 flex justify-between items-end">
+<div class="flex flex-col">
+<span class="font-label-lg text-[10px] text-outline uppercase">Price</span>
+<span class="font-label-lg text-label-lg text-primary">5,400 <span class="text-secondary text-[12px]">PC</span></span>
+</div>
+<button class="bg-surface-glass border border-white/5 hover:bg-primary hover:text-on-primary text-primary w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-[2.5rem] p-6 flex flex-col gap-4 card-hover relative overflow-hidden group spring-transition">
+<div class="absolute inset-0 bg-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500 blur-3xl z-0 pointer-events-none"></div>
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-background z-10 border border-white/5">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity filter grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="A glowing crystalline structure emitting a soft, ethereal cyan and white light. The crystal is housed within a dark, intricate cybernetic framework. The scene is shot with high contrast, deep shadows, and subtle glass-like reflections, perfectly suited for a high-end dark-mode tech dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD2sli3kZWGUKvQucBMupo3Ekzbm9vcss-8wtSPhR-vtDJQmPOy8YUYUYC_Ortz6CkGECIyR3mS475ddyR57xEryV18-9YeGyusaP78DI312Jv6z458Fh2Pyr60ziVcmnJvJ8KkmaSL0DpRGV6qe5wV5gWLNICfXVs0gEMffmDU1Ps44S6Cl9tMl-8nEeTSx3uTo-CneORUzFi3HPyl5SKDfiP40E3gLOGPEeaHgu9USVBY3i3HGrO5_9We5jQTwSploLS_wTkMw"/>
+<div class="absolute top-2 left-2 bg-background/80 backdrop-blur-md border border-white/5 rounded-lg px-2 py-1 font-label-lg text-[10px] text-outline-variant tracking-wider uppercase">Common</div>
+</div>
+<div class="flex flex-col gap-1 z-10 px-2">
+<h4 class="font-headline-md text-[20px] text-primary truncate tracking-tight">Standard Plating</h4>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-[14px] text-outline">ID: #9921</span>
+<span class="font-body-md text-[14px] text-outline flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">shield</span> Rank C</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5 z-10 px-2 pb-1 flex justify-between items-end">
+<div class="flex flex-col">
+<span class="font-label-lg text-[10px] text-outline uppercase">Price</span>
+<span class="font-label-lg text-label-lg text-primary">850 <span class="text-secondary text-[12px]">PC</span></span>
+</div>
+<button class="bg-surface-glass border border-white/5 hover:bg-primary hover:text-on-primary text-primary w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-[2.5rem] p-6 flex flex-col gap-4 card-hover relative overflow-hidden group spring-transition">
+<div class="absolute inset-0 bg-error opacity-0 group-hover:opacity-5 transition-opacity duration-500 blur-3xl z-0 pointer-events-none"></div>
+<div class="relative w-full aspect-square rounded-2xl overflow-hidden bg-background z-10 border border-white/5">
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-outline-variant opacity-30">deployed_code</span>
+</div>
+<div class="absolute top-2 left-2 bg-background/80 backdrop-blur-md border border-white/5 rounded-lg px-2 py-1 font-label-lg text-[10px] text-error tracking-wider uppercase">Legendary</div>
+</div>
+<div class="flex flex-col gap-1 z-10 px-2">
+<h4 class="font-headline-md text-[20px] text-primary truncate tracking-tight">Corrupted Core</h4>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-[14px] text-outline">ID: #0404</span>
+<span class="font-body-md text-[14px] text-outline flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">shield</span> Elite</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5 z-10 px-2 pb-1 flex justify-between items-end">
+<div class="flex flex-col">
+<span class="font-label-lg text-[10px] text-outline uppercase">Price</span>
+<span class="font-label-lg text-label-lg text-primary">45,000 <span class="text-secondary text-[12px]">PC</span></span>
+</div>
+<button class="bg-surface-glass border border-white/5 hover:bg-primary hover:text-on-primary text-primary w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+</article>
+</section>
+<div class="flex justify-center mt-4">
+<button class="glass-panel border-white/5 px-8 py-3 rounded-full font-label-lg text-label-lg text-primary hover:bg-surface-bright transition-colors flex items-center gap-2">
+                Load More Assets <span class="material-symbols-outlined text-[18px]">autorenew</span>
+</button>
+</div>
+</main>
+</body></html>

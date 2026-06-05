@@ -2240,7 +2240,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         </header>
 
         <!-- Input -->
-        <section class="vt-input-wrap">
+        <section class="vt-input-wrap vt-bento-card" style="transition-delay:0.1s">
           <div class="vt-tabs">
             <button class="vt-tab-btn vt-tab-btn--active" id="vtTabAsset" onclick="vtSwitchTab('asset',this)">
               <span class="material-symbols-outlined">deployed_code</span> POXY Asset
@@ -2253,8 +2253,8 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
             </button>
           </div>
           <div class="vt-search-bar">
-            <input class="vt-search-input" id="vtHashInput" type="text" placeholder="Enter poxy_hash (64 lowercase hex chars)…" value="0x7a2b9c8d...3f1e4a5b">
-            <button class="vt-search-btn" onclick="vtRunVerify()">
+            <input class="vt-search-input vt-input-shimmer" id="vtHashInput" type="text" placeholder="Enter poxy_hash (64 lowercase hex chars)…">
+            <button class="vt-search-btn vt-btn-magnetic" onclick="vtRunVerify()">
               <span class="material-symbols-outlined">search</span> Verify
             </button>
           </div>
@@ -2263,16 +2263,17 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         <!-- Dashboard grid -->
         <div class="vt-grid">
           <!-- Validation Path -->
-          <div class="vt-validation-panel vt-glass">
+          <div class="vt-validation-panel vt-glass vt-bento-card" style="transition-delay:0.2s">
             <div class="vt-validation-panel__bg-icon"><span class="material-symbols-outlined">account_tree</span></div>
             <div class="vt-panel-title">
               <span class="material-symbols-outlined">linear_scale</span>
               Validation Path
             </div>
             <div class="vt-steps">
+              <div class="vt-data-pulse-line"></div>
               <!-- Phase 1: Commit -->
               <div class="vt-step vt-step--done">
-                <div class="vt-step__icon vt-step__icon--done">
+                <div class="vt-step__icon vt-step__icon--done vt-status-glow">
                   <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1">check</span>
                 </div>
                 <div class="vt-step__body">
@@ -2283,7 +2284,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
               </div>
               <!-- Phase 2: Entropy -->
               <div class="vt-step vt-step--done">
-                <div class="vt-step__icon vt-step__icon--done">
+                <div class="vt-step__icon vt-step__icon--done vt-status-glow">
                   <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1">check</span>
                 </div>
                 <div class="vt-step__body">
@@ -2306,7 +2307,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
           <!-- Right column -->
           <div class="vt-right-col">
             <!-- Asset Proof Receipt -->
-            <div class="vt-receipt vt-glass">
+            <div class="vt-receipt vt-glass vt-bento-card" style="transition-delay:0.3s">
               <div class="vt-receipt__corner-glow"></div>
               <div class="vt-receipt__top">
                 <div>
@@ -2352,7 +2353,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
             </div>
 
             <!-- Live Log Console -->
-            <div class="vt-console vt-glass">
+            <div class="vt-console vt-glass vt-bento-card" style="transition-delay:0.4s">
               <div class="vt-console__toolbar">
                 <span class="vt-console__dot vt-console__dot--r"></span>
                 <span class="vt-console__dot vt-console__dot--y"></span>
@@ -6123,9 +6124,27 @@ window.vtInitConsoleLog=function(){
   const body=$('vtConsoleBody');
   if(!body||body.dataset.init)return;
   body.dataset.init='1';
-  const lines=['&gt; initializing verification routine...','&gt; parsing hash: 0x7a2b...9a0b','&gt; <span class="vt-log-ok">[OK]</span> hash format valid','&gt; querying ledger node tx_req_4421...','&gt; <span class="vt-log-ok">[OK]</span> consensus reached (nodes: 42/42)','<span class="vt-log-accent">&gt; checking entropy source signature...</span>','&gt; <span class="vt-log-cursor">_</span>'];
+  const lines=['&gt; initializing poxy_crypto_core v2.4.1...','&gt; awaiting input vector...','&gt; <span class="vt-log-ok">[OK]</span> secure channel established','&gt; listening on verification endpoint...','<span class="vt-log-accent">&gt; status: ready — enter hash to begin</span>','&gt; <span class="vt-log-cursor">_</span>'];
   let i=0;body.innerHTML='';
-  const t=setInterval(()=>{if(i<lines.length){body.innerHTML+=lines[i]+'<br>';i++;body.scrollTop=body.scrollHeight;}else clearInterval(t);},260);
+  const t=setInterval(()=>{if(i<lines.length){body.innerHTML+=lines[i]+'<br>';i++;body.scrollTop=body.scrollHeight;}else clearInterval(t);},220);
+  // Trigger bento entrance animations
+  const panel=$('stPanelVerify');
+  if(panel){
+    setTimeout(()=>{
+      panel.querySelectorAll('.vt-bento-card').forEach(c=>c.classList.add('vt-visible'));
+    },80);
+  }
+  // Wire magnetic button
+  const btn=panel&&panel.querySelector('.vt-btn-magnetic');
+  if(btn&&!btn.dataset.magnetic){
+    btn.dataset.magnetic='1';
+    btn.addEventListener('mousemove',e=>{
+      const r=btn.getBoundingClientRect();
+      const x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
+      btn.style.transform=`translate(${x*0.12}px,${y*0.12}px)`;
+    });
+    btn.addEventListener('mouseleave',()=>{btn.style.transform='';});
+  }
 };
 
 /* ── Whitepaper sidebar navigation ───────────────────────────── */

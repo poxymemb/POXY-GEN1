@@ -250,3 +250,168 @@ body.poxy-stitch-dash .btn-search{background:linear-gradient(90deg,#9c27b0,#d703
 body.poxy-stitch-dash .filter-btn.active{border-color:var(--fc,#f9abff);color:var(--fc,#f9abff)}
 body.poxy-stitch-dash .section-label{color:#9d8b9b}
 body.poxy-stitch-dash .search-hint{color:#9d8b9b}
+
+/* ──────────────────────────────────────────────────────────────
+   MARKET FRAMEWORK SYNC — Stitch: 8f83db3b
+   mesh-bg hero, rounded-[2.5rem] cards, card-hover spring
+   ────────────────────────────────────────────────────────────── */
+
+/* Market page base */
+#stPanelMarket { background: #050506 !important; }
+.poxy-market-page { background: #050506 !important; }
+
+/* Ambient mesh blobs */
+.poxy-market-page::before,
+.poxy-market-page::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.18;
+  z-index: 0;
+  pointer-events: none;
+}
+.poxy-market-page::before {
+  top: -10%; left: -10%;
+  width: 40vw; height: 40vw;
+  background: rgba(244,114,182,0.06);
+}
+.poxy-market-page::after {
+  bottom: -20%; right: -10%;
+  width: 50vw; height: 50vw;
+  background: rgba(255,255,255,0.02);
+}
+
+/* Title headline upgrade */
+.poxy-market-title {
+  font-size: clamp(2.5rem,6vw,5rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+  line-height: 1 !important;
+}
+
+/* Search bar as a dark glass capsule */
+.poxy-market-toolbar {
+  background: #0d0d0f !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* Hero featured listing bento */
+.poxy-market-featured,
+.poxy-market-hero-card {
+  background: rgba(5,5,6,0.8) !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 2.5rem !important;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+/* Mesh gradient background for hero */
+.poxy-market-featured::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(at 0% 0%,   rgba(32,31,33,0.5) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(95,63,83,0.3)  0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(58,57,58,0.4) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(5,5,6,0.8)    0px, transparent 50%);
+  z-index: 0;
+}
+
+/* Stats panel */
+.poxy-market-stats-panel {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 2.5rem !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+.poxy-market-stats-panel h3 {
+  font-size: clamp(1.25rem,2.5vw,2rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+
+/* Asset listing cards */
+.poxy-market-card {
+  background: rgba(255,255,255,0.03) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 2.5rem !important;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275),
+              box-shadow 0.4s cubic-bezier(0.175,0.885,0.32,1.275),
+              border-color 0.3s !important;
+}
+.poxy-market-card:hover {
+  transform: scale(1.02) translateY(-4px) !important;
+  box-shadow: 0 20px 40px -10px rgba(244,114,182,0.08) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+/* Primary acquire / buy button */
+.poxy-market-btn-primary,
+.poxy-market-card .btn-buy,
+.poxy-market-card .market-acquire-btn {
+  background: #fff !important;
+  color: #080809 !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  padding: 10px 28px !important;
+  cursor: pointer !important;
+  transition: background 0.2s, transform 0.15s !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}
+.poxy-market-btn-primary:hover,
+.poxy-market-card .btn-buy:hover,
+.poxy-market-card .market-acquire-btn:hover {
+  background: #fbcfe8 !important;
+  transform: scale(1.03) !important;
+}
+
+/* Add to cart icon button */
+.poxy-market-card .btn-cart {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 999px !important;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.poxy-market-card .btn-cart:hover { background: #fff !important; color: #080809 !important; }
+
+/* Load more button */
+.poxy-market-load-more {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 999px !important;
+  padding: 10px 32px !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: background 0.2s !important;
+}
+.poxy-market-load-more:hover { background: rgba(255,255,255,0.08) !important; }
+
+/* Tab active state */
+.poxy-market-tab.active {
+  color: #e5bad3 !important;
+}
+.poxy-market-tab.active::after {
+  background: #e5bad3 !important;
+  box-shadow: 0 0 8px rgba(229,186,211,0.4) !important;
+}

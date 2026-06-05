@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY WORLD - Tactical Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "obsidian": "#050506",
+                        "charcoal": "#0d0d0f",
+                        "hotfix-accent": "#ec4899",
+                        "zinc-400": "#a1a1aa",
+                        "zinc-600": "#52525b",
+                    },
+                    fontFamily: {
+                        "sans": ["Hanken Grotesk", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass-panel {
+                @apply bg-[#0d0d0f] border border-white/5;
+            }
+            .spring-transition {
+                @apply transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)];
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#050506] text-zinc-400 font-sans min-h-screen relative overflow-x-hidden selection:bg-hotfix-accent selection:text-white">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-[#080809]/60 backdrop-blur-xl fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 border-b border-white/[0.08]"><div class="flex items-center gap-gutter"><span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-200 font-headline-md font-black uppercase tracking-tighter">POXY WORLD</span></div><nav class="hidden md:flex gap-gutter items-center"><a class="font-label-lg text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">News</a><a class="font-label-lg text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">Patches</a><a class="font-label-lg text-white border-b border-pink-200 pb-1 hover:scale-105 spring-transition uppercase px-2 py-1" href="#">Terminal</a><a class="font-label-lg text-gray-400 hover:text-white hover:scale-105 spring-transition uppercase px-2 py-1 rounded" href="#">Market</a></nav><div class="flex items-center gap-stack-sm"><button class="w-10 h-10 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md flex items-center justify-center text-white hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition"><span class="material-symbols-outlined">apps</span></button><button class="w-10 h-10 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md flex items-center justify-center text-white hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition"><span class="material-symbols-outlined">notifications</span></button><button class="px-6 py-2 rounded-[2.5rem] border border-white/[0.08] bg-white/[0.03] backdrop-blur-md text-white font-label-lg uppercase tracking-widest hover:bg-white/[0.1] hover:shadow-[0_0_20px_rgba(251,207,232,0.15)] spring-transition">Connect Wallet</button><div class="w-12 h-12 rounded-full border border-white/20 overflow-hidden ml-2 spring-transition hover:scale-105"><img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFiIJuW9AKwxVHxZHKauenFXfLTExhjdW3HdkAXGV8im0apTAHLm_1VmrjOUm_kmGuSr42K9De9HCPseUOIwH7glc21VLtYwsHRnnQQcSz-Qs2tFtUVFjta21QgmhsbBSC1QiHjEhn92aNB3wriRkruF0gc9bQDemWBeWxqc2JEdbFyV5xZ9-g3AqrM1qO9lxhDelgfbU_osV-26dFOxPtL0bDey7YE-1ZwHAsTXK5be6S7OY0zFscCzDlNjTVbtj6Skc3am3oyw"/></div></div></header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 pt-32 pb-24 px-6 md:px-16 max-w-[1600px] mx-auto min-h-screen flex flex-col gap-6">
+<!-- Header Section -->
+<!-- Bento Grid Architecture -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Hero Feature Card -->
+<div class="col-span-1 lg:col-span-8 glass-panel rounded-[2.5rem] p-12 relative overflow-hidden min-h-[400px] flex flex-col justify-end group cursor-pointer border-white/[0.08] bg-white/[0.03] backdrop-blur-xl hover:shadow-[0_0_40px_rgba(236,72,153,0.1)] spring-transition">
+<div class="absolute inset-0 z-0">
+<div class="absolute w-[600px] h-[600px] bg-pink-400/10 rounded-full mix-blend-screen filter blur-[120px] animate-pulse top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent"></div>
+</div>
+<div class="relative z-10 flex flex-col items-start gap-4"><h1 class="font-headline-xl text-headline-xl text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-200 uppercase leading-none drop-shadow-lg mb-4">Inventory</h1>
+<div class="bg-white/[0.05] border border-white/10 text-white px-4 py-2 rounded-full text-sm font-bold uppercase tracking-widest inline-flex items-center gap-2 backdrop-blur-md">
+<div class="w-2 h-2 rounded-full bg-pink-300 animate-pulse"></div>
+                    Featured Event
+                </div>
+<h3 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tight mb-2 drop-shadow-lg group-hover:text-pink-200 transition-colors duration-500">Syndicate Forge Live</h3>
+<p class="text-lg text-gray-400 max-w-lg border-l border-pink-200/50 pl-4 py-2">Combine 5 Common assets to forge 1 Uncommon. Boosted drop rates active for the next 24 hours.</p>
+</div>
+</div>
+<!-- Burn Rates HUD -->
+<div class="col-span-1 lg:col-span-4 glass-panel rounded-[2.5rem] p-8 flex flex-col relative overflow-hidden border-white/[0.08] bg-[#0d0d0f]">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+<span class="material-symbols-outlined text-red-400" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div>
+<div class="text-sm font-bold text-white uppercase tracking-widest">Burn Rates</div>
+<div class="text-[10px] text-zinc-400 uppercase tracking-wider">Asset → PC Conversion</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 flex-1 justify-center">
+<div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
+<span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Common</span>
+<span class="text-sm font-mono text-white">0.10 PC</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
+<span class="text-xs font-bold text-yellow-500 uppercase tracking-widest">Mythic</span>
+<span class="text-sm font-mono text-white">40.0 PC</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
+<span class="text-xs font-bold text-purple-400 uppercase tracking-widest">Secret</span>
+<span class="text-sm font-mono text-white">100.0 PC</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Utility Bar -->
+<div class="glass-panel p-2 rounded-xl flex flex-col lg:flex-row items-center justify-between gap-6">
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-2 pl-2">
+<button class="px-4 py-1.5 text-[10px] font-bold rounded bg-pink-500/20 border border-pink-500/30 text-pink-200 uppercase tracking-widest">All</button>
+<button class="px-4 py-1.5 text-[10px] font-bold rounded text-zinc-400 hover:text-white hover:bg-white/5 uppercase tracking-widest transition-colors">Common</button>
+<button class="px-4 py-1.5 text-[10px] font-bold rounded text-zinc-400 hover:text-white hover:bg-white/5 uppercase tracking-widest transition-colors">Uncommon</button>
+<button class="px-4 py-1.5 text-[10px] font-bold rounded text-zinc-400 hover:text-white hover:bg-white/5 uppercase tracking-widest transition-colors">Rare</button>
+<button class="px-4 py-1.5 text-[10px] font-bold rounded text-zinc-400 hover:text-white hover:bg-white/5 uppercase tracking-widest transition-colors">Epic</button>
+<button class="px-4 py-1.5 text-[10px] font-bold rounded text-zinc-400 hover:text-white hover:bg-white/5 uppercase tracking-widest transition-colors">Legendary</button>
+<button class="px-4 py-1.5 text-[10px] font-bold rounded text-zinc-400 hover:text-white hover:bg-white/5 uppercase tracking-widest transition-colors">Mythic</button>
+</div>
+<!-- Actions -->
+<div class="flex flex-wrap items-center gap-3 pr-2 w-full lg:w-auto">
+<button class="flex-1 lg:flex-none px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors">Select</button>
+<button class="flex-1 lg:flex-none px-6 py-2 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-bold uppercase tracking-widest hover:bg-red-500/20 transition-colors">Burn</button>
+<button class="flex-1 lg:flex-none px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-500/20 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[14px]">build</span>
+                    Craft
+                </button>
+</div>
+</div>
+<!-- Inventory Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+<!-- Card: Uncommon -->
+<div class="glass-panel rounded-[24px] aspect-[4/5] flex flex-col items-center justify-center relative group hover:-translate-y-1 hover:border-green-400/30 spring-transition cursor-pointer overflow-hidden bg-[#0d0d0f]">
+<div class="absolute inset-0 bg-gradient-to-b from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute top-4 w-full flex justify-center">
+<span class="text-[10px] font-bold text-green-300 uppercase tracking-widest px-3 py-1 rounded bg-white/5 border border-white/10 backdrop-blur-md">Uncommon</span>
+</div>
+<div class="w-20 h-20 rounded-3xl bg-obsidian border border-white/5 flex items-center justify-center mt-4 shadow-[0_0_20px_rgba(34,197,94,0.1)] group-hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-shadow relative z-10">
+<span class="material-symbols-outlined text-4xl text-green-300 drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="text-center absolute bottom-5 w-full z-10">
+<p class="font-mono text-xs text-zinc-300 mb-1">PX-RFSGJZ</p>
+<p class="font-sans text-[10px] text-zinc-500 uppercase tracking-wider">05 Jun 26</p>
+</div>
+</div>
+<!-- Card: Legendary -->
+<div class="glass-panel rounded-[24px] aspect-[4/5] flex flex-col items-center justify-center relative group hover:-translate-y-1 hover:border-yellow-500/30 spring-transition cursor-pointer overflow-hidden bg-[#0d0d0f]">
+<div class="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute top-4 w-full flex justify-center">
+<span class="text-[10px] font-bold text-yellow-300 uppercase tracking-widest px-3 py-1 rounded bg-white/5 border border-white/10 backdrop-blur-md">Legendary</span>
+</div>
+<div class="w-20 h-20 rounded-3xl bg-obsidian border border-white/5 flex items-center justify-center mt-4 shadow-[0_0_20px_rgba(250,204,21,0.1)] group-hover:shadow-[0_0_30px_rgba(250,204,21,0.2)] transition-shadow relative z-10">
+<span class="material-symbols-outlined text-4xl text-yellow-300 drop-shadow-[0_0_8px_rgba(250,204,21,0.3)]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="text-center absolute bottom-5 w-full z-10">
+<p class="font-mono text-xs text-zinc-300 mb-1">PX-G8HI3X</p>
+<p class="font-sans text-[10px] text-zinc-500 uppercase tracking-wider">04 Jun 26</p>
+</div>
+</div>
+<!-- Card: Rare -->
+<div class="glass-panel rounded-[24px] aspect-[4/5] flex flex-col items-center justify-center relative group hover:-translate-y-1 hover:border-blue-400/30 spring-transition cursor-pointer overflow-hidden bg-[#0d0d0f]">
+<div class="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute top-4 w-full flex justify-center">
+<span class="text-[10px] font-bold text-blue-300 uppercase tracking-widest px-3 py-1 rounded bg-white/5 border border-white/10 backdrop-blur-md">Rare</span>
+</div>
+<div class="w-20 h-20 rounded-3xl bg-obsidian border border-white/5 flex items-center justify-center mt-4 shadow-[0_0_20px_rgba(56,189,248,0.1)] group-hover:shadow-[0_0_30px_rgba(56,189,248,0.2)] transition-shadow relative z-10">
+<span class="material-symbols-outlined text-4xl text-blue-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.3)]" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<div class="text-center absolute bottom-5 w-full z-10">
+<p class="font-mono text-xs text-zinc-300 mb-1">PX-GBYMLM</p>
+<p class="font-sans text-[10px] text-zinc-500 uppercase tracking-wider">04 Jun 26</p>
+</div>
+</div>
+<!-- Card: Epic -->
+<div class="glass-panel rounded-[24px] aspect-[4/5] flex flex-col items-center justify-center relative group hover:-translate-y-1 hover:border-purple-400/30 spring-transition cursor-pointer overflow-hidden bg-[#0d0d0f]">
+<div class="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute top-4 w-full flex justify-center">
+<span class="text-[10px] font-bold text-purple-300 uppercase tracking-widest px-3 py-1 rounded bg-white/5 border border-white/10 backdrop-blur-md">Epic</span>
+</div>
+<div class="w-20 h-20 rounded-3xl bg-obsidian border border-white/5 flex items-center justify-center mt-4 shadow-[0_0_20px_rgba(192,132,252,0.1)] group-hover:shadow-[0_0_30px_rgba(192,132,252,0.2)] transition-shadow relative z-10">
+<span class="material-symbols-outlined text-4xl text-purple-300 drop-shadow-[0_0_8px_rgba(192,132,252,0.3)]" style="font-variation-settings: 'FILL' 1;">hexagon</span>
+</div>
+<div class="text-center absolute bottom-5 w-full z-10">
+<p class="font-mono text-xs text-zinc-300 mb-1">PX-XRUAK9</p>
+<p class="font-sans text-[10px] text-zinc-500 uppercase tracking-wider">04 Jun 26</p>
+</div>
+</div>
+<!-- Card: Common -->
+<div class="glass-panel rounded-[24px] aspect-[4/5] flex flex-col items-center justify-center relative group hover:-translate-y-1 hover:border-gray-400/30 spring-transition cursor-pointer overflow-hidden bg-[#0d0d0f]">
+<div class="absolute inset-0 bg-gradient-to-b from-gray-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute top-4 w-full flex justify-center">
+<span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest px-3 py-1 rounded bg-white/5 border border-white/10 backdrop-blur-md">Common</span>
+</div>
+<div class="w-20 h-20 rounded-3xl bg-obsidian border border-white/5 flex items-center justify-center mt-4 transition-shadow relative z-10">
+<span class="material-symbols-outlined text-4xl text-gray-300" style="font-variation-settings: 'FILL' 1;">square</span>
+</div>
+<div class="text-center absolute bottom-5 w-full z-10">
+<p class="font-mono text-xs text-zinc-300 mb-1">PX-X7Z1CK</p>
+<p class="font-sans text-[10px] text-zinc-500 uppercase tracking-wider">04 Jun 26</p>
+</div>
+</div>
+<!-- Card: Uncommon -->
+<div class="glass-panel rounded-[24px] aspect-[4/5] flex flex-col items-center justify-center relative group hover:-translate-y-1 hover:border-green-400/30 spring-transition cursor-pointer overflow-hidden bg-[#0d0d0f]">
+<div class="absolute inset-0 bg-gradient-to-b from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="absolute top-4 w-full flex justify-center">
+<span class="text-[10px] font-bold text-green-300 uppercase tracking-widest px-3 py-1 rounded bg-white/5 border border-white/10 backdrop-blur-md">Uncommon</span>
+</div>
+<div class="w-20 h-20 rounded-3xl bg-obsidian border border-white/5 flex items-center justify-center mt-4 shadow-[0_0_20px_rgba(34,197,94,0.1)] group-hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-shadow relative z-10">
+<span class="material-symbols-outlined text-4xl text-green-300 drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="text-center absolute bottom-5 w-full z-10">
+<p class="font-mono text-xs text-zinc-300 mb-1">PX-530NYD</p>
+<p class="font-sans text-[10px] text-zinc-500 uppercase tracking-wider">04 Jun 26</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-[#080809]/80 backdrop-blur-lg border-t border-white/[0.08] w-full py-stack-lg px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter relative z-20"><div class="font-headline-md text-headline-md text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-200 uppercase font-black tracking-tighter">POXY WORLD</div><nav class="flex flex-wrap gap-gutter justify-center"><a class="font-label-lg text-gray-500 uppercase tracking-wider hover:text-white spring-transition" href="#">Privacy Policy</a><a class="font-label-lg text-gray-500 uppercase tracking-wider hover:text-white spring-transition" href="#">Terms of Service</a><a class="font-label-lg text-gray-500 uppercase tracking-wider hover:text-white spring-transition" href="#">Cookie Policy</a><a class="font-label-lg text-gray-500 uppercase tracking-wider hover:text-white spring-transition" href="#">Support</a></nav><div class="font-body-md text-gray-500 font-medium uppercase text-sm">© 2024 POXY WORLD TERMINAL. ALL RIGHTS RESERVED.</div></footer></body></html>
