@@ -62,6 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=1">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6008,6 +6009,129 @@ if(settingsAvatarInp)settingsAvatarInp.addEventListener('change',e=>handleAvatar
 const DASH_COL_GOAL=20;
 window.scrollToTreasury=function(){ openTopUpModal(); };
 
+// ══════════════════════════════════════════════════════════════════
+// ASSET VIEWER MODAL  — state machine
+// ══════════════════════════════════════════════════════════════════
+let _avmCurrentItem = null;
+
+window.openAssetViewerModal = function(item) {
+  if(!item) return;
+  _avmCurrentItem = item;
+  const modal = $('assetViewerModal');
+  if(!modal) return;
+
+  const tier = TIER_BY_ID[item.poxy_tier] || TIERS[0];
+  const rMeta = RARITY_TIER_META[item.poxy_tier] || {};
+
+  // ── Cinematic stage ──
+  // Backlight color
+  const bl = $('avmBacklight');
+  if(bl) bl.style.setProperty('--avm-glow', tier.glow || 'rgba(255,255,255,0.3)');
+  // Ring border
+  const ring = $('avmRing');
+  if(ring) ring.style.borderColor = (tier.color || '#fff') + '55';
+
+  // Tier badge
+  const badge = $('avmTierBadge');
+  if(badge){ badge.textContent = tier.label.toUpperCase() + ' TIER'; badge.style.color = tier.color; badge.style.borderColor = tier.color + '55'; }
+
+  // Asset icon
+  const ico = $('avmAssetIcon');
+  if(ico){ ico.style.color = tier.color; ico.textContent = STITCH_TIER_ICON[tier.id] || 'view_in_ar'; }
+  // Tint panel stage
+  const stage = modal.querySelector('.avm-stage');
+  if(stage) stage.style.setProperty('--avm-rarity', tier.color);
+
+  // Asset number (#serial last 4 or vip_serial)
+  const num = $('avmAssetNumber');
+  if(num){
+    const s = item.serial_number || '';
+    num.textContent = item.vip_serial != null ? '#' + item.vip_serial : (s ? '#' + s.slice(-4).toUpperCase() : '#–');
+  }
+
+  // Owner hash (truncated asset ID as stand-in until chain address is exposed)
+  const hash = $('avmOwnerHash');
+  if(hash){
+    const id = String(item.id || '');
+    hash.textContent = id.length > 8 ? '0x' + id.slice(0,4).toUpperCase() + '…' + id.slice(-4).toUpperCase() : '0x···';
+  }
+
+  // ── Ops center ──
+  const title = $('avmOpsTitle');
+  if(title) title.textContent = (tier.label || 'POXY').toUpperCase() + ' ASSET';
+
+  // ISSUED
+  const issued = $('avmIssued');
+  if(issued){
+    const d = new Date(item.dropped_at);
+    issued.textContent = d.toISOString().slice(0,10).replace(/-/g,'.');
+  }
+
+  // Rarity table
+  const rc = $('avmRarityClass'); if(rc) rc.textContent = tier.label.toUpperCase();
+  const dr = $('avmDropRate');    if(dr){ dr.textContent = rMeta.dropPct != null ? rMeta.dropPct + '%' : '–'; dr.style.color = tier.color; }
+  const co = $('avmCoeff');       if(co){ co.textContent = rMeta.coeff != null ? '×' + rMeta.coeff : '–'; }
+
+  // Serial + ID
+  const ser = $('avmSerial');   if(ser) ser.textContent = item.serial_number || '–';
+  const aid = $('avmAssetId'); if(aid){
+    const id = String(item.id || '');
+    aid.textContent = id.length > 16 ? id.slice(0,8) + '…' + id.slice(-8) : id;
+  }
+
+  // Conditional rows
+  const forgeRow = $('avmForgeRow');
+  if(forgeRow) forgeRow.hidden = typeof findCraftSocketForItem !== 'function' || findCraftSocketForItem(item.id) < 0;
+  const pinRow = $('avmPinnedRow');
+  if(pinRow) pinRow.hidden = !item.pinned_at;
+
+  // ── Wire action buttons (fresh each open) ──
+  const cryptoBtn = $('avmCryptoBtn');
+  if(cryptoBtn){ cryptoBtn.onclick = ()=>{ if(window.PoxyTrust&&PoxyTrust.inspect) PoxyTrust.inspect(item); else showToast('Crypto layer loading…'); }; }
+
+  const equipBtn = $('avmEquipBtn');
+  if(equipBtn){ equipBtn.onclick = ()=>{ showToast('Theme equip coming in Lumina OS v2.'); }; }
+
+  const pinBtn = $('avmPinBtn');
+  const pinLabel = $('avmPinLabel');
+  if(pinBtn){
+    const isPinned = !!item.pinned_at;
+    if(pinLabel) pinLabel.textContent = isPinned ? 'Unpin' : 'Pin';
+    pinBtn.onclick = ()=>{ closeAssetViewerModal(); togglePinPoxy(item.id, item.pinned_at); };
+  }
+
+  const featBtn = $('avmFeatureBtn');
+  const featLabel = $('avmFeatureLabel');
+  if(featBtn){
+    const isFeatured = String(currentProfile?.favorite_poxy_id||'') === String(item.id);
+    if(featLabel) featLabel.textContent = isFeatured ? 'Unfeature' : 'Feature';
+    featBtn.onclick = ()=>{ closeAssetViewerModal(); toggleFeaturePoxy(item.id); };
+  }
+
+  const listBtn = $('avmListBtn');
+  if(listBtn){ listBtn.onclick = ()=>{ closeAssetViewerModal(); const t=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0]; pendingListItem={poxyId:item.id,tier:t,serial:item.serial_number||'',fromHunt:false}; openPriceModal(); }; }
+
+  const burnBtn = $('avmBurnBtn');
+  if(burnBtn){ burnBtn.onclick = ()=>{ closeAssetViewerModal(); const card=document.querySelector('.col-card[data-id="'+CSS.escape(String(item.id))+'"]'); burnPoxySecure(item.id, card); }; }
+
+  // ── Show modal ──
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => modal.classList.add('avm-open'));
+};
+
+window.closeAssetViewerModal = function() {
+  const modal = $('assetViewerModal');
+  if(!modal) return;
+  modal.classList.remove('avm-open');
+  document.body.style.overflow = '';
+  setTimeout(() => { modal.hidden = true; _avmCurrentItem = null; }, 280);
+};
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && $('assetViewerModal') && !$('assetViewerModal').hidden) closeAssetViewerModal();
+});
+
 // ── TOP-UP MODAL ───────────────────────────────────────────────────
 let _tumListenersReady=false;
 window.openTopUpModal=function(){
@@ -8003,6 +8127,12 @@ async function sharePoxy(poxyId,rarity,serialNumber){
       if(colCraftZoneOpen&&card.dataset.tier==='common'){
         showToast('Drag this Common into a forge socket.');
         return;
+      }
+      // ── Normal single-card tap → Asset Viewer Modal ──
+      const itemId=card.dataset.id;
+      const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(itemId));
+      if(item&&typeof openAssetViewerModal==='function'){
+        openAssetViewerModal(item);
       }
     }
   });
@@ -12472,6 +12602,145 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
   openLuminaOS(p.user,p.nav);
 }
 </script>
+<!-- ══════════════════════════════════════════════════════════════
+     ASSET VIEWER MODAL  — triggered by collection card click
+     ══════════════════════════════════════════════════════════════ -->
+<div id="assetViewerModal" class="avm-backdrop" role="dialog" aria-modal="true" aria-label="Asset Details" hidden onclick="if(event.target===this)closeAssetViewerModal()">
+  <div class="avm-panel">
+
+    <!-- White ambient glow behind panel -->
+    <div class="avm-ambient" aria-hidden="true"></div>
+
+    <!-- Close button -->
+    <button type="button" class="avm-close" onclick="closeAssetViewerModal()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
+    <!-- ── LEFT — Cinematic Stage ──────────────────────────────── -->
+    <div class="avm-stage">
+      <!-- Rarity ambient backlight -->
+      <div class="avm-stage-backlight" id="avmBacklight" aria-hidden="true"></div>
+      <!-- Shimmer ring -->
+      <div class="avm-stage-ring" id="avmRing" aria-hidden="true"></div>
+
+      <!-- POXY ID badge (top) -->
+      <div class="avm-poxy-id-badge">
+        <span class="avm-badge-label">POXY ID</span>
+        <span class="avm-badge-tier" id="avmTierBadge">– TIER</span>
+      </div>
+
+      <!-- Central asset viewport -->
+      <div class="avm-asset-frame" id="avmAssetFrame">
+        <div class="avm-asset-inner" id="avmAssetInner">
+          <!-- Populated by JS: icon / image / lottie / webgl -->
+          <span class="material-symbols-outlined avm-asset-icon" id="avmAssetIcon" aria-hidden="true">view_in_ar</span>
+        </div>
+      </div>
+
+      <!-- Asset number + owner hash -->
+      <div class="avm-stage-meta">
+        <div class="avm-asset-number" id="avmAssetNumber">#–</div>
+        <div class="avm-owner-row">
+          <span class="avm-owner-label">VERIFIED OWNER</span>
+          <span class="avm-owner-hash" id="avmOwnerHash">0x···</span>
+        </div>
+      </div>
+
+      <!-- Particle placeholder (future GPU effect) -->
+      <div class="avm-particles" id="avmParticles" aria-hidden="true">
+        <span class="avm-particle"></span><span class="avm-particle"></span>
+        <span class="avm-particle"></span><span class="avm-particle"></span>
+        <span class="avm-particle"></span><span class="avm-particle"></span>
+      </div>
+    </div>
+
+    <!-- ── RIGHT — Operations Center ──────────────────────────── -->
+    <div class="avm-ops">
+      <div class="avm-ops-eyebrow">ASSET INTELLIGENCE</div>
+      <h2 class="avm-ops-title" id="avmOpsTitle">POXY ASSET</h2>
+
+      <!-- Tactical data table -->
+      <div class="avm-data-table">
+        <div class="avm-data-row">
+          <span class="avm-data-key">ISSUED</span>
+          <span class="avm-data-val" id="avmIssued">–</span>
+        </div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">STATUS</span>
+          <span class="avm-data-val avm-val-active" id="avmStatus">ACTIVE</span>
+        </div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">NETWORK</span>
+          <span class="avm-data-val" id="avmNetwork">MAINNET</span>
+        </div>
+        <div class="avm-data-divider"></div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">RARITY CLASS</span>
+          <span class="avm-data-val" id="avmRarityClass">–</span>
+        </div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">DROP RATE</span>
+          <span class="avm-data-val" id="avmDropRate">–</span>
+        </div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">RARITY COEFF</span>
+          <span class="avm-data-val" id="avmCoeff">–</span>
+        </div>
+        <div class="avm-data-divider"></div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">SERIAL</span>
+          <span class="avm-data-val avm-val-mono" id="avmSerial">–</span>
+        </div>
+        <div class="avm-data-row">
+          <span class="avm-data-key">ASSET ID</span>
+          <span class="avm-data-val avm-val-mono avm-val-dim" id="avmAssetId">–</span>
+        </div>
+        <div class="avm-data-row" id="avmForgeRow" hidden>
+          <span class="avm-data-key">FORGE</span>
+          <span class="avm-data-val avm-val-forge">IN SYNDICATE FORGE</span>
+        </div>
+        <div class="avm-data-row" id="avmPinnedRow" hidden>
+          <span class="avm-data-key">PINNED</span>
+          <span class="avm-data-val">📌 Collection Top</span>
+        </div>
+      </div>
+
+      <!-- Crypto proof shortcut -->
+      <button type="button" class="avm-crypto-btn" id="avmCryptoBtn">
+        <span class="material-symbols-outlined">verified_user</span>
+        VIEW CRYPTOGRAPHIC PROOF
+      </button>
+
+      <!-- Primary action -->
+      <button type="button" class="avm-cta" id="avmEquipBtn">
+        <span class="material-symbols-outlined">palette</span>
+        EQUIP THEME TO LUMINA OS
+      </button>
+
+      <!-- Secondary actions row -->
+      <div class="avm-secondary-actions">
+        <button type="button" class="avm-sec-btn" id="avmPinBtn" title="Pin to top">
+          <span class="material-symbols-outlined">push_pin</span>
+          <span id="avmPinLabel">Pin</span>
+        </button>
+        <button type="button" class="avm-sec-btn" id="avmFeatureBtn" title="Feature in profile">
+          <span class="material-symbols-outlined">star</span>
+          <span id="avmFeatureLabel">Feature</span>
+        </button>
+        <button type="button" class="avm-sec-btn" id="avmListBtn" title="List on market">
+          <span class="material-symbols-outlined">sell</span>
+          <span>List</span>
+        </button>
+        <button type="button" class="avm-sec-btn avm-sec-danger" id="avmBurnBtn" title="Burn for dust">
+          <span class="material-symbols-outlined">local_fire_department</span>
+          <span>Burn</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ══════════════════════════════════════════════════════════════
      TOP-UP MODAL  — triggered by header (+) button
      ══════════════════════════════════════════════════════════════ -->
