@@ -11,8 +11,8 @@
 #stPanelVerify {
   position: relative;
   overflow: visible;
+  overflow-x: clip;
   background: #050506 !important;
-  min-height: 100vh;               /* match Stitch: body.min-h-screen */
 }
 
 /* ── Main canvas ──

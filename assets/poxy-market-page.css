@@ -1,5 +1,5 @@
 /* POXY Marketplace — Stitch terminal UI */
-#stPanelMarket{width:100%;max-width:100%;overflow-x:hidden;box-sizing:border-box}
+#stPanelMarket{width:100%;max-width:100%;overflow:visible;overflow-x:clip;box-sizing:border-box}
 .poxy-market-page{
   display:none;
   width:100%;
@@ -7,7 +7,8 @@
   margin:0 auto;
   padding:20px 16px 48px;
   box-sizing:border-box;
-  overflow-x:hidden;
+  overflow:visible;
+  overflow-x:clip;
   color:#e5e2e1;
   font-family:Inter,system-ui,sans-serif;
 }

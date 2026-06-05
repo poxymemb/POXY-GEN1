@@ -23,12 +23,11 @@
   padding-bottom:0;
 }
 #poxyAppShell #poxyStitchDashboard.poxy-stitch-dash{
-  flex:1 1 auto;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
+  flex:none;
+  display:block;
+  min-height:auto;
 }
-#poxyAppShell .st-spa-viewport{flex:1 1 auto;min-height:0}
+#poxyAppShell .st-spa-viewport{flex:none;min-height:auto;overflow:visible;overflow-x:clip}
 .poxy-stitch-dash .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;font-size:20px;line-height:1;vertical-align:middle}
 /* ── NAV SIZING TOKENS ── */
 :root{
@@ -46,17 +45,15 @@
 
 #poxyAppShell{
   --st-nav-h:var(--st-nav-h-val);
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-  min-height:100dvh;
+  display:block;
+  min-height:auto;
   padding-top:var(--st-nav-h);
+  overflow:visible;
 }
 #poxyAppShell>#huntPage{
-  flex:1 1 auto;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
+  display:block;
+  min-height:auto;
+  overflow:visible;
 }
 #poxyAppShell>.page.visible,#poxyAppShell>#huntPage,#poxyAppShell>.club-page.visible{padding-top:0}
 
@@ -794,3 +791,22 @@ body.st-win-reveal-open{overflow:hidden}
 .poxy-stitch-dash .cta-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
 .poxy-stitch-dash .post-btns,.poxy-stitch-dash .btn-list-market{max-width:400px;width:100%}
 .poxy-stitch-dash .btn-logout{font-size:10px}
+
+/* ══ Scroll architecture — body is the single vertical scroll container ══
+   overflow-x:hidden + overflow-y:visible computes to overflow-y:auto (CSS spec),
+   which created nested scrollbars inside the flex-height shell chain. */
+html{
+  overflow-x:clip;
+  overflow-y:auto;
+}
+body.poxy-app-dark,
+body.poxy-stitch-dash{
+  overflow-x:clip;
+  overflow-y:auto;
+  min-height:100dvh;
+}
+#poxyAppShell .st-spa-panel,
+#poxyAppShell .st-spa-panel--active{
+  overflow:visible;
+  overflow-x:clip;
+}

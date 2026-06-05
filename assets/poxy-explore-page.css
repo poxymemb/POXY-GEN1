@@ -1,5 +1,5 @@
 /* POXY Explore — aligned with Stitch dashboard / marketplace */
-#stPanelExplore{width:100%;max-width:100%;overflow-x:hidden;box-sizing:border-box}
+#stPanelExplore{width:100%;max-width:100%;overflow:visible;overflow-x:clip;box-sizing:border-box}
 .poxy-explore-page{
   --ex-bg:var(--st-bg,#131313);
   --ex-surface:rgba(28,27,27,0.55);
@@ -18,7 +18,8 @@
   margin:0 auto;
   padding:20px 16px 48px;
   box-sizing:border-box;
-  overflow-x:hidden;
+  overflow:visible;
+  overflow-x:clip;
   color:var(--ex-on);
   font-family:Inter,system-ui,sans-serif;
   background:var(--ex-bg);

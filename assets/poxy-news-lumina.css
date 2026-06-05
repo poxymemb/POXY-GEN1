@@ -4,15 +4,15 @@
    Page visual identity. Stitch screen: ee3732804b7e40bd...
    ============================================================ */
 
-/* Panel-level top padding to clear the sticky nav (~72–80px) */
+/* Nav offset lives on #poxyAppShell — panels must not re-pad or force 100vh */
 #stPanelNews,
 #stPanelTelemetry,
 #stPanelWhitepaper,
 #stPanelVerify {
-  padding-top: var(--st-nav-h, 72px);
   background: #050506;
-  min-height: 100vh;
   box-sizing: border-box;
+  overflow: visible;
+  overflow-x: clip;
 }
 
 /* ── Root tokens (match Landing Page --pl-* vars) ────────────── */
@@ -40,7 +40,6 @@
   max-width: 1600px;
   margin: 0 auto;
   box-sizing: border-box;
-  min-height: 100vh;
 }
 @media (min-width: 768px) {
   .poxy-news-lumina { padding: 40px 40px 96px; }

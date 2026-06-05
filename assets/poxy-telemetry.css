@@ -28,7 +28,6 @@
   margin: 0 auto;
   box-sizing: border-box;
   font-family: 'Hanken Grotesk', Inter, system-ui, sans-serif;
-  min-height: 100vh;
   position: relative;
 }
 @media (min-width: 768px) {
