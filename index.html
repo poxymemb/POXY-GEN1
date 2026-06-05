@@ -59,6 +59,7 @@
 <link rel="stylesheet" href="assets/lumina-features.css?v=1">
 <link rel="stylesheet" href="assets/poxy-landing-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
+<link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -1395,11 +1396,11 @@ body.dark-club .club-sub{color:#888}
         </div>
         <div class="st-nav-zone st-nav-zone--right">
           <div class="st-wallet-capsule balance-badge st-balance st-spring-interactive gpu-accel" id="balanceBadgeGroup">
-            <button type="button" class="st-wallet-body" id="balanceBadge" onclick="scrollToTreasury()" data-i18n-aria="nav.wallet" aria-label="Wallet balance">
+            <button type="button" class="st-wallet-body" id="balanceBadge" onclick="openTopUpModal()" data-i18n-aria="nav.wallet" aria-label="Wallet balance">
               <span class="st-wallet-icon material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
               <span class="st-wallet-amount" id="stBalanceText">0 PC</span>
             </button>
-            <button type="button" class="st-wallet-plus-btn st-spring-interactive" id="balanceTopUpBtn" onclick="scrollToTreasury()" data-i18n-aria="nav.topUp" aria-label="Add funds">
+            <button type="button" class="st-wallet-plus-btn st-spring-interactive" id="balanceTopUpBtn" onclick="openTopUpModal()" data-i18n-aria="nav.topUp" aria-label="Add funds">
               <span class="material-symbols-outlined" aria-hidden="true">add</span>
             </button>
           </div>
@@ -1517,35 +1518,7 @@ body.dark-club .club-sub{color:#888}
         <div class="st-col-grid" id="dashColGrid"></div>
         <button type="button" class="st-view-all" onclick="showPage('collection')" data-i18n="dash.viewAllCollection">View full collection →</button>
       </section>
-      <div class="st-bottom">
-        <section class="st-panel" id="psdTreasury">
-          <span class="st-test-tag" data-i18n="dash.treasury.testMode">TEST MODE</span>
-          <h3><span class="material-symbols-outlined">account_balance_wallet</span> <span data-i18n="dash.treasury.title">Treasury &amp; Funds</span></h3>
-          <p class="st-col-sub" style="margin-bottom:16px" data-i18n="dash.treasury.sub">Deposit Poxy Coins (PC) — 1 PC per unit deposited.</p>
-          <div class="bank-amounts" id="bankAmounts"></div>
-          <div class="psd-pay-methods" id="psdPayMethods">
-            <div class="bank-form-label">Payment method</div>
-            <div class="psd-wallet-row">
-              <button type="button" class="btn-wallet-pay btn-apple-pay" id="btnApplePay" aria-label="Pay with Apple Pay">
-                <span class="apple-pay-inner" aria-hidden="true"><span class="apple-pay-icon"></span><span class="apple-pay-word">Pay</span></span>
-              </button>
-              <button type="button" class="btn-wallet-pay btn-paypal-pay" id="btnPayPal" aria-label="Pay with PayPal">
-                <span class="paypal-mark" aria-hidden="true">PayPal</span>
-              </button>
-            </div>
-            <p class="psd-pay-divider" aria-hidden="true"><span>or pay with card</span></p>
-            <div class="bank-form">
-              <div class="bank-form-label">Card Number</div>
-              <input class="bank-input" id="bankCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
-              <div class="bank-form-row">
-                <div><div class="bank-form-label">Expiry</div><input class="bank-input" id="bankExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" style="margin-bottom:0"></div>
-                <div><div class="bank-form-label">CVV</div><input class="bank-input" id="bankCVV" placeholder="123" maxlength="4" type="password" style="margin-bottom:0"></div>
-              </div>
-            </div>
-            <button type="button" class="btn-primary btn-pay-card" id="btnPayCard"><span class="material-symbols-outlined">lock</span> Add Funds (Test)</button>
-          </div>
-        </section>
-      </div>
+      <div class="st-bottom"></div>
       <section class="poxy-store-embed" id="dashStoreSection" aria-label="Tactical Terminal">
         <div class="poxy-store-layout" id="storePage">
           <aside class="poxy-store-sidenav" aria-label="Store categories">
@@ -1608,7 +1581,7 @@ body.dark-club .club-sub{color:#888}
                     </div>
                   </div>
                 </div>
-                <button type="button" class="poxy-store-terminal-fund" onclick="scrollToTreasury()">Add funds — treasury</button>
+                <button type="button" class="poxy-store-terminal-fund" onclick="openTopUpModal()">Add funds — treasury</button>
               </div>
             </section>
             <section class="poxy-store-uplinks" aria-label="Active uplinks">
@@ -3296,7 +3269,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 <div class="page" id="bankPage">
   <div class="page-title">ADD FUNDS</div>
   <p class="psd-subpages-hint">Treasury &amp; card form are on the Dashboard.</p>
-  <button type="button" class="btn-primary" onclick="showPage('hunt');scrollToTreasury()">Go to Dashboard Treasury</button>
+          <button type="button" class="btn-primary" onclick="openTopUpModal()">Add Funds — Treasury</button>
 </div>
 
 <!-- POXY CLUB v2 — Founders Circle Ecosystem (fragment for index.html) -->
@@ -5940,18 +5913,72 @@ if(settingsAvatarInp)settingsAvatarInp.addEventListener('change',e=>handleAvatar
 
 // ── STITCH DASHBOARD helpers ──
 const DASH_COL_GOAL=20;
-window.scrollToTreasury=function(){
-  showStitchTab('dashboard');
-  const scrollTreasury=()=>{
-    const el=$('psdTreasury')||$('psdPayMethods');
-    const nav=$('stGlobalNav');
-    if(!el)return;
-    const navH=nav?Math.ceil(nav.getBoundingClientRect().height):72;
-    const top=el.getBoundingClientRect().top+window.scrollY-navH-16;
-    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
-  };
-  requestAnimationFrame(()=>requestAnimationFrame(scrollTreasury));
+window.scrollToTreasury=function(){ openTopUpModal(); };
+
+// ── TOP-UP MODAL ───────────────────────────────────────────────────
+let _tumListenersReady=false;
+window.openTopUpModal=function(){
+  const modal=$('topUpModal');
+  if(!modal)return;
+  // Sync live balance display
+  const bal=currentProfile?.balance??0;
+  const el=$('tumBalanceDisplay');
+  if(el)el.textContent=formatPC(bal)+' PC';
+  // Render amount buttons (re-init each open)
+  renderBank();
+  modal.hidden=false;
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(()=>modal.classList.add('tum-open'));
+  // Wire button listeners once
+  if(!_tumListenersReady){
+    _tumListenersReady=true;
+    const payCard=$('btnPayCard');
+    if(payCard){
+      payCard.addEventListener('click',async function(){
+        if(!validateCard())return;
+        payCard.disabled=true;
+        payCard.innerHTML='<span class="material-symbols-outlined">hourglass_top</span> PROCESSING…';
+        try{await processTopup();closeTopUpModal();}catch(e){showToast(e.message||'Payment failed.');}
+        payCard.disabled=false;
+        payCard.innerHTML='<span class="material-symbols-outlined">lock</span> INITIATE TRANSACTION';
+      });
+    }
+    const appleBtn=$('btnApplePay');
+    const APPLE_PAY_BTN_HTML='<span class="apple-pay-inner" aria-hidden="true"><span class="apple-pay-icon"></span><span class="apple-pay-word">Pay</span></span>';
+    if(appleBtn){
+      appleBtn.addEventListener('click',async function(){
+        appleBtn.disabled=true;
+        appleBtn.innerHTML='<span class="apple-pay-word" style="font-size:14px;font-weight:600">Processing…</span>';
+        await new Promise(r=>setTimeout(r,900));
+        try{await processTopup();closeTopUpModal();}catch(e){showToast(e.message||'Apple Pay failed.');}
+        appleBtn.disabled=false;appleBtn.innerHTML=APPLE_PAY_BTN_HTML;
+      });
+    }
+    const ppBtn=$('btnPayPal');
+    if(ppBtn){
+      ppBtn.addEventListener('click',async function(){
+        ppBtn.disabled=true;
+        const lbl=ppBtn.querySelector('.paypal-mark');
+        const prev=lbl?lbl.textContent:'PayPal';
+        if(lbl)lbl.textContent='Processing…';
+        await new Promise(r=>setTimeout(r,900));
+        try{await processTopup();closeTopUpModal();}catch(e){showToast(e.message||'PayPal failed.');}
+        ppBtn.disabled=false;if(lbl)lbl.textContent=prev;
+      });
+    }
+  }
 };
+window.closeTopUpModal=function(){
+  const modal=$('topUpModal');
+  if(!modal)return;
+  modal.classList.remove('tum-open');
+  document.body.style.overflow='';
+  setTimeout(()=>{modal.hidden=true;},280);
+};
+// Escape key closes modal
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&$('topUpModal')&&!$('topUpModal').hidden)closeTopUpModal();
+});
 window.scrollToStore=function(){
   showStitchTab('dashboard');
   document.querySelectorAll('.st-nav-link').forEach(b=>b.classList.remove('active'));
@@ -6590,7 +6617,7 @@ window.showPage=function(page){
     return;
   }
   if(page==='settings')window._allowSettingsPage=false;
-  if(page==='bank'){showStitchTab('dashboard');scrollToTreasury();return;}
+  if(page==='bank'){openTopUpModal();return;}
   if(page==='store'){scrollToStore();return;}
   if(page==='friends'){
     if(typeof openLuminaOS==='function'){openLuminaOS(null,'friends');return;}
@@ -7140,7 +7167,7 @@ function resetAll(){
 $('btnOpen').addEventListener('click',async function(){
   if(busy||!currentUser)return;
   const bal=currentProfile?.balance||0;
-  if(bal<STANDARD_CASE_PRICE){showToast('Insufficient Poxy Coins. Add funds in Treasury.');scrollToTreasury();return;}
+  if(bal<STANDARD_CASE_PRICE){showToast('Insufficient Poxy Coins. Add funds via Treasury.');openTopUpModal();return;}
   busy=true;$('btnOpen').disabled=true;
   currentProfile.balance=bal-STANDARD_CASE_PRICE;
   updateBalanceBadge(currentProfile.balance);
@@ -9617,30 +9644,8 @@ async function processTopup(){
   updateBalanceBadge(data.new_balance);
   showToast('+'+selectedBankAmt+' Poxy Coins added!');
 }
-$('btnPayCard').addEventListener('click',async function(){
-  if(!validateCard())return;
-  const btn=$('btnPayCard');btn.disabled=true;btn.innerHTML='<span class="material-symbols-outlined">hourglass_top</span> Processing…';
-  try{await processTopup();}catch(e){showToast(e.message||'Payment failed.');}
-  btn.disabled=false;btn.innerHTML='<span class="material-symbols-outlined">lock</span> Add Funds (Test)';
-});
-const APPLE_PAY_BTN_HTML='<span class="apple-pay-inner" aria-hidden="true"><span class="apple-pay-icon"></span><span class="apple-pay-word">Pay</span></span>';
-$('btnApplePay').addEventListener('click',async function(){
-  const btn=$('btnApplePay');btn.disabled=true;btn.innerHTML='<span class="apple-pay-word" style="font-size:14px;font-weight:600">Processing…</span>';
-  await new Promise(r=>setTimeout(r,900));
-  try{await processTopup();}catch(e){showToast(e.message||'Apple Pay failed.');}
-  btn.disabled=false;btn.innerHTML=APPLE_PAY_BTN_HTML;
-});
-const btnPayPalEl=$('btnPayPal');
-if(btnPayPalEl)btnPayPalEl.addEventListener('click',async function(){
-  btnPayPalEl.disabled=true;
-  const label=btnPayPalEl.querySelector('.paypal-mark');
-  const prev=label?label.textContent:'PayPal';
-  if(label)label.textContent='Processing…';
-  await new Promise(r=>setTimeout(r,900));
-  try{await processTopup();}catch(e){showToast(e.message||'PayPal failed.');}
-  btnPayPalEl.disabled=false;
-  if(label)label.textContent=prev;
-});
+// Payment button listeners are registered lazily in openTopUpModal() to avoid
+// running before the modal HTML exists in the DOM.
 window.formatCard=function(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v;};
 window.formatExpiry=function(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2);el.value=v;};
 
@@ -12336,5 +12341,86 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
   openLuminaOS(p.user,p.nav);
 }
 </script>
+<!-- ══════════════════════════════════════════════════════════════
+     TOP-UP MODAL  — triggered by header (+) button
+     ══════════════════════════════════════════════════════════════ -->
+<div id="topUpModal" class="tum-backdrop" role="dialog" aria-modal="true" aria-label="Add Funds" hidden onclick="if(event.target===this)closeTopUpModal()">
+  <div class="tum-panel">
+    <!-- Ambient glow -->
+    <div class="tum-glow" aria-hidden="true"></div>
+
+    <!-- Close -->
+    <button type="button" class="tum-close" onclick="closeTopUpModal()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
+    <!-- ── LEFT — Status ───────────────────────────────────────── -->
+    <div class="tum-left">
+      <div class="tum-eyebrow">POXY PROTOCOL</div>
+      <h2 class="tum-title">TREASURY<br>DEPOSIT</h2>
+
+      <div class="tum-status-card">
+        <div class="tum-status-row">
+          <span class="tum-status-label">CURRENT BALANCE</span>
+          <span class="tum-status-val" id="tumBalanceDisplay">0 PC</span>
+        </div>
+        <div class="tum-status-divider"></div>
+        <div class="tum-status-row">
+          <span class="tum-status-label">EXCHANGE RATE</span>
+          <span class="tum-status-val tum-val-dim">1 UNIT = 1 PC</span>
+        </div>
+        <div class="tum-status-row">
+          <span class="tum-status-label">NETWORK</span>
+          <span class="tum-status-val"><span class="tum-dot"></span>ONLINE</span>
+        </div>
+        <div class="tum-status-row">
+          <span class="tum-status-label">MODE</span>
+          <span class="tum-status-val tum-val-warn">TEST</span>
+        </div>
+      </div>
+
+      <p class="tum-note">Poxy Coins (PC) are used to open cases, purchase assets from the market, and unlock premium items in the Tactical Terminal.</p>
+    </div>
+
+    <!-- ── RIGHT — Deposit form ───────────────────────────────── -->
+    <div class="tum-right">
+      <div class="tum-section-label">SELECT AMOUNT</div>
+      <div class="bank-amounts tum-amounts" id="bankAmounts"></div>
+
+      <div class="tum-section-label" style="margin-top:20px">PAYMENT METHOD</div>
+      <div class="psd-wallet-row tum-wallet-row">
+        <button type="button" class="btn-wallet-pay btn-apple-pay" id="btnApplePay" aria-label="Pay with Apple Pay">
+          <span class="apple-pay-inner" aria-hidden="true"><span class="apple-pay-icon"></span><span class="apple-pay-word">Pay</span></span>
+        </button>
+        <button type="button" class="btn-wallet-pay btn-paypal-pay" id="btnPayPal" aria-label="Pay with PayPal">
+          <span class="paypal-mark" aria-hidden="true">PayPal</span>
+        </button>
+      </div>
+
+      <p class="tum-divider-line" aria-hidden="true"><span>or pay with card</span></p>
+
+      <div class="tum-card-form">
+        <div class="tum-field-label">CARD NUMBER</div>
+        <input class="tum-input" id="bankCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)" autocomplete="cc-number">
+        <div class="tum-row-2">
+          <div>
+            <div class="tum-field-label">EXPIRY</div>
+            <input class="tum-input" id="bankExpiry" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)" autocomplete="cc-exp">
+          </div>
+          <div>
+            <div class="tum-field-label">CVV</div>
+            <input class="tum-input" id="bankCVV" placeholder="•••" maxlength="4" type="password" autocomplete="cc-csc">
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="tum-cta" id="btnPayCard">
+        <span class="material-symbols-outlined">lock</span>
+        INITIATE TRANSACTION
+      </button>
+      <p class="tum-legal">Funds are applied instantly to your POXY wallet in test mode. No real charges are made.</p>
+    </div>
+  </div>
+</div>
 </body>
 </html>

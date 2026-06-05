@@ -1,0 +1,381 @@
+/* ═══════════════════════════════════════════════════════════════════
+   POXY — TOP-UP MODAL  (Obsidian Protocol)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Backdrop ─────────────────────────────────────────────────────── */
+.tum-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.26s ease;
+}
+.tum-backdrop.tum-open { opacity: 1; }
+.tum-backdrop[hidden] { display: none !important; }
+
+/* ── Panel ────────────────────────────────────────────────────────── */
+.tum-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #050506;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 24px;
+  transform: translateY(18px) scale(0.97);
+  transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
+  overflow: hidden; /* clip glow */
+  scrollbar-width: none;
+}
+.tum-panel::-webkit-scrollbar { display: none; }
+.tum-backdrop.tum-open .tum-panel {
+  transform: translateY(0) scale(1);
+}
+
+/* ── Ambient white glow behind panel ─────────────────────────────── */
+.tum-glow {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 24px;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
+}
+
+/* ── Close button ────────────────────────────────────────────────── */
+.tum-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.tum-close:hover {
+  background: rgba(255,255,255,0.09);
+  color: #fff;
+  border-color: rgba(255,255,255,0.18);
+}
+.tum-close .material-symbols-outlined { font-size: 18px; }
+
+/* ── LEFT panel ───────────────────────────────────────────────────── */
+.tum-left {
+  position: relative;
+  z-index: 1;
+  padding: 36px 28px 36px 32px;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255,255,255,0.015);
+}
+
+.tum-eyebrow {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+.tum-title {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0;
+}
+
+/* Status card */
+.tum-status-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 4px;
+}
+.tum-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+.tum-status-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+  margin: 2px 0;
+}
+.tum-status-label {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+.tum-status-val {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.tum-val-dim { color: rgba(255,255,255,0.45); }
+.tum-val-warn { color: #f0b429; letter-spacing: 0.1em; }
+
+/* Online dot */
+.tum-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74,222,128,0.7);
+  animation: tumDotPulse 2.4s ease-in-out infinite;
+}
+@keyframes tumDotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.tum-note {
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.25);
+  margin: 0;
+}
+
+/* ── RIGHT panel ──────────────────────────────────────────────────── */
+.tum-right {
+  position: relative;
+  z-index: 1;
+  padding: 36px 32px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tum-section-label {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.28);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* Amount grid — reuse .bank-amt but override inside modal */
+.tum-amounts {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+}
+.tum-amounts .bank-amt {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+  cursor: pointer;
+  transition: background 0.16s, border-color 0.16s;
+  text-align: center;
+}
+.tum-amounts .bank-amt:hover {
+  background: rgba(255,255,255,0.08) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+}
+.tum-amounts .bank-amt.selected {
+  background: rgba(255,255,255,0.1) !important;
+  border-color: rgba(255,255,255,0.25) !important;
+}
+.tum-amounts .bank-amt-val {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.tum-amounts .bank-amt-sub {
+  font-size: 9.5px;
+  color: rgba(255,255,255,0.3);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+.tum-amounts .bank-amt-custom {
+  grid-column: span 3;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 !important;
+  background: rgba(255,255,255,0.03) !important;
+  border-radius: 10px !important;
+}
+.tum-amounts .bank-custom-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 12px;
+  color: #fff;
+  padding: 10px 12px;
+}
+.tum-amounts .bank-custom-input::placeholder { color: rgba(255,255,255,0.2); }
+.tum-amounts .bank-custom-add {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 300;
+  cursor: pointer;
+  margin-right: 6px;
+  transition: background 0.15s;
+}
+.tum-amounts .bank-custom-add:hover { background: rgba(255,255,255,0.12); }
+
+/* Wallet row */
+.tum-wallet-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+/* Divider */
+.tum-divider-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.18);
+  font-size: 11px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  letter-spacing: 0.1em;
+  margin: 16px 0 14px;
+}
+.tum-divider-line::before,
+.tum-divider-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+
+/* Card form */
+.tum-card-form { display: flex; flex-direction: column; gap: 10px; }
+
+.tum-field-label {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.tum-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 13px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.18s, background 0.18s;
+  box-sizing: border-box;
+}
+.tum-input::placeholder { color: rgba(255,255,255,0.18); }
+.tum-input:focus {
+  border-color: rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.06);
+}
+
+.tum-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* CTA */
+.tum-cta {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: #fff;
+  border: none;
+  color: #050506;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.18s, transform 0.14s;
+}
+.tum-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+.tum-cta:active { transform: translateY(0); }
+.tum-cta:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.tum-cta .material-symbols-outlined { font-size: 16px; }
+
+.tum-legal {
+  margin-top: 12px;
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.2);
+  text-align: center;
+  line-height: 1.55;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .tum-panel {
+    grid-template-columns: 1fr;
+    border-radius: 18px;
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+  .tum-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 28px 24px; }
+  .tum-right { padding: 24px; }
+  .tum-title { font-size: 18px; }
+  .tum-amounts { grid-template-columns: repeat(3, 1fr) !important; }
+}
