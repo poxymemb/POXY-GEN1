@@ -150,86 +150,100 @@
     return code;
   }
 
-  /* ─── Build PASSPORT layout (full card) ────────────────────────── */
-  function _buildPassportContent(item, tier, dateStr) {
+  /* ─── Build PASSPORT layout ─────────────────────────────────────
+   *  Pixel-perfect 1:1 implementation of the Stitch design:
+   *  "POXY - Tactical Archive (Obsidian Protocol Restored)"
+   *  Screen ID: 2fed15a5deb440bab2418f2722eb33b7
+   *
+   *  Stitch spec (translated from Tailwind):
+   *    article: bg-[#050506] border-white/5 rounded-[2rem] p-7 flex-col gap-6
+   *    avatar:  w-20 h-20 rounded-2xl bg-black border-white/5
+   *    number:  text-2xl font-bold (24px)
+   *    data:    border-t border-white/5 pt-4 flex-col gap-2
+   * ─────────────────────────────────────────────────────────────── */
+  function _buildPassportContent(item, tier, dateStr, rendererOpts) {
     const rarity = item.poxy_tier || 'common';
     const cfg = RARITY_CONFIG[rarity] || RARITY_CONFIG.common;
 
-    // Tactical serial code — PX-XXXXXX format
-    const numDisplay = _genTacticalSerial(item);
+    // PX-XXXXXX tactical serial (deterministic from item.id)
+    const serial = _genTacticalSerial(item);
 
-    // owner hash from item id
+    // Owner hash
     const id = String(item.id || '');
     const hashDisplay = id.length > 8
-      ? '0x' + id.slice(0, 3).toUpperCase() + '…' + id.slice(-4).toUpperCase()
-      : '0x···';
+      ? '0x' + id.slice(0, 4).toUpperCase() + '...' + id.slice(-4).toUpperCase()
+      : '0x····';
 
-    // issued date → YYYY.MM.DD
+    // Issued date → YYYY.MM.DD
     const d = new Date(item.dropped_at);
-    const issuedStr = isNaN(d)
+    const issuedStr = isNaN(d.getTime())
       ? dateStr
       : d.getFullYear() + '.' +
         String(d.getMonth() + 1).padStart(2, '0') + '.' +
         String(d.getDate()).padStart(2, '0');
 
-    const wrap = _el('div', 'pcard-pp');
+    // Tier label (matches Stitch: "LEGENDARY TIER", "EPIC TIER", "STANDARD TIER")
+    const tierLabel = (tier.label || rarity).toUpperCase() + ' TIER';
 
-    // ── Header row ──
-    const hdr = _el('div', 'pcard-pp-header');
-    const idLabel = _el('span', 'pcard-pp-id-label');
-    idLabel.textContent = 'POXY ID';
-    const tierBadge = _el('span', 'pcard-pp-tier-badge');
-    tierBadge.textContent = tier.label.toUpperCase() + ' TIER';
-    tierBadge.style.borderColor = tier.color + '66';
-    tierBadge.style.color = tier.color;
-    hdr.appendChild(idLabel);
-    hdr.appendChild(tierBadge);
-    wrap.appendChild(hdr);
+    /* ── Section 1: header (POXY ID | TIER BADGE) ── */
+    const sec1 = _el('div', 'pcard-s1');
+    const s1id = _el('span', 'pcard-s1-id'); s1id.textContent = 'POXY ID';
+    const s1badge = _el('div', 'pcard-s1-badge');
+    s1badge.textContent = tierLabel;
+    s1badge.style.color = tier.color || cfg.glow;
+    s1badge.style.borderColor = (tier.color || cfg.glow) + '55';
+    sec1.appendChild(s1id);
+    sec1.appendChild(s1badge);
 
-    // ── Identity row ──
-    const ident = _el('div', 'pcard-pp-identity');
-    // Avatar
-    const av = _el('div', 'pcard-pp-avatar');
+    /* ── Section 2: identity (avatar + info) ── */
+    const sec2 = _el('div', 'pcard-s2');
+
+    // Avatar box (80×80, Stitch: w-20 h-20 rounded-2xl bg-black border-white/5)
+    const av = _el('div', 'pcard-s2-avatar');
     av.style.setProperty('--avatar-glow', cfg.glow);
-    const avIcon = _el('span', 'material-symbols-outlined pcard-pp-avatar-icon');
-    avIcon.style.color = tier.color;
-    avIcon.textContent = STITCH_TIER_ICON
-      ? (STITCH_TIER_ICON[tier.id] || 'view_in_ar')
-      : 'view_in_ar';
-    av.appendChild(avIcon);
-    // Info block
-    const info = _el('div', 'pcard-pp-asset-info');
-    const numEl = _el('div', 'pcard-pp-number');
-    numEl.textContent = numDisplay;
-    const ownerLbl = _el('div', 'pcard-pp-owner-label');
-    ownerLbl.textContent = 'VERIFIED OWNER';
-    const hashEl = _el('div', 'pcard-pp-hash');
-    hashEl.textContent = hashDisplay;
-    info.appendChild(numEl);
-    info.appendChild(ownerLbl);
-    info.appendChild(hashEl);
-    ident.appendChild(av);
-    ident.appendChild(info);
-    wrap.appendChild(ident);
-
-    // ── Divider ──
-    wrap.appendChild(_el('div', 'pcard-pp-divider'));
-
-    // ── Data rows ──
-    const data = _el('div', 'pcard-pp-data');
-    function addRow(key, val, extraClass) {
-      const row = _el('div', 'pcard-pp-row');
-      const k = _el('span', 'pcard-pp-key'); k.textContent = key;
-      const v = _el('span', 'pcard-pp-val' + (extraClass ? ' ' + extraClass : ''));
-      v.textContent = val;
-      row.appendChild(k); row.appendChild(v);
-      data.appendChild(row);
+    if (rendererOpts && rendererOpts.renderer === 'image' && rendererOpts.rendererData && rendererOpts.rendererData.src) {
+      const img = _el('img', 'pcard-s2-img');
+      img.src = rendererOpts.rendererData.src;
+      img.alt = tier.label + ' POXY';
+      img.loading = 'lazy';
+      av.appendChild(img);
+    } else {
+      const icon = _el('span', 'material-symbols-outlined pcard-s2-icon');
+      icon.style.color = tier.color;
+      icon.textContent = (window.STITCH_TIER_ICON && window.STITCH_TIER_ICON[tier.id]) || 'view_in_ar';
+      av.appendChild(icon);
     }
-    addRow('ISSUED', issuedStr);
-    addRow('STATUS', 'ACTIVE', 'pcard-pp-active');
-    addRow('NETWORK', 'MAINNET');
-    wrap.appendChild(data);
 
+    // Info column
+    const info = _el('div', 'pcard-s2-info');
+    const numEl = _el('span', 'pcard-s2-num'); numEl.textContent = serial;
+    const ownerEl = _el('span', 'pcard-s2-owner'); ownerEl.textContent = 'VERIFIED OWNER';
+    const hashEl = _el('div', 'pcard-s2-hash'); hashEl.textContent = hashDisplay;
+    info.appendChild(numEl);
+    info.appendChild(ownerEl);
+    info.appendChild(hashEl);
+
+    sec2.appendChild(av);
+    sec2.appendChild(info);
+
+    /* ── Section 3: data rows (border-t separator, gap-2) ── */
+    const sec3 = _el('div', 'pcard-s3');
+    function row(k, v, cls) {
+      const r = _el('div', 'pcard-s3-row');
+      const rk = _el('span', 'pcard-s3-key'); rk.textContent = k;
+      const rv = _el('span', 'pcard-s3-val' + (cls ? ' ' + cls : '')); rv.textContent = v;
+      r.appendChild(rk); r.appendChild(rv);
+      sec3.appendChild(r);
+    }
+    row('ISSUED', issuedStr);
+    row('STATUS', 'ACTIVE', 'pcard-s3-active');
+    row('NETWORK', 'MAINNET');
+
+    /* ── Assemble ── */
+    const wrap = _el('div', 'pcard-pp');
+    wrap.appendChild(sec1);
+    wrap.appendChild(sec2);
+    wrap.appendChild(sec3);
     return wrap;
   }
 
@@ -390,7 +404,8 @@
         card.classList.add('pcard--passport');
         card.appendChild(_buildBgLayer(rarity));
         card.appendChild(_buildFxLayer(rarity));
-        card.appendChild(_buildPassportContent(item, tier, dateStr));
+        // Pass renderer info so avatar shows image when available
+        card.appendChild(_buildPassportContent(item, tier, dateStr, opts));
       } else {
         // ── Classic layered layout ──
         const renderer = opts.renderer || 'icon';
