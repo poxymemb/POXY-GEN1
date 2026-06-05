@@ -1,0 +1,53 @@
+---
+description: Enforce pixel-perfect Stitch design implementation — always fetch via MCP, compare screenshot, fix all divergences before committing
+alwaysApply: true
+---
+
+# Stitch Design Fidelity — Always 1:1
+
+When any Stitch screen ID is mentioned or a design task involves a Stitch project, **never approximate**. Follow this exact protocol every time.
+
+## Mandatory Steps (in order)
+
+1. **Fetch via MCP first** — call `get_screen` with the project/screen IDs before writing any code.
+2. **Download both assets** — screenshot (`downloadUrl`) AND HTML code (`htmlCode.downloadUrl`) using `Invoke-WebRequest`.
+3. **Read the screenshot** — use the Read tool to view the image. Visually analyse every element.
+4. **Diff HTML vs current code** — identify every class, color, layout, and animation that differs.
+5. **Implement 1:1** — copy exact values: colors, border-radius, opacity, animation timings, easing curves, font sizes. Do not invent or approximate.
+6. **Verify the diff list is empty** before committing.
+
+## Common Mistakes to Avoid
+
+| ❌ Wrong (approximation) | ✅ Correct (exact Stitch) |
+|---|---|
+| Amber/teal glow blobs | `w-[800px] bg-white opacity-[0.02] blur-[150px]` centered blob |
+| Pink active filter pill | `bg-white text-black border-white` solid white |
+| Pink step icons | `bg-white border-[3px] border-[#0d0d0f]` white circle |
+| Pink hash text | `color: #ffffff` plain white |
+| Gradient title | `color: #ffffff` plain white uppercase |
+| Separate header + input cards | Single combined `flex-col lg:flex-row` bento card |
+| `position: fixed` for glow inside SPA | `position: absolute` scoped to panel |
+
+## CSS Translation Rules (Tailwind → custom CSS)
+
+When the project has no Tailwind, translate utility classes to raw CSS:
+- `bg-[#0d0d0f]` → `background: #0d0d0f`
+- `border border-white/5` → `border: 1px solid rgba(255,255,255,0.05)`
+- `rounded-3xl` → `border-radius: 1.5rem`
+- `opacity-[0.02]` → `opacity: 0.02`
+- `blur-[150px]` → `filter: blur(150px)`
+- `bg-white/5` → `background: rgba(255,255,255,0.05)`
+- `border-white/20` → `border-color: rgba(255,255,255,0.20)`
+
+## Animation Timings (never change these)
+
+```
+bento entrance:  0.8s cubic-bezier(0.16, 1, 0.3, 1)
+data-pulse:      2.5s linear infinite
+breath-glow:     3s ease-in-out infinite
+shimmer-edge:    2s infinite (on focus)
+magnetic button: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+mesh-float:      20s ease-in-out infinite alternate
+cursor-blink:    1s step-end infinite
+spring:          0.5s cubic-bezier(0.34, 1.56, 0.64, 1)
+```
