@@ -1,0 +1,84 @@
+/* POXY WORLD — global site footer (black bar) */
+.poxy-site-footer{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px 24px;
+  width:100%;
+  padding:20px clamp(20px,4vw,48px);
+  background:#000;
+  border-top:1px solid rgba(255,255,255,0.06);
+  font-family:Inter,system-ui,sans-serif;
+  box-sizing:border-box;
+}
+.poxy-site-footer__brand{
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:#fff;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.poxy-site-footer__nav{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:12px clamp(16px,3vw,32px);
+  flex:1 1 auto;
+  min-width:0;
+}
+.poxy-site-footer__nav a{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#a0a0a0;
+  text-decoration:none;
+  transition:color 0.2s ease;
+  white-space:nowrap;
+}
+.poxy-site-footer__nav a:hover{color:#fff}
+.poxy-site-footer__copy{
+  margin:0;
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:#404040;
+  text-align:right;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+@media(max-width:900px){
+  .poxy-site-footer{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:14px;
+  }
+  .poxy-site-footer__nav{justify-content:center;width:100%}
+  .poxy-site-footer__copy{text-align:center;white-space:normal;max-width:320px;line-height:1.5}
+}
+/* Landing page — full width, no glass */
+.pl-footer.poxy-site-footer{
+  background:#000;
+  backdrop-filter:none;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+/* Auth overlay — pinned to bottom of modal */
+.poxy-auth-overlay .poxy-site-footer.poxy-auth-footer{
+  flex-shrink:0;
+  margin-top:auto;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+/* App shell — centered max width */
+#poxyAppShell .poxy-site-footer.st-site-footer{
+  max-width:var(--st-max,1280px);
+  margin:0 auto;
+  border-top:1px solid rgba(255,255,255,0.06);
+}

@@ -639,42 +639,7 @@ body.poxy-landing-preview #plPreviewBack{
   text-shadow:0 0 24px rgba(255,255,255,0.2);
 }
 
-.pl-footer{
-  position:relative;
-  z-index:2;
-  padding:48px var(--pl-margin-m);
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-  align-items:center;
-  background:rgba(8,8,9,0.85);
-  backdrop-filter:blur(16px);
-  border-top:1px solid var(--pl-glass-border);
-}
-@media(min-width:768px){
-  .pl-footer{
-    flex-direction:row;
-    justify-content:space-between;
-    padding:48px var(--pl-margin-d);
-  }
-}
-.pl-footer-links{
-  display:flex;
-  flex-wrap:wrap;
-  gap:16px 32px;
-  justify-content:center;
-}
-.pl-footer-links a{
-  font-size:0.7rem;
-  font-weight:700;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:var(--pl-muted);
-  text-decoration:none;
-  transition:color 0.35s var(--pl-ease),transform 0.45s var(--pl-spring);
-}
-.pl-footer-links a:hover{color:#fff;transform:scale(1.04)}
-.pl-footer-copy{font-size:0.9rem;color:var(--pl-muted)}
+/* Landing footer: assets/poxy-site-footer.css (.pl-footer) */
 
 /* Scroll reveal */
 .pl-reveal{

@@ -159,16 +159,7 @@
   background:radial-gradient(ellipse at 50% 50%,rgba(156,39,176,0.2),transparent 65%);
   pointer-events:none;
 }
-.poxy-auth-footer{
-  flex-shrink:0;padding:12px clamp(16px,4vw,48px) 20px;
-  border-top:1px solid rgba(255,255,255,0.06);
-}
-.poxy-auth-footer nav{
-  display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;
-  font-size:11px;color:#536471;
-}
-.poxy-auth-footer a{color:#536471;text-decoration:none}
-.poxy-auth-footer a:hover{color:#c5c5cd;text-decoration:underline}
+/* Auth footer: assets/poxy-site-footer.css */
 .poxy-auth-panel-logo-mobile{
   display:flex;align-items:baseline;margin-bottom:28px;
 }

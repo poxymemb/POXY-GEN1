@@ -58,6 +58,7 @@
 <link rel="stylesheet" href="assets/lumina-os-overrides.css?v=15">
 <link rel="stylesheet" href="assets/lumina-features.css?v=1">
 <link rel="stylesheet" href="assets/poxy-landing-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-site-footer.css?v=1">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
@@ -1310,14 +1311,15 @@ body.dark-club .club-sub{color:#888}
       </div>
     </section>
   </main>
-  <footer class="pl-footer">
-    <div class="pl-logo" aria-hidden="true">POXY</div>
-    <nav class="pl-footer-links" aria-label="Legal">
-      <a href="#" onclick="event.preventDefault()" data-i18n="landing.footer.privacy">Privacy Policy</a>
-      <a href="#" onclick="event.preventDefault()" data-i18n="landing.footer.terms">Terms of Service</a>
-      <a href="#" onclick="event.preventDefault()" data-i18n="landing.footer.contact">Contact</a>
+  <footer class="poxy-site-footer pl-footer">
+    <span class="poxy-site-footer__brand">POXY WORLD</span>
+    <nav class="poxy-site-footer__nav" aria-label="Legal">
+      <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="landing.footer.privacy">Privacy Policy</a>
+      <a href="#" onclick="openFooterLink('terms',event)" data-i18n="landing.footer.terms">Terms of Service</a>
+      <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
+      <a href="#" onclick="openFooterLink('support',event)" data-i18n="landing.footer.contact">Support</a>
     </nav>
-    <p class="pl-footer-copy" data-i18n="landing.footer.copy">© 2024 POXY World. All rights reserved.</p>
+    <p class="poxy-site-footer__copy" data-i18n="landing.footer.copy">© 2024 POXY WORLD. ALL RIGHTS RESERVED.</p>
   </footer>
 </div>
 
@@ -1362,14 +1364,15 @@ body.dark-club .club-sub{color:#888}
       </div>
     </aside>
   </div>
-  <footer class="poxy-auth-footer">
-    <nav aria-label="Auth footer">
-      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.about">About</a>
-      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.club">POXY CLUB</a>
-      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.help">Help</a>
-      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.terms">Terms</a>
-      <a href="#" onclick="event.preventDefault()" data-i18n="auth.footer.privacy">Privacy</a>
+  <footer class="poxy-site-footer poxy-auth-footer">
+    <span class="poxy-site-footer__brand">POXY WORLD</span>
+    <nav class="poxy-site-footer__nav" aria-label="Legal">
+      <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="auth.footer.privacy">Privacy Policy</a>
+      <a href="#" onclick="openFooterLink('terms',event)" data-i18n="auth.footer.terms">Terms of Service</a>
+      <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
+      <a href="#" onclick="openFooterLink('support',event)" data-i18n="auth.footer.help">Support</a>
     </nav>
+    <p class="poxy-site-footer__copy">© 2024 POXY WORLD. ALL RIGHTS RESERVED.</p>
   </footer>
 </div>
 
@@ -2395,18 +2398,15 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
     <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
-    <footer class="st-site-footer" id="stSiteFooter">
-      <div class="st-footer-brand">
-        <span class="st-footer-logo-word">POXY</span>
-        <span class="st-footer-logo-word st-footer-logo-sub">WORLD</span>
-      </div>
-      <nav class="st-site-footer-legal" aria-label="Legal">
-        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')" data-i18n="dash.footer.privacy">Privacy Policy</a>
-        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')" data-i18n="dash.footer.terms">Terms of Service</a>
-        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')">Cookie Policy</a>
-        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('support')">Support</a>
+    <footer class="poxy-site-footer st-site-footer" id="stSiteFooter">
+      <span class="poxy-site-footer__brand">POXY WORLD</span>
+      <nav class="poxy-site-footer__nav" aria-label="Legal">
+        <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="dash.footer.privacy">Privacy Policy</a>
+        <a href="#" onclick="openFooterLink('terms',event)" data-i18n="dash.footer.terms">Terms of Service</a>
+        <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
+        <a href="#" onclick="openFooterLink('support',event)">Support</a>
       </nav>
-      <p class="st-site-footer-copy" data-i18n="dash.footer.copy">© 2025 POXY World. All rights reserved.</p>
+      <p class="poxy-site-footer__copy" data-i18n="dash.footer.copy">© 2024 POXY WORLD. ALL RIGHTS RESERVED.</p>
     </footer>
   </div>
 </div>
@@ -4545,6 +4545,22 @@ let activeExploreSection='support';
 const EXPLORE_SECTION_MAP={
   support:'exploreSectionSupport',codex:'exploreSectionCodex',legal:'exploreSectionLegal',
   policies:'exploreSectionPolicies',news:'exploreSectionNews',updates:'exploreSectionUpdates',contact:'exploreSectionContact'
+};
+window.openFooterLink=function(kind,e){
+  if(e&&e.preventDefault)e.preventDefault();
+  const shell=$('poxyAppShell');
+  const sec={privacy:'legal',terms:'legal',cookies:'policies',support:'support'}[kind]||'support';
+  const go=function(){
+    if(typeof showStitchTab!=='function'||typeof switchExploreSection!=='function')return false;
+    if(typeof closePoxyAuth==='function')closePoxyAuth();
+    if(shell)shell.style.display='block';
+    showStitchTab('explore');
+    switchExploreSection(sec);
+    return true;
+  };
+  if(shell&&shell.style.display!=='none'&&go())return;
+  if(typeof currentUser!=='undefined'&&currentUser&&go())return;
+  if(typeof showToast==='function')showToast('Sign in to view this section.');
 };
 window.switchExploreSection=function(section){
   if(!EXPLORE_SECTION_MAP[section])return;
