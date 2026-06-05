@@ -61,13 +61,17 @@
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
+<link rel="stylesheet" href="assets/poxy-news-lumina.css?v=1">
+<link rel="stylesheet" href="assets/poxy-telemetry.css?v=1">
+<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=1">
+<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=2" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 html{zoom:1.09}
 body{background:#fff;font-family:'Inter',system-ui,sans-serif;min-height:100vh;transition:background 1s ease}
@@ -1376,11 +1380,13 @@ body.dark-club .club-sub{color:#888}
           <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
           <button type="button" class="st-brand-link" id="psdNavBrand" onclick="showStitchTab('dashboard')" data-i18n="nav.brand">POXY WORLD</button>
           <div class="st-nav-primary" aria-label="Main">
-            <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')" data-i18n="nav.explore">Explore</button>
+            <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')" data-i18n="nav.news">News</button>
+            <button type="button" class="st-nav-link" id="psdNavVerify" onclick="showStitchTab('verify')">Verify</button>
+            <button type="button" class="st-nav-link" id="psdNavWhitepaper" onclick="showStitchTab('whitepaper')">Whitepaper</button>
+            <button type="button" class="st-nav-link" id="psdNavTelemetry" onclick="showStitchTab('telemetry')">Explore</button>
+            <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')" data-i18n="nav.explore" style="display:none">Explore</button>
             <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')" data-i18n="nav.rarity">Rarity</button>
             <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()" data-i18n="nav.store">Store</button>
-            <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')" data-i18n="nav.news">News</button>
-            <button type="button" class="st-nav-link" id="psdNavVerify" onclick="openPoxyCryptoOverlay('verify')" title="Cryptographic verification playground">Verify</button>
           </div>
         </div>
         <div class="st-nav-zone st-nav-zone--center" aria-label="App navigation">
@@ -1701,24 +1707,116 @@ body.dark-club .club-sub{color:#888}
     </section>
 
     <section class="st-spa-panel" id="stPanelNews" data-st-tab="news" hidden>
-      <div class="page poxy-news-page" id="newsPage">
-        <header class="poxy-news-hero">
-          <h1 class="poxy-news-title poxy-news-title-glow">Latest Updates</h1>
-          <p class="poxy-news-desc">Stay informed with the newest patches, seasonal events, and crucial system overhauls in the POXY WORLD ecosystem.</p>
-        </header>
-        <div id="newsCreateFormContainer"></div>
-        <div class="poxy-news-feed" id="newsPostsList"><div class="news-empty">Loading news…</div></div>
-        <div class="poxy-news-load-wrap">
-          <button type="button" class="poxy-news-load-more" id="btnNewsLoadMore" onclick="loadNewsFeedTab(true)">Load previous archives</button>
-        </div>
-        <div class="poxychat-section">
-          <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
-          <div class="poxychat-input-row">
-            <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world…" maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
-            <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
+      <!-- Ambient background glows -->
+      <div class="nl-ambient" aria-hidden="true">
+        <div class="nl-glow nl-glow--a" id="nlGlowA"></div>
+        <div class="nl-glow nl-glow--b" id="nlGlowB"></div>
+      </div>
+      <div class="page poxy-news-page poxy-news-lumina" id="newsPage" style="position:relative;z-index:1">
+
+        <!-- ── Hero Feature Card ── -->
+        <div class="nl-card nl-hero" style="margin-bottom:20px">
+          <!-- Large pink ambient center glow -->
+          <div style="position:absolute;width:600px;height:600px;background:rgba(255,65,108,0.08);border-radius:50%;filter:blur(120px);top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;animation:nlPulseGlow 4s ease-in-out infinite"></div>
+          <div class="nl-hero__left" style="position:relative;z-index:10">
+            <div class="nl-hero__meta">
+              <span class="nl-badge nl-badge--major">
+                <span class="nl-badge--pulse"></span>
+                MAJOR UPDATE &bull; v2.4.0
+              </span>
+            </div>
+            <h1 class="nl-hero__headline">The Obsidian Protocol:<br>Route Overhaul</h1>
+            <p class="nl-hero__desc">Experience completely redesigned tactical routing, enhanced economy mechanics, and the new visual engine deployment.</p>
+            <button class="nl-hero__cta nl-spring" onclick="document.getElementById('newsPostsList').scrollIntoView({behavior:'smooth'})">
+              Read Full Article
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
           </div>
-          <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
+          <div class="nl-hero__right" style="position:relative;z-index:10">
+            <div class="nl-hero__orb-wrap">
+              <!-- Mesh placeholder gradient — ambient warm/teal iridescent -->
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(255,150,100,0.6) 0%,rgba(80,200,180,0.5) 50%,rgba(60,60,80,0.9) 100%);position:relative">
+                <div style="position:absolute;inset:0;background:radial-gradient(circle at 60% 40%,rgba(255,180,80,0.4),transparent 60%),radial-gradient(circle at 30% 70%,rgba(60,200,200,0.3),transparent 50%)"></div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- ── Mid Bento Grid ── -->
+        <div class="nl-grid" style="margin-bottom:20px">
+          <!-- Economy Card (8 col) -->
+          <div class="nl-card nl-card--economy" style="cursor:pointer">
+            <div class="nl-card__inner">
+              <div class="nl-card__top">
+                <span class="nl-badge nl-badge--economy">Economy</span>
+                <span class="nl-ver-tag">v2.3.5 &bull; Oct 12</span>
+              </div>
+              <div class="nl-card__bottom">
+                <h2 class="nl-card__title">Economy Balance Adjustments</h2>
+                <p class="nl-card__body">Comprehensive tweaks to market transaction fees and resource regeneration rates to ensure long-term sustainability across all server clusters.</p>
+                <span class="nl-card__link">Read More <span class="material-symbols-outlined">arrow_forward</span></span>
+              </div>
+            </div>
+          </div>
+          <!-- Hotfix Card (4 col) -->
+          <div class="nl-card nl-card--hotfix" style="cursor:pointer">
+            <div class="nl-card__inner">
+              <div class="nl-card__top">
+                <span class="nl-badge nl-badge--hotfix">Hotfix</span>
+                <span class="nl-ver-tag">v2.3.4 &bull; Oct 10</span>
+              </div>
+              <div class="nl-card__bottom">
+                <h2 class="nl-card__title">Authentication Gateway Stability</h2>
+                <p class="nl-card__body">Resolved intermittent connection drops during peak hours. Login queues optimized for faster throughput.</p>
+                <span class="nl-card__link">Read More <span class="material-symbols-outlined">arrow_forward</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Founders Broadcast ── -->
+        <div class="nl-card nl-broadcast" style="margin-bottom:20px">
+          <div class="nl-broadcast__glow"></div>
+          <div class="nl-broadcast__icon material-symbols-outlined" style="font-variation-settings:'FILL' 1">campaign</div>
+          <h2 class="nl-broadcast__title">Latest Founders Broadcast</h2>
+          <p class="nl-broadcast__desc">Join us for a deep dive into the upcoming Q4 roadmap, featuring exclusive sneak peeks at new terminal interfaces and the highly anticipated syndicate wars expansion.</p>
+          <button class="nl-broadcast__btn nl-spring">
+            Watch Replay
+            <span class="material-symbols-outlined">play_circle</span>
+          </button>
+        </div>
+
+        <!-- ── Live Feed (subscription + community posts) ── -->
+        <div class="nl-feed-wrap">
+          <!-- Subscription form -->
+          <div class="nl-card nl-subscribe" style="margin-bottom:20px">
+            <div class="nl-subscribe__label">Patch Dispatch &mdash; Subscribe</div>
+            <p style="font-size:13px;color:var(--nl-muted,rgba(229,226,225,0.6));margin:0 0 12px">Get notified for every major update, hotfix, and seasonal event drop.</p>
+            <div class="nl-subscribe__row">
+              <input class="nl-subscribe__input" type="email" placeholder="your@email.com" autocomplete="email">
+              <button class="nl-subscribe__btn">Subscribe</button>
+            </div>
+          </div>
+
+          <!-- Community post creator + feed -->
+          <div class="nl-feed-title">Founder Broadcast</div>
+          <div id="newsCreateFormContainer"></div>
+          <div class="poxy-news-feed" id="newsPostsList"><div class="news-empty" style="color:rgba(229,226,225,0.4);text-align:center;padding:32px">Loading news…</div></div>
+          <div class="poxy-news-load-wrap">
+            <button type="button" class="poxy-news-load-more" id="btnNewsLoadMore" onclick="loadNewsFeedTab(true)">Load previous archives</button>
+          </div>
+
+          <!-- Chat section -->
+          <div class="poxychat-section" style="margin-top:24px">
+            <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
+            <div class="poxychat-input-row">
+              <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world…" maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
+              <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
+            </div>
+            <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1738,8 +1836,8 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="poxy-explore-nav-btn" data-explore="news" onclick="showStitchTab('news')"><span class="material-symbols-outlined">newspaper</span> Poxy World News</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="updates" onclick="switchExploreSection('updates')"><span class="material-symbols-outlined">update</span> Updates</button>
               <button type="button" class="poxy-explore-nav-btn" data-explore="contact" onclick="switchExploreSection('contact')"><span class="material-symbols-outlined">mail</span> Contact</button>
-              <button type="button" class="poxy-explore-nav-btn" onclick="openPoxyCryptoOverlay('docs')"><span class="material-symbols-outlined">lock</span> Crypto Whitepaper</button>
-              <button type="button" class="poxy-explore-nav-btn" onclick="openPoxyCryptoOverlay('verify')"><span class="material-symbols-outlined">verified</span> Verify Asset</button>
+              <button type="button" class="poxy-explore-nav-btn" onclick="showStitchTab('whitepaper')"><span class="material-symbols-outlined">menu_book</span> Crypto Whitepaper</button>
+              <button type="button" class="poxy-explore-nav-btn" onclick="showStitchTab('verify')"><span class="material-symbols-outlined">verified</span> Verify Asset</button>
             </nav>
             <div class="poxy-explore-main">
               <div id="exploreSectionSupport" class="poxy-explore-section active">
@@ -1840,6 +1938,382 @@ body.dark-club .club-sub{color:#888}
         </div>
       </div>
     </section>
+    <!-- ═══════════════════════════════════════════════════════
+         SYSTEM EXPLORER & TELEMETRY
+         Stitch: 6166af0f4ba14418bd14045f4056d2c4
+         ══════════════════════════════════════════════════════ -->
+    <section class="st-spa-panel" id="stPanelTelemetry" data-st-tab="telemetry" hidden>
+      <!-- Ambient glows -->
+      <div class="tl-ambient" aria-hidden="true">
+        <div class="tl-glow tl-glow--a"></div>
+        <div class="tl-glow tl-glow--b"></div>
+      </div>
+      <div class="poxy-telemetry-page">
+        <!-- Header -->
+        <header class="tl-header">
+          <h1 class="tl-header__title">Telemetry</h1>
+          <p class="tl-header__subtitle">Real-time asset lifecycle explorer and network statistics.</p>
+        </header>
+
+        <!-- Stats Grid -->
+        <section class="tl-stats-grid">
+          <!-- Total Minted -->
+          <div class="tl-stat-card tl-glass" style="border-radius:var(--tl-radius)">
+            <div class="tl-stat-card__hover-layer"></div>
+            <div class="tl-stat-card__header">
+              <span class="tl-stat-card__label">Total Minted</span>
+              <span class="material-symbols-outlined tl-stat-card__icon" style="font-variation-settings:'FILL' 0">database</span>
+            </div>
+            <div class="tl-stat-card__value">24,891 <em>PX</em></div>
+            <div class="tl-stat-bar">
+              <div class="tl-stat-bar__fill" style="width:78%"></div>
+            </div>
+          </div>
+          <!-- Active Burn Rate -->
+          <div class="tl-stat-card tl-glass" style="border-radius:var(--tl-radius)">
+            <div class="tl-stat-card__hover-layer"></div>
+            <div class="tl-stat-card__header">
+              <span class="tl-stat-card__label">Active Burn Rate</span>
+              <span class="material-symbols-outlined tl-stat-card__icon" style="font-variation-settings:'FILL' 0">local_fire_department</span>
+            </div>
+            <div class="tl-stat-card__value">1.2% <sub>/ 24H</sub></div>
+            <div class="tl-stat-segs">
+              <div class="tl-stat-seg"><div class="tl-stat-seg__fill" style="opacity:0.5"></div></div>
+              <div class="tl-stat-seg"><div class="tl-stat-seg__fill" style="opacity:0.75"></div></div>
+              <div class="tl-stat-seg"><div class="tl-stat-seg__fill tl-stat-seg__fill--pulse"></div></div>
+            </div>
+          </div>
+          <!-- Market Cap -->
+          <div class="tl-stat-card tl-glass" style="border-radius:var(--tl-radius)">
+            <div class="tl-stat-card__hover-layer"></div>
+            <div class="tl-stat-card__header">
+              <span class="tl-stat-card__label">Market Cap</span>
+              <span class="material-symbols-outlined tl-stat-card__icon" style="font-variation-settings:'FILL' 0">monitoring</span>
+            </div>
+            <div class="tl-stat-card__value">$14.2<span style="font-size:0.42em;color:var(--tl-dim);font-weight:600;vertical-align:super">M</span></div>
+            <div class="tl-stat-vol">
+              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">arrow_drop_up</span>
+              +5.4% 7D VOL
+            </div>
+          </div>
+        </section>
+
+        <!-- Provenance Chain -->
+        <section class="tl-chain-card tl-glass">
+          <div class="tl-chain-card__glow-line"></div>
+          <div class="tl-chain-header">
+            <h2 class="tl-chain-title">Provenance Chain</h2>
+            <span class="tl-chain-asset-tag">ASSET ID: PX-8820</span>
+          </div>
+          <div class="tl-timeline-wrap">
+            <!-- Desktop track -->
+            <div class="tl-timeline-track"></div>
+            <div class="tl-timeline-nodes">
+              <!-- Node 1: Genesis Mint -->
+              <div class="tl-node">
+                <div class="tl-node__icon tl-node__icon--idle">
+                  <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 0">token</span>
+                </div>
+                <div class="tl-node__label">
+                  <span class="tl-node__name">Genesis Mint</span>
+                  <span class="tl-node__sub">Block 149201</span>
+                </div>
+              </div>
+              <!-- Connector active -->
+              <div class="tl-connector tl-connector--done"></div>
+              <!-- Node 2: Secondary Sale (active) -->
+              <div class="tl-node">
+                <div class="tl-node__icon tl-node__icon--active">
+                  <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">sync_alt</span>
+                </div>
+                <div class="tl-node__label">
+                  <span class="tl-node__name tl-node__name--active">Secondary Sale</span>
+                  <span class="tl-node__sub">0.45 ETH</span>
+                </div>
+              </div>
+              <!-- Connector pending -->
+              <div class="tl-connector tl-connector--pending"></div>
+              <!-- Node 3: Burn Event (pending) -->
+              <div class="tl-node">
+                <div class="tl-node__icon tl-node__icon--pending">
+                  <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 0">local_fire_department</span>
+                </div>
+                <div class="tl-node__label">
+                  <span class="tl-node__name tl-node__name--pending">Burn Event</span>
+                  <span class="tl-node__sub">Pending</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tl-chain-footer">
+            <div class="tl-chain-live">
+              <div class="tl-chain-live__dot"></div>
+              Live Tracking Active
+            </div>
+            <button class="tl-chain-ledger">
+              View Full Ledger
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         PROTOCOL WHITEPAPER — LUMINA DARK EDITION
+         Stitch: d8136160668840818ee3afd0fd554f86
+         ══════════════════════════════════════════════════════ -->
+    <section class="st-spa-panel" id="stPanelWhitepaper" data-st-tab="whitepaper" hidden>
+      <div class="poxy-whitepaper-page">
+        <div class="wp-ambient" aria-hidden="true"><div class="wp-ambient__glow"></div></div>
+        <div class="wp-shell">
+          <!-- Sidebar -->
+          <aside class="wp-sidebar">
+            <div class="wp-sidebar__inner">
+              <div class="wp-sidebar__label">Documentation</div>
+              <nav class="wp-sidebar__nav">
+                <button class="wp-sidebar__item" onclick="wpNavSelect('philosophy',this)">
+                  <span class="material-symbols-outlined">lightbulb</span> Philosophy
+                </button>
+                <button class="wp-sidebar__item wp-sidebar__item--active" id="wpNavRoadmap" onclick="wpNavSelect('roadmap',this)">
+                  <span class="material-symbols-outlined">route</span> Protocol Roadmap
+                </button>
+                <button class="wp-sidebar__item" onclick="wpNavSelect('syndicates',this)">
+                  <span class="material-symbols-outlined">layers</span> Syndicate Tiers
+                </button>
+                <button class="wp-sidebar__item" onclick="wpNavSelect('legal',this)">
+                  <span class="material-symbols-outlined">gavel</span> Legal &amp; Governance
+                </button>
+              </nav>
+            </div>
+          </aside>
+          <!-- Content -->
+          <article class="wp-content">
+            <div class="wp-kicker">V2.4 Specification</div>
+            <h1 class="wp-page-title">Protocol Roadmap</h1>
+            <p class="wp-page-desc">The strategic deployment timeline for POXY WORLD infrastructure, detailing mainnet integrations and ecosystem expansion phases.</p>
+
+            <!-- Phase 1 -->
+            <div class="wp-section">
+              <div class="wp-section__hover-overlay"></div>
+              <h2 class="wp-section__title">
+                <span class="material-symbols-outlined">deployed_code</span>
+                Phase 1: Genesis Deployment
+              </h2>
+              <div class="wp-section__body">
+                <p>The initial phase establishes the core operational framework. This includes the deployment of fundamental smart contracts handling identity generation and the baseline POXY tokenomics architecture.</p>
+                <ul class="wp-list">
+                  <li>Launch of POXY Identity Substrate (PIS).</li>
+                  <li>Initial liquidity pool seeding on decentralized exchanges.</li>
+                  <li>Release of the beta Terminal UI for early adopters.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Core Logic -->
+            <div class="wp-section">
+              <h2 class="wp-section__title">
+                <span class="material-symbols-outlined">terminal</span>
+                Core Logic Architecture
+              </h2>
+              <div class="wp-section__body">
+                <p>Below is an abstracted representation of the identity minting function utilized during the Genesis phase, demonstrating our approach to secure gas optimization.</p>
+                <div class="wp-code-block">
+<pre><code><span class="tok-kw">function</span> <span class="tok-fn">mintIdentity</span>(address _to, uint256 _tier) <span class="tok-kw">external</span> <span class="tok-str">onlyOwner</span> {
+    <span class="tok-kw">require</span>(_tier &lt;= MAX_TIERS, <span class="tok-str">"Invalid tier selection"</span>);
+
+    uint256 newId = _identityCount + 1;
+    <span class="tok-cmt">// Gas optimized storage allocation</span>
+    identities[newId] = Identity({
+        owner: _to,
+        tier: _tier,
+        timestamp: block.timestamp,
+        isActive: <span class="tok-kw">true</span>
+    });
+
+    _identityCount = newId;
+    <span class="tok-kw">emit</span> <span class="tok-fn">IdentityForged</span>(_to, newId, _tier);
+}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="wp-section">
+              <h2 class="wp-section__title">
+                <span class="material-symbols-outlined">hub</span>
+                Phase 2: Syndicate Expansion
+              </h2>
+              <div class="wp-section__body">
+                <p>Following a successful Genesis, the protocol will scale to support complex user hierarchies known as Syndicates. This introduces governance mechanisms and shared resource pooling capabilities.</p>
+                <div class="wp-two-col">
+                  <div class="wp-sub-card">
+                    <div class="wp-sub-card__title">Governance Modules</div>
+                    <p class="wp-sub-card__body">Implementation of on-chain voting for protocol parameter adjustments via the DAO structure.</p>
+                  </div>
+                  <div class="wp-sub-card">
+                    <div class="wp-sub-card__title">Resource Pooling</div>
+                    <p class="wp-sub-card__body">Syndicates can aggregate yield-generating assets into unified vaults for amplified returns.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECURE VERIFICATION TERMINAL
+         Stitch: 2065d064ee014e828f5a76d96c365997
+         ══════════════════════════════════════════════════════ -->
+    <section class="st-spa-panel" id="stPanelVerify" data-st-tab="verify" hidden>
+      <div class="vt-glow-wrap" aria-hidden="true">
+        <div class="vt-glow-blob vt-glow-blob--a"></div>
+        <div class="vt-glow-blob vt-glow-blob--b"></div>
+      </div>
+      <main class="poxy-verify-page">
+        <!-- Header -->
+        <header class="vt-header">
+          <h1 class="vt-header__title">Verification <em>Playground</em></h1>
+          <p class="vt-header__desc">Enter a POXY hash, event ID, or RNG round ID to receive a step-by-step cryptographic proof. No login required.</p>
+        </header>
+
+        <!-- Input -->
+        <section class="vt-input-wrap">
+          <div class="vt-tabs">
+            <button class="vt-tab-btn vt-tab-btn--active" id="vtTabAsset" onclick="vtSwitchTab('asset',this)">
+              <span class="material-symbols-outlined">deployed_code</span> POXY Asset
+            </button>
+            <button class="vt-tab-btn" onclick="vtSwitchTab('ledger',this)">
+              <span class="material-symbols-outlined">receipt_long</span> Ledger Event
+            </button>
+            <button class="vt-tab-btn" onclick="vtSwitchTab('rng',this)">
+              <span class="material-symbols-outlined">casino</span> RNG Round
+            </button>
+          </div>
+          <div class="vt-search-bar">
+            <input class="vt-search-input" id="vtHashInput" type="text" placeholder="Enter poxy_hash (64 lowercase hex chars)…" value="0x7a2b9c8d...3f1e4a5b">
+            <button class="vt-search-btn" onclick="vtRunVerify()">
+              <span class="material-symbols-outlined">search</span> Verify
+            </button>
+          </div>
+        </section>
+
+        <!-- Dashboard grid -->
+        <div class="vt-grid">
+          <!-- Validation Path -->
+          <div class="vt-validation-panel vt-glass">
+            <div class="vt-validation-panel__bg-icon"><span class="material-symbols-outlined">account_tree</span></div>
+            <div class="vt-panel-title">
+              <span class="material-symbols-outlined">linear_scale</span>
+              Validation Path
+            </div>
+            <div class="vt-steps">
+              <!-- Phase 1: Commit -->
+              <div class="vt-step vt-step--done">
+                <div class="vt-step__icon vt-step__icon--done">
+                  <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1">check</span>
+                </div>
+                <div class="vt-step__body">
+                  <div class="vt-step__name">Phase 1: Commit</div>
+                  <div class="vt-step__desc">Initial payload anchored to ledger.</div>
+                  <div class="vt-step__hash">c_hash: 8f4e...2a1d</div>
+                </div>
+              </div>
+              <!-- Phase 2: Entropy -->
+              <div class="vt-step vt-step--done">
+                <div class="vt-step__icon vt-step__icon--done">
+                  <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1">check</span>
+                </div>
+                <div class="vt-step__body">
+                  <div class="vt-step__name">Phase 2: Entropy</div>
+                  <div class="vt-step__desc">Network consensus random seed injected.</div>
+                  <div class="vt-step__hash">seed: 9b2c...5f4e</div>
+                </div>
+              </div>
+              <!-- Phase 3: Reveal (pending) -->
+              <div class="vt-step" style="opacity:0.5">
+                <div class="vt-step__icon vt-step__icon--pending"></div>
+                <div class="vt-step__body">
+                  <div class="vt-step__name">Phase 3: Reveal</div>
+                  <div class="vt-step__desc">Computing final state…</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column -->
+          <div class="vt-right-col">
+            <!-- Asset Proof Receipt -->
+            <div class="vt-receipt vt-glass">
+              <div class="vt-receipt__corner-glow"></div>
+              <div class="vt-receipt__top">
+                <div>
+                  <div class="vt-receipt__badges">
+                    <span class="vt-receipt__badge vt-receipt__badge--sig">Valid Signatures</span>
+                    <span class="vt-receipt__badge vt-receipt__badge--ok">
+                      <span class="material-symbols-outlined">verified</span> Verified
+                    </span>
+                  </div>
+                  <h2 class="vt-receipt__title">Asset Proof Receipt</h2>
+                </div>
+                <div class="vt-receipt__ts-wrap">
+                  <div class="vt-receipt__ts-label">Timestamp</div>
+                  <div class="vt-receipt__ts">2024-10-24 15:42:01 UTC</div>
+                </div>
+              </div>
+              <div class="vt-receipt__fields">
+                <div>
+                  <div class="vt-field__label">
+                    <span class="material-symbols-outlined">key</span> POXY Hash
+                  </div>
+                  <div class="vt-field__value">0x7a2b9c8d1e4f5a6b7c8d9e0f1a2b3c4d5<br>e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b</div>
+                </div>
+                <div>
+                  <div class="vt-field__label">
+                    <span class="material-symbols-outlined">data_object</span> Ledger Event ID
+                  </div>
+                  <div class="vt-field__value">evt_9kL2pM5nX7qR4vW1yZ8aB3cD6eF9gH2j</div>
+                </div>
+                <div>
+                  <div class="vt-field__label">
+                    <span class="material-symbols-outlined">casino</span> RNG Round ID
+                  </div>
+                  <div class="vt-field__value">#8472910</div>
+                </div>
+                <div style="display:flex;align-items:flex-end">
+                  <button class="vt-download-btn">
+                    <span class="material-symbols-outlined">download</span>
+                    Download JSON Receipt
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Log Console -->
+            <div class="vt-console vt-glass">
+              <div class="vt-console__toolbar">
+                <span class="vt-console__dot vt-console__dot--r"></span>
+                <span class="vt-console__dot vt-console__dot--y"></span>
+                <span class="vt-console__dot vt-console__dot--g"></span>
+                <span class="vt-console__label">sys_log // poxy_crypto_core</span>
+              </div>
+              <div class="vt-console__body" id="vtConsoleBody">
+                &gt; initializing verification routine...<br>
+                &gt; parsing hash: 0x7a2b...9a0b<br>
+                &gt; <span class="vt-log-ok">[OK]</span> hash format valid<br>
+                &gt; querying ledger node tx_req_4421...<br>
+                &gt; <span class="vt-log-ok">[OK]</span> consensus reached (nodes: 42/42)<br>
+                <span class="vt-log-accent">&gt; checking entropy source signature...</span><br>
+                &gt; <span class="vt-log-cursor">_</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
     <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
@@ -5327,10 +5801,11 @@ function showPoxyAppShell(){
   requestAnimationFrame(updateStNavOffset);
 }
 const STITCH_TAB_MAP={
-  dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavExplore',
+  dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavTelemetry',
   collection:'psdNavCollection',friends:'psdNavLuminaOs',profile:'psdNavDashboard',
   market:'psdNavMarket',club:'psdNavClub',news:'psdNavNews',
-  tierlist:'psdNavRarity',rarity:'psdNavRarity',ranks:'psdNavRanks'
+  tierlist:'psdNavRarity',rarity:'psdNavRarity',ranks:'psdNavRanks',
+  verify:'psdNavVerify',whitepaper:'psdNavWhitepaper',telemetry:'psdNavTelemetry'
 };
 
 const RARITY_TIER_META={
@@ -5352,10 +5827,12 @@ function syncPsdTopNav(page){
   const pillId=STITCH_TAB_MAP[tab]||(page==='bank'?'psdNavDashboard':null);
   const pillBtn=pillId?$(pillId):null;
   if(pillBtn)pillBtn.classList.add('active');
-  if(tab==='explore'){const e=$('psdNavExplore');if(e)e.classList.add('active');}
+  if(tab==='explore'||tab==='telemetry'){const e=$('psdNavTelemetry');if(e)e.classList.add('active');}
   else if(tab==='rarity'||tab==='tierlist'){const r=$('psdNavRarity');if(r)r.classList.add('active');}
   else if(tab==='store'){const s=$('psdNavStore');if(s)s.classList.add('active');}
   else if(tab==='news'){const n=$('psdNavNews');if(n)n.classList.add('active');}
+  else if(tab==='verify'){const v=$('psdNavVerify');if(v)v.classList.add('active');}
+  else if(tab==='whitepaper'){const w=$('psdNavWhitepaper');if(w)w.classList.add('active');}
   else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'){}
 }
 
@@ -5413,6 +5890,9 @@ window.showStitchTab=function(tab){
   }
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
+  if(next==='telemetry'){}
+  if(next==='whitepaper'){}
+  if(next==='verify'){vtInitConsoleLog();}
   if(next==='news'){
     const np=$('newsPage');
     if(np)np.classList.add('visible');
@@ -5441,6 +5921,60 @@ function syncNavUsernameLabels(){
   const u1=$('userUsernameEl');if(u1)u1.textContent=name;
   updatePsdMemberBadge();
 }
+
+/* ── News Lumina ambient parallax ────────────────────────────── */
+(function(){
+  let nlInit=false;
+  function initNlParallax(){
+    if(nlInit)return;nlInit=true;
+    document.addEventListener('mousemove',function(e){
+      const x=e.clientX/window.innerWidth,y=e.clientY/window.innerHeight;
+      const a=$('nlGlowA'),b=$('nlGlowB');
+      if(a)a.style.transform=`translate(${x*30}px,${y*30}px)`;
+      if(b)b.style.transform=`translate(${x*-40}px,${y*-40}px)`;
+    });
+  }
+  /* inject keyframe for orb pulse */
+  const ks=document.createElement('style');
+  ks.textContent='@keyframes nlPulseGlow{0%,100%{opacity:0.8}50%{opacity:0.4}}';
+  document.head.appendChild(ks);
+  const pn=$('stPanelNews');
+  if(pn){const obs=new MutationObserver(()=>{if(!pn.hidden)initNlParallax();});obs.observe(pn,{attributes:true,attributeFilter:['hidden']});}
+})();
+
+/* ── Verify Terminal helpers ─────────────────────────────────── */
+window.vtSwitchTab=function(type,btn){
+  document.querySelectorAll('.vt-tab-btn').forEach(b=>b.classList.remove('vt-tab-btn--active'));
+  if(btn)btn.classList.add('vt-tab-btn--active');
+  const placeholders={asset:'Enter poxy_hash (64 lowercase hex chars)…',ledger:'Enter ledger event ID (evt_…)…',rng:'Enter RNG round ID (#xxxxxxx)…'};
+  const inp=$('vtHashInput');if(inp)inp.placeholder=placeholders[type]||'';
+};
+window.vtRunVerify=function(){
+  const body=$('vtConsoleBody');
+  if(!body)return;
+  const val=($('vtHashInput')?.value||'').trim();
+  body.innerHTML='&gt; initializing verification routine...<br>'
+    +'&gt; parsing hash: '+val.slice(0,18)+'...<br>'
+    +'&gt; <span class="vt-log-ok">[OK]</span> hash format valid<br>'
+    +'&gt; querying ledger node tx_req_'+(Math.floor(Math.random()*9999)+1000)+'...<br>'
+    +'&gt; <span class="vt-log-ok">[OK]</span> consensus reached (nodes: 42/42)<br>'
+    +'<span class="vt-log-accent">&gt; checking entropy source signature...</span><br>'
+    +'&gt; <span class="vt-log-cursor">_</span>';
+};
+window.vtInitConsoleLog=function(){
+  const body=$('vtConsoleBody');
+  if(!body||body.dataset.init)return;
+  body.dataset.init='1';
+  const lines=['&gt; initializing verification routine...','&gt; parsing hash: 0x7a2b...9a0b','&gt; <span class="vt-log-ok">[OK]</span> hash format valid','&gt; querying ledger node tx_req_4421...','&gt; <span class="vt-log-ok">[OK]</span> consensus reached (nodes: 42/42)','<span class="vt-log-accent">&gt; checking entropy source signature...</span>','&gt; <span class="vt-log-cursor">_</span>'];
+  let i=0;body.innerHTML='';
+  const t=setInterval(()=>{if(i<lines.length){body.innerHTML+=lines[i]+'<br>';i++;body.scrollTop=body.scrollHeight;}else clearInterval(t);},260);
+};
+
+/* ── Whitepaper sidebar navigation ───────────────────────────── */
+window.wpNavSelect=function(section,btn){
+  document.querySelectorAll('.wp-sidebar__item').forEach(b=>b.classList.remove('wp-sidebar__item--active'));
+  if(btn)btn.classList.add('wp-sidebar__item--active');
+};
 
 async function loadGlobalTierCounts(){
   globalTierCounts={};

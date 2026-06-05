@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY Verification Playground</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0e0e0f; /* surface-container-lowest */
+            color: #e5e2e3; /* on-surface */
+            overflow-x: hidden;
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .cyber-glow-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-blob {
+            position: absolute;
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .glow-1 {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #d97706, #14b8a6); /* Amber to Teal */
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .glow-2 {
+            width: 500px;
+            height: 500px;
+            background: #ec4899; /* Neon pink highlight */
+            bottom: -200px;
+            left: 10%;
+            animation-delay: -5s;
+            opacity: 0.1;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-50px, 50px) scale(1.1); }
+        }
+
+        .matrix-line {
+            position: relative;
+        }
+        .matrix-line::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: -16px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .matrix-line:last-child::before {
+            display: none;
+        }
+        .matrix-step-active::before {
+            background: linear-gradient(to bottom, #ec4899, rgba(236, 72, 153, 0.2));
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131314;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444748;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8e9192;
+        }
+
+        .spring-transition {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .spring-transition:hover {
+            transform: scale(1.02);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#ffffff",
+                      "on-tertiary-container": "#636565",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "inverse-surface": "#e5e2e3",
+                      "surface": "#131314",
+                      "outline-variant": "#444748",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "secondary-fixed": "#ffd8ed",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-primary-container": "#636565",
+                      "background": "#131314",
+                      "on-secondary-fixed": "#2c1325",
+                      "tertiary-fixed": "#e2e2e2",
+                      "surface-glass": "rgba(255, 255, 255, 0.03)",
+                      "glow-pink": "rgba(244, 114, 182, 0.1)",
+                      "on-background": "#e5e2e3",
+                      "surface-container-high": "#2a2a2b",
+                      "error": "#ffb4ab",
+                      "secondary-container": "#5f3f53",
+                      "secondary-fixed-dim": "#e5bad3",
+                      "surface-container-lowest": "#0e0e0f",
+                      "on-surface": "#e5e2e3",
+                      "surface-container": "#201f21",
+                      "primary-fixed": "#e2e2e2",
+                      "surface-bright": "#3a393a",
+                      "surface-container-low": "#1c1b1d",
+                      "tertiary-container": "#e2e2e2",
+                      "on-secondary-fixed-variant": "#5c3d51",
+                      "hotfix-accent": "#ec4899",
+                      "inverse-on-surface": "#313031",
+                      "surface-dim": "#131314",
+                      "on-error-container": "#ffdad6",
+                      "on-primary-fixed-variant": "#454747",
+                      "surface-tint": "#c6c6c7",
+                      "on-primary-fixed": "#1a1c1c",
+                      "tertiary": "#ffffff",
+                      "inverse-primary": "#5d5f5f",
+                      "on-primary": "#2f3131",
+                      "primary-container": "#e2e2e2",
+                      "secondary": "#e5bad3",
+                      "outline": "#8e9192",
+                      "surface-container-highest": "#353436",
+                      "on-surface-variant": "#c4c7c8",
+                      "surface-variant": "#353436",
+                      "on-secondary-container": "#d6adc5",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "error-container": "#93000a",
+                      "on-tertiary": "#2f3131",
+                      "on-secondary": "#44273a",
+                      "border-glass": "rgba(255, 255, 255, 0.08)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "base": "8px",
+                      "margin-mobile": "20px",
+                      "stack-md": "32px",
+                      "stack-lg": "80px",
+                      "gutter": "24px",
+                      "stack-sm": "12px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Hanken Grotesk"],
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "headline-xl": ["Hanken Grotesk"],
+                      "headline-lg": ["Hanken Grotesk"],
+                      "body-md": ["Hanken Grotesk"],
+                      "label-lg": ["Hanken Grotesk"],
+                      "body-lg": ["Hanken Grotesk"]
+              },
+              "fontSize": {
+                      "headline-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                      "headline-lg-mobile": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                      "headline-xl": ["80px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "900" }],
+                      "headline-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+                      "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "label-lg": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                      "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "500" }]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+<!-- Ambient Background -->
+<div class="cyber-glow-bg">
+<div class="glow-blob glow-1"></div>
+<div class="glow-blob glow-2"></div>
+</div>
+<!-- TopNavBar (Shared Component) -->
+<nav class="bg-surface-glass backdrop-blur-xl fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 border-b border-border-glass shadow-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-hotfix-accent" style="font-variation-settings: 'FILL' 1;">token</span>
+<div class="font-headline-md text-headline-md font-black tracking-tighter text-primary dark:text-primary uppercase">POXY WORLD</div>
+</div>
+<!-- Desktop Navigation -->
+<div class="hidden md:flex items-center gap-8 h-full">
+<a class="h-full flex items-center text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 px-4 font-label-lg text-label-lg" href="#">NEWS</a>
+<a class="h-full flex items-center text-hotfix-accent border-b-2 border-hotfix-accent pb-1 transition-all duration-300 font-label-lg text-label-lg" href="#">VERIFY</a>
+<a class="h-full flex items-center text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 px-4 font-label-lg text-label-lg" href="#">WHITEPAPER</a>
+<a class="h-full flex items-center text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 px-4 font-label-lg text-label-lg" href="#">EXPLORE</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:flex text-on-surface-variant hover:text-primary transition-all duration-300 hover:bg-white/5 p-2 rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hidden md:flex text-on-surface-variant hover:text-primary transition-all duration-300 hover:bg-white/5 p-2 rounded-full">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all duration-300 hover:bg-white/5 p-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[120px] px-margin-mobile md:px-margin-desktop pb-stack-lg max-w-[1600px] mx-auto w-full relative z-10 flex flex-col items-center">
+<!-- Header Section -->
+<header class="text-center mb-stack-md w-full max-w-3xl">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-base">Verification <span class="text-hotfix-accent">Playground</span></h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Enter a POXY hash, event ID, or RNG round ID to receive a step-by-step cryptographic proof. No login required.</p>
+</header>
+<!-- Input Area -->
+<section class="w-full max-w-3xl mb-stack-lg">
+<!-- Tabs -->
+<div class="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+<button class="glass-panel border-hotfix-accent/50 text-hotfix-accent px-6 py-3 rounded-full flex items-center gap-2 font-label-lg text-label-lg whitespace-nowrap bg-glow-pink">
+<span class="material-symbols-outlined text-[18px]">deployed_code</span>
+                    POXY Asset
+                </button>
+<button class="glass-panel text-on-surface-variant hover:text-primary px-6 py-3 rounded-full flex items-center gap-2 font-label-lg text-label-lg whitespace-nowrap transition-colors">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+                    Ledger Event
+                </button>
+<button class="glass-panel text-on-surface-variant hover:text-primary px-6 py-3 rounded-full flex items-center gap-2 font-label-lg text-label-lg whitespace-nowrap transition-colors">
+<span class="material-symbols-outlined text-[18px]">casino</span>
+                    RNG Round
+                </button>
+</div>
+<!-- Search Bar -->
+<div class="relative flex w-full">
+<input class="w-full bg-surface-container-high border border-outline-variant/30 text-primary font-mono text-sm px-6 py-4 rounded-l-lg focus:outline-none focus:border-hotfix-accent/50 transition-colors" placeholder="Enter poxy_hash (64 lowercase hex chars)..." type="text" value="0x7a2b9c8d...3f1e4a5b"/>
+<button class="bg-hotfix-accent text-white px-8 py-4 rounded-r-lg font-label-lg text-label-lg flex items-center gap-2 hover:bg-pink-400 transition-colors shrink-0">
+<span class="material-symbols-outlined text-[20px]">search</span>
+                    Verify
+                </button>
+</div>
+</section>
+<!-- Dashboard Layout: Grid -->
+<div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Verification Matrix -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="glass-panel rounded-xl p-6 h-full border-t-2 border-t-hotfix-accent/50 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">account_tree</span>
+</div>
+<h2 class="font-headline-md text-[24px] text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-hotfix-accent">linear_scale</span>
+                        Validation Path
+                    </h2>
+<div class="flex flex-col gap-6">
+<!-- Phase 1: Commit -->
+<div class="matrix-line matrix-step-active flex gap-4">
+<div class="relative z-10 w-6 h-6 rounded-full bg-hotfix-accent flex items-center justify-center shrink-0 mt-1 shadow-[0_0_15px_rgba(236,72,153,0.5)]">
+<span class="material-symbols-outlined text-[14px] text-white font-bold" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-primary uppercase mb-1">Phase 1: Commit</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mb-2">Initial payload anchored to ledger.</p>
+<div class="bg-surface-container p-2 rounded border border-outline-variant/20 font-mono text-[12px] text-hotfix-accent break-all">
+                                    c_hash: 8f4e...2a1d
+                                </div>
+</div>
+</div>
+<!-- Phase 2: Entropy -->
+<div class="matrix-line matrix-step-active flex gap-4">
+<div class="relative z-10 w-6 h-6 rounded-full bg-hotfix-accent flex items-center justify-center shrink-0 mt-1 shadow-[0_0_15px_rgba(236,72,153,0.5)]">
+<span class="material-symbols-outlined text-[14px] text-white font-bold" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-primary uppercase mb-1">Phase 2: Entropy</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant mb-2">Network consensus random seed injected.</p>
+<div class="bg-surface-container p-2 rounded border border-outline-variant/20 font-mono text-[12px] text-hotfix-accent break-all">
+                                    seed: 9b2c...5f4e
+                                </div>
+</div>
+</div>
+<!-- Phase 3: Reveal -->
+<div class="matrix-line flex gap-4 opacity-50">
+<div class="relative z-10 w-6 h-6 rounded-full border-2 border-outline-variant bg-surface flex items-center justify-center shrink-0 mt-1">
+<div class="w-2 h-2 rounded-full bg-outline-variant animate-pulse"></div>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg text-primary uppercase mb-1">Phase 3: Reveal</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant">Computing final state...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Audit Receipt & Data Terminal -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Main Receipt Card -->
+<div class="glass-panel rounded-xl p-8 border-l-4 border-l-teal-500/50 spring-transition relative overflow-hidden">
+<div class="absolute -right-20 -bottom-20 w-64 h-64 bg-teal-500/10 blur-[60px] rounded-full z-0"></div>
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-white/10 pb-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-white/10 text-primary px-3 py-1 rounded-full font-label-lg text-[12px] tracking-widest uppercase border border-white/10">Valid Signatures</span>
+<span class="bg-teal-500/20 text-teal-300 px-3 py-1 rounded-full font-label-lg text-[12px] tracking-widest uppercase border border-teal-500/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                                    Verified
+                                </span>
+</div>
+<h2 class="font-headline-lg text-[32px] text-primary">Asset Proof Receipt</h2>
+</div>
+<div class="text-right">
+<div class="font-label-lg text-on-surface-variant uppercase text-[12px] tracking-wider mb-1">Timestamp</div>
+<div class="font-mono text-primary">2024-10-24 15:42:01 UTC</div>
+</div>
+</div>
+<div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Data Block 1 -->
+<div>
+<div class="font-label-lg text-on-surface-variant uppercase text-[12px] tracking-wider mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">key</span>
+                                POXY Hash
+                            </div>
+<div class="bg-surface-container-lowest/50 p-4 rounded-lg border border-white/5 font-mono text-sm text-primary break-all">
+                                0x7a2b9c8d1e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b
+                            </div>
+</div>
+<!-- Data Block 2 -->
+<div>
+<div class="font-label-lg text-on-surface-variant uppercase text-[12px] tracking-wider mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">data_object</span>
+                                Ledger Event ID
+                            </div>
+<div class="bg-surface-container-lowest/50 p-4 rounded-lg border border-white/5 font-mono text-sm text-primary break-all">
+                                evt_9kL2pM5nX7qR4vW1yZ8aB3cD6eF9gH2j
+                            </div>
+</div>
+<!-- Data Block 3 -->
+<div>
+<div class="font-label-lg text-on-surface-variant uppercase text-[12px] tracking-wider mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">casino</span>
+                                RNG Round ID
+                            </div>
+<div class="bg-surface-container-lowest/50 p-4 rounded-lg border border-white/5 font-mono text-sm text-primary">
+                                #8472910
+                            </div>
+</div>
+<!-- Action -->
+<div class="flex items-end justify-end">
+<button class="w-full md:w-auto bg-white/5 hover:bg-white/10 text-primary border border-white/10 px-6 py-4 rounded-lg font-label-lg text-label-lg flex items-center justify-center gap-2 transition-all duration-300">
+<span class="material-symbols-outlined">download</span>
+                                 Download JSON Receipt
+                             </button>
+</div>
+</div>
+</div>
+<!-- Secondary Terminal View -->
+<div class="glass-panel rounded-xl p-4 overflow-hidden">
+<div class="flex items-center gap-2 mb-2 px-2">
+<span class="w-3 h-3 rounded-full bg-red-500/50"></span>
+<span class="w-3 h-3 rounded-full bg-yellow-500/50"></span>
+<span class="w-3 h-3 rounded-full bg-green-500/50"></span>
+<span class="font-mono text-[12px] text-on-surface-variant ml-2">sys_log // poxy_crypto_core</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded font-mono text-[13px] text-outline-variant h-32 overflow-y-auto leading-relaxed">
+                        &gt; initializing verification routine...<br/>
+                        &gt; parsing hash: 0x7a2b...9a0b<br/>
+                        &gt; [OK] hash format valid<br/>
+                        &gt; querying ledger node tx_req_4421...<br/>
+                        &gt; [OK] consensus reached (nodes: 42/42)<br/>
+<span class="text-hotfix-accent">&gt; checking entropy source signature...</span><br/>
+                        &gt; <span class="animate-pulse">_</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-surface-container-lowest w-full py-stack-md px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center border-t border-outline-variant/10 mt-auto z-10 relative">
+<div class="font-headline-md text-headline-md text-primary mb-4 md:mb-0 uppercase tracking-tighter">POXY WORLD</div>
+<div class="flex gap-6 mb-4 md:mb-0">
+<a class="font-label-lg text-label-lg text-on-tertiary-container hover:text-primary transition-colors duration-200" href="#">Privacy</a>
+<a class="font-label-lg text-label-lg text-on-tertiary-container hover:text-primary transition-colors duration-200" href="#">Terms</a>
+<a class="font-label-lg text-label-lg text-on-tertiary-container hover:text-primary transition-colors duration-200" href="#">Support</a>
+</div>
+<div class="font-label-lg text-label-lg text-on-tertiary-container">© 2024 POXY WORLD. ALL RIGHTS RESERVED.</div>
+</footer>
+<script>
+        // Simple ambient glow interaction
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const glow1 = document.querySelector('.glow-1');
+            const glow2 = document.querySelector('.glow-2');
+            
+            if(glow1 && glow2) {
+                glow1.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+                glow2.style.transform = `translate(${x * -40}px, ${y * -40}px)`;
+            }
+        });
+    </script>
+</body></html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY EXPLORE TELEMETRY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#ffffff",
+                        "on-tertiary-container": "#636565",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "inverse-surface": "#e5e2e3",
+                        "surface": "#131314",
+                        "outline-variant": "#444748",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "secondary-fixed": "#ffd8ed",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-primary-container": "#636565",
+                        "background": "#131314",
+                        "on-secondary-fixed": "#2c1325",
+                        "tertiary-fixed": "#e2e2e2",
+                        "surface-glass": "rgba(255, 255, 255, 0.03)",
+                        "glow-pink": "rgba(244, 114, 182, 0.1)",
+                        "on-background": "#e5e2e3",
+                        "surface-container-high": "#2a2a2b",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#5f3f53",
+                        "secondary-fixed-dim": "#e5bad3",
+                        "surface-container-lowest": "#0e0e0f",
+                        "on-surface": "#e5e2e3",
+                        "surface-container": "#201f21",
+                        "primary-fixed": "#e2e2e2",
+                        "surface-bright": "#3a393a",
+                        "surface-container-low": "#1c1b1d",
+                        "tertiary-container": "#e2e2e2",
+                        "on-secondary-fixed-variant": "#5c3d51",
+                        "hotfix-accent": "#ec4899",
+                        "inverse-on-surface": "#313031",
+                        "surface-dim": "#131314",
+                        "on-error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#454747",
+                        "surface-tint": "#c6c6c7",
+                        "on-primary-fixed": "#1a1c1c",
+                        "tertiary": "#ffffff",
+                        "inverse-primary": "#5d5f5f",
+                        "on-primary": "#2f3131",
+                        "primary-container": "#e2e2e2",
+                        "secondary": "#e5bad3",
+                        "outline": "#8e9192",
+                        "surface-container-highest": "#353436",
+                        "on-surface-variant": "#c4c7c8",
+                        "surface-variant": "#353436",
+                        "on-secondary-container": "#d6adc5",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#2f3131",
+                        "on-secondary": "#44273a",
+                        "border-glass": "rgba(255, 255, 255, 0.08)"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "base": "8px",
+                        "margin-mobile": "20px",
+                        "stack-md": "32px",
+                        "stack-lg": "80px",
+                        "gutter": "24px",
+                        "stack-sm": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-xl": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "label-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-xl": ["80px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "900" }],
+                        "headline-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .mesh-bg {
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(244, 114, 182, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(229, 186, 211, 0.05) 0px, transparent 50%);
+        }
+        .anim-pulse-slow {
+            animation: pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.3)); }
+            50% { opacity: 0.7; filter: drop-shadow(0 0 2px rgba(236, 72, 153, 0.1)); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen relative overflow-x-hidden font-body-md text-body-md mesh-bg">
+<!-- Ambient Space Glows -->
+<div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-glow-pink rounded-full blur-[120px] opacity-60 pointer-events-none z-0"></div>
+<div class="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-secondary-fixed/5 rounded-full blur-[150px] opacity-40 pointer-events-none z-0"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20 bg-surface-glass backdrop-blur-xl border-b border-border-glass shadow-none">
+<div class="flex items-center gap-stack-md">
+<div class="font-headline-md text-headline-md font-black tracking-tighter text-primary dark:text-primary">
+                POXY WORLD
+            </div>
+<div class="hidden md:flex gap-gutter items-center ml-stack-md">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">NEWS</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">VERIFY</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">WHITEPAPER</a>
+<a class="font-label-lg text-label-lg text-hotfix-accent border-b-2 border-hotfix-accent pb-1 transition-all duration-300" href="#">EXPLORE</a>
+</div>
+</div>
+<div class="flex items-center gap-gutter">
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 p-2 rounded-full hidden md:block">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 p-2 rounded-full hidden md:block">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 p-2 rounded-full border border-border-glass glass-panel flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_balance_wallet</span>
+<span class="hidden md:inline font-label-lg text-label-lg">CONNECT</span>
+</button>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="relative z-10 pt-[120px] pb-stack-lg max-w-[1600px] mx-auto px-margin-mobile md:px-margin-desktop">
+<!-- Header -->
+<header class="mb-stack-lg flex flex-col gap-base">
+<h1 class="font-headline-xl text-headline-lg-mobile md:text-headline-xl uppercase text-primary">Telemetry</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Real-time asset lifecycle explorer and network statistics.</p>
+</header>
+<!-- Stats Panel (3-Column) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-lg">
+<!-- Stat Card 1 -->
+<div class="glass-panel rounded-DEFAULT p-stack-md flex flex-col gap-stack-sm hover:scale-[1.02] transition-transform duration-300 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-lg text-label-lg text-on-surface-variant tracking-widest uppercase">Total Minted</span>
+<span class="material-symbols-outlined text-outline-variant" style="font-variation-settings: 'FILL' 0;">database</span>
+</div>
+<div class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mt-2">
+                    24,891 <span class="font-headline-md text-headline-md text-hotfix-accent">PX</span>
+</div>
+<div class="h-[2px] w-full bg-surface-container-high mt-4 relative overflow-hidden rounded-full">
+<div class="absolute top-0 left-0 h-full bg-hotfix-accent w-[78%]"></div>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-panel rounded-DEFAULT p-stack-md flex flex-col gap-stack-sm hover:scale-[1.02] transition-transform duration-300 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-lg text-label-lg text-on-surface-variant tracking-widest uppercase">Active Burn Rate</span>
+<span class="material-symbols-outlined text-outline-variant" style="font-variation-settings: 'FILL' 0;">local_fire_department</span>
+</div>
+<div class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mt-2 flex items-baseline gap-2">
+                    1.2% <span class="font-label-lg text-label-lg text-secondary">/ 24H</span>
+</div>
+<div class="flex gap-2 mt-4">
+<div class="h-[2px] flex-1 bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-secondary w-full opacity-50"></div></div>
+<div class="h-[2px] flex-1 bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-secondary w-full opacity-80"></div></div>
+<div class="h-[2px] flex-1 bg-surface-container-high rounded-full overflow-hidden"><div class="h-full bg-secondary w-full anim-pulse-slow"></div></div>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-panel rounded-DEFAULT p-stack-md flex flex-col gap-stack-sm hover:scale-[1.02] transition-transform duration-300 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-lg text-label-lg text-on-surface-variant tracking-widest uppercase">Market Cap</span>
+<span class="material-symbols-outlined text-outline-variant" style="font-variation-settings: 'FILL' 0;">monitoring</span>
+</div>
+<div class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mt-2">
+                    $14.2<span class="font-headline-md text-headline-md text-outline-variant">M</span>
+</div>
+<div class="font-label-lg text-label-lg text-surface-tint mt-4 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">arrow_drop_up</span>
+                    +5.4% 7D VOL
+                </div>
+</div>
+</section>
+<!-- Provenance Chain -->
+<section class="glass-panel rounded-lg p-stack-md md:p-stack-lg border border-border-glass relative overflow-hidden">
+<!-- Decorative inner glow -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-hotfix-accent/30 to-transparent"></div>
+<header class="mb-stack-md flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-primary">PROVENANCE CHAIN</h2>
+<span class="font-label-lg text-label-lg text-on-surface-variant bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/30">ASSET ID: PX-8820</span>
+</header>
+<div class="relative py-stack-md">
+<!-- Timeline Track (Background Line) -->
+<div class="absolute top-1/2 left-[5%] right-[5%] h-[2px] bg-surface-container-high -translate-y-1/2 z-0 hidden md:block"></div>
+<!-- Nodes Container -->
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-stack-md md:gap-0">
+<!-- Node 1: Genesis Mint -->
+<div class="flex md:flex-col items-center gap-gutter w-full md:w-auto relative group cursor-pointer">
+<!-- Connecting line for mobile -->
+<div class="absolute left-6 top-12 bottom-[-2rem] w-[2px] bg-surface-container-high md:hidden"></div>
+<div class="w-12 h-12 rounded-full bg-surface-container bg-opacity-80 backdrop-blur-md border border-outline-variant flex items-center justify-center shrink-0 group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors" style="font-variation-settings: 'FILL' 0;">token</span>
+</div>
+<div class="md:text-center md:absolute md:top-16 flex flex-col md:items-center">
+<span class="font-label-lg text-label-lg text-primary uppercase block mb-1">Genesis Mint</span>
+<span class="font-body-md text-[12px] text-on-surface-variant">Block 149201</span>
+</div>
+</div>
+<!-- Connecting Active Line (Desktop) -->
+<div class="hidden md:block flex-1 h-[2px] bg-gradient-to-r from-surface-container-high to-hotfix-accent mx-4 relative top-[-1rem]"></div>
+<!-- Node 2: Secondary Sale (Active) -->
+<div class="flex md:flex-col items-center gap-gutter w-full md:w-auto relative group cursor-pointer">
+<!-- Connecting line for mobile -->
+<div class="absolute left-6 top-12 bottom-[-2rem] w-[2px] bg-hotfix-accent/30 md:hidden"></div>
+<div class="w-12 h-12 rounded-full bg-hotfix-accent/10 backdrop-blur-md border-2 border-hotfix-accent flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(236,72,153,0.2)] anim-pulse-slow">
+<span class="material-symbols-outlined text-hotfix-accent" style="font-variation-settings: 'FILL' 1;">sync_alt</span>
+</div>
+<div class="md:text-center md:absolute md:top-16 flex flex-col md:items-center">
+<span class="font-label-lg text-label-lg text-hotfix-accent uppercase block mb-1">Secondary Sale</span>
+<span class="font-body-md text-[12px] text-surface-tint">0.45 ETH</span>
+</div>
+</div>
+<!-- Connecting Pending Line (Desktop) -->
+<div class="hidden md:block flex-1 h-[2px] bg-surface-container-high mx-4 relative top-[-1rem]"></div>
+<!-- Node 3: Burn Event -->
+<div class="flex md:flex-col items-center gap-gutter w-full md:w-auto relative group cursor-pointer opacity-50 hover:opacity-100 transition-opacity">
+<div class="w-12 h-12 rounded-full bg-surface-container bg-opacity-80 backdrop-blur-md border border-outline-variant/50 flex items-center justify-center shrink-0 border-dashed">
+<span class="material-symbols-outlined text-outline-variant" style="font-variation-settings: 'FILL' 0;">local_fire_department</span>
+</div>
+<div class="md:text-center md:absolute md:top-16 flex flex-col md:items-center">
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase block mb-1">Burn Event</span>
+<span class="font-body-md text-[12px] text-outline-variant">Pending</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-stack-lg pt-stack-md border-t border-border-glass flex justify-between items-center text-on-surface-variant">
+<div class="font-body-md text-[14px] flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-hotfix-accent"></div> Live Tracking Active
+                </div>
+<button class="font-label-lg text-label-lg uppercase hover:text-primary transition-colors flex items-center gap-1">
+                    View Full Ledger <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-md px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-surface-container-lowest border-t border-outline-variant/10 relative z-10 mt-stack-lg">
+<div class="font-headline-md text-headline-md text-primary mb-stack-md md:mb-0">
+            POXY WORLD
+        </div>
+<div class="flex gap-gutter mb-stack-md md:mb-0">
+<a class="font-label-lg text-label-lg text-on-tertiary-container hover:text-primary transition-colors duration-200" href="#">Privacy</a>
+<a class="font-label-lg text-label-lg text-on-tertiary-container hover:text-primary transition-colors duration-200" href="#">Terms</a>
+<a class="font-label-lg text-label-lg text-on-tertiary-container hover:text-primary transition-colors duration-200" href="#">Support</a>
+</div>
+<div class="font-label-lg text-label-lg text-on-tertiary-container">
+            © 2024 POXY WORLD. ALL RIGHTS RESERVED.
+        </div>
+</footer>
+</body></html>

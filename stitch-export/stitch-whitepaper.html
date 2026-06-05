@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY WORLD - Whitepaper</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-tint": "#c6c6c7",
+                "surface-bright": "#3a393a",
+                "hotfix-accent": "#ff416c",
+                "glow-pink": "rgba(255, 65, 108, 0.15)",
+                "background": "#050506",
+                "inverse-on-surface": "#313031",
+                "tertiary": "#ffffff",
+                "secondary-fixed": "#ffd8ed",
+                "inverse-surface": "#e5e2e3",
+                "primary-fixed": "#e2e2e2",
+                "tertiary-fixed": "#e2e2e2",
+                "on-primary": "#2f3131",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-error-container": "#ffdad6",
+                "surface-container-lowest": "#0e0e0f",
+                "on-primary-fixed": "#1a1c1c",
+                "secondary-container": "#5f3f53",
+                "on-surface-variant": "#a1a1aa",
+                "surface-container-low": "#1c1b1d",
+                "secondary": "#e5bad3",
+                "error-container": "#93000a",
+                "on-primary-fixed-variant": "#454747",
+                "on-background": "#ffffff",
+                "on-tertiary": "#2f3131",
+                "surface": "#0d0d0f",
+                "outline-variant": "rgba(255,255,255,0.05)",
+                "on-secondary": "#44273a",
+                "on-tertiary-container": "#636565",
+                "error": "#ffb4ab",
+                "inverse-primary": "#5d5f5f",
+                "on-secondary-fixed-variant": "#5c3d51",
+                "surface-container": "#201f21",
+                "primary-container": "#e2e2e2",
+                "tertiary-container": "#e2e2e2",
+                "on-secondary-container": "#d6adc5",
+                "surface-container-highest": "#353436",
+                "surface-glass": "rgba(13, 13, 15, 0.7)",
+                "secondary-fixed-dim": "#e5bad3",
+                "surface-container-high": "#2a2a2b",
+                "tertiary-fixed-dim": "#c6c6c7",
+                "on-tertiary-fixed": "#1a1c1c",
+                "primary": "#ffffff",
+                "on-primary-container": "#636565",
+                "border-glass": "rgba(255, 255, 255, 0.05)",
+                "outline": "rgba(255,255,255,0.1)",
+                "surface-variant": "#353436",
+                "on-surface": "#ffffff",
+                "primary-fixed-dim": "#c6c6c7",
+                "on-secondary-fixed": "#2c1325",
+                "surface-dim": "#131314",
+                "on-error": "#690005"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "stack-sm": "12px",
+                "stack-lg": "80px",
+                "stack-md": "32px",
+                "margin-mobile": "20px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "base": "8px"
+        },
+        "fontFamily": {
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "headline-lg-mobile": [
+                        "Hanken Grotesk"
+                ],
+                "label-lg": [
+                        "Hanken Grotesk"
+                ],
+                "headline-lg": [
+                        "Hanken Grotesk"
+                ],
+                "body-lg": [
+                        "Hanken Grotesk"
+                ],
+                "body-md": [
+                        "Hanken Grotesk"
+                ],
+                "headline-xl": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "40px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "label-lg": [
+                        "14px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-lg": [
+                        "64px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.03em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "body-lg": [
+                        "20px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "500"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-xl": [
+                        "80px",
+                        {
+                                "lineHeight": "1.0",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "900"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); overflow-x: hidden; }
+        .ambient-glow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 65, 108, 0.08) 0%, rgba(5, 5, 6, 0) 70%);
+            top: -200px;
+            left: -200px;
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(120px);
+        }
+        .code-block {
+            background-color: rgba(5, 5, 6, 0.8);
+            border: 1px solid theme('colors.border-glass');
+            border-radius: theme('borderRadius.DEFAULT');
+        }
+        .text-teal-accent { color: #2dd4bf; }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased min-h-screen flex flex-col relative">
+<div class="ambient-glow"></div>
+<!-- TopNavBar Shared Component (Lumina Edition) -->
+<header class="bg-surface-glass backdrop-blur-xl border-b border-border-glass shadow-none fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-20">
+<div class="flex items-center gap-8">
+<a class="font-headline-md text-headline-md font-black tracking-tighter text-primary uppercase" href="#">
+                POXY WORLD
+            </a>
+<nav class="hidden md:flex gap-6">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded-lg" href="#">NEWS</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded-lg" href="#">VERIFY</a>
+<a class="font-label-lg text-label-lg text-primary border-b-2 border-hotfix-accent pb-1 transition-all duration-300 hover:bg-white/5 px-3 py-2 rounded-lg" href="#">WHITEPAPER</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200 hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded-lg" href="#">EXPLORE</a>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex bg-surface border border-border-glass rounded-full p-1">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+<button class="hidden md:flex items-center gap-2 bg-hotfix-accent hover:bg-hotfix-accent/90 transition-all text-white rounded-full px-5 py-2.5 font-label-lg text-label-lg font-bold shadow-[0_0_15px_rgba(255,65,108,0.3)] hover:shadow-[0_0_25px_rgba(255,65,108,0.5)]">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>CONNECT</span>
+</button>
+</div>
+</header>
+<main class="flex-grow pt-32 pb-stack-lg px-margin-mobile md:px-margin-desktop max-w-[1600px] mx-auto w-full flex flex-col md:flex-row gap-gutter">
+<!-- Sidebar Navigation -->
+<aside class="w-full md:w-64 flex-shrink-0 mb-8 md:mb-0">
+<div class="sticky top-32 bg-surface/80 backdrop-blur-xl border border-border-glass rounded-xl p-4">
+<h3 class="font-label-lg text-label-lg text-zinc-500 mb-4 px-4 uppercase tracking-widest font-bold">Documentation</h3>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-400 hover:text-primary hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="lightbulb">lightbulb</span>
+<span class="font-label-lg text-label-lg">Philosophy</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary bg-hotfix-accent/10 border-l-[3px] border-hotfix-accent transition-all shadow-[inset_0_0_20px_rgba(255,65,108,0.05)]" href="#">
+<span class="material-symbols-outlined text-hotfix-accent" data-icon="route">route</span>
+<span class="font-label-lg text-label-lg">Protocol Roadmap</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-400 hover:text-primary hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+<span class="font-label-lg text-label-lg">Syndicate Tiers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-400 hover:text-primary hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="font-label-lg text-label-lg">Legal &amp; Governance</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area -->
+<article class="flex-grow max-w-4xl">
+<header class="mb-stack-md">
+<div class="inline-block bg-hotfix-accent/10 text-hotfix-accent font-label-lg text-label-lg px-4 py-1.5 rounded-full mb-6 border border-hotfix-accent/20 tracking-widest uppercase font-bold text-xs">V2.4 SPECIFICATION</div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4 uppercase tracking-tighter">Protocol Roadmap</h1>
+<p class="font-body-lg text-body-lg text-zinc-400 max-w-3xl">The strategic deployment timeline for POXY WORLD infrastructure, detailing mainnet integrations and ecosystem expansion phases.</p>
+</header>
+<section class="mb-stack-lg bg-surface/80 border border-border-glass rounded-xl p-8 md:p-10 backdrop-blur-xl relative overflow-hidden group hover:border-white/10 transition-colors shadow-2xl">
+<div class="absolute inset-0 bg-gradient-to-br from-hotfix-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<h2 class="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-4 relative z-10 uppercase tracking-tight">
+<span class="material-symbols-outlined text-hotfix-accent text-4xl" data-icon="deployed_code">deployed_code</span>
+                    Phase 1: Genesis Deployment
+                </h2>
+<div class="space-y-4 font-body-md text-body-md text-zinc-400 relative z-10">
+<p>The initial phase establishes the core operational framework. This includes the deployment of fundamental smart contracts handling identity generation and the baseline POXY tokenomics architecture.</p>
+<ul class="list-disc list-inside space-y-3 ml-2 text-zinc-300 mt-6">
+<li>Launch of POXY Identity Substrate (PIS).</li>
+<li>Initial liquidity pool seeding on decentralized exchanges.</li>
+<li>Release of the beta Terminal UI for early adopters.</li>
+</ul>
+</div>
+</section>
+<section class="mb-stack-lg bg-surface/80 border border-border-glass rounded-xl p-8 md:p-10 backdrop-blur-xl shadow-2xl">
+<h2 class="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-4 uppercase tracking-tight">
+<span class="material-symbols-outlined text-hotfix-accent text-4xl" data-icon="terminal">terminal</span>
+                    Core Logic Architecture
+                </h2>
+<p class="font-body-md text-body-md text-zinc-400 mb-8">Below is an abstracted representation of the identity minting function utilized during the Genesis phase, demonstrating our approach to secure gas optimization.</p>
+<div class="code-block p-6 font-mono text-sm overflow-x-auto shadow-inner rounded-xl">
+<pre><code class="text-zinc-300 leading-relaxed">
+<span class="text-hotfix-accent font-bold">function</span> <span class="text-white font-bold">mintIdentity</span>(address _to, uint256 _tier) <span class="text-hotfix-accent font-bold">external</span> <span class="text-teal-accent">onlyOwner</span> {
+    <span class="text-hotfix-accent font-bold">require</span>(_tier &lt;= MAX_TIERS, <span class="text-teal-accent">"Invalid tier selection"</span>);
+    
+    uint256 newId = _identityCount + 1;
+    <span class="text-zinc-500 italic">// Gas optimized storage allocation</span>
+    identities[newId] = Identity({
+        owner: _to,
+        tier: _tier,
+        timestamp: block.timestamp,
+        isActive: <span class="text-hotfix-accent font-bold">true</span>
+    });
+    
+    _identityCount = newId;
+    <span class="text-hotfix-accent font-bold">emit</span> <span class="text-white font-bold">IdentityForged</span>(_to, newId, _tier);
+}
+</code></pre>
+</div>
+</section>
+<section class="bg-surface/80 border border-border-glass rounded-xl p-8 md:p-10 backdrop-blur-xl shadow-2xl">
+<h2 class="font-headline-md text-headline-md text-primary mb-6 flex items-center gap-4 uppercase tracking-tight">
+<span class="material-symbols-outlined text-hotfix-accent text-4xl" data-icon="hub">hub</span>
+                    Phase 2: Syndicate Expansion
+                </h2>
+<div class="space-y-4 font-body-md text-body-md text-zinc-400">
+<p>Following a successful Genesis, the protocol will scale to support complex user hierarchies known as Syndicates. This introduces governance mechanisms and shared resource pooling capabilities.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+<div class="bg-background/50 border border-border-glass p-6 rounded-xl hover:border-hotfix-accent/30 transition-colors">
+<h4 class="font-label-lg text-label-lg text-primary mb-3 uppercase tracking-wider font-bold">Governance Modules</h4>
+<p class="text-sm text-zinc-400">Implementation of on-chain voting for protocol parameter adjustments via the DAO structure.</p>
+</div>
+<div class="bg-background/50 border border-border-glass p-6 rounded-xl hover:border-hotfix-accent/30 transition-colors">
+<h4 class="font-label-lg text-label-lg text-primary mb-3 uppercase tracking-wider font-bold">Resource Pooling</h4>
+<p class="text-sm text-zinc-400">Syndicates can aggregate yield-generating assets into unified vaults for amplified returns.</p>
+</div>
+</div>
+</div>
+</section>
+</article>
+</main>
+<!-- Footer Shared Component -->
+<footer class="w-full py-stack-md px-margin-desktop flex flex-col md:flex-row justify-between items-center border-t border-border-glass bg-background mt-auto">
+<div class="font-headline-md text-headline-md text-primary mb-4 md:mb-0 uppercase font-black">
+            POXY WORLD
+        </div>
+<div class="flex gap-8 mb-4 md:mb-0">
+<a class="font-label-lg text-label-lg text-zinc-500 hover:text-primary transition-colors duration-200 uppercase tracking-widest text-xs" href="#">Privacy</a>
+<a class="font-label-lg text-label-lg text-zinc-500 hover:text-primary transition-colors duration-200 uppercase tracking-widest text-xs" href="#">Terms</a>
+<a class="font-label-lg text-label-lg text-zinc-500 hover:text-primary transition-colors duration-200 uppercase tracking-widest text-xs" href="#">Support</a>
+</div>
+<div class="font-label-lg text-label-lg text-zinc-600 text-xs tracking-widest">
+            © 2024 POXY WORLD. ALL RIGHTS RESERVED.
+        </div>
+</footer>
+</body></html>
