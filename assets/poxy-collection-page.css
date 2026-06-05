@@ -1,24 +1,38 @@
 /* POXY Collection — Tactical Archive (high-density cyber-matte) */
+/* In the stitch-dash app shell the fixed nav height is tracked by
+   --st-nav-h (set via updateStNavOffset in JS, default ~92px).
+   stitch-dashboard.css already sets padding-top:var(--st-nav-h) on
+   #poxyAppShell>.page.visible, but the shorthand below overrides it.
+   Use !important on padding-top so this always wins, and use longhand
+   for sides/bottom to avoid a cascade war. */
 body.poxy-stitch-dash #collectionPage.page,
 body.poxy-stitch-dash .poxy-collection-page.page{
   max-width:100%;
   width:100%;
   min-height:100vh;
-  /* Reserve space for the fixed global nav.
-     --st-nav-h is set by updateStNavOffset() in JS; fall back to 72px. */
-  padding: calc(var(--st-nav-h, 72px) + 20px) 16px 56px;
   margin:0 auto;
+  /* top: nav height + breathing room. JS also enforces this on show. */
+  padding-top: calc(var(--st-nav-h, 92px) + 20px) !important;
+  padding-right: 16px;
+  padding-bottom: 56px;
+  padding-left: 16px;
 }
 @media(min-width:768px){
   body.poxy-stitch-dash #collectionPage.page,
   body.poxy-stitch-dash .poxy-collection-page.page{
-    padding: calc(var(--st-nav-h, 72px) + 24px) 24px 64px;
+    padding-top: calc(var(--st-nav-h, 92px) + 24px) !important;
+    padding-right: 24px;
+    padding-bottom: 64px;
+    padding-left: 24px;
   }
 }
 @media(min-width:1280px){
   body.poxy-stitch-dash #collectionPage.page,
   body.poxy-stitch-dash .poxy-collection-page.page{
-    padding: calc(var(--st-nav-h, 72px) + 28px) 32px 72px;
+    padding-top: calc(var(--st-nav-h, 124px) + 28px) !important;
+    padding-right: 32px;
+    padding-bottom: 72px;
+    padding-left: 32px;
   }
 }
 .poxy-collection-page{

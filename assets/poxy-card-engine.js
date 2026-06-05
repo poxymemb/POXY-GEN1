@@ -84,7 +84,7 @@
           _setCardState(card, state);
         });
       },
-      { threshold: 0.1, rootMargin: '100px 0px' }
+      { threshold: 0.05, rootMargin: '40px 0px' }
     );
     return _observer;
   }
@@ -337,15 +337,9 @@
     // Store cleanup list
     _cards.set(card, cleanups);
 
-    // Cleanup when detached from DOM
-    const mo = new MutationObserver(() => {
-      if (!document.contains(card)) {
-        PoxyCardEngine.destroy(card);
-        mo.disconnect();
-      }
-    });
-    mo.observe(document.body, { childList: true, subtree: true });
-    cleanups.push(() => mo.disconnect());
+    // No per-card MutationObserver — destroyAll() handles cleanup on tab leave.
+    // Individual MutationObservers watching document.body subtree are O(n)
+    // expensive and the primary source of collection lag.
   }
 
   /* ─── Public API ────────────────────────────────────────────────── */

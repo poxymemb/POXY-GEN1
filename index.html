@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=10">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=11">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=6">
@@ -61,7 +61,7 @@
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
-<link rel="stylesheet" href="assets/poxy-card-engine.css?v=2">
+<link rel="stylesheet" href="assets/poxy-card-engine.css?v=3">
 <link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
@@ -72,7 +72,7 @@
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-ambient.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
-<script src="assets/poxy-card-engine.js?v=2" defer></script>
+<script src="assets/poxy-card-engine.js?v=3" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=2" defer></script>
@@ -6881,6 +6881,20 @@ window.showPage=function(page){
   });
   syncPsdTopNav(page);
   if(page==='collection'){
+    // Ensure the fixed nav never overlaps the collection page.
+    // Measure the actual nav height and apply it as an inline top offset.
+    (function enforceColPadding(){
+      const nav=document.getElementById('stGlobalNav')||document.querySelector('nav.st-global-nav,nav[id*="nav"],header[id*="nav"]');
+      const colPage=document.getElementById('collectionPage');
+      if(!colPage)return;
+      const navH=nav?nav.getBoundingClientRect().height:(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--st-nav-h'))||92);
+      colPage.style.paddingTop=(navH+20)+'px';
+      // Re-enforce once fonts/layout settle
+      requestAnimationFrame(()=>{
+        const navH2=nav?nav.getBoundingClientRect().height:navH;
+        colPage.style.paddingTop=(navH2+20)+'px';
+      });
+    })();
     colFilter='all';colSortPreset='default';colMultiSelectMode=false;colCraftZoneOpen=false;
     selectedForDust=new Set();selectedItems=selectedForDust;colLastSelectIndex=-1;
     resetCraftSockets(false);closeColSortMenu();syncColMultiToggleUi();setColCraftZoneOpen(false);
@@ -7862,6 +7876,9 @@ function buildColCardMenuHtml(item){
 function renderCollection(){
   const cont=$('colContent');
   if(!cont)return;
+  // Release all engine resources before wiping DOM — prevents IntersectionObserver
+  // accumulation and _cards Map memory leak on filter changes.
+  if(window.PoxyCardEngine)PoxyCardEngine.destroyAll();
   if(typeof closeAllColCardMenus==='function')closeAllColCardMenus();
   else document.querySelectorAll('.col-card-menu.open').forEach(m=>{m.classList.remove('open');m.classList.remove('is-fixed');});
   const base=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
