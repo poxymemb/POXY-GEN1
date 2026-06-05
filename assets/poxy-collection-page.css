@@ -362,16 +362,6 @@ body.poxy-stitch-dash .poxy-collection-page.page{
   background-size:16px 16px;
 }
 
-/* Corner tick marks */
-.poxy-col-tick{
-  position:absolute;width:8px;height:8px;
-  pointer-events:none;z-index:1;
-}
-.poxy-col-tick--tl{top:6px;left:6px;border-top:1px solid rgba(255,255,255,0.15);border-left:1px solid rgba(255,255,255,0.15)}
-.poxy-col-tick--tr{top:6px;right:6px;border-top:1px solid rgba(255,255,255,0.15);border-right:1px solid rgba(255,255,255,0.15)}
-.poxy-col-tick--bl{bottom:6px;left:6px;border-bottom:1px solid rgba(255,255,255,0.15);border-left:1px solid rgba(255,255,255,0.15)}
-.poxy-col-tick--br{bottom:6px;right:6px;border-bottom:1px solid rgba(255,255,255,0.15);border-right:1px solid rgba(255,255,255,0.15)}
-
 /* ── Filter tab strip ── */
 .poxy-col-filters{
   display:flex;flex-wrap:wrap;

@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=17">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=18">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=6">
@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=3">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=4">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -3118,12 +3118,6 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
       <div class="poxy-col-console">
         <!-- micro-grid texture layer -->
         <div class="poxy-col-console-grid" aria-hidden="true"></div>
-        <!-- corner ticks -->
-        <span class="poxy-col-tick poxy-col-tick--tl" aria-hidden="true"></span>
-        <span class="poxy-col-tick poxy-col-tick--tr" aria-hidden="true"></span>
-        <span class="poxy-col-tick poxy-col-tick--bl" aria-hidden="true"></span>
-        <span class="poxy-col-tick poxy-col-tick--br" aria-hidden="true"></span>
-
         <!-- ROW 1: tier filters (left) + utilities (right) -->
         <div class="poxy-col-console-row poxy-col-console-row--top">
           <div class="poxy-col-filters filter-row" id="filterRow"></div>
@@ -12842,13 +12836,13 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       </div>
 
       <!-- Crypto proof shortcut -->
-      <button type="button" class="avm-crypto-btn" id="avmCryptoBtn">
+      <button type="button" class="avm-crypto-btn font-sans" id="avmCryptoBtn">
         <span class="material-symbols-outlined">verified_user</span>
         VIEW CRYPTOGRAPHIC PROOF
       </button>
 
       <!-- Primary CTA — POXY WORLD branded -->
-      <button type="button" class="avm-cta" id="avmEquipBtn">
+      <button type="button" class="avm-cta font-sans" id="avmEquipBtn">
         <span class="material-symbols-outlined">rocket_launch</span>
         EQUIP TO POXY PROFILE
       </button>
