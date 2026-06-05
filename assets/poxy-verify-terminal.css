@@ -298,7 +298,7 @@
   border-radius: 1.5rem;
   padding: 20px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   box-sizing: border-box;
 }
 @media (min-width: 1024px) { .vt-validation-panel { grid-column: span 4; } }
@@ -328,7 +328,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  overflow: hidden;
+  overflow: visible;
   margin-top: 8px;
 }
 
