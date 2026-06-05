@@ -702,10 +702,9 @@
   flex-direction: column;
   gap: 4px;
 }
-/* Hide scrollbar on console body — prevents second scrollbar thumb on Windows.
-   Scroll still works via JS/mouse wheel, bar is just invisible (matches Stitch). */
-.vt-console__body { scrollbar-width: none; }
-.vt-console__body::-webkit-scrollbar { display: none; }
+/* Hide scrollbar on console body — no second page-level bar (wheel scroll still works). */
+.vt-console__body { scrollbar-width: none; -ms-overflow-style: none; }
+.vt-console__body::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
 /* Log colors */
 .vt-log-ok     { color: rgba(74, 222, 128, 0.7); }

@@ -794,15 +794,22 @@ body.st-win-reveal-open{overflow:hidden}
 
 /* ══ Scroll architecture — body is the single vertical scroll container ══
    overflow-x:hidden + overflow-y:visible computes to overflow-y:auto (CSS spec),
-   which created nested scrollbars inside the flex-height shell chain. */
+   which created nested scrollbars inside the flex-height shell chain.
+   Never set overflow-y:auto on both html and body — that renders two bars. */
+html:has(body.poxy-app-dark),
+html:has(body.poxy-stitch-dash){
+  overflow:hidden;
+  height:100%;
+}
 html{
   overflow-x:clip;
-  overflow-y:auto;
+  overflow-y:visible;
 }
 body.poxy-app-dark,
 body.poxy-stitch-dash{
   overflow-x:clip;
   overflow-y:auto;
+  height:100%;
   min-height:100dvh;
 }
 #poxyAppShell .st-spa-panel,
