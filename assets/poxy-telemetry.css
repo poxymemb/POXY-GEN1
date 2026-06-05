@@ -29,6 +29,7 @@
   box-sizing: border-box;
   font-family: 'Hanken Grotesk', Inter, system-ui, sans-serif;
   position: relative;
+  min-height: calc(100dvh - var(--st-nav-h, 92px));
 }
 @media (min-width: 768px) {
   .poxy-telemetry-page { padding: 40px 40px 96px; }
@@ -37,9 +38,16 @@
   .poxy-telemetry-page { padding: 48px 64px 96px; }
 }
 
-/* Ambient glow orbs */
+#stPanelTelemetry {
+  position: relative;
+  background: #050506 !important;
+  min-height: calc(100dvh - var(--st-nav-h, 92px));
+  box-sizing: border-box;
+}
+
+/* Ambient glow orbs — scoped to panel, not viewport (prevents bottom color band) */
 .tl-ambient {
-  position: fixed; inset: 0;
+  position: absolute; inset: 0;
   pointer-events: none; z-index: 0; overflow: hidden;
 }
 .tl-glow {
@@ -53,7 +61,7 @@
   opacity: 0.6;
 }
 .tl-glow--b {
-  bottom: -20%; right: -10%;
+  top: 55%; right: -10%;
   width: min(700px,70vw); height: min(700px,70vw);
   background: rgba(236,72,153,0.04);
   opacity: 0.4;

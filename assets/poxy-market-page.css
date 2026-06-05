@@ -1,7 +1,8 @@
 /* POXY Marketplace — Stitch terminal UI */
-#stPanelMarket{width:100%;max-width:100%;overflow:visible;overflow-x:clip;box-sizing:border-box}
+#stPanelMarket{width:100%;max-width:100%;overflow:visible;overflow-x:clip;box-sizing:border-box;position:relative;background:#050506 !important;min-height:calc(100dvh - var(--st-nav-h,92px))}
 .poxy-market-page{
   display:none;
+  position:relative;
   width:100%;
   max-width:100%;
   margin:0 auto;
@@ -13,7 +14,10 @@
   font-family:Inter,system-ui,sans-serif;
 }
 #stPanelMarket .poxy-market-page,
-.poxy-market-page.visible{display:block}
+.poxy-market-page.visible{
+  display:block;
+  min-height:calc(100dvh - var(--st-nav-h,92px));
+}
 @media(min-width:768px){.poxy-market-page{padding:24px 24px 56px}}
 @media(min-width:1280px){.poxy-market-page{padding:28px 32px 64px}}
 .poxy-market-shell{width:100%;max-width:min(1280px,100%);margin:0 auto;min-width:0}
@@ -261,11 +265,11 @@ body.poxy-stitch-dash .search-hint{color:#9d8b9b}
 #stPanelMarket { background: #050506 !important; }
 .poxy-market-page { background: #050506 !important; }
 
-/* Ambient mesh blobs */
+/* Ambient mesh blobs — panel-scoped (not viewport-fixed) */
 .poxy-market-page::before,
 .poxy-market-page::after {
   content: '';
-  position: fixed;
+  position: absolute;
   border-radius: 50%;
   filter: blur(140px);
   opacity: 0.18;
@@ -278,7 +282,7 @@ body.poxy-stitch-dash .search-hint{color:#9d8b9b}
   background: rgba(244,114,182,0.06);
 }
 .poxy-market-page::after {
-  bottom: -20%; right: -10%;
+  top: 55%; right: -10%;
   width: 50vw; height: 50vw;
   background: rgba(255,255,255,0.02);
 }

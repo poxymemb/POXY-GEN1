@@ -811,6 +811,13 @@ body.poxy-stitch-dash{
   overflow-y:auto;
   height:100%;
   min-height:100dvh;
+  background:#050506;
+}
+#poxyAppShell,
+#poxyAppShell>#huntPage,
+#poxyAppShell #poxyStitchDashboard,
+#poxyAppShell .st-spa-viewport{
+  background:#050506;
 }
 #poxyAppShell .st-spa-panel,
 #poxyAppShell .st-spa-panel--active{

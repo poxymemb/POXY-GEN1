@@ -1,7 +1,7 @@
 /* POXY Explore — aligned with Stitch dashboard / marketplace */
-#stPanelExplore{width:100%;max-width:100%;overflow:visible;overflow-x:clip;box-sizing:border-box}
+#stPanelExplore{width:100%;max-width:100%;overflow:visible;overflow-x:clip;box-sizing:border-box;position:relative;background:#050506;min-height:calc(100dvh - var(--st-nav-h,92px))}
 .poxy-explore-page{
-  --ex-bg:var(--st-bg,#131313);
+  --ex-bg:#050506;
   --ex-surface:rgba(28,27,27,0.55);
   --ex-surface-raised:rgba(19,19,19,0.82);
   --ex-surface-low:rgba(10,10,12,0.85);

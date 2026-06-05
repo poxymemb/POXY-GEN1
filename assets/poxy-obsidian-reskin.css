@@ -273,18 +273,21 @@ body.ranks-tab-active #huntPage .st-spa-viewport {
   background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(236,72,153,0.05), transparent 60%);
 }
 
-/* ── Ambient glow layers — subtle, below text ─────────────── */
+/* ── Ambient glow layers — subtle, below text (panel-scoped, no blue bottom band) ── */
+#stPanelMarket,
+#stPanelRanks {
+  position: relative;
+}
 #stPanelMarket::before,
 .poxy-collection-page::before,
 #stPanelRanks::before {
   content: '';
-  position: fixed;
+  position: absolute;
   pointer-events: none;
   z-index: 0;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(236,72,153,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 20% 90%, rgba(59,130,246,0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(236,72,153,0.05) 0%, transparent 60%);
 }
 
 /* ──────────────────────────────────────────────────────────────
