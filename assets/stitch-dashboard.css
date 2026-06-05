@@ -47,15 +47,21 @@
   --st-nav-h:var(--st-nav-h-val);
   display:block;
   min-height:auto;
-  padding-top:var(--st-nav-h);
+  padding-top:0;
   overflow:visible;
 }
 #poxyAppShell>#huntPage{
   display:block;
   min-height:auto;
   overflow:visible;
+  box-sizing:border-box;
 }
-#poxyAppShell>.page.visible,#poxyAppShell>#huntPage,#poxyAppShell>.club-page.visible{padding-top:0}
+#poxyAppShell>#huntPage,
+#poxyAppShell>.page.visible,
+#poxyAppShell>.club-page.visible{
+  padding-top:var(--st-nav-h);
+  box-sizing:border-box;
+}
 
 .st-nav{
   /* neutral-950/70 + backdrop-blur-2xl — smooth smoked glass, no dot texture */
@@ -812,6 +818,7 @@ body.poxy-stitch-dash{
   height:100%;
   min-height:100dvh;
   background:#050506;
+  scroll-padding-top:var(--st-nav-h,92px);
 }
 #poxyAppShell,
 #poxyAppShell>#huntPage,
