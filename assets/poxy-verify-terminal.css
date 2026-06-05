@@ -865,3 +865,186 @@
   color: rgba(196,199,200,0.6) !important;
   word-break: break-all;
 }
+
+/* ================================================================
+   VERIFY TERMINAL v4 — SCROLL FIX · CONTAINER RADIUS · GLOW · ANIMATIONS
+   Exact sync with Stitch "Animated Unified Verify Terminal" b6f56d50
+   ================================================================ */
+
+/* ── 1. SCROLL & OVERFLOW FIX ────────────────────────────────────
+   Root cause: position:fixed elements inside a transformed/filtered
+   ancestor create an extra scrollbar and trap the layout.
+   Fix: flip all internal fixed wrappers to absolute.
+   ─────────────────────────────────────────────────────────────── */
+#stPanelVerify {
+  position: relative !important;
+  overflow: visible !important;   /* never clip the panel itself */
+}
+
+/* Flip the ::before ambient mesh from fixed → absolute */
+#stPanelVerify::before {
+  position: absolute !important;  /* was: fixed — caused double scrollbar */
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Flip the glow blob wrapper from fixed → absolute */
+#stPanelVerify .vt-glow-wrap {
+  position: absolute !important;  /* was: fixed */
+  inset: 0 !important;
+  overflow: hidden !important;
+}
+
+/* The page element: never set a hard height; let content grow */
+.poxy-verify-page {
+  height: auto !important;
+  overflow: visible !important;    /* restore vertical scroll */
+  overflow-x: hidden !important;   /* keep horizontal clean */
+}
+
+/* ── 2. CONTAINER BORDER-RADIUS (rounded-3xl = 1.5rem) ──────────
+   The dark foundation (#0e0e0f) sits inside the panel (#050506),
+   so rounding it reveals the outer bg — exactly the framed-card look.
+   Use border-radius WITHOUT overflow:hidden so glow blobs bleed out.
+   ─────────────────────────────────────────────────────────────── */
+.poxy-verify-page {
+  border-radius: 1.5rem !important;
+  /* White ambient backlight behind the rounded dark canvas */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 0 120px 40px rgba(255,255,255,0.025);
+}
+
+/* ── 3. AMBIENT GLOW FIX ─────────────────────────────────────────
+   Replace harsh amber/teal blob with the Stitch spec:
+   subtle purple (#9333ea) + pink (#ec4899) at very low opacity.
+   ─────────────────────────────────────────────────────────────── */
+#stPanelVerify .vt-glow-blob--a {
+  background: radial-gradient(circle, rgba(147,51,234,0.20) 0%, transparent 70%) !important;
+  top: -80px !important;
+  right: -80px !important;
+  opacity: 0.10 !important;
+  filter: blur(140px) !important;
+  width: 600px !important;
+  height: 600px !important;
+}
+#stPanelVerify .vt-glow-blob--b {
+  background: radial-gradient(circle, rgba(236,72,153,0.20) 0%, transparent 70%) !important;
+  bottom: -160px !important;
+  left: 8% !important;
+  opacity: 0.08 !important;
+  filter: blur(140px) !important;
+  width: 500px !important;
+  height: 500px !important;
+}
+
+/* ── 4. ANIMATIONS — 1:1 sync with Stitch "Animated Verify" ─────
+   Timings, easing, stagger, and hover transitions match exactly.
+   ─────────────────────────────────────────────────────────────── */
+
+/* 4a. Bento card staggered entrance */
+.vt-bento-card {
+  opacity: 0 !important;
+  transform: translateY(20px) !important;
+  transition:
+    opacity  0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.vt-bento-card.vt-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* 4b. Data pulse line — animated accent stripe on validation path */
+.vt-data-pulse-line {
+  position: absolute !important;
+  left: -1px !important;
+  top: 0 !important;
+  width: 2px !important;
+  height: 100% !important;
+  background: linear-gradient(to bottom, transparent, rgba(251,207,232,0.8), transparent) !important;
+  transform: translateY(-100%) !important;
+  animation: vtDataPulse 2.5s infinite linear !important;
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+@keyframes vtDataPulse {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* 4c. Breath glow — pulsing box-shadow on completed step icons */
+.vt-status-glow,
+.vt-step__icon--done.vt-status-glow {
+  animation: vtBreathGlow 3s infinite ease-in-out !important;
+}
+@keyframes vtBreathGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(251,207,232,0.2); }
+  50%       { box-shadow: 0 0 20px rgba(251,207,232,0.6); }
+}
+
+/* 4d. Input shimmer — edge pulse while focused */
+.vt-search-input.vt-input-shimmer:focus {
+  animation: vtShimmerEdge 2s infinite !important;
+  outline: none !important;
+}
+@keyframes vtShimmerEdge {
+  0%, 100% {
+    border-color: rgba(255,255,255,0.10) !important;
+    box-shadow: 0 0 0 rgba(236,72,153,0) !important;
+  }
+  50% {
+    border-color: rgba(251,207,232,0.40) !important;
+    box-shadow: 0 0 15px rgba(236,72,153,0.15) !important;
+  }
+}
+
+/* 4e. Magnetic button — spring + scale-down on press */
+.vt-btn-magnetic {
+  transition:
+    transform  0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.2s ease !important;
+}
+.vt-btn-magnetic:active {
+  transform: scale(0.95) !important;
+}
+
+/* 4f. Mesh float — ambient bg layer (matches .bg-mesh in Stitch) */
+@keyframes vtMeshFloat {
+  0%   { transform: scale(1)    translate(0,    0);    }
+  50%  { transform: scale(1.10) translate(2%,   2%);   }
+  100% { transform: scale(1)    translate(-2%, -2%);   }
+}
+
+/* 4g. Terminal cursor blink — step-end so it snaps on/off */
+.vt-log-cursor {
+  display: inline-block !important;
+  animation: vtCursorBlink 1s step-end infinite !important;
+}
+@keyframes vtCursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* 4h. Spring-transition helper */
+.vt-spring {
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* Reduced motion: disable all custom animations, fade-in only */
+@media (prefers-reduced-motion: reduce) {
+  .vt-bento-card,
+  .vt-data-pulse-line,
+  .vt-status-glow,
+  .vt-step__icon--done.vt-status-glow,
+  .vt-search-input.vt-input-shimmer:focus,
+  .vt-log-cursor,
+  #stPanelVerify::before,
+  #stPanelVerify .vt-glow-wrap {
+    animation: none !important;
+    transition: opacity 0.3s ease !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

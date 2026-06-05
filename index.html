@@ -64,7 +64,7 @@
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=2">
 <link rel="stylesheet" href="assets/poxy-telemetry.css?v=2">
 <link rel="stylesheet" href="assets/poxy-whitepaper.css?v=3">
-<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=3">
+<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=4">
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=3">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -6214,27 +6214,40 @@ window.vtInitConsoleLog=function(){
   const body=$('vtConsoleBody');
   if(!body||body.dataset.init)return;
   body.dataset.init='1';
-  const lines=['&gt; initializing poxy_crypto_core v2.4.1...','&gt; awaiting input vector...','&gt; <span class="vt-log-ok">[OK]</span> secure channel established','&gt; listening on verification endpoint...','<span class="vt-log-accent">&gt; status: ready — enter hash to begin</span>','&gt; <span class="vt-log-cursor">_</span>'];
-  let i=0;body.innerHTML='';
-  const t=setInterval(()=>{if(i<lines.length){body.innerHTML+=lines[i]+'<br>';i++;body.scrollTop=body.scrollHeight;}else clearInterval(t);},220);
-  // Trigger bento entrance animations
+  const lines=[
+    '&gt; initializing poxy_crypto_core v2.4.1...',
+    '&gt; awaiting input vector...',
+    '&gt; <span class="vt-log-ok">[OK]</span> secure channel established',
+    '&gt; listening on verification endpoint...',
+    '<span class="vt-log-accent">&gt; status: ready — enter hash to begin</span>',
+    '&gt; <span class="vt-log-cursor">_</span>'
+  ];
+  let i=0; body.innerHTML='';
+  const t=setInterval(()=>{
+    if(i<lines.length){body.innerHTML+=lines[i]+'<br>';i++;body.scrollTop=body.scrollHeight;}
+    else clearInterval(t);
+  },220);
+
+  // ── Staggered bento entrance (exact Stitch timing: 100ms base + CSS transition-delay) ──
   const panel=$('stPanelVerify');
   if(panel){
     setTimeout(()=>{
       panel.querySelectorAll('.vt-bento-card').forEach(c=>c.classList.add('vt-visible'));
-    },80);
+    },100); /* 100ms matches Stitch DOMContentLoaded setTimeout */
   }
-  // Wire magnetic button
-  const btn=panel&&panel.querySelector('.vt-btn-magnetic');
-  if(btn&&!btn.dataset.magnetic){
+
+  // ── Wire ALL magnetic buttons (Stitch: querySelectorAll('.btn-magnetic')) ──
+  const btns=panel?panel.querySelectorAll('.vt-btn-magnetic'):[];
+  btns.forEach(btn=>{
+    if(btn.dataset.magnetic)return;
     btn.dataset.magnetic='1';
     btn.addEventListener('mousemove',e=>{
       const r=btn.getBoundingClientRect();
-      const x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
-      btn.style.transform=`translate(${x*0.12}px,${y*0.12}px)`;
+      const x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2;
+      btn.style.transform=`translate(${x*0.10}px,${y*0.10}px)`; /* 0.10 = Stitch factor */
     });
-    btn.addEventListener('mouseleave',()=>{btn.style.transform='';});
-  }
+    btn.addEventListener('mouseleave',()=>{ btn.style.transform=''; });
+  });
 };
 
 /* ── Whitepaper sidebar navigation ───────────────────────────── */
