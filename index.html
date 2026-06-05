@@ -64,7 +64,7 @@
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
 <link rel="stylesheet" href="assets/poxy-telemetry.css?v=4">
 <link rel="stylesheet" href="assets/poxy-whitepaper.css?v=5">
-<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=11">
+<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=12">
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-ambient.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
@@ -6248,6 +6248,21 @@ function vtUpdateSteps(data){
     if(hs&&(s.commit_hash||s.computed_hash))hs.textContent=(s.commit_hash||s.computed_hash).slice(0,18)+'…';
     el.style.opacity='1';
   });
+  requestAnimationFrame(vtSyncTimelineLine);
+}
+function vtSyncTimelineLine(){
+  const root=document.querySelector('#stPanelVerify .vt-steps');
+  if(!root)return;
+  const steps=root.querySelectorAll('.vt-step');
+  if(steps.length<2)return;
+  const firstIcon=steps[0].querySelector('.vt-step__icon');
+  const lastIcon=steps[steps.length-1].querySelector('.vt-step__icon');
+  if(!firstIcon||!lastIcon)return;
+  const rr=root.getBoundingClientRect();
+  const fy=firstIcon.getBoundingClientRect().top+firstIcon.getBoundingClientRect().height/2-rr.top;
+  const ly=lastIcon.getBoundingClientRect().top+lastIcon.getBoundingClientRect().height/2-rr.top;
+  root.style.setProperty('--vt-line-top',fy+'px');
+  root.style.setProperty('--vt-line-height',Math.max(0,ly-fy)+'px');
 }
 window.vtInitConsoleLog=function(){
   const body=$('vtConsoleBody');
@@ -6287,6 +6302,12 @@ window.vtInitConsoleLog=function(){
     });
     btn.addEventListener('mouseleave',()=>{ btn.style.transform=''; });
   });
+
+  requestAnimationFrame(vtSyncTimelineLine);
+  if(!window._vtTimelineLineResize){
+    window._vtTimelineLineResize=1;
+    window.addEventListener('resize',()=>requestAnimationFrame(vtSyncTimelineLine),{passive:true});
+  }
 };
 
 /* ── Whitepaper sidebar navigation ───────────────────────────── */

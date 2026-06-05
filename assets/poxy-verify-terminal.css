@@ -324,12 +324,25 @@
 .vt-steps {
   position: relative;
   padding-left: 16px;
-  border-left: 1px solid rgba(255, 255, 255, 0.10);
+  border-left: none;
   display: flex;
   flex-direction: column;
   gap: 20px;
   overflow: visible;
   margin-top: 8px;
+  --vt-line-top: 10px;
+  --vt-line-height: 0px;
+}
+/* Dim track — static segment from step 1 icon center to step 3 icon center */
+.vt-steps::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: var(--vt-line-top);
+  width: 1px;
+  height: var(--vt-line-height);
+  background: rgba(255, 255, 255, 0.10);
+  pointer-events: none;
 }
 
 .vt-step {
@@ -409,18 +422,24 @@
   line-height: 1.5;
 }
 
-/* Data pulse line — animated accent stripe on timeline border */
+/* Data pulse line — static accent from first to last step icon center */
 .vt-data-pulse-line {
   position: absolute;
   left: -1px;
-  top: 0;
+  top: var(--vt-line-top);
   width: 2px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent, rgba(251, 207, 232, 0.8), transparent);
-  transform: translateY(-100%);
-  animation: vtDataPulse 2.5s infinite linear;
-  opacity: 0.5;
+  height: var(--vt-line-height);
+  background: linear-gradient(
+    to bottom,
+    rgba(251, 207, 232, 0.25) 0%,
+    rgba(251, 207, 232, 0.75) 50%,
+    rgba(251, 207, 232, 0.25) 100%
+  );
+  transform: none;
+  animation: none;
+  opacity: 0.55;
   pointer-events: none;
+  z-index: 0;
 }
 
 /* ════════════════════════════════════════════════════════
