@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=5">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=6">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6077,14 +6077,19 @@ window.openAssetViewerModal = function(item) {
   const badge = $('avmTierBadge');
   if(badge){ badge.textContent = tier.label.toUpperCase() + ' TIER'; badge.style.color = tierColor; badge.style.borderColor = tierColor + '55'; }
 
-  // Asset frame: set tier-reactive glow on the frame itself (drives ::before radial)
+  // Asset frame: tier-reactive glow + premium stasis-pod shadow
   const frame = $('avmAssetFrame');
   if(frame){
     frame.style.setProperty('--avm-glow', tierGlow);
-    frame.style.boxShadow = `0 0 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04), 0 0 32px ${tierGlow}, inset 0 0 30px rgba(0,0,0,0.5)`;
+    frame.style.boxShadow = [
+      'inset 0 0 50px rgba(0,0,0,0.85)',
+      `0 24px 48px rgba(0,0,0,0.55)`,
+      `0 0 60px ${tierGlow}`,
+      '0 0 0 1px rgba(255,255,255,0.06)'
+    ].join(', ');
   }
 
-  // Asset inner: show image if available, else floating icon
+  // Asset inner: show image if available, else amber diamond SVG glyph (Stitch 1:1)
   const inner = $('avmAssetInner');
   if(inner){
     inner.innerHTML = '';
@@ -6092,16 +6097,25 @@ window.openAssetViewerModal = function(item) {
       const img = document.createElement('img');
       img.src = item.asset_url;
       img.alt = tier.label + ' POXY';
-      img.style.cssText = 'width:72%;height:72%;object-fit:contain;mix-blend-mode:screen;';
+      img.style.cssText = 'width:72%;height:72%;object-fit:contain;mix-blend-mode:screen;position:relative;z-index:3;';
       inner.appendChild(img);
     } else {
-      const ico = document.createElement('span');
-      ico.className = 'material-symbols-outlined avm-asset-icon';
-      ico.id = 'avmAssetIcon';
-      ico.style.color = tierColor;
-      ico.style.setProperty('--avm-rarity', tierColor);
-      ico.textContent = (window.STITCH_TIER_ICON && STITCH_TIER_ICON[tier.id]) || 'view_in_ar';
-      inner.appendChild(ico);
+      // Amber glow blob
+      const blob = document.createElement('div');
+      blob.className = 'avm-glyph-blob';
+      blob.style.background = `radial-gradient(circle, ${tierGlow.replace(/rgba?\([^)]+\)/,
+        c => c.replace(/[\d.]+\)$/, '0.25)')) || 'rgba(245,158,11,0.22)'} 0%, transparent 70%)`;
+      // SVG diamond glyph (Stitch spec)
+      const wrap = document.createElement('div');
+      wrap.className = 'avm-diamond-glyph';
+      wrap.style.cssText = `width:90px;height:90px;color:${tierColor};animation:avmDiamondPulse 3s ease-in-out infinite alternate;`;
+      wrap.innerHTML = `<svg viewBox="0 0 100 100" style="width:100%;height:100%" xmlns="http://www.w3.org/2000/svg">
+        <polygon fill="none" points="50,10 90,50 50,90 10,50" stroke="currentColor" stroke-width="2.5"/>
+        <polygon fill="none" opacity="0.5" points="50,26 74,50 50,74 26,50" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="50" cy="50" fill="currentColor" r="5"/>
+      </svg>`;
+      inner.appendChild(blob);
+      inner.appendChild(wrap);
     }
   }
 

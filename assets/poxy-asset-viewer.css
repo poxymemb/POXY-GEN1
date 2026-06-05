@@ -30,15 +30,16 @@
   max-width: 1000px;
   max-height: 92vh;
   overflow: hidden;
-  background: rgba(20,20,22,0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 20px;
-  transform: translateY(20px) scale(0.96);
-  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
+  background: rgba(14,14,15,0.92);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 32px;            /* rounded-3xl */
+  transform: translateY(24px) scale(0.96);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1),
               opacity 0.3s ease;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+  box-shadow: 0 48px 96px rgba(0,0,0,0.7),
+              0 0 0 1px rgba(255,255,255,0.03);
 }
 .avm-backdrop.avm-open .avm-panel {
   transform: translateY(0) scale(1);
@@ -52,10 +53,10 @@
   pointer-events: none;
   z-index: 20;
 }
-.avm-corner--tl { top: 0;    left: 0;  border-top: 1px solid rgba(245,158,11,0.2); border-left:  1px solid rgba(245,158,11,0.2); border-top-left-radius:  20px; }
-.avm-corner--tr { top: 0;    right: 0; border-top: 1px solid rgba(245,158,11,0.2); border-right: 1px solid rgba(245,158,11,0.2); border-top-right-radius: 20px; }
-.avm-corner--bl { bottom: 0; left: 0;  border-bottom: 1px solid rgba(245,158,11,0.2); border-left:  1px solid rgba(245,158,11,0.2); border-bottom-left-radius:  20px; }
-.avm-corner--br { bottom: 0; right: 0; border-bottom: 1px solid rgba(245,158,11,0.2); border-right: 1px solid rgba(245,158,11,0.2); border-bottom-right-radius: 20px; }
+.avm-corner--tl { top: 0;    left: 0;  border-top: 1px solid rgba(245,158,11,0.25); border-left:  1px solid rgba(245,158,11,0.25); border-top-left-radius:  32px; }
+.avm-corner--tr { top: 0;    right: 0; border-top: 1px solid rgba(245,158,11,0.25); border-right: 1px solid rgba(245,158,11,0.25); border-top-right-radius: 32px; }
+.avm-corner--bl { bottom: 0; left: 0;  border-bottom: 1px solid rgba(245,158,11,0.25); border-left:  1px solid rgba(245,158,11,0.25); border-bottom-left-radius:  32px; }
+.avm-corner--br { bottom: 0; right: 0; border-bottom: 1px solid rgba(245,158,11,0.25); border-right: 1px solid rgba(245,158,11,0.25); border-bottom-right-radius: 32px; }
 
 /* ── White ambient glow ────────────────────────────────────────────── */
 .avm-ambient {
@@ -99,11 +100,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 0;
-  padding: 28px 20px 28px;
+  padding: 28px 24px 28px;
   border-right: 1px solid rgba(255,255,255,0.05);
-  background: rgba(255,255,255,0.012);
+  /* Stitch: gradient-to-b from-transparent to-black/40 */
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.25) 50%,
+    rgba(0,0,0,0.55) 100%
+  );
   overflow: hidden;
-  min-height: 420px;
+  min-height: 480px;
 }
 
 /* Rarity ambient backlight */
@@ -171,63 +178,61 @@
   text-transform: uppercase;
 }
 
-/* ── Central asset frame — animation-ready 3D rig ──────────────────
-   Pre-rigged for: icon / image / Lottie / Rive / Three.js / GPU FX
-   transition-transform duration-300 ease-out per spec              */
+/* ── Central asset frame — Stitch stasis-pod premium ───────────────
+   Metallic glass: diagonal gradient sheen + deep inset shadow + float */
 .avm-asset-frame {
   position: relative;
   z-index: 2;
-  width: 220px;
-  height: 220px;
-  border-radius: 20px;
-  /* Dark glass — bg-black/40 border border-white/5 */
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.05);
+  width: 260px;
+  height: 260px;
+  border-radius: 28px;
+  /* Stitch exact: metallic glass diagonal */
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.06) 0%,
+    rgba(30,30,32,0.8)    40%,
+    rgba(0,0,0,0.65)      100%);
+  border: 1px solid rgba(255,255,255,0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  /* Reactive transform: hover scale, future 3D parallax */
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  /* Stitch: stasis-pod box-shadow — deep inset + float */
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.85),
+              0 24px 48px rgba(0,0,0,0.55),
+              0 0 0 1px rgba(255,255,255,0.05);
+  transition: transform 0.12s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.3s ease-out;
   will-change: transform;
-  /* Tier-reactive outer glow */
-  box-shadow: 0 0 40px rgba(0,0,0,0.6),
-              0 0 0 1px rgba(255,255,255,0.04),
-              inset 0 0 30px rgba(0,0,0,0.5);
+  transform-style: preserve-3d;
 }
-.avm-backdrop.avm-open .avm-asset-frame:hover {
-  transform: scale(1.03) translateY(-2px);
-}
-
-/* Tier-reactive border glow on frame — set via --avm-rarity in JS */
+/* Ambient tier glow beneath the frame */
 .avm-asset-frame::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(ellipse at 50% 110%,
-    var(--avm-glow, rgba(255,255,255,0.15)) 0%, transparent 65%);
+  background: radial-gradient(ellipse at 50% 115%,
+    var(--avm-glow, rgba(255,255,255,0.2)) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
-  opacity: 0.6;
+  opacity: 0.7;
   transition: opacity 0.3s;
 }
-
-/* Premium shimmer sweep — only on hover */
+/* Top-right glass highlight — static diagonal sheen from Stitch */
 .avm-asset-frame::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg,
-    transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%);
-  background-size: 200% 200%;
+  top: 0; right: 0;
+  width: 55%; height: 55%;
+  border-radius: 0 28px 0 80%;
+  background: linear-gradient(225deg,
+    rgba(255,255,255,0.09) 0%,
+    rgba(255,255,255,0.02) 50%,
+    transparent 100%);
   pointer-events: none;
   z-index: 1;
-  opacity: 0;
-  transition: opacity 0.3s;
 }
-.avm-backdrop.avm-open .avm-asset-frame:hover::after { opacity: 1; }
 
 /* Inner mount: plug-in target for any renderer */
 .avm-asset-inner {
@@ -240,14 +245,46 @@
   justify-content: center;
 }
 
-/* Fallback icon — shown only when no asset image/model is available.
-   Static star replaced with subtle floating icon + tier colour.    */
+/* Fallback icon — only shown when no asset image is loaded */
 .avm-asset-icon {
-  font-size: 80px;
+  font-size: 72px;
   font-variation-settings: 'FILL' 1;
   filter: drop-shadow(0 0 28px var(--avm-rarity, rgba(255,255,255,0.5)));
   animation: avmIconFloat 4s ease-in-out infinite;
   transition: filter 0.3s;
+  position: relative;
+  z-index: 3;
+}
+
+/* Amber diamond SVG glyph (injected by JS for non-image assets) */
+.avm-diamond-glyph {
+  position: relative;
+  z-index: 3;
+  animation: avmIconFloat 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 10px rgba(245,158,11,0.4));
+  transition: filter 0.3s;
+}
+.avm-diamond-glyph:hover {
+  filter: drop-shadow(0 0 24px rgba(245,158,11,0.8));
+}
+/* Amber glow blob behind the glyph */
+.avm-glyph-blob {
+  position: absolute;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(245,158,11,0.2);
+  filter: blur(24px);
+  pointer-events: none;
+  z-index: 2;
+  animation: avmGlyphBlob 3s ease-in-out infinite alternate;
+}
+@keyframes avmGlyphBlob {
+  0%   { transform: scale(0.9); opacity: 0.6; }
+  100% { transform: scale(1.2); opacity: 1;   }
+}
+@keyframes avmDiamondPulse {
+  0%   { filter: drop-shadow(0 0 10px rgba(245,158,11,0.4)); opacity: 0.8; transform: scale(0.95); }
+  100% { filter: drop-shadow(0 0 28px rgba(245,158,11,0.85)); opacity: 1;  transform: scale(1.05); }
 }
 /* Hide default icon when a real image/model is loaded */
 .avm-asset-inner img ~ .avm-asset-icon,
@@ -262,7 +299,7 @@
   100% { background-position: -50% -50%; }
 }
 
-/* Holographic sheen sweep — Stitch spec */
+/* Holographic diagonal sweep — Stitch 1:1 stasis-pod::before */
 .avm-stage-sheen {
   position: absolute;
   top: -100%;
@@ -271,21 +308,21 @@
   height: 300%;
   background: linear-gradient(
     45deg,
-    transparent 0%,
-    rgba(255,255,255,0.0) 40%,
-    rgba(255,255,255,0.1) 45%,
-    rgba(255,255,255,0.18) 50%,
-    rgba(255,255,255,0.1) 55%,
-    rgba(255,255,255,0.0) 60%,
-    transparent 100%
+    transparent            0%,
+    rgba(255,255,255,0.00) 38%,
+    rgba(255,255,255,0.10) 44%,
+    rgba(255,255,255,0.20) 50%,
+    rgba(255,255,255,0.10) 56%,
+    rgba(255,255,255,0.00) 62%,
+    transparent            100%
   );
   animation: avmHolographicSheen 6s linear infinite;
-  z-index: 25;
+  z-index: 8;
   pointer-events: none;
 }
 @keyframes avmHolographicSheen {
   0%   { transform: translate(-50%,-50%) rotate(45deg) translateY(-100%); }
-  100% { transform: translate(-50%,-50%) rotate(45deg) translateY(100%); }
+  100% { transform: translate(-50%,-50%) rotate(45deg) translateY(100%);  }
 }
 
 /* Stage metadata (number + owner) */
@@ -402,29 +439,33 @@
   margin: 0 0 20px;
 }
 
-/* Data group cards — Stitch: bg-white/[0.02] rounded-lg p-4 border border-white/[0.03] */
+/* Data group cards — solid matte, zero texture artifacts */
 .avm-data-group {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.03);
+  background: rgba(255,255,255,0.018);
+  border: 1px solid rgba(255,255,255,0.04);
   border-radius: 12px;
-  padding: 0 16px;
-  margin-bottom: 12px;
+  padding: 2px 16px;
+  margin-bottom: 10px;
+  /* Ensure no inner grid lines */
+  background-image: none;
+  box-shadow: none;
 }
 .avm-data-group:last-of-type { margin-bottom: 0; }
 
-/* Kept for backwards compat — now hidden by default */
+/* Legacy — hidden */
 .avm-data-table { display: none; }
 
 .avm-data-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 11px 0;
   gap: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  /* Subtle row separator — only hairline */
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  background: none; /* ensure no stray backgrounds */
 }
-.avm-data-group .avm-data-row:last-child,
-.avm-data-row:last-child { border-bottom: none; }
+.avm-data-group .avm-data-row:last-child { border-bottom: none; }
 
 .avm-data-key {
   font-family: 'JetBrains Mono', monospace;
