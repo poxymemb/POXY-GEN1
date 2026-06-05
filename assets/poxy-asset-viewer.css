@@ -154,57 +154,95 @@
   text-transform: uppercase;
 }
 
-/* Central asset frame */
+/* ── Central asset frame — animation-ready 3D rig ──────────────────
+   Pre-rigged for: icon / image / Lottie / Rive / Three.js / GPU FX
+   transition-transform duration-300 ease-out per spec              */
 .avm-asset-frame {
   position: relative;
   z-index: 2;
-  width: 160px;
-  height: 160px;
-  border-radius: 24px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  width: 200px;
+  height: 200px;
+  border-radius: 28px;
+  /* Dark glass — bg-black/40 border border-white/5 */
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.05);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  /* Reactive transform: hover scale, future 3D parallax */
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+  will-change: transform;
+  /* Tier-reactive outer glow */
+  box-shadow: 0 0 40px rgba(0,0,0,0.6),
+              0 0 0 1px rgba(255,255,255,0.04),
+              inset 0 0 30px rgba(0,0,0,0.5);
+}
+.avm-backdrop.avm-open .avm-asset-frame:hover {
+  transform: scale(1.03) translateY(-2px);
 }
 
-/* Shimmer sweep over asset frame */
+/* Tier-reactive border glow on frame — set via --avm-rarity in JS */
+.avm-asset-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at 50% 110%,
+    var(--avm-glow, rgba(255,255,255,0.15)) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+/* Premium shimmer sweep — only on hover */
 .avm-asset-frame::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%);
+  background: linear-gradient(135deg,
+    transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%);
   background-size: 200% 200%;
-  animation: avmShimmer 2.5s ease-in-out infinite;
   pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
+.avm-backdrop.avm-open .avm-asset-frame:hover::after { opacity: 1; }
 
-@keyframes avmShimmer {
-  0%   { background-position: 200% 200%; }
-  100% { background-position: -50% -50%; }
-}
-
+/* Inner mount: plug-in target for any renderer */
 .avm-asset-inner {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Renderer plug-in target */
 }
 
+/* Fallback icon — shown only when no asset image/model is available.
+   Static star replaced with subtle floating icon + tier colour.    */
 .avm-asset-icon {
-  font-size: 72px;
+  font-size: 80px;
   font-variation-settings: 'FILL' 1;
-  filter: drop-shadow(0 0 24px var(--avm-rarity, rgba(255,255,255,0.5)));
-  animation: avmIconFloat 3.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 28px var(--avm-rarity, rgba(255,255,255,0.5)));
+  animation: avmIconFloat 4s ease-in-out infinite;
+  transition: filter 0.3s;
 }
+/* Hide default icon when a real image/model is loaded */
+.avm-asset-inner img ~ .avm-asset-icon,
+.avm-asset-inner canvas ~ .avm-asset-icon { display: none; }
 
 @keyframes avmIconFloat {
-  0%, 100% { transform: translateY(0px);   }
-  50%       { transform: translateY(-6px); }
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes avmShimmer {
+  0%   { background-position: 200% 200%; }
+  100% { background-position: -50% -50%; }
 }
 
 /* Stage metadata (number + owner) */
@@ -393,29 +431,37 @@
 .avm-crypto-btn:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.16); }
 .avm-crypto-btn .material-symbols-outlined { font-size: 14px; }
 
-/* Primary CTA */
+/* Primary CTA — translucent ghost, eye draws to left panel
+   bg-white/5 border border-white/20 text-white
+   hover: bg-white text-black (high-contrast reveal)            */
 .avm-cta {
   width: 100%;
   margin-bottom: 14px;
   padding: 14px 20px;
   border-radius: 12px;
-  background: #fff;
-  border: none;
-  color: #050506;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fff;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: opacity 0.18s, transform 0.14s;
+  transition: background 0.25s, color 0.25s, border-color 0.25s,
+              transform 0.18s cubic-bezier(0.22,1,0.36,1);
 }
-.avm-cta:hover { opacity: 0.88; transform: translateY(-1px); }
-.avm-cta:active { transform: translateY(0); }
+.avm-cta:hover {
+  background: #fff;
+  color: #050506;
+  border-color: transparent;
+  transform: translateY(-1px) scale(1.01);
+}
+.avm-cta:active { transform: translateY(0) scale(0.99); }
 .avm-cta .material-symbols-outlined { font-size: 16px; }
 
 /* Secondary actions row */
@@ -467,13 +513,22 @@
   .avm-secondary-actions { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* ── Animations only mount when modal is open ──────────────────────── */
+/* ── Complete animation isolation — ZERO background render cost ────── */
+/* All CSS animation loops pause when modal is closed (avm-open absent).
+   Guarantees no GPU/CPU waste while browsing the primary card grid.  */
 .avm-backdrop:not(.avm-open) .avm-stage-backlight,
 .avm-backdrop:not(.avm-open) .avm-stage-ring,
 .avm-backdrop:not(.avm-open) .avm-asset-icon,
 .avm-backdrop:not(.avm-open) .avm-asset-frame::after,
-.avm-backdrop:not(.avm-open) .avm-particle {
-  animation-play-state: paused;
+.avm-backdrop:not(.avm-open) .avm-asset-frame::before,
+.avm-backdrop:not(.avm-open) .avm-particle,
+.avm-backdrop:not(.avm-open) .avm-uplink-dot,
+.avm-backdrop:not(.avm-open) .avm-ambient {
+  animation-play-state: paused !important;
+}
+/* Also remove from layout entirely when hidden */
+.avm-backdrop[hidden] * {
+  animation-play-state: paused !important;
 }
 
 /* ── Uplink status track ──────────────────────────────────────────── */

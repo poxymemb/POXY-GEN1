@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=2">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=3">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6050,23 +6050,52 @@ window.openAssetViewerModal = function(item) {
   const rMeta = RARITY_TIER_META[item.poxy_tier] || {};
 
   // ── Cinematic stage ──
-  // Backlight color
+  const tierGlow = tier.glow || 'rgba(255,255,255,0.3)';
+  const tierColor = tier.color || '#fff';
+
+  // Backlight — bottom ambient fog, tier-reactive
   const bl = $('avmBacklight');
-  if(bl) bl.style.setProperty('--avm-glow', tier.glow || 'rgba(255,255,255,0.3)');
+  if(bl) bl.style.setProperty('--avm-glow', tierGlow);
+
   // Ring border
   const ring = $('avmRing');
-  if(ring) ring.style.borderColor = (tier.color || '#fff') + '55';
+  if(ring) ring.style.borderColor = tierColor + '55';
 
-  // Tier badge
+  // Tier badge (left panel top)
   const badge = $('avmTierBadge');
-  if(badge){ badge.textContent = tier.label.toUpperCase() + ' TIER'; badge.style.color = tier.color; badge.style.borderColor = tier.color + '55'; }
+  if(badge){ badge.textContent = tier.label.toUpperCase() + ' TIER'; badge.style.color = tierColor; badge.style.borderColor = tierColor + '55'; }
 
-  // Asset icon
-  const ico = $('avmAssetIcon');
-  if(ico){ ico.style.color = tier.color; ico.textContent = STITCH_TIER_ICON[tier.id] || 'view_in_ar'; }
-  // Tint panel stage
+  // Asset frame: set tier-reactive glow on the frame itself (drives ::before radial)
+  const frame = $('avmAssetFrame');
+  if(frame){
+    frame.style.setProperty('--avm-glow', tierGlow);
+    frame.style.boxShadow = `0 0 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04), 0 0 32px ${tierGlow}, inset 0 0 30px rgba(0,0,0,0.5)`;
+  }
+
+  // Asset inner: show image if available, else floating icon
+  const inner = $('avmAssetInner');
+  if(inner){
+    inner.innerHTML = '';
+    if(item.asset_url){
+      const img = document.createElement('img');
+      img.src = item.asset_url;
+      img.alt = tier.label + ' POXY';
+      img.style.cssText = 'width:72%;height:72%;object-fit:contain;mix-blend-mode:screen;';
+      inner.appendChild(img);
+    } else {
+      const ico = document.createElement('span');
+      ico.className = 'material-symbols-outlined avm-asset-icon';
+      ico.id = 'avmAssetIcon';
+      ico.style.color = tierColor;
+      ico.style.setProperty('--avm-rarity', tierColor);
+      ico.textContent = (window.STITCH_TIER_ICON && STITCH_TIER_ICON[tier.id]) || 'view_in_ar';
+      inner.appendChild(ico);
+    }
+  }
+
+  // Stage rarity CSS variable
   const stage = modal.querySelector('.avm-stage');
-  if(stage) stage.style.setProperty('--avm-rarity', tier.color);
+  if(stage) stage.style.setProperty('--avm-rarity', tierColor);
 
   // Asset number — PX-XXXXXX tactical serial (matches passport card)
   const num = $('avmAssetNumber');
@@ -12766,10 +12795,7 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
           <span class="avm-data-val avm-val-dim">POXY PROTOCOL v4.2</span>
         </div>
         <div class="avm-data-divider"></div>
-        <div class="avm-data-row">
-          <span class="avm-data-key">RARITY CLASS</span>
-          <span class="avm-data-val" id="avmRarityClass">–</span>
-        </div>
+        <!-- RARITY CLASS removed — tier already displayed in title pill -->
         <div class="avm-data-row">
           <span class="avm-data-key">DROP RATE</span>
           <span class="avm-data-val" id="avmDropRate">–</span>
