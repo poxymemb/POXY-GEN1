@@ -1,0 +1,319 @@
+/* ═══════════════════════════════════════════════════════════════════
+   POXY CARD ENGINE v1.0 — layered rendering system
+   Layer 0  .pcard-bg        rarity background
+   Layer 1  .pcard-fx        shimmer · glow-pulse · blueprint · foil
+   Layer 2  .pcard-viewport  asset display area
+   Layer 3  .pcard-meta      tier · serial · date (reserved zone)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Root card ─────────────────────────────────────────────────────── */
+.pcard {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.22s cubic-bezier(0.22,1,0.36,1),
+              border-color 0.22s,
+              box-shadow 0.22s;
+  animation: pcardFadeIn 0.38s ease both;
+  will-change: transform;
+  /* aspect-ratio applied by grid context */
+}
+
+@keyframes pcardFadeIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)  scale(1);     }
+}
+
+/* Hover lift */
+.pcard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(var(--rarity-color-rgb, 255,255,255), 0.18);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.45),
+              0 0 18px var(--rarity-glow, rgba(255,255,255,0.1));
+}
+
+/* Drag state */
+.pcard.is-dragging { opacity: 0.5; }
+
+/* Selected */
+.pcard.col-inv-selected {
+  outline: 2px solid #FF5722;
+  outline-offset: 2px;
+}
+
+/* In forge */
+.pcard.col-inv-in-forge {
+  border-color: rgba(255,190,40,0.5);
+  box-shadow: 0 0 14px rgba(255,190,40,0.25);
+}
+
+/* Pinned */
+.pcard.pinned {
+  box-shadow: 0 0 22px rgba(255,180,40,0.32),
+              inset 0 0 0 1px rgba(255,180,40,0.45) !important;
+}
+
+/* ── Layer 0 — Background ──────────────────────────────────────────── */
+.pcard-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+/* Inner edge vignette ring */
+.pcard-bg-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* ── Layer 1 — FX ──────────────────────────────────────────────────── */
+.pcard-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+/* Visibility gate — offscreen cards get no FX */
+[data-pcard-state="offscreen"] .pcard-fx { display: none; }
+
+/* ── Shimmer band ── */
+.pcard-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--shimmer-via, rgba(255,255,255,0.08)) 45%,
+    transparent 100%
+  );
+  background-size: 200% 200%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+[data-pcard-state="visible"]  .pcard-shimmer { opacity: 0; }
+[data-pcard-state="focused"]  .pcard-shimmer {
+  opacity: 1;
+  animation: pcardShimmerIdle 4s ease-in-out infinite;
+}
+[data-pcard-state="hovered"]  .pcard-shimmer {
+  opacity: 1;
+  animation: pcardShimmerActive 1.4s ease-in-out infinite;
+}
+
+@keyframes pcardShimmerIdle {
+  0%, 100% { background-position: 200% 200%; }
+  50%       { background-position: 0% 0%; }
+}
+@keyframes pcardShimmerActive {
+  0%   { background-position: 200% 200%; }
+  100% { background-position: -50% -50%; }
+}
+
+/* ── Glow pulse ── */
+.pcard-glow-pulse {
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, var(--glow-color, rgba(255,255,255,0.2)) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+[data-pcard-state="focused"] .pcard-glow-pulse {
+  opacity: 0.4;
+  animation: pcardPulse 2.8s ease-in-out infinite;
+}
+[data-pcard-state="hovered"] .pcard-glow-pulse {
+  opacity: 0.75;
+  animation: pcardPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pcardPulse {
+  0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1);    }
+  50%       { opacity: 0.7; transform: translateX(-50%) scale(1.15); }
+}
+
+/* ── Blueprint grid ── */
+.pcard-blueprint {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.055;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+  background-size: 18px 18px;
+  pointer-events: none;
+}
+
+/* Corner accents */
+.pcard-blueprint::before,
+.pcard-blueprint::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.pcard-blueprint::before {
+  background:
+    radial-gradient(circle at 0% 0%,   rgba(255,255,255,0.35) 0px, transparent 28px),
+    radial-gradient(circle at 100% 0%,  rgba(255,255,255,0.2)  0px, transparent 20px);
+}
+.pcard-blueprint::after {
+  background:
+    radial-gradient(circle at 0%   100%, rgba(255,255,255,0.2) 0px, transparent 20px),
+    radial-gradient(circle at 100% 100%, rgba(255,255,255,0.35) 0px, transparent 28px);
+}
+
+/* ── Foil layer — legendary / mythic (mouse-tracked) ── */
+.pcard-foil {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  /* Paint a dynamic radial spotlight that follows the mouse */
+  background: radial-gradient(
+    circle at calc(var(--foil-x, 0.5) * 100%) calc(var(--foil-y, 0.5) * 100%),
+    rgba(255,255,255,0.15) 0%,
+    var(--glow-color, rgba(255,200,40,0.2)) 25%,
+    transparent 60%
+  );
+}
+
+[data-pcard-state="hovered"] .pcard-foil { opacity: 1; }
+
+/* ── Layer 2 — Asset Viewport ──────────────────────────────────────── */
+.pcard-viewport {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 12px 8px;
+  min-height: 80px;
+}
+
+.pcard-asset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Icon renderer */
+.pcard-icon-symbol {
+  font-size: 32px;
+  line-height: 1;
+  transition: filter 0.25s, transform 0.25s;
+  font-variation-settings: 'FILL' 1;
+}
+
+[data-pcard-state="hovered"] .pcard-icon-symbol {
+  filter: drop-shadow(0 0 8px var(--rarity-glow, rgba(255,255,255,0.4)));
+  transform: scale(1.08);
+}
+
+/* Image renderer */
+.pcard-image-asset {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* ── Layer 3 — Metadata (reserved zone) ────────────────────────────── */
+.pcard-meta {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 10px 12px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.pcard-tier-badge {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.pcard-serial {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.55);
+  word-break: break-word;
+}
+
+.pcard-date {
+  font-size: 8.5px;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ── Rarity-specific border accents ────────────────────────────────── */
+.pcard[data-rarity="rare"]      { border-color: rgba(0,229,255,0.15); }
+.pcard[data-rarity="epic"]      { border-color: rgba(156,39,176,0.2); }
+.pcard[data-rarity="legendary"] { border-color: rgba(255,200,40,0.22); }
+.pcard[data-rarity="mythic"]    { border-color: rgba(255,51,102,0.25); }
+
+.pcard[data-rarity="legendary"]:hover { border-color: rgba(255,200,40,0.45); }
+.pcard[data-rarity="mythic"]:hover    { border-color: rgba(255,51,102,0.5); }
+
+/* ── Status layer badges (z-index: 4+, shared with existing code) ──── */
+.pcard .col-card-pin-badge   { z-index: 6; }
+.pcard .col-card-vip-serial  { z-index: 6; }
+.pcard .col-card-kebab       { z-index: 7; }
+.pcard .col-card-topbar      { z-index: 7; }
+.pcard .col-card-locked-overlay { z-index: 8; }
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .pcard-icon-symbol { font-size: 26px; }
+  .pcard-viewport { padding: 14px 10px 6px; min-height: 64px; }
+  .pcard-meta { padding: 6px 8px 10px; }
+}
+
+/* ── Battery-saver / reduced-motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pcard-shimmer,
+  .pcard-glow-pulse { animation: none !important; }
+  .pcard { animation: none; transition: none; }
+}
+
+/* ── Grid integration: make .pcard slot into existing col-grid ─────── */
+.col-grid .pcard,
+.col-club-grid .pcard {
+  /* The engine card fully replaces .col-card visually */
+}
+
+.col-grid.col-grid-wide .pcard {
+  aspect-ratio: 3 / 4;
+}

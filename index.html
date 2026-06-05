@@ -61,6 +61,7 @@
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
+<link rel="stylesheet" href="assets/poxy-card-engine.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -70,6 +71,7 @@
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-ambient.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
+<script src="assets/poxy-card-engine.js?v=1" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=2" defer></script>
@@ -6182,6 +6184,10 @@ window.showStitchTab=function(tab){
     if(!colData.length)loadCollection().then(()=>renderStorePage()).catch(()=>renderStorePage());
     else renderStorePage();
   }
+  // Release offscreen card engine observers when leaving the collection tab
+  if(prev==='collection'&&next!=='collection'){
+    if(window.PoxyCardEngine)PoxyCardEngine.destroyAll();
+  }
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
   if(next==='telemetry'){}
@@ -7616,12 +7622,22 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
   const isVip=!!vipTier||item.is_vip===true;
   const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
   const isPinned=!!item.pinned_at;
-  const isFeatured=String(currentProfile?.favorite_poxy_id||'')===String(item.id);
   const inForge=findCraftSocketForItem(item.id)>=0;
   const isSelected=isColItemSelected(item.id);
 
-  const card=document.createElement('div');
-  card.className='col-card col-inv-card poxy-col-card tilt-3d'+
+  // ── Use the Card Engine for layered rendering ──
+  // Determine the best renderer for this asset tier (future: lottie, rive)
+  const rendererType = item.asset_url ? 'image' : 'icon';
+  const rendererData = rendererType === 'image'
+    ? { src: item.asset_url, alt: tier.label + ' POXY', color: tier.color }
+    : { color: tier.color, symbol: STITCH_TIER_ICON[tier.id] || 'view_in_ar' };
+
+  const card = window.PoxyCardEngine
+    ? window.PoxyCardEngine.buildCard(item, tier, ds, { renderer: rendererType, rendererData })
+    : _buildCollectionCardFallback(item, tier, ds); // graceful fallback
+
+  // ── Preserve all existing class flags (forge, selection, VIP, locked) ──
+  card.className += ' col-inv-card poxy-col-card tilt-3d'+
     (isPinned?' pinned':'')+
     (isVip?' col-card-vip':'')+
     (vipTier?' '+vipClassFor(item):'')+
@@ -7629,44 +7645,13 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     (lockedView?' poxy-club-teaser':'')+
     (isSelected?' selected-for-dust col-inv-selected':'')+
     (inForge?' col-inv-in-forge':'');
-  card.dataset.id=item.id;
-  card.dataset.index=displayIndex!=null?String(displayIndex):'';
-  card.dataset.tier=item.poxy_tier||'';
-  card.dataset.pinnedAt=item.pinned_at||'';
-  card.style.setProperty('--rarity-color',tier.color);
-  card.style.setProperty('--rarity-glow',tier.glow);
-  card.style.animationDelay=(index*0.04)+'s';
 
-  const thumb=document.createElement('div');
-  thumb.className='col-inv-thumb poxy-col-preview';
-  const glow=document.createElement('div');
-  glow.className='col-inv-thumb-glow';
-  glow.style.background='radial-gradient(ellipse at 50% 80%,'+tier.glow+',transparent 70%)';
-  const ico=document.createElement('div');
-  ico.className='col-card-icon poxy-col-preview-icon';
-  ico.style.color=tier.color;
-  ico.textContent=tier.icon;
-  thumb.appendChild(glow);
-  thumb.appendChild(ico);
-  card.appendChild(thumb);
+  card.dataset.index = displayIndex!=null ? String(displayIndex) : '';
+  card.dataset.tier  = item.poxy_tier || '';
+  card.dataset.pinnedAt = item.pinned_at || '';
+  card.style.animationDelay = (index*0.04)+'s';
 
-  const foot=document.createElement('div');
-  foot.className='col-inv-foot poxy-col-foot';
-  const lbl=document.createElement('div');
-  lbl.className='col-card-tier';
-  lbl.style.color=tier.color;
-  lbl.textContent=tier.label;
-  const ser=document.createElement('div');
-  ser.className='col-card-serial';
-  ser.textContent=item.serial_number||'–';
-  const dt=document.createElement('div');
-  dt.className='col-card-date';
-  dt.textContent=ds;
-  foot.appendChild(lbl);
-  foot.appendChild(ser);
-  foot.appendChild(dt);
-  card.appendChild(foot);
-
+  // ── Status layer: forge drag ──
   if(colCraftZoneOpen&&item.poxy_tier==='common'&&!lockedView&&!inForge){
     card.draggable=true;
     card.dataset.dragKind='grid';
@@ -7674,27 +7659,36 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     card.addEventListener('dragend',onColItemDragEnd);
   }
 
-  if(isPinned){const pb=document.createElement('div');pb.className='col-card-pin-badge';pb.textContent='📌';card.appendChild(pb);}
+  // ── Status layer: pin badge ──
+  if(isPinned){
+    const pb=document.createElement('div');
+    pb.className='col-card-pin-badge';
+    pb.textContent='📌';
+    card.appendChild(pb);
+  }
 
-  // Prominent VIP serial — top-center (#1, #2, #X). Only when item is VIP and
-  // a vip_serial counter value exists from open_vip_case minting.
+  // ── Status layer: VIP serial badge ──
   if(isVip&&item.vip_serial!=null){
-    const vb=document.createElement('div');vb.className='col-card-vip-serial';
+    const vb=document.createElement('div');
+    vb.className='col-card-vip-serial';
     vb.textContent='#'+item.vip_serial;
     card.appendChild(vb);
   }
 
+  // ── Interaction layer: kebab menu ──
   const topBar=document.createElement('div');
   topBar.className='col-card-topbar';
   const kebab=document.createElement('button');
-  kebab.type='button';kebab.className='col-card-kebab';kebab.textContent='⋮';
+  kebab.type='button';
+  kebab.className='col-card-kebab';
+  kebab.textContent='⋮';
   kebab.setAttribute('aria-label','Open actions menu');
-  kebab.dataset.action='kebab';kebab.dataset.id=item.id;
+  kebab.dataset.action='kebab';
+  kebab.dataset.id=item.id;
   topBar.appendChild(kebab);
   card.appendChild(topBar);
 
   if(lockedView){
-    // Wrap so the LOCKED overlay sits OUTSIDE the blurred card and stays sharp.
     const wrap=document.createElement('div');
     wrap.className='col-vip-locked-wrap';
     wrap.appendChild(card);
@@ -7704,6 +7698,26 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     wrap.appendChild(overlay);
     return wrap;
   }
+  return card;
+}
+
+/** Graceful fallback if PoxyCardEngine hasn't loaded yet (tiny, inlined). */
+function _buildCollectionCardFallback(item, tier, ds){
+  const card=document.createElement('div');
+  card.className='pcard';
+  card.dataset.id=item.id;
+  card.dataset.rarity=item.poxy_tier||'common';
+  card.style.setProperty('--rarity-color',tier.color);
+  card.style.setProperty('--rarity-glow',tier.glow||'rgba(255,255,255,0.3)');
+  const vp=document.createElement('div');vp.className='pcard-viewport';
+  const ico=document.createElement('span');ico.className='material-symbols-outlined pcard-icon-symbol';
+  ico.style.color=tier.color;ico.textContent=STITCH_TIER_ICON[tier.id]||'view_in_ar';
+  vp.appendChild(ico);
+  const meta=document.createElement('div');meta.className='pcard-meta';
+  meta.innerHTML='<div class="pcard-tier-badge" style="color:'+tier.color+'">'+tier.label+'</div>'
+    +'<div class="pcard-serial">'+(item.serial_number||'–')+'</div>'
+    +'<div class="pcard-date">'+ds+'</div>';
+  card.appendChild(vp);card.appendChild(meta);
   return card;
 }
 
