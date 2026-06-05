@@ -1,84 +1,145 @@
-/* POXY WORLD — global site footer (black bar) */
+/* POXY WORLD — global site footer (obsidian, full-bleed) */
 .poxy-site-footer{
   position:relative;
   z-index:2;
+  box-sizing:border-box;
   display:flex;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
   align-items:center;
   justify-content:space-between;
-  gap:16px 24px;
+  gap:clamp(24px,4vw,64px);
   width:100%;
-  padding:20px clamp(20px,4vw,48px);
-  background:#000;
-  border-top:1px solid rgba(255,255,255,0.06);
-  font-family:Inter,system-ui,sans-serif;
-  box-sizing:border-box;
+  max-width:none;
+  margin:0;
+  padding:28px clamp(24px,5vw,80px) 32px;
+  background:transparent;
+  border:none;
+  font-family:Inter,'Hanken Grotesk',system-ui,sans-serif;
 }
 .poxy-site-footer__brand{
-  font-size:13px;
-  font-weight:800;
-  letter-spacing:0.14em;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:0;
+  line-height:1;
+  flex:0 0 auto;
+}
+.poxy-site-footer__brand-line{
+  display:block;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:0.22em;
   text-transform:uppercase;
   color:#fff;
-  white-space:nowrap;
-  flex-shrink:0;
 }
 .poxy-site-footer__nav{
   display:flex;
-  flex-wrap:wrap;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:12px clamp(16px,3vw,32px);
+  gap:10px;
   flex:1 1 auto;
   min-width:0;
+  padding:0 clamp(12px,2vw,32px);
+}
+.poxy-site-footer__nav-row{
+  display:flex;
+  flex-wrap:nowrap;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(20px,3.5vw,48px);
+}
+.poxy-site-footer__nav-row--support{
+  gap:0;
 }
 .poxy-site-footer__nav a{
   font-size:11px;
   font-weight:600;
-  letter-spacing:0.1em;
+  letter-spacing:0.14em;
   text-transform:uppercase;
-  color:#a0a0a0;
+  color:#737373;
   text-decoration:none;
-  transition:color 0.2s ease;
   white-space:nowrap;
+  transition:color 0.25s ease,opacity 0.25s ease;
 }
-.poxy-site-footer__nav a:hover{color:#fff}
+.poxy-site-footer__nav a:hover{
+  color:#d4d4d4;
+  opacity:1;
+}
 .poxy-site-footer__copy{
   margin:0;
+  flex:0 0 auto;
   font-size:10px;
   font-weight:500;
-  letter-spacing:0.06em;
+  letter-spacing:0.08em;
   text-transform:uppercase;
-  color:#404040;
+  color:#3a3a3a;
   text-align:right;
   white-space:nowrap;
-  flex-shrink:0;
+  line-height:1.2;
 }
-@media(max-width:900px){
+/* Landing — flush with obsidian page */
+#poxyLanding .poxy-site-footer.pl-footer{
+  background:transparent;
+}
+body.poxy-landing-active .poxy-site-footer.pl-footer{
+  background:transparent;
+}
+/* Auth overlay — pin to bottom, full bleed */
+.poxy-auth-overlay .poxy-site-footer.poxy-auth-footer{
+  flex-shrink:0;
+  margin-top:auto;
+  width:100%;
+  background:transparent;
+}
+/* App shell — full viewport width (not constrained by --st-max) */
+#poxyAppShell > .poxy-site-footer.st-site-footer,
+#huntPage > .poxy-site-footer.st-site-footer{
+  width:100%;
+  max-width:none;
+  background:transparent;
+}
+body.poxy-stitch-dash #huntPage{
+  background:#050506;
+}
+body.poxy-stitch-dash #huntPage > .poxy-site-footer.st-site-footer{
+  background:transparent;
+}
+@media(max-width:1024px){
+  .poxy-site-footer{
+    flex-wrap:wrap;
+    align-items:flex-start;
+    row-gap:20px;
+  }
+  .poxy-site-footer__nav{
+    order:3;
+    flex:1 1 100%;
+    width:100%;
+    padding:0;
+  }
+  .poxy-site-footer__copy{
+    order:2;
+    margin-left:auto;
+    text-align:right;
+  }
+}
+@media(max-width:640px){
   .poxy-site-footer{
     flex-direction:column;
     align-items:center;
     text-align:center;
-    gap:14px;
+    padding:24px 20px 28px;
   }
-  .poxy-site-footer__nav{justify-content:center;width:100%}
-  .poxy-site-footer__copy{text-align:center;white-space:normal;max-width:320px;line-height:1.5}
-}
-/* Landing page — full width, no glass */
-.pl-footer.poxy-site-footer{
-  background:#000;
-  backdrop-filter:none;
-  border-top:1px solid rgba(255,255,255,0.06);
-}
-/* Auth overlay — pinned to bottom of modal */
-.poxy-auth-overlay .poxy-site-footer.poxy-auth-footer{
-  flex-shrink:0;
-  margin-top:auto;
-  border-top:1px solid rgba(255,255,255,0.08);
-}
-/* App shell — centered max width */
-#poxyAppShell .poxy-site-footer.st-site-footer{
-  max-width:var(--st-max,1280px);
-  margin:0 auto;
-  border-top:1px solid rgba(255,255,255,0.06);
+  .poxy-site-footer__brand{align-items:center}
+  .poxy-site-footer__nav-row{
+    flex-wrap:wrap;
+    gap:12px 20px;
+  }
+  .poxy-site-footer__copy{
+    margin-left:0;
+    text-align:center;
+    white-space:normal;
+    max-width:280px;
+  }
 }

@@ -58,7 +58,7 @@
 <link rel="stylesheet" href="assets/lumina-os-overrides.css?v=15">
 <link rel="stylesheet" href="assets/lumina-features.css?v=1">
 <link rel="stylesheet" href="assets/poxy-landing-page.css?v=2">
-<link rel="stylesheet" href="assets/poxy-site-footer.css?v=1">
+<link rel="stylesheet" href="assets/poxy-site-footer.css?v=2">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
@@ -1312,14 +1312,21 @@ body.dark-club .club-sub{color:#888}
     </section>
   </main>
   <footer class="poxy-site-footer pl-footer">
-    <span class="poxy-site-footer__brand">POXY WORLD</span>
+    <div class="poxy-site-footer__brand" aria-label="POXY World">
+      <span class="poxy-site-footer__brand-line">POXY</span>
+      <span class="poxy-site-footer__brand-line">WORLD</span>
+    </div>
     <nav class="poxy-site-footer__nav" aria-label="Legal">
-      <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="landing.footer.privacy">Privacy Policy</a>
-      <a href="#" onclick="openFooterLink('terms',event)" data-i18n="landing.footer.terms">Terms of Service</a>
-      <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
-      <a href="#" onclick="openFooterLink('support',event)" data-i18n="landing.footer.contact">Support</a>
+      <div class="poxy-site-footer__nav-row poxy-site-footer__nav-row--primary">
+        <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="landing.footer.privacy">Privacy Policy</a>
+        <a href="#" onclick="openFooterLink('terms',event)" data-i18n="landing.footer.terms">Terms of Service</a>
+        <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
+      </div>
+      <div class="poxy-site-footer__nav-row poxy-site-footer__nav-row--support">
+        <a href="#" onclick="openFooterLink('support',event)" data-i18n="landing.footer.contact">Support</a>
+      </div>
     </nav>
-    <p class="poxy-site-footer__copy" data-i18n="landing.footer.copy">© 2024 POXY WORLD. ALL RIGHTS RESERVED.</p>
+    <p class="poxy-site-footer__copy" data-i18n="landing.footer.copy">© 2024 POXY WORLD TERMINAL. ALL RIGHTS RESERVED.</p>
   </footer>
 </div>
 
@@ -1365,14 +1372,21 @@ body.dark-club .club-sub{color:#888}
     </aside>
   </div>
   <footer class="poxy-site-footer poxy-auth-footer">
-    <span class="poxy-site-footer__brand">POXY WORLD</span>
+    <div class="poxy-site-footer__brand" aria-label="POXY World">
+      <span class="poxy-site-footer__brand-line">POXY</span>
+      <span class="poxy-site-footer__brand-line">WORLD</span>
+    </div>
     <nav class="poxy-site-footer__nav" aria-label="Legal">
-      <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="auth.footer.privacy">Privacy Policy</a>
-      <a href="#" onclick="openFooterLink('terms',event)" data-i18n="auth.footer.terms">Terms of Service</a>
-      <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
-      <a href="#" onclick="openFooterLink('support',event)" data-i18n="auth.footer.help">Support</a>
+      <div class="poxy-site-footer__nav-row poxy-site-footer__nav-row--primary">
+        <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="auth.footer.privacy">Privacy Policy</a>
+        <a href="#" onclick="openFooterLink('terms',event)" data-i18n="auth.footer.terms">Terms of Service</a>
+        <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
+      </div>
+      <div class="poxy-site-footer__nav-row poxy-site-footer__nav-row--support">
+        <a href="#" onclick="openFooterLink('support',event)" data-i18n="auth.footer.help">Support</a>
+      </div>
     </nav>
-    <p class="poxy-site-footer__copy">© 2024 POXY WORLD. ALL RIGHTS RESERVED.</p>
+    <p class="poxy-site-footer__copy">© 2024 POXY WORLD TERMINAL. ALL RIGHTS RESERVED.</p>
   </footer>
 </div>
 
@@ -2398,17 +2412,25 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
     <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
-    <footer class="poxy-site-footer st-site-footer" id="stSiteFooter">
-      <span class="poxy-site-footer__brand">POXY WORLD</span>
-      <nav class="poxy-site-footer__nav" aria-label="Legal">
+  </div>
+  <footer class="poxy-site-footer st-site-footer" id="stSiteFooter">
+    <div class="poxy-site-footer__brand" aria-label="POXY World">
+      <span class="poxy-site-footer__brand-line">POXY</span>
+      <span class="poxy-site-footer__brand-line">WORLD</span>
+    </div>
+    <nav class="poxy-site-footer__nav" aria-label="Legal">
+      <div class="poxy-site-footer__nav-row poxy-site-footer__nav-row--primary">
         <a href="#" onclick="openFooterLink('privacy',event)" data-i18n="dash.footer.privacy">Privacy Policy</a>
         <a href="#" onclick="openFooterLink('terms',event)" data-i18n="dash.footer.terms">Terms of Service</a>
         <a href="#" onclick="openFooterLink('cookies',event)">Cookie Policy</a>
+      </div>
+      <div class="poxy-site-footer__nav-row poxy-site-footer__nav-row--support">
         <a href="#" onclick="openFooterLink('support',event)">Support</a>
-      </nav>
-      <p class="poxy-site-footer__copy" data-i18n="dash.footer.copy">© 2024 POXY WORLD. ALL RIGHTS RESERVED.</p>
-    </footer>
-  </div>
+      </div>
+    </nav>
+    <p class="poxy-site-footer__copy" data-i18n="dash.footer.copy">© 2024 POXY WORLD TERMINAL. ALL RIGHTS RESERVED.</p>
+  </footer>
+</div>
 </div>
 
 <!-- LUMINA OS — immersive communication environment (LuminaOSLayout) -->
