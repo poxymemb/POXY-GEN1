@@ -63,7 +63,7 @@
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=2">
 <link rel="stylesheet" href="assets/poxy-telemetry.css?v=2">
-<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=3">
+<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=4">
 <link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=3">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
@@ -2044,6 +2044,7 @@ body.dark-club .club-sub{color:#888}
          ══════════════════════════════════════════════════════ -->
     <section class="st-spa-panel" id="stPanelWhitepaper" data-st-tab="whitepaper" hidden>
       <div class="poxy-whitepaper-page">
+        <!-- Stitch: fixed inset-0 flex items-center justify-center overflow-hidden → centered white blob -->
         <div class="wp-ambient" aria-hidden="true"><div class="wp-ambient__glow"></div></div>
         <div class="wp-shell">
           <!-- Sidebar -->
@@ -2165,12 +2166,27 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
                 </div>
               </div>
               <div class="wp-section">
-                <h2 class="wp-section__title"><span class="material-symbols-outlined">hub</span> Phase 2 → 3: Syndicate Expansion</h2>
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">hub</span> Phase 2: Syndicate Expansion</h2>
                 <div class="wp-section__body">
                   <p>Following a successful Genesis, the protocol scales to support complex user hierarchies known as Syndicates — introducing governance mechanisms and shared resource pooling capabilities.</p>
                   <div class="wp-two-col">
                     <div class="wp-sub-card"><div class="wp-sub-card__title">Governance Modules</div><p class="wp-sub-card__body">On-chain voting for protocol parameter adjustments via the DAO structure. Proposals must pass a 67% supermajority to take effect.</p></div>
                     <div class="wp-sub-card"><div class="wp-sub-card__title">Resource Pooling</div><p class="wp-sub-card__body">Syndicates can aggregate yield-generating assets into unified vaults for amplified collective returns and shared verification rights.</p></div>
+                  </div>
+                </div>
+              </div>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">layers</span> Phase 3: Syndicate Tiers</h2>
+                <div class="wp-section__body">
+                  <p>Syndicate tiers are determined by the cryptographic weight of the aggregated identities. Higher tiers unlock advanced protocol features, governance voting weight, and exclusive access to premium syndicate vaults.</p>
+                  <ul class="wp-list">
+                    <li><strong>Tier 1 (Initiate):</strong> Base access to governance proposals and standard yield pools.</li>
+                    <li><strong>Tier 2 (Operative):</strong> Enhanced voting power multiplier (1.5x) and access to priority transaction relays.</li>
+                    <li><strong>Tier 3 (Architect):</strong> Maximum protocol influence (3x voting weight), custom syndicate vault deployment, and zero-fee identity minting.</li>
+                  </ul>
+                  <!-- Stitch: bg-[#020203] border border-white/10 p-6 rounded-xl font-mono text-gray-500 -->
+                  <div class="wp-sys-log">
+                    <span class="wp-sys-log__label">SYS_LOG:</span> Cryptographic verification required for tier ascension. Node consensus mandatory.
                   </div>
                 </div>
               </div>

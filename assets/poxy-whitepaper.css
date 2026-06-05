@@ -327,131 +327,180 @@
   margin: 0;
 }
 
-/* ============================================================
-   WHITEPAPER V3 — Stitch Obsidian Pink Redesign
-   Accent: #f9a8d4 · Surface: #050506 · JetBrains Mono terminal
-   ============================================================ */
+/* ================================================================
+   WHITEPAPER v4 — STITCH "UNIFIED WHITEPAPER (OBSIDIAN EDITION) v2"
+   Source: Stitch screen 4ae89bd1e68d4df38cefc7db986d088b
+   Every value taken directly from the downloaded HTML.
+   ================================================================ */
 
-/* Override accent to neon pink */
-.poxy-whitepaper-page {
-  --wp-accent:      #f9a8d4;
-  --wp-accent-glow: rgba(249,168,212,0.15);
-  --wp-bg:          #050506;
-  --wp-surface:     #0d0d0f;
-  --wp-border:      rgba(255,255,255,0.05);
-  --wp-border-hi:   rgba(255,255,255,0.10);
+/* Page background */
+.poxy-whitepaper-page,
+#stPanelWhitepaper {
+  background: #050506 !important;
 }
 
-/* Ambient glow now pink */
+/* ── 1. AMBIENT GLOW
+   Stitch: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+            w-[800px] h-[800px] bg-white opacity-[0.02] blur-[150px] rounded-full"
+   = centered white blob, NOT a pink glow in the corner ── */
+.wp-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
 .wp-ambient__glow {
-  background: radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%);
+  /* reset old positioning */
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  /* Stitch exact values */
+  width: 800px !important;
+  height: 800px !important;
+  background: #ffffff !important;
+  opacity: 0.02 !important;
+  filter: blur(150px) !important;
+  border-radius: 50% !important;
+  flex-shrink: 0;
 }
 
-/* Sidebar active — left pink border + pink icon (Stitch design) */
-.wp-sidebar__item--active {
-  color: #fff;
-  background: transparent;
-  border-color: transparent;
-  border-left: 3px solid #f9a8d4 !important;
-  box-shadow: none;
-}
-.wp-sidebar__item--active .material-symbols-outlined {
-  color: #f9a8d4;
-}
-
-/* Sidebar inner — glassmorphism card */
-.wp-sidebar__inner {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 2.5rem;
-}
-
-/* Sidebar label — JetBrains Mono */
-.wp-sidebar__label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.3);
-  text-transform: uppercase;
-}
-
-/* Kicker tag — neon pink instead of red */
+/* ── 2. KICKER TAG
+   Stitch: bg-white/[0.05] border border-white/10 text-white rounded-[2.5rem]
+   with a plain "w-2 h-2 rounded-full bg-white" dot — NO animation, NO pink ── */
 .wp-kicker {
-  background: rgba(249,168,212,0.10);
-  color: #f9a8d4;
-  border-color: rgba(249,168,212,0.22);
+  background: rgba(255,255,255,0.05) !important;
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.10) !important;
+  backdrop-filter: blur(12px);
+  border-radius: 2.5rem !important;
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 .wp-kicker::before {
   content: '';
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #f9a8d4;
-  animation: wpDotPulse 2s ease-in-out infinite;
-}
-@keyframes wpDotPulse {
-  0%,100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.6; transform: scale(0.8); }
+  background: #ffffff !important;   /* white dot */
+  animation: none !important;       /* no pulsing */
+  transform: none !important;
+  opacity: 1 !important;
 }
 
-/* Page title — pink gradient */
+/* ── 3. PAGE TITLE
+   Stitch: "text-white uppercase leading-none drop-shadow-lg"
+   Plain white — no gradient, no pink ── */
 .wp-page-title {
-  background: linear-gradient(135deg, #ffffff 35%, #fbcfe8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: unset !important;
 }
 
-/* Page desc border — pink */
+/* ── 4. PAGE DESC LEFT BORDER
+   Stitch: border-l (plain) — maps to white/20 ── */
 .wp-page-desc {
-  border-left-color: rgba(249,168,212,0.4);
+  border-left-color: rgba(255,255,255,0.20) !important;
 }
 
-/* Section sections — deeper surface */
-.wp-section {
+/* ── 5. ACTIVE SIDEBAR ITEM
+   Stitch: "text-white border-l-[3px] bg-transparent"
+   White left border, transparent background — NOT pink ── */
+.wp-sidebar__item--active {
+  color: #ffffff !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  border-left: 3px solid #ffffff !important;
+  box-shadow: none !important;
+}
+.wp-sidebar__item--active .material-symbols-outlined {
+  color: #ffffff !important;
+}
+
+/* ── 6. SECTION TITLE ICONS
+   Stitch: icons have no explicit color class → inherit text-white ── */
+.wp-section__title .material-symbols-outlined {
+  color: #ffffff !important;
+  font-size: 36px;
+}
+
+/* ── 7. SECTION HOVER OVERLAY
+   Stitch: "absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" ── */
+.wp-section__hover-overlay {
+  background: linear-gradient(135deg, rgba(255,255,255,0.02), transparent) !important;
+}
+
+/* ── 8. LIST BULLETS
+   Stitch uses list-disc list-inside (native bullets)
+   Our custom ::before bullet should be white ── */
+.wp-list li::before {
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* ── 9. SUB-CARDS
+   Stitch: "bg-white/5 border border-white/10 p-6 rounded-xl" ── */
+.wp-sub-card {
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+.wp-sub-card:hover {
+  border-color: rgba(255,255,255,0.20) !important;
+}
+.wp-sub-card__title {
+  color: #ffffff !important;
+}
+
+/* ── 10. CODE BLOCK
+   Stitch: bg-[#020203], green keywords, white function names,
+   teal strings (text-teal-accent = #2dd4bf), gray comments ── */
+.wp-code-block {
+  background: #020203 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+.wp-code-block .tok-kw  { color: #4ade80 !important; font-weight: 700; }  /* green */
+.wp-code-block .tok-fn  { color: #ffffff !important; font-weight: 700; }  /* white */
+.wp-code-block .tok-str { color: #2dd4bf !important; }                    /* teal */
+.wp-code-block .tok-cmt { color: #636363 !important; font-style: italic; } /* gray */
+.wp-code-block .tok-num { color: #fbbf24 !important; }                    /* amber */
+
+/* ── 11. SYS_LOG terminal block (Phase 3)
+   Stitch: "bg-[#020203] border border-white/10 p-6 rounded-xl text-sm font-mono text-gray-500"
+   with "text-green-400" SYS_LOG: label ── */
+.wp-sys-log {
+  background: #020203;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px;
+  padding: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 32px;
+}
+.wp-sys-log__label {
+  color: #4ade80;
+}
+
+/* ── 12. SIDEBAR inner card ── */
+.wp-sidebar__inner {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 2.5rem;
 }
 
-/* Section title icons — pink */
-.wp-section__title .material-symbols-outlined {
-  color: rgba(249,168,212,0.7);
-}
-
-/* Section hover overlay — pink tint */
-.wp-section__hover-overlay {
-  background: linear-gradient(135deg, rgba(249,168,212,0.04), transparent);
-}
-
-/* List bullet — pink */
-.wp-list li::before {
-  background: #f9a8d4;
-  box-shadow: 0 0 6px rgba(249,168,212,0.5);
-}
-
-/* Code block — dark terminal */
-.wp-code-block {
-  background: rgba(5,5,6,0.9);
-  border-color: rgba(255,255,255,0.05);
-}
-.wp-code-block .tok-kw   { color: #4ade80; font-weight: 700; }
-.wp-code-block .tok-fn   { color: #fff; font-weight: 700; }
-.wp-code-block .tok-str  { color: #f9a8d4; }
-.wp-code-block .tok-cmt  { color: rgba(249,168,212,0.5); font-style: italic; }
-
-/* Sub-card hover — pink border */
-.wp-sub-card:hover {
-  border-color: rgba(249,168,212,0.25);
-}
-.wp-sub-card__title {
-  color: #fff;
-}
-
-/* Background panels */
-.poxy-whitepaper-page,
-#stPanelWhitepaper {
-  background: #050506 !important;
+/* ── 13. SIDEBAR LABEL — Stitch: "text-gray-500 uppercase tracking-widest font-bold" ── */
+.wp-sidebar__label {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #6b7280;
+  text-transform: uppercase;
 }
