@@ -703,3 +703,171 @@ body.ranks-tab-active #huntPage .st-spa-viewport{background:#050506!important;an
 .rk-widget-progress-fill{height:100%;background:#fbcfe8;transition:width 0.55s cubic-bezier(0.1,1,0.1,1)}
 .rk-widget-action{width:100%;padding:10px 16px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:background 0.25s;border-radius:4px}
 .rk-widget-action:hover{background:rgba(255,255,255,0.08)}
+
+/* ============================================================
+   RANKS PAGE V8 — Stitch Obsidian Full Redesign
+   bg #050506 · glass panels · neon pink #f9a8d4 · JetBrains Mono
+   ============================================================ */
+
+/* Force obsidian background everywhere */
+#stPanelRanks,
+.ranks-panel,
+body.ranks-tab-active #huntPage,
+body.ranks-tab-active #huntPage .poxy-stitch-dash,
+body.ranks-tab-active #huntPage .st-spa-viewport {
+  background: #050506 !important;
+  animation: none !important;
+}
+
+/* GLOBAL RANKS heading — pink gradient */
+.ranks-page .ranks-hero-title,
+.ranks-page h1.ranks-hero-title {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: clamp(2.5rem,8vw,5rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+  background: linear-gradient(135deg, #ffffff 35%, #fbcfe8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 !important;
+}
+
+/* Subtitle */
+.ranks-hero-sub {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 18px;
+  color: rgba(229,226,225,0.55);
+  margin-bottom: 8px;
+}
+
+/* Toggle capsule — sharp rectangle Stitch style */
+.ranks-page-toggle {
+  background: #050506;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px !important;
+  padding: 3px;
+}
+.ranks-page .lb-toggle-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  border-radius: 2px !important;
+  padding: 8px 20px;
+}
+.ranks-page .lb-toggle-btn.active {
+  background: rgba(255,255,255,0.05) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+}
+.ranks-toggle-pill {
+  border-radius: 2px !important;
+}
+
+/* Podium cards — sharp obsidian */
+.rk-podium-card {
+  background: #050506 !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 16px !important;
+  transition: background 0.3s;
+}
+.rk-podium-card:hover {
+  background: rgba(255,255,255,0.02) !important;
+}
+.rk-podium-card--1 {
+  z-index: 10;
+}
+/* Glowing border for #1 via pseudo-element */
+.rk-podium-card--1::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: rgba(249,171,255,0.25);
+  z-index: -1;
+  filter: blur(5px);
+  opacity: 0.85;
+}
+.rk-podium-monogram--1,
+.rk-podium-card--1 .rk-podium-monogram { color: #fbcfe8 !important; }
+.rk-podium-card--1 .rk-podium-score     { color: #fbcfe8 !important; }
+.rk-podium-avatar {
+  filter: grayscale(100%) brightness(0.85);
+}
+
+/* Leaderboard panel */
+.rk-lb-panel {
+  background: #050506 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 16px !important;
+}
+.rk-lb-header {
+  background: rgba(255,255,255,0.02) !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+}
+.rk-lb-row {
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+  transition: background 0.25s;
+}
+.rk-lb-row:hover {
+  background: rgba(255,255,255,0.02) !important;
+}
+.rk-lb-row:hover .rk-lb-score { color: #fbcfe8 !important; }
+.rk-lb-name {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.rk-lb-avatar {
+  filter: grayscale(1) brightness(0.85);
+  border-radius: 4px !important;
+}
+
+/* Standing Overview widget — glassmorphism terminal panel */
+.rk-widget-panel {
+  background: rgba(255,255,255,0.03) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 2.5rem !important;
+  padding: 28px;
+}
+
+/* Widget stats boxes */
+.ranks-widget-stat-box {
+  background: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 4px !important;
+}
+.ranks-widget-stat-value--accent { color: #fbcfe8 !important; }
+.ranks-widget-progress {
+  height: 2px !important;
+  background: rgba(255,255,255,0.05) !important;
+  border-radius: 0 !important;
+}
+.ranks-widget-progress-fill {
+  background: #fbcfe8 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.ranks-widget-btn {
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  background: rgba(255,255,255,0.03) !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: 0.1em !important;
+  font-size: 11px !important;
+  color: #fff !important;
+}
+.ranks-widget-btn:hover {
+  background: rgba(255,255,255,0.08) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}

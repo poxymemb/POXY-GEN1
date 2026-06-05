@@ -326,3 +326,132 @@
   line-height: 1.6;
   margin: 0;
 }
+
+/* ============================================================
+   WHITEPAPER V3 — Stitch Obsidian Pink Redesign
+   Accent: #f9a8d4 · Surface: #050506 · JetBrains Mono terminal
+   ============================================================ */
+
+/* Override accent to neon pink */
+.poxy-whitepaper-page {
+  --wp-accent:      #f9a8d4;
+  --wp-accent-glow: rgba(249,168,212,0.15);
+  --wp-bg:          #050506;
+  --wp-surface:     #0d0d0f;
+  --wp-border:      rgba(255,255,255,0.05);
+  --wp-border-hi:   rgba(255,255,255,0.10);
+}
+
+/* Ambient glow now pink */
+.wp-ambient__glow {
+  background: radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%);
+}
+
+/* Sidebar active — left pink border + pink icon (Stitch design) */
+.wp-sidebar__item--active {
+  color: #fff;
+  background: transparent;
+  border-color: transparent;
+  border-left: 3px solid #f9a8d4 !important;
+  box-shadow: none;
+}
+.wp-sidebar__item--active .material-symbols-outlined {
+  color: #f9a8d4;
+}
+
+/* Sidebar inner — glassmorphism card */
+.wp-sidebar__inner {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2.5rem;
+}
+
+/* Sidebar label — JetBrains Mono */
+.wp-sidebar__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+/* Kicker tag — neon pink instead of red */
+.wp-kicker {
+  background: rgba(249,168,212,0.10);
+  color: #f9a8d4;
+  border-color: rgba(249,168,212,0.22);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.wp-kicker::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #f9a8d4;
+  animation: wpDotPulse 2s ease-in-out infinite;
+}
+@keyframes wpDotPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(0.8); }
+}
+
+/* Page title — pink gradient */
+.wp-page-title {
+  background: linear-gradient(135deg, #ffffff 35%, #fbcfe8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Page desc border — pink */
+.wp-page-desc {
+  border-left-color: rgba(249,168,212,0.4);
+}
+
+/* Section sections — deeper surface */
+.wp-section {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2.5rem;
+}
+
+/* Section title icons — pink */
+.wp-section__title .material-symbols-outlined {
+  color: rgba(249,168,212,0.7);
+}
+
+/* Section hover overlay — pink tint */
+.wp-section__hover-overlay {
+  background: linear-gradient(135deg, rgba(249,168,212,0.04), transparent);
+}
+
+/* List bullet — pink */
+.wp-list li::before {
+  background: #f9a8d4;
+  box-shadow: 0 0 6px rgba(249,168,212,0.5);
+}
+
+/* Code block — dark terminal */
+.wp-code-block {
+  background: rgba(5,5,6,0.9);
+  border-color: rgba(255,255,255,0.05);
+}
+.wp-code-block .tok-kw   { color: #4ade80; font-weight: 700; }
+.wp-code-block .tok-fn   { color: #fff; font-weight: 700; }
+.wp-code-block .tok-str  { color: #f9a8d4; }
+.wp-code-block .tok-cmt  { color: rgba(249,168,212,0.5); font-style: italic; }
+
+/* Sub-card hover — pink border */
+.wp-sub-card:hover {
+  border-color: rgba(249,168,212,0.25);
+}
+.wp-sub-card__title {
+  color: #fff;
+}
+
+/* Background panels */
+.poxy-whitepaper-page,
+#stPanelWhitepaper {
+  background: #050506 !important;
+}

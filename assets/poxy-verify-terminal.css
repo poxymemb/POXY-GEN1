@@ -599,3 +599,269 @@
     opacity: 1 !important;
   }
 }
+
+/* ============================================================
+   VERIFY TERMINAL v3 — Stitch Animated Playground
+   split-color heading · pill filter tabs · mesh bg · glassmorphism
+   ============================================================ */
+
+/* Page background */
+#stPanelVerify,
+.poxy-verify-page {
+  background: #050506 !important;
+}
+
+/* Ambient mesh gradient */
+#stPanelVerify::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(147,51,234,0.07) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(236,72,153,0.07) 0%, transparent 50%);
+  animation: vtMeshFloat 20s ease-in-out infinite alternate;
+}
+@keyframes vtMeshFloat {
+  0%   { transform: scale(1) translate(0,0); }
+  50%  { transform: scale(1.05) translate(1%,1%); }
+  100% { transform: scale(1) translate(-1%,-1%); }
+}
+
+/* Header: split-color "Verification Playground" */
+.vt-header__title {
+  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
+  font-size: clamp(2rem,6vw,3.5rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+  color: #fff !important;
+}
+/* em tag = "Playground" = pink gradient */
+.vt-header__title em {
+  font-style: normal;
+  background: linear-gradient(135deg, #ec4899 0%, #f9a8d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Header protocol badge */
+.vt-header::before {
+  content: '⬡ VERIFICATION PROTOCOL';
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f9a8d4;
+  background: rgba(236,72,153,0.10);
+  border: 1px solid rgba(236,72,153,0.20);
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+/* Tab buttons → pill filter pills (Stitch style) */
+.vt-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+.vt-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px !important;
+  border-radius: 999px !important;
+  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.vt-tab-btn:not(.vt-tab-btn--active) {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: rgba(196,199,200,0.7) !important;
+}
+.vt-tab-btn:not(.vt-tab-btn--active):hover {
+  color: #fff !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+.vt-tab-btn--active {
+  background: rgba(236,72,153,0.12) !important;
+  border: 1px solid rgba(236,72,153,0.22) !important;
+  color: #fbcfe8 !important;
+}
+.vt-tab-btn .material-symbols-outlined {
+  font-size: 14px !important;
+}
+
+/* Input wrap: search bar */
+.vt-search-bar {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+.vt-search-input {
+  background: #050506 !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 999px !important;
+  padding-left: 24px !important;
+  padding-right: 120px !important;
+  height: 52px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px !important;
+  color: #fff !important;
+  width: 100% !important;
+}
+.vt-search-input::placeholder {
+  color: rgba(161,161,170,0.45) !important;
+  font-size: 12px !important;
+}
+.vt-search-btn {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  bottom: 4px;
+  background: #fff !important;
+  color: #080809 !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 0 24px !important;
+  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.vt-search-btn:hover {
+  background: #fbcfe8 !important;
+  transform: scale(1.01) !important;
+}
+
+/* Input section bento card */
+.vt-input-wrap {
+  background: #0d0d0f !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 1.5rem !important;
+  padding: 28px 32px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+@media (min-width: 768px) {
+  .vt-input-wrap {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .vt-input-wrap .vt-header { margin-bottom: 0; flex: 1; }
+  .vt-tabs-search { flex: 1; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+}
+
+/* Validation path panel */
+.vt-validation-panel {
+  background: #0d0d0f !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 1.5rem !important;
+}
+
+/* Receipt panel */
+.vt-receipt {
+  background: #0d0d0f !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 1.5rem !important;
+}
+
+/* Console terminal */
+.vt-console {
+  background: #0d0d0f !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 1.5rem !important;
+}
+
+/* Step icons — pink glow */
+.vt-step__icon--done {
+  background: #fbcfe8 !important;
+  border-color: #0d0d0f !important;
+}
+
+/* Step hash code */
+.vt-step__hash {
+  background: #050506 !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 6px !important;
+  color: #f9a8d4 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  padding: 8px 10px !important;
+  margin-top: 6px !important;
+  word-break: break-all;
+}
+
+/* Receipt badges */
+.vt-receipt__badge--ok {
+  background: rgba(20,184,166,0.12) !important;
+  border-color: rgba(20,184,166,0.25) !important;
+  color: #2dd4bf !important;
+}
+
+/* Download button */
+.vt-download-btn {
+  background: rgba(255,255,255,0.03) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+  font-family: 'Hanken Grotesk', Inter, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 12px 18px !important;
+  width: 100%;
+  justify-content: center;
+}
+.vt-download-btn:hover { background: rgba(255,255,255,0.08) !important; }
+
+/* Console toolbar dots */
+.vt-console__dot--r { background: rgba(255,96,88,0.4) !important; }
+.vt-console__dot--y { background: rgba(255,189,68,0.3) !important; }
+.vt-console__dot--g { background: rgba(40,200,64,0.3) !important; }
+
+/* Receipt field values */
+.vt-field__value {
+  background: #050506 !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  color: rgba(196,199,200,0.6) !important;
+  word-break: break-all;
+}

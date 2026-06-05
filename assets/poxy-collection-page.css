@@ -807,3 +807,386 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
 .poxy-col-item:hover[data-rarity="epic"]      { border-color: rgba(196,181,253,0.25) !important; }
 .poxy-col-item:hover[data-rarity="legendary"] { border-color: rgba(253,230,138,0.25) !important; }
 .poxy-col-item:hover[data-rarity="mythic"]    { border-color: rgba(251,207,232,0.30) !important; }
+
+/* ============================================================
+   INVENTORY TERMINAL v9 — Stitch Patches Sync Edition
+   bg #050506 · glass bento grid · pink FEATURED EVENT badge
+   ============================================================ */
+
+/* Page background */
+.poxy-collection-page,
+#collectionPage {
+  background: #050506 !important;
+  color: #e5e2e3;
+}
+
+/* ── Inventory Hero Header (Stitch bento top row) ── */
+.pxy-inv-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (min-width: 768px) {
+  .pxy-inv-header {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+}
+
+/* Hero feature card (left) */
+.pxy-inv-hero {
+  display: contents; /* children flow into grid */
+}
+
+.pxy-inv-hero-left {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 2.5rem;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 12px;
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+}
+.pxy-inv-hero-left::before {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  background: rgba(236,72,153,0.07);
+  border-radius: 50%;
+  filter: blur(120px);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+  animation: invHeroGlow 4s ease-in-out infinite alternate;
+}
+@keyframes invHeroGlow {
+  0%   { opacity: 0.7; }
+  100% { opacity: 1.0; }
+}
+
+.pxy-inv-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.pxy-inv-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+.pxy-inv-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+}
+
+.pxy-inv-event-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: #fff;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 999px;
+  width: fit-content;
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 1;
+}
+.pxy-inv-event-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #f9a8d4;
+  animation: invDotPulse 2s ease-in-out infinite;
+}
+@keyframes invDotPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.8); }
+}
+
+.pxy-inv-event-title {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0;
+  line-height: 1.1;
+  position: relative;
+  z-index: 1;
+  transition: color 0.4s;
+}
+.pxy-inv-hero-left:hover .pxy-inv-event-title { color: #fbcfe8; }
+
+.pxy-inv-event-desc {
+  font-size: 14px;
+  color: rgba(229,226,225,0.55);
+  max-width: 480px;
+  border-left: 1px solid rgba(249,168,212,0.4);
+  padding-left: 14px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin: 0;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+/* Burn Rates HUD (right column) */
+.pxy-inv-burn-hud {
+  background: #0d0d0f;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 2.5rem;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pxy-inv-burn-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pxy-inv-burn-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.10);
+  border: 1px solid rgba(239,68,68,0.20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pxy-inv-burn-icon-wrap .material-symbols-outlined {
+  font-size: 22px;
+  color: rgba(248,113,113,0.9);
+  font-variation-settings: 'FILL' 1;
+}
+.pxy-inv-burn-title {
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.pxy-inv-burn-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-top: 2px;
+}
+
+.pxy-inv-burn-rates {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+}
+.pxy-inv-burn-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.pxy-inv-burn-tier {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(229,226,225,0.55);
+}
+.pxy-inv-burn-tier--mythic { color: #fbbf24; }
+.pxy-inv-burn-tier--secret { color: #c084fc; }
+.pxy-inv-burn-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #fff;
+}
+
+/* ── Filter Utility Bar ── */
+.poxy-col-controls {
+  background: transparent !important;
+}
+
+/* Filter pills (ALL, COMMON, etc.) — rarity coded */
+.poxy-col-filter-dock {
+  background: rgba(13,13,15,0.9);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Override old border-bottom on filter dock */
+.poxy-col-filter-dock { border-bottom: none !important; padding-bottom: 8px !important; }
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Override JS-rendered filter buttons */
+.poxy-collection-page .filter-btn,
+#collectionPage .filter-btn {
+  padding: 5px 14px !important;
+  border-radius: 6px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  color: rgba(161,161,170,0.7) !important;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.poxy-collection-page .filter-btn:hover,
+#collectionPage .filter-btn:hover {
+  color: #fff !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+.poxy-collection-page .filter-btn.active,
+#collectionPage .filter-btn.active {
+  background: rgba(236,72,153,0.15) !important;
+  border-color: rgba(236,72,153,0.30) !important;
+  color: #fbcfe8 !important;
+}
+
+/* Action pills: SELECT, BURN, CRAFT */
+.poxy-col-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.poxy-col-multi-toggle {
+  padding: 7px 18px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: #fff !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.poxy-col-multi-toggle:hover { background: rgba(255,255,255,0.08) !important; }
+
+/* BURN capsule — red */
+.poxy-col-capsule-burn {
+  background: rgba(239,68,68,0.10) !important;
+  border: 1px solid rgba(239,68,68,0.25) !important;
+  color: rgba(248,113,113,0.9) !important;
+  border-radius: 999px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.1em !important;
+}
+.poxy-col-capsule-burn:hover:not(:disabled) {
+  background: rgba(239,68,68,0.20) !important;
+}
+
+/* CRAFT capsule — cyan */
+.poxy-col-capsule-craft {
+  background: rgba(6,182,212,0.08) !important;
+  border: 1px solid rgba(6,182,212,0.22) !important;
+  color: rgba(34,211,238,0.9) !important;
+  border-radius: 999px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.1em !important;
+}
+.poxy-col-capsule-craft:hover:not(:disabled) {
+  background: rgba(6,182,212,0.18) !important;
+}
+
+/* Forge button — craft icon */
+.poxy-col-forge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 18px !important;
+  border-radius: 999px !important;
+  background: rgba(6,182,212,0.08) !important;
+  border: 1px solid rgba(6,182,212,0.22) !important;
+  color: rgba(34,211,238,0.9) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  cursor: pointer;
+}
+
+/* Inventory grid — obsidian cards */
+.poxy-col-grid,
+.col-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 16px !important;
+}
+@media (min-width: 640px)  { .poxy-col-grid, .col-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+@media (min-width: 900px)  { .poxy-col-grid, .col-grid { grid-template-columns: repeat(4, 1fr) !important; } }
+@media (min-width: 1100px) { .poxy-col-grid, .col-grid { grid-template-columns: repeat(5, 1fr) !important; } }
+@media (min-width: 1400px) { .poxy-col-grid, .col-grid { grid-template-columns: repeat(6, 1fr) !important; } }
+
+/* Collection item cards — obsidian glass */
+.poxy-col-item {
+  background: #0d0d0f !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 24px !important;
+}
+.poxy-col-item:hover {
+  transform: translateY(-4px) !important;
+}
+
+/* Rarity badge — top-center positioned */
+.col-item-rarity-badge {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  padding: 4px 12px !important;
+  border-radius: 6px !important;
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}

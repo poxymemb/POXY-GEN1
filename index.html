@@ -37,15 +37,15 @@
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=5">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=3">
 <link rel="stylesheet" href="assets/poxy-quick-profile.css?v=6">
-<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=7">
+<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=8">
 <link rel="stylesheet" href="assets/poxy-rarity-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-club-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-club-gold.css?v=2">
-<link rel="stylesheet" href="assets/poxy-market-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-market-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=8">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=9">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=6">
@@ -63,9 +63,9 @@
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=2">
 <link rel="stylesheet" href="assets/poxy-telemetry.css?v=2">
-<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=2">
-<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=2">
-<link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=2">
+<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=3">
+<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=3">
+<link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=3">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
@@ -2940,15 +2940,49 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 <!-- COLLECTION PAGE — Tactical Archive -->
 <div class="page page-collection-wide poxy-page-collection poxy-collection-page" id="collectionPage">
   <div class="poxy-col-shell">
-    <header class="poxy-col-header">
-      <div class="poxy-col-header-main">
-        <h1 class="poxy-col-title" data-i18n="col.title">Tactical Archive</h1>
-        <div class="poxy-col-meta">
-          <span data-i18n="col.inventory">Inventory</span>
-          <span class="poxy-col-meta-count" id="colCount">—</span>
+    <!-- Inventory Terminal Header — Stitch Patches Sync v9 -->
+    <header class="poxy-col-header pxy-inv-header">
+      <!-- Hero feature card (left 8 cols) -->
+      <div class="pxy-inv-hero-left">
+        <div class="pxy-inv-meta-row">
+          <span class="pxy-inv-label" data-i18n="col.inventory">INVENTORY</span>
+          <span class="pxy-inv-count" id="colCount">—</span>
+        </div>
+        <div class="pxy-inv-event-badge">
+          <span class="pxy-inv-event-dot"></span>
+          Featured Event
+        </div>
+        <h1 class="pxy-inv-event-title">Syndicate Forge Live</h1>
+        <p class="pxy-inv-event-desc">Combine 5 Common assets to forge 1 Uncommon. Boosted drop rates active for the next 24 hours.</p>
+      </div>
+      <!-- Burn Rates HUD (right 4 cols) -->
+      <div class="pxy-inv-burn-hud">
+        <div class="pxy-inv-burn-head">
+          <div class="pxy-inv-burn-icon-wrap">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+          </div>
+          <div>
+            <div class="pxy-inv-burn-title">Burn Rates</div>
+            <div class="pxy-inv-burn-sub">Asset → PC Conversion</div>
+          </div>
+        </div>
+        <div class="pxy-inv-burn-rates">
+          <div class="pxy-inv-burn-row">
+            <span class="pxy-inv-burn-tier">Common</span>
+            <span class="pxy-inv-burn-val">0.10 PC</span>
+          </div>
+          <div class="pxy-inv-burn-row">
+            <span class="pxy-inv-burn-tier pxy-inv-burn-tier--mythic">Mythic</span>
+            <span class="pxy-inv-burn-val">40.0 PC</span>
+          </div>
+          <div class="pxy-inv-burn-row">
+            <span class="pxy-inv-burn-tier pxy-inv-burn-tier--secret">Secret</span>
+            <span class="pxy-inv-burn-val">100.0 PC</span>
+          </div>
         </div>
       </div>
-      <div class="poxy-col-header-actions" id="colHeaderBulk" hidden>
+      <!-- Bulk actions (JS-controlled, keep intact) -->
+      <div class="poxy-col-header-actions" id="colHeaderBulk" hidden style="grid-column:1/-1">
         <span class="poxy-col-bulk-count" id="bulkCount" data-i18n="col.bulk.selected" data-i18n-vars="n:0">0 selected</span>
         <button type="button" class="poxy-col-bulk-burn" id="btnBulkDust" data-i18n="col.bulk.burnAll">Burn All Selected</button>
       </div>
@@ -3132,14 +3166,18 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 <!-- MARKETPLACE PAGE (Stitch) -->
 <div class="page poxy-market-page" id="marketPage">
   <div class="poxy-market-shell">
-    <header class="poxy-market-header">
-      <h1 class="poxy-market-title">Marketplace</h1>
-      <nav class="poxy-market-tabs" role="tablist" aria-label="Marketplace">
-        <button type="button" role="tab" class="poxy-market-tab active" id="mTabBuy" onclick="switchMarketTab('buy')">Buy</button>
-        <button type="button" role="tab" class="poxy-market-tab" id="mTabSell" onclick="switchMarketTab('sell')">My Listings</button>
-      </nav>
+    <!-- Asset Exchange Header — Stitch Market Framework v3 -->
+    <header class="poxy-market-header pxy-ae-header">
+      <div class="pxy-ae-label-chip">
+        <span class="pxy-ae-label-dot"></span>
+        Asset Exchange
+      </div>
+      <div class="pxy-ae-tab-row">
+        <button type="button" role="tab" class="poxy-market-tab pxy-ae-tab active" id="mTabBuy" onclick="switchMarketTab('buy')">Buy</button>
+        <button type="button" role="tab" class="poxy-market-tab pxy-ae-tab" id="mTabSell" onclick="switchMarketTab('sell')">My Listings</button>
+      </div>
     </header>
-    <div class="poxy-market-toolbar" id="marketToolbar">
+    <div class="poxy-market-toolbar pxy-ae-toolbar" id="marketToolbar">
       <label class="poxy-market-search">
         <span class="material-symbols-outlined" aria-hidden="true">search</span>
         <input type="search" id="marketSearchInput" placeholder="Search tier or serial..." autocomplete="off" oninput="clearTimeout(window._mktDeb);window._mktDeb=setTimeout(window.onMarketSearchChange,200)"/>
@@ -3158,6 +3196,58 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         </select>
       </div>
     </div>
+    <!-- Bento Hero Grid — static design layer (Stitch v3) -->
+    <div class="pxy-ae-bento" id="pxyAeBento">
+      <!-- Hero Featured Listing -->
+      <div class="pxy-ae-hero-card">
+        <div class="pxy-ae-hero-art" aria-hidden="true">
+          <div class="pxy-ae-hero-art-glow"></div>
+          <div class="pxy-ae-hero-art-placeholder">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">deployed_code</span>
+          </div>
+        </div>
+        <div class="pxy-ae-hero-info">
+          <div class="pxy-ae-hero-badges">
+            <span class="pxy-ae-hero-badge pxy-ae-hero-badge--mythic">Mythic Rare</span>
+            <span class="pxy-ae-hero-badge pxy-ae-hero-badge--featured">
+              <span class="material-symbols-outlined">verified</span> Featured
+            </span>
+          </div>
+          <h2 class="pxy-ae-hero-title">VOID WALKER EXOSUIT</h2>
+          <p class="pxy-ae-hero-serial">Serial ID: #0001-ALPHA</p>
+          <div class="pxy-ae-hero-price-wrap">
+            <div class="pxy-ae-hero-price-label">Current Ask</div>
+            <div class="pxy-ae-hero-price">85,000 <span class="pxy-ae-hero-price-cur">PC</span></div>
+          </div>
+          <div class="pxy-ae-hero-actions">
+            <button class="pxy-ae-hero-btn-primary" onclick="showToast('Featured listing coming soon.')">Acquire Asset</button>
+            <button class="pxy-ae-hero-btn-fav" aria-label="Favourite"><span class="material-symbols-outlined">favorite</span></button>
+          </div>
+        </div>
+      </div>
+      <!-- Market Pulse Panel -->
+      <aside class="pxy-ae-pulse-card">
+        <h3 class="pxy-ae-pulse-title">Market Pulse</h3>
+        <div class="pxy-ae-pulse-stats">
+          <div class="pxy-ae-pulse-row">
+            <span class="pxy-ae-pulse-label">24h Volume</span>
+            <span class="pxy-ae-pulse-val" id="mktVol">1.2M PC</span>
+          </div>
+          <div class="pxy-ae-pulse-row">
+            <span class="pxy-ae-pulse-label">Floor Price</span>
+            <span class="pxy-ae-pulse-val pxy-ae-pulse-val--accent" id="mktFloor">4,500 PC</span>
+          </div>
+          <div class="pxy-ae-pulse-row">
+            <span class="pxy-ae-pulse-label">Active Listings</span>
+            <span class="pxy-ae-pulse-val" id="mktListings">—</span>
+          </div>
+        </div>
+        <button class="pxy-ae-pulse-analytics-btn" onclick="showToast('Full analytics coming soon.')">
+          View Full Analytics <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </aside>
+    </div>
+    <!-- Dynamic Listings Grid -->
     <div class="poxy-market-content" id="marketContent">
       <div class="poxy-market-loading"><div class="col-spinner"></div></div>
     </div>
