@@ -322,284 +322,260 @@ body.poxy-stitch-dash .poxy-collection-page.page{
 }
 
 /* ════════════════════════════════════════════════════════════════════
-   COLLECTION CONTROLS — POXY WORLD Obsidian Terminal v3
-   Zero glow. Zero neon. Pure tactical dark glass.
+   COLLECTION CONTROLS — POXY WORLD Tactical Console (Stitch 1:1 v4)
+   Split-panel: Left Telemetry | Right Action Power-Block
    ════════════════════════════════════════════════════════════════════ */
 
-/* ── Filter dock wrapper ── */
-.poxy-col-filter-dock{
+/* ── Outer control wrapper ── */
+.poxy-col-controls{display:flex;flex-direction:column;gap:12px}
+
+/* ── Master console container (micro-grid + corner ticks) ── */
+.poxy-col-console{
+  position:relative;
+  background:#050506;
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;
+  padding:20px 20px 18px;
+  overflow:hidden;
   display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px 12px;
-  padding:12px 0;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  margin-bottom:2px;
+  flex-direction:column;
+  gap:20px;
+}
+@media(min-width:1024px){
+  .poxy-col-console{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:32px}
 }
 
-/* ── Filter tab strip — bare horizontal list, no container box ── */
+/* Micro-grid texture */
+.poxy-col-console-grid{
+  position:absolute;inset:0;
+  pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle at 2px 2px,rgba(255,255,255,0.025) 1px,transparent 0);
+  background-size:16px 16px;
+}
+
+/* Corner tick marks */
+.poxy-col-tick{
+  position:absolute;width:8px;height:8px;
+  pointer-events:none;z-index:1;
+}
+.poxy-col-tick--tl{top:6px;left:6px;border-top:1px solid rgba(255,255,255,0.15);border-left:1px solid rgba(255,255,255,0.15)}
+.poxy-col-tick--tr{top:6px;right:6px;border-top:1px solid rgba(255,255,255,0.15);border-right:1px solid rgba(255,255,255,0.15)}
+.poxy-col-tick--bl{bottom:6px;left:6px;border-bottom:1px solid rgba(255,255,255,0.15);border-left:1px solid rgba(255,255,255,0.15)}
+.poxy-col-tick--br{bottom:6px;right:6px;border-bottom:1px solid rgba(255,255,255,0.15);border-right:1px solid rgba(255,255,255,0.15)}
+
+/* ── LEFT TELEMETRY ZONE ── */
+.poxy-col-left-zone{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  gap:16px;
+  flex-grow:1;min-width:0;
+}
+
+/* ── Filter tab strip ── */
 .poxy-col-filters{
-  display:flex;
-  flex-wrap:wrap;
-  gap:2px;
-  align-items:center;
-  min-width:0;
-  flex:1;
-  background:transparent;
-  border:none;
-  padding:0;
+  display:flex;flex-wrap:wrap;
+  gap:4px;align-items:center;
+  background:transparent;border:none;padding:0;
 }
-
-/* ── Individual filter tab ── */
 .poxy-col-filter-tab{
   position:relative;
-  padding:6px 14px;
+  padding:5px 12px;
   border:1px solid transparent;
-  border-radius:8px;
+  border-radius:999px;
   background:transparent;
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
+  font-size:11px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
   color:rgba(255,255,255,0.35);
   cursor:pointer;
-  transition:color 0.18s, background 0.18s, border-color 0.18s;
+  transition:color 0.18s,background 0.18s,border-color 0.18s;
   white-space:nowrap;
 }
 .poxy-col-filter-tab:hover{
   color:rgba(255,255,255,0.7);
-  border-color:rgba(255,255,255,0.05);
+  border-color:rgba(255,255,255,0.1);
 }
-/* Active: clean white glass outline — no tier colours, no glow */
 .poxy-col-filter-tab.active{
   color:#fff;
   background:rgba(255,255,255,0.05);
-  border-color:rgba(255,255,255,0.18);
+  border-color:rgba(255,255,255,0.15);
 }
 .poxy-col-filter-tab.active::after{display:none}
 
-/* ── SORT: DEFAULT capsule ── */
-.poxy-col-sort-wrap{position:relative;flex-shrink:0}
-.poxy-col-sort-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 13px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.03);
-  color:rgba(255,255,255,0.4);
+/* ── BURN → PC telemetry row ── */
+.poxy-col-burn-panel{
+  display:flex;flex-direction:column;
+  gap:8px;background:transparent;border:none;padding:0;border-radius:0;
+}
+@media(min-width:640px){
+  .poxy-col-burn-panel{flex-direction:row;align-items:center;gap:16px}
+}
+/* BURN → PC status pill */
+.poxy-col-burn-label{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:999px;
+  padding:6px 14px;
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  cursor:pointer;
-  transition:border-color 0.18s, color 0.18s, background 0.18s;
+  font-size:11px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.poxy-col-burn-label .material-symbols-outlined{font-size:14px;color:rgba(248,113,113,0.65)}
+/* Inline arrow icon */
+.poxy-col-arrow-icon{
+  font-size:12px !important;
+  vertical-align:middle;
+  color:inherit;opacity:0.7;
+}
+/* Metric chips row */
+.poxy-col-burn-rates{display:flex;flex-wrap:wrap;gap:6px}
+.poxy-col-burn-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#050506;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:999px;
+  padding:5px 12px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
   white-space:nowrap;
 }
-.poxy-col-sort-btn:hover{
-  border-color:rgba(255,255,255,0.16);
-  color:#fff;
-  background:rgba(255,255,255,0.05);
+.poxy-burn-chip-key{color:rgba(255,255,255,0.4)}
+.poxy-burn-chip-val{color:#fff}
+
+/* ── RIGHT ACTION POWER-BLOCK ── */
+.poxy-col-right-zone{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  gap:12px;
+  flex-shrink:0;
 }
+@media(min-width:1024px){width:460px}
+
+/* Row 1: utilities (SELECT MULTIPLE + SORT) */
+.poxy-col-utils{
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;
+  flex-wrap:wrap;
+}
+
+/* SELECT MULTIPLE */
+.poxy-col-multi-toggle{
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:#050506;
+  color:rgba(255,255,255,0.4);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;
+  transition:color 0.18s,border-color 0.18s,background 0.18s;
+  white-space:nowrap;
+}
+.poxy-col-multi-toggle:hover{color:#fff;border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.05)}
+.poxy-col-multi-toggle.is-active{color:#fff;background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.22)}
+@keyframes poxy-col-multi-pulse{0%,100%{opacity:1}}
+
+/* SORT dropdown trigger */
+.poxy-col-sort-wrap{position:relative;flex-shrink:0}
+.poxy-col-sort-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:#050506;
+  color:rgba(255,255,255,0.4);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;
+  transition:color 0.18s,border-color 0.18s,background 0.18s;
+  white-space:nowrap;
+}
+.poxy-col-sort-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.05)}
 .poxy-col-sort-btn .material-symbols-outlined{font-size:14px;opacity:0.6}
 
-/* ── Sort dropdown ── */
+/* Sort dropdown panel */
 .poxy-col-sort-menu{
-  position:absolute;right:0;
-  top:calc(100% + 6px);
+  position:absolute;right:0;top:calc(100% + 6px);
   min-width:200px;
   background:#050506;
   border:1px solid rgba(255,255,255,0.08);
-  border-radius:10px;
-  padding:4px;
-  box-shadow:0 24px 48px rgba(0,0,0,0.8);
-  z-index:50;
+  border-radius:10px;padding:4px;
+  box-shadow:0 24px 48px rgba(0,0,0,0.85);z-index:50;
 }
 .poxy-col-sort-menu.hidden{display:none}
 .poxy-col-sort-opt{
   display:block;width:100%;text-align:left;
-  padding:8px 12px;border:none;border-radius:6px;
-  background:transparent;
+  padding:8px 12px;border:none;border-radius:6px;background:transparent;
   color:rgba(255,255,255,0.4);
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;font-weight:600;
-  letter-spacing:0.1em;text-transform:uppercase;
-  cursor:pointer;
-  transition:background 0.12s,color 0.12s;
+  font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;transition:background 0.12s,color 0.12s;
 }
 .poxy-col-sort-opt:hover{background:rgba(255,255,255,0.05);color:#fff}
 .poxy-col-sort-opt.is-active{background:rgba(255,255,255,0.07);color:#fff}
 
-/* ── Toolbar row: SELECT MULTIPLE MODE + CRAFT ── */
-.poxy-col-toolbar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  align-items:center;
-  padding:8px 0 2px;
+/* Row 2: BURN + CRAFT action grid */
+.poxy-col-actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
 }
 
-/* SELECT MULTIPLE MODE — dark glass capsule */
-.poxy-col-multi-toggle{
-  padding:7px 16px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.03);
-  color:rgba(255,255,255,0.45);
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;font-weight:700;
-  letter-spacing:0.12em;text-transform:uppercase;
-  cursor:pointer;
-  transition:border-color 0.18s,color 0.18s,background 0.18s;
-}
-.poxy-col-multi-toggle:hover{
-  color:rgba(255,255,255,0.8);
-  border-color:rgba(255,255,255,0.15);
-  background:rgba(255,255,255,0.05);
-}
-.poxy-col-multi-toggle.is-active{
-  color:#fff;
-  background:rgba(255,255,255,0.07);
-  border-color:rgba(255,255,255,0.22);
-}
-/* kill old pulse */
-@keyframes poxy-col-multi-pulse{0%,100%{opacity:1}}
-
-/* CRAFT shortcut button — same glass capsule, NO glow/animation */
-.poxy-col-forge{
-  padding:7px 16px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:rgba(255,255,255,0.04);
-  color:rgba(255,255,255,0.7);
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;font-weight:700;
-  letter-spacing:0.12em;text-transform:uppercase;
-  cursor:pointer;
-  display:inline-flex;align-items:center;gap:7px;
-  flex-shrink:0;
-  animation:none !important;
-  box-shadow:none !important;
-  transition:border-color 0.18s,color 0.18s,background 0.18s,transform 0.18s;
-}
-.poxy-col-forge:hover{
-  color:#fff;
-  border-color:rgba(255,255,255,0.22);
-  background:rgba(255,255,255,0.08);
-  transform:translateY(-1px);
-}
-.poxy-col-forge:active{transform:translateY(0) scale(0.98)}
-.poxy-col-forge .material-symbols-outlined{font-size:14px;opacity:0.7}
-/* Kill plasma pulse completely */
-@keyframes poxy-plasma-pulse{0%,100%{box-shadow:none}}
-
-/* ── Wide action capsules: BURN / CRAFT ── */
-.poxy-col-capsule-row{
-  display:flex;flex-wrap:wrap;gap:8px;
-  padding:2px 0;
-}
+/* Base action button */
 .poxy-col-capsule{
-  flex:1;
-  min-width:min(100%,180px);
-  padding:11px 20px;
-  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 16px;
+  border-radius:8px;
   border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.03);
+  background:transparent;
   color:rgba(255,255,255,0.25);
   font-family:'JetBrains Mono',monospace;
   font-size:10px;font-weight:700;
-  letter-spacing:0.14em;text-transform:uppercase;
+  letter-spacing:0.1em;text-transform:uppercase;
   cursor:pointer;
   text-align:center;
-  transition:color 0.2s,border-color 0.2s,background 0.2s,transform 0.18s;
+  transition:color 0.2s,border-color 0.2s,background 0.2s;
 }
 .poxy-col-capsule:disabled{opacity:0.3;cursor:not-allowed}
+.poxy-col-capsule .poxy-col-arrow-icon,.poxy-col-capsule .poxy-craft-sep{opacity:0.5}
 
-/* BURN — muted red accent, no solid fill */
-.poxy-col-capsule-burn:not(:disabled){
-  color:rgba(248,113,113,0.75);
+/* BURN — muted tactical red */
+.poxy-col-capsule-burn{
   border-color:rgba(239,68,68,0.2);
-  background:transparent;
+  color:rgba(248,113,113,0.7);
 }
 .poxy-col-capsule-burn:not(:disabled):hover{
-  color:rgba(248,113,113,0.95);
-  border-color:rgba(239,68,68,0.35);
-  background:rgba(239,68,68,0.06);
-  transform:translateY(-1px);
+  color:rgba(248,113,113,1);
+  border-color:rgba(239,68,68,0.4);
+  background:rgba(239,68,68,0.07);
 }
 
-/* CRAFT — white glass, same premium level as EQUIP button */
-.poxy-col-capsule-craft:not(:disabled){
-  color:rgba(255,255,255,0.75);
+/* CRAFT — white glass premium */
+.poxy-col-capsule-craft{
   border-color:rgba(255,255,255,0.1);
   background:rgba(255,255,255,0.04);
+  color:rgba(255,255,255,0.8);
 }
 .poxy-col-capsule-craft:not(:disabled):hover{
   color:#fff;
-  border-color:rgba(255,255,255,0.25);
+  border-color:rgba(255,255,255,0.22);
   background:rgba(255,255,255,0.09);
-  transform:translateY(-1px);
 }
 
-/* Ready state: subtle border brightens only */
+/* Ready states */
 .poxy-col-capsule.poxy-capsule-ready{animation:none}
-.poxy-col-capsule-burn.poxy-capsule-ready{
-  border-color:rgba(239,68,68,0.4);
-  color:rgba(248,113,113,0.95);
-}
-.poxy-col-capsule-craft.poxy-capsule-ready{
-  border-color:rgba(255,255,255,0.28);
-  color:#fff;
-}
+.poxy-col-capsule-burn.poxy-capsule-ready{border-color:rgba(239,68,68,0.4);color:rgba(248,113,113,1)}
+.poxy-col-capsule-craft.poxy-capsule-ready{border-color:rgba(255,255,255,0.28);color:#fff}
 @keyframes poxy-capsule-ready-glow{0%,100%{opacity:1}}
 
-/* ── BURN → PC telemetry strip ── */
-.poxy-col-burn-panel{
-  background:transparent;
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:10px;
-  padding:10px 14px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-@media(min-width:768px){
-  .poxy-col-burn-panel{flex-direction:row;align-items:center;justify-content:space-between}
-}
-.poxy-col-burn-label{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.5);
-}
-.poxy-col-burn-label .material-symbols-outlined{
-  font-size:15px;
-  color:rgba(248,113,113,0.6);
-}
-.poxy-col-burn-rates{display:flex;flex-wrap:wrap;gap:5px}
-/* Terminal badge chips */
-.poxy-col-burn-chip{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  padding:4px 10px;
-  border-radius:5px;
-  background:#050506;
-  border:1px solid rgba(255,255,255,0.05);
-  color:rgba(255,255,255,0.6);
-  white-space:nowrap;
-}
+/* Legacy class names — keep empty so JS class toggles don't break */
+.poxy-col-filter-dock,.poxy-col-toolbar,.poxy-col-capsule-row,.poxy-col-forge{display:none}
+@keyframes poxy-plasma-pulse{0%,100%{box-shadow:none}}
+@keyframes poxy-col-multi-pulse{0%,100%{opacity:1}}
 
 /* Alchemical Processing Zone */
 .poxy-col-craft-zone{
