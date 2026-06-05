@@ -319,18 +319,41 @@
    Screen: 2fed15a5deb440bab2418f2722eb33b7
    ════════════════════════════════════════════════════════════════════ */
 
-/* Card root: bg-[#050506] border-white/5 rounded-[2rem] */
-.pcard--passport {
-  border-radius: 32px;
+/* Card root: bg-[#050506] border-white/5 rounded-[2rem]
+   Use !important to override the legacy .col-inv-card rules in
+   poxy-collection-page.css which aggressively set border-radius,
+   background gradient, aspect-ratio, and padding with !important. */
+.pcard--passport,
+.pcard--passport.col-inv-card,
+.poxy-collection-page .col-inv-card.pcard--passport,
+#collectionPage .col-inv-card.pcard--passport {
+  border-radius: 32px !important;
   background: #050506 !important;
-  border-color: rgba(255,255,255,0.05);
-  cursor: pointer;
-  transition: border-color 0.25s, transform 0.25s;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.05) !important;
+  box-shadow: none !important;
+  aspect-ratio: auto !important;     /* NOT square — passport needs natural height */
+  padding: 0 !important;             /* padding lives inside .pcard-pp */
+  cursor: pointer !important;
+  transition: border-color 0.25s, transform 0.25s !important;
+  min-height: 0 !important;
+  contain-intrinsic-size: auto !important;
+  content-visibility: auto;
 }
-.pcard--passport:hover {
-  border-color: rgba(255,255,255,0.14);
-  transform: translateY(-2px);
+.pcard--passport:hover,
+.pcard--passport.col-inv-card:hover,
+.poxy-collection-page .col-inv-card.pcard--passport:hover,
+#collectionPage .col-inv-card.pcard--passport:hover {
+  border-color: rgba(255,255,255,0.14) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: none !important;
 }
+/* Strip the legacy ::before shimmer overlay on passport cards */
+.poxy-collection-page .col-inv-card.pcard--passport::before,
+#collectionPage .col-inv-card.pcard--passport::before {
+  display: none !important;
+}
+/* All rarities: flat obsidian */
 .pcard--passport[data-rarity],
 .pcard--passport[data-rarity="common"],
 .pcard--passport[data-rarity="uncommon"],

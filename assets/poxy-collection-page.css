@@ -686,13 +686,14 @@ body.poxy-stitch-dash .poxy-collection-page.page{
 
 .poxy-col-main{min-width:0}
 
-/* High-density inventory grid — same cell sizing as legacy col-grid-wide */
+/* Passport card grid — Stitch: sm:grid-cols-2 lg:grid-cols-4 gap-gutter(24px)
+   Min 240px so passport cards have room for avatar + serial + data rows */
 .poxy-col-inventory-grid,
 #collectionPage .poxy-col-inventory-grid{
   display:grid!important;
-  grid-template-columns:repeat(auto-fill,minmax(176px,1fr))!important;
-  gap:16px!important;
-  align-items:stretch;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr))!important;
+  gap:24px!important;
+  align-items:start!important;  /* stretch→start: passport cards are variable height */
 }
 
 /* Matte titanium inventory cards */

@@ -400,11 +400,10 @@
       card.style.setProperty('--foil-y', '0.5');
 
       if (layout === 'passport') {
-        // ── Passport layout: BG + FX + passport content ──
+        // ── Passport layout: flat #050506, NO bg/fx gradient layers ──
+        // Stitch spec: bg-[#050506] border-white/5 — completely flat obsidian.
+        // Rarity is communicated only via tier badge colour and avatar icon colour.
         card.classList.add('pcard--passport');
-        card.appendChild(_buildBgLayer(rarity));
-        card.appendChild(_buildFxLayer(rarity));
-        // Pass renderer info so avatar shows image when available
         card.appendChild(_buildPassportContent(item, tier, dateStr, opts));
       } else {
         // ── Classic layered layout ──
