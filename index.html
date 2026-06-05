@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=11">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=12">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=6">
@@ -61,7 +61,7 @@
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
-<link rel="stylesheet" href="assets/poxy-card-engine.css?v=3">
+<link rel="stylesheet" href="assets/poxy-card-engine.css?v=4">
 <link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
@@ -72,7 +72,7 @@
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-ambient.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
-<script src="assets/poxy-card-engine.js?v=3" defer></script>
+<script src="assets/poxy-card-engine.js?v=4" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=2" defer></script>
@@ -3045,53 +3045,74 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 <!-- COLLECTION PAGE — Tactical Archive -->
 <div class="page page-collection-wide poxy-page-collection poxy-collection-page" id="collectionPage">
   <div class="poxy-col-shell">
-    <!-- Inventory Terminal Header — Stitch Patches Sync v9 -->
-    <header class="poxy-col-header pxy-inv-header">
-      <!-- Hero feature card (left 8 cols) -->
-      <div class="pxy-inv-hero-left">
-        <div class="pxy-inv-meta-row">
-          <span class="pxy-inv-label" data-i18n="col.inventory">INVENTORY</span>
-          <span class="pxy-inv-count" id="colCount">—</span>
-        </div>
-        <div class="pxy-inv-event-badge">
-          <span class="pxy-inv-event-dot"></span>
-          Featured Event
-        </div>
-        <h1 class="pxy-inv-event-title">Syndicate Forge Live</h1>
-        <p class="pxy-inv-event-desc">Combine 5 Common assets to forge 1 Uncommon. Boosted drop rates active for the next 24 hours.</p>
+    <!-- ── Tactical Archive Header (Stitch: POXY - Tactical Archive Obsidian Protocol Restored) ── -->
+    <header class="poxy-col-arch-header">
+      <div class="poxy-col-arch-title-block">
+        <h1 class="poxy-col-arch-title">Tactical Archive</h1>
+        <p class="poxy-col-arch-desc">Your complete operational inventory. Manage assets, review metadata, and deploy tactical units to the grid.</p>
       </div>
-      <!-- Burn Rates HUD (right 4 cols) -->
-      <div class="pxy-inv-burn-hud">
-        <div class="pxy-inv-burn-head">
-          <div class="pxy-inv-burn-icon-wrap">
-            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">local_fire_department</span>
-          </div>
-          <div>
-            <div class="pxy-inv-burn-title">Burn Rates</div>
-            <div class="pxy-inv-burn-sub">Asset → PC Conversion</div>
-          </div>
-        </div>
-        <div class="pxy-inv-burn-rates">
-          <div class="pxy-inv-burn-row">
-            <span class="pxy-inv-burn-tier">Common</span>
-            <span class="pxy-inv-burn-val">0.10 PC</span>
-          </div>
-          <div class="pxy-inv-burn-row">
-            <span class="pxy-inv-burn-tier pxy-inv-burn-tier--mythic">Mythic</span>
-            <span class="pxy-inv-burn-val">40.0 PC</span>
-          </div>
-          <div class="pxy-inv-burn-row">
-            <span class="pxy-inv-burn-tier pxy-inv-burn-tier--secret">Secret</span>
-            <span class="pxy-inv-burn-val">100.0 PC</span>
-          </div>
-        </div>
-      </div>
-      <!-- Bulk actions (JS-controlled, keep intact) -->
-      <div class="poxy-col-header-actions" id="colHeaderBulk" hidden style="grid-column:1/-1">
-        <span class="poxy-col-bulk-count" id="bulkCount" data-i18n="col.bulk.selected" data-i18n-vars="n:0">0 selected</span>
-        <button type="button" class="poxy-col-bulk-burn" id="btnBulkDust" data-i18n="col.bulk.burnAll">Burn All Selected</button>
+      <div class="poxy-col-arch-actions">
+        <!-- Filter pill — opens the existing filter dock -->
+        <button type="button" class="poxy-col-arch-pill" onclick="document.getElementById('filterRow')?.scrollIntoView({behavior:'smooth'})">
+          <span class="material-symbols-outlined">filter_list</span>
+          <span>FILTER ASSETS</span>
+          <span class="material-symbols-outlined poxy-col-arch-chevron">expand_more</span>
+        </button>
+        <!-- Sort pill — opens existing sort menu -->
+        <button type="button" class="poxy-col-arch-pill" onclick="document.getElementById('colSortBtn')?.click()">
+          <span class="material-symbols-outlined">sort</span>
+          <span id="archSortLabel">RARITY: HIGH TO LOW</span>
+          <span class="material-symbols-outlined poxy-col-arch-chevron">expand_more</span>
+        </button>
       </div>
     </header>
+    <!-- ── 4 Telemetry Metrics (Stitch spec) ── -->
+    <div class="poxy-col-metrics-grid">
+      <div class="poxy-col-metric-card">
+        <div class="poxy-col-metric-top">
+          <span class="poxy-col-metric-label">TOTAL ASSETS</span>
+          <span class="material-symbols-outlined poxy-col-metric-icon">inventory_2</span>
+        </div>
+        <div class="poxy-col-metric-bottom">
+          <span class="poxy-col-metric-val" id="archMetricTotal">—</span>
+          <span class="poxy-col-metric-sub poxy-col-metric-sub--accent" id="archMetricTotalSub">+0 THIS WEEK</span>
+        </div>
+      </div>
+      <div class="poxy-col-metric-card">
+        <div class="poxy-col-metric-top">
+          <span class="poxy-col-metric-label">LEGENDARY CORE</span>
+          <span class="material-symbols-outlined poxy-col-metric-icon poxy-col-metric-icon--gold" style="font-variation-settings:'FILL' 1">stars</span>
+        </div>
+        <div class="poxy-col-metric-bottom">
+          <span class="poxy-col-metric-val" id="archMetricLegendary">—</span>
+          <span class="poxy-col-metric-sub" id="archMetricLegendarySub">TOP 5% HOLDERS</span>
+        </div>
+      </div>
+      <div class="poxy-col-metric-card">
+        <div class="poxy-col-metric-top">
+          <span class="poxy-col-metric-label">EST. VALUE</span>
+          <span class="material-symbols-outlined poxy-col-metric-icon poxy-col-metric-icon--pink">account_balance_wallet</span>
+        </div>
+        <div class="poxy-col-metric-bottom">
+          <span class="poxy-col-metric-val" id="archMetricValue">—</span>
+          <span class="poxy-col-metric-sub">PX</span>
+        </div>
+      </div>
+      <div class="poxy-col-metric-card poxy-col-metric-card--deploy">
+        <div class="poxy-col-metric-top">
+          <span class="poxy-col-metric-label poxy-col-metric-label--white">DEPLOY SQUAD</span>
+          <span class="material-symbols-outlined poxy-col-metric-icon poxy-col-metric-icon--pink" style="font-variation-settings:'FILL' 1">rocket_launch</span>
+        </div>
+        <div class="poxy-col-metric-bottom">
+          <span class="poxy-col-metric-deploy-sub" id="archMetricDeploy">3 UNITS READY FOR ACTIVE DUTY</span>
+        </div>
+      </div>
+    </div>
+    <!-- Bulk actions (JS-controlled, keep intact) -->
+    <div class="poxy-col-header-actions" id="colHeaderBulk" hidden>
+      <span class="poxy-col-bulk-count" id="bulkCount" data-i18n="col.bulk.selected" data-i18n-vars="n:0">0 selected</span>
+      <button type="button" class="poxy-col-bulk-burn" id="btnBulkDust" data-i18n="col.bulk.burnAll">Burn All Selected</button>
+    </div>
     <div class="poxy-col-controls">
       <div class="poxy-col-filter-dock">
         <div class="poxy-col-filters filter-row" id="filterRow"></div>
@@ -3143,6 +3164,11 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
       </div>
     </div>
     <main class="poxy-col-main">
+      <!-- Active Inventory sub-header (Stitch spec) -->
+      <div class="poxy-col-inv-header">
+        <h2 class="poxy-col-inv-title">Active Inventory</h2>
+        <span class="poxy-col-inv-count" id="archDisplayCount">DISPLAYING: — OF —</span>
+      </div>
       <div id="colContent"><div class="col-loading poxy-col-loading"><div class="col-spinner"></div></div></div>
     </main>
   </div>
@@ -7706,6 +7732,7 @@ async function loadCollection(){
     colData=data||[];
     renderFilterButtons();renderCollection();
     renderDashColPreview();
+    refreshColArchMetrics();
     if(cnt)cnt.textContent=colData.length?String(colData.length):'0';
     syncStoreData();
     if($('storeGrid')&&currentProfile)renderStoreGrid();
@@ -7873,6 +7900,30 @@ function buildColCardMenuHtml(item){
   );
 }
 
+// ── Tactical Archive metrics (4 top telemetry cards) ──────────────────────
+function refreshColArchMetrics(){
+  if(!colData)return;
+  const total=colData.length;
+  const legendary=colData.filter(i=>i.poxy_tier==='legendary'||i.poxy_tier==='mythic').length;
+  // Estimated value: rough burn-rate weighted sum
+  const BURN={common:0.1,uncommon:0.5,rare:2,epic:8,legendary:40,mythic:100,secret:100};
+  const estVal=Math.round(colData.reduce((s,i)=>s+(BURN[i.poxy_tier]||0.1),0));
+  const deployReady=colData.filter(i=>['rare','epic','legendary','mythic'].includes(i.poxy_tier)).length;
+
+  const el=id=>document.getElementById(id);
+  if(el('archMetricTotal'))el('archMetricTotal').textContent=total||'0';
+  if(el('archMetricLegendary'))el('archMetricLegendary').textContent=legendary||'0';
+  if(el('archMetricValue'))el('archMetricValue').textContent=estVal?estVal.toLocaleString():'0';
+  if(el('archMetricDeploy'))el('archMetricDeploy').textContent=(deployReady||'0')+' UNITS READY FOR ACTIVE DUTY';
+
+  // Display count updated after filtering
+  const base=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
+  if(el('archDisplayCount')){
+    const shown=Math.min(base.length,base.length); // show all
+    el('archDisplayCount').textContent=base.length?'DISPLAYING: 1–'+shown+' OF '+total:'DISPLAYING: — OF '+total;
+  }
+}
+
 function renderCollection(){
   const cont=$('colContent');
   if(!cont)return;
@@ -7943,6 +7994,8 @@ function renderCollection(){
     if(gridEl)PoxyHudAudio.bindCollectionGrid(gridEl);
   }
   syncColCardSelectionUi();
+  // Refresh Tactical Archive metrics after each render
+  refreshColArchMetrics();
 }
 
 // ── PIN TOGGLE ──

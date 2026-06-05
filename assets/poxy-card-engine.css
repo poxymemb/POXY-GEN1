@@ -317,10 +317,17 @@
    PASSPORT LAYOUT  — matches the POXY ID card design
    ════════════════════════════════════════════════════════════════════ */
 
+/* Passport card — matches Stitch: bg-[#050506] border-white/5 rounded-[2rem] p-7 */
 .pcard--passport {
-  border-radius: 18px;
-  border-color: rgba(255,255,255,0.07);
+  border-radius: 32px;
+  background: #050506 !important;
+  border-color: rgba(255,255,255,0.05);
   cursor: pointer;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.pcard--passport:hover {
+  border-color: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
 }
 
 /* Inner passport content wrapper */
@@ -330,7 +337,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 16px 16px 14px;
+  padding: 22px 22px 18px;
 }
 
 /* ── Header row: POXY ID / TIER BADGE ── */
@@ -419,11 +426,13 @@
 
 .pcard-pp-number {
   font-family: 'JetBrains Mono', 'Inter', monospace;
-  font-size: 20px;
+  /* Stitch: text-2xl font-bold tracking-wider */
+  font-size: 18px;
   font-weight: 700;
   color: #fff;
   line-height: 1;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
 }
 
 .pcard-pp-owner-label {
@@ -491,13 +500,17 @@
   letter-spacing: 0.12em;
 }
 
-/* ── Rarity-specific bg tints for passport ── */
-.pcard--passport[data-rarity="common"]    { background: linear-gradient(160deg, #13111a 0%, #0e0c13 100%); }
-.pcard--passport[data-rarity="uncommon"]  { background: linear-gradient(160deg, #0c1310 0%, #091009 100%); }
-.pcard--passport[data-rarity="rare"]      { background: linear-gradient(160deg, #080f1a 0%, #050c15 100%); }
-.pcard--passport[data-rarity="epic"]      { background: linear-gradient(160deg, #0e0618 0%, #090412 100%); }
-.pcard--passport[data-rarity="legendary"]{ background: radial-gradient(ellipse at 50% 0%, #1a1200 0%, #0b0900 70%); }
-.pcard--passport[data-rarity="mythic"]   { background: radial-gradient(ellipse at 50% 0%, #14090e 0%, #050506 80%); }
+/* ── Rarity-specific backgrounds for passport ──
+   Obsidian Protocol: all use #050506 flat black.
+   Rarity is communicated via tier badge color + avatar glow only. */
+.pcard--passport[data-rarity="common"],
+.pcard--passport[data-rarity="uncommon"],
+.pcard--passport[data-rarity="rare"],
+.pcard--passport[data-rarity="epic"],
+.pcard--passport[data-rarity="legendary"],
+.pcard--passport[data-rarity="mythic"] {
+  background: #050506 !important;
+}
 
 /* ── Responsive compact ── */
 @media (max-width: 480px) {

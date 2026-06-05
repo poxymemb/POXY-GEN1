@@ -130,16 +130,33 @@
     return bg;
   }
 
+  /* ─── Tactical serial generator ────────────────────────────────── */
+  // Produces deterministic PX-XXXXXX codes from item identity.
+  // Replaces generic #001/#492 IDs with cryptographic-looking keys.
+  function _genTacticalSerial(item) {
+    const src = String(item.id || item.serial_number || item.dropped_at || '').replace(/-/g, '');
+    // DJB2-style hash for determinism
+    let h = 5381;
+    for (let i = 0; i < src.length; i++) {
+      h = ((h << 5) + h + src.charCodeAt(i)) | 0;
+    }
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = 'PX-';
+    let seed = Math.abs(h);
+    for (let i = 0; i < 6; i++) {
+      code += chars[seed % chars.length];
+      seed = Math.abs(Math.imul(seed, 1664525) + 1013904223 + i * 31337);
+    }
+    return code;
+  }
+
   /* ─── Build PASSPORT layout (full card) ────────────────────────── */
   function _buildPassportContent(item, tier, dateStr) {
     const rarity = item.poxy_tier || 'common';
     const cfg = RARITY_CONFIG[rarity] || RARITY_CONFIG.common;
 
-    // serial → #XXXX display
-    const serial = item.serial_number || '';
-    const numDisplay = item.vip_serial != null
-      ? '#' + item.vip_serial
-      : (serial ? '#' + serial.slice(-4).toUpperCase() : '#–');
+    // Tactical serial code — PX-XXXXXX format
+    const numDisplay = _genTacticalSerial(item);
 
     // owner hash from item id
     const id = String(item.id || '');
