@@ -265,26 +265,10 @@ body.poxy-stitch-dash .search-hint{color:#9d8b9b}
 #stPanelMarket { background: #050506 !important; }
 .poxy-market-page { background: #050506 !important; }
 
-/* Ambient mesh blobs — panel-scoped (not viewport-fixed) */
+/* Ambient glow — unified in poxy-obsidian-ambient.css */
 .poxy-market-page::before,
 .poxy-market-page::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(140px);
-  opacity: 0.18;
-  z-index: 0;
-  pointer-events: none;
-}
-.poxy-market-page::before {
-  top: -10%; left: -10%;
-  width: 40vw; height: 40vw;
-  background: rgba(244,114,182,0.06);
-}
-.poxy-market-page::after {
-  top: 55%; right: -10%;
-  width: 50vw; height: 50vw;
-  background: rgba(255,255,255,0.02);
+  display: none;
 }
 
 /* Title headline upgrade */
