@@ -124,11 +124,96 @@
     const cfg = RARITY_CONFIG[rarity] || RARITY_CONFIG.common;
     const bg = _el('div', 'pcard-bg');
     bg.style.background = cfg.bg;
-    // Inner edge vignette ring
     const ring = _el('div', 'pcard-bg-ring');
     ring.style.boxShadow = 'inset 0 0 32px ' + cfg.glow;
     bg.appendChild(ring);
     return bg;
+  }
+
+  /* ─── Build PASSPORT layout (full card) ────────────────────────── */
+  function _buildPassportContent(item, tier, dateStr) {
+    const rarity = item.poxy_tier || 'common';
+    const cfg = RARITY_CONFIG[rarity] || RARITY_CONFIG.common;
+
+    // serial → #XXXX display
+    const serial = item.serial_number || '';
+    const numDisplay = item.vip_serial != null
+      ? '#' + item.vip_serial
+      : (serial ? '#' + serial.slice(-4).toUpperCase() : '#–');
+
+    // owner hash from item id
+    const id = String(item.id || '');
+    const hashDisplay = id.length > 8
+      ? '0x' + id.slice(0, 3).toUpperCase() + '…' + id.slice(-4).toUpperCase()
+      : '0x···';
+
+    // issued date → YYYY.MM.DD
+    const d = new Date(item.dropped_at);
+    const issuedStr = isNaN(d)
+      ? dateStr
+      : d.getFullYear() + '.' +
+        String(d.getMonth() + 1).padStart(2, '0') + '.' +
+        String(d.getDate()).padStart(2, '0');
+
+    const wrap = _el('div', 'pcard-pp');
+
+    // ── Header row ──
+    const hdr = _el('div', 'pcard-pp-header');
+    const idLabel = _el('span', 'pcard-pp-id-label');
+    idLabel.textContent = 'POXY ID';
+    const tierBadge = _el('span', 'pcard-pp-tier-badge');
+    tierBadge.textContent = tier.label.toUpperCase() + ' TIER';
+    tierBadge.style.borderColor = tier.color + '66';
+    tierBadge.style.color = tier.color;
+    hdr.appendChild(idLabel);
+    hdr.appendChild(tierBadge);
+    wrap.appendChild(hdr);
+
+    // ── Identity row ──
+    const ident = _el('div', 'pcard-pp-identity');
+    // Avatar
+    const av = _el('div', 'pcard-pp-avatar');
+    av.style.setProperty('--avatar-glow', cfg.glow);
+    const avIcon = _el('span', 'material-symbols-outlined pcard-pp-avatar-icon');
+    avIcon.style.color = tier.color;
+    avIcon.textContent = STITCH_TIER_ICON
+      ? (STITCH_TIER_ICON[tier.id] || 'view_in_ar')
+      : 'view_in_ar';
+    av.appendChild(avIcon);
+    // Info block
+    const info = _el('div', 'pcard-pp-asset-info');
+    const numEl = _el('div', 'pcard-pp-number');
+    numEl.textContent = numDisplay;
+    const ownerLbl = _el('div', 'pcard-pp-owner-label');
+    ownerLbl.textContent = 'VERIFIED OWNER';
+    const hashEl = _el('div', 'pcard-pp-hash');
+    hashEl.textContent = hashDisplay;
+    info.appendChild(numEl);
+    info.appendChild(ownerLbl);
+    info.appendChild(hashEl);
+    ident.appendChild(av);
+    ident.appendChild(info);
+    wrap.appendChild(ident);
+
+    // ── Divider ──
+    wrap.appendChild(_el('div', 'pcard-pp-divider'));
+
+    // ── Data rows ──
+    const data = _el('div', 'pcard-pp-data');
+    function addRow(key, val, extraClass) {
+      const row = _el('div', 'pcard-pp-row');
+      const k = _el('span', 'pcard-pp-key'); k.textContent = key;
+      const v = _el('span', 'pcard-pp-val' + (extraClass ? ' ' + extraClass : ''));
+      v.textContent = val;
+      row.appendChild(k); row.appendChild(v);
+      data.appendChild(row);
+    }
+    addRow('ISSUED', issuedStr);
+    addRow('STATUS', 'ACTIVE', 'pcard-pp-active');
+    addRow('NETWORK', 'MAINNET');
+    wrap.appendChild(data);
+
+    return wrap;
   }
 
   /* ─── Build FX layer (Layer 1) ──────────────────────────────────── */
@@ -277,11 +362,7 @@
      */
     buildCard(item, tier, dateStr, opts = {}) {
       const rarity = item.poxy_tier || 'common';
-      const renderer = opts.renderer || 'icon';
-      const renderData = opts.rendererData || {
-        color: tier.color,
-        symbol: opts.symbol || 'view_in_ar',
-      };
+      const layout = opts.layout || 'passport'; // 'passport' | 'classic'
 
       // ── Root card
       const card = _el('div', 'pcard');
@@ -293,17 +374,21 @@
       card.style.setProperty('--foil-x', '0.5');
       card.style.setProperty('--foil-y', '0.5');
 
-      // ── Layer 0: Background
-      card.appendChild(_buildBgLayer(rarity));
-
-      // ── Layer 1: FX
-      card.appendChild(_buildFxLayer(rarity));
-
-      // ── Layer 2: Asset viewport
-      card.appendChild(_buildViewport(renderer, renderData));
-
-      // ── Layer 3: Metadata (reserved zone — never overlaps viewport)
-      card.appendChild(_buildMetaLayer(item, tier, dateStr));
+      if (layout === 'passport') {
+        // ── Passport layout: BG + FX + passport content ──
+        card.classList.add('pcard--passport');
+        card.appendChild(_buildBgLayer(rarity));
+        card.appendChild(_buildFxLayer(rarity));
+        card.appendChild(_buildPassportContent(item, tier, dateStr));
+      } else {
+        // ── Classic layered layout ──
+        const renderer = opts.renderer || 'icon';
+        const renderData = opts.rendererData || { color: tier.color, symbol: opts.symbol || 'view_in_ar' };
+        card.appendChild(_buildBgLayer(rarity));
+        card.appendChild(_buildFxLayer(rarity));
+        card.appendChild(_buildViewport(renderer, renderData));
+        card.appendChild(_buildMetaLayer(item, tier, dateStr));
+      }
 
       // Register with engine
       _registerCard(card, rarity);

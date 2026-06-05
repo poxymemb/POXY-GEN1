@@ -308,12 +308,201 @@
   .pcard { animation: none; transition: none; }
 }
 
-/* ── Grid integration: make .pcard slot into existing col-grid ─────── */
-.col-grid .pcard,
-.col-club-grid .pcard {
-  /* The engine card fully replaces .col-card visually */
+/* ── Grid integration ──────────────────────────────────────────────── */
+.col-grid.col-grid-wide .pcard {
+  aspect-ratio: unset; /* passport cards are height-auto */
 }
 
-.col-grid.col-grid-wide .pcard {
-  aspect-ratio: 3 / 4;
+/* ════════════════════════════════════════════════════════════════════
+   PASSPORT LAYOUT  — matches the POXY ID card design
+   ════════════════════════════════════════════════════════════════════ */
+
+.pcard--passport {
+  border-radius: 18px;
+  border-color: rgba(255,255,255,0.07);
+  cursor: pointer;
+}
+
+/* Inner passport content wrapper */
+.pcard-pp {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 16px 16px 14px;
+}
+
+/* ── Header row: POXY ID / TIER BADGE ── */
+.pcard-pp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.pcard-pp-id-label {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.pcard-pp-tier-badge {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+/* ── Identity row: avatar + asset info ── */
+.pcard-pp-identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+/* Avatar box */
+.pcard-pp-avatar {
+  width: 68px;
+  height: 68px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 14px var(--avatar-glow, rgba(255,255,255,0.15));
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle inner gradient */
+.pcard-pp-avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 110%, var(--avatar-glow, rgba(255,255,255,0.1)) 0%, transparent 65%);
+  border-radius: inherit;
+}
+
+.pcard-pp-avatar-icon {
+  font-size: 30px;
+  font-variation-settings: 'FILL' 1;
+  position: relative;
+  z-index: 1;
+  transition: filter 0.25s, transform 0.25s;
+}
+
+.pcard--passport:hover .pcard-pp-avatar-icon {
+  filter: drop-shadow(0 0 8px var(--rarity-glow, rgba(255,255,255,0.4)));
+  transform: scale(1.08);
+}
+
+/* Asset info block */
+.pcard-pp-asset-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 4px;
+  min-width: 0;
+}
+
+.pcard-pp-number {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.pcard-pp-owner-label {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+.pcard-pp-hash {
+  display: inline-block;
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 9.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 999px;
+  padding: 2px 10px;
+  letter-spacing: 0.06em;
+}
+
+/* ── Divider ── */
+.pcard-pp-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin-bottom: 12px;
+}
+
+/* ── Data rows ── */
+.pcard-pp-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pcard-pp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.pcard-pp-key {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.28);
+  text-transform: uppercase;
+}
+
+.pcard-pp-val {
+  font-family: 'JetBrains Mono', 'Inter', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.06em;
+}
+
+.pcard-pp-active {
+  color: #ec4899;  /* matches the pink STATUS: ACTIVE from the design */
+  letter-spacing: 0.12em;
+}
+
+/* ── Rarity-specific bg tints for passport ── */
+.pcard--passport[data-rarity="common"]    { background: linear-gradient(160deg, #13111a 0%, #0e0c13 100%); }
+.pcard--passport[data-rarity="uncommon"]  { background: linear-gradient(160deg, #0c1310 0%, #091009 100%); }
+.pcard--passport[data-rarity="rare"]      { background: linear-gradient(160deg, #080f1a 0%, #050c15 100%); }
+.pcard--passport[data-rarity="epic"]      { background: linear-gradient(160deg, #0e0618 0%, #090412 100%); }
+.pcard--passport[data-rarity="legendary"]{ background: radial-gradient(ellipse at 50% 0%, #1a1200 0%, #0b0900 70%); }
+.pcard--passport[data-rarity="mythic"]   { background: radial-gradient(ellipse at 50% 0%, #14090e 0%, #050506 80%); }
+
+/* ── Responsive compact ── */
+@media (max-width: 480px) {
+  .pcard-pp { padding: 12px 12px 10px; }
+  .pcard-pp-avatar { width: 54px; height: 54px; }
+  .pcard-pp-number { font-size: 17px; }
+  .pcard-pp-avatar-icon { font-size: 24px; }
 }
