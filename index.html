@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="assets/poxy-landing-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
+<link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -1453,11 +1454,101 @@ body.dark-club .club-sub{color:#888}
     <div class="st-spa-viewport" id="stSpaViewport">
     <section class="st-spa-panel st-spa-panel--active" id="stPanelDashboard" data-st-tab="dashboard">
     <main class="st-main">
+
+      <!-- ══ HERO IDENTITY HEADER (Obsidian Gold) ══════════════════════ -->
+      <div class="dsh-ambient-fog" aria-hidden="true"></div>
+      <header class="dsh-hero-header">
+        <div class="dsh-hero-left">
+          <h1 class="dsh-greeting">Welcome back, <span class="dsh-username" id="dashGreetUsername">Operative</span></h1>
+          <div class="dsh-hero-meta">
+            <span class="dsh-elite-badge" id="dashMemberBadge">ELITE MEMBER</span>
+            <div class="dsh-rank-pill">
+              <span class="material-symbols-outlined">military_tech</span>
+              <span id="dashHeroRankText">–</span>
+            </div>
+          </div>
+        </div>
+        <div class="dsh-hero-right">
+          <button type="button" class="dsh-discord-btn" onclick="showToast('Discord integration coming soon.')">
+            <span class="material-symbols-outlined">forum</span>
+            Add to Collection Discord
+          </button>
+        </div>
+      </header>
+
+      <!-- ══ TELEMETRY METRIC CARDS ════════════════════════════════════ -->
+      <section class="dsh-metrics-row" aria-label="Telemetry metrics">
+        <div class="dsh-metric-card">
+          <div class="dsh-metric-head">
+            <div class="dsh-metric-icon dsh-icon-accent"><span class="material-symbols-outlined">toll</span></div>
+            <span class="dsh-metric-label">POXY COINS</span>
+          </div>
+          <div class="dsh-metric-val"><span class="dsh-val-num" id="dashHeroBalance">0</span><span class="dsh-val-unit">PC</span></div>
+        </div>
+        <div class="dsh-metric-card">
+          <div class="dsh-metric-head">
+            <div class="dsh-metric-icon dsh-icon-glow"><span class="material-symbols-outlined">stars</span></div>
+            <span class="dsh-metric-label">POXY POINTS</span>
+          </div>
+          <div class="dsh-metric-val"><span class="dsh-val-num" id="dashHeroDust">0</span><span class="dsh-val-unit">PX</span></div>
+        </div>
+        <div class="dsh-metric-card">
+          <div class="dsh-metric-head">
+            <div class="dsh-metric-icon"><span class="material-symbols-outlined">inventory_2</span></div>
+            <span class="dsh-metric-label">TOTAL POXIES</span>
+          </div>
+          <div class="dsh-metric-val"><span class="dsh-val-num" id="dashHeroTotal">0</span><span class="dsh-val-unit">Assets</span></div>
+        </div>
+        <div class="dsh-metric-card">
+          <div class="dsh-metric-head">
+            <div class="dsh-metric-icon"><span class="material-symbols-outlined">emoji_events</span></div>
+            <span class="dsh-metric-label">GLOBAL RANK</span>
+          </div>
+          <div class="dsh-metric-val"><span class="dsh-val-num" id="dashHeroRank">#–</span><span class="dsh-val-unit dsh-val-accent" id="dashHeroRankSub">–</span></div>
+        </div>
+        <div class="dsh-metric-card">
+          <div class="dsh-metric-head">
+            <div class="dsh-metric-icon"><span class="material-symbols-outlined">local_fire_department</span></div>
+            <span class="dsh-metric-label">WIN RATE</span>
+          </div>
+          <div class="dsh-metric-val"><span class="dsh-val-num" id="dashHeroWinRate">–</span><span class="dsh-val-unit dsh-val-accent">Elite</span></div>
+        </div>
+      </section>
+
+      <!-- ══ QUICK ACTIONS ═════════════════════════════════════════════ -->
+      <section class="dsh-quick-section">
+        <h2 class="dsh-section-label">Quick Actions</h2>
+        <div class="dsh-quick-grid">
+          <button type="button" class="dsh-quick-btn" onclick="showStitchTab('dashboard')" title="Open Case">
+            <span class="material-symbols-outlined">package_2</span>
+          </button>
+          <button type="button" class="dsh-quick-btn" onclick="showStitchTab('market')" title="Market">
+            <span class="material-symbols-outlined">search</span>
+          </button>
+          <button type="button" class="dsh-quick-btn" onclick="showStitchTab('ranks')" title="Rankings">
+            <span class="material-symbols-outlined">trending_up</span>
+          </button>
+          <button type="button" class="dsh-quick-btn" onclick="showStitchTab('verify')" title="Verify">
+            <span class="material-symbols-outlined">security</span>
+          </button>
+          <button type="button" class="dsh-quick-btn" onclick="openLuminaOS(null,'friends')" title="Friends">
+            <span class="material-symbols-outlined">group</span>
+          </button>
+          <button type="button" class="dsh-quick-btn" onclick="showStitchTab('collection')" title="Collection">
+            <span class="material-symbols-outlined">star</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ══ SPIN BLOCK ═════════════════════════════════════════════════ -->
       <section class="st-hero">
         <div class="st-hero-glow" aria-hidden="true"></div>
         <div class="st-hero-inner">
           <div class="logo-row" id="logoRow" style="display:none" aria-hidden="true"><span class="l-letter l-p">P</span><span class="l-letter l-o">O</span><span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span></div>
-          <h1 data-i18n="dash.spin.title">Spin</h1>
+          <div class="dsh-spin-label">
+            <span class="dsh-spin-eyebrow">SYSTEM ACCESS</span>
+            <h2 class="dsh-spin-title" data-i18n="dash.spin.title">REWARD DECRYPTER</h2>
+          </div>
           <div class="fomo" id="fomoText" hidden aria-hidden="true">Mythic POXY claimed this month: 0/10</div>
           <div id="greatBurnCounter" hidden aria-hidden="true">🔥 The Great Burn — 0 POXY</div>
           <div class="st-hero-playfield" id="stHeroPlayfield">
@@ -6564,6 +6655,8 @@ function renderDashColPreview(){
   const pctEl=$('dashColCompletionPct'),barEl=$('dashColCompletionBar');
   if(pctEl)pctEl.textContent=pct+'%';
   if(barEl)barEl.style.width=pct+'%';
+  // Keep hero metrics in sync
+  if(typeof refreshDashHeroMetrics==='function')refreshDashHeroMetrics();
   for(let i=0;i<5;i++){
     const item=items[i];
     const card=document.createElement('div');
@@ -6597,7 +6690,39 @@ function refreshStitchDashboardChrome(){
   if(price)price.textContent=formatPC(STANDARD_CASE_PRICE).replace(' PC','')+' PC';
   updatePsdMemberBadge();
   renderDashColPreview();
-  if(currentUser&&$('storeGrid'))renderStorePage();
+  refreshDashHeroMetrics();
+}
+function refreshDashHeroMetrics(){
+  if(!currentProfile)return;
+  // Greeting username
+  const uname=currentProfile.username||'Operative';
+  const greetEl=$('dashGreetUsername');if(greetEl)greetEl.textContent=uname;
+  // Member badge
+  const badgeEl=$('dashMemberBadge');
+  if(badgeEl)badgeEl.textContent=isClubMember()?'ELITE MEMBER':'POXY MEMBER';
+  // Poxy Coins
+  const balEl=$('dashHeroBalance');
+  if(balEl)balEl.textContent=formatPC(parseFloat(currentProfile.balance)||0).replace(' PC','');
+  // Poxy Points (dust)
+  const dustEl=$('dashHeroDust');
+  if(dustEl)dustEl.textContent=String(Math.floor(parseFloat(currentProfile.dust)||0));
+  // Total Poxies
+  const totEl=$('dashHeroTotal');
+  if(totEl)totEl.textContent=String(colData?.length||0);
+  // Win Rate — compute from mythic/legendary ratio
+  const total=colData?.length||0;
+  const rareUp=(colData||[]).filter(c=>['rare','epic','legendary','mythic'].includes(c.poxy_tier)).length;
+  const wr=total>0?Math.round((rareUp/total)*100):0;
+  const wrEl=$('dashHeroWinRate');if(wrEl)wrEl.textContent=wr+'%';
+  // Global Rank — from leaderboard map if loaded
+  const myId=currentUser?.id;
+  const rank=myId&&leaderboardRankByUser[myId]?leaderboardRankByUser[myId]:null;
+  const rankEl=$('dashHeroRank');
+  const rankSubEl=$('dashHeroRankSub');
+  const rankTxtEl=$('dashHeroRankText');
+  if(rankEl)rankEl.textContent=rank?('#'+rank):'#–';
+  if(rankSubEl)rankSubEl.textContent=rank&&rank<=100?'Top 1%':(rank&&rank<=500?'Top 5%':'');
+  if(rankTxtEl)rankTxtEl.textContent=rank?('Rank '+rank.toLocaleString()):'–';
 }
 
 // ── NAVIGATION ──

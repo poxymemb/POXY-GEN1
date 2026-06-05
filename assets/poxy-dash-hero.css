@@ -1,0 +1,313 @@
+/* ═══════════════════════════════════════════════════════════════════
+   POXY — UNIFIED DASHBOARD HERO (Obsidian Gold)
+   Covers: hero header, telemetry cards, quick actions, spin reskin,
+           collection card blueprint pattern, ambient fog.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Ambient fog ──────────────────────────────────────────────────── */
+.dsh-ambient-fog {
+  position: absolute;
+  top: -10vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110vw;
+  height: 55vh;
+  pointer-events: none;
+  background: radial-gradient(ellipse at top, rgba(255,255,255,0.045) 0%, transparent 65%);
+  z-index: 0;
+}
+#stPanelDashboard .st-main { position: relative; }
+
+/* ── Hero header ──────────────────────────────────────────────────── */
+.dsh-hero-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 36px 36px 0;
+  flex-wrap: wrap;
+}
+
+.dsh-greeting {
+  font-family: 'Hanken Grotesk', 'Inter', sans-serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #fff;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.dsh-username {
+  color: #ec4899;
+}
+
+.dsh-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.dsh-elite-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #ec4899;
+  text-transform: uppercase;
+}
+
+.dsh-rank-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+  padding: 3px 10px 3px 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+}
+.dsh-rank-pill .material-symbols-outlined { font-size: 14px; }
+
+.dsh-discord-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+}
+.dsh-discord-btn:hover {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.75);
+  border-color: rgba(255,255,255,0.14);
+}
+.dsh-discord-btn .material-symbols-outlined { font-size: 16px; }
+
+/* ── Telemetry metric cards ───────────────────────────────────────── */
+.dsh-metrics-row {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding: 20px 36px 0;
+}
+
+@media (max-width: 1100px) { .dsh-metrics-row { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px)  { .dsh-metrics-row { grid-template-columns: repeat(2, 1fr); padding: 16px 20px 0; } }
+
+.dsh-metric-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  backdrop-filter: blur(20px);
+  transition: background 0.22s, border-color 0.22s, transform 0.22s;
+}
+.dsh-metric-card:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+
+.dsh-metric-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dsh-metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.45);
+  flex-shrink: 0;
+}
+.dsh-metric-icon .material-symbols-outlined { font-size: 18px; }
+.dsh-icon-accent { color: #ec4899; }
+.dsh-icon-glow {
+  color: #ec4899;
+  border-color: rgba(236,72,153,0.2);
+  box-shadow: 0 0 12px rgba(236,72,153,0.15);
+}
+
+.dsh-metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+}
+
+.dsh-metric-val {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.dsh-val-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.dsh-val-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.35);
+}
+
+.dsh-val-accent { color: #ec4899 !important; }
+
+/* ── Quick actions ────────────────────────────────────────────────── */
+.dsh-quick-section {
+  position: relative;
+  z-index: 1;
+  padding: 20px 36px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dsh-section-label {
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.dsh-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 900px) { .dsh-quick-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 500px) { .dsh-quick-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.dsh-quick-btn {
+  aspect-ratio: 1;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.18s;
+  color: rgba(255,255,255,0.4);
+  backdrop-filter: blur(12px);
+}
+.dsh-quick-btn:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  transform: scale(1.04);
+}
+.dsh-quick-btn:active { transform: scale(0.97); }
+.dsh-quick-btn .material-symbols-outlined { font-size: 28px; }
+
+/* ── Spin section reskin ──────────────────────────────────────────── */
+.dsh-spin-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.dsh-spin-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+.dsh-spin-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Hide the old plain <h1> "Spin" since we replaced it — but keep the i18n selector working */
+#stPanelDashboard .st-hero h1[data-i18n="dash.spin.title"] { display: none !important; }
+
+/* ── Collection card blueprint pattern ────────────────────────────── */
+.st-col-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Geometric blueprint grid overlay */
+.st-col-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.06;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+  background-size: 18px 18px;
+  border-radius: inherit;
+}
+
+/* Corner accent marks */
+.st-col-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.08;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,255,255,0.4) 0px, transparent 30px),
+    radial-gradient(circle at 100% 100%, rgba(255,255,255,0.4) 0px, transparent 30px);
+  border-radius: inherit;
+}
+
+/* Keep inner content above the pattern */
+.st-col-card > * { position: relative; z-index: 1; }
+
+/* ── Responsive padding adjustments ──────────────────────────────── */
+@media (max-width: 700px) {
+  .dsh-hero-header { padding: 24px 20px 0; }
+  .dsh-quick-section { padding: 16px 20px 0; }
+  .dsh-greeting { font-size: 26px; }
+  .dsh-discord-btn { display: none; }
+}
