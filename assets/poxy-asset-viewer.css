@@ -25,20 +25,37 @@
 .avm-panel {
   position: relative;
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 5fr 7fr;
   width: 100%;
-  max-width: 820px;
+  max-width: 1000px;
   max-height: 92vh;
   overflow: hidden;
-  background: #050506;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 24px;
+  background: rgba(20,20,22,0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 20px;
   transform: translateY(20px) scale(0.96);
-  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
+              opacity 0.3s ease;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
 }
 .avm-backdrop.avm-open .avm-panel {
   transform: translateY(0) scale(1);
 }
+
+/* ── Cybernetic corner accents ─────────────────────────────────────── */
+.avm-corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+  z-index: 20;
+}
+.avm-corner--tl { top: 0;    left: 0;  border-top: 1px solid rgba(245,158,11,0.2); border-left:  1px solid rgba(245,158,11,0.2); border-top-left-radius:  20px; }
+.avm-corner--tr { top: 0;    right: 0; border-top: 1px solid rgba(245,158,11,0.2); border-right: 1px solid rgba(245,158,11,0.2); border-top-right-radius: 20px; }
+.avm-corner--bl { bottom: 0; left: 0;  border-bottom: 1px solid rgba(245,158,11,0.2); border-left:  1px solid rgba(245,158,11,0.2); border-bottom-left-radius:  20px; }
+.avm-corner--br { bottom: 0; right: 0; border-bottom: 1px solid rgba(245,158,11,0.2); border-right: 1px solid rgba(245,158,11,0.2); border-bottom-right-radius: 20px; }
 
 /* ── White ambient glow ────────────────────────────────────────────── */
 .avm-ambient {
@@ -160,9 +177,9 @@
 .avm-asset-frame {
   position: relative;
   z-index: 2;
-  width: 200px;
-  height: 200px;
-  border-radius: 28px;
+  width: 220px;
+  height: 220px;
+  border-radius: 20px;
   /* Dark glass — bg-black/40 border border-white/5 */
   background: rgba(0,0,0,0.4);
   border: 1px solid rgba(255,255,255,0.05);
@@ -243,6 +260,32 @@
 @keyframes avmShimmer {
   0%   { background-position: 200% 200%; }
   100% { background-position: -50% -50%; }
+}
+
+/* Holographic sheen sweep — Stitch spec */
+.avm-stage-sheen {
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255,255,255,0.0) 40%,
+    rgba(255,255,255,0.1) 45%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.1) 55%,
+    rgba(255,255,255,0.0) 60%,
+    transparent 100%
+  );
+  animation: avmHolographicSheen 6s linear infinite;
+  z-index: 25;
+  pointer-events: none;
+}
+@keyframes avmHolographicSheen {
+  0%   { transform: translate(-50%,-50%) rotate(45deg) translateY(-100%); }
+  100% { transform: translate(-50%,-50%) rotate(45deg) translateY(100%); }
 }
 
 /* Stage metadata (number + owner) */
@@ -359,22 +402,29 @@
   margin: 0 0 20px;
 }
 
-/* Data table */
-.avm-data-table {
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
-  padding: 6px 0;
-  margin-bottom: 16px;
+/* Data group cards — Stitch: bg-white/[0.02] rounded-lg p-4 border border-white/[0.03] */
+.avm-data-group {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 0 16px;
+  margin-bottom: 12px;
 }
+.avm-data-group:last-of-type { margin-bottom: 0; }
+
+/* Kept for backwards compat — now hidden by default */
+.avm-data-table { display: none; }
 
 .avm-data-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
+  padding: 12px 0;
   gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
+.avm-data-group .avm-data-row:last-child,
+.avm-data-row:last-child { border-bottom: none; }
 
 .avm-data-key {
   font-family: 'JetBrains Mono', monospace;
@@ -494,9 +544,18 @@
   cursor: pointer;
   transition: background 0.16s, color 0.16s, border-color 0.16s;
 }
-.avm-sec-btn:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.16); }
+.avm-sec-btn:hover {
+  background: rgba(245,158,11,0.08);
+  color: rgba(245,158,11,0.9);
+  border-color: rgba(245,158,11,0.25);
+}
 .avm-sec-btn .material-symbols-outlined { font-size: 18px; }
-.avm-sec-danger:hover { background: rgba(255,80,80,0.12); color: #ff7373; border-color: rgba(255,80,80,0.25); }
+/* BURN button: red hover */
+.avm-sec-danger:hover {
+  background: rgba(239,68,68,0.12);
+  color: #f87171;
+  border-color: rgba(239,68,68,0.35);
+}
 
 /* ── Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 680px) {
@@ -528,7 +587,8 @@
 .avm-backdrop:not(.avm-open) .avm-asset-frame::before,
 .avm-backdrop:not(.avm-open) .avm-particle,
 .avm-backdrop:not(.avm-open) .avm-uplink-dot,
-.avm-backdrop:not(.avm-open) .avm-ambient {
+.avm-backdrop:not(.avm-open) .avm-ambient,
+.avm-backdrop:not(.avm-open) .avm-stage-sheen {
   animation-play-state: paused !important;
 }
 /* Also remove from layout entirely when hidden */

@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=19">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=20">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=6">
@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=4">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=5">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6149,10 +6149,7 @@ window.openAssetViewerModal = function(item) {
     issued.textContent = isNaN(d.getTime()) ? '–' : d.toISOString().slice(0,10).replace(/-/g,'.');
   }
 
-  // Rarity table
-  const rc = $('avmRarityClass'); if(rc) rc.textContent = tier.label.toUpperCase();
-  const dr = $('avmDropRate');    if(dr){ dr.textContent = rMeta.dropPct != null ? rMeta.dropPct + '%' : '–'; dr.style.color = tier.color; }
-  const co = $('avmCoeff');       if(co){ co.textContent = rMeta.coeff != null ? '×' + rMeta.coeff : '–'; }
+  // (DROP RATE / RARITY COEFF removed per Stitch 1:1 — not in reference design)
 
   // Serial + ID
   const ser = $('avmSerial');   if(ser) ser.textContent = item.serial_number || '–';
@@ -6195,6 +6192,57 @@ window.openAssetViewerModal = function(item) {
 
   const burnBtn = $('avmBurnBtn');
   if(burnBtn){ burnBtn.onclick = ()=>{ closeAssetViewerModal(); const card=document.querySelector('.col-card[data-id="'+CSS.escape(String(item.id))+'"]'); burnPoxySecure(item.id, card); }; }
+
+  // ── Amber particle system — Stitch spec ──
+  const pCont = $('avmParticles');
+  if(pCont){
+    pCont.innerHTML = '';
+    const isAmber = item.poxy_tier && ['vip','secret','legendary','mythic'].includes(item.poxy_tier);
+    const particleColor = isAmber ? 'rgba(245,158,11,0.8)' : (tier.glow || 'rgba(255,255,255,0.5)');
+    const sparkColor   = isAmber ? '#fbbf24' : (tier.color || '#fff');
+    const count = 40;
+    for(let i=0;i<count;i++){
+      const p = document.createElement('span');
+      const isSpark = Math.random() > 0.75;
+      const size = isSpark ? Math.random()*2+1 : Math.random()*4+1;
+      p.style.cssText = [
+        'position:absolute','border-radius:50%','pointer-events:none',
+        `width:${size}px`,`height:${size}px`,
+        `left:${Math.random()*100}%`,`top:${70+Math.random()*30}%`,
+        `background:${isSpark?sparkColor:particleColor}`,
+        `box-shadow:0 0 ${isSpark?8:14}px ${isSpark?sparkColor:particleColor}`,
+        `opacity:${isSpark?Math.random()*0.8+0.2:Math.random()*0.35+0.1}`,
+        'will-change:transform,opacity'
+      ].join(';');
+      pCont.appendChild(p);
+      p.animate([
+        {transform:'translate(0,0) scale(1)',opacity:p.style.opacity},
+        {transform:`translate(${(Math.random()-0.5)*70}px,-${120+Math.random()*120}px) scale(${Math.random()*0.5+0.4})`,opacity:'0'}
+      ],{duration:(Math.random()*5+4)*1000,delay:Math.random()*5*1000,iterations:Infinity,easing:'cubic-bezier(0.4,0,0.2,1)'});
+    }
+  }
+
+  // ── 3D parallax on stage ──
+  const stageEl = modal.querySelector('.avm-stage');
+  const frameEl = $('avmAssetFrame');
+  function _avmOnMouseMove(e){
+    if(!frameEl||!stageEl) return;
+    const r=stageEl.getBoundingClientRect();
+    const rx=((e.clientY-r.top)/r.height-0.5)*-14;
+    const ry=((e.clientX-r.left)/r.width-0.5)*14;
+    frameEl.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+  }
+  function _avmOnMouseLeave(){
+    if(frameEl) frameEl.style.transform='perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)';
+  }
+  if(stageEl){
+    stageEl.removeEventListener('mousemove',stageEl._avmMove);
+    stageEl.removeEventListener('mouseleave',stageEl._avmLeave);
+    stageEl._avmMove  = _avmOnMouseMove;
+    stageEl._avmLeave = _avmOnMouseLeave;
+    stageEl.addEventListener('mousemove',_avmOnMouseMove);
+    stageEl.addEventListener('mouseleave',_avmOnMouseLeave);
+  }
 
   // ── Show modal ──
   modal.hidden = false;
@@ -12728,6 +12776,12 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
     <!-- White ambient glow behind panel -->
     <div class="avm-ambient" aria-hidden="true"></div>
 
+    <!-- Cybernetic corner accents — Stitch spec -->
+    <span class="avm-corner avm-corner--tl" aria-hidden="true"></span>
+    <span class="avm-corner avm-corner--tr" aria-hidden="true"></span>
+    <span class="avm-corner avm-corner--bl" aria-hidden="true"></span>
+    <span class="avm-corner avm-corner--br" aria-hidden="true"></span>
+
     <!-- Close button -->
     <button type="button" class="avm-close" onclick="closeAssetViewerModal()" aria-label="Close">
       <span class="material-symbols-outlined">close</span>
@@ -12748,6 +12802,8 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
 
       <!-- Central asset viewport -->
       <div class="avm-asset-frame" id="avmAssetFrame">
+        <!-- Holographic sheen sweep — Stitch 1:1 -->
+        <div class="avm-stage-sheen" aria-hidden="true"></div>
         <div class="avm-asset-inner" id="avmAssetInner">
           <!-- Populated by JS: icon / image / lottie / webgl -->
           <span class="material-symbols-outlined avm-asset-icon" id="avmAssetIcon" aria-hidden="true">view_in_ar</span>
@@ -12788,8 +12844,8 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         <span class="avm-ops-tier-pill" id="avmOpsTierPill">–– TIER</span>
       </div>
 
-      <!-- Tactical data matrix -->
-      <div class="avm-data-table">
+      <!-- Tactical data matrix — Group 1: Core Status (Stitch 1:1) -->
+      <div class="avm-data-group">
         <div class="avm-data-row">
           <span class="avm-data-key">ISSUED DATE</span>
           <span class="avm-data-val" id="avmIssued">–</span>
@@ -12806,17 +12862,10 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
           <span class="avm-data-key">SYSTEM ARCHITECTURE</span>
           <span class="avm-data-val avm-val-dim">POXY PROTOCOL v4.2</span>
         </div>
-        <div class="avm-data-divider"></div>
-        <!-- RARITY CLASS removed — tier already displayed in title pill -->
-        <div class="avm-data-row">
-          <span class="avm-data-key">DROP RATE</span>
-          <span class="avm-data-val" id="avmDropRate">–</span>
-        </div>
-        <div class="avm-data-row">
-          <span class="avm-data-key">RARITY COEFF</span>
-          <span class="avm-data-val" id="avmCoeff">–</span>
-        </div>
-        <div class="avm-data-divider"></div>
+      </div>
+
+      <!-- Tactical data matrix — Group 2: Identity (Stitch 1:1) -->
+      <div class="avm-data-group" style="margin-bottom:16px">
         <div class="avm-data-row">
           <span class="avm-data-key">SERIAL KEY</span>
           <span class="avm-data-val avm-val-mono" id="avmSerial">–</span>
