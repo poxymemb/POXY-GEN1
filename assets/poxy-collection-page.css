@@ -3,9 +3,23 @@ body.poxy-stitch-dash #collectionPage.page,
 body.poxy-stitch-dash .poxy-collection-page.page{
   max-width:100%;
   width:100%;
-  min-height:0;
-  padding:0;
+  min-height:100vh;
+  /* Reserve space for the fixed global nav.
+     --st-nav-h is set by updateStNavOffset() in JS; fall back to 72px. */
+  padding: calc(var(--st-nav-h, 72px) + 20px) 16px 56px;
   margin:0 auto;
+}
+@media(min-width:768px){
+  body.poxy-stitch-dash #collectionPage.page,
+  body.poxy-stitch-dash .poxy-collection-page.page{
+    padding: calc(var(--st-nav-h, 72px) + 24px) 24px 64px;
+  }
+}
+@media(min-width:1280px){
+  body.poxy-stitch-dash #collectionPage.page,
+  body.poxy-stitch-dash .poxy-collection-page.page{
+    padding: calc(var(--st-nav-h, 72px) + 28px) 32px 72px;
+  }
 }
 .poxy-collection-page{
   display:none;
