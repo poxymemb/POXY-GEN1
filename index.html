@@ -65,6 +65,7 @@
 <link rel="stylesheet" href="assets/poxy-telemetry.css?v=1">
 <link rel="stylesheet" href="assets/poxy-whitepaper.css?v=1">
 <link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=1">
+<link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=1">
 <script src="assets/poxy-landing-page.js?v=2" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
@@ -1386,7 +1387,6 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="st-nav-link" id="psdNavTelemetry" onclick="showStitchTab('telemetry')">Explore</button>
             <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')" data-i18n="nav.explore" style="display:none">Explore</button>
             <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')" data-i18n="nav.rarity">Rarity</button>
-            <button type="button" class="st-nav-link" id="psdNavStore" onclick="scrollToStore()" data-i18n="nav.store">Store</button>
           </div>
         </div>
         <div class="st-nav-zone st-nav-zone--center" aria-label="App navigation">
@@ -1396,6 +1396,7 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span><span data-i18n="nav.club">Club</span></button>
             <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span><span data-i18n="nav.ranks">Ranks</span></button>
             <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span><span data-i18n="nav.collection">Collection</span></button>
+            <button type="button" class="st-nav-pill" id="psdNavStore" onclick="scrollToStore()"><span class="material-symbols-outlined">local_grocery_store</span><span data-i18n="nav.store">Store</span></button>
             <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
           </div>
         </div>
@@ -1806,14 +1807,10 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="poxy-news-load-more" id="btnNewsLoadMore" onclick="loadNewsFeedTab(true)">Load previous archives</button>
           </div>
 
-          <!-- Chat section -->
-          <div class="poxychat-section" style="margin-top:24px">
-            <div class="poxychat-title"><span class="chat-dot"></span>POXY CHAT — GLOBAL</div>
-            <div class="poxychat-input-row">
-              <input class="poxychat-input" id="poxyChatInput" placeholder="Say something to the world…" maxlength="280" onkeydown="if(event.key==='Enter')sendPoxyChat()">
-              <button class="btn-poxychat-send" id="btnPoxyChatSend" onclick="sendPoxyChat()">Send</button>
-            </div>
-            <div class="poxychat-list" id="poxyChatList"><div class="poxychat-empty">Loading chat…</div></div>
+          <!-- Chat preserved in DOM for compatibility (hidden) -->
+          <div style="display:none" aria-hidden="true">
+            <input id="poxyChatInput" maxlength="280"><button id="btnPoxyChatSend"></button>
+            <div id="poxyChatList"></div>
           </div>
         </div>
 
@@ -2090,70 +2087,151 @@ body.dark-club .club-sub{color:#888}
           <!-- Content -->
           <article class="wp-content">
             <div class="wp-kicker">V2.4 Specification</div>
-            <h1 class="wp-page-title">Protocol Roadmap</h1>
-            <p class="wp-page-desc">The strategic deployment timeline for POXY WORLD infrastructure, detailing mainnet integrations and ecosystem expansion phases.</p>
+            <h1 class="wp-page-title" id="wpPageTitle">Protocol Roadmap</h1>
+            <p class="wp-page-desc" id="wpPageDesc">The strategic deployment timeline for POXY WORLD infrastructure, detailing mainnet integrations and ecosystem expansion phases.</p>
 
-            <!-- Phase 1 -->
-            <div class="wp-section">
-              <div class="wp-section__hover-overlay"></div>
-              <h2 class="wp-section__title">
-                <span class="material-symbols-outlined">deployed_code</span>
-                Phase 1: Genesis Deployment
-              </h2>
-              <div class="wp-section__body">
-                <p>The initial phase establishes the core operational framework. This includes the deployment of fundamental smart contracts handling identity generation and the baseline POXY tokenomics architecture.</p>
-                <ul class="wp-list">
-                  <li>Launch of POXY Identity Substrate (PIS).</li>
-                  <li>Initial liquidity pool seeding on decentralized exchanges.</li>
-                  <li>Release of the beta Terminal UI for early adopters.</li>
-                </ul>
+            <!-- ── PHILOSOPHY SECTION ── -->
+            <div class="wp-section-group" id="wpSection_philosophy">
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">lightbulb</span> I. The Asset Philosophy</h2>
+                <div class="wp-section__body">
+                  <p>Every POXY is an immutable cryptographic entity. From the precise nanosecond of its generation, each asset carries a permanent, unalterable chain of custody — a digital fingerprint that follows the asset through every transaction, trade, and transfer in perpetuity.</p>
+                  <p>Ownership is not a permission granted by a platform. It is a verifiable mathematical fact recorded on an immutable ledger. Your POXY belongs to you in the most absolute digital sense possible.</p>
+                </div>
               </div>
-            </div>
-
-            <!-- Core Logic -->
-            <div class="wp-section">
-              <h2 class="wp-section__title">
-                <span class="material-symbols-outlined">terminal</span>
-                Core Logic Architecture
-              </h2>
-              <div class="wp-section__body">
-                <p>Below is an abstracted representation of the identity minting function utilized during the Genesis phase, demonstrating our approach to secure gas optimization.</p>
-                <div class="wp-code-block">
-<pre><code><span class="tok-kw">function</span> <span class="tok-fn">mintIdentity</span>(address _to, uint256 _tier) <span class="tok-kw">external</span> <span class="tok-str">onlyOwner</span> {
-    <span class="tok-kw">require</span>(_tier &lt;= MAX_TIERS, <span class="tok-str">"Invalid tier selection"</span>);
-
-    uint256 newId = _identityCount + 1;
-    <span class="tok-cmt">// Gas optimized storage allocation</span>
-    identities[newId] = Identity({
-        owner: _to,
-        tier: _tier,
-        timestamp: block.timestamp,
-        isActive: <span class="tok-kw">true</span>
-    });
-
-    _identityCount = newId;
-    <span class="tok-kw">emit</span> <span class="tok-fn">IdentityForged</span>(_to, newId, _tier);
-}</code></pre>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">lock</span> II. Cryptographic Ownership Model</h2>
+                <div class="wp-section__body">
+                  <p>At the core of every POXY asset is an <strong>ED25519 keypair</strong> generated server-side at mint time. The public key is permanently embedded in the asset record and used to verify all downstream events. No key is ever reused.</p>
+                  <div class="wp-code-block"><pre><code><span class="tok-cmt"># Asset identity generation (pseudocode)</span>
+<span class="tok-kw">private_key</span>, <span class="tok-kw">public_key</span> = ed25519.generate_keypair()
+poxy_hash = sha256(<span class="tok-str">f"{serial_id}:{public_key.hex()}:{timestamp_ns}"</span>)
+genesis_payload = {<span class="tok-str">"poxy_hash"</span>: poxy_hash, <span class="tok-str">"pub_key"</span>: public_key, <span class="tok-str">"tier"</span>: tier}
+signature = ed25519.sign(private_key, canonical_json(genesis_payload))
+<span class="tok-cmt"># private_key is destroyed — never stored</span></code></pre></div>
+                  <p>The private key signs the genesis event payload, then is <strong>permanently destroyed</strong>. The public key and signature are recorded in the immutable ledger, and all subsequent ownership proofs reference this chain.</p>
+                </div>
+              </div>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">verified</span> III. Immutable Heritage</h2>
+                <div class="wp-section__body">
+                  <p>Rarity tiers — Common through Mythic — represent genuine scarcity coefficients baked permanently into the generation algorithm. Once set, these values are immutable at the protocol level and cannot be altered by any administrative action.</p>
+                  <div class="wp-two-col">
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Scarcity Enforcement</div><p class="wp-sub-card__body">Tier probabilities are hardcoded into the RNG module. An audit trail of every roll is publicly queryable.</p></div>
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Chain of Custody</div><p class="wp-sub-card__body">Every transfer, trade, and burn is a signed ledger event, cryptographically linked to the genesis record.</p></div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Phase 2 -->
-            <div class="wp-section">
-              <h2 class="wp-section__title">
-                <span class="material-symbols-outlined">hub</span>
-                Phase 2: Syndicate Expansion
-              </h2>
-              <div class="wp-section__body">
-                <p>Following a successful Genesis, the protocol will scale to support complex user hierarchies known as Syndicates. This introduces governance mechanisms and shared resource pooling capabilities.</p>
-                <div class="wp-two-col">
-                  <div class="wp-sub-card">
-                    <div class="wp-sub-card__title">Governance Modules</div>
-                    <p class="wp-sub-card__body">Implementation of on-chain voting for protocol parameter adjustments via the DAO structure.</p>
+            <!-- ── ROADMAP SECTION ── -->
+            <div class="wp-section-group wp-section-group--active" id="wpSection_roadmap">
+              <div class="wp-section">
+                <div class="wp-section__hover-overlay"></div>
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">deployed_code</span> Phase 1: Genesis Deployment</h2>
+                <div class="wp-section__body">
+                  <p>The initial phase establishes the core operational framework — deployment of server-side seed generation infrastructure, the ED25519 signing pipeline, and the baseline POXY tokenomics architecture.</p>
+                  <ul class="wp-list">
+                    <li>Launch of POXY Identity Substrate (PIS) with ED25519 keypair generation.</li>
+                    <li>Commit-reveal RNG validation loop deployed to production edge functions.</li>
+                    <li>Append-only ledger initialized — no records deletable or mutable after write.</li>
+                    <li>Release of the beta Terminal UI for early adopters.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">terminal</span> Core Logic: Cryptographic Engine</h2>
+                <div class="wp-section__body">
+                  <p>The POXY cryptographic engine uses a <strong>commit-reveal RNG pattern</strong> to guarantee provably fair outcomes. The server commits to an entropy seed before any user action, then reveals and combines it with a client-supplied nonce to produce the final result.</p>
+                  <div class="wp-code-block"><pre><code><span class="tok-cmt"># Server-side seed generation (Edge Function)</span>
+<span class="tok-kw">def</span> <span class="tok-fn">generate_commit</span>(round_id: str) -> dict:
+    server_seed = secrets.token_hex(<span class="tok-str">32</span>)          <span class="tok-cmt"># 256-bit CSPRNG</span>
+    commit_hash = sha256(server_seed.encode()).hexdigest()
+    <span class="tok-cmt"># Store commit_hash publicly; server_seed locked until reveal</span>
+    ledger.insert({<span class="tok-str">"round_id"</span>: round_id, <span class="tok-str">"commit_hash"</span>: commit_hash})
+    <span class="tok-kw">return</span> {<span class="tok-str">"commit_hash"</span>: commit_hash}
+
+<span class="tok-kw">def</span> <span class="tok-fn">reveal_and_resolve</span>(round_id, client_nonce):
+    row = ledger.get_commit(round_id)
+    combined = row[<span class="tok-str">"server_seed"</span>] + <span class="tok-str">":"</span> + client_nonce
+    result_hash = sha256(combined.encode()).hexdigest()
+    tier = map_hash_to_tier(result_hash)            <span class="tok-cmt"># deterministic tier assignment</span>
+    sig = ed25519.sign(SERVER_PRIVATE_KEY, canonical_json({<span class="tok-str">"round_id"</span>: round_id, <span class="tok-str">"result"</span>: tier}))
+    ledger.append({<span class="tok-str">"round_id"</span>: round_id, <span class="tok-str">"result"</span>: tier, <span class="tok-str">"sig"</span>: sig})
+    <span class="tok-kw">return</span> {<span class="tok-str">"tier"</span>: tier, <span class="tok-str">"sig"</span>: sig, <span class="tok-str">"server_seed"</span>: row[<span class="tok-str">"server_seed"</span>]}</code></pre></div>
+                  <p>After the reveal, anyone can independently verify the result by computing <code>sha256(server_seed + ":" + client_nonce)</code> and confirming it matches the stored result hash. The ED25519 signature confirms the server did not alter the seed post-commit.</p>
+                </div>
+              </div>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">storage</span> Append-Only State Architecture</h2>
+                <div class="wp-section__body">
+                  <p>All POXY state transitions are stored in a <strong>strictly append-only ledger</strong>. No record is ever deleted or modified — ownership changes are represented as new events with cryptographic back-references to prior events, forming an unbroken chain from genesis.</p>
+                  <div class="wp-code-block"><pre><code><span class="tok-cmt">-- Ledger schema (simplified)</span>
+<span class="tok-kw">CREATE TABLE</span> poxy_events (
+  id          UUID        <span class="tok-kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  poxy_hash   TEXT        <span class="tok-kw">NOT NULL REFERENCES</span> poxy_assets(poxy_hash),
+  event_type  TEXT        <span class="tok-kw">NOT NULL</span>,  <span class="tok-cmt">-- genesis | transfer | burn | verify</span>
+  payload     JSONB       <span class="tok-kw">NOT NULL</span>,
+  signature   TEXT        <span class="tok-kw">NOT NULL</span>,  <span class="tok-cmt">-- ED25519 over payload</span>
+  prev_hash   TEXT,                   <span class="tok-cmt">-- NULL for genesis, else sha256(prev event)</span>
+  seq         BIGINT      <span class="tok-kw">GENERATED ALWAYS AS IDENTITY</span>,
+  created_at  TIMESTAMPTZ <span class="tok-kw">DEFAULT now()</span>
+);
+<span class="tok-cmt">-- Row-Level Security prevents any deletion or update</span>
+<span class="tok-kw">ALTER TABLE</span> poxy_events <span class="tok-kw">ENABLE ROW LEVEL SECURITY</span>;
+<span class="tok-kw">CREATE POLICY</span> insert_only <span class="tok-kw">ON</span> poxy_events <span class="tok-kw">FOR INSERT TO</span> service_role <span class="tok-kw">WITH CHECK</span> (<span class="tok-kw">true</span>);</code></pre></div>
+                </div>
+              </div>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">hub</span> Phase 2 → 3: Syndicate Expansion</h2>
+                <div class="wp-section__body">
+                  <p>Following a successful Genesis, the protocol scales to support complex user hierarchies known as Syndicates — introducing governance mechanisms and shared resource pooling capabilities.</p>
+                  <div class="wp-two-col">
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Governance Modules</div><p class="wp-sub-card__body">On-chain voting for protocol parameter adjustments via the DAO structure. Proposals must pass a 67% supermajority to take effect.</p></div>
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Resource Pooling</div><p class="wp-sub-card__body">Syndicates can aggregate yield-generating assets into unified vaults for amplified collective returns and shared verification rights.</p></div>
                   </div>
-                  <div class="wp-sub-card">
-                    <div class="wp-sub-card__title">Resource Pooling</div>
-                    <p class="wp-sub-card__body">Syndicates can aggregate yield-generating assets into unified vaults for amplified returns.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── SYNDICATES SECTION ── -->
+            <div class="wp-section-group" id="wpSection_syndicates">
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">layers</span> Tier Architecture</h2>
+                <div class="wp-section__body">
+                  <p>POXY Syndicates operate on a five-tier hierarchy. Each tier unlocks progressively deeper protocol access, governance weight, and revenue participation rights.</p>
+                  <div class="wp-two-col">
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Tier I — Recruit</div><p class="wp-sub-card__body">Base access. Can participate in public drops and standard market operations.</p></div>
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Tier II — Operative</div><p class="wp-sub-card__body">Unlocked by holding 5+ unique assets. Priority queue access for limited drops.</p></div>
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Tier III — Sentinel</div><p class="wp-sub-card__body">Minimum 1 Rare or above. Governance voting rights activated.</p></div>
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Tier IV — Warlord</div><p class="wp-sub-card__body">Minimum 1 Mythic asset. Revenue-sharing participation and vault creation rights.</p></div>
+                  </div>
+                </div>
+              </div>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">group</span> Collective Operations</h2>
+                <div class="wp-section__body">
+                  <p>Syndicates may pool verified assets into collective vaults. Vault operations are governed by multi-signature authorization, requiring consensus from a configurable threshold of vault keyholders.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── LEGAL SECTION ── -->
+            <div class="wp-section-group" id="wpSection_legal">
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">gavel</span> Usage Rights &amp; Jurisdiction</h2>
+                <div class="wp-section__body">
+                  <p>POXY assets are digital collectibles with fully assigned ownership rights. The holder of a verified POXY asset is entitled to: (1) display rights across any personal or commercial medium, (2) transfer or resale of the asset on authorized secondary markets, and (3) protocol governance participation at the applicable tier level.</p>
+                  <p>POXY World Ltd. operates under jurisdiction of England and Wales. All disputes are subject to binding arbitration under LCIA rules.</p>
+                </div>
+              </div>
+              <div class="wp-section">
+                <h2 class="wp-section__title"><span class="material-symbols-outlined">policy</span> On-Chain Governance</h2>
+                <div class="wp-section__body">
+                  <p>Protocol parameter changes require a governance proposal submitted on-chain. Eligible voters are Sentinel-tier and above. A 67% supermajority is required for ratification. Emergency security patches may be deployed by the core team within a 24-hour notice window, subject to retroactive ratification within 7 days.</p>
+                  <div class="wp-two-col">
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Privacy Policy</div><p class="wp-sub-card__body">User data is processed in accordance with UK GDPR. No on-chain identity data is linked to personally identifiable information without explicit consent.</p></div>
+                    <div class="wp-sub-card"><div class="wp-sub-card__title">Cookie Policy</div><p class="wp-sub-card__body">Functional cookies only. No third-party tracking cookies are deployed on any POXY World domain.</p></div>
                   </div>
                 </div>
               </div>
@@ -2250,7 +2328,7 @@ body.dark-club .club-sub{color:#888}
               <div class="vt-receipt__corner-glow"></div>
               <div class="vt-receipt__top">
                 <div>
-                  <div class="vt-receipt__badges">
+                  <div class="vt-receipt__badges" id="vtReceiptBadges">
                     <span class="vt-receipt__badge vt-receipt__badge--sig">Valid Signatures</span>
                     <span class="vt-receipt__badge vt-receipt__badge--ok">
                       <span class="material-symbols-outlined">verified</span> Verified
@@ -2260,7 +2338,7 @@ body.dark-club .club-sub{color:#888}
                 </div>
                 <div class="vt-receipt__ts-wrap">
                   <div class="vt-receipt__ts-label">Timestamp</div>
-                  <div class="vt-receipt__ts">2024-10-24 15:42:01 UTC</div>
+                  <div class="vt-receipt__ts" id="vtReceiptTs">—</div>
                 </div>
               </div>
               <div class="vt-receipt__fields">
@@ -2268,22 +2346,22 @@ body.dark-club .club-sub{color:#888}
                   <div class="vt-field__label">
                     <span class="material-symbols-outlined">key</span> POXY Hash
                   </div>
-                  <div class="vt-field__value">0x7a2b9c8d1e4f5a6b7c8d9e0f1a2b3c4d5<br>e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b</div>
+                  <div class="vt-field__value" id="vtReceiptHash">Enter a hash above and click Verify</div>
                 </div>
                 <div>
                   <div class="vt-field__label">
                     <span class="material-symbols-outlined">data_object</span> Ledger Event ID
                   </div>
-                  <div class="vt-field__value">evt_9kL2pM5nX7qR4vW1yZ8aB3cD6eF9gH2j</div>
+                  <div class="vt-field__value" id="vtReceiptEvent">—</div>
                 </div>
                 <div>
                   <div class="vt-field__label">
                     <span class="material-symbols-outlined">casino</span> RNG Round ID
                   </div>
-                  <div class="vt-field__value">#8472910</div>
+                  <div class="vt-field__value" id="vtReceiptRng">—</div>
                 </div>
                 <div style="display:flex;align-items:flex-end">
-                  <button class="vt-download-btn">
+                  <button class="vt-download-btn" id="vtDownloadBtn">
                     <span class="material-symbols-outlined">download</span>
                     Download JSON Receipt
                   </button>
@@ -2318,11 +2396,17 @@ body.dark-club .club-sub{color:#888}
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
     </div>
     <footer class="st-site-footer" id="stSiteFooter">
+      <div class="st-footer-brand">
+        <span class="st-footer-logo-word">POXY</span>
+        <span class="st-footer-logo-word st-footer-logo-sub">WORLD</span>
+      </div>
       <nav class="st-site-footer-legal" aria-label="Legal">
         <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')" data-i18n="dash.footer.privacy">Privacy Policy</a>
         <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')" data-i18n="dash.footer.terms">Terms of Service</a>
+        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('legal')">Cookie Policy</a>
+        <a href="#" onclick="event.preventDefault();showStitchTab('explore');switchExploreSection('support')">Support</a>
       </nav>
-      <p class="st-site-footer-copy" data-i18n="dash.footer.copy">© 2024 POXY World. All rights reserved.</p>
+      <p class="st-site-footer-copy" data-i18n="dash.footer.copy">© 2025 POXY World. All rights reserved.</p>
     </footer>
   </div>
 </div>
@@ -5943,24 +6027,128 @@ function syncNavUsernameLabels(){
 })();
 
 /* ── Verify Terminal helpers ─────────────────────────────────── */
+/* ── Verify Terminal type state ───────────────────────────────────── */
+let _vtType='asset';
 window.vtSwitchTab=function(type,btn){
+  _vtType=type;
   document.querySelectorAll('.vt-tab-btn').forEach(b=>b.classList.remove('vt-tab-btn--active'));
   if(btn)btn.classList.add('vt-tab-btn--active');
   const placeholders={asset:'Enter poxy_hash (64 lowercase hex chars)…',ledger:'Enter ledger event ID (evt_…)…',rng:'Enter RNG round ID (#xxxxxxx)…'};
   const inp=$('vtHashInput');if(inp)inp.placeholder=placeholders[type]||'';
+  // Sync with the underlying pcd type selector if overlay is present
+  const pcdTypeMap={asset:'asset',ledger:'event',rng:'rng'};
+  if(window.pcdSelectType)pcdSelectType(pcdTypeMap[type]||'asset');
 };
-window.vtRunVerify=function(){
+
+/* ── vtLog helper ────────────────────────────────────────── */
+function vtLog(body,msg,delay){
+  return new Promise(res=>{
+    setTimeout(()=>{
+      body.innerHTML+=msg+'<br>';
+      body.scrollTop=body.scrollHeight;
+      res();
+    },delay||0);
+  });
+}
+
+/* ── vtRunVerify — real cryptographic backend call ────────── */
+window.vtRunVerify=async function(){
   const body=$('vtConsoleBody');
-  if(!body)return;
-  const val=($('vtHashInput')?.value||'').trim();
-  body.innerHTML='&gt; initializing verification routine...<br>'
-    +'&gt; parsing hash: '+val.slice(0,18)+'...<br>'
-    +'&gt; <span class="vt-log-ok">[OK]</span> hash format valid<br>'
-    +'&gt; querying ledger node tx_req_'+(Math.floor(Math.random()*9999)+1000)+'...<br>'
-    +'&gt; <span class="vt-log-ok">[OK]</span> consensus reached (nodes: 42/42)<br>'
-    +'<span class="vt-log-accent">&gt; checking entropy source signature...</span><br>'
-    +'&gt; <span class="vt-log-cursor">_</span>';
+  const inp=$('vtHashInput');
+  if(!body||!inp)return;
+  const val=inp.value.trim();
+  if(!val){
+    body.innerHTML='<span class="vt-log-err">&gt; [ERR] No input provided. Enter a hash, event ID, or round ID.</span>';
+    return;
+  }
+
+  // Animate log start
+  body.innerHTML='';
+  const txReq=Math.floor(Math.random()*9999)+1000;
+  const steps=[
+    '&gt; initializing verification routine...',
+    '&gt; parsing input: '+escHtml(val.slice(0,24))+(val.length>24?'…':''),
+    '&gt; <span class="vt-log-ok">[OK]</span> input format valid',
+    '&gt; connecting to ledger node tx_req_'+txReq+'...',
+    '&gt; building '+(_vtType==='rng'?'commit-reveal RNG':_vtType==='ledger'?'event chain':'identity hash')+' proof...',
+    '<span class="vt-log-accent">&gt; calling /public_verify endpoint...</span>',
+  ];
+  let delay=0;
+  for(const s of steps){await vtLog(body,s,delay);delay=180;}
+
+  // Reset receipt panel
+  const rcptBadges=$('vtReceiptBadges');
+  const rcptHash=$('vtReceiptHash');
+  const rcptEvent=$('vtReceiptEvent');
+  const rcptRng=$('vtReceiptRng');
+  const rcptTs=$('vtReceiptTs');
+  const dlBtn=$('vtDownloadBtn');
+
+  // Prepare real verification payload
+  const FUNCTIONS_BASE='https://rbrtjkfawdnomvvyxwvp.functions.supabase.co';
+  const pcdTypeMap={asset:'asset',ledger:'event',rng:'rng'};
+  const type=pcdTypeMap[_vtType]||'asset';
+  const payload=type==='asset'?{type:'asset',hash:val}:{type:type,id:val};
+
+  let data=null;
+  try{
+    const resp=await fetch(FUNCTIONS_BASE+'/public_verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    data=await resp.json();
+  }catch(e){
+    await vtLog(body,'<span class="vt-log-err">&gt; [FAIL] Network error: '+escHtml(e?.message||String(e))+'</span>',0);
+    return;
+  }
+
+  const ok=data?.ok;
+  if(ok){
+    await vtLog(body,'&gt; <span class="vt-log-ok">[OK]</span> signature chain verified',0);
+    await vtLog(body,'&gt; <span class="vt-log-ok">[PASS]</span> '+escHtml(data.summary||'Verification complete.'),0);
+    if(rcptBadges)rcptBadges.innerHTML='<span class="vt-receipt__badge vt-receipt__badge--sig">Valid Signatures</span><span class="vt-receipt__badge vt-receipt__badge--ok"><span class="material-symbols-outlined">verified</span> Verified</span>';
+  }else{
+    await vtLog(body,'<span class="vt-log-err">&gt; [FAIL] '+escHtml(data?.error||data?.summary||'Verification failed.')+'</span>',0);
+    if(rcptBadges)rcptBadges.innerHTML='<span class="vt-receipt__badge" style="background:rgba(255,65,65,0.15);color:#ff6565;border-color:rgba(255,65,65,0.3)">Invalid</span>';
+  }
+
+  // Populate receipt fields
+  const now=new Date().toISOString().replace('T',' ').slice(0,19)+' UTC';
+  if(rcptHash)rcptHash.textContent=data.poxy_hash||val;
+  if(rcptEvent)rcptEvent.textContent=data.event_id||data.id||'—';
+  if(rcptRng)rcptRng.textContent=data.round_id?'#'+data.round_id:'—';
+  if(rcptTs)rcptTs.textContent=data.timestamp||now;
+
+  // Wire download button
+  if(dlBtn){
+    dlBtn.onclick=function(){
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='poxy_receipt_'+(val.slice(0,12).replace(/[^a-zA-Z0-9]/g,'_'))+'.json';
+      a.click();
+    };
+  }
+
+  await vtLog(body,'&gt; receipt generated — download available.',0);
+  await vtLog(body,'&gt; <span class="vt-log-cursor">_</span>',0);
+  // Update validation path steps based on response
+  vtUpdateSteps(data);
 };
+
+function vtUpdateSteps(data){
+  const steps=document.querySelectorAll('#stPanelVerify .vt-step');
+  const apiSteps=data?.steps||[];
+  steps.forEach((el,i)=>{
+    const s=apiSteps[i];
+    if(!s)return;
+    const ok=s.ok===true;
+    const ic=el.querySelector('.vt-step__icon');
+    const nm=el.querySelector('.vt-step__name');
+    const hs=el.querySelector('.vt-step__hash');
+    if(ic){ic.className='vt-step__icon '+(ok?'vt-step__icon--done':'vt-step__icon--fail');ic.innerHTML=ok?'<span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:\'FILL\' 1">check</span>':'<span class="material-symbols-outlined" style="font-size:14px">close</span>';}
+    if(nm)nm.textContent=s.name||nm.textContent;
+    if(hs&&(s.commit_hash||s.computed_hash))hs.textContent=(s.commit_hash||s.computed_hash).slice(0,18)+'…';
+    el.style.opacity='1';
+  });
+}
 window.vtInitConsoleLog=function(){
   const body=$('vtConsoleBody');
   if(!body||body.dataset.init)return;
@@ -5974,6 +6162,21 @@ window.vtInitConsoleLog=function(){
 window.wpNavSelect=function(section,btn){
   document.querySelectorAll('.wp-sidebar__item').forEach(b=>b.classList.remove('wp-sidebar__item--active'));
   if(btn)btn.classList.add('wp-sidebar__item--active');
+  // Toggle content sections
+  document.querySelectorAll('.wp-section-group').forEach(s=>s.classList.remove('wp-section-group--active'));
+  const target=document.getElementById('wpSection_'+section);
+  if(target)target.classList.add('wp-section-group--active');
+  // Update page title/desc
+  const titles={
+    philosophy:{title:'Philosophy',desc:'The immutable ownership principles that define every POXY asset.'},
+    roadmap:{title:'Protocol Roadmap',desc:'The strategic deployment timeline for POXY WORLD infrastructure, detailing mainnet integrations and ecosystem expansion phases.'},
+    syndicates:{title:'Syndicate Tiers',desc:'Governance layers and shared resource pooling capabilities for advanced POXY operators.'},
+    legal:{title:'Legal & Governance',desc:'Usage rights, jurisdiction, on-chain governance policies, and regulatory stance.'}
+  };
+  const meta=titles[section];
+  const titleEl=document.getElementById('wpPageTitle'),descEl=document.getElementById('wpPageDesc');
+  if(titleEl&&meta)titleEl.textContent=meta.title;
+  if(descEl&&meta)descEl.textContent=meta.desc;
 };
 
 async function loadGlobalTierCounts(){

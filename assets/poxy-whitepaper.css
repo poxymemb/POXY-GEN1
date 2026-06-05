@@ -302,6 +302,12 @@
   color: #fff;
   margin-bottom: 10px;
 }
+/* Section groups — hide/show sections */
+.wp-section-group { display: none; }
+.wp-section-group--active { display: block; }
+
+.wp-code-block code { display: block; }
+
 .wp-sub-card__body {
   font-size: 13px;
   color: var(--wp-muted);

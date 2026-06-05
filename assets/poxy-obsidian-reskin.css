@@ -1,0 +1,371 @@
+/* ============================================================
+   POXY — Global Obsidian Reskin Layer
+   Applies to: Market, Collection, Ranks, Store, Dash (color/glass only)
+   Design tokens: #050506 bg · #0d0d0f surfaces · border-white/5
+   CRITICAL: No structural layout changes. Color + glassmorphism only.
+   CRITICAL: Club tab and Lumina OS are explicitly excluded.
+   ============================================================ */
+
+:root {
+  --obs-bg:          #050506;
+  --obs-surface:     #0d0d0f;
+  --obs-surface2:    rgba(13,13,15,0.9);
+  --obs-border:      rgba(255,255,255,0.05);
+  --obs-border-hi:   rgba(255,255,255,0.10);
+  --obs-on:          #ffffff;
+  --obs-muted:       #a1a1aa;
+  --obs-dim:         #52525b;
+  --obs-accent:      #ec4899;
+  --obs-accent-glow: rgba(236,72,153,0.12);
+  --obs-radius:      1rem;
+  --obs-radius-lg:   1.5rem;
+}
+
+/* ── Base: force obsidian background on all relevant panels ── */
+#stPanelMarket,
+#stPanelRanks,
+body.ranks-tab-active #huntPage,
+body.ranks-tab-active #huntPage .poxy-stitch-dash,
+body.ranks-tab-active #huntPage .st-spa-viewport {
+  background: var(--obs-bg) !important;
+  background-size: unset !important;
+  animation: none !important;
+}
+
+/* Dash panel: obsidian bg, glass surfaces. NO structural changes. */
+#stPanelDashboard .st-hero {
+  background: var(--obs-bg);
+}
+#stPanelDashboard .st-hero-glow {
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(236,72,153,0.08), transparent 75%);
+}
+
+/* ── Dashboard glassmorphism overlays ──────────────────────── */
+#stPanelDashboard .st-panel,
+#stPanelDashboard .st-treasury-card,
+#stPanelDashboard .st-quick-actions,
+#stPanelDashboard .st-recent-tx-list,
+#stPanelDashboard .st-dash-card {
+  background: var(--obs-surface) !important;
+  border-color: var(--obs-border) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* ── Market panel ─────────────────────────────────────────── */
+#stPanelMarket .poxy-market-page {
+  background: var(--obs-bg);
+}
+#stPanelMarket .poxy-market-shell {
+  max-width: 1440px;
+}
+#stPanelMarket .poxy-market-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #fff;
+}
+/* Replace listing cards with obsidian bento style */
+#stPanelMarket .poxy-market-card {
+  background: var(--obs-surface) !important;
+  border: 1px solid var(--obs-border) !important;
+  border-radius: var(--obs-radius-lg) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+  transition: border-color 0.25s, box-shadow 0.25s !important;
+}
+#stPanelMarket .poxy-market-card:hover {
+  border-color: var(--obs-border-hi) !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(236,72,153,0.08) !important;
+}
+#stPanelMarket .poxy-market-card-rarity-epic   { border-left: 2px solid #a855f7 !important; }
+#stPanelMarket .poxy-market-card-rarity-rare   { border-left: 2px solid #3b82f6 !important; }
+#stPanelMarket .poxy-market-card-rarity-mythic { border-left: 2px solid #ec4899 !important; }
+/* Market toolbar glass capsule */
+#stPanelMarket .poxy-market-toolbar {
+  background: rgba(13,13,15,0.85) !important;
+  border: 1px solid var(--obs-border) !important;
+  border-radius: 999px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+/* Market tabs — accent underline */
+#stPanelMarket .poxy-market-tab.active { color: var(--obs-accent) !important; }
+#stPanelMarket .poxy-market-tab.active::after { background: var(--obs-accent) !important; box-shadow: 0 0 8px rgba(236,72,153,0.5) !important; }
+/* Market featured hero */
+#stPanelMarket .poxy-market-featured {
+  background: var(--obs-surface) !important;
+  border: 1px solid var(--obs-border) !important;
+  border-radius: var(--obs-radius-lg) !important;
+}
+/* Primary action buttons */
+#stPanelMarket .poxy-market-btn-primary {
+  background: #fff !important;
+  color: #050506 !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+#stPanelMarket .poxy-market-btn-primary:hover {
+  background: var(--obs-accent) !important;
+  color: #fff !important;
+  transform: scale(1.02) !important;
+}
+
+/* ── Collection panel obsidian skin ───────────────────────── */
+.poxy-collection-page {
+  background: var(--obs-bg) !important;
+}
+.poxy-col-item {
+  background: var(--obs-surface) !important;
+  border: 1px solid var(--obs-border) !important;
+  border-radius: var(--obs-radius-lg) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: border-color 0.25s, box-shadow 0.25s !important;
+}
+.poxy-col-item:hover {
+  border-color: var(--obs-border-hi) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
+}
+.poxy-col-item.selected {
+  border-color: var(--obs-accent) !important;
+  box-shadow: 0 0 0 1px rgba(236,72,153,0.2) !important;
+}
+.poxy-col-filter-bar,
+.poxy-col-search-wrap {
+  background: var(--obs-surface) !important;
+  border-color: var(--obs-border) !important;
+  border-radius: 999px !important;
+  backdrop-filter: blur(16px) !important;
+}
+.poxy-col-title { color: #fff !important; }
+.poxy-col-count { color: var(--obs-muted) !important; }
+/* Collection filter pills */
+.poxy-col-filter-pill.active {
+  background: rgba(236,72,153,0.12) !important;
+  border-color: var(--obs-accent) !important;
+  color: #fff !important;
+}
+/* Burn button — keep gradient but tune border */
+.poxy-col-bulk-burn { border-radius: 999px !important; }
+
+/* ── Ranks panel obsidian skin ────────────────────────────── */
+body.ranks-tab-active #huntPage,
+body.ranks-tab-active #huntPage .poxy-stitch-dash,
+body.ranks-tab-active #huntPage .st-spa-viewport {
+  background: var(--obs-bg) !important;
+  animation: none !important;
+}
+.ranks-panel .ranks-card,
+.ranks-panel .ranks-row,
+.ranks-panel .leaderboard-card {
+  background: var(--obs-surface) !important;
+  border: 1px solid var(--obs-border) !important;
+  border-radius: var(--obs-radius) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+.ranks-panel .ranks-card:hover,
+.ranks-panel .ranks-row:hover {
+  border-color: var(--obs-border-hi) !important;
+}
+.ranks-panel .ranks-header-title {
+  font-size: clamp(2rem, 5vw, 4rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+/* Rank accent strips by position */
+.ranks-panel .ranks-row--gold   { border-left: 2px solid #fbbf24 !important; }
+.ranks-panel .ranks-row--silver { border-left: 2px solid #d4d4d8 !important; }
+.ranks-panel .ranks-row--bronze { border-left: 2px solid #92400e !important; }
+
+/* ── Store obsidian skin (now inside nav-pills / dashboard area) */
+.poxy-store-embed,
+#dashStoreSection {
+  background: var(--obs-bg) !important;
+}
+.poxy-store-embed .st-panel,
+.poxy-store-embed [class*="store-card"],
+.poxy-store-embed [class*="store-item"],
+.poxy-store-embed .store-product-card {
+  background: var(--obs-surface) !important;
+  border: 1px solid var(--obs-border) !important;
+  border-radius: var(--obs-radius-lg) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: border-color 0.25s, box-shadow 0.25s !important;
+}
+.poxy-store-embed .st-panel:hover,
+.poxy-store-embed [class*="store-card"]:hover,
+.poxy-store-embed .store-product-card:hover {
+  border-color: var(--obs-border-hi) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
+}
+/* Store buy buttons */
+.poxy-store-embed .btn-primary,
+.poxy-store-embed [class*="btn-buy"],
+.poxy-store-embed .store-buy-btn {
+  background: #fff !important;
+  color: #050506 !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  padding: 10px 24px !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+.poxy-store-embed .btn-primary:hover,
+.poxy-store-embed [class*="btn-buy"]:hover,
+.poxy-store-embed .store-buy-btn:hover {
+  background: var(--obs-accent) !important;
+  color: #fff !important;
+  transform: scale(1.02) !important;
+}
+
+/* ── Bento-style depth injection — all panels ─────────────── */
+#stPanelMarket .poxy-market-grid,
+.poxy-col-grid,
+.ranks-panel .leaderboard-grid {
+  gap: 16px !important;
+}
+
+/* ── Rarity tab obsidian skin (animations/cards UNTOUCHED) ── */
+#stPanelTierList {
+  background: var(--obs-bg) !important;
+}
+/* Wrap the rarity page root in obsidian context */
+#stPanelTierList .rarity-page {
+  /* No structural changes — only color context */
+}
+#stPanelTierList .rarity-page-header {
+  position: relative;
+  z-index: 1;
+}
+/* Page title style upgrade */
+#stPanelTierList .rarity-page-header h1,
+#stPanelTierList .rarity-page-header .rarity-page-title {
+  font-size: clamp(2rem, 6vw, 5rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: uppercase !important;
+  color: #fff !important;
+}
+/* Rarity aside bento card */
+#stPanelTierList .rarity-page-aside .rarity-aside-card,
+#stPanelTierList .rarity-page-aside [class*="rarity-aside"] {
+  background: var(--obs-surface) !important;
+  border: 1px solid var(--obs-border) !important;
+  border-radius: var(--obs-radius-lg) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+/* Rarity ambient glow — subtle background only */
+#stPanelTierList::before {
+  content: '';
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(236,72,153,0.05), transparent 60%);
+}
+
+/* ── Ambient glow layers — subtle, below text ─────────────── */
+#stPanelMarket::before,
+.poxy-collection-page::before,
+#stPanelRanks::before {
+  content: '';
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(236,72,153,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 20% 90%, rgba(59,130,246,0.04) 0%, transparent 60%);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   GLOBAL GLOW CALIBRATION
+   Tones down all over-saturated purple/pink glow layers
+   across any panel (CLUB excluded by specificity)
+   ────────────────────────────────────────────────────────────── */
+
+/* Kill over-bright background radial blobs on non-Club panels */
+#stPanelMarket [class*="blob"],
+#stPanelTierList [class*="blob"],
+.poxy-collection-page [class*="blob"],
+.ranks-panel [class*="blob"],
+#stPanelNews [class*="blob"],
+#stPanelTelemetry [class*="blob"],
+#stPanelVerify [class*="blob"] {
+  opacity: 0.35 !important;
+  filter: blur(160px) !important;
+}
+
+/* Reduce glow on rarity tier card icons */
+.rarity-tier-card [class*="glow"],
+.rarity-tier-card:hover [class*="glow"] {
+  opacity: 0.2 !important;
+}
+
+/* Throttle telemetry panel purple glows */
+#stPanelTelemetry .tl-glow-a,
+#stPanelTelemetry .tl-glow-b,
+#stPanelTelemetry [class*="tl-glow"] {
+  opacity: 0.25 !important;
+}
+
+/* Reduce news lumina glows */
+#stPanelNews .nl-glow-a,
+#stPanelNews .nl-glow-b,
+#stPanelNews [class*="nl-glow"] {
+  opacity: 0.30 !important;
+}
+
+/* Reduce verify terminal blobs */
+#stPanelVerify .vt-glow-blob {
+  opacity: 0.20 !important;
+}
+
+/* Global: reduce all box-shadow glow spreads on hover to tight values */
+.poxy-market-card:hover,
+.poxy-col-item:hover,
+.ranks-panel .ranks-card:hover {
+  box-shadow: 0 12px 36px rgba(0,0,0,0.5) !important;
+}
+
+/* Enforce border-white/5 on all bento surfaces */
+.st-panel,
+.poxy-market-card,
+.poxy-col-item,
+.rarity-tier-card,
+.vt-glass,
+.wp-section,
+.wp-sub-card,
+.tl-glass,
+.nl-card {
+  border-color: rgba(255,255,255,0.05) !important;
+}
+/* Hover: promote to border-white/10 */
+.st-panel:hover,
+.poxy-market-card:hover,
+.poxy-col-item:hover,
+.rarity-tier-card:hover,
+.vt-glass:hover,
+.wp-section:hover,
+.tl-glass:hover,
+.nl-card:hover {
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+/* ── rounded-3xl universal on bento cards ─────────────────── */
+.poxy-market-card,
+.poxy-col-item,
+.vt-glass,
+.nl-card,
+.tl-glass {
+  border-radius: 1.5rem !important;
+}
