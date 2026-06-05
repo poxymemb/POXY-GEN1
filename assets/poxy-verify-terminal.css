@@ -5,11 +5,14 @@
    No legacy overrides. No conflicts.
    ================================================================ */
 
-/* ── Panel wrapper ── */
+/* ── Panel wrapper ──
+   Must fill full viewport height and use Stitch's exact body bg (#050506).
+   SPA container shows #131313 behind panels — override with !important. */
 #stPanelVerify {
   position: relative;
   overflow: visible;
-  background: #050506;
+  background: #050506 !important;
+  min-height: 100vh;               /* match Stitch: body.min-h-screen */
 }
 
 /* ── Main canvas ──
@@ -23,9 +26,8 @@
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  z-index: 1;
+  z-index: 2;                   /* above fixed glow (z:1) and bg-mesh (z:0) */
   overflow: visible;
-  min-height: 60vh;
   background: transparent;
   align-items: stretch;
   max-width: 100%;
@@ -34,34 +36,45 @@
 }
 
 /* ── White centered ambient glow ──
-   Stitch: fixed inset-0 z-0 flex items-center justify-center overflow-hidden
-   → w-[800px] h-[800px] bg-white opacity-[0.02] blur-[150px] rounded-full */
+   Stitch: <div class="fixed inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
+   KEY: Stitch uses position:FIXED (not absolute) → covers full viewport regardless of panel height.
+   display:none inherited from parent #stPanelVerify when panel is inactive — safe for SPA use. */
 .vt-ambient-center {
-  position: absolute;
+  position: fixed;               /* STITCH EXACT: fixed inset-0 */
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
+/* Stitch: w-[800px] h-[800px] bg-white opacity-[0.02] blur-[150px] rounded-full */
 .vt-ambient-center__blob {
   width: 800px;
   height: 800px;
   background: #ffffff;
-  opacity: 0.02;
-  filter: blur(150px);
+  opacity: 0.02;                 /* Stitch exact: opacity-[0.02] — keep subtle */
+  filter: blur(150px);           /* Stitch exact: blur-[150px] */
   border-radius: 50%;
   flex-shrink: 0;
 }
+/* Override poxy-obsidian-reskin.css which forces opacity:0.35 on [class*="blob"] —
+   that rule over-brightens the white glow. We keep Stitch's exact 0.02. */
+#stPanelVerify .vt-ambient-center__blob {
+  opacity: 0.02 !important;
+  filter: blur(150px) !important;
+}
 
 /* ── BG mesh gradient ──
-   Stitch: radial purple 0.08 at 15%/50% + radial pink 0.08 at 85%/30%
-   animation: meshFloat 20s ease-in-out infinite alternate */
+   Stitch CSS: .bg-mesh { position: fixed; top:0; left:0; width:100vw; height:100vh; }
+   Must be fixed to cover full viewport, same as Stitch. */
 .vt-bg-mesh {
-  position: absolute;
-  inset: 0;
+  position: fixed;               /* STITCH EXACT: position:fixed */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
   pointer-events: none;
   background:
@@ -689,9 +702,10 @@
   flex-direction: column;
   gap: 4px;
 }
-.vt-console__body::-webkit-scrollbar { width: 4px; }
-.vt-console__body::-webkit-scrollbar-track { background: transparent; }
-.vt-console__body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 2px; }
+/* Hide scrollbar on console body — prevents second scrollbar thumb on Windows.
+   Scroll still works via JS/mouse wheel, bar is just invisible (matches Stitch). */
+.vt-console__body { scrollbar-width: none; }
+.vt-console__body::-webkit-scrollbar { display: none; }
 
 /* Log colors */
 .vt-log-ok     { color: rgba(74, 222, 128, 0.7); }
