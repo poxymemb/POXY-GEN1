@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=16">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=17">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=6">
@@ -3124,27 +3124,9 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         <span class="poxy-col-tick poxy-col-tick--bl" aria-hidden="true"></span>
         <span class="poxy-col-tick poxy-col-tick--br" aria-hidden="true"></span>
 
-        <!-- LEFT TELEMETRY ZONE -->
-        <div class="poxy-col-left-zone">
-          <!-- Row 1: tier filter tabs -->
+        <!-- ROW 1: tier filters (left) + utilities (right) -->
+        <div class="poxy-col-console-row poxy-col-console-row--top">
           <div class="poxy-col-filters filter-row" id="filterRow"></div>
-          <!-- Row 2: BURN → PC status + metric chips -->
-          <div class="poxy-col-burn-panel">
-            <div class="poxy-col-burn-label">
-              <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
-              <span>BURN <span class="material-symbols-outlined poxy-col-arrow-icon" aria-hidden="true">arrow_forward</span> PC</span>
-            </div>
-            <div class="poxy-col-burn-rates">
-              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">COMMON</span><span class="poxy-burn-chip-val">0.10</span></span>
-              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">MYTHIC</span><span class="poxy-burn-chip-val">40</span></span>
-              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">SECRET</span><span class="poxy-burn-chip-val">100</span></span>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT ACTION POWER-BLOCK -->
-        <div class="poxy-col-right-zone">
-          <!-- Row 1: utilities (SELECT MULTIPLE + SORT) -->
           <div class="poxy-col-utils">
             <button type="button" class="poxy-col-multi-toggle" id="btnColMultiSelect" aria-pressed="false">SELECT MULTIPLE</button>
             <div class="poxy-col-sort-wrap">
@@ -3160,13 +3142,27 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
               </div>
             </div>
           </div>
-          <!-- Row 2: BURN + CRAFT action grid -->
+        </div>
+
+        <!-- ROW 2: telemetry (left) + primary actions (right) -->
+        <div class="poxy-col-console-row poxy-col-console-row--bottom">
+          <div class="poxy-col-burn-panel">
+            <div class="poxy-col-burn-label">
+              <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+              <span>BURN <span class="material-symbols-outlined poxy-col-arrow-icon" aria-hidden="true">arrow_forward</span> PC</span>
+            </div>
+            <div class="poxy-col-burn-rates">
+              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">COMMON</span><span class="poxy-burn-chip-val">0.10</span></span>
+              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">MYTHIC</span><span class="poxy-burn-chip-val">40</span></span>
+              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">SECRET</span><span class="poxy-burn-chip-val">100</span></span>
+            </div>
+          </div>
           <div class="poxy-col-actions">
             <button type="button" class="poxy-col-capsule poxy-col-capsule-burn" id="btnColBurnCapsule" disabled>
               <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
               BURN
             </button>
-            <button type="button" class="poxy-col-capsule poxy-col-capsule-craft" id="btnColCraftCapsule" id2="btnColCraftMode">
+            <button type="button" class="poxy-col-capsule poxy-col-capsule-craft" id="btnColCraftCapsule">
               CRAFT <span class="poxy-craft-sep">|</span> [5X CMN <span class="material-symbols-outlined poxy-col-arrow-icon" aria-hidden="true">arrow_forward</span> 1X UNC]
             </button>
           </div>
@@ -7786,7 +7782,7 @@ function closeColSortMenu(){
   if(menu)menu.classList.add('hidden');
   if(btn)btn.setAttribute('aria-expanded','false');
 }
-const COL_SORT_LABELS={default:'Sort: Default',duplicates:'Sort: Duplicates First',recent:'Sort: Recent',value:'Sort: Highest Value'};
+const COL_SORT_LABELS={default:'SORT: DEFAULT',duplicates:'SORT: DUPLICATES',recent:'SORT: RECENT',value:'SORT: VALUE'};
 async function loadCollection(){
   const cont=$('colContent'),cnt=$('colCount');
   cont.innerHTML='<div class="col-loading poxy-col-loading"><div class="col-spinner"></div></div>';
@@ -7812,7 +7808,7 @@ function renderFilterButtons(){
     const tier=TIERS.find(t=>t.id===id);
     const btn=document.createElement('button');
     btn.type='button';
-    btn.className='poxy-col-filter-tab filter-btn'+(id===colFilter?' active':'');
+    btn.className='poxy-col-filter-tab'+(id===colFilter?' active':'');
     btn.textContent=id==='all'?'All':tier?.label||id;
     btn.style.setProperty('--fc',tier?.color||'rgba(255,255,255,0.9)');
     btn.style.setProperty('--fb',tier?tier.glow:'rgba(255,255,255,0.15)');
