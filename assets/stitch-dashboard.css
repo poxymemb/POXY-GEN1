@@ -83,6 +83,9 @@
 .st-nav--global{position:fixed;top:0;left:0;right:0;z-index:320}
 .st-nav:not(.st-nav--global){position:sticky;top:0;z-index:120}
 
+/* Beta: Lumina OS + chat hidden until release */
+[data-beta-hidden="lumina"]{display:none!important}
+
 /* Three-zone bar: brand | pill tabs | utilities (Stitch Lumina nav) */
 .st-nav-inner{
   max-width:none;

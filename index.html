@@ -32,7 +32,7 @@
 <title>POXY WORLD</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
-<link rel="stylesheet" href="assets/stitch-dashboard.css?v=13">
+<link rel="stylesheet" href="assets/stitch-dashboard.css?v=14">
 <link rel="stylesheet" href="assets/poxy-theme.css?v=2">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=6">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=3">
@@ -1395,7 +1395,7 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span><span data-i18n="nav.ranks">Ranks</span></button>
             <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span><span data-i18n="nav.collection">Collection</span></button>
             <button type="button" class="st-nav-pill" id="psdNavStore" onclick="showStitchTab('store')"><span class="material-symbols-outlined">local_grocery_store</span><span data-i18n="nav.store">Store</span></button>
-            <button type="button" class="st-nav-pill" id="psdNavLuminaOs" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
+            <button type="button" class="st-nav-pill" id="psdNavLuminaOs" hidden data-beta-hidden="lumina" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
           </div>
         </div>
         <div class="st-nav-zone st-nav-zone--right">
@@ -1413,7 +1413,7 @@ body.dark-club .club-sub{color:#888}
               <span class="material-symbols-outlined">notifications</span>
               <span class="st-nav-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
             </button>
-            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavChat" data-i18n-aria="nav.messages" aria-label="Messages" onclick="openLuminaOS(null,'messages')">
+            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavChat" hidden data-beta-hidden="lumina" data-i18n-aria="nav.messages" aria-label="Messages" onclick="openLuminaOS(null,'messages')">
               <span class="material-symbols-outlined">chat_bubble</span>
               <span class="st-nav-badge" id="notifyChatDot" hidden aria-hidden="true"></span>
             </button>
@@ -4512,6 +4512,7 @@ window.PoxyTrustBridge = {
   get pendingSpinTier(){return pendingSpinTier;}
 };
 
+const POXY_BETA_HIDE_LUMINA=true; // set false when Lumina OS is ready for release
 const STANDARD_CASE_PRICE = 1.00;
 const VIP_CASE_PRICE = 5.00;
 const FOUNDER_EMAIL = 'nikitash0504@gmail.com';
@@ -9848,6 +9849,7 @@ window.closeInspectModal=function(){
 
 // ── LUMINA OS (SPA /lumina-os — LuminaOSLayout) ──
 window.openLuminaOS=function(userId,nav){
+  if(POXY_BETA_HIDE_LUMINA){showToast('Lumina OS is coming soon.');return;}
   if(!currentUser){showToast('Sign in to open Lumina OS.');return;}
   if(userId&&String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
   try{sessionStorage.removeItem('poxy_skip_lumina');}catch(e){}
