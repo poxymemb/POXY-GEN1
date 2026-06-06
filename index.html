@@ -5741,8 +5741,11 @@ const PROFILE_BADGE_DEFS={
   developer:{label:'CORE DEV',icon:'terminal',perk:'SDK PERMISSIONS',accent:false},
   vip_club:{label:'CLUB ENTRY',icon:'meeting_room',perk:'ALPHA ACCESS',accent:false},
   market_baron:{label:'MARKET BARON',icon:'payments',perk:'TRADING PERKS',accent:false},
-  first_drop_set:{label:'FIRST DROP',icon:'check_circle',perk:'COLLECTION SET',accent:false}
+  first_drop_set:{label:'FIRST DROP',icon:'check_circle',perk:'COLLECTION SET',accent:false},
+  early_adopter:{label:'EARLY ADOPTER',icon:'rocket_launch',perk:'BETA ACCESS',accent:false},
+  bug_hunter:{label:'BUG HUNTER',icon:'bug_report',perk:'REPORTER PERKS',accent:false}
 };
+const PROFILE_BADGE_ORDER=['founder','developer','vip_club','market_baron','first_drop_set','early_adopter','bug_hunter'];
 
 function tierGlowMeta(tierId){
   const t=TIERS.find(x=>x.id===tierId)||TIERS[0];
@@ -5956,16 +5959,21 @@ function formatBadgeIssuedDate(){
 }
 
 async function collectProfileBadges(){
-  const badges=[];
+  const badges=new Set();
+  // Admin-granted / stored badges from DB
+  if(Array.isArray(currentProfile?.badges)){
+    currentProfile.badges.forEach(b=>{if(b)badges.add(b);});
+  }
+  // Earned badges (derived from activity)
   const{data:listings}=await sb.from('marketplace').select('id').eq('seller_id',currentUser.id).limit(1);
-  if(listings&&listings.length)badges.push('market_baron');
+  if(listings&&listings.length)badges.add('market_baron');
   const{data:tiers}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
   const tierSet=new Set((tiers||[]).map(t=>t.poxy_tier));
-  if(['common','uncommon','rare','epic','legendary'].every(t=>tierSet.has(t)))badges.push('first_drop_set');
-  if(tierSet.has('mythic'))badges.push('founder');
-  if(isClubMember())badges.push('vip_club');
-  if(currentProfile?.is_verified_employee)badges.push('developer');
-  return badges;
+  if(['common','uncommon','rare','epic','legendary'].every(t=>tierSet.has(t)))badges.add('first_drop_set');
+  if(tierSet.has('mythic'))badges.add('founder');
+  if(isClubMember())badges.add('vip_club');
+  if(currentProfile?.is_verified_employee)badges.add('developer');
+  return [...badges];
 }
 
 function toggleBadgeExpand(badgeId){
@@ -5984,10 +5992,17 @@ async function renderBadgeWallet(){
       return;
     }
     list.innerHTML='';
-    const order=['founder','developer','vip_club','market_baron','first_drop_set'];
-    order.filter(b=>badges.includes(b)).forEach(b=>{
-      const d=PROFILE_BADGE_DEFS[b];
-      if(!d)return;
+    const sorted=[
+      ...PROFILE_BADGE_ORDER.filter(b=>badges.includes(b)),
+      ...badges.filter(b=>!PROFILE_BADGE_ORDER.includes(b))
+    ];
+    sorted.forEach(b=>{
+      const d=PROFILE_BADGE_DEFS[b]||{
+        label:String(b).replace(/_/g,' ').toUpperCase(),
+        icon:'military_tech',
+        perk:'ACTIVE PASS',
+        accent:false
+      };
       const row=document.createElement('div');
       row.className='idhub-badge-row';
       row.innerHTML='<div class="idhub-badge-left">'
@@ -9408,7 +9423,9 @@ const POXY_ID_BADGE_DEFS={
   vip_club:{icon:'diamond',label:'VIP',mod:'vip'},
   developer:{icon:'terminal',label:'DEVELOPER',mod:'dev'},
   market_baron:{icon:'payments',label:'BARON',mod:''},
-  first_drop_set:{icon:'target',label:'HUNTER',mod:''}
+  first_drop_set:{icon:'target',label:'HUNTER',mod:''},
+  early_adopter:{icon:'rocket_launch',label:'EARLY',mod:''},
+  bug_hunter:{icon:'bug_report',label:'HUNTER',mod:''}
 };
 window.formatPoxyHandle=function(username){
   const u=String(username||'Anonymous').replace(/^@/,'').trim()||'Anonymous';
@@ -12661,7 +12678,8 @@ function setupRealtimeSubscriptions(){
         if(payload.new.profile_theme!==undefined){currentProfile.profile_theme=payload.new.profile_theme;applyTheme(payload.new.profile_theme);syncStoreData();}
         if(payload.new.name_gradient!==undefined){currentProfile.name_gradient=payload.new.name_gradient;applyNameGradientUI(payload.new.name_gradient);syncStoreData();}
         if(payload.new.username!==undefined){currentProfile.username=payload.new.username;syncNavUsernameLabels();syncStoreData();}
-        if(payload.new.is_club_member!==undefined){currentProfile.is_club_member=payload.new.is_club_member;}
+        if(payload.new.is_club_member!==undefined){currentProfile.is_club_member=payload.new.is_club_member;renderBadgeWallet();}
+        if(payload.new.is_verified_employee!==undefined){currentProfile.is_verified_employee=payload.new.is_verified_employee;renderBadgeWallet();}
         if(payload.new.badges!==undefined){
           currentProfile.badges=payload.new.badges;
           renderBadgeWallet();
