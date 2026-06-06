@@ -86,6 +86,9 @@
 /* Beta: Lumina OS + chat hidden until release */
 [data-beta-hidden="lumina"]{display:none!important}
 
+/* Light-mode toggle removed — hide if cached HTML still injects it */
+#poxyThemeToggle{display:none!important}
+
 /* Three-zone bar: brand | pill tabs | utilities (Stitch Lumina nav) */
 .st-nav-inner{
   max-width:none;
