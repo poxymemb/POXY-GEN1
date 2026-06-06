@@ -607,6 +607,19 @@
 .st-roulette-track .st-slot[data-tier="epic"]{box-shadow:0 0 20px rgba(171,71,188,0.55),0 0 40px rgba(171,71,188,0.2)}
 .st-roulette-track .st-slot[data-tier="legendary"]{box-shadow:0 0 22px rgba(255,202,40,0.6),0 0 44px rgba(255,152,0,0.22)}
 .st-roulette-track .st-slot[data-tier="mythic"]{box-shadow:0 0 24px rgba(255,82,82,0.65),0 0 48px rgba(255,82,82,0.28)}
+/* Mythic teaser decoy slot — flashes red as it passes the viewport */
+.st-roulette-track .st-slot--teaser{
+  border:2px solid #ff5252!important;
+  background:rgba(255,82,82,0.12)!important;
+  box-shadow:0 0 32px rgba(255,82,82,0.8),0 0 64px rgba(255,82,82,0.45),inset 0 0 24px rgba(255,82,82,0.25)!important;
+  animation:teaser-pulse 0.45s ease-in-out infinite alternate;
+  transform:scale(1.04);
+  z-index:2;
+}
+@keyframes teaser-pulse{
+  from{box-shadow:0 0 28px rgba(255,82,82,0.75),0 0 56px rgba(255,82,82,0.4);transform:scale(1.03)}
+  to{box-shadow:0 0 44px rgba(255,82,82,1),0 0 80px rgba(255,82,82,0.65),0 0 120px rgba(255,82,82,0.3);transform:scale(1.07)}
+}
 @keyframes prize-pulse{0%,100%{box-shadow:0 0 18px var(--prize-glow),0 0 36px var(--prize-glow);transform:scale(1.04)}50%{box-shadow:0 0 28px var(--prize-glow),0 0 56px var(--prize-glow),0 0 90px var(--prize-glow);transform:scale(1.08)}}
 body.st-win-reveal-open{overflow:hidden}
 .st-win-reveal{position:fixed;inset:0;z-index:350;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.4s ease,visibility 0.4s ease}

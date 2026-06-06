@@ -7182,6 +7182,7 @@ const ROULETTE_SLOT_HALF=45;
 const ROULETTE_WIN_INDEX=50;
 const ROULETTE_TRAIL_SLOTS=19;
 let spinNearMissTier=null,rouletteWinIndex=ROULETTE_WIN_INDEX;
+let globalSpinCount=0; // counts total spins for mythic teaser timing
 let spinTickTimer=null,spinSlowTickTimer=null,spinSettleTimer=null;
 function tierBgStyle(tier){return{background:tier.glow,borderColor:tier.color,boxShadow:'0 0 22px '+tier.color+'99,inset 0 0 16px '+tier.glow};}
 function tierGlowVar(tier){return tier.color+'88';}
@@ -7198,15 +7199,24 @@ function getSpinProgress(){
 function buildRouletteTrack(winTier){
   const track=$('stRouletteTrack');
   if(!track)return;
+  globalSpinCount++;
   const winner=winTier||pickTier();
   const slots=[];
   for(let i=0;i<ROULETTE_WIN_INDEX;i++)slots.push(pickTier());
   slots.push(winner);
   rouletteWinIndex=ROULETTE_WIN_INDEX;
   for(let i=0;i<ROULETTE_TRAIL_SLOTS;i++)slots.push(pickTier());
+
+  // Every 3rd spin: inject mythic teaser decoy at ~position 38 (near-miss before win)
+  const showTeaser=(globalSpinCount%3===0)&&(winner.id!=='mythic');
+  const mythicTier=TIERS.find(t=>t.id==='mythic')||TIERS[TIERS.length-1];
+  const TEASER_IDX=38; // slot index where the mythic "flash" appears
+
   track.innerHTML=slots.map((t,i)=>{
     const win=i===rouletteWinIndex;
-    return '<div class="st-slot'+(win?' st-slot--winner':'')+'" data-tier="'+t.id+'" style="color:'+t.color+';--prize-glow:'+tierGlowVar(t)+'">'+t.icon+'</div>';
+    const isTeaser=showTeaser&&(i===TEASER_IDX);
+    const displayTier=isTeaser?mythicTier:t;
+    return '<div class="st-slot'+(win?' st-slot--winner':'')+(isTeaser?' st-slot--teaser':'')+'" data-tier="'+displayTier.id+'" style="color:'+displayTier.color+';--prize-glow:'+tierGlowVar(displayTier)+'">'+displayTier.icon+'</div>';
   }).join('');
   track.classList.remove('is-spinning','is-landed');
   track.style.transition='none';
@@ -7288,7 +7298,8 @@ function closeWinRevealModalOnly(){
 function openWinRevealModal(tier){
   const t=tier||pendingSpinTier||TIERS[0];
   currentTier=t;
-  currentSerial=genSerial();
+  // Use RPC serial if already set; only generate local one as fallback
+  if(!currentSerial)currentSerial=genSerial();
   const modal=$('stWinReveal');
   const flare=$('stWinFlare');
   if(flare)flare.style.setProperty('--flare-color',t.color+'44');
@@ -7604,10 +7615,18 @@ async function addCurrentDropToCollection(sourceBtn){
   closeWinRevealModalOnly();
   resetAll();
 }
-function discardCurrentDrop(){
+async function discardCurrentDrop(){
+  const poxyToDelete=currentPoxyId;
+  currentPoxyId=null;
   closeWinRevealModalOnly();
-  showToast('POXY discarded.');
   resetAll();
+  if(poxyToDelete){
+    try{
+      await sb.from('user_poxy').delete().eq('id',poxyToDelete).eq('user_id',currentUser.id);
+      loadCollection().catch(()=>{});
+    }catch(e){console.warn('discard delete:',e);}
+  }
+  showToast('POXY discarded.');
 }
 function startSpin(){
   pendingSpinTier=pickTier();
@@ -12636,14 +12655,15 @@ function setupRealtimeSubscriptions(){
         if(payload.new.name_gradient!==undefined){currentProfile.name_gradient=payload.new.name_gradient;applyNameGradientUI(payload.new.name_gradient);syncStoreData();}
         if(payload.new.username!==undefined){currentProfile.username=payload.new.username;syncNavUsernameLabels();syncStoreData();}
         if(payload.new.is_club_member!==undefined){currentProfile.is_club_member=payload.new.is_club_member;}
-        if(payload.new.badges!==undefined){currentProfile.badges=payload.new.badges;}
+        if(payload.new.badges!==undefined){currentProfile.badges=payload.new.badges;renderBadgeWallet();}
       })
       .subscribe();
     realtimeSubs.push(balanceSub);
 
-    // Inventory changes (mine)
+    // Inventory changes (mine) — skip during active spin to prevent premature refresh
     const invSub=sb.channel('user-poxy-'+currentUser.id)
       .on('postgres_changes',{event:'*',schema:'public',table:'user_poxy',filter:'user_id=eq.'+currentUser.id},payload=>{
+        if(busy)return; // don't reload while roulette is spinning
         loadCollection().catch(console.error);
       })
       .subscribe();
