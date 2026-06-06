@@ -10,14 +10,14 @@
 .rarity-page{
   max-width:min(1440px,96vw);
   margin:0 auto;
-  padding:32px 20px 48px;
+  padding:32px 20px 140px;
   display:flex;
   flex-direction:column;
   gap:32px;
   box-sizing:border-box;
 }
 @media(min-width:1280px){
-  .rarity-page{padding:48px clamp(32px,5vw,72px) 64px}
+  .rarity-page{padding:48px clamp(32px,5vw,72px) 160px}
 }
 .rarity-page-layout{
   display:flex;
@@ -325,3 +325,16 @@
 .rarity-lb-row.shimmer-effect:nth-child(1)::after{animation-delay:0s}
 .rarity-lb-row.shimmer-effect:nth-child(2)::after{animation-delay:0.2s}
 .rarity-lb-row.shimmer-effect:nth-child(3)::after{animation-delay:0.4s}
+
+/* ── Scroll fix: Common (last tier card) bottom clearance ── */
+#stPanelTierList.st-spa-panel {
+  min-height: auto !important;
+  height: auto;
+  overflow: visible;
+}
+.rarity-tier-stack .rarity-tier-card:last-child {
+  margin-bottom: 16px;
+}
+body.poxy-stitch-dash:has(#stPanelTierList:not([hidden])) {
+  scroll-padding-bottom: 96px;
+}
