@@ -6177,17 +6177,9 @@ window.openAssetViewerModal = function(item) {
   const stage = modal.querySelector('.avm-stage');
   if(stage) stage.style.setProperty('--avm-rarity', tierColor);
 
-  // Asset number — PX-XXXXXX tactical serial (matches passport card)
+  // Asset number — use the real serial_number from DB
   const num = $('avmAssetNumber');
-  if(num){
-    // Reuse same DJB2 hash as PoxyCardEngine._genTacticalSerial
-    const src = String(item.id || item.serial_number || item.dropped_at || '').replace(/-/g,'');
-    let h=5381; for(let i=0;i<src.length;i++) h=((h<<5)+h+src.charCodeAt(i))|0;
-    const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code='PX-', seed=Math.abs(h);
-    for(let i=0;i<6;i++){ code+=chars[seed%chars.length]; seed=Math.abs(Math.imul(seed,1664525)+1013904223+i*31337); }
-    num.textContent = code;
-  }
+  if(num){ num.textContent = item.serial_number || ('PX-' + String(item.id||'').slice(0,6).toUpperCase()); }
 
   // Owner hash
   const hash = $('avmOwnerHash');
@@ -6196,17 +6188,9 @@ window.openAssetViewerModal = function(item) {
     hash.textContent = id.length > 8 ? '0x' + id.slice(0,4).toUpperCase() + '…' + id.slice(-4).toUpperCase() : '0x···';
   }
 
-  // ── Ops center title row: PX-serial (bold) + tier pill ──
+  // ── Ops center title row: real serial_number
   const title = $('avmOpsTitle');
-  if(title){
-    // Same PX code generated above — regenerate from same hash
-    const src2 = String(item.id||item.serial_number||item.dropped_at||'').replace(/-/g,'');
-    let h2=5381; for(let i=0;i<src2.length;i++) h2=((h2<<5)+h2+src2.charCodeAt(i))|0;
-    const chars2='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code2='PX-', seed2=Math.abs(h2);
-    for(let i=0;i<6;i++){ code2+=chars2[seed2%chars2.length]; seed2=Math.abs(Math.imul(seed2,1664525)+1013904223+i*31337); }
-    title.textContent = code2;
-  }
+  if(title){ title.textContent = item.serial_number || ('PX-' + String(item.id||'').slice(0,6).toUpperCase()); }
   const tierPill = $('avmOpsTierPill');
   if(tierPill){ tierPill.textContent = tier.label.toUpperCase() + ' TIER'; tierPill.style.color = tier.color; tierPill.style.borderColor = tier.color + '44'; }
 
