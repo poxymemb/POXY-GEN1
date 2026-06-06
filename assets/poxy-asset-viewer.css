@@ -69,13 +69,7 @@
 }
 
 /* ── Cybernetic corner accents ─────────────────────────────────────── */
-.avm-corner {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  pointer-events: none;
-  z-index: 20;
-}
+.avm-corner { display: none; } /* removed — double framing with panel border */
 /* Stitch: border-orange-500/20 = rgba(249,115,22,0.2) */
 .avm-corner--tl { top: 0;    left: 0;  border-top: 1px solid rgba(249,115,22,0.2); border-left:  1px solid rgba(249,115,22,0.2); border-top-left-radius:  32px; }
 .avm-corner--tr { top: 0;    right: 0; border-top: 1px solid rgba(249,115,22,0.2); border-right: 1px solid rgba(249,115,22,0.2); border-top-right-radius: 32px; }
