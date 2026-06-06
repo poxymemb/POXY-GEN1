@@ -547,7 +547,7 @@ const SUPABASE_URL = 'https://rbrtjkfawdnomvvyxwvp.supabase.co';
 const SUPABASE_ANON  = 'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG';
 const DEV_KEY_LSKEY  = 'poxy_dev_uplink_key';
 // Change this to your desired secret (or store hash for prod)
-const DEV_SECRET     = 'POXY_DEV_2026_ULTRA';
+const DEV_SECRET     = 'DEVOPIUM2006!DEV';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
@@ -585,6 +585,9 @@ function bootTerminal(){
 
 // Auto-boot if key already stored
 (function checkAutoAuth(){
+  // Purge stale keys from previous sessions
+  const stored = localStorage.getItem(DEV_KEY_LSKEY);
+  if(stored && stored !== DEV_SECRET) localStorage.removeItem(DEV_KEY_LSKEY);
   if(localStorage.getItem(DEV_KEY_LSKEY) === DEV_SECRET){
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('terminal').classList.remove('hidden');
