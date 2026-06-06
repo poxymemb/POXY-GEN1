@@ -1261,7 +1261,9 @@ function pauseLog(){
 let _streamChannel  = null;
 let _pollTimer      = null;
 let _lastLedgerTs   = null;   // ISO string of most-recent processed event
+let _lastPoxyTs     = null;   // ISO string of most-recent user_poxy drop
 const _seenIds      = new Set(); // dedup cache (capped at 500)
+const _userLabelCache = new Map();
 
 const EV = {
   MINT:    { css:'info', tag:'◈ MINT'    },
@@ -1314,6 +1316,67 @@ function processLedgerRow(r, historical = false){
 // ── Realtime callback (instant) ────────────────────────────────
 function onLedgerInsert(payload){ processLedgerRow(payload.new, false); }
 
+// ── Player case drops (user_poxy) — primary mint feed for standard opens ──
+async function resolveUserLabel(userId){
+  if(!userId) return '?';
+  if(_userLabelCache.has(userId)) return _userLabelCache.get(userId);
+  try{
+    const { data } = await sb.from('profiles').select('username,account_hash').eq('id', userId).single();
+    const label = data?.username
+      ? `${data.username}${data.account_hash ? ' #PX-'+String(data.account_hash).slice(0,8) : ''}`
+      : userId.slice(0,12)+'…';
+    _userLabelCache.set(userId, label);
+    return label;
+  }catch(_){
+    const fallback = userId.slice(0,12)+'…';
+    _userLabelCache.set(userId, fallback);
+    return fallback;
+  }
+}
+
+function poxySeenKey(id){ return 'poxy:'+id; }
+
+function processPoxyRow(r, historical=false, userLabel){
+  if(!r || !r.id) return;
+  const key = poxySeenKey(r.id);
+  if(_seenIds.has(key)) return;
+  _seenIds.add(key);
+  if(_seenIds.size > 500){ _seenIds.delete(_seenIds.values().next().value); }
+
+  if(r.dropped_at && (!_lastPoxyTs || r.dropped_at > _lastPoxyTs)){
+    _lastPoxyTs = r.dropped_at;
+  }
+
+  const tier   = (r.poxy_tier || '').toUpperCase();
+  const serial = r.serial_number || '?';
+  const who    = userLabel || r.user_id?.slice(0,12)+'…' || '?';
+  const origin = (r.case_origin || 'case').toUpperCase();
+  const ts     = r.dropped_at
+    ? `[${fmtLogTime(new _nativeDate(r.dropped_at))}]`
+    : null;
+  const css    = tier === 'MYTHIC' ? 'err' : tier === 'LEGENDARY' ? 'warn' : 'info';
+  const suffix = historical ? '  ← historical' : '';
+  const meta   = EV.MINT;
+  const msg    = `${ts||'['+fmtLogTime()+']'} [${meta.tag}] ${who} → ${tier} [${serial}] (${origin})${suffix}`;
+  appendLog(msg, css);
+}
+
+async function onPoxyInsert(payload){
+  const r = payload.new;
+  if(!r) return;
+  const who = await resolveUserLabel(r.user_id);
+  processPoxyRow(r, false, who);
+}
+
+async function onPoxyDelete(payload){
+  const r = payload.old;
+  if(!r || !r.id) return;
+  const who = await resolveUserLabel(r.user_id);
+  const tier = (r.poxy_tier || '').toUpperCase();
+  const serial = r.serial_number || '?';
+  streamLine('BURN', `${who} discarded ${tier} [${serial}]`);
+}
+
 // ── Polling fallback (every 8s) — guarantees delivery ─────────
 async function pollLedger(){
   if(logPaused) return;
@@ -1326,6 +1389,27 @@ async function pollLedger(){
     const { data } = await q;
     if(data && data.length) data.forEach(r => processLedgerRow(r, false));
   } catch(_){}
+}
+
+async function pollPoxyMints(){
+  if(logPaused) return;
+  try{
+    let q = sb.from('user_poxy')
+      .select('id,user_id,poxy_tier,serial_number,case_origin,dropped_at')
+      .order('dropped_at', { ascending:true })
+      .limit(24);
+    if(_lastPoxyTs) q = q.gt('dropped_at', _lastPoxyTs);
+    const { data } = await q;
+    if(!data || !data.length) return;
+    for(const r of data){
+      const who = await resolveUserLabel(r.user_id);
+      processPoxyRow(r, false, who);
+    }
+  } catch(_){}
+}
+
+async function pollActionStream(){
+  await Promise.all([pollLedger(), pollPoxyMints()]);
 }
 
 // ── news_posts INSERT ─────────────────────────────────────────
@@ -1387,9 +1471,25 @@ async function seedStreamHistory(){
       frag.appendChild(d);
     });
     box.insertBefore(frag, box.firstChild);
-    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} historical events loaded`, 'sys');
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} historical ledger events loaded`, 'sys');
   } catch(e){
-    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] History seed skipped: ${e.message}`, 'sys');
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Ledger history seed skipped: ${e.message}`, 'sys');
+  }
+  try{
+    const { data: drops } = await sb.from('user_poxy')
+      .select('id,user_id,poxy_tier,serial_number,case_origin,dropped_at')
+      .order('dropped_at', { ascending:false })
+      .limit(16);
+    if(drops && drops.length){
+      const ordered = [...drops].reverse();
+      for(const r of ordered){
+        const who = await resolveUserLabel(r.user_id);
+        processPoxyRow(r, true, who);
+      }
+      appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${drops.length} recent player drops loaded`, 'sys');
+    }
+  } catch(e){
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Drop history seed skipped: ${e.message}`, 'sys');
   }
 }
 
@@ -1404,6 +1504,8 @@ function initActionStream(){
   // 1. WebSocket realtime — instant delivery
   _streamChannel = sb.channel('poxy-action-stream')
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'ledger_events'}, onLedgerInsert)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'user_poxy'},     onPoxyInsert)
+    .on('postgres_changes',{event:'DELETE',schema:'public',table:'user_poxy'},     onPoxyDelete)
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'news_posts'},    onNewsInsert)
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'marketplace'},   onTradeInsert)
     .subscribe(status => {
@@ -1420,10 +1522,9 @@ function initActionStream(){
       }
     });
 
-  // 2. Polling fallback every 8s — guaranteed delivery even if WS drops
-  _pollTimer = setInterval(pollLedger, 8000);
-  // Run first poll after 3s so seed has time to set _lastLedgerTs watermark
-  setTimeout(pollLedger, 3000);
+  // 2. Polling fallback every 8s — ledger + player drops
+  _pollTimer = setInterval(pollActionStream, 8000);
+  setTimeout(pollActionStream, 3000);
 }
 
 // CHARTS
