@@ -44,7 +44,7 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-profile-page.css?v=6">
+<link rel="stylesheet" href="assets/poxy-profile-page.css?v=7">
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=20">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
@@ -2691,83 +2691,76 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
   <div class="lc-toast" id="lcToast" role="status"></div>
 </div>
 
-<!-- PROFILE PAGE (Stitch — Refined Profile HUD) -->
-<div class="page poxy-page-profile" id="profilePage">
-  <div class="poxy-profile-shell">
-    <header class="poxy-profile-header">
-      <h1 class="poxy-profile-title" data-i18n="profile.title">MY PROFILE</h1>
-      <button type="button" class="poxy-profile-settings-link" onclick="openProfileSettings()"><span class="material-symbols-outlined">settings</span> Settings</button>
-    </header>
-    <div class="poxy-profile-layout">
-      <aside class="poxy-profile-sidebar">
-        <div class="poxy-profile-avatar-block">
-          <div class="poxy-profile-hero">
-            <div class="poxy-id-banner qp-profile-banner poxy-profile-hero-banner" id="profileAuraBanner">
-              <div class="poxy-id-banner-aura qp-profile-banner-aura" id="profileAuraBannerAura" aria-hidden="true"></div>
-              <div class="poxy-id-banner-rank qp-profile-banner-rank" id="profileAuraBannerRank" aria-hidden="true"></div>
-              <div class="poxy-id-banner-vignette qp-profile-banner-vignette" aria-hidden="true"></div>
-              <div class="poxy-id-banner-readability qp-profile-banner-readability" aria-hidden="true"></div>
-            </div>
-            <div class="poxy-profile-avatar-float">
-              <div id="profileBigAvatarWrap" class="gpu-accel avatar-frame-target poxy-profile-avatar-frame">
-                <div id="profileBigAvatar" class="poxy-profile-avatar-inner"></div>
-              </div>
-            </div>
-          </div>
+<!-- PROFILE PAGE — Stitch Identity Hub -->
+<div class="page poxy-page-profile idhub-page" id="profilePage">
+  <div class="idhub-blob idhub-blob--tl" aria-hidden="true"></div>
+  <div class="idhub-blob idhub-blob--br" aria-hidden="true"></div>
+  <div class="poxy-profile-shell idhub-shell">
+    <button type="button" class="idhub-settings-btn" onclick="openProfileSettings()" aria-label="Open settings">
+      <span class="material-symbols-outlined">settings</span>
+    </button>
+    <section class="idhub-hero">
+      <div class="idhub-avatar-wrap">
+        <div id="profileBigAvatarWrap" class="idhub-avatar-ring gpu-accel avatar-frame-target">
+          <div id="profileBigAvatar" class="idhub-avatar-inner"></div>
         </div>
-        <div class="poxy-profile-identity-readonly">
-          <div class="poxy-profile-identity-handle" id="profileDisplayHandle">@player</div>
-          <button type="button" class="poxy-profile-edit-settings" onclick="openProfileSettings()"><span class="material-symbols-outlined">edit</span><span data-i18n="profile.editInSettings">Edit in Settings</span></button>
-        </div>
-      </aside>
-      <div class="poxy-profile-main">
-        <div class="profile-stats poxy-profile-stats">
-          <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statTotal">–</div><div class="pstat-label">Total</div></div>
-          <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statRare">–</div><div class="pstat-label">Rare+</div></div>
-          <div class="pstat poxy-profile-stat"><div class="pstat-val" id="statDust">–</div><div class="pstat-label">Dust</div></div>
-        </div>
-        <section class="poxy-profile-panel poxy-showcase-section" id="profileShowcaseSection" aria-label="Profile showcase matrix">
-          <h2 class="poxy-profile-section-label">Profile Showcase Matrix</h2>
-          <p class="poxy-showcase-hint">Pin up to five POXY from your collection. Hover pinned slots for tier ambient glow.</p>
-          <div class="poxy-showcase-slots" id="profileShowcaseSlots" role="list"></div>
-        </section>
-        <section class="poxy-profile-panel poxy-profile-quests-stack">
-          <div class="poxy-streak-widget" id="profileStreakWidget" aria-label="7-day streak and multiplier">
-            <div class="poxy-streak-widget-head">
-              <h2 class="poxy-streak-title">7-Day Streak &amp; Multiplier</h2>
-              <span class="poxy-streak-mult" id="profileStreakMult">×1.00</span>
-            </div>
-            <div class="poxy-streak-nodes" id="profileStreakNodes" role="list"></div>
-          </div>
-          <h2 class="poxy-profile-section-label">Daily Quests</h2>
-          <div id="dailyQuestList" class="poxy-quest-list">
-            <p class="poxy-quest-loading">Sign in to load quests…</p>
-          </div>
-        </section>
-        <div class="frame-cosmetic-panel frame-selector-section poxy-profile-frames" id="frameSelectorSection">
-          <button type="button" class="frame-selector-header poxy-profile-frames-banner" id="frameSelectorToggle" aria-expanded="true" aria-controls="frameSelectorBody">
-            <span class="frame-selector-header-text">
-              <span class="frame-selector-label poxy-profile-frames-title">Avatar Frames</span>
-              <span class="frame-selector-sub poxy-profile-frames-sub">Premium Cosmetics</span>
-            </span>
-            <span class="material-symbols-outlined frame-selector-chevron poxy-profile-frames-chevron" aria-hidden="true">chevron_right</span>
-          </button>
-          <div class="frame-selector-body poxy-profile-frames-body" id="frameSelectorBody">
-            <div class="frame-selector-grid" id="frameSelectorGrid"></div>
-          </div>
-        </div>
-        <section class="poxy-profile-panel mythic-club-tracker" id="mythicClubTracker">
-          <h2 class="poxy-profile-section-label mct-label">Ecosystem Private Club Entry</h2>
-          <div class="mct-bar-shell">
-            <div class="mct-bar-track"><div class="mct-bar-fill" id="mctBarFill" style="width:0%"></div></div>
-          </div>
-          <p class="mct-status" id="mctStatus">Loading…</p>
-        </section>
-        <section class="poxy-profile-panel badge-wallet" id="badgeWalletContainer">
-          <h2 class="badge-wallet-label poxy-profile-section-label">Badge Wallet</h2>
-          <div class="badge-list poxy-profile-badges" id="badgeList"><span class="badge-none">No badges yet.</span></div>
-        </section>
+        <span class="idhub-rank-pill" id="profileRankBadge">Rank –</span>
       </div>
+      <h1 class="idhub-name" id="profileDisplayName">PLAYER</h1>
+      <p class="idhub-operator">
+        OPERATOR: <span id="profileDisplayHandle">@player</span>
+        <span class="idhub-operator-sep">//</span>
+        SYSTEM_ID: <span id="profileSystemId">#PX-––––</span>
+      </p>
+      <button type="button" class="idhub-wallet-badge" id="profileWalletBadge" onclick="copyProfileWallet()">
+        <span class="idhub-wallet-text" id="profileWalletText">0x––––</span>
+        <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+      </button>
+    </section>
+    <section class="idhub-stats" aria-label="Profile statistics">
+      <div class="idhub-stat-card">
+        <span class="idhub-stat-label">TOTAL ASSETS</span>
+        <span class="idhub-stat-val" id="statTotal">–</span>
+      </div>
+      <div class="idhub-stat-card idhub-stat-card--accent">
+        <span class="idhub-stat-label">RARE+ UNITS</span>
+        <span class="idhub-stat-val" id="statRare">–</span>
+      </div>
+      <div class="idhub-stat-card">
+        <span class="idhub-stat-label">TOTAL DUST</span>
+        <span class="idhub-stat-val" id="statDust">–</span>
+      </div>
+      <div class="idhub-stat-card">
+        <span class="idhub-stat-label">ECOSYSTEM RANK</span>
+        <span class="idhub-stat-val" id="statRank">#–</span>
+      </div>
+    </section>
+    <section class="idhub-split">
+      <div class="idhub-panel" id="profileShowcaseSection" aria-label="Showcase matrix">
+        <div class="idhub-panel-head">
+          <h2 class="idhub-panel-title">SHOWCASE MATRIX</h2>
+          <span class="idhub-panel-meta idhub-panel-meta--accent" id="profileShowcaseCount">0/5 SLOTS</span>
+        </div>
+        <div class="idhub-showcase-grid" id="profileShowcaseSlots" role="list"></div>
+      </div>
+      <div class="idhub-panel" id="badgeWalletContainer" aria-label="Badge wallet">
+        <div class="idhub-panel-head">
+          <h2 class="idhub-panel-title">BADGE WALLET &amp; PERKS</h2>
+          <span class="idhub-panel-meta">ACTIVE PASSES</span>
+        </div>
+        <div class="idhub-badge-list" id="badgeList"><span class="idhub-badge-empty">No badges yet.</span></div>
+      </div>
+    </section>
+    <section class="idhub-panel idhub-directives-panel">
+      <h2 class="idhub-panel-title idhub-panel-title--solo">DAILY DIRECTIVES</h2>
+      <div class="idhub-directives" id="dailyQuestList">
+        <p class="idhub-directive-loading">Sign in to load directives…</p>
+      </div>
+    </section>
+    <div class="idhub-legacy" hidden aria-hidden="true">
+      <div id="profileStreakWidget"><span id="profileStreakMult"></span><div id="profileStreakNodes"></div></div>
+      <div id="frameSelectorSection"><div id="frameSelectorGrid"></div></div>
+      <div id="mythicClubTracker"><div id="mctBarFill"></div><p id="mctStatus"></p></div>
     </div>
   </div>
 </div>
@@ -5609,6 +5602,47 @@ function syncProfileIdentityReadonly(){
   if(handle)handle.textContent=un?'@'+un:'@player';
   const sh=$('settingsDisplayHandle');
   if(sh)sh.textContent=un?'@'+un:'@player';
+  const nameEl=$('profileDisplayName');
+  if(nameEl)nameEl.textContent=(un||'PLAYER').toUpperCase();
+  const sysEl=$('profileSystemId');
+  if(sysEl){
+    const hash=currentProfile?.account_hash||'----';
+    const yr=new Date().getFullYear();
+    sysEl.textContent='#PX-'+hash+'-'+yr;
+  }
+  const walletEl=$('profileWalletText');
+  if(walletEl&&currentUser?.id){
+    const id=currentUser.id.replace(/-/g,'');
+    walletEl.textContent='0x'+id.slice(0,2).toUpperCase()+'...'+id.slice(-4).toUpperCase();
+  }
+  const rankBadge=$('profileRankBadge');
+  const myRank=currentUser?.id&&leaderboardRankByUser[currentUser.id];
+  if(rankBadge)rankBadge.textContent=myRank?('Rank '+String(myRank).padStart(2,'0')):'Rank –';
+}
+window.copyProfileWallet=function(){
+  if(!currentUser?.id)return;
+  const icon=$('profileWalletBadge')?.querySelector('.material-symbols-outlined');
+  const copy=navigator.clipboard?.writeText?()=>navigator.clipboard.writeText(currentUser.id):null;
+  const done=()=>{
+    if(icon){icon.textContent='check';setTimeout(()=>{icon.textContent='content_copy';},2000);}
+    showToast('System ID copied.');
+  };
+  if(copy)copy().then(done).catch(()=>showToast('Could not copy.'));
+  else{done();}
+};
+let profileParallaxBound=false;
+function initProfileParallax(){
+  if(profileParallaxBound)return;
+  profileParallaxBound=true;
+  document.addEventListener('mousemove',e=>{
+    if(!$('profilePage')?.classList.contains('visible'))return;
+    const x=e.clientX/window.innerWidth;
+    const y=e.clientY/window.innerHeight;
+    document.querySelectorAll('.idhub-blob').forEach((blob,i)=>{
+      const m=(i+1)*30;
+      blob.style.transform='translate('+(x*m)+'px,'+(y*m)+'px)';
+    });
+  });
 }
 function renderSettingsPage(){
   if(!currentUser)return;
@@ -5651,13 +5685,30 @@ function renderProfilePage(){
   updateGlobalFrames();
   renderSettingsAvatar();
   refreshProfileAuraBanner();
+  initProfileParallax();
+}
+async function fetchMyEcosystemRank(){
+  if(!currentUser)return null;
+  if(leaderboardRankByUser[currentUser.id])return leaderboardRankByUser[currentUser.id];
+  try{
+    const{data,error}=await sb.from('profiles').select('id').order('balance',{ascending:false}).limit(500);
+    if(error||!data)return null;
+    data.forEach((p,i)=>{if(p.id)leaderboardRankByUser[p.id]=i+1;});
+    return leaderboardRankByUser[currentUser.id]||null;
+  }catch(e){return null;}
 }
 async function renderProfileStats(){
   try{
     const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
-    $('statTotal').textContent=data?.length||0;
-    $('statRare').textContent=data?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
-    $('statDust').textContent=currentProfile?.dust||0;
+    const total=data?.length||0;
+    const rare=data?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
+    const dust=parseFloat(currentProfile?.dust)||0;
+    const totEl=$('statTotal');if(totEl)totEl.textContent=total.toLocaleString();
+    const rareEl=$('statRare');if(rareEl)rareEl.textContent=rare.toLocaleString();
+    const dustEl=$('statDust');if(dustEl)dustEl.textContent=dust.toFixed(3);
+    const rank=await fetchMyEcosystemRank();
+    const rankEl=$('statRank');if(rankEl)rankEl.textContent=rank?('#'+rank):'#–';
+    syncProfileIdentityReadonly();
   }catch(e){}
 }
 async function renderMythicClubTracker(){
@@ -5685,11 +5736,11 @@ let activeShowcaseSlotIndex=null;
 let expandedBadgeId=null;
 
 const PROFILE_BADGE_DEFS={
-  market_baron:{label:'Market Baron',icon:'payments',chipClass:'market_baron',accent:'#eab308'},
-  first_drop_set:{label:'First Drop Set',icon:'check_circle',chipClass:'first_drop_set',accent:'#f9abff'},
-  founder:{label:'Founder',icon:'emoji_events',chipClass:'founder',accent:'#f97316'},
-  developer:{label:'Developer',icon:'bolt',chipClass:'developer',accent:'#ef4444'},
-  vip_club:{label:'VIP',icon:'local_play',chipClass:'vip_club',accent:'#d70357'}
+  founder:{label:'FOUNDER',icon:'token',perk:'LIFETIME ACCESS',accent:true},
+  developer:{label:'CORE DEV',icon:'terminal',perk:'SDK PERMISSIONS',accent:false},
+  vip_club:{label:'CLUB ENTRY',icon:'meeting_room',perk:'ALPHA ACCESS',accent:false},
+  market_baron:{label:'MARKET BARON',icon:'payments',perk:'TRADING PERKS',accent:false},
+  first_drop_set:{label:'FIRST DROP',icon:'check_circle',perk:'COLLECTION SET',accent:false}
 };
 
 function tierGlowMeta(tierId){
@@ -5734,12 +5785,12 @@ function resolveShowcaseItem(poxyId){
 }
 
 function buildShowcaseSlotHtml(item){
-  if(!item)return '<span class="poxy-showcase-empty-icon material-symbols-outlined" aria-hidden="true">add</span><span class="poxy-showcase-empty-label">Add Asset</span>';
+  if(!item)return '<span class="material-symbols-outlined" aria-hidden="true">add</span>';
   const tier=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0];
-  const serial=sanitizeText(item.serial_number||'–');
-  return '<span class="poxy-showcase-tier" style="color:'+tier.color+'">'+sanitizeText(tier.label)+'</span>'
-    +'<span class="poxy-showcase-icon" aria-hidden="true">'+tier.icon+'</span>'
-    +'<span class="poxy-showcase-serial">'+serial+'</span>';
+  const borderAlpha=tier.id==='legendary'||tier.id==='mythic'?'rgba(236,72,153,0.4)':'rgba(255,255,255,0.4)';
+  const glow=tier.id==='legendary'||tier.id==='mythic'?'rgba(236,72,153,0.3)':'rgba(255,255,255,0.2)';
+  return '<span class="idhub-showcase-icon" style="color:'+tier.color+'" aria-hidden="true">'+tier.icon+'</span>'
+    +'<div class="idhub-showcase-overlay" style="border-color:'+borderAlpha+';box-shadow:inset 0 0 20px '+glow+'"></div>';
 }
 
 function renderProfileShowcaseMatrix(){
@@ -5753,7 +5804,7 @@ function renderProfileShowcaseMatrix(){
     const meta=tierGlowMeta(tierId);
     const btn=document.createElement('button');
     btn.type='button';
-    btn.className='poxy-showcase-slot gpu-accel'+(item?' is-pinned':' is-empty');
+    btn.className='idhub-showcase-slot gpu-accel'+(item?' is-pinned':' is-empty');
     btn.setAttribute('role','listitem');
     btn.dataset.slot=String(i);
     btn.dataset.tier=tierId;
@@ -5764,6 +5815,11 @@ function renderProfileShowcaseMatrix(){
     btn.innerHTML=buildShowcaseSlotHtml(item);
     btn.addEventListener('click',()=>openShowcasePicker(i));
     wrap.appendChild(btn);
+  }
+  const countEl=$('profileShowcaseCount');
+  if(countEl){
+    const filled=profileShowcaseSlots.filter(Boolean).length;
+    countEl.textContent=filled+'/'+PROFILE_SHOWCASE_SLOTS+' SLOTS';
   }
 }
 
@@ -5919,40 +5975,29 @@ function toggleBadgeExpand(badgeId){
 async function renderBadgeWallet(){
   const list=$('badgeList');
   if(!list||!currentUser)return;
-  list.className='poxy-profile-badges poxy-badge-wallet';
+  list.className='idhub-badge-list';
   try{
     const badges=await collectProfileBadges();
     if(!badges.length){
-      list.innerHTML='<span class="badge-none">No badges yet.</span>';
+      list.innerHTML='<span class="idhub-badge-empty">No badges yet.</span>';
       return;
     }
     list.innerHTML='';
-    const issued=formatBadgeIssuedDate();
-    badges.forEach(b=>{
+    const order=['founder','developer','vip_club','market_baron','first_drop_set'];
+    order.filter(b=>badges.includes(b)).forEach(b=>{
       const d=PROFILE_BADGE_DEFS[b];
       if(!d)return;
-      const serial=badgeSerialFor(b);
-      const isOpen=expandedBadgeId===b;
       const row=document.createElement('div');
-      row.className='poxy-badge-row'+(isOpen?' is-open':'');
-      const chip=document.createElement('button');
-      chip.type='button';
-      chip.className='poxy-badge-chip-toggle badge-chip '+d.chipClass;
-      chip.setAttribute('aria-expanded',isOpen?'true':'false');
-      chip.innerHTML='<span class="poxy-badge-chip-left"><span class="material-symbols-outlined" aria-hidden="true" style="font-variation-settings:\'FILL\' 1">'+d.icon+'</span><span>'+sanitizeText(d.label)+'</span></span>'
-        +'<span class="material-symbols-outlined poxy-badge-chevron" aria-hidden="true">expand_more</span>';
-      chip.addEventListener('click',()=>toggleBadgeExpand(b));
-      const panel=document.createElement('div');
-      panel.className='poxy-badge-expand';
-      panel.innerHTML='<div class="poxy-badge-mini-card">'
-        +'<div class="poxy-badge-asset-stage" aria-hidden="true"><span class="material-symbols-outlined">view_in_ar</span><span class="poxy-badge-asset-label">3D Asset Stage</span></div>'
-        +'<div class="poxy-badge-meta"><span class="poxy-badge-meta-line">Issued: '+issued+'</span><span class="poxy-badge-meta-line">ID: '+serial+'</span></div>'
-        +'</div>';
-      row.append(chip,panel);
+      row.className='idhub-badge-row';
+      row.innerHTML='<div class="idhub-badge-left">'
+        +'<div class="idhub-badge-icon'+(d.accent?' idhub-badge-icon--accent':'')+'">'
+        +'<span class="material-symbols-outlined" aria-hidden="true">'+d.icon+'</span></div>'
+        +'<span class="idhub-badge-label">'+sanitizeText(d.label)+'</span></div>'
+        +'<span class="idhub-badge-perk">'+sanitizeText(d.perk)+'</span>';
       list.appendChild(row);
     });
   }catch(e){
-    list.innerHTML='<span class="badge-none">Error loading badges.</span>';
+    list.innerHTML='<span class="idhub-badge-empty">Error loading badges.</span>';
   }
 }
 
@@ -12669,32 +12714,35 @@ function updateGreatBurnUI(){
 async function loadDailyQuests(){
   if(!currentUser)return;
   const list=$('dailyQuestList');if(!list)return;
-  list.innerHTML='<p class="poxy-quest-loading">Loading quests…</p>';
+  list.innerHTML='<p class="idhub-directive-loading">Loading directives…</p>';
   try{
     const{data,error}=await sb.rpc('ensure_daily_quests',{p_user_id:currentUser.id});
     if(error)throw error;
     dailyQuests=data||[];
-    if(!dailyQuests.length){list.innerHTML='<p class="poxy-quest-empty">No quests today.</p>';return;}
-    const labels={open_3_cases:'Open 3 cases',burn_5_commons:'Burn 5 Commons',list_1_market:'List 1 item on market',send_chat:'Send a chat message'};
+    if(!dailyQuests.length){list.innerHTML='<p class="idhub-directive-empty">No directives today.</p>';return;}
+    const labels={open_3_cases:'VOID RUNNER CHALLENGE',burn_5_commons:'SYNTHETIC DUST EXTRACTION',list_1_market:'MARKET LISTING PROTOCOL',send_chat:'COMMS UPLINK'};
     list.innerHTML='';
     dailyQuests.forEach(q=>{
-      const pct=Math.min(100,(q.progress/q.goal)*100);
+      const pct=Math.min(100,Math.round((q.progress/q.goal)*100));
       const claimed=!!q.claimed;
       const ready=q.progress>=q.goal&&!claimed;
+      const title=(labels[q.quest_key]||q.quest_key).toUpperCase();
+      const pctLabel=ready&&!claimed?'COMPLETE':pct+'% COMPLETE';
       const row=document.createElement('div');
-      row.className='poxy-quest-row'+(claimed?' is-claimed':ready?'':' is-progress');
-      const btnLabel=claimed?'Claimed':ready?'Claim':'In progress';
-      row.innerHTML='<div class="poxy-quest-head"><span class="poxy-quest-title">'+sanitizeText(labels[q.quest_key]||q.quest_key)+'</span>'
-        +'<span class="poxy-quest-progress">'+q.progress+' / '+q.goal+'</span></div>'
-        +'<div class="poxy-quest-track"><div class="poxy-quest-fill" style="width:'+pct+'%"></div></div>'
-        +'<div class="poxy-quest-foot"><span class="poxy-quest-reward">+ '+formatPC(q.reward_pc)+'</span>'
-        +'<button type="button" class="poxy-quest-claim'+(claimed?' is-claimed':'')+'" data-id="'+q.id+'">'+btnLabel+'</button></div>';
-      const btn=row.querySelector('.poxy-quest-claim');
+      row.className='idhub-directive';
+      row.innerHTML='<div class="idhub-directive-body">'
+        +'<div class="idhub-directive-head">'
+        +'<span class="idhub-directive-title">'+sanitizeText(title)+'</span>'
+        +'<span class="idhub-directive-pct'+(ready&&!claimed?' is-complete':'')+'">'+pctLabel+'</span></div>'
+        +'<div class="idhub-directive-track"><div class="idhub-directive-fill" style="width:'+pct+'%"></div></div></div>'
+        +'<button type="button" class="idhub-directive-claim'+(claimed?' is-claimed':ready?' is-ready':' is-progress')+'" data-id="'+q.id+'">'
+        +(claimed?'CLAIMED':ready?'CLAIM':'CLAIM')+'</button>';
+      const btn=row.querySelector('.idhub-directive-claim');
       btn.disabled=claimed||!ready;
       if(ready)btn.addEventListener('click',()=>claimQuestReward(q.id));
       list.appendChild(row);
     });
-  }catch(e){list.innerHTML='<p class="poxy-quest-empty" style="color:#ffb4ab">Could not load quests.</p>';}
+  }catch(e){list.innerHTML='<p class="idhub-directive-empty" style="color:#ffb4ab">Could not load directives.</p>';}
 }
 async function bumpQuest(quest_key,delta){
   if(!currentUser)return;

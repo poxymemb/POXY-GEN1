@@ -1,975 +1,471 @@
-/* POXY — Refined Profile HUD (Stitch POXY GEN1, vanilla port) */
+/* POXY Identity Hub — Stitch 1:1 (vanilla CSS port) */
 #profilePage.poxy-page-profile{
-  --prof-bg:#131313;
-  --prof-primary:#f9abff;
-  --prof-primary-dim:rgba(249,171,255,0.35);
-  --prof-secondary:#ffb2be;
-  --prof-secondary-container:#d70357;
-  --prof-on:#e5e2e1;
-  --prof-muted:#d5c1d2;
-  --prof-outline:rgba(157,139,155,0.2);
-  --prof-glass:rgba(22,22,28,0.6);
-  --prof-surface:#20201f;
-  --prof-surface-low:#1c1b1b;
-  --prof-max:1280px;
-  background:var(--prof-bg)!important;
-  color:var(--prof-on);
+  --idhub-obsidian:#050506;
+  --idhub-accent:#ec4899;
+  --idhub-accent-glow:rgba(236,72,153,0.2);
+  --idhub-glass:rgba(255,255,255,0.03);
+  --idhub-border:rgba(255,255,255,0.08);
+  --idhub-on:#e5e2e3;
+  --idhub-muted:#c4c7c8;
+  --idhub-max:1600px;
+  position:relative;
+  background:var(--idhub-obsidian)!important;
+  color:var(--idhub-on);
   max-width:none;
   width:100%;
-  padding:calc(var(--st-nav-h,96px) + 24px) 20px 80px;
+  min-height:100vh;
+  margin:0 auto;
+  padding:calc(var(--st-nav-h,92px) + 32px) 20px 80px;
   box-sizing:border-box;
+  overflow-x:hidden;
 }
-#profilePage .poxy-profile-shell{
-  max-width:var(--prof-max);
+body.poxy-stitch-dash #profilePage.poxy-page-profile{
+  padding-top:calc(var(--st-nav-h,92px) + 32px)!important;
+  padding-right:20px;
+  padding-bottom:120px!important;
+  padding-left:20px;
+}
+@media(min-width:768px){
+  body.poxy-stitch-dash #profilePage.poxy-page-profile{
+    padding-top:calc(var(--st-nav-h,92px) + 40px)!important;
+    padding-right:64px;
+    padding-bottom:140px!important;
+    padding-left:64px;
+  }
+  #profilePage.poxy-page-profile{padding:calc(var(--st-nav-h,92px) + 40px) 64px 140px}
+}
+@media(min-width:1280px){
+  body.poxy-stitch-dash #profilePage.poxy-page-profile{
+    padding-top:calc(var(--st-nav-h,124px) + 48px)!important;
+  }
+}
+
+/* Ambient blobs */
+.idhub-blob{
+  position:fixed;
+  width:600px;
+  height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(236,72,153,0.08) 0%,rgba(0,0,0,0) 70%);
+  filter:blur(120px);
+  z-index:0;
+  pointer-events:none;
+  transition:transform 0.15s ease-out;
+}
+.idhub-blob--tl{top:-10%;left:-10%}
+.idhub-blob--br{bottom:-10%;right:-10%}
+
+.idhub-shell{
+  position:relative;
+  z-index:1;
+  max-width:var(--idhub-max);
   margin:0 auto;
   width:100%;
 }
-#profilePage .poxy-profile-header{margin-bottom:32px}
-#profilePage .poxy-profile-title{
-  margin:0;
-  font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:clamp(2.5rem,6vw,4rem);
-  font-weight:700;
-  letter-spacing:-0.02em;
-  line-height:1.1;
-  color:var(--prof-on);
-  text-transform:uppercase;
-  background:none;
-  -webkit-text-fill-color:unset;
-}
-#profilePage .poxy-profile-title::after{display:none}
-.poxy-profile-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.poxy-profile-settings-link{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:10px 16px;
-  border-radius:9999px;
-  border:1px solid rgba(249,171,255,0.35);
-  background:rgba(156,39,176,0.12);
-  color:#f9abff;
-  font-size:12px;
-  font-weight:700;
-  cursor:pointer;
-  font-family:inherit;
-  transition:background 0.25s,transform 0.2s;
-}
-.poxy-profile-settings-link:hover{background:rgba(156,39,176,0.22);transform:scale(1.02)}
-.poxy-profile-settings-link .material-symbols-outlined{font-size:18px}
-#profilePage .poxy-profile-layout{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:32px;
-  align-items:start;
-}
-@media(min-width:1024px){
-  #profilePage .poxy-profile-layout{
-    grid-template-columns:minmax(0,3fr) minmax(0,9fr);
-    gap:24px;
-  }
-}
-/* Sidebar */
-#profilePage .poxy-profile-sidebar{
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-  align-items:center;
-}
-@media(min-width:1024px){
-  #profilePage .poxy-profile-sidebar{align-items:stretch}
-}
-#profilePage .poxy-profile-avatar-block{
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  width:100%;
-}
-#profilePage .poxy-profile-hero{
-  position:relative;
-  width:100%;
-  margin-bottom:20px;
-}
-#profilePage .poxy-profile-hero-banner{
-  height:120px;
-  border-radius:12px;
-  overflow:hidden;
-}
-#profilePage .poxy-profile-avatar-float{
-  position:relative;
-  z-index:4;
-  display:block;
-  width:fit-content;
-  margin-top:-56px;
-  margin-left:12px;
-  min-height:64px;
-}
-#profilePage #profileBigAvatarWrap.poxy-profile-avatar-frame{
-  width:112px;
-  height:112px;
-  min-width:112px;
-  min-height:112px;
-  margin:0!important;
-  border-radius:50%;
-  border:4px solid #0e0e0e;
-  overflow:visible;
-  box-shadow:0 12px 32px rgba(0,0,0,0.5);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#353535;
-  flex-shrink:0;
-}
-#profilePage .poxy-profile-avatar-inner,
-#profilePage #profileBigAvatar{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  overflow:hidden;
-}
-#profilePage #profileBigAvatar img.avatar-upload-preview{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
-}
-#profilePage .profile-menu-avatar-face{
-  font-size:4rem;
-  line-height:1;
-}
-.poxy-profile-identity-readonly{
-  width:100%;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:12px;
-}
-@media(min-width:1024px){
-  .poxy-profile-identity-readonly{align-items:flex-start;text-align:left}
-}
-.poxy-profile-identity-handle{
-  font-family:'JetBrains Mono',monospace;
-  font-size:1.125rem;
-  font-weight:700;
-  color:var(--prof-primary);
-  letter-spacing:0.02em;
-}
-.poxy-profile-edit-settings{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:8px 14px;
-  border-radius:9999px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:rgba(255,255,255,0.04);
-  color:var(--prof-muted);
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-  cursor:pointer;
-  font-family:inherit;
-  transition:background 0.2s,color 0.2s,border-color 0.2s,transform 0.2s;
-}
-.poxy-profile-edit-settings:hover{
-  color:var(--prof-primary);
-  border-color:rgba(249,171,255,0.35);
-  background:rgba(156,39,176,0.12);
-  transform:scale(1.02);
-}
-.poxy-profile-edit-settings .material-symbols-outlined{font-size:16px}
-#profilePage .poxy-profile-camera-btn{
+
+.idhub-settings-btn{
   position:absolute;
-  bottom:2px;
-  left:76px;
-  z-index:10;
-  display:none;
+  top:0;
+  right:0;
+  z-index:5;
+  display:flex;
   align-items:center;
   justify-content:center;
   width:40px;
   height:40px;
   border-radius:50%;
-  border:1px solid var(--prof-outline);
-  background:var(--prof-surface);
-  color:var(--prof-on);
-  cursor:pointer;
-  box-shadow:0 8px 24px rgba(0,0,0,0.45);
-  transition:background 0.2s ease,transform 0.2s ease;
-}
-#profilePage .poxy-profile-camera-btn:hover{
-  background:var(--prof-surface-low);
-  transform:scale(1.05);
-}
-#profilePage .poxy-profile-camera-btn .material-symbols-outlined{font-size:18px}
-#profilePage .poxy-profile-upload-status{
-  font-size:11px;
-  color:var(--prof-muted);
-  margin-top:4px;
-  min-height:16px;
-  text-align:center;
-}
-#profilePage .poxy-profile-field{width:100%}
-#profilePage .poxy-profile-field-label,
-#profilePage .profile-label{
-  display:block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  font-weight:500;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--prof-muted);
-  margin-bottom:8px;
-}
-#profilePage .poxy-profile-username-input,
-#profilePage .profile-input{
-  width:100%;
-  box-sizing:border-box;
-  padding:12px 24px;
-  border-radius:9999px;
-  border:1px solid var(--prof-outline);
-  background:var(--prof-glass);
+  border:1px solid var(--idhub-border);
+  background:var(--idhub-glass);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
-  color:var(--prof-on);
-  font-size:16px;
-  outline:none;
-  transition:border-color 0.2s ease,box-shadow 0.2s ease;
+  color:var(--idhub-muted);
+  cursor:pointer;
+  transition:border-color 0.3s,color 0.3s,box-shadow 0.3s;
 }
-#profilePage .profile-input:focus{
-  border-color:var(--prof-primary);
-  box-shadow:0 0 0 1px rgba(249,171,255,0.35);
+.idhub-settings-btn:hover{
+  border-color:rgba(236,72,153,0.4);
+  color:#fff;
+  box-shadow:0 0 20px rgba(236,72,153,0.15);
 }
-#profilePage .poxy-profile-actions{
+.idhub-settings-btn .material-symbols-outlined{font-size:20px}
+
+/* Hero */
+.idhub-hero{
   display:flex;
   flex-direction:column;
-  gap:12px;
-  width:100%;
+  align-items:center;
+  text-align:center;
+  margin-bottom:64px;
 }
-#profilePage .poxy-profile-btn{
+.idhub-avatar-wrap{
+  position:relative;
+  margin-bottom:32px;
+}
+.idhub-avatar-ring{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  border:4px solid rgba(236,72,153,0.2);
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(236,72,153,0.2);
+  margin:0!important;
+}
+.idhub-avatar-inner{
+  display:block;
   width:100%;
-  padding:12px 24px;
+  height:100%;
+}
+.idhub-avatar-inner img,
+.idhub-avatar-inner .avatar-upload-preview{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+.idhub-avatar-inner .profile-menu-avatar-face{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  font-size:64px;
+  line-height:1;
+}
+.idhub-rank-pill{
+  position:absolute;
+  bottom:-8px;
+  right:16px;
+  background:var(--idhub-accent);
+  color:#fff;
+  padding:4px 12px;
   border-radius:9999px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
+  font-size:10px;
   font-weight:700;
   letter-spacing:0.1em;
   text-transform:uppercase;
-  cursor:pointer;
-  border:none;
+  white-space:nowrap;
+}
+.idhub-name{
+  margin:0 0 16px;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:clamp(48px,10vw,80px);
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-0.04em;
+  color:#fff;
+  text-transform:uppercase;
+}
+.idhub-operator{
+  margin:0 0 16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+}
+.idhub-operator #profileDisplayHandle,
+.idhub-operator #profileSystemId{color:rgba(255,255,255,0.6)}
+.idhub-operator-sep{margin:0 6px;opacity:0.5}
+.idhub-wallet-badge{
   display:inline-flex;
   align-items:center;
-  justify-content:center;
   gap:8px;
-  transition:transform 0.3s ease,box-shadow 0.3s ease,background 0.2s ease;
+  padding:8px 16px;
+  border-radius:9999px;
+  border:1px solid var(--idhub-border);
+  background:rgba(255,255,255,0.05);
+  color:var(--idhub-muted);
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  cursor:pointer;
+  transition:background 0.3s,color 0.3s;
 }
-#profilePage .poxy-profile-btn--primary,
-#profilePage .poxy-profile-btn:not(.poxy-profile-btn--ghost):not(.poxy-profile-btn--compact){
-  background:var(--prof-primary);
-  color:#570066;
-}
-#profilePage .poxy-profile-btn--primary:hover:not(:disabled),
-#profilePage .poxy-profile-btn:not(.poxy-profile-btn--ghost):not(.poxy-profile-btn--compact):hover:not(:disabled){
-  transform:scale(1.02);
-  box-shadow:0 0 15px rgba(249,171,255,0.4);
-}
-#profilePage .poxy-profile-btn--ghost{
-  background:var(--prof-surface);
-  border:1px solid var(--prof-outline);
-  color:var(--prof-on);
-}
-#profilePage .poxy-profile-btn--ghost:hover:not(:disabled){
-  background:#2a2a2a;
-}
-#profilePage .poxy-profile-btn:disabled{opacity:0.45;cursor:not-allowed}
-#profilePage .poxy-profile-btn--compact{
-  width:auto;
-  padding:10px 18px;
-  font-size:11px;
-}
-/* Main column */
-#profilePage .poxy-profile-main{
-  display:flex;
-  flex-direction:column;
-  gap:32px;
-  min-width:0;
-}
-#profilePage .poxy-profile-stats{
+.idhub-wallet-badge:hover{background:rgba(255,255,255,0.1);color:#fff}
+.idhub-wallet-badge .material-symbols-outlined{font-size:14px;color:rgba(255,255,255,0.4);transition:color 0.3s}
+.idhub-wallet-badge:hover .material-symbols-outlined{color:#fff}
+
+/* Stats grid */
+.idhub-stats{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:1fr;
   gap:16px;
-  margin:0;
+  margin-bottom:32px;
 }
-#profilePage .poxy-profile-stat,
-#profilePage .pstat{
-  background:var(--prof-glass);
+@media(min-width:640px){.idhub-stats{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.idhub-stats{grid-template-columns:repeat(4,1fr)}}
+.idhub-stat-card{
+  background:var(--idhub-glass);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--prof-outline);
-  border-radius:12px;
-  padding:24px 16px;
-  text-align:center;
-  transition:background 0.3s ease;
+  border:1px solid var(--idhub-border);
+  border-radius:8px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  transition:border-color 0.3s,box-shadow 0.3s;
 }
-#profilePage .poxy-profile-stat:hover{background:rgba(42,42,42,0.55)}
-#profilePage .pstat-val{
+.idhub-stat-card:hover{
+  border-color:rgba(236,72,153,0.4);
+  box-shadow:0 0 20px rgba(236,72,153,0.15);
+}
+.idhub-stat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  margin-bottom:8px;
+}
+.idhub-stat-val{
   font-family:'Hanken Grotesk',Inter,sans-serif;
   font-size:32px;
   font-weight:700;
   line-height:1.2;
-  color:var(--prof-primary)!important;
-  margin-bottom:4px;
+  letter-spacing:-0.01em;
+  color:#fff;
 }
-#profilePage .pstat-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  font-weight:500;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--prof-muted)!important;
+.idhub-stat-card--accent .idhub-stat-val{color:var(--idhub-accent)}
+
+/* Glass panels */
+.idhub-panel{
+  background:var(--idhub-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--idhub-border);
+  border-radius:8px;
+  padding:32px;
 }
-#profilePage .poxy-profile-grid-2{
+.idhub-split{
   display:grid;
   grid-template-columns:1fr;
-  gap:32px;
-}
-@media(min-width:1024px){
-  #profilePage .poxy-profile-grid-2{grid-template-columns:1fr 1fr}
-}
-#profilePage .poxy-profile-panel,
-#profilePage .poxy-profile-card{
-  display:flex;
-  flex-direction:column;
   gap:16px;
+  margin-bottom:32px;
 }
-#profilePage .poxy-profile-section-label,
-#profilePage .badge-wallet-label,
-#profilePage .mct-label{
-  margin:0;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  font-weight:500;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--prof-on);
-}
-/* Featured POXY */
-#profilePage .poxy-featured-slot{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  min-height:256px;
-  padding:24px;
-  border-radius:12px;
-  border:1px solid rgba(249,171,255,0.2);
-  background:var(--prof-glass);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  text-align:center;
-  overflow:hidden;
-  cursor:pointer;
-  transition:border-color 0.3s ease;
-}
-#profilePage .poxy-featured-slot:hover{border-color:rgba(249,171,255,0.5)}
-#profilePage .poxy-featured-slot.empty{
-  border-style:solid;
-  border-color:var(--prof-outline);
-}
-#profilePage .poxy-featured-gem{
-  font-size:40px!important;
-  color:var(--prof-primary);
-  filter:drop-shadow(0 0 10px rgba(249,171,255,0.8));
-  padding:20px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(255,0,128,0.08) 0%,transparent 70%);
-  line-height:1;
-}
-#profilePage .poxy-featured-tier{
-  font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:18px;
-  font-weight:700;
-}
-#profilePage .poxy-featured-icon{font-size:2.5rem;line-height:1}
-#profilePage .poxy-featured-serial{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--prof-muted);
-}
-#profilePage .featured-poxy-empty,
-#profilePage .poxy-featured-slot.empty p{
-  font-size:14px;
-  color:var(--prof-muted);
-  margin:0;
-}
-/* Daily quests */
-#profilePage .poxy-quest-list{display:flex;flex-direction:column;gap:12px}
-#profilePage .poxy-quest-row{
-  padding:16px;
-  border-radius:12px;
-  background:var(--prof-glass);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--prof-outline);
-}
-#profilePage .poxy-quest-row.is-progress{border-left:2px solid var(--prof-secondary-container)}
-#profilePage .poxy-quest-row.is-claimed{opacity:0.85}
-#profilePage .poxy-quest-head{
+@media(min-width:1024px){.idhub-split{grid-template-columns:repeat(2,1fr)}}
+.idhub-panel-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  margin-bottom:32px;
   gap:12px;
-  margin-bottom:12px;
+  flex-wrap:wrap;
 }
-#profilePage .poxy-quest-title{
-  font-size:16px;
-  font-weight:500;
-  color:var(--prof-on);
-}
-#profilePage .poxy-quest-progress{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--prof-muted);
-}
-#profilePage .poxy-quest-track{
-  height:4px;
-  background:var(--prof-surface);
-  border-radius:999px;
-  overflow:hidden;
-  margin-bottom:12px;
-}
-#profilePage .poxy-quest-fill{
-  height:100%;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--prof-primary),var(--prof-secondary-container));
-  transition:width 0.45s ease;
-}
-#profilePage .poxy-quest-row.is-claimed .poxy-quest-fill{width:100%!important}
-#profilePage .poxy-quest-foot{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-}
-#profilePage .poxy-quest-reward{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  color:var(--prof-primary);
-}
-#profilePage .poxy-quest-claim{
-  padding:4px 12px;
-  border-radius:9999px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  font-weight:500;
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-  cursor:pointer;
-  border:1px solid var(--prof-outline);
-  background:transparent;
-  color:var(--prof-muted);
-}
-#profilePage .poxy-quest-claim:not(:disabled):not(.is-claimed){
-  border-color:rgba(215,3,87,0.5);
-  background:rgba(215,3,87,0.1);
-  color:var(--prof-secondary);
-}
-#profilePage .poxy-quest-claim.is-claimed,
-#profilePage .poxy-quest-claim:disabled{
-  cursor:default;
-  color:var(--prof-outline);
-}
-#profilePage .poxy-quest-loading,
-#profilePage .poxy-quest-empty{
-  font-size:14px;
-  color:var(--prof-muted);
-}
-/* Avatar frames banner */
-#profilePage .poxy-profile-frames{
-  padding:0;
-  overflow:hidden;
-  border-radius:12px;
-  border:1px solid var(--prof-outline);
-  background:linear-gradient(90deg,#353535,#2a1b38);
-}
-#profilePage .poxy-profile-frames-banner{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  padding:24px;
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  text-align:left;
-  color:inherit;
-  transition:border-color 0.3s ease;
-}
-#profilePage .poxy-profile-frames-banner:hover .poxy-profile-frames-title{color:var(--prof-primary)}
-#profilePage .poxy-profile-frames-title{
-  display:block;
+.idhub-panel-title{
+  margin:0;
   font-family:'Hanken Grotesk',Inter,sans-serif;
   font-size:32px;
   font-weight:700;
-  letter-spacing:-0.02em;
-  text-transform:uppercase;
-  color:var(--prof-on);
-  transition:color 0.3s ease;
+  line-height:1.2;
+  letter-spacing:-0.01em;
+  color:#fff;
 }
-#profilePage .poxy-profile-frames-sub{
-  display:block;
-  margin-top:4px;
+.idhub-panel-title--solo{margin-bottom:32px}
+.idhub-panel-meta{
   font-family:'JetBrains Mono',monospace;
   font-size:12px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--prof-muted);
+  color:rgba(255,255,255,0.4);
+  white-space:nowrap;
 }
-#profilePage .poxy-profile-frames-chevron{
-  color:var(--prof-outline);
-  font-size:28px!important;
-  transition:transform 0.3s ease,color 0.3s ease;
-}
-#profilePage .frame-selector-section:not(.is-collapsed) .poxy-profile-frames-chevron,
-#profilePage .poxy-profile-frames-banner[aria-expanded="true"] .poxy-profile-frames-chevron{
-  transform:translateX(4px);
-  color:var(--prof-primary);
-}
-#profilePage .frame-cosmetic-panel.is-collapsed .poxy-profile-frames-chevron{
-  transform:rotate(0deg)!important;
-  color:var(--prof-outline);
-}
-#profilePage .poxy-profile-frames-body{
-  padding:0 24px 24px;
-  border-top:1px solid rgba(255,255,255,0.06);
-}
-#profilePage .frame-selector-section.is-collapsed .poxy-profile-frames-body{display:none}
-/* Club entry */
-#profilePage .mythic-club-tracker{
-  background:transparent;
-  border:none;
-  padding:0;
-}
-#profilePage .mct-bar-shell{
-  padding:4px;
-  border-radius:9999px;
-  background:var(--prof-glass);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--prof-outline);
-}
-#profilePage .mct-bar-track{
-  height:8px;
-  background:var(--prof-surface);
-  border-radius:999px;
-  overflow:hidden;
-}
-#profilePage .mct-bar-fill{
-  height:100%;
-  border-radius:999px;
-  background:var(--prof-primary)!important;
-  box-shadow:0 0 10px rgba(249,171,255,0.8);
-  transition:width 0.5s ease;
-}
-#profilePage .mct-status{
-  margin:8px 0 0;
-  font-size:14px;
-  color:var(--prof-muted)!important;
-}
-#profilePage .mct-status.closed{color:var(--prof-muted)!important}
-/* Showcase matrix */
-#profilePage .poxy-showcase-hint{
-  margin:-8px 0 16px;
-  font-size:13px;
-  color:var(--prof-muted);
-  line-height:1.5;
-}
-#profilePage .poxy-showcase-slots{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-}
-@media(min-width:640px){
-  #profilePage .poxy-showcase-slots{grid-template-columns:repeat(5,minmax(0,1fr))}
-}
-#profilePage .poxy-showcase-slot{
-  position:relative;
-  min-height:148px;
-  padding:14px 10px;
-  border-radius:14px;
-  border:1px solid rgba(180,188,210,0.22);
-  background:rgba(14,14,18,0.55);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  cursor:pointer;
-  overflow:visible;
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),border-color 0.25s ease,box-shadow 0.35s ease;
-}
-#profilePage .poxy-showcase-slot::before{
-  content:'';
-  position:absolute;
-  inset:-8px;
-  border-radius:18px;
-  opacity:0;
-  pointer-events:none;
-  background:radial-gradient(circle at 50% 40%,var(--showcase-glow,rgba(249,171,255,0.2)) 0%,transparent 72%);
-  transition:opacity 0.35s ease;
-  z-index:0;
-}
-#profilePage .poxy-showcase-slot.is-pinned:hover{
-  transform:scale(1.05);
-  border-color:rgba(249,171,255,0.35);
-  z-index:2;
-}
-#profilePage .poxy-showcase-slot.is-pinned:hover::before{opacity:1}
-#profilePage .poxy-showcase-slot.is-empty:hover{
-  border-color:rgba(249,171,255,0.25);
-  background:rgba(22,22,28,0.65);
-}
-#profilePage .poxy-showcase-slot > *{position:relative;z-index:1}
-#profilePage .poxy-showcase-empty-icon{font-size:28px;color:var(--prof-muted)}
-#profilePage .poxy-showcase-empty-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  color:var(--prof-muted);
-}
-#profilePage .poxy-showcase-tier{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-}
-#profilePage .poxy-showcase-icon{font-size:1.75rem;line-height:1}
-#profilePage .poxy-showcase-serial{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  color:var(--prof-muted);
-}
-/* 7-day streak */
-#profilePage .poxy-profile-quests-stack{display:flex;flex-direction:column;gap:20px}
-#profilePage .poxy-streak-widget{
-  padding:16px 20px;
-  border-radius:9999px;
-  border:1px solid rgba(249,171,255,0.2);
-  background:rgba(22,22,28,0.55);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  animation:poxyStreakBreath 3s ease-in-out infinite;
-}
-@keyframes poxyStreakBreath{
-  0%,100%{box-shadow:0 0 0 rgba(249,171,255,0)}
-  50%{box-shadow:0 0 28px rgba(249,171,255,0.12)}
-}
-#profilePage .poxy-streak-widget-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:12px;
-}
-#profilePage .poxy-streak-title{
-  margin:0;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--prof-on);
-}
-#profilePage .poxy-streak-mult{
-  font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:18px;
-  font-weight:700;
-  color:var(--prof-primary);
-}
-#profilePage .poxy-streak-nodes{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-}
-#profilePage .poxy-streak-node{
-  flex:1;
-  max-width:44px;
-  aspect-ratio:1;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(40,40,48,0.9);
-  border:1px solid rgba(255,255,255,0.06);
-  color:#6a6a72;
-  transition:background 0.3s ease,border-color 0.3s ease,box-shadow 0.3s ease,color 0.3s ease;
-}
-#profilePage .poxy-streak-node .material-symbols-outlined{font-size:20px}
-#profilePage .poxy-streak-node.is-active{
-  background:linear-gradient(135deg,var(--prof-primary),var(--prof-secondary-container));
-  border-color:rgba(249,171,255,0.5);
-  color:#570066;
-  box-shadow:0 0 14px rgba(249,171,255,0.55);
-}
-/* Interactive badge wallet */
-#profilePage .poxy-badge-wallet{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-#profilePage .badge-none{
-  font-size:14px;
-  color:var(--prof-muted);
-}
-#profilePage .poxy-badge-row{
-  border-radius:14px;
-  border:1px solid var(--prof-outline);
-  background:var(--prof-glass);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  overflow:hidden;
-  transition:border-color 0.25s ease;
-}
-#profilePage .poxy-badge-row.is-open{
-  border-color:rgba(249,171,255,0.35);
-  box-shadow:0 0 20px rgba(249,171,255,0.08);
-}
-#profilePage .poxy-badge-chip-toggle{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:12px 16px;
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  font-weight:700;
-  color:inherit;
-  text-align:left;
-}
-#profilePage .poxy-badge-chip-left{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-}
-#profilePage .poxy-badge-chevron{
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  font-size:22px!important;
-}
-#profilePage .poxy-badge-row.is-open .poxy-badge-chevron{transform:rotate(180deg)}
-#profilePage .poxy-badge-expand{
-  max-height:0;
-  opacity:0;
-  overflow:hidden;
-  transition:max-height 0.45s cubic-bezier(0.34,1.56,0.64,1),opacity 0.35s ease,padding 0.35s ease;
-  padding:0 16px;
-}
-#profilePage .poxy-badge-row.is-open .poxy-badge-expand{
-  max-height:220px;
-  opacity:1;
-  padding:0 16px 16px;
-}
-#profilePage .poxy-badge-mini-card{
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.06);
-  background:rgba(10,10,14,0.75);
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-#profilePage .poxy-badge-asset-stage{
-  min-height:88px;
-  border-radius:10px;
-  border:1px dashed rgba(157,139,155,0.25);
-  background:radial-gradient(ellipse at 50% 30%,rgba(249,171,255,0.08),transparent 70%);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  color:var(--prof-muted);
-}
-#profilePage .poxy-badge-asset-stage .material-symbols-outlined{font-size:32px;color:var(--prof-primary)}
-#profilePage .poxy-badge-asset-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9px;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-}
-#profilePage .poxy-badge-meta{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  color:var(--prof-muted);
-}
-#profilePage .poxy-badge-chip-toggle.market_baron{color:#eab308}
-#profilePage .poxy-badge-chip-toggle.first_drop_set{color:var(--prof-primary)}
-#profilePage .poxy-badge-chip-toggle.founder{color:#f97316}
-#profilePage .poxy-badge-chip-toggle.developer{color:#ef4444}
-#profilePage .poxy-badge-chip-toggle.vip_club{color:var(--prof-secondary-container)}
-/* Security panel */
-#profilePage .poxy-profile-security{
-  background:var(--prof-glass);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--prof-outline);
-  border-radius:12px;
-  padding:20px 24px;
-}
-#profilePage .poxy-profile-security[hidden]{display:none!important}
-#profilePage .poxy-profile-security-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:16px;
-}
-#profilePage .poxy-profile-security-head h3{
-  margin:0;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--prof-on);
-}
-#profilePage .pwd-form{background:transparent;border:none;padding:0;margin:0}
-#profilePage .pwd-msg.error{color:#ffb4ab}
-#profilePage .pwd-msg.success{color:#99ccf5}
+.idhub-panel-meta--accent{color:var(--idhub-accent)}
 
-/* Showcase picker overlay */
-.poxy-showcase-picker{
-  position:fixed;
-  inset:0;
-  z-index:450;
+/* Showcase matrix */
+.idhub-showcase-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:12px;
+}
+@media(max-width:640px){.idhub-showcase-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.idhub-showcase-slot{
+  position:relative;
+  aspect-ratio:1/1;
+  border-radius:6px;
+  border:1px solid var(--idhub-border);
+  background:rgba(255,255,255,0.05);
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:20px;
+  overflow:hidden;
+  cursor:pointer;
+  padding:0;
+  font-family:inherit;
+  transition:border-color 0.3s,background 0.3s;
 }
-.poxy-showcase-picker[hidden]{display:none!important}
-.poxy-showcase-picker-backdrop{
+.idhub-showcase-slot.is-empty{
+  border-style:dashed;
+  border-color:rgba(255,255,255,0.2);
+}
+.idhub-showcase-slot.is-empty:hover{border-color:rgba(255,255,255,0.4)}
+.idhub-showcase-slot.is-empty .material-symbols-outlined{
+  font-size:24px;
+  color:rgba(255,255,255,0.2);
+  transition:color 0.3s;
+}
+.idhub-showcase-slot.is-empty:hover .material-symbols-outlined{color:#fff}
+.idhub-showcase-slot.is-pinned .idhub-showcase-icon{
+  font-size:28px;
+  line-height:1;
+  filter:drop-shadow(0 0 8px currentColor);
+}
+.idhub-showcase-overlay{
   position:absolute;
   inset:0;
-  background:rgba(4,4,8,0.82);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
+  border:2px solid;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow:inset 0 0 20px rgba(236,72,153,0.3);
 }
-.poxy-showcase-picker-card{
-  position:relative;
-  z-index:2;
-  width:100%;
-  max-width:640px;
-  max-height:min(80vh,640px);
-  overflow:auto;
-  border-radius:16px;
-  border:1px solid rgba(157,139,155,0.25);
-  background:rgba(18,18,24,0.95);
-  padding:20px 22px 22px;
-  box-shadow:0 24px 80px rgba(0,0,0,0.55),0 0 40px rgba(249,171,255,0.08);
+
+/* Badge wallet */
+.idhub-badge-list{display:flex;flex-direction:column;gap:12px}
+.idhub-badge-empty{
+  font-size:13px;
+  color:var(--idhub-muted);
 }
-.poxy-showcase-picker-head{
+.idhub-badge-row{
   display:flex;
   align-items:center;
   justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--idhub-border);
+  border-radius:6px;
+  transition:background 0.3s;
+}
+.idhub-badge-row:hover{background:rgba(255,255,255,0.1)}
+.idhub-badge-left{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  min-width:0;
+}
+.idhub-badge-icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.idhub-badge-icon--accent{background:rgba(236,72,153,0.2)}
+.idhub-badge-icon .material-symbols-outlined{
+  font-size:20px;
+  color:#fff;
+  font-variation-settings:'FILL' 1;
+}
+.idhub-badge-icon--accent .material-symbols-outlined{color:var(--idhub-accent)}
+.idhub-badge-label{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:0.05em;
+  color:#fff;
+  text-transform:uppercase;
+}
+.idhub-badge-perk{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.05em;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* Daily directives */
+.idhub-directives-panel{margin-bottom:0}
+.idhub-directives{display:flex;flex-direction:column;gap:16px}
+.idhub-directive-loading,
+.idhub-directive-empty{
+  font-size:13px;
+  color:var(--idhub-muted);
+  margin:0;
+}
+.idhub-directive{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  padding:12px;
+  background:var(--idhub-obsidian);
+  border:1px solid var(--idhub-border);
+  border-radius:8px;
+}
+@media(min-width:768px){
+  .idhub-directive{
+    flex-direction:row;
+    align-items:center;
+  }
+}
+.idhub-directive-body{flex:1;width:100%;min-width:0}
+.idhub-directive-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   gap:12px;
   margin-bottom:8px;
+  flex-wrap:wrap;
 }
-.poxy-showcase-picker-head h3{
-  margin:0;
+.idhub-directive-title{
   font-family:'Hanken Grotesk',Inter,sans-serif;
-  font-size:20px;
-  font-weight:600;
-  color:#e5e2e1;
-}
-.poxy-showcase-picker-close{
-  width:36px;height:36px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.1);
-  background:rgba(32,32,40,0.9);
-  color:#e5e2e1;
-  font-size:22px;
-  line-height:1;
-  cursor:pointer;
-}
-.poxy-showcase-picker-sub{
-  margin:0 0 16px;
-  font-size:13px;
-  color:#d5c1d2;
-}
-.poxy-showcase-picker-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  gap:12px;
-}
-.poxy-showcase-picker-item{
-  min-height:120px;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(157,139,155,0.2);
-  background:rgba(14,14,18,0.8);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  cursor:pointer;
-  transition:transform 0.25s ease,border-color 0.25s ease;
-}
-.poxy-showcase-picker-item:hover{
-  transform:scale(1.03);
-  border-color:rgba(249,171,255,0.4);
-}
-.poxy-showcase-picker-item.is-pinned-elsewhere{opacity:0.55}
-.poxy-showcase-picker-tier{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9px;
+  font-size:14px;
   font-weight:700;
-  letter-spacing:0.1em;
+  letter-spacing:0.05em;
+  color:#fff;
   text-transform:uppercase;
 }
-.poxy-showcase-picker-icon{font-size:1.5rem}
-.poxy-showcase-picker-serial{
+.idhub-directive-pct{
   font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  color:#d5c1d2;
+  font-size:12px;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
 }
-.poxy-showcase-picker-clear{
-  grid-column:1/-1;
-  padding:12px;
+.idhub-directive-pct.is-complete{color:var(--idhub-accent)}
+.idhub-directive-track{
+  width:100%;
+  height:8px;
+  background:rgba(255,255,255,0.1);
   border-radius:9999px;
-  border:1px dashed rgba(157,139,155,0.35);
-  background:transparent;
-  color:#d5c1d2;
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:0.08em;
+  overflow:hidden;
+}
+.idhub-directive-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--idhub-accent),#f472b6);
+  border-radius:9999px;
+  box-shadow:0 0 10px rgba(236,72,153,0.5);
+  transition:width 0.4s ease;
+}
+.idhub-directive-claim{
+  width:100%;
+  padding:12px 32px;
+  border:none;
+  border-radius:6px;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:0.05em;
   text-transform:uppercase;
   cursor:pointer;
+  transition:background 0.3s,transform 0.2s,opacity 0.3s;
+  flex-shrink:0;
 }
-.poxy-showcase-picker-empty{
-  grid-column:1/-1;
-  text-align:center;
-  color:#d5c1d2;
-  padding:24px;
+@media(min-width:768px){.idhub-directive-claim{width:auto}}
+.idhub-directive-claim.is-ready{
+  background:#fff;
+  color:var(--idhub-obsidian);
 }
+.idhub-directive-claim.is-ready:hover{background:#fce7f3}
+.idhub-directive-claim.is-ready:active{transform:scale(0.95)}
+.idhub-directive-claim.is-progress,
+.idhub-directive-claim.is-claimed{
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  cursor:not-allowed;
+  opacity:0.5;
+}
+
+/* Showcase picker (keep compatible) */
+.poxy-showcase-picker-backdrop{background:rgba(5,5,6,0.82)}
+.poxy-showcase-picker-card{border-color:var(--idhub-border);background:rgba(28,27,27,0.95)}
