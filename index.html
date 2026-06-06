@@ -3186,7 +3186,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
       <p class="poxy-friends-sub" data-i18n="friends.sub">Compact roster with live presence, hot-key macros, and full profile viewports.</p>
       <div id="pendingRequestsContainer"></div>
       <div class="search-bar">
-        <input class="search-input" id="friendSearch" data-i18n-placeholder="friends.search.placeholder" placeholder="Search by exact username..." onkeydown="if(event.key==='Enter')searchUsers()">
+        <input class="search-input" id="friendSearch" data-i18n-placeholder="friends.search.placeholder" placeholder="Username or #PX-hash..." onkeydown="if(event.key==='Enter')searchUsers()">
         <button class="btn-search" onclick="searchUsers()" data-i18n="friends.search.find">Find</button>
       </div>
       <div class="search-hint" data-i18n="friends.search.hint">Enter exact username (letters, numbers, underscores).</div>
@@ -4344,6 +4344,7 @@ Verification (anyone can do this):
               <span class="material-symbols-outlined poxy-id-verified qp-profile-verified" id="inspectVerified" hidden>verified</span>
             </div>
             <p class="poxy-id-handle" id="inspectHandle"><span class="poxy-id-at">@</span>–</p>
+            <p class="poxy-id-system-id" id="inspectSystemId" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:.08em;margin:2px 0 0;display:none"></p>
           </div>
           <div class="poxy-id-meta qp-profile-rank-row">
             <span class="poxy-id-meta-primary qp-profile-rank-primary" id="inspectRankText">Unranked</span>
@@ -9301,12 +9302,23 @@ async function openChatUserInspect(userId,anchorEl,e){
 window.searchUsers=async function(){
   const q=$('friendSearch').value.trim();
   const cont=$('searchResults');
-  if(!q){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">Enter an exact username above</div>';return;}
-  const v=validateUsername(q);
-  if(!v.ok){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">'+sanitizeText(v.msg)+'</div>';return;}
+  if(!q){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:8px 0">Enter username or #PX-hash above</div>';return;}
+  // Allow search by account hash: starts with # or PX-
+  const isHashSearch=/^#?PX-[A-Za-z0-9]+/i.test(q);
+  if(!isHashSearch){
+    const v=validateUsername(q);
+    if(!v.ok){cont.innerHTML='<div style="font-size:12px;color:#E91E63;padding:8px 0">'+sanitizeText(v.msg)+'</div>';return;}
+  }
   cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
   try{
-    const{data,error}=await sb.from('profiles').select('id,username,avatar_url').eq('username',q).neq('id',currentUser.id).limit(5);
+    let data,error;
+    if(isHashSearch){
+      // Strip leading # and PX- prefix to get raw hash
+      const rawHash=q.replace(/^#/,'').replace(/^PX-/i,'').split('-')[0].toUpperCase();
+      ({data,error}=await sb.from('profiles').select('id,username,avatar_url,account_hash').ilike('account_hash',rawHash+'%').neq('id',currentUser.id).limit(5));
+    } else {
+      ({data,error}=await sb.from('profiles').select('id,username,avatar_url,account_hash').eq('username',q).neq('id',currentUser.id).limit(5));
+    }
     if(error)throw error;
     if(!data||!data.length){cont.innerHTML='<div style="font-size:12px;color:#C8C8C8;padding:10px 0">No user found with username "'+sanitizeText(q)+'".</div>';return;}
     const ids=data.map(p=>p.id);
@@ -9323,7 +9335,8 @@ window.searchUsers=async function(){
       renderUserCardAvatar(avEl,p.avatar_url,premIds.has(p.id),p.id);
       const info=document.createElement('div');info.className='user-card-info';
       const nm=document.createElement('div');nm.className='user-card-name';nm.textContent=sanitizeText(p.username||'');
-      const sub=document.createElement('div');sub.className='user-card-sub';sub.textContent='POXY member';
+      const sub=document.createElement('div');sub.className='user-card-sub';
+      sub.textContent=p.account_hash?'#PX-'+p.account_hash:'POXY member';
       info.appendChild(nm);info.appendChild(sub);
       const btn=document.createElement('button');
       const alreadyFriend=friendAccepted.includes(p.id);
@@ -9739,6 +9752,11 @@ async function openInspectModal(userId){
     poxyIdSetIdentity($('inspectDisplayName'),$('inspectHandle'),prof);
     const verified=$('inspectVerified');
     if(verified)verified.hidden=!(prof.is_verified_employee||(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL));
+    const sysIdEl=$('inspectSystemId');
+    if(sysIdEl&&prof.account_hash){
+      sysIdEl.textContent='SYSTEM_ID: #PX-'+prof.account_hash;
+      sysIdEl.style.display='block';
+    } else if(sysIdEl) sysIdEl.style.display='none';
     const rk=leaderboardRankByUser[userId];
     $('inspectRankText').textContent=rk?'Global Rank #'+rk:'Unranked';
     $('inspectMemberText').textContent=prof.is_club_member?'Elite Member':'POXY Member';

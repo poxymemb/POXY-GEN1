@@ -191,6 +191,9 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
       <button class="nav-btn" onclick="switchTab('telem')" data-tab="telem">
         <span class="ic">⬟</span>TELEMETRY
       </button>
+      <button class="nav-btn" onclick="switchTab('acc')" data-tab="acc">
+        <span class="ic">⚙</span>ACCOUNT OPS
+      </button>
     </nav>
     <div class="sidebar-footer">
       <div><span class="uplink-dot"></span><span class="uplink-txt">UPLINK ACTIVE</span></div>
@@ -546,6 +549,150 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
         </div>
       </div>
     </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         TAB 5: ACCOUNT OPERATIONS (by #PX-hash / username / UUID)
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-acc" class="tab-pane">
+      <div class="section-hdr">ACCOUNT OPERATIONS — SYSTEM CONTROL PANEL</div>
+
+      <!-- LOOKUP -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">◈ ACCOUNT LOOKUP — #PX-HASH / USERNAME / UUID</div>
+        <div class="grid2" style="align-items:end;gap:12px">
+          <div class="f-row" style="margin:0">
+            <label class="f-label">QUERY (ANY FORMAT)</label>
+            <input id="accQuery" class="f-input" type="text" placeholder="#PX-ABCD1234 or @username or uuid" onkeydown="if(event.key==='Enter')accLookup()"/>
+          </div>
+          <button class="btn btn-amber" onclick="accLookup()" style="height:32px">LOOKUP</button>
+        </div>
+        <div id="accProfile" style="display:none;margin-top:14px">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg2);border:1px solid var(--border)">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:#fff" id="accDisplayName">–</div>
+              <div style="font-size:8px;color:var(--muted);margin-top:2px" id="accHandle">@–</div>
+              <div style="font-size:8px;color:var(--cyan);margin-top:2px" id="accHashLine">SYSTEM_ID: –</div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div style="font-size:8px;color:var(--muted)">BALANCE</div>
+              <div style="font-size:16px;font-weight:700;color:var(--amber)" id="accBalance">–</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:8px;color:var(--muted)">ASSETS</div>
+              <div style="font-size:16px;font-weight:700;color:var(--cyan)" id="accAssets">–</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding:8px;background:var(--bg2);border:1px solid var(--border)">
+            <span style="font-size:8px;color:var(--muted)">STATUS:</span>
+            <span id="accStatusBadges" style="font-size:8px;display:flex;gap:6px;flex-wrap:wrap"></span>
+          </div>
+          <input type="hidden" id="accUserId" value=""/>
+        </div>
+      </div>
+
+      <!-- OPERATIONS GRID -->
+      <div class="grid2" style="align-items:start">
+
+        <!-- BALANCE OPS -->
+        <div class="card">
+          <div class="card-title">⬡ BALANCE OPERATIONS</div>
+          <div class="f-row">
+            <label class="f-label">AMOUNT (PC)</label>
+            <input id="accBalAmount" class="f-input" type="number" value="100" min="0" max="999999" step="10"/>
+          </div>
+          <div class="row-flex" style="gap:8px">
+            <button class="btn btn-green" onclick="accAddBalance()">+ ADD BALANCE</button>
+            <button class="btn btn-red" onclick="accSetBalance()">= SET BALANCE</button>
+            <button class="btn btn-ghost btn-sm" onclick="accResetBalance()">RESET TO 0</button>
+          </div>
+          <div id="accBalLog" style="margin-top:8px;font-size:8px;color:var(--muted)"></div>
+        </div>
+
+        <!-- ACCOUNT STATUS -->
+        <div class="card">
+          <div class="card-title">◆ ACCOUNT STATUS FLAGS</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="toggle-wrap">
+              <label class="toggle"><input type="checkbox" id="accFreezeToggle" onchange="accSetFreeze()"/><span class="toggle-slider"></span></label>
+              <span class="toggle-label">FREEZE ACCOUNT (lock all actions)</span>
+            </div>
+            <div class="toggle-wrap">
+              <label class="toggle"><input type="checkbox" id="accVerifiedToggle" onchange="accSetVerified()"/><span class="toggle-slider"></span></label>
+              <span class="toggle-label">VERIFIED EMPLOYEE (✓ checkmark)</span>
+            </div>
+            <div class="toggle-wrap">
+              <label class="toggle"><input type="checkbox" id="accClubToggle" onchange="accSetClub()"/><span class="toggle-slider"></span></label>
+              <span class="toggle-label">VIP CLUB MEMBER</span>
+            </div>
+          </div>
+          <div id="accStatusLog" style="margin-top:8px;font-size:8px;color:var(--muted)"></div>
+        </div>
+
+        <!-- BADGE MANAGEMENT -->
+        <div class="card">
+          <div class="card-title">◈ BADGE MANAGEMENT</div>
+          <div class="f-row">
+            <label class="f-label">SELECT BADGE</label>
+            <select id="accBadgeSelect" class="f-select">
+              <option value="founder">FOUNDER</option>
+              <option value="developer">CORE DEV</option>
+              <option value="vip_club">VIP CLUB</option>
+              <option value="market_baron">MARKET BARON</option>
+              <option value="first_drop_set">FIRST DROP SET</option>
+              <option value="early_adopter">EARLY ADOPTER</option>
+              <option value="bug_hunter">BUG HUNTER</option>
+            </select>
+          </div>
+          <div class="row-flex" style="gap:8px">
+            <button class="btn btn-green" onclick="accGrantBadge()">GRANT BADGE</button>
+            <button class="btn btn-red" onclick="accRevokeBadge()">REVOKE BADGE</button>
+          </div>
+          <div id="accBadgeLog" style="margin-top:8px;font-size:8px;color:var(--muted)"></div>
+        </div>
+
+        <!-- USERNAME OVERRIDE -->
+        <div class="card">
+          <div class="card-title">⚠ USERNAME OVERRIDE (policy / 18+ violation)</div>
+          <div style="margin-bottom:10px;padding:8px;background:var(--bg2);border:1px solid rgba(255,60,95,.25)">
+            <div style="font-size:8px;color:var(--red);letter-spacing:.1em;text-transform:uppercase">⚠ BYPASS CLIENT VALIDATION — USE ONLY FOR POLICY VIOLATIONS</div>
+          </div>
+          <div class="f-row">
+            <label class="f-label">NEW USERNAME</label>
+            <input id="accNewUsername" class="f-input" type="text" placeholder="new_username_here"/>
+          </div>
+          <div class="f-row">
+            <label class="f-label">REASON</label>
+            <input id="accUsernameReason" class="f-input" type="text" placeholder="Policy violation / 18+ content / etc"/>
+          </div>
+          <button class="btn btn-amber" onclick="accForceUsername()">OVERRIDE USERNAME</button>
+          <div id="accUsernameLog" style="margin-top:8px;font-size:8px;color:var(--muted)"></div>
+        </div>
+
+      </div><!-- /grid2 -->
+
+      <!-- DANGER ZONE -->
+      <div class="card" style="border-color:rgba(255,60,95,.35);margin-top:4px">
+        <div class="card-title" style="color:var(--red)">☠ DANGER ZONE — DESTRUCTIVE OPERATIONS</div>
+        <div class="grid2" style="gap:12px">
+          <div>
+            <div style="font-size:8px;color:var(--muted);margin-bottom:8px;line-height:1.6">BLOCK: prevents login. UNBLOCK: restores access.<br/>DELETE: removes profile + all assets permanently.</div>
+            <div class="row-flex" style="gap:8px">
+              <button class="btn btn-red" onclick="accBlock()">⛔ BLOCK ACCOUNT</button>
+              <button class="btn btn-ghost btn-sm" onclick="accUnblock()">UNBLOCK</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:8px;color:var(--red);margin-bottom:8px;line-height:1.6">⚠ PERMANENT: wipes profile row. Cannot be undone.<br/>Type user's username below to confirm.</div>
+            <div class="f-row">
+              <input id="accDeleteConfirm" class="f-input" type="text" placeholder="Type username to confirm"/>
+            </div>
+            <button class="btn btn-red" onclick="accDeleteAccount()" style="width:100%">🗑 PERMANENTLY DELETE ACCOUNT</button>
+          </div>
+        </div>
+        <div id="accDangerLog" style="margin-top:10px;font-size:8px;color:var(--red)"></div>
+      </div>
+
+    </div><!-- /tab-acc -->
 
   </div><!-- /main -->
 </div><!-- /terminal -->
@@ -908,9 +1055,7 @@ async function executeAirdrop(){
     user_id: userId,
     poxy_tier: tier,
     serial_number: serialFinal,
-    collection_id: collection,
-    generation_version: 1,
-    rarity_seed: crypto.randomUUID()
+    case_origin: 'airdrop'
   }).select('id').single();
 
   if(error){
@@ -1368,6 +1513,232 @@ function fmtDate(s){
 function fmtLogTime(d){
   const t = d || new _nativeDate();
   return [t.getHours(),t.getMinutes(),t.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 5 — ACCOUNT OPERATIONS
+// ═══════════════════════════════════════════════════════════════
+
+// ── Shared resolver: username / UUID / #PX-hash ───────────────
+async function resolveAccTarget(raw){
+  if(!raw) return null;
+  const q = raw.trim();
+  // UUID format
+  if(/^[0-9a-f-]{36}$/i.test(q)){
+    const {data} = await sb.from('profiles').select('*').eq('id',q).maybeSingle();
+    return data || null;
+  }
+  // Hash format: #PX-ABCD1234 or PX-ABCD1234 or ABCD1234
+  if(/^#?PX-/i.test(q) || /^[A-F0-9]{6,8}$/i.test(q)){
+    const hash = q.replace(/^#?PX-/i,'').split('-')[0].toUpperCase();
+    const {data} = await sb.from('profiles').select('*').ilike('account_hash',hash+'%').limit(1);
+    if(data&&data.length) return data[0];
+  }
+  // Username fallback
+  const {data} = await sb.from('profiles').select('*').ilike('username',q).limit(1);
+  return (data&&data.length) ? data[0] : null;
+}
+
+let _accCurrentProf = null;
+
+async function accLookup(){
+  const raw = document.getElementById('accQuery').value.trim();
+  if(!raw){ toast('ENTER QUERY','err'); return; }
+  document.getElementById('accProfile').style.display = 'none';
+  toast('RESOLVING…');
+  const prof = await resolveAccTarget(raw);
+  if(!prof){ toast('USER NOT FOUND','err'); return; }
+  _accCurrentProf = prof;
+  document.getElementById('accUserId').value = prof.id;
+  document.getElementById('accDisplayName').textContent = prof.username || '(no username)';
+  document.getElementById('accHandle').textContent = '@' + (prof.username||'—');
+  document.getElementById('accHashLine').textContent = 'SYSTEM_ID: #PX-' + (prof.account_hash||'——');
+  document.getElementById('accBalance').textContent = (prof.balance||0).toFixed(2)+' PC';
+  // Load asset count
+  const {count} = await sb.from('user_poxy').select('id',{count:'exact',head:true}).eq('user_id',prof.id);
+  document.getElementById('accAssets').textContent = count ?? '?';
+  // Status badges
+  const badges = [];
+  if(prof.is_verified_employee) badges.push('<span class="badge badge-amber">✓ VERIFIED</span>');
+  if(prof.is_club_member) badges.push('<span class="badge badge-green">VIP</span>');
+  if(prof.is_frozen) badges.push('<span class="badge badge-red">FROZEN</span>');
+  if(prof.is_blocked) badges.push('<span class="badge badge-red">BLOCKED</span>');
+  document.getElementById('accStatusBadges').innerHTML = badges.join('') || '<span style="color:var(--muted)">STANDARD</span>';
+  // Sync toggles
+  document.getElementById('accFreezeToggle').checked   = !!prof.is_frozen;
+  document.getElementById('accVerifiedToggle').checked = !!prof.is_verified_employee;
+  document.getElementById('accClubToggle').checked     = !!prof.is_club_member;
+  document.getElementById('accProfile').style.display  = 'block';
+  streamLine('ADMIN', `ACC LOOKUP: ${prof.username||prof.id.slice(0,12)} | #PX-${prof.account_hash||'??'}`);
+}
+
+function getAccUserId(logId){
+  const uid = document.getElementById('accUserId').value;
+  if(!uid){ toast('LOOKUP A USER FIRST','err'); return null; }
+  return uid;
+}
+
+// ── Balance ops ──────────────────────────────────────────────
+async function accAddBalance(){
+  const uid = getAccUserId(); if(!uid) return;
+  const amt = parseFloat(document.getElementById('accBalAmount').value)||0;
+  if(amt<=0){ toast('ENTER POSITIVE AMOUNT','err'); return; }
+  const logEl = document.getElementById('accBalLog');
+  logEl.style.color='var(--muted)'; logEl.textContent='APPLYING…';
+  const {data,error} = await sb.from('profiles').update({balance: (_accCurrentProf.balance||0)+amt}).eq('id',uid).select('balance').maybeSingle();
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; toast('FAILED','err'); return; }
+  _accCurrentProf.balance = data.balance;
+  document.getElementById('accBalance').textContent = data.balance.toFixed(2)+' PC';
+  logEl.style.color='var(--green)'; logEl.textContent='✓ BALANCE NOW: '+data.balance.toFixed(2)+' PC';
+  toast('BALANCE UPDATED');
+  streamLine('ADMIN', `BALANCE +${amt}PC → ${_accCurrentProf.username||uid.slice(0,12)} = ${data.balance}PC`);
+}
+async function accSetBalance(){
+  const uid = getAccUserId(); if(!uid) return;
+  const amt = parseFloat(document.getElementById('accBalAmount').value)||0;
+  const logEl = document.getElementById('accBalLog');
+  logEl.style.color='var(--muted)'; logEl.textContent='SETTING…';
+  const {data,error} = await sb.from('profiles').update({balance:amt}).eq('id',uid).select('balance').maybeSingle();
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
+  _accCurrentProf.balance = data.balance;
+  document.getElementById('accBalance').textContent = data.balance.toFixed(2)+' PC';
+  logEl.style.color='var(--green)'; logEl.textContent='✓ SET TO: '+data.balance.toFixed(2)+' PC';
+  toast('BALANCE SET');
+  streamLine('ADMIN', `BALANCE SET → ${_accCurrentProf.username||uid.slice(0,12)} = ${data.balance}PC`);
+}
+async function accResetBalance(){
+  document.getElementById('accBalAmount').value = '0';
+  await accSetBalance();
+}
+
+// ── Status flags ─────────────────────────────────────────────
+async function accSetFreeze(){
+  const uid = getAccUserId(); if(!uid) return;
+  const val = document.getElementById('accFreezeToggle').checked;
+  const logEl = document.getElementById('accStatusLog');
+  const {error} = await sb.from('profiles').update({is_frozen:val}).eq('id',uid);
+  if(error){
+    // Column may not exist yet — handle gracefully
+    logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message+' (run freeze migration if needed)';
+    return;
+  }
+  logEl.style.color = val?'var(--red)':'var(--green)';
+  logEl.textContent = val?'✓ ACCOUNT FROZEN':'✓ ACCOUNT UNFROZEN';
+  toast(val?'ACCOUNT FROZEN':'ACCOUNT UNFROZEN');
+  streamLine('ADMIN', `ACC FREEZE → ${_accCurrentProf.username||uid.slice(0,12)} = ${val?'FROZEN':'ACTIVE'}`);
+}
+async function accSetVerified(){
+  const uid = getAccUserId(); if(!uid) return;
+  const val = document.getElementById('accVerifiedToggle').checked;
+  const logEl = document.getElementById('accStatusLog');
+  const {error} = await sb.from('profiles').update({is_verified_employee:val}).eq('id',uid);
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
+  logEl.style.color='var(--green)'; logEl.textContent='✓ VERIFIED = '+String(val).toUpperCase();
+  toast('VERIFIED FLAG SET');
+  streamLine('ADMIN', `VERIFIED → ${_accCurrentProf.username||uid.slice(0,12)} = ${val}`);
+}
+async function accSetClub(){
+  const uid = getAccUserId(); if(!uid) return;
+  const val = document.getElementById('accClubToggle').checked;
+  const logEl = document.getElementById('accStatusLog');
+  const {error} = await sb.from('profiles').update({is_club_member:val}).eq('id',uid);
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
+  logEl.style.color='var(--green)'; logEl.textContent='✓ VIP CLUB = '+String(val).toUpperCase();
+  toast('CLUB STATUS SET');
+  streamLine('ADMIN', `VIP CLUB → ${_accCurrentProf.username||uid.slice(0,12)} = ${val}`);
+}
+
+// ── Badge management ─────────────────────────────────────────
+async function accGrantBadge(){
+  const uid = getAccUserId(); if(!uid) return;
+  const badge = document.getElementById('accBadgeSelect').value;
+  const logEl = document.getElementById('accBadgeLog');
+  const current = Array.isArray(_accCurrentProf.badges)?[..._accCurrentProf.badges]:[];
+  if(current.includes(badge)){ logEl.textContent='BADGE ALREADY PRESENT'; return; }
+  current.push(badge);
+  const {error} = await sb.from('profiles').update({badges:current}).eq('id',uid);
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
+  _accCurrentProf.badges = current;
+  logEl.style.color='var(--green)'; logEl.textContent='✓ BADGE GRANTED: '+badge.toUpperCase();
+  toast('BADGE GRANTED');
+  streamLine('ADMIN', `BADGE GRANT → ${_accCurrentProf.username||uid.slice(0,12)} | ${badge}`);
+}
+async function accRevokeBadge(){
+  const uid = getAccUserId(); if(!uid) return;
+  const badge = document.getElementById('accBadgeSelect').value;
+  const logEl = document.getElementById('accBadgeLog');
+  const current = (Array.isArray(_accCurrentProf.badges)?[..._accCurrentProf.badges]:[]).filter(b=>b!==badge);
+  const {error} = await sb.from('profiles').update({badges:current}).eq('id',uid);
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
+  _accCurrentProf.badges = current;
+  logEl.style.color='var(--amber)'; logEl.textContent='✓ BADGE REVOKED: '+badge.toUpperCase();
+  toast('BADGE REVOKED');
+  streamLine('ADMIN', `BADGE REVOKE → ${_accCurrentProf.username||uid.slice(0,12)} | ${badge}`);
+}
+
+// ── Username override ─────────────────────────────────────────
+async function accForceUsername(){
+  const uid = getAccUserId(); if(!uid) return;
+  const newUn = document.getElementById('accNewUsername').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  const reason = document.getElementById('accUsernameReason').value.trim();
+  const logEl = document.getElementById('accUsernameLog');
+  if(!newUn||newUn.length<2){ logEl.style.color='var(--red)'; logEl.textContent='ENTER VALID USERNAME (min 2 chars)'; return; }
+  if(!reason){ logEl.style.color='var(--red)'; logEl.textContent='ENTER REASON'; return; }
+  logEl.style.color='var(--muted)'; logEl.textContent='UPDATING…';
+  const {error} = await sb.from('profiles').update({username:newUn}).eq('id',uid);
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
+  _accCurrentProf.username = newUn;
+  document.getElementById('accDisplayName').textContent = newUn;
+  document.getElementById('accHandle').textContent = '@'+newUn;
+  logEl.style.color='var(--green)'; logEl.textContent='✓ USERNAME CHANGED TO: @'+newUn+' | REASON: '+reason;
+  toast('USERNAME OVERRIDDEN');
+  streamLine('ADMIN', `USERNAME OVERRIDE → @${newUn} (${reason})`);
+}
+
+// ── Block / Unblock ───────────────────────────────────────────
+async function accBlock(){
+  const uid = getAccUserId(); if(!uid) return;
+  if(!confirm(`BLOCK account "${_accCurrentProf.username||uid}"? This prevents login.`)) return;
+  const {error} = await sb.from('profiles').update({is_blocked:true}).eq('id',uid);
+  const logEl = document.getElementById('accDangerLog');
+  if(error){ logEl.textContent='ERROR: '+error.message; return; }
+  logEl.textContent='✓ ACCOUNT BLOCKED: '+(_accCurrentProf.username||uid.slice(0,12));
+  toast('ACCOUNT BLOCKED','err');
+  streamLine('ADMIN', `BLOCK → ${_accCurrentProf.username||uid.slice(0,12)}`);
+}
+async function accUnblock(){
+  const uid = getAccUserId(); if(!uid) return;
+  const {error} = await sb.from('profiles').update({is_blocked:false}).eq('id',uid);
+  const logEl = document.getElementById('accDangerLog');
+  if(error){ logEl.textContent='ERROR: '+error.message; return; }
+  logEl.textContent='✓ ACCOUNT UNBLOCKED: '+(_accCurrentProf.username||uid.slice(0,12));
+  toast('UNBLOCKED');
+  streamLine('ADMIN', `UNBLOCK → ${_accCurrentProf.username||uid.slice(0,12)}`);
+}
+
+// ── Delete account ────────────────────────────────────────────
+async function accDeleteAccount(){
+  const uid = getAccUserId(); if(!uid) return;
+  const confirmName = document.getElementById('accDeleteConfirm').value.trim();
+  const realName = _accCurrentProf.username||'';
+  const logEl = document.getElementById('accDangerLog');
+  if(!confirmName||confirmName.toLowerCase()!==realName.toLowerCase()){
+    logEl.textContent='TYPE THE EXACT USERNAME TO CONFIRM DELETION';
+    toast('CONFIRMATION MISMATCH','err'); return;
+  }
+  if(!confirm(`PERMANENTLY DELETE account "${realName}"? ALL ASSETS AND DATA WILL BE LOST.`)) return;
+  logEl.textContent='DELETING ASSETS…';
+  await sb.from('user_poxy').delete().eq('user_id',uid);
+  await sb.from('marketplace').delete().eq('seller_id',uid);
+  const {error} = await sb.from('profiles').delete().eq('id',uid);
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='PROFILE DELETE ERROR: '+error.message; return; }
+  document.getElementById('accProfile').style.display='none';
+  document.getElementById('accQuery').value='';
+  document.getElementById('accDeleteConfirm').value='';
+  _accCurrentProf = null;
+  logEl.style.color='var(--red)'; logEl.textContent='⛔ ACCOUNT DELETED: '+realName;
+  toast('ACCOUNT DELETED','err');
+  streamLine('ADMIN', `DELETE → @${realName} | ${uid.slice(0,12)}`);
 }
 </script>
 </body>
