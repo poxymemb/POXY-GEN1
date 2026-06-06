@@ -1760,9 +1760,7 @@ body.dark-club .club-sub{color:#888}
             </div>
           </div>
 
-          <!-- Community post creator + feed -->
-          <div class="nl-feed-title">Founder Broadcast</div>
-          <div id="newsCreateFormContainer"></div>
+          <!-- Live feed -->
           <div class="poxy-news-feed" id="newsPostsList"><div class="news-empty" style="color:rgba(229,226,225,0.4);text-align:center;padding:32px">Loading news…</div></div>
           <div class="poxy-news-load-wrap">
             <button type="button" class="poxy-news-load-more" id="btnNewsLoadMore" onclick="loadNewsFeedTab(true)">Load previous archives</button>
@@ -11714,15 +11712,8 @@ function renderNewsDemoFeed(listEl){
 async function loadNewsFeedTab(loadMore){
   if(!currentUser)return;
   const listEl=$('newsPostsList');
-  const formEl=$('newsCreateFormContainer');
   if(!listEl)return;
   if(loadMore)newsFeedLimit=Math.min(60,newsFeedLimit+20);
-  const canPost=currentProfile?.is_verified_employee===true||isFounder();
-  if(formEl){
-    if(canPost){
-      formEl.innerHTML='<div class="news-create-form"><div class="news-create-title">'+(isFounder()?'Founder Broadcast':'Publish News Post')+'</div><input class="news-input" id="newsInputTitle" placeholder="Post title..." maxlength="200"><textarea class="news-textarea" id="newsInputContent" placeholder="Post content..." maxlength="5000"></textarea><input class="news-input" id="newsInputImage" placeholder="Image URL (optional)..." maxlength="1000"><button class="btn-news-publish" id="btnNewsPublish" onclick="submitNewsPost()">Publish Post</button></div>';
-    } else {formEl.innerHTML='';}
-  }
   if(!loadMore)listEl.innerHTML='<div class="news-empty"><div class="col-spinner" style="border-top-color:#f9abff;margin:0 auto 12px"></div></div>';
   try{
     const{data,error}=await sb.from('news_posts').select('*').order('created_at',{ascending:false}).limit(newsFeedLimit);
