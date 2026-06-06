@@ -3,14 +3,54 @@
   display:none;
   max-width:100%!important;
   width:100%;
-  min-height:calc(100vh - 120px);
+  min-height:100vh;
   margin:0 auto;
-  padding:20px 16px 64px!important;
+  padding:20px 16px 80px;
   box-sizing:border-box;
   color:#e5e2e1;
   background:transparent;
 }
 #settingsPage.poxy-settings-page.visible{display:block!important}
+
+/* Stitch dash: fixed nav clearance (profile/collection pattern) */
+body.poxy-stitch-dash #settingsPage.poxy-settings-page,
+body.poxy-stitch-dash #settingsPage.poxy-settings-page.visible{
+  padding-top:calc(var(--st-nav-h,92px) + 20px)!important;
+  padding-right:16px;
+  padding-bottom:120px!important;
+  padding-left:16px;
+}
+@media(min-width:768px){
+  body.poxy-stitch-dash #settingsPage.poxy-settings-page,
+  body.poxy-stitch-dash #settingsPage.poxy-settings-page.visible{
+    padding-top:calc(var(--st-nav-h,92px) + 24px)!important;
+    padding-right:24px;
+    padding-bottom:140px!important;
+    padding-left:24px;
+  }
+}
+@media(min-width:1280px){
+  body.poxy-stitch-dash #settingsPage.poxy-settings-page,
+  body.poxy-stitch-dash #settingsPage.poxy-settings-page.visible{
+    padding-top:calc(var(--st-nav-h,124px) + 28px)!important;
+    padding-right:32px;
+    padding-bottom:160px!important;
+    padding-left:32px;
+  }
+}
+body.poxy-stitch-dash:has(#settingsPage.visible){
+  scroll-padding-bottom:80px;
+}
+body.poxy-stitch-dash #settingsPage .poxy-settings-shell{
+  min-height:auto;
+}
+body.poxy-stitch-dash #settingsPage .poxy-settings-viewport{
+  overflow-y:visible;
+  max-height:none;
+}
+body.poxy-stitch-dash #settingsPage .poxy-settings-viewport-head{
+  top:calc(var(--st-nav-h,92px) + 8px);
+}
 
 .poxy-settings-shell{
   display:flex;
@@ -18,7 +58,7 @@
   gap:20px;
   max-width:min(1280px,100%);
   margin:0 auto;
-  min-height:calc(100vh - 160px);
+  min-height:0;
 }
 @media(min-width:900px){
   .poxy-settings-shell{

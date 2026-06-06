@@ -48,7 +48,7 @@
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=20">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-settings-page.css?v=6">
+<link rel="stylesheet" href="assets/poxy-settings-page.css?v=7">
 <script src="assets/poxy-i18n-extra.js?v=5"></script>
 <script src="assets/poxy-i18n.js?v=5"></script>
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
@@ -7101,6 +7101,17 @@ window.showPage=function(page){
     if(!colData.length)loadCollection().then(()=>renderProfileShowcaseMatrix());
   }
   if(page==='settings'){
+    (function enforceSettingsPadding(){
+      const nav=document.getElementById('stGlobalNav')||document.querySelector('nav.st-nav--global');
+      const settingsPage=document.getElementById('settingsPage');
+      if(!settingsPage)return;
+      const navH=nav?nav.getBoundingClientRect().height:(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--st-nav-h'))||92);
+      settingsPage.style.paddingTop=(navH+20)+'px';
+      requestAnimationFrame(()=>{
+        const navH2=nav?nav.getBoundingClientRect().height:navH;
+        settingsPage.style.paddingTop=(navH2+20)+'px';
+      });
+    })();
     renderSettingsPage();
     applySettingsPrefsUi();
     switchSettingsTab(activeSettingsTab||'account');
