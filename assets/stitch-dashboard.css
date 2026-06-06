@@ -831,3 +831,122 @@ body.poxy-stitch-dash{
   overflow:visible;
   overflow-x:clip;
 }
+
+/* ── Showcase Picker Overlay (global — needed on all pages) ── */
+.poxy-showcase-picker{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  box-sizing:border-box;
+}
+.poxy-showcase-picker[hidden]{display:none}
+.poxy-showcase-picker-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(5,5,6,0.82);
+  backdrop-filter:blur(4px);
+  cursor:pointer;
+}
+.poxy-showcase-picker-card{
+  position:relative;
+  z-index:1;
+  background:#1c1b1b;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;
+  width:100%;
+  max-width:540px;
+  max-height:80vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.poxy-showcase-picker-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 20px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  flex-shrink:0;
+}
+.poxy-showcase-picker-head h3{
+  margin:0;
+  font-size:14px;
+  font-weight:600;
+  color:#e5e2e1;
+  letter-spacing:.03em;
+}
+.poxy-showcase-picker-close{
+  background:none;
+  border:none;
+  color:rgba(255,255,255,0.45);
+  font-size:20px;
+  cursor:pointer;
+  line-height:1;
+  padding:4px 8px;
+  border-radius:6px;
+  transition:background .15s,color .15s;
+}
+.poxy-showcase-picker-close:hover{background:rgba(255,255,255,0.08);color:#fff}
+.poxy-showcase-picker-sub{
+  margin:0;
+  padding:10px 20px;
+  font-size:12px;
+  color:rgba(255,255,255,0.45);
+  flex-shrink:0;
+}
+.poxy-showcase-picker-grid{
+  padding:12px 16px 16px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:8px;
+  overflow-y:auto;
+  flex:1;
+}
+.poxy-showcase-picker-item{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+  padding:12px 8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  transition:background .15s,border-color .15s,transform .15s;
+  color:#e5e2e1;
+  font-family:inherit;
+}
+.poxy-showcase-picker-item:hover{
+  background:rgba(255,255,255,0.08);
+  border-color:var(--showcase-accent,rgba(255,255,255,0.25));
+  transform:translateY(-2px);
+}
+.poxy-showcase-picker-item.is-pinned-elsewhere{opacity:.45;cursor:not-allowed}
+.poxy-showcase-picker-tier{font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.poxy-showcase-picker-icon{font-size:28px;line-height:1}
+.poxy-showcase-picker-serial{font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:.04em;text-align:center;word-break:break-all}
+.poxy-showcase-picker-clear{
+  grid-column:1/-1;
+  background:none;
+  border:1px dashed rgba(255,255,255,0.18);
+  border-radius:8px;
+  padding:10px;
+  color:rgba(255,255,255,0.45);
+  font-size:11px;
+  cursor:pointer;
+  transition:background .15s,color .15s;
+  font-family:inherit;
+}
+.poxy-showcase-picker-clear:hover{background:rgba(255,60,95,0.12);color:#ff3c5f;border-color:rgba(255,60,95,0.4)}
+.poxy-showcase-picker-empty{
+  grid-column:1/-1;
+  text-align:center;
+  padding:24px;
+  color:rgba(255,255,255,0.35);
+  font-size:12px;
+  line-height:1.6;
+}
