@@ -626,6 +626,19 @@
   from{box-shadow:0 0 28px rgba(255,82,82,0.75),0 0 56px rgba(255,82,82,0.4);transform:scale(1.03)}
   to{box-shadow:0 0 44px rgba(255,82,82,1),0 0 80px rgba(255,82,82,0.65),0 0 120px rgba(255,82,82,0.3);transform:scale(1.07)}
 }
+/* Legendary carousel flash — extra gold visibility during spin (visual only) */
+.st-roulette-track .st-slot--legendary-flash{
+  border:2px solid #FFCA28!important;
+  background:rgba(255,202,40,0.14)!important;
+  box-shadow:0 0 28px rgba(255,202,40,0.75),0 0 52px rgba(255,152,0,0.4),inset 0 0 18px rgba(255,202,40,0.2)!important;
+  animation:legendary-flash-pulse 0.55s ease-in-out infinite alternate;
+  transform:scale(1.03);
+  z-index:2;
+}
+@keyframes legendary-flash-pulse{
+  from{box-shadow:0 0 22px rgba(255,202,40,0.65),0 0 44px rgba(255,152,0,0.35);transform:scale(1.02)}
+  to{box-shadow:0 0 36px rgba(255,202,40,0.95),0 0 68px rgba(255,202,40,0.55),0 0 100px rgba(255,152,0,0.25);transform:scale(1.06)}
+}
 @keyframes prize-pulse{0%,100%{box-shadow:0 0 18px var(--prize-glow),0 0 36px var(--prize-glow);transform:scale(1.04)}50%{box-shadow:0 0 28px var(--prize-glow),0 0 56px var(--prize-glow),0 0 90px var(--prize-glow);transform:scale(1.08)}}
 body.st-win-reveal-open{overflow:hidden}
 .st-win-reveal{position:fixed;inset:0;z-index:350;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.4s ease,visibility 0.4s ease}

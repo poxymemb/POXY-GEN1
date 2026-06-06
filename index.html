@@ -48,7 +48,7 @@
 <title>POXY WORLD</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
-<link rel="stylesheet" href="assets/stitch-dashboard.css?v=15">
+<link rel="stylesheet" href="assets/stitch-dashboard.css?v=16">
 <link rel="stylesheet" href="assets/poxy-theme.css?v=2">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=6">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=3">
@@ -5027,6 +5027,16 @@ function clearBg(){if(!document.body.classList.contains('dark-club')){const cls=
 function showToast(msg,dur=2800){if(window.PoxyI18n)msg=PoxyI18n.translateToast(msg);const t=$('toast');t.textContent=String(msg||'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
 function poxyApplyI18n(){if(window.PoxyI18n)PoxyI18n.applyApp();}
 function pickTier(){let r=Math.random(),acc=0;for(const t of TIERS){acc+=t.prob;if(r<acc)return t;}return TIERS[TIERS.length-1];}
+/* Visual-only weights for roulette filler — does NOT affect server drop RNG */
+function pickCarouselTier(){
+  const r=Math.random();
+  if(r<0.30)return TIERS[0];
+  if(r<0.48)return TIERS[1];
+  if(r<0.63)return TIERS[2];
+  if(r<0.76)return TIERS[3];
+  if(r<0.90)return TIERS[4]; /* ~14% legendary in filler */
+  return TIERS[5];
+}
 function pickVipTier(){let r=Math.random(),acc=0;for(const t of VIP_TIERS){acc+=t.prob;if(r<acc)return t;}return VIP_TIERS[VIP_TIERS.length-1];}
 function isFounder(){return!!(currentUser&&currentUser.email&&currentUser.email.toLowerCase()===FOUNDER_EMAIL);}
 function isClubMember(){return!!(currentProfile&&(currentProfile.is_club_member||hasMythic));}
@@ -7219,16 +7229,33 @@ function buildRouletteTrack(winTier){
   globalSpinCount++;
   const winner=winTier||pickTier();
   const slots=[];
-  for(let i=0;i<ROULETTE_WIN_INDEX;i++)slots.push(pickTier());
+  for(let i=0;i<ROULETTE_WIN_INDEX;i++)slots.push(pickCarouselTier());
   slots.push(winner);
   rouletteWinIndex=ROULETTE_WIN_INDEX;
-  for(let i=0;i<ROULETTE_TRAIL_SLOTS;i++)slots.push(pickTier());
+  for(let i=0;i<ROULETTE_TRAIL_SLOTS;i++)slots.push(pickCarouselTier());
 
-  // Mythic teaser funnel (decoy only — real drop still follows server RNG)
   const mythicTier=TIERS.find(t=>t.id==='mythic')||TIERS[TIERS.length-1];
+  const legendaryTier=TIERS.find(t=>t.id==='legendary')||TIERS[4];
   const teaserSet=new Set();
+  const legendarySet=new Set();
   const trackLen=slots.length;
   const winIdx=rouletteWinIndex;
+
+  // Pepper track with 4–8 extra gold legendary cards (visual funnel only)
+  const legTarget=4+Math.floor(Math.random()*5);
+  let legTries=0;
+  while(legendarySet.size<legTarget&&legTries++<64){
+    const idx=Math.floor(Math.random()*trackLen);
+    if(idx!==winIdx)legendarySet.add(idx);
+  }
+  // ~35%: one legendary 2–5 cells before the winner (gold near-miss)
+  if(winner.id!=='legendary'&&winner.id!=='mythic'&&Math.random()<0.35){
+    const gap=2+Math.floor(Math.random()*4);
+    const nearLeg=winIdx-gap;
+    if(nearLeg>=0)legendarySet.add(nearLeg);
+  }
+
+  // Mythic teaser funnel (decoy only — real drop still follows server RNG)
   if(winner.id!=='mythic'){
     // 1-in-4: scatter 1–4 red mythic decoys at fully random slots during the spin
     if(Math.random()<0.25){
@@ -7260,8 +7287,9 @@ function buildRouletteTrack(winTier){
   track.innerHTML=slots.map((t,i)=>{
     const win=i===rouletteWinIndex;
     const isTeaser=teaserSet.has(i);
-    const displayTier=isTeaser?mythicTier:t;
-    return '<div class="st-slot'+(win?' st-slot--winner':'')+(isTeaser?' st-slot--teaser':'')+'" data-tier="'+displayTier.id+'" style="color:'+displayTier.color+';--prize-glow:'+tierGlowVar(displayTier)+'">'+displayTier.icon+'</div>';
+    const isLegendaryFlash=!isTeaser&&legendarySet.has(i);
+    const displayTier=isTeaser?mythicTier:(isLegendaryFlash?legendaryTier:t);
+    return '<div class="st-slot'+(win?' st-slot--winner':'')+(isTeaser?' st-slot--teaser':'')+(isLegendaryFlash?' st-slot--legendary-flash':'')+'" data-tier="'+displayTier.id+'" style="color:'+displayTier.color+';--prize-glow:'+tierGlowVar(displayTier)+'">'+displayTier.icon+'</div>';
   }).join('');
   track.classList.remove('is-spinning','is-landed');
   track.style.transition='none';
