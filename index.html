@@ -32,7 +32,7 @@
 <title>POXY WORLD</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
-<link rel="stylesheet" href="assets/stitch-dashboard.css?v=12">
+<link rel="stylesheet" href="assets/stitch-dashboard.css?v=13">
 <link rel="stylesheet" href="assets/poxy-theme.css?v=2">
 <link rel="stylesheet" href="assets/poxy-spa-nav.css?v=6">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=3">
@@ -1431,6 +1431,7 @@ body.dark-club .club-sub{color:#888}
             <div class="st-user-meta">
               <div class="st-user-name" id="userUsernameEl">Player</div>
               <div class="st-user-role" id="userRoleEl">POXY MEMBER</div>
+              <div class="st-user-hash" id="userAccountHash" title="Your unique account hash — use this to verify your identity" style="font-size:9px;font-family:monospace;color:rgba(255,255,255,0.35);letter-spacing:.08em;cursor:default;user-select:all"></div>
             </div>
             <span class="user-email" id="userEmailEl" style="display:none"></span>
           </div>
@@ -4729,7 +4730,7 @@ function renderFrameSelector(){
 }
 
 // ── STATE (PHASE 1 — synchronized in real-time UI) ──
-let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null;
+let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null, currentPoxyId=null;
 let mythicCount=0, hasMythic=false, busy=false;
 let spinAnim=null, particleLoop=null, particles=[];
 let selectedAvatar=AVATARS[0], marketTab='buy';
@@ -5418,6 +5419,9 @@ async function loadProfile(){
       setBarAvatar(selectedAvatar);
       updateBalanceBadge(data.balance||0);
       updatePsdMemberBadge();
+      // Show unique account hash in nav sidebar
+      const hashEl=$('userAccountHash');
+      if(hashEl)hashEl.textContent=data.account_hash?'#'+data.account_hash:'';
     } else {
       currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null};
       sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).then(({error})=>{if(error&&error.code!=='23505')console.error(error);});
@@ -6291,6 +6295,8 @@ window.openTopUpModal=function(){
   if(el)el.textContent=formatPC(bal)+' PC';
   // Render amount buttons (re-init each open)
   renderBank();
+  // Show DEV TOPUP panel for founder accounts
+  renderDevTopupPanel();
   modal.hidden=false;
   document.body.style.overflow='hidden';
   requestAnimationFrame(()=>modal.classList.add('tum-open'));
@@ -6339,6 +6345,38 @@ window.closeTopUpModal=function(){
   modal.classList.remove('tum-open');
   document.body.style.overflow='';
   setTimeout(()=>{modal.hidden=true;},280);
+};
+// DEV TOPUP — only visible to founder/verified-employee accounts
+function renderDevTopupPanel(){
+  const slot=$('tumDevTopupSlot');
+  if(!slot)return;
+  const FOUNDER=['nikitash0504@gmail.com','worldpoxy@gmail.com'];
+  const email=(currentUser?.email||'').toLowerCase();
+  const isFounderAcc=FOUNDER.includes(email)||currentProfile?.is_verified_employee;
+  if(!isFounderAcc){slot.hidden=true;return;}
+  slot.hidden=false;
+  if(slot.dataset.ready==='1')return;
+  slot.dataset.ready='1';
+  slot.innerHTML=`
+    <div style="margin-top:16px;padding:12px;border:1px solid rgba(0,255,102,0.25);border-radius:10px;background:rgba(0,255,102,0.04)">
+      <div style="font-size:9px;letter-spacing:.15em;color:rgba(0,255,102,0.7);text-transform:uppercase;margin-bottom:8px">⚡ DEV TOPUP — FOUNDER ONLY</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${[100,500,1000,5000].map(n=>`<button onclick="devTopup(${n})" style="padding:6px 12px;border-radius:7px;border:1px solid rgba(0,255,102,0.3);background:rgba(0,255,102,0.1);color:#00ff66;font-size:11px;font-weight:700;cursor:pointer;font-family:monospace">+${n} PC</button>`).join('')}
+      </div>
+    </div>`;
+}
+window.devTopup=async function(amount){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('dev_topup',{p_amount:amount});
+    if(error)throw error;
+    if(data?.ok===false)throw new Error(data.error||'Dev topup failed');
+    if(currentProfile)currentProfile.balance=data.new_balance;
+    updateBalanceBadge(data.new_balance);
+    const el=$('tumBalanceDisplay');
+    if(el)el.textContent=formatPC(data.new_balance)+' PC';
+    showToast('DEV: +'+amount+' PC added → balance: '+formatPC(data.new_balance)+' PC');
+  }catch(e){showToast('Dev topup error: '+(e.message||'unknown'));}
 };
 // Escape key closes modal
 document.addEventListener('keydown',function(e){
@@ -7486,9 +7524,15 @@ async function addCurrentDropToCollection(sourceBtn){
   const orig=sourceBtn?sourceBtn.textContent:'';
   if(sourceBtn){sourceBtn.disabled=true;sourceBtn.textContent='Saving...';}
   try{
-    const{data:inserted,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial}).select('id').single();
-    if(error)throw error;
-    cryptoMint(inserted&&inserted.id,currentTier.id).catch(()=>{});
+    // If already saved via server RPC (pendingPoxyId set), just update UI
+    if(currentPoxyId){
+      cryptoMint(currentPoxyId,currentTier.id).catch(()=>{});
+    } else {
+      // Fallback: direct insert (should not happen with v2 RPC flow)
+      const{data:ins,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial}).select('id').single();
+      if(error)throw error;
+      cryptoMint(ins&&ins.id,currentTier.id).catch(()=>{});
+    }
     showToast('Saved to collection!');
     if(currentTier.id==='mythic'){hasMythic=true;toggleClubAccess(true);}
     if(['legendary','mythic'].includes(currentTier.id))refreshPremiumFrame();
@@ -7499,6 +7543,7 @@ async function addCurrentDropToCollection(sourceBtn){
     return;
   }
   if(sourceBtn){sourceBtn.disabled=false;sourceBtn.textContent=orig;}
+  currentPoxyId=null;
   closeWinRevealModalOnly();
   resetAll();
 }
@@ -7530,6 +7575,7 @@ function triggerRevealFX(tierId){
 }
 function showReward(tier,fromModal){
   currentTier=tier||pendingSpinTier||pickTier();
+  // currentSerial set by RPC; fallback to generated if somehow missing
   if(!currentSerial)currentSerial=genSerial();
   const tid=currentTier.id;
   launchParticles(currentTier.color);
@@ -7572,17 +7618,37 @@ function resetAll(){
   $('postBtns').classList.remove('faded-in');setTimeout(()=>$('postBtns').classList.remove('visible'),400);
   $('btnOpen').style.opacity='1';$('btnOpen').style.pointerEvents='auto';$('btnOpen').disabled=false;
   $('btnListFromHunt').classList.remove('show');
-  busy=false;currentTier=null;currentSerial=null;clearBg();
+  busy=false;currentTier=null;currentSerial=null;currentPoxyId=null;clearBg();
 }
 $('btnOpen').addEventListener('click',async function(){
   if(busy||!currentUser)return;
   const bal=currentProfile?.balance||0;
   if(bal<STANDARD_CASE_PRICE){showToast('Insufficient Poxy Coins. Add funds via Treasury.');openTopUpModal();return;}
   busy=true;$('btnOpen').disabled=true;
-  currentProfile.balance=bal-STANDARD_CASE_PRICE;
-  updateBalanceBadge(currentProfile.balance);
-  try{await sb.from('profiles').update({balance:currentProfile.balance}).eq('id',currentUser.id);}catch(e){console.error('debit failed',e);}
-  $('idleBox').style.opacity='0';startSpin();
+  $('idleBox').style.opacity='0';
+  try{
+    // Server-side RNG: atomic debit + asset creation
+    const{data:rpcResult,error:rpcErr}=await sb.rpc('open_standard_case_v2');
+    if(rpcErr)throw rpcErr;
+    if(rpcResult?.ok===false)throw new Error(rpcResult.error||'Case open failed');
+    // Apply server result
+    const serverTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
+    currentPoxyId=rpcResult.poxy_id;
+    currentSerial=rpcResult.serial;
+    // Update balance from server response
+    if(rpcResult.balance!=null&&currentProfile){
+      currentProfile.balance=rpcResult.balance;
+      updateBalanceBadge(currentProfile.balance);
+    }
+    // Drive animation with server-determined tier (rigged win)
+    pendingSpinTier=serverTier;
+    runRouletteCarousel(serverTier);
+  }catch(e){
+    showToast(e.message||'Case open failed. Try again.');
+    busy=false;$('btnOpen').disabled=false;
+    $('idleBox').style.opacity='1';
+    return;
+  }
   bumpQuest('open_3_cases',1);
 });
 const stWinAdd=$('stWinAdd');
@@ -8745,7 +8811,7 @@ window.openGiftPicker=async function(userId,username){
   $('giftPickerOverlay').hidden=false;
   if(!colData.length)await loadCollection();
   grid.innerHTML='';
-  const items=(colData||[]).slice(0,24);
+  const items=(colData||[]);
   if(!items.length){grid.innerHTML='<p style="font-size:11px;color:#9d8b9b">No items to gift.</p>';return;}
   items.forEach(it=>{
     const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];
@@ -8773,20 +8839,24 @@ window.confirmSendGift=async function(){
   const btn=$('btnSendGiftConfirm');
   if(btn)btn.disabled=true;
   try{
-    const payload={
-      to_id:giftTargetUserId,
-      from_id:currentUser.id,
-      from_name:currentProfile?.username||'Player',
-      item_id:giftSelectedItemId,
-      tier:item?.poxy_tier,
-      serial:item?.serial_number,
-      icon:tier?.icon
-    };
+    // Use server-side RPC: atomically removes from inventory + creates DB gift record
+    const{data:giftResult,error:giftErr}=await sb.rpc('send_gift',{
+      p_recipient_id:giftTargetUserId,
+      p_poxy_id:giftSelectedItemId,
+      p_message:null
+    });
+    if(giftErr)throw giftErr;
+    if(giftResult?.ok===false)throw new Error(giftResult.error||'Gift failed');
+    // Also broadcast for instant recipient notification (Realtime)
     if(giftBroadcastCh){
-      await giftBroadcastCh.send({type:'broadcast',event:'gift',payload});
+      await giftBroadcastCh.send({type:'broadcast',event:'gift',payload:{
+        to_id:giftTargetUserId,from_id:currentUser.id,
+        from_name:currentProfile?.username||'Player',
+        gift_id:giftResult?.gift_id,
+        tier:giftResult?.tier,serial:giftResult?.serial,
+        icon:tier?.icon
+      }});
     }
-    const{error:delErr}=await sb.from('user_poxy').delete().eq('id',giftSelectedItemId).eq('user_id',currentUser.id);
-    if(delErr)throw delErr;
     colData=colData.filter(i=>String(i.id)!==String(giftSelectedItemId));
     pushNotification('gift_sent',{to:giftTargetUserId,item_id:giftSelectedItemId});
     showToast('Gift sent! They can open it from the notification bell.');
@@ -8817,20 +8887,33 @@ function triggerGiftParticleBurst(){
 let giftBroadcastCh=null;
 
 function pendingGiftsStorageKey(){return PENDING_GIFTS_LS+'_'+(currentUser?.id||'');}
-function loadPendingGifts(){
+async function loadPendingGifts(){
   pendingGifts=[];
-  try{
-    const raw=localStorage.getItem(pendingGiftsStorageKey());
-    if(raw){
-      const parsed=JSON.parse(raw);
-      if(Array.isArray(parsed))pendingGifts=parsed;
-    }
-  }catch(e){}
-}
-function savePendingGifts(){
   if(!currentUser)return;
-  try{localStorage.setItem(pendingGiftsStorageKey(),JSON.stringify(pendingGifts));}catch(e){}
+  try{
+    const{data,error}=await sb.rpc('get_my_pending_gifts');
+    if(!error&&Array.isArray(data)){
+      pendingGifts=data.map(g=>({
+        id:g.id,
+        from_id:null,
+        from_name:g.sender_username||'Player',
+        tier:g.poxy_tier,
+        serial:g.serial_number,
+        message:g.message,
+        icon:TIER_BY_ID[g.poxy_tier]?.icon||'🎁',
+        status:'pending',
+        t:new Date(g.created_at).getTime()
+      }));
+    }
+  }catch(e){
+    // Fallback to localStorage for offline/error
+    try{
+      const raw=localStorage.getItem(pendingGiftsStorageKey());
+      if(raw){const p=JSON.parse(raw);if(Array.isArray(p))pendingGifts=p;}
+    }catch(e2){}
+  }
 }
+function savePendingGifts(){/* No-op: gifts now stored server-side via poxy_gifts table */}
 function countPendingGifts(){return pendingGifts.filter(g=>g.status==='pending').length;}
 function updateNotifyBellDot(){
   const dot=$('notifyBellDot');
@@ -8845,14 +8928,16 @@ function updateNotifyBellDot(){
 }
 function addIncomingGift(p){
   if(!p||!currentUser)return;
+  // Dedup: skip if we already have this gift_id in pendingGifts
+  if(p.gift_id&&pendingGifts.some(g=>g.id===p.gift_id))return;
   const gift={
-    id:'gift_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),
+    id:p.gift_id||('gift_'+Date.now()+'_'+Math.random().toString(36).slice(2,8)),
     from_id:p.from_id,
     from_name:p.from_name||'Player',
     item_id:p.item_id,
     tier:p.tier||'common',
     serial:p.serial||genSerial(),
-    icon:p.icon||'🎁',
+    icon:p.icon||TIER_BY_ID[p.tier]?.icon||'🎁',
     status:'pending',
     t:Date.now()
   };
@@ -9074,24 +9159,20 @@ window.claimGiftById=async function(giftId){
   const btn=$('giftUnboxAddBtn');
   if(btn){btn.disabled=true;btn.textContent='Adding…';}
   try{
-    const{error}=await sb.from('user_poxy').insert({
-      user_id:currentUser.id,
-      poxy_tier:g.tier||'common',
-      serial_number:g.serial||genSerial()
-    });
+    // Use server-side RPC: atomically creates asset + marks gift claimed
+    const{data:res,error}=await sb.rpc('claim_gift',{p_gift_id:giftId});
     if(error)throw error;
+    if(res?.ok===false)throw new Error(res.error||'Claim failed');
     g.status='claimed';
-    savePendingGifts();
     pushNotification('gift_claimed',{serial:g.serial,tier:g.tier});
     renderNotifyGiftsList();
     updateNotifyBellDot();
     closeGiftUnboxOverlay();
     showToast('POXY added to your collection!');
-    if(!colData.length)await loadCollection();
-    else await loadCollection();
+    await loadCollection();
     if(activeStitchTab==='dashboard')renderDashColPreview();
   }catch(e){
-    showToast('Could not add gift: '+(e.message||'error'));
+    showToast('Could not claim gift: '+(e.message||'error'));
     console.error(e);
   }
   if(btn){btn.disabled=false;btn.textContent='Add to Collection';}
@@ -9099,11 +9180,23 @@ window.claimGiftById=async function(giftId){
 function setupGiftBroadcastListener(){
   if(!currentUser||giftBroadcastCh)return;
   giftBroadcastCh=sb.channel('poxy-gifts-lobby');
+  // Broadcast channel: instant peer-to-peer notification on send
   giftBroadcastCh.on('broadcast',{event:'gift'},payload=>{
     const p=payload?.payload;
     if(!p||String(p.to_id)!==String(currentUser.id))return;
     addIncomingGift(p);
-  }).subscribe();
+  });
+  // DB change listener: authoritative source — fires when gift row is inserted
+  giftBroadcastCh.on('postgres_changes',{event:'INSERT',schema:'public',table:'poxy_gifts',filter:'recipient_id=eq.'+currentUser.id},payload=>{
+    const r=payload?.new;
+    if(!r)return;
+    addIncomingGift({
+      to_id:r.recipient_id,from_id:r.sender_id,
+      gift_id:r.id,tier:r.poxy_tier,serial:r.serial_number,
+      message:r.message,icon:TIER_BY_ID[r.poxy_tier]?.icon||'🎁'
+    });
+  });
+  giftBroadcastCh.subscribe();
   realtimeSubs.push(giftBroadcastCh);
 }
 
@@ -12963,6 +13056,7 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       </div>
 
       <p class="tum-note">Poxy Coins (PC) are used to open cases, purchase assets from the market, and unlock premium items in the Tactical Terminal.</p>
+      <div id="tumDevTopupSlot" hidden></div>
     </div>
 
     <!-- ── RIGHT — Deposit form ───────────────────────────────── -->

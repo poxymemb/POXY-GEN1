@@ -23,8 +23,9 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
 .auth-sub{font-size:10px;color:var(--muted);letter-spacing:.15em}
 .auth-input{background:var(--bg1);border:1px solid var(--border);color:#fff;font-family:var(--font);font-size:12px;padding:10px 14px;width:280px;outline:none;letter-spacing:.08em}
 .auth-input:focus{border-color:var(--amber)}
-.auth-btn{background:var(--amber);border:none;color:#050506;font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 28px;cursor:pointer}
+.auth-btn{background:var(--amber);border:none;color:#050506;font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 28px;cursor:pointer;min-width:140px}
 .auth-btn:hover{opacity:.85}
+.auth-btn:disabled{opacity:.55;cursor:not-allowed}
 .auth-err{color:var(--red);font-size:10px;letter-spacing:.1em;height:14px}
 /* ── LAYOUT ── */
 #terminal{display:grid;grid-template-columns:180px 1fr;height:100vh;overflow:hidden}
@@ -159,9 +160,10 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
 <div id="authScreen">
   <div class="auth-logo">POXY WORLD</div>
   <div class="auth-title">⬡ ADMIN TERMINAL</div>
-  <div class="auth-sub">RESTRICTED ACCESS — DEVELOPER UPLINK ONLY</div>
-  <input id="authKey" class="auth-input" type="password" placeholder="ENTER UPLINK KEY" autocomplete="off"/>
-  <button class="auth-btn" onclick="authSubmit()">AUTHENTICATE</button>
+  <div class="auth-sub">RESTRICTED ACCESS — VERIFIED STAFF ONLY</div>
+  <input id="authEmail" class="auth-input" type="email" placeholder="STAFF EMAIL" autocomplete="email" style="margin-bottom:8px"/>
+  <input id="authPass"  class="auth-input" type="password" placeholder="PASSWORD" autocomplete="current-password"/>
+  <button class="auth-btn" id="authBtn" onclick="authSubmit()">AUTHENTICATE</button>
   <div id="authErr" class="auth-err"></div>
 </div>
 
@@ -555,37 +557,56 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
 // ═══════════════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════
-const SUPABASE_URL = 'https://rbrtjkfawdnomvvyxwvp.supabase.co';
-const SUPABASE_ANON  = 'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG';
-const DEV_KEY_LSKEY  = 'poxy_dev_uplink_key';
-// Change this to your desired secret (or store hash for prod)
-const DEV_SECRET     = 'DEVOPIUM2006!DEV';
+const SUPABASE_URL  = 'https://rbrtjkfawdnomvvyxwvp.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
 });
 
 // ═══════════════════════════════════════════════════════════════
-// AUTH
+// AUTH — Supabase session-based (no hardcoded secret)
+// Access gate: user must have is_verified_employee=true or be founder
 // ═══════════════════════════════════════════════════════════════
-function authSubmit(){
-  const val = document.getElementById('authKey').value.trim();
-  const stored = localStorage.getItem(DEV_KEY_LSKEY);
-  if(val === DEV_SECRET || stored === DEV_SECRET){
-    localStorage.setItem(DEV_KEY_LSKEY, DEV_SECRET);
+async function checkStaffAccess(user){
+  if(!user) return false;
+  const FOUNDER = ['nikitash0504@gmail.com','worldpoxy@gmail.com'];
+  if(FOUNDER.includes((user.email||'').toLowerCase())) return true;
+  try{
+    const {data} = await sb.from('profiles').select('is_verified_employee').eq('id',user.id).single();
+    return !!(data?.is_verified_employee);
+  }catch(e){ return false; }
+}
+
+async function authSubmit(){
+  const email = (document.getElementById('authEmail')?.value||'').trim();
+  const pass  = (document.getElementById('authPass')?.value||'').trim();
+  const errEl = document.getElementById('authErr');
+  const btn   = document.getElementById('authBtn');
+  errEl.textContent = '';
+  if(!email||!pass){ errEl.textContent='[ ENTER EMAIL AND PASSWORD ]'; return; }
+  if(btn){ btn.disabled=true; btn.textContent='VERIFYING…'; }
+  try{
+    const {data,error} = await sb.auth.signInWithPassword({email, password:pass});
+    if(error) throw error;
+    const allowed = await checkStaffAccess(data?.user);
+    if(!allowed){
+      await sb.auth.signOut();
+      throw new Error('ACCESS DENIED — STAFF CLEARANCE REQUIRED');
+    }
     bootTerminal();
-  } else {
-    document.getElementById('authErr').textContent = '[ ACCESS DENIED — INVALID UPLINK KEY ]';
-    document.getElementById('authKey').value = '';
+  }catch(e){
+    errEl.textContent = '[ '+(e.message||'AUTH FAILED')+' ]';
+    if(btn){ btn.disabled=false; btn.textContent='AUTHENTICATE'; }
   }
 }
 
-document.getElementById('authKey').addEventListener('keydown', e => {
-  if(e.key === 'Enter') authSubmit();
+['authEmail','authPass'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')authSubmit();});
 });
 
-function deauth(){
-  localStorage.removeItem(DEV_KEY_LSKEY);
+async function deauth(){
+  await sb.auth.signOut();
   location.reload();
 }
 
@@ -595,17 +616,15 @@ function bootTerminal(){
   initAll();
 }
 
-// Auto-boot if key already stored
-(function checkAutoAuth(){
-  // Purge stale keys from previous sessions
-  const stored = localStorage.getItem(DEV_KEY_LSKEY);
-  if(stored && stored !== DEV_SECRET) localStorage.removeItem(DEV_KEY_LSKEY);
-  if(localStorage.getItem(DEV_KEY_LSKEY) === DEV_SECRET){
-    document.getElementById('authScreen').classList.add('hidden');
-    document.getElementById('terminal').classList.remove('hidden');
-    // Slight delay so DOM is fully ready
-    setTimeout(initAll, 50);
-  }
+// Auto-boot if already signed in as staff
+(async function checkAutoAuth(){
+  try{
+    const {data:{session}} = await sb.auth.getSession();
+    if(session?.user){
+      const allowed = await checkStaffAccess(session.user);
+      if(allowed){ setTimeout(bootTerminal, 50); return; }
+    }
+  }catch(e){}
 })();
 
 // ═══════════════════════════════════════════════════════════════

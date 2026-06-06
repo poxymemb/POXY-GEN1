@@ -609,8 +609,10 @@
 .st-roulette-track .st-slot[data-tier="mythic"]{box-shadow:0 0 24px rgba(255,82,82,0.65),0 0 48px rgba(255,82,82,0.28)}
 @keyframes prize-pulse{0%,100%{box-shadow:0 0 18px var(--prize-glow),0 0 36px var(--prize-glow);transform:scale(1.04)}50%{box-shadow:0 0 28px var(--prize-glow),0 0 56px var(--prize-glow),0 0 90px var(--prize-glow);transform:scale(1.08)}}
 body.st-win-reveal-open{overflow:hidden}
-.st-win-reveal{position:fixed;inset:0;z-index:350;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.4s ease,visibility 0.4s ease}
+.st-win-reveal{position:fixed;inset:0;z-index:350;display:flex;align-items:center;justify-content:flex-start;padding:20px 20px 20px 5vw;opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.4s ease,visibility 0.4s ease}
 .st-win-reveal.is-open{opacity:1;visibility:visible;pointer-events:auto}
+/* On narrow screens center it */
+@media(max-width:768px){.st-win-reveal{justify-content:center;padding:20px}}
 .st-win-reveal-backdrop{position:absolute;inset:0;background:rgba(5,5,8,0.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .st-win-reveal-card{position:relative;z-index:2;width:100%;max-width:360px;padding:36px 28px 28px;border-radius:24px;border:1px solid var(--st-glass);background:linear-gradient(165deg,rgba(42,42,42,0.98),rgba(19,19,19,0.98));text-align:center;transform:scale(0);opacity:0;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.55)}
 .st-win-reveal.is-open .st-win-reveal-card{animation:stWinPop 0.65s cubic-bezier(0.34,1.56,0.64,1) forwards}
