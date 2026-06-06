@@ -61,7 +61,7 @@
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=7">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=20">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=21">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=7">
@@ -7147,11 +7147,14 @@ window.showPage=function(page){
       const colPage=document.getElementById('collectionPage');
       if(!colPage)return;
       const navH=nav?nav.getBoundingClientRect().height:(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--st-nav-h'))||92);
+      const bottomPad=window.innerWidth>=1280?160:(window.innerWidth>=768?140:120);
       colPage.style.paddingTop=(navH+20)+'px';
+      colPage.style.paddingBottom=bottomPad+'px';
       // Re-enforce once fonts/layout settle
       requestAnimationFrame(()=>{
         const navH2=nav?nav.getBoundingClientRect().height:navH;
         colPage.style.paddingTop=(navH2+20)+'px';
+        colPage.style.paddingBottom=bottomPad+'px';
       });
     })();
     colFilter='all';colSortPreset='default';colMultiSelectMode=false;colCraftZoneOpen=false;

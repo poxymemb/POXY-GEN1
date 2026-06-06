@@ -9,12 +9,15 @@ body.poxy-stitch-dash #collectionPage.page,
 body.poxy-stitch-dash .poxy-collection-page.page{
   max-width:100%;
   width:100%;
-  min-height:100vh;
+  min-height:auto;
+  height:auto;
   margin:0 auto;
+  overflow:visible;
+  overflow-x:clip;
   /* top: nav height + breathing room. JS also enforces this on show. */
   padding-top: calc(var(--st-nav-h, 92px) + 20px) !important;
   padding-right: 16px;
-  padding-bottom: 56px;
+  padding-bottom: 120px !important;
   padding-left: 16px;
 }
 @media(min-width:768px){
@@ -22,7 +25,7 @@ body.poxy-stitch-dash .poxy-collection-page.page{
   body.poxy-stitch-dash .poxy-collection-page.page{
     padding-top: calc(var(--st-nav-h, 92px) + 24px) !important;
     padding-right: 24px;
-    padding-bottom: 64px;
+    padding-bottom: 140px !important;
     padding-left: 24px;
   }
 }
@@ -31,23 +34,27 @@ body.poxy-stitch-dash .poxy-collection-page.page{
   body.poxy-stitch-dash .poxy-collection-page.page{
     padding-top: calc(var(--st-nav-h, 124px) + 28px) !important;
     padding-right: 32px;
-    padding-bottom: 72px;
+    padding-bottom: 160px !important;
     padding-left: 32px;
   }
+}
+body.poxy-stitch-dash:has(#collectionPage.visible){
+  scroll-padding-bottom:96px;
 }
 .poxy-collection-page{
   display:none;
   width:100%;
   max-width:100%;
   margin:0 auto;
-  padding:20px 16px 48px;
+  padding:20px 16px 80px;
   box-sizing:border-box;
-  overflow-x:hidden;
+  overflow-x:clip;
+  overflow-y:visible;
   color:#e5e2e1;
   font-family:Inter,system-ui,sans-serif;
   /* Obsidian Protocol: pure deep dark background */
   background:#050506;
-  min-height:100vh;
+  min-height:auto;
 }
 .poxy-collection-page.visible{display:block}
 
@@ -703,7 +710,11 @@ body.poxy-stitch-dash .poxy-collection-page.page{
 }
 .poxy-col-craft-execute.is-ignited:hover{transform:scale(1.04)}
 
-.poxy-col-main{min-width:0}
+.poxy-col-main{min-width:0;overflow:visible}
+#collectionPage #colContent,
+#collectionPage .poxy-col-inventory-grid{
+  overflow:visible;
+}
 
 /* Passport card grid — Stitch: sm:grid-cols-2 lg:grid-cols-4 gap-gutter(24px)
    Min 240px so passport cards have room for avatar + serial + data rows */
@@ -866,7 +877,11 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
 
 /* Override legacy light sticky bar inside collection */
 #collectionPage .col-sticky-bar{display:none}
-#collectionPage.page-collection-wide{max-width:100%!important;padding:0!important;background:transparent!important}
+/* Do NOT use padding:0 shorthand — it zeroes bottom clearance and clips the grid under the viewport edge */
+#collectionPage.page-collection-wide{
+  max-width:100%!important;
+  background:transparent!important;
+}
 
 /* ──────────────────────────────────────────────────────────────
    INVENTORY TERMINAL — Patches Sync Edition — Stitch: 2c53756c
