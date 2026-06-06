@@ -7131,6 +7131,7 @@ window.showPage=function(page){
     colFilter='all';colSortPreset='default';colMultiSelectMode=false;colCraftZoneOpen=false;
     selectedForDust=new Set();selectedItems=selectedForDust;colLastSelectIndex=-1;
     resetCraftSockets(false);closeColSortMenu();syncColMultiToggleUi();setColCraftZoneOpen(false);
+    colData=[]; // always force fresh fetch — never show stale cache
     loadCollection().then(()=>{const c=$('colContent');if(c&&window.PoxyHudAudio)PoxyHudAudio.bindCollectionGrid(c);});
     refreshPremiumFrame();
     updatePresenceTrack();
