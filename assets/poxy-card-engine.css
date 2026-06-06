@@ -53,10 +53,9 @@
   box-shadow: 0 0 14px rgba(255,190,40,0.25);
 }
 
-/* Pinned */
+/* Pinned — outer glow only, no inset frame */
 .pcard.pinned {
-  box-shadow: 0 0 22px rgba(255,180,40,0.32),
-              inset 0 0 0 1px rgba(255,180,40,0.45) !important;
+  box-shadow: 0 0 22px rgba(255,180,40,0.32) !important;
 }
 
 /* ── Layer 0 — Background ──────────────────────────────────────────── */
@@ -323,19 +322,20 @@
    Use !important to override the legacy .col-inv-card rules in
    poxy-collection-page.css which aggressively set border-radius,
    background gradient, aspect-ratio, and padding with !important. */
+/* Single premium frame: 1px rarity border + soft outer glow (no inset/double) */
 .pcard--passport,
 .pcard--passport.col-inv-card,
 .poxy-collection-page .col-inv-card.pcard--passport,
 #collectionPage .col-inv-card.pcard--passport {
   border-radius: 32px !important;
   background: #050506 !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
-  border-color: rgba(255,255,255,0.05) !important;
-  box-shadow: none !important;
-  aspect-ratio: auto !important;     /* NOT square — passport needs natural height */
-  padding: 0 !important;             /* padding lives inside .pcard-pp */
+  border: 1px solid var(--card-border, rgba(245,158,11,0.18)) !important;
+  border-color: var(--card-border, rgba(245,158,11,0.18)) !important;
+  box-shadow: 0 0 20px var(--card-glow, rgba(245,158,11,0.06)) !important;
+  aspect-ratio: auto !important;
+  padding: 0 !important;
   cursor: pointer !important;
-  transition: border-color 0.25s, transform 0.25s !important;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s !important;
   min-height: 0 !important;
   contain-intrinsic-size: auto !important;
   content-visibility: auto;
@@ -344,16 +344,16 @@
 .pcard--passport.col-inv-card:hover,
 .poxy-collection-page .col-inv-card.pcard--passport:hover,
 #collectionPage .col-inv-card.pcard--passport:hover {
-  border-color: rgba(255,255,255,0.14) !important;
+  border-color: var(--card-border-hover, rgba(245,158,11,0.35)) !important;
   transform: translateY(-2px) !important;
-  box-shadow: none !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 28px var(--card-glow, rgba(245,158,11,0.12)) !important;
 }
 /* Strip the legacy ::before shimmer overlay on passport cards */
 .poxy-collection-page .col-inv-card.pcard--passport::before,
 #collectionPage .col-inv-card.pcard--passport::before {
   display: none !important;
 }
-/* All rarities: flat obsidian */
+/* All rarities: flat obsidian bg + single tier border system */
 .pcard--passport[data-rarity],
 .pcard--passport[data-rarity="common"],
 .pcard--passport[data-rarity="uncommon"],
@@ -361,6 +361,18 @@
 .pcard--passport[data-rarity="epic"],
 .pcard--passport[data-rarity="legendary"],
 .pcard--passport[data-rarity="mythic"] { background: #050506 !important; }
+
+.pcard--passport[data-rarity="common"]    { --card-border: rgba(158,158,158,0.18); --card-border-hover: rgba(158,158,158,0.32); --card-glow: rgba(158,158,158,0.08); }
+.pcard--passport[data-rarity="uncommon"]  { --card-border: rgba(76,175,80,0.20);   --card-border-hover: rgba(76,175,80,0.38);   --card-glow: rgba(76,175,80,0.10); }
+.pcard--passport[data-rarity="rare"]      { --card-border: rgba(0,229,255,0.20);    --card-border-hover: rgba(0,229,255,0.40);    --card-glow: rgba(0,229,255,0.10); }
+.pcard--passport[data-rarity="epic"]      { --card-border: rgba(156,39,176,0.22);   --card-border-hover: rgba(156,39,176,0.42);   --card-glow: rgba(156,39,176,0.12); }
+.pcard--passport[data-rarity="legendary"] { --card-border: rgba(255,200,40,0.25);   --card-border-hover: rgba(255,200,40,0.48);   --card-glow: rgba(255,200,40,0.14); }
+.pcard--passport[data-rarity="mythic"]    { --card-border: rgba(255,51,102,0.28);   --card-border-hover: rgba(255,51,102,0.50);   --card-glow: rgba(255,51,102,0.15); }
+
+/* Pinned: glow only, no inset duplicate frame */
+.pcard--passport.pinned {
+  box-shadow: 0 0 28px rgba(255,180,40,0.28) !important;
+}
 
 /* Inner wrapper: flex flex-col gap-6 p-7 */
 .pcard-pp {

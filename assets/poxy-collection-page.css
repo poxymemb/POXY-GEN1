@@ -724,8 +724,8 @@ body.poxy-stitch-dash .poxy-collection-page.page{
   padding:16px 12px 12px!important;
   border-radius:12px!important;
   background:linear-gradient(145deg,#2a2a2e 0%,#1a1a1d 48%,#141416 100%)!important;
-  border:1px solid rgba(255,255,255,0.08)!important;
-  box-shadow:0 4px 20px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.06)!important;
+  border:1px solid var(--card-border,rgba(255,255,255,0.08))!important;
+  box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 16px var(--card-glow,transparent)!important;
   display:flex;
   flex-direction:column;
   overflow:hidden;
@@ -734,30 +734,13 @@ body.poxy-stitch-dash .poxy-collection-page.page{
   animation:fadeIn 0.4s ease both;
   position:relative;
 }
-.poxy-collection-page .col-inv-card::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  border-radius:12px;
-  padding:1px;
-  background:linear-gradient(135deg,transparent,rgba(255,255,255,0.08),transparent);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity 0.35s;
-}
+/* Inner duplicate border removed — was mask-composite second perimeter */
+.poxy-collection-page .col-inv-card::before{display:none!important}
 .poxy-collection-page .col-inv-card:hover{
   transform:scale(1.03)!important;
   z-index:6;
   border-color:rgba(255,255,255,0.18)!important;
-  box-shadow:0 8px 32px rgba(0,0,0,0.45),0 0 24px var(--rarity-glow,rgba(249,171,255,0.15)),inset 0 0 24px var(--rarity-glow,transparent)!important;
-}
-.poxy-collection-page .col-inv-card:hover::before{
-  opacity:1;
-  box-shadow:0 0 0 1px var(--rarity-color,#f9abff),0 0 20px var(--rarity-glow,rgba(249,171,255,0.25));
+  box-shadow:0 8px 32px rgba(0,0,0,0.45),0 0 24px var(--rarity-glow,rgba(249,171,255,0.15))!important;
 }
 body.col-multi-select-active .poxy-collection-page .col-inv-card{cursor:pointer}
 body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common"]{cursor:grab}
@@ -803,7 +786,7 @@ body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common
 .poxy-collection-page .col-inv-card.col-inv-selected{
   outline:2px solid #f9abff;
   outline-offset:2px;
-  box-shadow:0 0 24px rgba(214,3,87,0.35),inset 0 0 16px rgba(156,39,176,0.12)!important;
+  box-shadow:0 0 24px rgba(214,3,87,0.35)!important;
 }
 .poxy-collection-page .col-inv-card.col-inv-in-forge{opacity:0.35;pointer-events:none}
 

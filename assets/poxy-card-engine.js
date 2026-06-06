@@ -125,7 +125,7 @@
     const bg = _el('div', 'pcard-bg');
     bg.style.background = cfg.bg;
     const ring = _el('div', 'pcard-bg-ring');
-    ring.style.boxShadow = 'inset 0 0 32px ' + cfg.glow;
+    ring.style.boxShadow = 'none'; /* no inset ring — single outer border only */
     bg.appendChild(ring);
     return bg;
   }

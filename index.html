@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=11">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=12">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6069,24 +6069,22 @@ window.openAssetViewerModal = function(item) {
   const bl = $('avmBacklight');
   if(bl) bl.style.setProperty('--avm-glow', tierGlow);
 
-  // Ring border
-  const ring = $('avmRing');
-  if(ring) ring.style.borderColor = tierColor + '55';
+  // Single panel frame — tier-reactive border + glow (no inner rings)
+  const panel = modal.querySelector('.avm-panel');
+  if(panel){
+    panel.style.setProperty('--avm-border', tierColor + '38');
+    panel.style.setProperty('--avm-glow', tierGlow);
+  }
 
   // Tier badge (left panel top)
   const badge = $('avmTierBadge');
   if(badge){ badge.textContent = tier.label.toUpperCase() + ' TIER'; badge.style.color = tierColor; badge.style.borderColor = tierColor + '55'; }
 
-  // Asset frame: tier-reactive glow + premium stasis-pod shadow
+  // Asset frame: no border/shadow — depth via backlight + particles only
   const frame = $('avmAssetFrame');
   if(frame){
-    frame.style.setProperty('--avm-glow', tierGlow);
-    frame.style.boxShadow = [
-      'inset 0 0 50px rgba(0,0,0,0.85)',
-      `0 24px 48px rgba(0,0,0,0.55)`,
-      `0 0 60px ${tierGlow}`,
-      '0 0 0 1px rgba(255,255,255,0.06)'
-    ].join(', ');
+    frame.style.boxShadow = 'none';
+    frame.style.border = 'none';
   }
 
   // Asset inner: show image if available, else amber diamond SVG glyph (Stitch 1:1)
@@ -12800,12 +12798,6 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
     <!-- White ambient glow behind panel -->
     <div class="avm-ambient" aria-hidden="true"></div>
 
-    <!-- Cybernetic corner accents — Stitch spec -->
-    <span class="avm-corner avm-corner--tl" aria-hidden="true"></span>
-    <span class="avm-corner avm-corner--tr" aria-hidden="true"></span>
-    <span class="avm-corner avm-corner--bl" aria-hidden="true"></span>
-    <span class="avm-corner avm-corner--br" aria-hidden="true"></span>
-
     <!-- Close button -->
     <button type="button" class="avm-close" onclick="closeAssetViewerModal()" aria-label="Close">
       <span class="material-symbols-outlined">close</span>
@@ -12815,8 +12807,6 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
     <div class="avm-stage">
       <!-- Rarity ambient backlight -->
       <div class="avm-stage-backlight" id="avmBacklight" aria-hidden="true"></div>
-      <!-- Shimmer ring -->
-      <div class="avm-stage-ring" id="avmRing" aria-hidden="true"></div>
       <!-- Lower amber aura — Stitch: from-orange-500/30 via-orange-900/10 blur-3xl -->
       <div class="avm-stage-lower-aura" aria-hidden="true"></div>
 

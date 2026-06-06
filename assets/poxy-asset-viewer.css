@@ -51,12 +51,14 @@
   background: rgba(20,20,22,0.6);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.05);
+  /* Single premium frame — tier-reactive via --avm-border / --avm-glow */
+  border: 1px solid var(--avm-border, rgba(245,158,11,0.22));
   border-radius: 32px;
   transform: translateY(24px) scale(0.96);
   transition: transform 0.4s cubic-bezier(0.16,1,0.3,1),
               opacity 0.3s ease;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6),
+              0 0 28px var(--avm-glow, rgba(245,158,11,0.1));
   z-index: 1;
 }
 .avm-backdrop.avm-open .avm-panel {
@@ -68,19 +70,13 @@
   transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* ── Cybernetic corner accents ─────────────────────────────────────── */
-.avm-corner { display: none; } /* removed — double framing with panel border */
-/* Stitch: border-orange-500/20 = rgba(249,115,22,0.2) */
-.avm-corner--tl { top: 0;    left: 0;  border-top: 1px solid rgba(249,115,22,0.2); border-left:  1px solid rgba(249,115,22,0.2); border-top-left-radius:  32px; }
-.avm-corner--tr { top: 0;    right: 0; border-top: 1px solid rgba(249,115,22,0.2); border-right: 1px solid rgba(249,115,22,0.2); border-top-right-radius: 32px; }
-.avm-corner--bl { bottom: 0; left: 0;  border-bottom: 1px solid rgba(249,115,22,0.2); border-left:  1px solid rgba(249,115,22,0.2); border-bottom-left-radius:  32px; }
-.avm-corner--br { bottom: 0; right: 0; border-bottom: 1px solid rgba(249,115,22,0.2); border-right: 1px solid rgba(249,115,22,0.2); border-bottom-right-radius: 32px; }
+/* Corner accents removed — caused double framing with panel border */
 
-/* ── White ambient glow ────────────────────────────────────────────── */
+/* ── White ambient glow (gradient only, no border) ───────────────── */
 .avm-ambient {
   position: absolute;
-  inset: -1px;
-  border-radius: 24px;
+  inset: 0;
+  border-radius: 32px;
   pointer-events: none;
   z-index: 0;
   background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
@@ -164,21 +160,8 @@
   50%       { opacity: 0.85; transform: translateX(-50%) scale(1.12); }
 }
 
-/* Rarity ring */
-.avm-stage-ring {
-  position: absolute;
-  inset: 12px;
-  border-radius: 20px;
-  border: 1px solid transparent;
-  pointer-events: none;
-  z-index: 0;
-  animation: avmRingPulse 4s ease-in-out infinite;
-}
-
-@keyframes avmRingPulse {
-  0%, 100% { opacity: 0.25; }
-  50%       { opacity: 0.65; }
-}
+/* Inner rarity ring removed — was second perimeter inside stage */
+.avm-stage-ring { display: none; }
 
 /* POXY ID badge row */
 .avm-poxy-id-badge {
