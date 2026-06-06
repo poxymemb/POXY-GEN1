@@ -67,7 +67,7 @@
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
 <link rel="stylesheet" href="assets/poxy-telemetry.css?v=4">
-<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=5">
+<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=6">
 <link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=12">
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-ambient.css?v=1">
@@ -6719,6 +6719,7 @@ window.wpNavSelect=function(section,btn){
   const titleEl=document.getElementById('wpPageTitle'),descEl=document.getElementById('wpPageDesc');
   if(titleEl&&meta)titleEl.textContent=meta.title;
   if(descEl&&meta)descEl.textContent=meta.desc;
+  window.scrollTo({top:0,behavior:'smooth'});
 };
 
 async function loadGlobalTierCounts(){

@@ -53,7 +53,7 @@
   max-width: 1440px;
   margin: 0 auto;
   width: 100%;
-  padding: 32px 20px 80px;
+  padding: 32px 20px 140px;
   box-sizing: border-box;
   position: relative;
   z-index: 1;
@@ -62,11 +62,11 @@
   .wp-shell {
     flex-direction: row;
     gap: 32px;
-    padding: 40px 40px 80px;
+    padding: 40px 40px 160px;
   }
 }
 @media (min-width: 1280px) {
-  .wp-shell { padding: 48px 64px 80px; gap: 48px; }
+  .wp-shell { padding: 48px 64px 160px; gap: 48px; }
 }
 
 /* ── Sidebar navigation ─────────────────────────────────────── */
@@ -193,7 +193,7 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* was hidden — clipped Immutable Heritage sub-cards at scroll end */
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
 }
@@ -503,4 +503,21 @@
   letter-spacing: 0.14em;
   color: #6b7280;
   text-transform: uppercase;
+}
+
+/* ── Scroll fix: Philosophy / Immutable Heritage bottom clearance ── */
+#stPanelWhitepaper.st-spa-panel,
+#stPanelWhitepaper .poxy-whitepaper-page {
+  min-height: auto !important;
+  height: auto;
+  overflow: visible;
+}
+.wp-section-group--active {
+  padding-bottom: 24px;
+}
+.wp-section-group--active .wp-section:last-child {
+  margin-bottom: 0;
+}
+body.poxy-stitch-dash:has(#stPanelWhitepaper:not([hidden])) {
+  scroll-padding-bottom: 96px;
 }
