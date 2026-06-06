@@ -89,11 +89,17 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
 .toggle input:checked+.toggle-slider::after{transform:translateX(18px);background:var(--green)}
 .toggle-label{font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;cursor:pointer}
 /* ── TERMINAL LOG ── */
-.log-box{background:#000;border:1px solid var(--border);padding:10px;height:220px;overflow-y:auto;font-size:9px;line-height:1.6}
+.log-box{background:#000;border:1px solid var(--border);padding:10px;height:340px;overflow-y:auto;font-size:9px;line-height:1.65;scroll-behavior:smooth}
 .log-line{color:#00ff9d;white-space:pre-wrap;word-break:break-all}
 .log-line.err{color:var(--red)}
 .log-line.warn{color:var(--amber)}
 .log-line.info{color:var(--cyan)}
+.log-line.sys{color:rgba(255,255,255,0.35);font-style:italic}
+/* ── RT STATUS ── */
+.stream-status{display:inline-flex;align-items:center;gap:5px;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
+.stream-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .4s}
+.stream-dot.live{background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite}
+.stream-dot.error{background:var(--red)}
 /* ── CHART BARS ── */
 .chart-wrap{display:flex;align-items:flex-end;gap:3px;height:64px;padding:0 2px}
 .chart-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
@@ -508,8 +514,14 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
 
       <!-- LOG STREAM -->
       <div class="card">
-        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span>⬟ ACTION STREAM — LIVE SECURITY LEDGER</span>
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span>⬟ ACTION STREAM — LIVE SECURITY LEDGER</span>
+            <span class="stream-status" id="streamStatus">
+              <span class="stream-dot" id="streamDot"></span>
+              <span id="streamStatusTxt" style="color:var(--muted)">CONNECTING…</span>
+            </span>
+          </div>
           <div class="row-flex" style="gap:6px">
             <button class="btn btn-ghost btn-sm" onclick="clearLog()">CLEAR</button>
             <button class="btn btn-ghost btn-sm" onclick="pauseLog()" id="pauseLogBtn">PAUSE</button>
@@ -621,7 +633,7 @@ function initAll(){
   restoreSimState();
   refreshSimFlags();
   // Telem
-  seedLog();
+  initActionStream();
   startCharts();
   loadTelemetryCounters();
 }
@@ -676,9 +688,9 @@ async function publishNews(){
   };
 
   const {error} = await sb.from('news_posts').insert(payload);
-  if(error){ toast('ERROR: '+error.message,'err'); appendLog(`[ADMIN] NEWS PUBLISH FAILED: ${error.message}`, 'err'); return; }
+  if(error){ toast('ERROR: '+error.message,'err'); streamLine('ADMIN', `NEWS PUBLISH FAILED: ${error.message}`); return; }
   toast('POST PUBLISHED');
-  appendLog(`[ADMIN] NEWS PUBLISHED: "${title}" (${cat})`, 'info');
+  streamLine('PUBLISH', `"${title}" (${cat}) published via admin`);
   clearNewsForm();
   loadNewsPosts();
 }
@@ -718,7 +730,7 @@ async function deletePost(id){
   const {error} = await sb.from('news_posts').delete().eq('id',id);
   if(error){ toast('DELETE FAILED','err'); return; }
   toast('POST DELETED');
-  appendLog(`[ADMIN] NEWS POST DELETED: ${id}`, 'warn');
+  streamLine('DELETE', `News post ${id.slice(0,8)}… deleted via admin`);
   loadNewsPosts();
 }
 
@@ -732,7 +744,7 @@ function activateBroadcast(){
   banner.classList.add('active');
   document.getElementById('broadcastStatus').textContent = 'ACTIVE';
   document.getElementById('broadcastStatus').className = 'badge badge-green';
-  appendLog(`[ADMIN] BROADCAST ACTIVATED: "${msg}"`, 'warn');
+  streamLine('ADMIN', `BROADCAST ACTIVATED: "${msg}"`);
   toast('BROADCAST LIVE');
 }
 
@@ -743,7 +755,7 @@ function clearBroadcast(){
   banner.classList.remove('active');
   document.getElementById('broadcastStatus').textContent = 'INACTIVE';
   document.getElementById('broadcastStatus').className = 'badge badge-red';
-  appendLog('[ADMIN] BROADCAST CLEARED', 'info');
+  streamLine('ADMIN', 'BROADCAST CLEARED');
   toast('BROADCAST CLEARED');
 }
 
@@ -764,12 +776,12 @@ function toggleMaintenance(){
     localStorage.setItem('poxy_maintenance_msg', msg);
     document.getElementById('maintMsg').textContent = msg;
     document.getElementById('poxyMaintOverlay').classList.add('active');
-    appendLog('[ADMIN] MAINTENANCE MODE ACTIVATED', 'err');
+    streamLine('ADMIN', 'MAINTENANCE MODE ACTIVATED');
     toast('MAINTENANCE MODE ON');
   } else {
     localStorage.removeItem('poxy_maintenance');
     document.getElementById('poxyMaintOverlay').classList.remove('active');
-    appendLog('[ADMIN] MAINTENANCE MODE DEACTIVATED', 'info');
+    streamLine('ADMIN', 'MAINTENANCE MODE DEACTIVATED');
     toast('MAINTENANCE MODE OFF');
   }
 }
@@ -847,7 +859,7 @@ async function inspectUser(){
   ].filter(l=>l!==undefined);
 
   out.textContent = lines.join('\n');
-  appendLog(`[ADMIN] INSPECTED USER: ${prof.username||userId}`, 'info');
+  streamLine('ADMIN', `USER INSPECT: ${prof.username||userId.slice(0,12)}`);
 }
 
 async function executeAirdrop(){
@@ -886,13 +898,13 @@ async function executeAirdrop(){
     logEl.textContent = 'ERROR: '+error.message;
     logEl.style.color='var(--red)';
     toast('MINT FAILED','err');
-    appendLog(`[ADMIN] AIRDROP FAILED → ${target}: ${error.message}`, 'err');
+    streamLine('ADMIN', `AIRDROP FAILED → ${target}: ${error.message}`);
     return;
   }
   logEl.style.color='var(--green)';
   logEl.textContent = `✓ MINTED ASSET ${data.id}\nTIER: ${tier.toUpperCase()}\nSERIAL: ${serialFinal}\nUSER: ${userId}`;
   toast('AIRDROP EXECUTED');
-  appendLog(`[ADMIN] AIRDROP EXECUTED → ${target} | ${tier.toUpperCase()} | ${serialFinal}`, 'warn');
+  streamLine('AIRDROP', `Override mint → ${target} | ${tier.toUpperCase()} | ${serialFinal}`);
 }
 
 async function loadUsersTable(){
@@ -922,7 +934,7 @@ function togglePerfMode(){
     document.documentElement.setAttribute('data-perf','low');
     document.getElementById('perfModeStatus').textContent='LOW PERF';
     document.getElementById('perfModeStatus').className='badge badge-amber';
-    appendLog('[SIM] PERF MODE → LOW', 'warn');
+    streamLine('ADMIN', 'SIM PERF MODE → LOW');
     toast('PERF MODE: LOW');
   } else {
     window.POXY_PERF_MODE = 'standard';
@@ -930,7 +942,7 @@ function togglePerfMode(){
     document.documentElement.removeAttribute('data-perf');
     document.getElementById('perfModeStatus').textContent='STANDARD';
     document.getElementById('perfModeStatus').className='badge badge-red';
-    appendLog('[SIM] PERF MODE → STANDARD', 'info');
+    streamLine('ADMIN', 'SIM PERF MODE → STANDARD');
     toast('PERF MODE: STANDARD');
   }
   refreshSimFlags();
@@ -948,7 +960,7 @@ function toggleLag(){
     };
     document.getElementById('lagStatus').textContent=`${ms}MS INJECTED`;
     document.getElementById('lagStatus').className='badge badge-amber';
-    appendLog(`[SIM] LAG EMULATOR ON → ${ms}ms delay injected`, 'warn');
+    streamLine('ADMIN', `SIM LAG ON → ${ms}ms fetch delay injected`);
     toast(`LAG: ${ms}MS`);
   } else if(!on && _lagPatched){
     _lagPatched = false;
@@ -956,7 +968,7 @@ function toggleLag(){
     window.fetch = _nativeFetch;
     document.getElementById('lagStatus').textContent='DISABLED';
     document.getElementById('lagStatus').className='badge badge-red';
-    appendLog('[SIM] LAG EMULATOR OFF', 'info');
+    streamLine('ADMIN', 'SIM LAG EMULATOR OFF');
     toast('LAG DISABLED');
   }
   refreshSimFlags();
@@ -978,7 +990,7 @@ function applyTimeTravel(){
   };
   document.getElementById('timeTravelCurrent').textContent = new _nativeDate(ts).toISOString();
   document.getElementById('timeTravelToggle').checked = true;
-  appendLog(`[SIM] TIME OVERRIDE → ${new _nativeDate(ts).toISOString()}`, 'warn');
+  streamLine('ADMIN', `SIM TIME OVERRIDE → ${new _nativeDate(ts).toISOString()}`);
   toast('TIME OVERRIDE APPLIED');
   refreshSimFlags();
 }
@@ -995,7 +1007,7 @@ function resetTimeTravel(){
   localStorage.removeItem('poxy_time_override');
   document.getElementById('timeTravelCurrent').textContent = 'NONE';
   document.getElementById('timeTravelToggle').checked = false;
-  appendLog('[SIM] TIME OVERRIDE CLEARED', 'info');
+  streamLine('ADMIN', 'SIM TIME OVERRIDE CLEARED');
   toast('TIME RESET TO REAL');
   refreshSimFlags();
 }
@@ -1006,7 +1018,7 @@ function clearAllSim(){
   document.getElementById('lagToggle').checked = false; toggleLag();
   resetTimeTravel();
   toast('ALL OVERRIDES CLEARED');
-  appendLog('[ADMIN] ALL SIM OVERRIDES CLEARED', 'warn');
+  streamLine('ADMIN', 'ALL SIM OVERRIDES CLEARED');
 }
 
 function restoreSimState(){
@@ -1046,58 +1058,157 @@ function refreshSimFlags(){
 // ═══════════════════════════════════════════════════════════════
 // TAB 4 — TELEMETRY
 // ═══════════════════════════════════════════════════════════════
-const LOG_PREFIXES = [
-  ['CRAFT','Wallet 0x{w} initiated CRAFT → {t} tier'],
-  ['BURN','Wallet 0x{w} submitted BURN for asset #{n}'],
-  ['MINT','Asset #{n} minted for 0x{w} [{t} TIER]'],
-  ['INSPECT','Profile 0x{w} viewed — Asset count: {n}'],
-  ['TRADE','Market listing #{n} by 0x{w} at {p} PC'],
-  ['LOGIN','Session established for 0x{w}'],
-  ['VERIFY','Merkle proof verified for 0x{w}'],
-  ['AIRDROP','DEV override mint → 0x{w} [{t}]']
-];
-const TIERS_ABBR = ['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY','MYTHIC'];
-const WALLETS = ['71f3','b4a2','c9d1','3e0f','8abc','55d2','fa91','2b77'];
 
-function randLog(){
-  const [tag, tpl] = LOG_PREFIXES[Math.floor(Math.random()*LOG_PREFIXES.length)];
-  const w = WALLETS[Math.floor(Math.random()*WALLETS.length)]+Math.random().toString(16).slice(2,6);
-  const n = Math.floor(Math.random()*99999);
-  const t = TIERS_ABBR[Math.floor(Math.random()*TIERS_ABBR.length)];
-  const p = (Math.random()*50+0.5).toFixed(2);
-  const line = tpl.replace('{w}',w).replace('{n}',n).replace('{t}',t).replace('{p}',p);
-  return `[${fmtLogTime()}] [${tag}] ${line}`;
-}
+// ── CORE LOG ENGINE ────────────────────────────────────────────
+const LOG_BUFFER_CAP = 150;
 
 function appendLog(msg, type=''){
   if(logPaused) return;
   const box = document.getElementById('logStream');
+  if(!box) return;
   const div = document.createElement('div');
-  div.className = 'log-line' + (type?' '+type:'');
+  div.className = 'log-line' + (type ? ' '+type : '');
   div.textContent = msg;
   box.appendChild(div);
+  // smooth scroll-to-bottom (like a real terminal)
   box.scrollTop = box.scrollHeight;
-  // Keep max 300 lines
-  while(box.children.length > 300) box.removeChild(box.firstChild);
-}
-
-function seedLog(){
-  for(let i=0;i<12;i++){
-    const ts = new _nativeDate(Date.now()-Math.random()*600000);
-    appendLog(`[${fmtLogTime(ts)}] ${['[MINT]','[LOGIN]','[CRAFT]','[BURN]'][Math.floor(Math.random()*4)]} ${randLog().split('] ').slice(1).join('] ')}`);
-  }
-  // Auto-stream
-  setInterval(()=>{ if(!logPaused) appendLog(randLog()); }, 4200);
+  // buffer cap — drop oldest entry when over limit
+  while(box.children.length > LOG_BUFFER_CAP) box.removeChild(box.firstChild);
 }
 
 function clearLog(){
-  document.getElementById('logStream').innerHTML='';
+  document.getElementById('logStream').innerHTML = '';
 }
 
 function pauseLog(){
   logPaused = !logPaused;
   document.getElementById('pauseLogBtn').textContent = logPaused ? 'RESUME' : 'PAUSE';
-  appendLog(`[SYSTEM] LOG STREAM ${logPaused?'PAUSED':'RESUMED'}`, 'info');
+  const sysMsg = `[${fmtLogTime()}] [◆ SYSTEM] STREAM ${logPaused ? 'PAUSED' : 'RESUMED'}`;
+  // bypass pause guard for system messages
+  const box = document.getElementById('logStream');
+  if(box){ const d=document.createElement('div'); d.className='log-line sys'; d.textContent=sysMsg; box.appendChild(d); box.scrollTop=box.scrollHeight; }
+}
+
+// ── ACTION STREAM — REAL-TIME SUPABASE LISTENER ────────────────
+let _streamChannel = null;
+
+const EV = {
+  MINT:    { css:'info', tag:'◈ MINT'    },
+  CRAFT:   { css:'',     tag:'✦ CRAFT'   },
+  BURN:    { css:'err',  tag:'⬡ BURN'    },
+  LOGIN:   { css:'',     tag:'◆ LOGIN'   },
+  TRADE:   { css:'warn', tag:'⬟ TRADE'  },
+  LISTING: { css:'warn', tag:'⬟ LISTING'},
+  AIRDROP: { css:'warn', tag:'⬡ AIRDROP'},
+  PUBLISH: { css:'info', tag:'◈ PUBLISH'},
+  DELETE:  { css:'err',  tag:'⬡ DELETE' },
+  ADMIN:   { css:'warn', tag:'⚠ ADMIN'  },
+};
+
+function streamLine(evKey, message){
+  const meta = EV[evKey] || { css:'', tag:'◆ EVENT' };
+  appendLog(`[${fmtLogTime()}] [${meta.tag}] ${message}`, meta.css);
+}
+
+// user_poxy INSERT → MINT
+function onMintInsert(payload){
+  const r = payload.new; if(!r) return;
+  const tier   = (r.poxy_tier || '?').toUpperCase();
+  const serial = r.serial_number || r.id?.slice(0,12) || '?';
+  const user   = r.user_id?.slice(0,10) || '?';
+  streamLine('MINT', `Asset ${serial} minted → 0x${user}… [${tier}]`);
+}
+
+// poxy_audit_log INSERT → typed action
+function onAuditInsert(payload){
+  const r = payload.new; if(!r) return;
+  const action = (r.action_type || 'EVENT').toUpperCase();
+  const user   = r.user_id?.slice(0,10) || 'anon';
+  const detail = r.payload
+    ? Object.entries(r.payload).map(([k,v])=>`${k}:${String(v).slice(0,20)}`).join(' ').slice(0,80)
+    : '';
+  const evKey  = EV[action] ? action : 'ADMIN';
+  streamLine(evKey, `${action} — 0x${user}… ${detail}`);
+}
+
+// news_posts INSERT → PUBLISH
+function onNewsInsert(payload){
+  const r = payload.new; if(!r) return;
+  const author = r.author_username || 'staff';
+  const title  = (r.title || '').slice(0,56);
+  streamLine('PUBLISH', `"${title}" published by ${author}`);
+}
+
+// marketplace INSERT → LISTING
+function onTradeInsert(payload){
+  const r = payload.new; if(!r) return;
+  const price  = r.price ?? '?';
+  const seller = r.seller_id?.slice(0,10) || '?';
+  const asset  = (r.asset_id || r.id)?.slice(0,10) || '?';
+  streamLine('LISTING', `Asset 0x${asset}… listed by 0x${seller}… @ ${price} PC`);
+}
+
+function setStreamUI(state){ // 'live' | 'error' | 'connecting'
+  const dot = document.getElementById('streamDot');
+  const txt = document.getElementById('streamStatusTxt');
+  if(!dot || !txt) return;
+  dot.className = 'stream-dot' + (state==='live' ? ' live' : state==='error' ? ' error' : '');
+  txt.textContent = state==='live' ? 'LIVE' : state==='error' ? 'ERROR' : 'CONNECTING…';
+  txt.style.color = state==='live' ? 'var(--green)' : state==='error' ? 'var(--red)' : 'var(--muted)';
+}
+
+async function seedStreamHistory(){
+  // Prefill with last 10 real mints so the log isn't empty on open
+  try {
+    const { data } = await sb.from('user_poxy')
+      .select('id,poxy_tier,serial_number,user_id,dropped_at')
+      .order('dropped_at', { ascending:false })
+      .limit(10);
+    if(!data || !data.length) return;
+    const box = document.getElementById('logStream');
+    if(!box) return;
+    // insert oldest-first at top (historical)
+    [...data].reverse().forEach(r => {
+      const tier   = (r.poxy_tier||'?').toUpperCase();
+      const serial = r.serial_number || r.id?.slice(0,12) || '?';
+      const user   = r.user_id?.slice(0,10) || '?';
+      const ts     = r.dropped_at ? `[${fmtLogTime(new _nativeDate(r.dropped_at))}]` : `[${fmtLogTime()}]`;
+      const d = document.createElement('div');
+      d.className = 'log-line info';
+      d.textContent = `${ts} [◈ MINT] Asset ${serial} minted → 0x${user}… [${tier}]  ← historical`;
+      box.insertBefore(d, box.firstChild);
+    });
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} historical events loaded — watching live…`, 'sys');
+  } catch(e){
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] History seed skipped: ${e.message}`, 'sys');
+  }
+}
+
+function initActionStream(){
+  setStreamUI('connecting');
+  appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Establishing realtime uplink…`, 'sys');
+
+  // Tear down any stale channel
+  if(_streamChannel){ sb.removeChannel(_streamChannel); _streamChannel = null; }
+
+  _streamChannel = sb.channel('poxy-action-stream')
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'user_poxy'     }, onMintInsert)
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'poxy_audit_log'}, onAuditInsert)
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'news_posts'    }, onNewsInsert)
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'marketplace'   }, onTradeInsert)
+    .subscribe(status => {
+      if(status === 'SUBSCRIBED'){
+        setStreamUI('live');
+        appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Realtime uplink ACTIVE — 4 channels open`, 'sys');
+        seedStreamHistory();
+      } else if(status === 'CLOSED'){
+        setStreamUI('connecting');
+        appendLog(`[${fmtLogTime()}] [⚠ SYSTEM] Channel closed — reconnecting…`, 'warn');
+      } else if(status === 'CHANNEL_ERROR'){
+        setStreamUI('error');
+        appendLog(`[${fmtLogTime()}] [⚠ SYSTEM] Channel error — check Supabase Realtime config`, 'err');
+      }
+    });
 }
 
 // CHARTS
