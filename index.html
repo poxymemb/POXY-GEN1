@@ -7224,24 +7224,37 @@ function buildRouletteTrack(winTier){
   rouletteWinIndex=ROULETTE_WIN_INDEX;
   for(let i=0;i<ROULETTE_TRAIL_SLOTS;i++)slots.push(pickTier());
 
-  // Mythic teaser: random positions, 1-2 teasers, full unpredictability
+  // Mythic teaser funnel (decoy only — real drop still follows server RNG)
   const mythicTier=TIERS.find(t=>t.id==='mythic')||TIERS[TIERS.length-1];
   const teaserSet=new Set();
+  const trackLen=slots.length;
+  const winIdx=rouletteWinIndex;
   if(winner.id!=='mythic'){
-    const rand=Math.random();
-    if(rand<0.35){
-      // 35%: one teaser very close before win (1-3 slots back)
-      const gap=1+Math.floor(Math.random()*3);
-      teaserSet.add(rouletteWinIndex-gap);
-    } else if(rand<0.65){
-      // 30%: one teaser in middle of track (random 20-55)
-      teaserSet.add(20+Math.floor(Math.random()*36));
-    } else if(rand<0.85){
-      // 20%: two teasers — one early, one close
-      teaserSet.add(10+Math.floor(Math.random()*20));
-      teaserSet.add(rouletteWinIndex-1-Math.floor(Math.random()*4));
+    // 1-in-4: scatter 1–4 red mythic decoys at fully random slots during the spin
+    if(Math.random()<0.25){
+      const scatterCount=1+Math.floor(Math.random()*4);
+      let tries=0;
+      while(teaserSet.size<scatterCount&&tries++<50){
+        const idx=Math.floor(Math.random()*trackLen);
+        if(idx!==winIdx)teaserSet.add(idx);
+      }
     }
-    // else 15%: no teaser this spin (suspense through absence)
+    // 1-in-6: near-miss — mythic lands 1–4 cells left OR right of the real winner
+    if(Math.random()<1/6){
+      const gap=1+Math.floor(Math.random()*4);
+      const nearOpts=[];
+      if(winIdx-gap>=0)nearOpts.push(winIdx-gap);
+      if(winIdx+gap<trackLen)nearOpts.push(winIdx+gap);
+      if(nearOpts.length){
+        const pick=nearOpts[Math.floor(Math.random()*nearOpts.length)];
+        if(pick!==winIdx)teaserSet.add(pick);
+      }
+    }
+    // Rare hype spike (~8%): one extra random mythic deep in the track
+    if(Math.random()<0.08){
+      const deep=8+Math.floor(Math.random()*(trackLen-16));
+      if(deep!==winIdx)teaserSet.add(deep);
+    }
   }
 
   track.innerHTML=slots.map((t,i)=>{
