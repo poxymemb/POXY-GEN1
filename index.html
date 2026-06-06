@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=8">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=9">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6173,14 +6173,10 @@ window.openAssetViewerModal = function(item) {
 
   // (DROP RATE / RARITY COEFF removed per Stitch 1:1 — not in reference design)
 
-  // Serial + ID
-  const ser = $('avmSerial');   if(ser) ser.textContent = item.serial_number || '–';
-  const aid = $('avmAssetId'); if(aid){
-    const id = String(item.id || '');
-    aid.textContent = id.length > 16 ? id.slice(0,8) + '…' + id.slice(-8) : id;
-  }
+  // Serial Key (Stitch group 2: Serial Key, Forge, Pinned)
+  const ser = $('avmSerial'); if(ser) ser.textContent = item.serial_number || '–';
 
-  // Conditional rows
+  // Conditional rows — hide rows when data is unavailable
   const forgeRow = $('avmForgeRow');
   if(forgeRow) forgeRow.hidden = typeof findCraftSocketForItem !== 'function' || findCraftSocketForItem(item.id) < 0;
   const pinRow = $('avmPinnedRow');
@@ -12895,20 +12891,16 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       </div>
 
       <!-- Tactical data matrix — Group 2: Identity (Stitch 1:1) -->
-      <div class="avm-data-group" style="margin-bottom:16px">
+      <div class="avm-data-group">
         <div class="avm-data-row">
           <span class="avm-data-key">SERIAL KEY</span>
           <span class="avm-data-val avm-val-mono" id="avmSerial">–</span>
         </div>
-        <div class="avm-data-row">
-          <span class="avm-data-key">ASSET ID</span>
-          <span class="avm-data-val avm-val-mono avm-val-dim" id="avmAssetId">–</span>
-        </div>
-        <div class="avm-data-row" id="avmForgeRow" hidden>
+        <div class="avm-data-row" id="avmForgeRow">
           <span class="avm-data-key">FORGE</span>
           <span class="avm-data-val avm-val-forge">IN SYNDICATE FORGE</span>
         </div>
-        <div class="avm-data-row" id="avmPinnedRow" hidden>
+        <div class="avm-data-row" id="avmPinnedRow">
           <span class="avm-data-key">PINNED</span>
           <span class="avm-data-val">COLLECTION TOP</span>
         </div>
