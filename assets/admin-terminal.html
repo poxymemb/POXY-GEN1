@@ -1585,26 +1585,27 @@ async function accAddBalance(){
   if(amt<=0){ toast('ENTER POSITIVE AMOUNT','err'); return; }
   const logEl = document.getElementById('accBalLog');
   logEl.style.color='var(--muted)'; logEl.textContent='APPLYING…';
-  const {data,error} = await sb.from('profiles').update({balance: (_accCurrentProf.balance||0)+amt}).eq('id',uid).select('balance').maybeSingle();
+  const newAmt = (_accCurrentProf.balance||0) + amt;
+  const {data,error} = await sb.rpc('admin_set_balance',{p_target_id:uid, p_amount:newAmt});
   if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; toast('FAILED','err'); return; }
-  _accCurrentProf.balance = data.balance;
-  document.getElementById('accBalance').textContent = data.balance.toFixed(2)+' PC';
-  logEl.style.color='var(--green)'; logEl.textContent='✓ BALANCE NOW: '+data.balance.toFixed(2)+' PC';
+  _accCurrentProf.balance = data;
+  document.getElementById('accBalance').textContent = Number(data).toFixed(2)+' PC';
+  logEl.style.color='var(--green)'; logEl.textContent='✓ BALANCE NOW: '+Number(data).toFixed(2)+' PC';
   toast('BALANCE UPDATED');
-  streamLine('ADMIN', `BALANCE +${amt}PC → ${_accCurrentProf.username||uid.slice(0,12)} = ${data.balance}PC`);
+  streamLine('ADMIN', `BALANCE +${amt}PC → ${_accCurrentProf.username||uid.slice(0,12)} = ${data}PC`);
 }
 async function accSetBalance(){
   const uid = getAccUserId(); if(!uid) return;
   const amt = parseFloat(document.getElementById('accBalAmount').value)||0;
   const logEl = document.getElementById('accBalLog');
   logEl.style.color='var(--muted)'; logEl.textContent='SETTING…';
-  const {data,error} = await sb.from('profiles').update({balance:amt}).eq('id',uid).select('balance').maybeSingle();
+  const {data,error} = await sb.rpc('admin_set_balance',{p_target_id:uid, p_amount:amt});
   if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
-  _accCurrentProf.balance = data.balance;
-  document.getElementById('accBalance').textContent = data.balance.toFixed(2)+' PC';
-  logEl.style.color='var(--green)'; logEl.textContent='✓ SET TO: '+data.balance.toFixed(2)+' PC';
+  _accCurrentProf.balance = data;
+  document.getElementById('accBalance').textContent = Number(data).toFixed(2)+' PC';
+  logEl.style.color='var(--green)'; logEl.textContent='✓ SET TO: '+Number(data).toFixed(2)+' PC';
   toast('BALANCE SET');
-  streamLine('ADMIN', `BALANCE SET → ${_accCurrentProf.username||uid.slice(0,12)} = ${data.balance}PC`);
+  streamLine('ADMIN', `BALANCE SET → ${_accCurrentProf.username||uid.slice(0,12)} = ${data}PC`);
 }
 async function accResetBalance(){
   document.getElementById('accBalAmount').value = '0';
@@ -1616,12 +1617,8 @@ async function accSetFreeze(){
   const uid = getAccUserId(); if(!uid) return;
   const val = document.getElementById('accFreezeToggle').checked;
   const logEl = document.getElementById('accStatusLog');
-  const {error} = await sb.from('profiles').update({is_frozen:val}).eq('id',uid);
-  if(error){
-    // Column may not exist yet — handle gracefully
-    logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message+' (run freeze migration if needed)';
-    return;
-  }
+  const {error} = await sb.rpc('admin_set_frozen',{p_target_id:uid, p_frozen:val});
+  if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
   logEl.style.color = val?'var(--red)':'var(--green)';
   logEl.textContent = val?'✓ ACCOUNT FROZEN':'✓ ACCOUNT UNFROZEN';
   toast(val?'ACCOUNT FROZEN':'ACCOUNT UNFROZEN');
@@ -1631,7 +1628,7 @@ async function accSetVerified(){
   const uid = getAccUserId(); if(!uid) return;
   const val = document.getElementById('accVerifiedToggle').checked;
   const logEl = document.getElementById('accStatusLog');
-  const {error} = await sb.from('profiles').update({is_verified_employee:val}).eq('id',uid);
+  const {error} = await sb.rpc('admin_set_verified',{p_target_id:uid, p_verified:val});
   if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
   logEl.style.color='var(--green)'; logEl.textContent='✓ VERIFIED = '+String(val).toUpperCase();
   toast('VERIFIED FLAG SET');
@@ -1641,7 +1638,7 @@ async function accSetClub(){
   const uid = getAccUserId(); if(!uid) return;
   const val = document.getElementById('accClubToggle').checked;
   const logEl = document.getElementById('accStatusLog');
-  const {error} = await sb.from('profiles').update({is_club_member:val}).eq('id',uid);
+  const {error} = await sb.rpc('admin_set_club',{p_target_id:uid, p_club:val});
   if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
   logEl.style.color='var(--green)'; logEl.textContent='✓ VIP CLUB = '+String(val).toUpperCase();
   toast('CLUB STATUS SET');
@@ -1656,7 +1653,7 @@ async function accGrantBadge(){
   const current = Array.isArray(_accCurrentProf.badges)?[..._accCurrentProf.badges]:[];
   if(current.includes(badge)){ logEl.textContent='BADGE ALREADY PRESENT'; return; }
   current.push(badge);
-  const {error} = await sb.from('profiles').update({badges:current}).eq('id',uid);
+  const {error} = await sb.rpc('admin_set_badges',{p_target_id:uid, p_badges:current});
   if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
   _accCurrentProf.badges = current;
   logEl.style.color='var(--green)'; logEl.textContent='✓ BADGE GRANTED: '+badge.toUpperCase();
@@ -1668,7 +1665,7 @@ async function accRevokeBadge(){
   const badge = document.getElementById('accBadgeSelect').value;
   const logEl = document.getElementById('accBadgeLog');
   const current = (Array.isArray(_accCurrentProf.badges)?[..._accCurrentProf.badges]:[]).filter(b=>b!==badge);
-  const {error} = await sb.from('profiles').update({badges:current}).eq('id',uid);
+  const {error} = await sb.rpc('admin_set_badges',{p_target_id:uid, p_badges:current});
   if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
   _accCurrentProf.badges = current;
   logEl.style.color='var(--amber)'; logEl.textContent='✓ BADGE REVOKED: '+badge.toUpperCase();
@@ -1685,7 +1682,7 @@ async function accForceUsername(){
   if(!newUn||newUn.length<2){ logEl.style.color='var(--red)'; logEl.textContent='ENTER VALID USERNAME (min 2 chars)'; return; }
   if(!reason){ logEl.style.color='var(--red)'; logEl.textContent='ENTER REASON'; return; }
   logEl.style.color='var(--muted)'; logEl.textContent='UPDATING…';
-  const {error} = await sb.from('profiles').update({username:newUn}).eq('id',uid);
+  const {error} = await sb.rpc('admin_set_username',{p_target_id:uid, p_username:newUn});
   if(error){ logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+error.message; return; }
   _accCurrentProf.username = newUn;
   document.getElementById('accDisplayName').textContent = newUn;
@@ -1699,7 +1696,7 @@ async function accForceUsername(){
 async function accBlock(){
   const uid = getAccUserId(); if(!uid) return;
   if(!confirm(`BLOCK account "${_accCurrentProf.username||uid}"? This prevents login.`)) return;
-  const {error} = await sb.from('profiles').update({is_blocked:true}).eq('id',uid);
+  const {error} = await sb.rpc('admin_set_blocked',{p_target_id:uid, p_blocked:true});
   const logEl = document.getElementById('accDangerLog');
   if(error){ logEl.textContent='ERROR: '+error.message; return; }
   logEl.textContent='✓ ACCOUNT BLOCKED: '+(_accCurrentProf.username||uid.slice(0,12));
@@ -1708,7 +1705,7 @@ async function accBlock(){
 }
 async function accUnblock(){
   const uid = getAccUserId(); if(!uid) return;
-  const {error} = await sb.from('profiles').update({is_blocked:false}).eq('id',uid);
+  const {error} = await sb.rpc('admin_set_blocked',{p_target_id:uid, p_blocked:false});
   const logEl = document.getElementById('accDangerLog');
   if(error){ logEl.textContent='ERROR: '+error.message; return; }
   logEl.textContent='✓ ACCOUNT UNBLOCKED: '+(_accCurrentProf.username||uid.slice(0,12));
