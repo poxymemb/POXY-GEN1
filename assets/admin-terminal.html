@@ -1089,8 +1089,15 @@ function pauseLog(){
   if(box){ const d=document.createElement('div'); d.className='log-line sys'; d.textContent=sysMsg; box.appendChild(d); box.scrollTop=box.scrollHeight; }
 }
 
-// ── ACTION STREAM — REAL-TIME SUPABASE LISTENER ────────────────
-let _streamChannel = null;
+// ── ACTION STREAM — REALTIME + POLLING HYBRID ─────────────────
+// Realtime (WebSocket): instant push when available
+// Polling fallback (8s): catches events if WebSocket drops or filters
+// Deduplication by event UUID: no double-entries regardless of source
+// ──────────────────────────────────────────────────────────────
+let _streamChannel  = null;
+let _pollTimer      = null;
+let _lastLedgerTs   = null;   // ISO string of most-recent processed event
+const _seenIds      = new Set(); // dedup cache (capped at 500)
 
 const EV = {
   MINT:    { css:'info', tag:'◈ MINT'    },
@@ -1105,122 +1112,154 @@ const EV = {
   ADMIN:   { css:'warn', tag:'⚠ ADMIN'  },
 };
 
-function streamLine(evKey, message){
+function streamLine(evKey, message, tsOverride){
   const meta = EV[evKey] || { css:'', tag:'◆ EVENT' };
-  appendLog(`[${fmtLogTime()}] [${meta.tag}] ${message}`, meta.css);
+  const ts   = tsOverride || `[${fmtLogTime()}]`;
+  appendLog(`${ts} [${meta.tag}] ${message}`, meta.css);
 }
 
-// ledger_events INSERT → MINT / any signed event (open SELECT policy — no RLS block)
-function onLedgerInsert(payload){
-  const r = payload.new; if(!r) return;
-  const evType = (r.event_type || 'EVENT').toUpperCase();
-  const user   = r.actor_id?.slice(0,10) || '?';
-  const asset  = r.asset_id?.slice(0,10) || '?';
-  const pl     = r.payload || {};
-  const tier   = (pl.tier || pl.poxy_tier || '').toUpperCase();
-  const col    = pl.collection_id || '';
+// ── Core ledger row renderer (shared by realtime + poll) ───────
+function processLedgerRow(r, historical = false){
+  if(!r || !r.id) return;
+  // Deduplicate
+  if(_seenIds.has(r.id)) return;
+  _seenIds.add(r.id);
+  if(_seenIds.size > 500){ _seenIds.delete(_seenIds.values().next().value); }
+
+  // Track watermark for poll queries
+  if(r.event_timestamp &&
+     (!_lastLedgerTs || r.event_timestamp > _lastLedgerTs)){
+    _lastLedgerTs = r.event_timestamp;
+  }
+
+  const evType  = (r.event_type || 'EVENT').toUpperCase();
+  const user    = r.actor_id?.slice(0,10) || '?';
+  const asset   = r.asset_id?.slice(0,10) || '?';
+  const pl      = r.payload || {};
+  const tier    = (pl.tier || pl.poxy_tier || '').toUpperCase();
   const tierStr = tier ? ` [${tier}]` : '';
-  const colStr  = col  ? ` {${col}}` : '';
   const evKey   = EV[evType] ? evType : 'MINT';
-  streamLine(evKey, `Asset 0x${asset}… → 0x${user}…${tierStr}${colStr}`);
+  const ts      = r.event_timestamp
+    ? `[${fmtLogTime(new _nativeDate(r.event_timestamp))}]`
+    : null;
+  const suffix  = historical ? '  ← historical' : '';
+
+  streamLine(evKey, `Asset 0x${asset}… → 0x${user}…${tierStr}${suffix}`, ts);
 }
 
-// user_poxy INSERT → MINT (secondary — fires if RLS passes for anon)
-function onMintInsert(payload){
-  const r = payload.new; if(!r) return;
-  const tier   = (r.poxy_tier || '?').toUpperCase();
-  const serial = r.serial_number || r.id?.slice(0,12) || '?';
-  const user   = r.user_id?.slice(0,10) || '?';
-  // Only log if ledger_events didn't already capture this (deduplicate by asset serial)
-  streamLine('MINT', `[poxy] ${serial} minted → 0x${user}… [${tier}]`);
+// ── Realtime callback (instant) ────────────────────────────────
+function onLedgerInsert(payload){ processLedgerRow(payload.new, false); }
+
+// ── Polling fallback (every 8s) — guarantees delivery ─────────
+async function pollLedger(){
+  if(logPaused) return;
+  try{
+    let q = sb.from('ledger_events')
+      .select('id,event_type,actor_id,asset_id,payload,event_timestamp')
+      .order('event_timestamp', { ascending:true })
+      .limit(20);
+    if(_lastLedgerTs) q = q.gt('event_timestamp', _lastLedgerTs);
+    const { data } = await q;
+    if(data && data.length) data.forEach(r => processLedgerRow(r, false));
+  } catch(_){}
 }
 
-// news_posts INSERT → PUBLISH
+// ── news_posts INSERT ─────────────────────────────────────────
 function onNewsInsert(payload){
   const r = payload.new; if(!r) return;
-  const author = r.author_username || 'staff';
-  const title  = (r.title || '').slice(0,56);
-  streamLine('PUBLISH', `"${title}" published by ${author}`);
+  streamLine('PUBLISH', `"${(r.title||'').slice(0,56)}" published by ${r.author_username||'staff'}`);
 }
 
-// marketplace INSERT → LISTING
+// ── marketplace INSERT ────────────────────────────────────────
 function onTradeInsert(payload){
   const r = payload.new; if(!r) return;
-  const price  = r.price ?? '?';
-  const seller = r.seller_id?.slice(0,10) || '?';
-  const asset  = (r.asset_id || r.id)?.slice(0,10) || '?';
-  streamLine('LISTING', `Asset 0x${asset}… listed by 0x${seller}… @ ${price} PC`);
+  const asset  = (r.asset_id||r.id)?.slice(0,10)||'?';
+  const seller = r.seller_id?.slice(0,10)||'?';
+  streamLine('LISTING', `Asset 0x${asset}… listed by 0x${seller}… @ ${r.price??'?'} PC`);
 }
 
-function setStreamUI(state){ // 'live' | 'error' | 'connecting'
+// ── Status dot ────────────────────────────────────────────────
+function setStreamUI(state){
   const dot = document.getElementById('streamDot');
   const txt = document.getElementById('streamStatusTxt');
-  if(!dot || !txt) return;
-  dot.className = 'stream-dot' + (state==='live' ? ' live' : state==='error' ? ' error' : '');
-  txt.textContent = state==='live' ? 'LIVE' : state==='error' ? 'ERROR' : 'CONNECTING…';
-  txt.style.color = state==='live' ? 'var(--green)' : state==='error' ? 'var(--red)' : 'var(--muted)';
+  if(!dot||!txt) return;
+  dot.className = 'stream-dot'+(state==='live'?' live':state==='error'?' error':'');
+  txt.textContent = state==='live'?'LIVE':state==='error'?'ERROR':'CONNECTING…';
+  txt.style.color = state==='live'?'var(--green)':state==='error'?'var(--red)':'var(--muted)';
 }
 
+// ── Historical seed ───────────────────────────────────────────
 async function seedStreamHistory(){
-  // Prefill from ledger_events — open SELECT policy, reliable source
-  try {
+  try{
     const { data } = await sb.from('ledger_events')
-      .select('event_type,actor_id,asset_id,payload,event_timestamp')
+      .select('id,event_type,actor_id,asset_id,payload,event_timestamp')
       .order('event_timestamp', { ascending:false })
       .limit(12);
-    if(!data || !data.length) return;
+    if(!data||!data.length) return;
     const box = document.getElementById('logStream');
     if(!box) return;
-    // Insert oldest-first at top as historical context
+    // Render oldest-first, prepend to top of log
+    const frag = document.createDocumentFragment();
     [...data].reverse().forEach(r => {
-      const evType  = (r.event_type || 'EVENT').toUpperCase();
-      const user    = r.actor_id?.slice(0,10) || '?';
-      const asset   = r.asset_id?.slice(0,10) || '?';
-      const pl      = r.payload || {};
-      const tier    = (pl.tier || pl.poxy_tier || '').toUpperCase();
-      const tierStr = tier ? ` [${tier}]` : '';
+      if(_seenIds.has(r.id)) return;
+      _seenIds.add(r.id);
+      if(r.event_timestamp &&
+         (!_lastLedgerTs || r.event_timestamp > _lastLedgerTs)){
+        _lastLedgerTs = r.event_timestamp;
+      }
+      const evType  = (r.event_type||'EVENT').toUpperCase();
+      const user    = r.actor_id?.slice(0,10)||'?';
+      const asset   = r.asset_id?.slice(0,10)||'?';
+      const pl      = r.payload||{};
+      const tier    = (pl.tier||pl.poxy_tier||'').toUpperCase();
+      const tierStr = tier?` [${tier}]`:'';
       const ts      = r.event_timestamp
-        ? `[${fmtLogTime(new _nativeDate(r.event_timestamp))}]`
-        : `[${fmtLogTime()}]`;
-      const meta    = EV[evType] || { css:'info', tag:'◈ MINT' };
+        ?`[${fmtLogTime(new _nativeDate(r.event_timestamp))}]`
+        :`[${fmtLogTime()}]`;
+      const meta    = EV[evType]||{css:'info',tag:'◈ MINT'};
       const d = document.createElement('div');
-      d.className = 'log-line ' + meta.css;
+      d.className = 'log-line '+meta.css;
       d.textContent = `${ts} [${meta.tag}] Asset 0x${asset}… → 0x${user}…${tierStr}  ← historical`;
-      box.insertBefore(d, box.firstChild);
+      frag.appendChild(d);
     });
-    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} historical events loaded — watching live…`, 'sys');
+    box.insertBefore(frag, box.firstChild);
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} historical events loaded`, 'sys');
   } catch(e){
     appendLog(`[${fmtLogTime()}] [◆ SYSTEM] History seed skipped: ${e.message}`, 'sys');
   }
 }
 
+// ── Main init ─────────────────────────────────────────────────
 function initActionStream(){
   setStreamUI('connecting');
   appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Establishing realtime uplink…`, 'sys');
 
-  // Tear down any stale channel
   if(_streamChannel){ sb.removeChannel(_streamChannel); _streamChannel = null; }
+  if(_pollTimer){ clearInterval(_pollTimer); _pollTimer = null; }
 
-  // Primary: ledger_events — qual=true policy, always fires (no RLS block)
-  // Secondary: user_poxy, news_posts (in publication, may filter by RLS)
-  // marketplace: not in publication yet — gracefully ignored by Supabase
-  _streamChannel = sb.channel('poxy-action-stream', { config:{ broadcast:{ self:false } } })
-    .on('postgres_changes', { event:'INSERT', schema:'public', table:'ledger_events' }, onLedgerInsert)
-    .on('postgres_changes', { event:'INSERT', schema:'public', table:'news_posts'    }, onNewsInsert)
-    .on('postgres_changes', { event:'INSERT', schema:'public', table:'marketplace'   }, onTradeInsert)
+  // 1. WebSocket realtime — instant delivery
+  _streamChannel = sb.channel('poxy-action-stream')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'ledger_events'}, onLedgerInsert)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'news_posts'},    onNewsInsert)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'marketplace'},   onTradeInsert)
     .subscribe(status => {
       if(status === 'SUBSCRIBED'){
         setStreamUI('live');
-        appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Realtime uplink ACTIVE — ledger + news + market`, 'sys');
+        appendLog(`[${fmtLogTime()}] [◆ SYSTEM] WebSocket uplink ACTIVE`, 'sys');
         seedStreamHistory();
       } else if(status === 'CLOSED'){
         setStreamUI('connecting');
-        appendLog(`[${fmtLogTime()}] [⚠ SYSTEM] Channel closed — reconnecting…`, 'warn');
+        appendLog(`[${fmtLogTime()}] [⚠ SYSTEM] WebSocket closed — poll fallback active`, 'warn');
       } else if(status === 'CHANNEL_ERROR'){
         setStreamUI('error');
-        appendLog(`[${fmtLogTime()}] [⚠ SYSTEM] Channel error — check Supabase Realtime config`, 'err');
+        appendLog(`[${fmtLogTime()}] [⚠ SYSTEM] Channel error — poll fallback active`, 'err');
       }
     });
+
+  // 2. Polling fallback every 8s — guaranteed delivery even if WS drops
+  _pollTimer = setInterval(pollLedger, 8000);
+  // Run first poll after 3s so seed has time to set _lastLedgerTs watermark
+  setTimeout(pollLedger, 3000);
 }
 
 // CHARTS
