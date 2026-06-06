@@ -1110,25 +1110,29 @@ function streamLine(evKey, message){
   appendLog(`[${fmtLogTime()}] [${meta.tag}] ${message}`, meta.css);
 }
 
-// user_poxy INSERT → MINT
+// ledger_events INSERT → MINT / any signed event (open SELECT policy — no RLS block)
+function onLedgerInsert(payload){
+  const r = payload.new; if(!r) return;
+  const evType = (r.event_type || 'EVENT').toUpperCase();
+  const user   = r.actor_id?.slice(0,10) || '?';
+  const asset  = r.asset_id?.slice(0,10) || '?';
+  const pl     = r.payload || {};
+  const tier   = (pl.tier || pl.poxy_tier || '').toUpperCase();
+  const col    = pl.collection_id || '';
+  const tierStr = tier ? ` [${tier}]` : '';
+  const colStr  = col  ? ` {${col}}` : '';
+  const evKey   = EV[evType] ? evType : 'MINT';
+  streamLine(evKey, `Asset 0x${asset}… → 0x${user}…${tierStr}${colStr}`);
+}
+
+// user_poxy INSERT → MINT (secondary — fires if RLS passes for anon)
 function onMintInsert(payload){
   const r = payload.new; if(!r) return;
   const tier   = (r.poxy_tier || '?').toUpperCase();
   const serial = r.serial_number || r.id?.slice(0,12) || '?';
   const user   = r.user_id?.slice(0,10) || '?';
-  streamLine('MINT', `Asset ${serial} minted → 0x${user}… [${tier}]`);
-}
-
-// poxy_audit_log INSERT → typed action
-function onAuditInsert(payload){
-  const r = payload.new; if(!r) return;
-  const action = (r.action_type || 'EVENT').toUpperCase();
-  const user   = r.user_id?.slice(0,10) || 'anon';
-  const detail = r.payload
-    ? Object.entries(r.payload).map(([k,v])=>`${k}:${String(v).slice(0,20)}`).join(' ').slice(0,80)
-    : '';
-  const evKey  = EV[action] ? action : 'ADMIN';
-  streamLine(evKey, `${action} — 0x${user}… ${detail}`);
+  // Only log if ledger_events didn't already capture this (deduplicate by asset serial)
+  streamLine('MINT', `[poxy] ${serial} minted → 0x${user}… [${tier}]`);
 }
 
 // news_posts INSERT → PUBLISH
@@ -1158,24 +1162,30 @@ function setStreamUI(state){ // 'live' | 'error' | 'connecting'
 }
 
 async function seedStreamHistory(){
-  // Prefill with last 10 real mints so the log isn't empty on open
+  // Prefill from ledger_events — open SELECT policy, reliable source
   try {
-    const { data } = await sb.from('user_poxy')
-      .select('id,poxy_tier,serial_number,user_id,dropped_at')
-      .order('dropped_at', { ascending:false })
-      .limit(10);
+    const { data } = await sb.from('ledger_events')
+      .select('event_type,actor_id,asset_id,payload,event_timestamp')
+      .order('event_timestamp', { ascending:false })
+      .limit(12);
     if(!data || !data.length) return;
     const box = document.getElementById('logStream');
     if(!box) return;
-    // insert oldest-first at top (historical)
+    // Insert oldest-first at top as historical context
     [...data].reverse().forEach(r => {
-      const tier   = (r.poxy_tier||'?').toUpperCase();
-      const serial = r.serial_number || r.id?.slice(0,12) || '?';
-      const user   = r.user_id?.slice(0,10) || '?';
-      const ts     = r.dropped_at ? `[${fmtLogTime(new _nativeDate(r.dropped_at))}]` : `[${fmtLogTime()}]`;
+      const evType  = (r.event_type || 'EVENT').toUpperCase();
+      const user    = r.actor_id?.slice(0,10) || '?';
+      const asset   = r.asset_id?.slice(0,10) || '?';
+      const pl      = r.payload || {};
+      const tier    = (pl.tier || pl.poxy_tier || '').toUpperCase();
+      const tierStr = tier ? ` [${tier}]` : '';
+      const ts      = r.event_timestamp
+        ? `[${fmtLogTime(new _nativeDate(r.event_timestamp))}]`
+        : `[${fmtLogTime()}]`;
+      const meta    = EV[evType] || { css:'info', tag:'◈ MINT' };
       const d = document.createElement('div');
-      d.className = 'log-line info';
-      d.textContent = `${ts} [◈ MINT] Asset ${serial} minted → 0x${user}… [${tier}]  ← historical`;
+      d.className = 'log-line ' + meta.css;
+      d.textContent = `${ts} [${meta.tag}] Asset 0x${asset}… → 0x${user}…${tierStr}  ← historical`;
       box.insertBefore(d, box.firstChild);
     });
     appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} historical events loaded — watching live…`, 'sys');
@@ -1191,15 +1201,17 @@ function initActionStream(){
   // Tear down any stale channel
   if(_streamChannel){ sb.removeChannel(_streamChannel); _streamChannel = null; }
 
-  _streamChannel = sb.channel('poxy-action-stream')
-    .on('postgres_changes', { event:'INSERT', schema:'public', table:'user_poxy'     }, onMintInsert)
-    .on('postgres_changes', { event:'INSERT', schema:'public', table:'poxy_audit_log'}, onAuditInsert)
+  // Primary: ledger_events — qual=true policy, always fires (no RLS block)
+  // Secondary: user_poxy, news_posts (in publication, may filter by RLS)
+  // marketplace: not in publication yet — gracefully ignored by Supabase
+  _streamChannel = sb.channel('poxy-action-stream', { config:{ broadcast:{ self:false } } })
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'ledger_events' }, onLedgerInsert)
     .on('postgres_changes', { event:'INSERT', schema:'public', table:'news_posts'    }, onNewsInsert)
     .on('postgres_changes', { event:'INSERT', schema:'public', table:'marketplace'   }, onTradeInsert)
     .subscribe(status => {
       if(status === 'SUBSCRIBED'){
         setStreamUI('live');
-        appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Realtime uplink ACTIVE — 4 channels open`, 'sys');
+        appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Realtime uplink ACTIVE — ledger + news + market`, 'sys');
         seedStreamHistory();
       } else if(status === 'CLOSED'){
         setStreamUI('connecting');
