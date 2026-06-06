@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>POXY // ADMIN TERMINAL</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050506;--bg1:#0a0a0d;--bg2:#0e0e13;--bg3:#13131a;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.06);
+  --green:#00ff9d;--red:#ff3c5f;--amber:#ffb300;--cyan:#00e5ff;
+  --muted:rgba(255,255,255,0.35);--dim:rgba(255,255,255,0.12);
+  --font:'JetBrains Mono','Courier New',monospace;
+}
+html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font);font-size:11px;overflow:hidden}
+/* ── AUTH SCREEN ── */
+#authScreen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999}
+#authScreen.hidden{display:none}
+.auth-logo{font-size:10px;letter-spacing:.5em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.auth-title{font-size:16px;font-weight:700;letter-spacing:.2em;color:var(--amber);text-transform:uppercase}
+.auth-sub{font-size:10px;color:var(--muted);letter-spacing:.15em}
+.auth-input{background:var(--bg1);border:1px solid var(--border);color:#fff;font-family:var(--font);font-size:12px;padding:10px 14px;width:280px;outline:none;letter-spacing:.08em}
+.auth-input:focus{border-color:var(--amber)}
+.auth-btn{background:var(--amber);border:none;color:#050506;font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:9px 28px;cursor:pointer}
+.auth-btn:hover{opacity:.85}
+.auth-err{color:var(--red);font-size:10px;letter-spacing:.1em;height:14px}
+/* ── LAYOUT ── */
+#terminal{display:grid;grid-template-columns:180px 1fr;height:100vh;overflow:hidden}
+#terminal.hidden{display:none}
+/* ── SIDEBAR ── */
+#sidebar{background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-hdr{padding:14px 12px 10px;border-bottom:1px solid var(--border)}
+.sidebar-brand{font-size:9px;letter-spacing:.4em;color:var(--amber);text-transform:uppercase}
+.sidebar-sub{font-size:8px;color:var(--muted);letter-spacing:.12em;margin-top:3px}
+.sidebar-nav{flex:1;padding:8px 0}
+.nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;background:none;border:none;color:var(--muted);font-family:var(--font);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:left;cursor:pointer;border-left:2px solid transparent;transition:color .15s,background .15s,border-color .15s}
+.nav-btn:hover{color:#fff;background:var(--dim)}
+.nav-btn.active{color:var(--amber);background:rgba(255,179,0,.08);border-left-color:var(--amber)}
+.nav-btn .ic{font-size:10px;width:14px;text-align:center;opacity:.7}
+.sidebar-footer{padding:10px 12px;border-top:1px solid var(--border)}
+.uplink-dot{display:inline-block;width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
+.uplink-txt{font-size:8px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* ── MAIN ── */
+#main{overflow-y:auto;background:var(--bg)}
+.tab-pane{display:none;padding:20px;max-width:1400px}
+.tab-pane.active{display:block}
+/* ── COMMON ── */
+.section-hdr{font-size:9px;letter-spacing:.35em;color:var(--amber);text-transform:uppercase;border-bottom:1px solid var(--border2);padding-bottom:6px;margin-bottom:14px}
+.card{background:var(--bg1);border:1px solid var(--border);padding:16px;margin-bottom:16px}
+.card-title{font-size:8px;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+/* ── FORMS ── */
+.f-label{font-size:8px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px}
+.f-input,.f-select,.f-textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:#e8e8ec;font-family:var(--font);font-size:10px;padding:7px 10px;outline:none;transition:border-color .15s}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:var(--amber)}
+.f-textarea{resize:vertical;min-height:80px}
+.f-select option{background:var(--bg2)}
+.f-row{margin-bottom:10px}
+/* ── BUTTONS ── */
+.btn{border:none;font-family:var(--font);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.8}
+.btn-amber{background:var(--amber);color:#050506}
+.btn-red{background:var(--red);color:#fff}
+.btn-green{background:var(--green);color:#050506}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber);opacity:1}
+.btn-sm{padding:4px 10px;font-size:8px}
+/* ── METRIC BOX ── */
+.metric-box{background:var(--bg2);border:1px solid var(--border);padding:14px;text-align:center}
+.metric-val{font-size:24px;font-weight:700;color:var(--cyan);letter-spacing:-.01em;display:block;line-height:1.1}
+.metric-lbl{font-size:7px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-top:4px;display:block}
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:9px}
+.tbl th{padding:6px 8px;text-align:left;font-size:8px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:700}
+.tbl td{padding:7px 8px;border-bottom:1px solid var(--border2);vertical-align:top;word-break:break-all}
+.tbl tr:hover td{background:var(--dim)}
+/* ── TOGGLE ── */
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle{position:relative;width:36px;height:18px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:background .2s}
+.toggle-slider::after{content:'';position:absolute;left:2px;top:2px;width:12px;height:12px;background:var(--muted);transition:transform .2s,background .2s}
+.toggle input:checked+.toggle-slider{background:rgba(0,255,157,.12);border-color:var(--green)}
+.toggle input:checked+.toggle-slider::after{transform:translateX(18px);background:var(--green)}
+.toggle-label{font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;cursor:pointer}
+/* ── TERMINAL LOG ── */
+.log-box{background:#000;border:1px solid var(--border);padding:10px;height:220px;overflow-y:auto;font-size:9px;line-height:1.6}
+.log-line{color:#00ff9d;white-space:pre-wrap;word-break:break-all}
+.log-line.err{color:var(--red)}
+.log-line.warn{color:var(--amber)}
+.log-line.info{color:var(--cyan)}
+/* ── CHART BARS ── */
+.chart-wrap{display:flex;align-items:flex-end;gap:3px;height:64px;padding:0 2px}
+.chart-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
+.chart-bar{width:100%;background:var(--cyan);min-height:2px;transition:height .4s}
+.chart-bar-lbl{font-size:7px;color:var(--muted);letter-spacing:.05em;text-align:center}
+/* ── USER DUMP ── */
+.dump-box{background:var(--bg2);border:1px solid var(--border);padding:12px;max-height:320px;overflow-y:auto;font-size:9px;line-height:1.8;white-space:pre-wrap;color:#c8d6e5}
+/* ── STATUS BADGE ── */
+.badge{display:inline-block;padding:1px 6px;font-size:7px;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.badge-green{background:rgba(0,255,157,.12);color:var(--green)}
+.badge-red{background:rgba(255,60,95,.12);color:var(--red)}
+.badge-amber{background:rgba(255,179,0,.12);color:var(--amber)}
+.badge-cyan{background:rgba(0,229,255,.1);color:var(--cyan)}
+/* ── MAINTENANCE OVERLAY (public-facing) ── */
+#poxyMaintOverlay{display:none;position:fixed;inset:0;background:#050506;z-index:99999;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-family:var(--font)}
+#poxyMaintOverlay.active{display:flex}
+/* ── BROADCAST BANNER ── */
+#poxyBroadcastBanner{display:none;position:fixed;top:0;left:0;right:0;background:var(--red);color:#fff;font-family:var(--font);font-size:10px;letter-spacing:.14em;text-align:center;padding:7px;z-index:99998;text-transform:uppercase}
+#poxyBroadcastBanner.active{display:block}
+/* ── MISC ── */
+.sep{height:1px;background:var(--border);margin:16px 0}
+.row-flex{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{display:inline-block;padding:1px 6px;background:var(--bg3);border:1px solid var(--border2);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.toast-area{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:9999;pointer-events:none}
+.toast{background:var(--bg1);border:1px solid var(--border);padding:8px 14px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+.toast.ok{border-color:var(--green);color:var(--green)}
+.toast.err{border-color:var(--red);color:var(--red)}
+#main::-webkit-scrollbar{width:4px}
+#main::-webkit-scrollbar-track{background:var(--bg)}
+#main::-webkit-scrollbar-thumb{background:var(--border)}
+.log-box::-webkit-scrollbar{width:3px}
+.log-box::-webkit-scrollbar-thumb{background:rgba(0,255,157,.3)}
+.dump-box::-webkit-scrollbar{width:3px}
+.dump-box::-webkit-scrollbar-thumb{background:var(--border)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     BROADCAST BANNER — rendered globally
+     ═══════════════════════════════════════════════════════ -->
+<div id="poxyBroadcastBanner"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     MAINTENANCE OVERLAY — replaces public UI
+     ═══════════════════════════════════════════════════════ -->
+<div id="poxyMaintOverlay">
+  <div style="font-size:11px;letter-spacing:.4em;color:var(--amber);text-transform:uppercase">⚠ POXY WORLD</div>
+  <div style="font-size:24px;font-weight:700;letter-spacing:.1em;color:#fff;text-transform:uppercase">MAINTENANCE</div>
+  <div id="maintMsg" style="font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase">System temporarily offline. Uplink restoring.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     AUTH GATE
+     ═══════════════════════════════════════════════════════ -->
+<div id="authScreen">
+  <div class="auth-logo">POXY WORLD</div>
+  <div class="auth-title">⬡ ADMIN TERMINAL</div>
+  <div class="auth-sub">RESTRICTED ACCESS — DEVELOPER UPLINK ONLY</div>
+  <input id="authKey" class="auth-input" type="password" placeholder="ENTER UPLINK KEY" autocomplete="off"/>
+  <button class="auth-btn" onclick="authSubmit()">AUTHENTICATE</button>
+  <div id="authErr" class="auth-err"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN TERMINAL LAYOUT
+     ═══════════════════════════════════════════════════════ -->
+<div id="terminal" class="hidden">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sidebar-hdr">
+      <div class="sidebar-brand">⬡ POXY ADMIN</div>
+      <div class="sidebar-sub">MASTER CONTROL UNIT v1.0</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" onclick="switchTab('cms')" data-tab="cms">
+        <span class="ic">◈</span>CONTENT &amp; CMS
+      </button>
+      <button class="nav-btn" onclick="switchTab('users')" data-tab="users">
+        <span class="ic">◆</span>USER MATRIX
+      </button>
+      <button class="nav-btn" onclick="switchTab('sim')" data-tab="sim">
+        <span class="ic">✦</span>HW SIMULATOR
+      </button>
+      <button class="nav-btn" onclick="switchTab('telem')" data-tab="telem">
+        <span class="ic">⬟</span>TELEMETRY
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div><span class="uplink-dot"></span><span class="uplink-txt">UPLINK ACTIVE</span></div>
+      <div style="margin-top:6px;font-size:8px;color:var(--muted);letter-spacing:.08em" id="sidebarUser"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%" onclick="deauth()">DISCONNECT</button>
+    </div>
+  </div>
+
+  <!-- MAIN STAGE -->
+  <div id="main">
+
+    <!-- ══════════════════════════════════════════════════════
+         TAB 1: SYSTEM CONTENT & CMS
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-cms" class="tab-pane active">
+      <div class="section-hdr">SYSTEM CONTENT &amp; CMS ENGINE</div>
+
+      <div class="grid2" style="align-items:start">
+
+        <!-- NEWS ENGINE -->
+        <div class="card">
+          <div class="card-title">◈ NEWS ENGINE — PUBLISH POST</div>
+          <div class="f-row">
+            <label class="f-label">TITLE</label>
+            <input id="newsTitle" class="f-input" type="text" placeholder="POST TITLE"/>
+          </div>
+          <div class="f-row">
+            <label class="f-label">CATEGORY</label>
+            <select id="newsCat" class="f-select">
+              <option value="NEWS">NEWS</option>
+              <option value="PATCH">PATCH</option>
+              <option value="CORE SYSTEM">CORE SYSTEM</option>
+              <option value="SECURITY">SECURITY</option>
+              <option value="EVENT">EVENT</option>
+            </select>
+          </div>
+          <div class="f-row">
+            <label class="f-label">IMAGE URL (OPTIONAL)</label>
+            <input id="newsImg" class="f-input" type="text" placeholder="https://..."/>
+          </div>
+          <div class="f-row">
+            <label class="f-label">CONTENT (MARKDOWN SUPPORTED)</label>
+            <textarea id="newsBody" class="f-textarea" style="min-height:110px" placeholder="# Heading&#10;**bold** _italic_..."></textarea>
+          </div>
+          <div class="row-flex" style="justify-content:flex-end;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="clearNewsForm()">CLEAR</button>
+            <button class="btn btn-amber" onclick="publishNews()">PUBLISH POST</button>
+          </div>
+        </div>
+
+        <!-- BROADCAST + MAINTENANCE -->
+        <div>
+          <div class="card">
+            <div class="card-title">⚠ LIVE SYSTEM BROADCAST</div>
+            <div class="f-row">
+              <label class="f-label">BROADCAST MESSAGE</label>
+              <input id="broadcastMsg" class="f-input" type="text" placeholder="⚠️ MAINTENANCE IN 10 MIN"/>
+            </div>
+            <div class="row-flex">
+              <button class="btn btn-amber" onclick="activateBroadcast()">BROADCAST NOW</button>
+              <button class="btn btn-ghost btn-sm" onclick="clearBroadcast()">CLEAR</button>
+            </div>
+            <div style="margin-top:10px;font-size:8px;color:var(--muted)">STATUS: <span id="broadcastStatus" class="badge badge-red">INACTIVE</span></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">⬡ MAINTENANCE MODE</div>
+            <div class="toggle-wrap" style="margin-bottom:10px">
+              <label class="toggle" title="Toggle maintenance mode">
+                <input type="checkbox" id="maintToggle" onchange="toggleMaintenance()"/>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">FORCE MAINTENANCE BLOCK SCREEN</span>
+            </div>
+            <div class="f-row">
+              <label class="f-label">MAINTENANCE MESSAGE</label>
+              <input id="maintMsg2" class="f-input" type="text" value="System temporarily offline. Uplink restoring."/>
+            </div>
+            <div style="font-size:8px;color:var(--muted)">PERSISTS IN LOCALSTORAGE ACROSS SESSIONS</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXISTING POSTS LOG -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>◆ NEWS POST REGISTRY — LIVE LOG</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadNewsPosts()">↺ REFRESH</button>
+        </div>
+        <div id="newsTableWrap" style="overflow-x:auto">
+          <table class="tbl" id="newsTable">
+            <thead>
+              <tr>
+                <th>ID</th><th>TITLE</th><th>CATEGORY</th><th>AUTHOR</th><th>CREATED</th><th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="newsTableBody"><tr><td colspan="6" style="color:var(--muted);text-align:center;padding:16px">LOADING...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         TAB 2: USER MATRIX & ASSET OPS
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-users" class="tab-pane">
+      <div class="section-hdr">USER MATRIX &amp; ASSET OPERATIONS</div>
+
+      <!-- COUNTERS -->
+      <div class="grid3" style="margin-bottom:16px">
+        <div class="metric-box">
+          <span class="metric-val" id="cntWallets">—</span>
+          <span class="metric-lbl">CONNECTED WALLETS</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-val" id="cntAssets">—</span>
+          <span class="metric-lbl">TOTAL MINTED ASSETS</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-val" id="cntAvg">—</span>
+          <span class="metric-lbl">AVG ASSETS / WALLET</span>
+        </div>
+      </div>
+      <div style="text-align:right;margin-bottom:16px">
+        <button class="btn btn-ghost btn-sm" onclick="loadCounters()">↺ REFRESH COUNTERS</button>
+      </div>
+
+      <div class="grid2" style="align-items:start">
+        <!-- USER INSPECTOR -->
+        <div class="card">
+          <div class="card-title">◈ USER INSPECTOR — WALLET QUERY</div>
+          <div class="f-row">
+            <label class="f-label">USERNAME OR USER ID</label>
+            <input id="inspectQuery" class="f-input" type="text" placeholder="USERNAME OR UUID"/>
+          </div>
+          <div class="row-flex" style="justify-content:flex-end;margin-bottom:12px">
+            <button class="btn btn-amber" onclick="inspectUser()">QUERY USER</button>
+          </div>
+          <div id="inspectResult" class="dump-box" style="display:none"></div>
+        </div>
+
+        <!-- AIRDROP GENERATOR -->
+        <div class="card">
+          <div class="card-title">⬡ AIRDROP GENERATOR — OVERRIDE MINT</div>
+          <div class="f-row">
+            <label class="f-label">TARGET USERNAME OR USER ID</label>
+            <input id="airdropTarget" class="f-input" type="text" placeholder="USERNAME OR UUID"/>
+          </div>
+          <div class="f-row">
+            <label class="f-label">ASSET TIER</label>
+            <select id="airdropTier" class="f-select">
+              <option value="common">COMMON</option>
+              <option value="uncommon">UNCOMMON</option>
+              <option value="rare">RARE</option>
+              <option value="epic">EPIC</option>
+              <option value="legendary">LEGENDARY</option>
+              <option value="mythic">MYTHIC</option>
+              <option value="secret">SECRET</option>
+              <option value="diamond">DIAMOND</option>
+              <option value="stellar">STELLAR</option>
+            </select>
+          </div>
+          <div class="f-row">
+            <label class="f-label">CUSTOM SERIAL (OPTIONAL)</label>
+            <input id="airdropSerial" class="f-input" type="text" placeholder="PX-XXXXXX (AUTO IF BLANK)"/>
+          </div>
+          <div class="f-row">
+            <label class="f-label">COLLECTION ID</label>
+            <input id="airdropCollection" class="f-input" type="text" value="genesis"/>
+          </div>
+          <div style="margin-bottom:12px;padding:8px;background:var(--bg2);border:1px solid rgba(255,60,95,.25)">
+            <div style="font-size:8px;color:var(--red);letter-spacing:.1em;text-transform:uppercase">⚠ DIRECT DB INSERT — BYPASSES CRYPTOGRAPHIC SIGNING</div>
+            <div style="font-size:8px;color:var(--muted);margin-top:4px">USE ONLY FOR DEV/TESTING. ASSET WILL LACK MINT SIGNATURE.</div>
+          </div>
+          <button class="btn btn-red" style="width:100%" onclick="executeAirdrop()">EXECUTE OVERRIDE MINT</button>
+          <div id="airdropLog" style="margin-top:10px;font-size:8px;color:var(--muted)"></div>
+        </div>
+      </div>
+
+      <!-- RECENT USERS TABLE -->
+      <div class="card" style="margin-top:4px">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>◆ REGISTERED PROFILES — RECENT 20</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadUsersTable()">↺ REFRESH</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>ID</th><th>USERNAME</th><th>BALANCE (PC)</th><th>CLUB</th><th>CREATED</th></tr></thead>
+            <tbody id="usersTableBody"><tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">LOADING...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         TAB 3: HARDWARE SIMULATOR & PERFORMANCE
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-sim" class="tab-pane">
+      <div class="section-hdr">HARDWARE SIMULATOR &amp; PERFORMANCE SANDBOX</div>
+
+      <div class="grid2" style="align-items:start">
+        <div>
+          <div class="card">
+            <div class="card-title">◈ PERFORMANCE MODE SIMULATOR</div>
+            <div class="toggle-wrap" style="margin-bottom:8px">
+              <label class="toggle">
+                <input type="checkbox" id="perfModeToggle" onchange="togglePerfMode()"/>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">ENABLE LOW-PERFORMANCE MODE</span>
+            </div>
+            <div style="font-size:8px;color:var(--muted);line-height:1.6;margin-top:8px">
+              SETS <span style="color:var(--cyan)">window.POXY_PERF_MODE='low'</span> GLOBALLY.<br/>
+              DISABLES: ANIMATIONS, BLUR FILTERS, PARTICLE FX, PARALLAX.<br/>
+              PERSISTS IN LOCALSTORAGE KEY: <span style="color:var(--amber)">poxy_perf_mode</span>
+            </div>
+            <div style="margin-top:10px;font-size:8px">STATUS: <span id="perfModeStatus" class="badge badge-red">STANDARD</span></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">◈ NETWORK LAG EMULATOR</div>
+            <div class="toggle-wrap" style="margin-bottom:8px">
+              <label class="toggle">
+                <input type="checkbox" id="lagToggle" onchange="toggleLag()"/>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">INJECT 2500MS FETCH DELAY</span>
+            </div>
+            <div class="f-row" style="margin-top:10px">
+              <label class="f-label">CUSTOM DELAY (MS)</label>
+              <input id="lagMs" class="f-input" type="number" value="2500" min="0" max="30000"/>
+            </div>
+            <div style="font-size:8px;color:var(--muted);line-height:1.6">
+              PATCHES <span style="color:var(--cyan)">window.fetch</span> WITH ARTIFICIAL DELAY.<br/>
+              PERSISTS: <span style="color:var(--amber)">poxy_lag_ms</span> IN LOCALSTORAGE.
+            </div>
+            <div style="margin-top:8px;font-size:8px">STATUS: <span id="lagStatus" class="badge badge-red">DISABLED</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-title">◈ TIME TRAVEL TOOL</div>
+            <div class="toggle-wrap" style="margin-bottom:8px">
+              <label class="toggle">
+                <input type="checkbox" id="timeTravelToggle" onchange="toggleTimeTravel()"/>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">OVERRIDE GLOBAL DATE()</span>
+            </div>
+            <div class="f-row" style="margin-top:10px">
+              <label class="f-label">TARGET DATE / TIME</label>
+              <input id="timeTravelDt" class="f-input" type="datetime-local"/>
+            </div>
+            <div style="font-size:8px;color:var(--muted);line-height:1.6;margin-top:8px">
+              PATCHES <span style="color:var(--cyan)">window.Date</span> CONSTRUCTOR TO RETURN FIXED TIMESTAMP.<br/>
+              UNLOCKS TIME-LOCKED EVENT DROPS AND CONDITIONAL RENDERS.<br/>
+              PERSISTS: <span style="color:var(--amber)">poxy_time_override</span>
+            </div>
+            <div style="margin-top:8px;font-size:8px">CURRENT OVERRIDE: <span id="timeTravelCurrent" style="color:var(--cyan)">NONE</span></div>
+            <div style="margin-top:8px">
+              <button class="btn btn-amber btn-sm" onclick="applyTimeTravel()">APPLY OVERRIDE</button>
+              <button class="btn btn-ghost btn-sm" onclick="resetTimeTravel()" style="margin-left:8px">RESET TO REAL TIME</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">◈ ACTIVE SIMULATION FLAGS</div>
+            <table class="tbl">
+              <thead><tr><th>KEY</th><th>VALUE</th><th>SOURCE</th></tr></thead>
+              <tbody id="simFlagsTbl"></tbody>
+            </table>
+            <div style="margin-top:10px">
+              <button class="btn btn-ghost btn-sm" onclick="refreshSimFlags()">↺ REFRESH FLAGS</button>
+              <button class="btn btn-red btn-sm" onclick="clearAllSim()" style="margin-left:8px">CLEAR ALL OVERRIDES</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         TAB 4: TELEMETRY & LOG STREAM
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-telem" class="tab-pane">
+      <div class="section-hdr">TELEMETRY &amp; LIVE LOG STREAM</div>
+
+      <!-- CHARTS -->
+      <div class="grid3" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-title">SERVER LOAD %</div>
+          <div class="chart-wrap" id="chartLoad"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">ACTIVE SESSIONS</div>
+          <div class="chart-wrap" id="chartSessions"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">CRAFT / BURN RATE</div>
+          <div class="chart-wrap" id="chartCraft"></div>
+        </div>
+      </div>
+
+      <!-- COUNTERS ROW -->
+      <div class="grid4" style="margin-bottom:16px">
+        <div class="metric-box">
+          <span class="metric-val" id="telNews">—</span>
+          <span class="metric-lbl">NEWS POSTS</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-val" id="telMints">—</span>
+          <span class="metric-lbl">TOTAL MINTS</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-val" id="telLegendary">—</span>
+          <span class="metric-lbl">LEGENDARY+ COUNT</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-val" id="telUsers">—</span>
+          <span class="metric-lbl">TOTAL USERS</span>
+        </div>
+      </div>
+
+      <!-- LOG STREAM -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>⬟ ACTION STREAM — LIVE SECURITY LEDGER</span>
+          <div class="row-flex" style="gap:6px">
+            <button class="btn btn-ghost btn-sm" onclick="clearLog()">CLEAR</button>
+            <button class="btn btn-ghost btn-sm" onclick="pauseLog()" id="pauseLogBtn">PAUSE</button>
+          </div>
+        </div>
+        <div class="log-box" id="logStream"></div>
+      </div>
+
+      <!-- RECENT AUDIT ACTIONS FROM DB -->
+      <div class="card" style="margin-top:0">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>◆ DB AUDIT LOG — RECENT 30</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadAuditLog()">↺ REFRESH</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>TIME</th><th>ACTION</th><th>USER ID</th><th>IP</th><th>DETAIL</th></tr></thead>
+            <tbody id="auditTableBody"><tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">CLICK REFRESH</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /terminal -->
+
+<!-- TOAST AREA -->
+<div class="toast-area" id="toastArea"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://rbrtjkfawdnomvvyxwvp.supabase.co';
+const SUPABASE_ANON  = 'sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG';
+const DEV_KEY_LSKEY  = 'poxy_dev_uplink_key';
+// Change this to your desired secret (or store hash for prod)
+const DEV_SECRET     = 'POXY_DEV_2026_ULTRA';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
+});
+
+// ═══════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════
+function authSubmit(){
+  const val = document.getElementById('authKey').value.trim();
+  const stored = localStorage.getItem(DEV_KEY_LSKEY);
+  if(val === DEV_SECRET || stored === DEV_SECRET){
+    localStorage.setItem(DEV_KEY_LSKEY, DEV_SECRET);
+    bootTerminal();
+  } else {
+    document.getElementById('authErr').textContent = '[ ACCESS DENIED — INVALID UPLINK KEY ]';
+    document.getElementById('authKey').value = '';
+  }
+}
+
+document.getElementById('authKey').addEventListener('keydown', e => {
+  if(e.key === 'Enter') authSubmit();
+});
+
+function deauth(){
+  localStorage.removeItem(DEV_KEY_LSKEY);
+  location.reload();
+}
+
+function bootTerminal(){
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('terminal').classList.remove('hidden');
+  initAll();
+}
+
+// Auto-boot if key already stored
+(function checkAutoAuth(){
+  if(localStorage.getItem(DEV_KEY_LSKEY) === DEV_SECRET){
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('terminal').classList.remove('hidden');
+    // Slight delay so DOM is fully ready
+    setTimeout(initAll, 50);
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+let logPaused = false;
+let _nativeFetch = window.fetch;
+let _nativeDate  = window.Date;
+
+function initAll(){
+  // Show current user
+  sb.auth.getUser().then(({data})=>{
+    const el = document.getElementById('sidebarUser');
+    if(el && data?.user) el.textContent = data.user.email || data.user.id.slice(0,12)+'...';
+    else if(el) el.textContent = 'ANON SESSION';
+  });
+  // CMS
+  loadNewsPosts();
+  restoreBroadcast();
+  restoreMaintenance();
+  // Users
+  loadCounters();
+  loadUsersTable();
+  // Sim
+  restoreSimState();
+  refreshSimFlags();
+  // Telem
+  seedLog();
+  startCharts();
+  loadTelemetryCounters();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB SWITCHER
+// ═══════════════════════════════════════════════════════════════
+function switchTab(id){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelector('.nav-btn[data-tab="'+id+'"]').classList.add('active');
+  if(id==='telem'){ loadAuditLog(); loadTelemetryCounters(); }
+  if(id==='users'){ loadCounters(); loadUsersTable(); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════
+function toast(msg, type='ok'){
+  const area = document.getElementById('toastArea');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  area.appendChild(t);
+  requestAnimationFrame(()=>{ t.classList.add('show'); });
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(), 300); }, 3000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 1 — CMS
+// ═══════════════════════════════════════════════════════════════
+async function publishNews(){
+  const title   = document.getElementById('newsTitle').value.trim();
+  const cat     = document.getElementById('newsCat').value;
+  const content = document.getElementById('newsBody').value.trim();
+  const img     = document.getElementById('newsImg').value.trim();
+  if(!title || !content){ toast('TITLE + CONTENT REQUIRED','err'); return; }
+
+  const {data:user} = await sb.auth.getUser();
+  if(!user?.user){ toast('NOT AUTHENTICATED','err'); return; }
+
+  const {data:prof} = await sb.from('profiles').select('username').eq('id',user.user.id).maybeSingle();
+  const author_username = prof?.username || 'ADMIN';
+
+  const payload = {
+    title,
+    content: `[${cat}] ${content}`,
+    author_id: user.user.id,
+    author_username,
+    image_url: img || null
+  };
+
+  const {error} = await sb.from('news_posts').insert(payload);
+  if(error){ toast('ERROR: '+error.message,'err'); appendLog(`[ADMIN] NEWS PUBLISH FAILED: ${error.message}`, 'err'); return; }
+  toast('POST PUBLISHED');
+  appendLog(`[ADMIN] NEWS PUBLISHED: "${title}" (${cat})`, 'info');
+  clearNewsForm();
+  loadNewsPosts();
+}
+
+function clearNewsForm(){
+  ['newsTitle','newsBody','newsImg'].forEach(id=>{ document.getElementById(id).value=''; });
+  document.getElementById('newsCat').value='NEWS';
+}
+
+async function loadNewsPosts(){
+  const tbody = document.getElementById('newsTableBody');
+  tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:12px">LOADING...</td></tr>';
+  const {data,error} = await sb.from('news_posts').select('id,title,content,author_username,created_at').order('created_at',{ascending:false}).limit(40);
+  if(error){ tbody.innerHTML='<tr><td colspan="6" style="color:var(--red)">ERROR: '+error.message+'</td></tr>'; return; }
+  if(!data||!data.length){ tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:12px">NO POSTS FOUND</td></tr>'; return; }
+  tbody.innerHTML = data.map(p=>`
+    <tr>
+      <td style="color:var(--muted);font-size:8px">${p.id.slice(0,8)}…</td>
+      <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.title)}</td>
+      <td><span class="badge badge-cyan">${catBadge(p.content)}</span></td>
+      <td style="color:var(--muted)">${esc(p.author_username||'—')}</td>
+      <td style="color:var(--muted);font-size:8px;white-space:nowrap">${fmtDate(p.created_at)}</td>
+      <td>
+        <button class="btn btn-red btn-sm" onclick="deletePost('${p.id}')">DEL</button>
+      </td>
+    </tr>`).join('');
+}
+
+function catBadge(content){
+  if(!content) return 'NEWS';
+  const m = content.match(/^\[([^\]]+)\]/);
+  return m ? m[1] : 'NEWS';
+}
+
+async function deletePost(id){
+  if(!confirm('DELETE POST '+id+'?')) return;
+  const {error} = await sb.from('news_posts').delete().eq('id',id);
+  if(error){ toast('DELETE FAILED','err'); return; }
+  toast('POST DELETED');
+  appendLog(`[ADMIN] NEWS POST DELETED: ${id}`, 'warn');
+  loadNewsPosts();
+}
+
+// BROADCAST
+function activateBroadcast(){
+  const msg = document.getElementById('broadcastMsg').value.trim();
+  if(!msg){ toast('ENTER BROADCAST MESSAGE','err'); return; }
+  localStorage.setItem('poxy_broadcast', msg);
+  const banner = document.getElementById('poxyBroadcastBanner');
+  banner.textContent = msg;
+  banner.classList.add('active');
+  document.getElementById('broadcastStatus').textContent = 'ACTIVE';
+  document.getElementById('broadcastStatus').className = 'badge badge-green';
+  appendLog(`[ADMIN] BROADCAST ACTIVATED: "${msg}"`, 'warn');
+  toast('BROADCAST LIVE');
+}
+
+function clearBroadcast(){
+  localStorage.removeItem('poxy_broadcast');
+  const banner = document.getElementById('poxyBroadcastBanner');
+  banner.textContent = '';
+  banner.classList.remove('active');
+  document.getElementById('broadcastStatus').textContent = 'INACTIVE';
+  document.getElementById('broadcastStatus').className = 'badge badge-red';
+  appendLog('[ADMIN] BROADCAST CLEARED', 'info');
+  toast('BROADCAST CLEARED');
+}
+
+function restoreBroadcast(){
+  const msg = localStorage.getItem('poxy_broadcast');
+  if(msg){
+    document.getElementById('broadcastMsg').value = msg;
+    activateBroadcast();
+  }
+}
+
+// MAINTENANCE
+function toggleMaintenance(){
+  const on = document.getElementById('maintToggle').checked;
+  const msg = document.getElementById('maintMsg2').value || 'System temporarily offline.';
+  if(on){
+    localStorage.setItem('poxy_maintenance','1');
+    localStorage.setItem('poxy_maintenance_msg', msg);
+    document.getElementById('maintMsg').textContent = msg;
+    document.getElementById('poxyMaintOverlay').classList.add('active');
+    appendLog('[ADMIN] MAINTENANCE MODE ACTIVATED', 'err');
+    toast('MAINTENANCE MODE ON');
+  } else {
+    localStorage.removeItem('poxy_maintenance');
+    document.getElementById('poxyMaintOverlay').classList.remove('active');
+    appendLog('[ADMIN] MAINTENANCE MODE DEACTIVATED', 'info');
+    toast('MAINTENANCE MODE OFF');
+  }
+}
+
+function restoreMaintenance(){
+  if(localStorage.getItem('poxy_maintenance')==='1'){
+    document.getElementById('maintToggle').checked = true;
+    const msg = localStorage.getItem('poxy_maintenance_msg')||'System temporarily offline.';
+    document.getElementById('maintMsg2').value = msg;
+    document.getElementById('maintMsg').textContent = msg;
+    document.getElementById('poxyMaintOverlay').classList.add('active');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 2 — USER MATRIX & ASSET OPS
+// ═══════════════════════════════════════════════════════════════
+async function loadCounters(){
+  const [walletsRes, assetsRes] = await Promise.all([
+    sb.from('profiles').select('id',{count:'exact',head:true}),
+    sb.from('user_poxy').select('id',{count:'exact',head:true})
+  ]);
+  const wallets = walletsRes.count ?? 0;
+  const assets  = assetsRes.count  ?? 0;
+  const avg     = wallets > 0 ? (assets/wallets).toFixed(2) : '0.00';
+  document.getElementById('cntWallets').textContent = wallets.toLocaleString();
+  document.getElementById('cntAssets').textContent  = assets.toLocaleString();
+  document.getElementById('cntAvg').textContent     = avg;
+}
+
+async function inspectUser(){
+  const query = document.getElementById('inspectQuery').value.trim();
+  if(!query){ toast('ENTER USERNAME OR USER ID','err'); return; }
+  const out = document.getElementById('inspectResult');
+  out.style.display='block';
+  out.textContent = 'QUERYING...';
+
+  // Try by username first, then by ID
+  let prof = null;
+  const {data:byName} = await sb.from('profiles').select('*').ilike('username',query).limit(1);
+  if(byName&&byName.length) prof = byName[0];
+  else {
+    const {data:byId} = await sb.from('profiles').select('*').eq('id',query).maybeSingle();
+    if(byId) prof = byId;
+  }
+
+  if(!prof){ out.textContent = '[ USER NOT FOUND ]'; return; }
+
+  const userId = prof.id;
+  const [poxyRes, listingsRes] = await Promise.all([
+    sb.from('user_poxy').select('id,poxy_tier,serial_number,dropped_at,pinned_at').eq('user_id',userId).order('dropped_at',{ascending:false}).limit(50),
+    sb.from('marketplace').select('id,price,listed_at').eq('seller_id',userId).limit(10)
+  ]);
+
+  const lines = [
+    `=== PROFILE DUMP ===`,
+    `  ID:         ${prof.id}`,
+    `  USERNAME:   ${prof.username||'—'}`,
+    `  BALANCE:    ${prof.balance??0} PC`,
+    `  DUST:       ${prof.dust??0}`,
+    `  CLUB:       ${prof.is_club_member?'YES':'NO'}`,
+    `  CREATED:    ${fmtDate(prof.created_at)}`,
+    `  AVATAR:     ${prof.avatar_url||'—'}`,
+    ``,
+    `=== INVENTORY (${poxyRes.data?.length||0} ASSETS) ===`,
+    ...(poxyRes.data||[]).slice(0,30).map(p=>
+      `  [${p.poxy_tier.toUpperCase().padEnd(10)}] ${p.serial_number||p.id.slice(0,12)}  ${fmtDate(p.dropped_at)}${p.pinned_at?' 📌':''}`
+    ),
+    poxyRes.data?.length > 30 ? `  ...and ${poxyRes.data.length-30} more` : '',
+    ``,
+    `=== ACTIVE LISTINGS (${listingsRes.data?.length||0}) ===`,
+    ...(listingsRes.data||[]).map(l=>
+      `  ID:${l.id.slice(0,8)}… PRICE:${l.price}PC  LISTED:${fmtDate(l.listed_at)}`
+    )
+  ].filter(l=>l!==undefined);
+
+  out.textContent = lines.join('\n');
+  appendLog(`[ADMIN] INSPECTED USER: ${prof.username||userId}`, 'info');
+}
+
+async function executeAirdrop(){
+  const target     = document.getElementById('airdropTarget').value.trim();
+  const tier       = document.getElementById('airdropTier').value;
+  const serial     = document.getElementById('airdropSerial').value.trim();
+  const collection = document.getElementById('airdropCollection').value.trim()||'genesis';
+  const logEl      = document.getElementById('airdropLog');
+
+  if(!target){ toast('ENTER TARGET','err'); return; }
+
+  logEl.textContent = 'RESOLVING TARGET...';
+  let userId = null;
+
+  // Resolve target to user_id
+  if(target.includes('-') && target.length > 30){
+    userId = target; // looks like UUID
+  } else {
+    const {data} = await sb.from('profiles').select('id').ilike('username',target).limit(1);
+    if(data&&data.length) userId = data[0].id;
+  }
+  if(!userId){ logEl.textContent = '[ ERROR: USER NOT FOUND ]'; logEl.style.color='var(--red)'; toast('USER NOT FOUND','err'); return; }
+
+  logEl.textContent = 'INSERTING ASSET...';
+  const serialFinal = serial || `DEV-${Math.random().toString(36).slice(2,8).toUpperCase()}`;
+  const {data, error} = await sb.from('user_poxy').insert({
+    user_id: userId,
+    poxy_tier: tier,
+    serial_number: serialFinal,
+    collection_id: collection,
+    generation_version: 1,
+    rarity_seed: crypto.randomUUID()
+  }).select('id').single();
+
+  if(error){
+    logEl.textContent = 'ERROR: '+error.message;
+    logEl.style.color='var(--red)';
+    toast('MINT FAILED','err');
+    appendLog(`[ADMIN] AIRDROP FAILED → ${target}: ${error.message}`, 'err');
+    return;
+  }
+  logEl.style.color='var(--green)';
+  logEl.textContent = `✓ MINTED ASSET ${data.id}\nTIER: ${tier.toUpperCase()}\nSERIAL: ${serialFinal}\nUSER: ${userId}`;
+  toast('AIRDROP EXECUTED');
+  appendLog(`[ADMIN] AIRDROP EXECUTED → ${target} | ${tier.toUpperCase()} | ${serialFinal}`, 'warn');
+}
+
+async function loadUsersTable(){
+  const tbody = document.getElementById('usersTableBody');
+  tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:12px">LOADING...</td></tr>';
+  const {data,error} = await sb.from('profiles').select('id,username,balance,is_club_member,created_at').order('created_at',{ascending:false}).limit(20);
+  if(error){ tbody.innerHTML='<tr><td colspan="5" style="color:var(--red)">ERROR: '+error.message+'</td></tr>'; return; }
+  if(!data||!data.length){ tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center">NO USERS</td></tr>'; return; }
+  tbody.innerHTML = data.map(u=>`
+    <tr>
+      <td style="font-size:8px;color:var(--muted)">${u.id.slice(0,10)}…</td>
+      <td>${esc(u.username||'—')}</td>
+      <td style="color:var(--cyan)">${(u.balance||0).toFixed(2)}</td>
+      <td>${u.is_club_member?'<span class="badge badge-amber">VIP</span>':'<span class="badge">—</span>'}</td>
+      <td style="font-size:8px;color:var(--muted)">${fmtDate(u.created_at)}</td>
+    </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 3 — HARDWARE SIMULATOR
+// ═══════════════════════════════════════════════════════════════
+function togglePerfMode(){
+  const on = document.getElementById('perfModeToggle').checked;
+  if(on){
+    window.POXY_PERF_MODE = 'low';
+    localStorage.setItem('poxy_perf_mode','low');
+    document.documentElement.setAttribute('data-perf','low');
+    document.getElementById('perfModeStatus').textContent='LOW PERF';
+    document.getElementById('perfModeStatus').className='badge badge-amber';
+    appendLog('[SIM] PERF MODE → LOW', 'warn');
+    toast('PERF MODE: LOW');
+  } else {
+    window.POXY_PERF_MODE = 'standard';
+    localStorage.removeItem('poxy_perf_mode');
+    document.documentElement.removeAttribute('data-perf');
+    document.getElementById('perfModeStatus').textContent='STANDARD';
+    document.getElementById('perfModeStatus').className='badge badge-red';
+    appendLog('[SIM] PERF MODE → STANDARD', 'info');
+    toast('PERF MODE: STANDARD');
+  }
+  refreshSimFlags();
+}
+
+let _lagPatched = false;
+function toggleLag(){
+  const on  = document.getElementById('lagToggle').checked;
+  const ms  = parseInt(document.getElementById('lagMs').value)||2500;
+  if(on && !_lagPatched){
+    _lagPatched = true;
+    localStorage.setItem('poxy_lag_ms', ms);
+    window.fetch = function(...args){
+      return new Promise(resolve => setTimeout(()=>resolve(_nativeFetch(...args)), ms));
+    };
+    document.getElementById('lagStatus').textContent=`${ms}MS INJECTED`;
+    document.getElementById('lagStatus').className='badge badge-amber';
+    appendLog(`[SIM] LAG EMULATOR ON → ${ms}ms delay injected`, 'warn');
+    toast(`LAG: ${ms}MS`);
+  } else if(!on && _lagPatched){
+    _lagPatched = false;
+    localStorage.removeItem('poxy_lag_ms');
+    window.fetch = _nativeFetch;
+    document.getElementById('lagStatus').textContent='DISABLED';
+    document.getElementById('lagStatus').className='badge badge-red';
+    appendLog('[SIM] LAG EMULATOR OFF', 'info');
+    toast('LAG DISABLED');
+  }
+  refreshSimFlags();
+}
+
+let _timeTravelActive = false;
+function applyTimeTravel(){
+  const dtVal = document.getElementById('timeTravelDt').value;
+  if(!dtVal){ toast('SET A DATE FIRST','err'); return; }
+  const ts = new Date(dtVal).getTime();
+  if(isNaN(ts)){ toast('INVALID DATE','err'); return; }
+  _timeTravelActive = true;
+  localStorage.setItem('poxy_time_override', dtVal);
+  const offset = ts - Date.now();
+  // Patch Date globally
+  window.Date = class extends _nativeDate {
+    constructor(...args){ if(!args.length){ super(ts + (_nativeDate.now() - (ts-offset))); } else { super(...args); } }
+    static now(){ return ts + (_nativeDate.now() - (ts-offset)); }
+  };
+  document.getElementById('timeTravelCurrent').textContent = new _nativeDate(ts).toISOString();
+  document.getElementById('timeTravelToggle').checked = true;
+  appendLog(`[SIM] TIME OVERRIDE → ${new _nativeDate(ts).toISOString()}`, 'warn');
+  toast('TIME OVERRIDE APPLIED');
+  refreshSimFlags();
+}
+
+function toggleTimeTravel(){
+  const on = document.getElementById('timeTravelToggle').checked;
+  if(!on) resetTimeTravel();
+  else applyTimeTravel();
+}
+
+function resetTimeTravel(){
+  _timeTravelActive = false;
+  window.Date = _nativeDate;
+  localStorage.removeItem('poxy_time_override');
+  document.getElementById('timeTravelCurrent').textContent = 'NONE';
+  document.getElementById('timeTravelToggle').checked = false;
+  appendLog('[SIM] TIME OVERRIDE CLEARED', 'info');
+  toast('TIME RESET TO REAL');
+  refreshSimFlags();
+}
+
+function clearAllSim(){
+  if(!confirm('CLEAR ALL SIMULATION OVERRIDES?')) return;
+  document.getElementById('perfModeToggle').checked = false; togglePerfMode();
+  document.getElementById('lagToggle').checked = false; toggleLag();
+  resetTimeTravel();
+  toast('ALL OVERRIDES CLEARED');
+  appendLog('[ADMIN] ALL SIM OVERRIDES CLEARED', 'warn');
+}
+
+function restoreSimState(){
+  if(localStorage.getItem('poxy_perf_mode')==='low'){
+    document.getElementById('perfModeToggle').checked=true; togglePerfMode();
+  }
+  const lagMs = localStorage.getItem('poxy_lag_ms');
+  if(lagMs){
+    document.getElementById('lagMs').value=lagMs;
+    document.getElementById('lagToggle').checked=true; toggleLag();
+  }
+  const timeOverride = localStorage.getItem('poxy_time_override');
+  if(timeOverride){
+    document.getElementById('timeTravelDt').value=timeOverride;
+    applyTimeTravel();
+  }
+}
+
+function refreshSimFlags(){
+  const rows = [
+    {key:'poxy_perf_mode',     val:localStorage.getItem('poxy_perf_mode')||'—',    src:'LOCALSTORAGE'},
+    {key:'poxy_lag_ms',        val:localStorage.getItem('poxy_lag_ms')||'—',         src:'LOCALSTORAGE'},
+    {key:'poxy_time_override', val:localStorage.getItem('poxy_time_override')||'—',  src:'LOCALSTORAGE'},
+    {key:'POXY_PERF_MODE',     val:window.POXY_PERF_MODE||'—',                      src:'WINDOW'},
+    {key:'poxy_maintenance',   val:localStorage.getItem('poxy_maintenance')||'—',    src:'LOCALSTORAGE'},
+    {key:'poxy_broadcast',     val:localStorage.getItem('poxy_broadcast')||'—',      src:'LOCALSTORAGE'},
+  ];
+  const tbody = document.getElementById('simFlagsTbl');
+  tbody.innerHTML = rows.map(r=>`
+    <tr>
+      <td style="color:var(--cyan)">${r.key}</td>
+      <td style="color:${r.val!=='—'?'#fff':'var(--muted)'}">${esc(String(r.val))}</td>
+      <td><span class="tag">${r.src}</span></td>
+    </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 4 — TELEMETRY
+// ═══════════════════════════════════════════════════════════════
+const LOG_PREFIXES = [
+  ['CRAFT','Wallet 0x{w} initiated CRAFT → {t} tier'],
+  ['BURN','Wallet 0x{w} submitted BURN for asset #{n}'],
+  ['MINT','Asset #{n} minted for 0x{w} [{t} TIER]'],
+  ['INSPECT','Profile 0x{w} viewed — Asset count: {n}'],
+  ['TRADE','Market listing #{n} by 0x{w} at {p} PC'],
+  ['LOGIN','Session established for 0x{w}'],
+  ['VERIFY','Merkle proof verified for 0x{w}'],
+  ['AIRDROP','DEV override mint → 0x{w} [{t}]']
+];
+const TIERS_ABBR = ['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY','MYTHIC'];
+const WALLETS = ['71f3','b4a2','c9d1','3e0f','8abc','55d2','fa91','2b77'];
+
+function randLog(){
+  const [tag, tpl] = LOG_PREFIXES[Math.floor(Math.random()*LOG_PREFIXES.length)];
+  const w = WALLETS[Math.floor(Math.random()*WALLETS.length)]+Math.random().toString(16).slice(2,6);
+  const n = Math.floor(Math.random()*99999);
+  const t = TIERS_ABBR[Math.floor(Math.random()*TIERS_ABBR.length)];
+  const p = (Math.random()*50+0.5).toFixed(2);
+  const line = tpl.replace('{w}',w).replace('{n}',n).replace('{t}',t).replace('{p}',p);
+  return `[${fmtLogTime()}] [${tag}] ${line}`;
+}
+
+function appendLog(msg, type=''){
+  if(logPaused) return;
+  const box = document.getElementById('logStream');
+  const div = document.createElement('div');
+  div.className = 'log-line' + (type?' '+type:'');
+  div.textContent = msg;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  // Keep max 300 lines
+  while(box.children.length > 300) box.removeChild(box.firstChild);
+}
+
+function seedLog(){
+  for(let i=0;i<12;i++){
+    const ts = new _nativeDate(Date.now()-Math.random()*600000);
+    appendLog(`[${fmtLogTime(ts)}] ${['[MINT]','[LOGIN]','[CRAFT]','[BURN]'][Math.floor(Math.random()*4)]} ${randLog().split('] ').slice(1).join('] ')}`);
+  }
+  // Auto-stream
+  setInterval(()=>{ if(!logPaused) appendLog(randLog()); }, 4200);
+}
+
+function clearLog(){
+  document.getElementById('logStream').innerHTML='';
+}
+
+function pauseLog(){
+  logPaused = !logPaused;
+  document.getElementById('pauseLogBtn').textContent = logPaused ? 'RESUME' : 'PAUSE';
+  appendLog(`[SYSTEM] LOG STREAM ${logPaused?'PAUSED':'RESUMED'}`, 'info');
+}
+
+// CHARTS
+const _chartHistory = { load:[], sessions:[], craft:[] };
+function pushChart(key, val){
+  _chartHistory[key].push(val);
+  if(_chartHistory[key].length > 20) _chartHistory[key].shift();
+}
+function renderChart(elId, key, color){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const data = _chartHistory[key];
+  const max  = Math.max(...data, 1);
+  el.innerHTML = data.map((v,i)=>`
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${Math.max(2,(v/max)*60)}px;background:${color}"></div>
+      ${i===data.length-1?`<div class="chart-bar-lbl">${Math.round(v)}</div>`:''}
+    </div>`).join('');
+}
+
+function startCharts(){
+  // Seed initial data
+  for(let i=0;i<16;i++){
+    pushChart('load',     20+Math.random()*60);
+    pushChart('sessions', 5+Math.random()*40);
+    pushChart('craft',    Math.random()*20);
+  }
+  renderChart('chartLoad',     'load',     'var(--cyan)');
+  renderChart('chartSessions', 'sessions', 'var(--green)');
+  renderChart('chartCraft',    'craft',    'var(--amber)');
+
+  setInterval(()=>{
+    pushChart('load',     20+Math.random()*65);
+    pushChart('sessions', 5+Math.random()*45);
+    pushChart('craft',    Math.random()*25);
+    renderChart('chartLoad',     'load',     'var(--cyan)');
+    renderChart('chartSessions', 'sessions', 'var(--green)');
+    renderChart('chartCraft',    'craft',    'var(--amber)');
+  }, 3000);
+}
+
+async function loadTelemetryCounters(){
+  const [newsRes, mintsRes, legendRes, usersRes] = await Promise.all([
+    sb.from('news_posts').select('id',{count:'exact',head:true}),
+    sb.from('user_poxy').select('id',{count:'exact',head:true}),
+    sb.from('user_poxy').select('id',{count:'exact',head:true}).in('poxy_tier',['legendary','mythic','diamond','secret']),
+    sb.from('profiles').select('id',{count:'exact',head:true})
+  ]);
+  document.getElementById('telNews').textContent     = newsRes.count ?? '—';
+  document.getElementById('telMints').textContent    = mintsRes.count ?? '—';
+  document.getElementById('telLegendary').textContent = legendRes.count ?? '—';
+  document.getElementById('telUsers').textContent    = usersRes.count ?? '—';
+}
+
+async function loadAuditLog(){
+  const tbody = document.getElementById('auditTableBody');
+  tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:12px">LOADING...</td></tr>';
+  // Try poxy_audit_log table, fall back if not available
+  const {data,error} = await sb.from('poxy_audit_log')
+    .select('created_at,action_type,user_id,ip_address,payload')
+    .order('created_at',{ascending:false}).limit(30);
+  if(error){
+    tbody.innerHTML=`<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:12px">AUDIT LOG TABLE NOT ACCESSIBLE (${esc(error.message)})</td></tr>`;
+    return;
+  }
+  if(!data||!data.length){ tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center">NO RECORDS</td></tr>'; return; }
+  tbody.innerHTML = data.map(r=>`
+    <tr>
+      <td style="font-size:8px;white-space:nowrap;color:var(--muted)">${fmtDate(r.created_at)}</td>
+      <td><span class="badge badge-cyan">${esc(r.action_type||'—')}</span></td>
+      <td style="font-size:8px;color:var(--muted)">${r.user_id?esc(r.user_id.slice(0,12))+'…':'—'}</td>
+      <td style="font-size:8px;color:var(--muted)">${esc(r.ip_address||'—')}</td>
+      <td style="font-size:8px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(JSON.stringify(r.payload||{}))}</td>
+    </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════
+function esc(s){ return String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
+
+function fmtDate(s){
+  if(!s) return '—';
+  try{ return new _nativeDate(s).toISOString().replace('T',' ').slice(0,16); }catch(e){ return s; }
+}
+
+function fmtLogTime(d){
+  const t = d || new _nativeDate();
+  return [t.getHours(),t.getMinutes(),t.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+}
+</script>
+</body>
+</html>

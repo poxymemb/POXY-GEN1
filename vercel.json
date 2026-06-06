@@ -12,6 +12,10 @@
     { "source": "/supabase/(.*)", "destination": "/", "permanent": false },
     { "source": "/tools/(.*)", "destination": "/", "permanent": false }
   ],
+  "routes": [
+    { "src": "/admin-terminal", "dest": "/assets/admin-terminal.html" },
+    { "src": "/admin-terminal/", "dest": "/assets/admin-terminal.html" }
+  ],
   "headers": [
     {
       "source": "/index.html",
