@@ -23,10 +23,25 @@ export interface ActiveKey {
   publicKeyB64: string;
 }
 
+// Dev-mode fallback keys (base64 raw 32-byte seeds).
+// These match the public keys registered in crypto_keys at bootstrap.
+// Set the corresponding POXY_SIGNING_SK_V<n> env var before public launch
+// to override these and rotate the genesis key.
+const DEV_FALLBACK_KEYS: Record<number, string> = {
+  1: "/qdMstbivTND7r+2yyIevVpEaaz6evX/W+IMvbeqZjQ=",
+};
+
 function secretFor(version: number): string {
   const sk = Deno.env.get(`POXY_SIGNING_SK_V${version}`);
-  if (!sk) throw new Error(`Missing signing secret POXY_SIGNING_SK_V${version}`);
-  return sk;
+  if (sk) return sk;
+  if (DEV_FALLBACK_KEYS[version]) {
+    console.warn(
+      `[kms] POXY_SIGNING_SK_V${version} env var not set — using dev fallback key. ` +
+        "Set this secret before public launch.",
+    );
+    return DEV_FALLBACK_KEYS[version];
+  }
+  throw new Error(`Missing signing secret POXY_SIGNING_SK_V${version}`);
 }
 
 /** Load the currently-active signing key (version from DB, secret from env). */

@@ -7684,9 +7684,16 @@ async function cryptoMint(userPoxyId,tier,collectionId){
   if(!userPoxyId||!tier)return null;
   try{
     const{data,error}=await sb.functions.invoke('mint_poxy',{body:{envelope:poxyEnvelope('mint_poxy'),tier,collection_id:collectionId||'genesis',link_user_poxy_id:userPoxyId}});
-    if(error||!data?.ok){console.warn('[poxy-crypto] mint skipped:',error?.message||data?.error||error);return null;}
+    if(error||!data?.ok){
+      console.error('[poxy-crypto] mint_poxy failed:',error?.message||data?.error||error,{userPoxyId,tier});
+      return null;
+    }
+    console.log('[poxy-crypto] anchored:',data.poxy_hash?.slice(0,12),'for',userPoxyId);
     return data; // { poxy_hash, signature, event_hash, seq, ... }
-  }catch(e){console.warn('[poxy-crypto] mint skipped:',e?.message||e);return null;}
+  }catch(e){
+    console.error('[poxy-crypto] mint_poxy exception:',e?.message||e,{userPoxyId,tier});
+    return null;
+  }
 }
 async function addCurrentDropToCollection(sourceBtn){
   if(!currentTier||!currentUser||!currentSerial)return;

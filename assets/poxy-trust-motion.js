@@ -717,9 +717,16 @@
   }
 
   /* ── capture real crypto data once the POXY is minted on save ────────── */
+  // Preserved across reset() so that async cryptoMint callbacks that fire after
+  // the UI has already been torn down can still store asset data.
+  var _savedRound = null;
+
   function onMint(data) {
-    if (!data || !current) return;
-    current.asset = {
+    if (!data) return;
+    // Use live round if still active; fall back to the snapshot saved on reset.
+    var r = current || _savedRound;
+    if (!r) return;
+    r.asset = {
       poxy_hash: data.poxy_hash,
       signature: data.signature,
       event_hash: data.event_hash,
@@ -727,10 +734,11 @@
       event_id: data.event_id,
       seq: data.seq
     };
+    _savedRound = null;
     setPill('sig', '', 'Idle');
     setPill('evt', '', 'Idle');
     if (drawer && drawer.classList.contains('is-open')) renderDrawer();
-    toast('POXY minted · signature on record');
+    if (current) toast('POXY minted \u00b7 signature on record');
   }
 
   /* ── POXY lifecycle / provenance visualization ───────────────────────── */
@@ -870,6 +878,9 @@
     hideHud();
     closeDrawer();
     clearRevealExtras();
+    // Preserve the round so onMint() can still attach asset data even if the
+    // async cryptoMint() response arrives after the UI has been torn down.
+    if (current) _savedRound = current;
     current = null;
   }
 
