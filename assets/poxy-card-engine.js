@@ -130,11 +130,10 @@
     return bg;
   }
 
-  /* ─── Tactical serial generator ────────────────────────────────── */
-  // Produces deterministic PX-XXXXXX codes from item identity.
-  // Replaces generic #001/#492 IDs with cryptographic-looking keys.
+  /* ─── Display serial — always prefer DB serial_number ───────────── */
   function _genTacticalSerial(item) {
-    const src = String(item.id || item.serial_number || item.dropped_at || '').replace(/-/g, '');
+    if (item && item.serial_number) return String(item.serial_number);
+    const src = String(item.id || item.dropped_at || '').replace(/-/g, '');
     // DJB2-style hash for determinism
     let h = 5381;
     for (let i = 0; i < src.length; i++) {
