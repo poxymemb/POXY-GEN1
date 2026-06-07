@@ -87,6 +87,7 @@
 <link rel="stylesheet" href="assets/poxy-season-atlas.css?v=1">
 <link rel="stylesheet" href="assets/poxy-museum-mode.css?v=1">
 <link rel="stylesheet" href="assets/poxy-milestones.css?v=1">
+<link rel="stylesheet" href="assets/poxy-certificate.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6847,6 +6848,112 @@ function _renderEraBadge(item) {
     badge.hidden = true;
   }
 }
+
+function _certEraText(item){
+  const d=item.dropped_at?new Date(item.dropped_at):null;
+  if(!d||isNaN(d.getTime()))return '';
+  if(item.poxy_tier==='genesis'||d<new Date('2024-01-01T00:00:00Z'))return 'Genesis Era';
+  if(d<AVM_GEN1_SEAL_DATE)return 'Founding Collection';
+  return '';
+}
+function _certHex(seed,len){
+  let h=0;const s=String(seed);
+  for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}
+  const chars='0123456789ABCDEF';let out='';
+  for(let i=0;i<len;i++){h=(h*1103515245+12345)>>>0;out+=chars[(h>>>(i%24))&15];}
+  return out;
+}
+let _certDecryptTimer=null;
+window.openCertificate=function(){
+  const item=_avmCurrentItem;
+  if(!item)return;
+  const modal=$('certModal');
+  if(!modal)return;
+  const tier=TIER_BY_ID[item.poxy_tier]||TIERS[0];
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pxid=item.serial_number||('PX-'+String(item.id||'').slice(0,6).toUpperCase());
+  $('certPxId').textContent=pxid;
+  const rEl=$('certRarity');rEl.textContent=(tier.label||'').toUpperCase();
+  modal.querySelector('.cert-frame').style.setProperty('--cert-color',tier.color||'#f59e0b');
+  rEl.style.setProperty('--cert-color',tier.color||'#f59e0b');
+  const eraEl=$('certEra');const era=_certEraText(item);
+  if(era){eraEl.textContent=era;eraEl.hidden=false;}else{eraEl.hidden=true;}
+  const d=item.dropped_at?new Date(item.dropped_at):null;
+  $('certDate').textContent=(d&&!isNaN(d.getTime()))?d.toISOString().slice(0,10).replace(/-/g,'.'):'—';
+  $('certBlock').textContent='#'+(parseInt(_certHex(item.id+'b',6),16)%900000+100000);
+  const dna=item.dna_hash?String(item.dna_hash):_certHex(item.id+'dna',64).toLowerCase();
+  $('certDna').textContent=dna.slice(0,16).toLowerCase()+'…'+dna.slice(-6).toLowerCase();
+  const provN=(item.vip_serial?1:0)+(item.pinned_at?1:0);
+  $('certProv').textContent=provN+' transfer'+(provN===1?'':'s');
+  const sigEl=$('certSig');
+  const finalSig=_certHex(item.id+'sig',18);
+  const sigDisplay=finalSig.slice(0,8)+'…'+finalSig.slice(-6);
+  modal.hidden=false;
+  requestAnimationFrame(()=>modal.classList.add('cert-open'));
+  if(!reduce){
+    let i=0;const chars='0123456789ABCDEF';
+    if(_certDecryptTimer)clearInterval(_certDecryptTimer);
+    _certDecryptTimer=setInterval(()=>{
+      let out='';
+      for(let k=0;k<sigDisplay.length;k++){
+        const ch=sigDisplay[k];
+        if(ch==='…'){out+='…';continue;}
+        out+=(k<i)?ch:chars[Math.floor(Math.random()*16)];
+      }
+      sigEl.textContent=out;
+      i++;
+      if(i>sigDisplay.length){clearInterval(_certDecryptTimer);sigEl.textContent=sigDisplay;}
+    },40);
+    let row=0;
+    modal.querySelectorAll('.cert-row').forEach(r=>{r.style.animationDelay=(row*80)+'ms';row++;});
+  }else{
+    sigEl.textContent=sigDisplay;
+  }
+};
+window.closeCertificate=function(){
+  const modal=$('certModal');
+  if(!modal)return;
+  if(_certDecryptTimer)clearInterval(_certDecryptTimer);
+  modal.classList.remove('cert-open');
+  setTimeout(()=>{modal.hidden=true;},280);
+};
+function _loadHtml2Canvas(){
+  return new Promise((resolve)=>{
+    if(window.html2canvas)return resolve(window.html2canvas);
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload=()=>resolve(window.html2canvas||null);
+    s.onerror=()=>resolve(null);
+    document.head.appendChild(s);
+  });
+}
+window.downloadCertificate=async function(){
+  const btn=$('certDownloadBtn');
+  const node=$('certCapture');
+  if(!node)return;
+  const orig=btn?btn.textContent:'';
+  if(btn){btn.classList.add('cert-btn--flash');btn.textContent='Generating...';}
+  const h2c=await _loadHtml2Canvas();
+  if(!h2c){if(btn){btn.textContent='Right-click → Save image';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2600);}return;}
+  try{
+    const canvas=await h2c(node,{backgroundColor:'#0d0d0f',scale:2,useCORS:true});
+    const pxid=($('certPxId').textContent||'POXY').trim();
+    const link=document.createElement('a');
+    link.download='POXY-'+pxid+'-certificate.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    if(btn){btn.textContent='Downloaded ✓';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2600);}
+  }catch(e){
+    if(btn){btn.textContent='Right-click → Save image';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2600);}
+  }
+};
+window.shareCertificate=function(){
+  const pxid=($('certPxId').textContent||'').trim();
+  const text='POXY WORLD Certificate of Authenticity — '+pxid;
+  if(navigator.share){navigator.share({title:'POXY Certificate',text:text}).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>showToast('Certificate info copied')).catch(()=>showToast(text));}
+  else{showToast(text);}
+};
 
 // ── RELIC SCORE RENDER ───────────────────────────────────────────────
 const RELIC_RARITY_WEIGHT = {
@@ -14246,6 +14353,12 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         VIEW CRYPTOGRAPHIC PROOF
       </button>
 
+      <!-- Certificate shortcut -->
+      <button type="button" class="avm-crypto-btn font-sans" id="avmCertBtn" onclick="openCertificate()">
+        <span class="material-symbols-outlined">workspace_premium</span>
+        VIEW CERTIFICATE
+      </button>
+
       <!-- Primary CTA — POXY WORLD branded -->
       <button type="button" class="avm-cta font-sans" id="avmEquipBtn">
         <span class="material-symbols-outlined">rocket_launch</span>
@@ -14273,6 +14386,49 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- CERTIFICATE OF AUTHENTICITY MODAL -->
+<div id="certModal" class="cert-backdrop" role="dialog" aria-modal="true" aria-label="Certificate of Authenticity" hidden onclick="if(event.target===this)closeCertificate()">
+  <div class="cert-panel" id="certPanel">
+    <button type="button" class="cert-close" onclick="closeCertificate()" aria-label="Close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <div class="cert-frame" id="certCapture">
+      <div class="cert-corner cert-corner--tl"></div>
+      <div class="cert-corner cert-corner--tr"></div>
+      <div class="cert-corner cert-corner--bl"></div>
+      <div class="cert-corner cert-corner--br"></div>
+      <div class="cert-head cert-row">
+        <div class="cert-title">CERTIFICATE OF AUTHENTICITY</div>
+        <div class="cert-sub">POXY WORLD — GEN CHINA MAGIC</div>
+        <div class="cert-rule"><span>✦</span></div>
+      </div>
+      <div class="cert-body">
+        <div class="cert-pxid cert-row" id="certPxId">PX-——————</div>
+        <div class="cert-badge-row cert-row"><span class="cert-badge" id="certRarity">—</span><span class="cert-era" id="certEra" hidden></span></div>
+        <div class="cert-grid">
+          <div class="cert-field cert-row"><span class="cert-label">ISSUE DATE</span><span class="cert-value" id="certDate">—</span></div>
+          <div class="cert-field cert-row"><span class="cert-label">MINT BLOCK</span><span class="cert-value" id="certBlock">—</span></div>
+          <div class="cert-field cert-row"><span class="cert-label">DNA HASH</span><span class="cert-value cert-mono" id="certDna">—</span></div>
+          <div class="cert-field cert-row"><span class="cert-label">ED25519 SIGNATURE</span><span class="cert-value cert-mono" id="certSig">—</span></div>
+          <div class="cert-field cert-row"><span class="cert-label">PROVENANCE CHAIN</span><span class="cert-value" id="certProv">—</span></div>
+        </div>
+      </div>
+      <div class="cert-foot cert-row">
+        <div class="cert-qr" aria-hidden="true"></div>
+        <div class="cert-foot-text">
+          <div class="cert-verified">Cryptographically Verified by POXY WORLD</div>
+          <div class="cert-logo">POXY · WORLD</div>
+        </div>
+      </div>
+    </div>
+    <div class="cert-actions">
+      <button type="button" class="cert-btn cert-btn--primary" id="certDownloadBtn" onclick="downloadCertificate()">DOWNLOAD PNG</button>
+      <button type="button" class="cert-btn" onclick="shareCertificate()">SHARE</button>
+      <button type="button" class="cert-btn" onclick="closeCertificate()">CLOSE</button>
+    </div>
   </div>
 </div>
 

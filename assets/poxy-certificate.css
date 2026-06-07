@@ -1,0 +1,222 @@
+.cert-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,0.82);
+  backdrop-filter:blur(8px);
+  overflow-y:auto;
+  perspective:1000px;
+}
+.cert-backdrop[hidden]{display:none}
+
+.cert-panel{
+  position:relative;
+  width:100%;
+  max-width:440px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  opacity:0;
+  transform:scale(0.85) rotateY(-8deg);
+}
+.cert-backdrop.cert-open .cert-panel{
+  animation:certIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes certIn{to{opacity:1;transform:scale(1) rotateY(0)}}
+
+.cert-close{
+  position:absolute;
+  top:-6px;right:-6px;
+  z-index:3;
+  width:34px;height:34px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(20,20,24,0.9);
+  color:rgba(255,255,255,0.7);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.cert-close .material-symbols-outlined{font-size:18px}
+
+.cert-frame{
+  position:relative;
+  padding:28px 24px;
+  border-radius:8px;
+  border:1px solid var(--amber,#f59e0b);
+  background:linear-gradient(160deg,#16140e,#0d0d0f);
+  box-shadow:0 0 40px rgba(245,158,11,0.12),inset 0 0 60px rgba(245,158,11,0.04);
+  overflow:hidden;
+}
+.cert-frame::before{
+  content:'';
+  position:absolute;
+  inset:6px;
+  border:1px solid rgba(245,158,11,0.25);
+  border-radius:4px;
+  pointer-events:none;
+}
+
+.cert-corner{
+  position:absolute;
+  width:18px;height:18px;
+  border-color:var(--amber,#f59e0b);
+  z-index:2;
+}
+.cert-corner--tl{top:12px;left:12px;border-top:2px solid;border-left:2px solid}
+.cert-corner--tr{top:12px;right:12px;border-top:2px solid;border-right:2px solid}
+.cert-corner--bl{bottom:12px;left:12px;border-bottom:2px solid;border-left:2px solid}
+.cert-corner--br{bottom:12px;right:12px;border-bottom:2px solid;border-right:2px solid}
+
+.cert-row{opacity:0;transform:translateY(8px)}
+.cert-backdrop.cert-open .cert-row{animation:certRowIn 0.5s ease-out forwards}
+@keyframes certRowIn{to{opacity:1;transform:translateY(0)}}
+
+.cert-head{text-align:center;position:relative;z-index:1}
+.cert-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:0.22em;
+  color:#fff;
+}
+.cert-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.18em;
+  color:rgba(245,158,11,0.85);
+  margin-top:4px;
+}
+.cert-rule{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:14px 0 4px;
+  color:rgba(245,158,11,0.55);
+  font-size:11px;
+}
+.cert-rule::before,.cert-rule::after{
+  content:'';height:1px;flex:1;
+  background:linear-gradient(90deg,transparent,rgba(245,158,11,0.4),transparent);
+}
+
+.cert-body{position:relative;z-index:1;text-align:center;margin-top:10px}
+.cert-pxid{
+  font-family:'JetBrains Mono',monospace;
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:0.08em;
+  color:#fff;
+}
+.cert-badge-row{margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.cert-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:999px;
+  border:1px solid var(--cert-color,#f59e0b);
+  color:var(--cert-color,#f59e0b);
+}
+.cert-era{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.08em;
+  padding:3px 10px;border-radius:999px;
+  border:1px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.6);
+}
+.cert-era[hidden]{display:none}
+
+.cert-grid{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  text-align:left;
+}
+.cert-field{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.cert-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;letter-spacing:0.1em;text-transform:uppercase;
+  color:rgba(196,199,200,0.45);
+  white-space:nowrap;
+}
+.cert-value{
+  font-family:'Hanken Grotesk',system-ui,sans-serif;
+  font-size:12px;font-weight:600;
+  color:rgba(255,255,255,0.85);
+  text-align:right;
+  word-break:break-all;
+}
+.cert-mono{font-family:'JetBrains Mono',monospace;font-size:11px}
+
+.cert-foot{
+  position:relative;z-index:1;
+  margin-top:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.cert-qr{
+  width:48px;height:48px;flex-shrink:0;
+  border-radius:4px;
+  background-color:#0d0d0f;
+  background-image:
+    linear-gradient(45deg,rgba(245,158,11,0.6) 25%,transparent 25%,transparent 75%,rgba(245,158,11,0.6) 75%),
+    linear-gradient(45deg,rgba(245,158,11,0.6) 25%,transparent 25%,transparent 75%,rgba(245,158,11,0.6) 75%);
+  background-size:12px 12px;
+  background-position:0 0,6px 6px;
+  border:1px solid rgba(245,158,11,0.4);
+}
+.cert-foot-text{flex:1}
+.cert-verified{
+  font-family:'Hanken Grotesk',system-ui,sans-serif;
+  font-size:10px;font-style:italic;
+  color:rgba(255,255,255,0.5);
+}
+.cert-logo{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:800;letter-spacing:0.2em;
+  color:rgba(245,158,11,0.85);
+  margin-top:3px;
+}
+
+.cert-actions{display:flex;gap:8px}
+.cert-btn{
+  flex:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:700;letter-spacing:0.08em;
+  padding:11px 8px;border-radius:10px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.04);
+  color:rgba(255,255,255,0.7);
+  cursor:pointer;
+  transition:background 0.18s,transform 0.12s;
+}
+.cert-btn:hover{background:rgba(255,255,255,0.08)}
+.cert-btn--primary{
+  background:linear-gradient(90deg,#f59e0b,#fbbf24);
+  border-color:transparent;color:#0d0d0f;
+}
+.cert-btn--flash{animation:certBtnFlash 0.3s ease-out}
+@keyframes certBtnFlash{0%{transform:scale(0.95)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+
+@media (max-width:420px){
+  .cert-frame{padding:22px 16px}
+  .cert-pxid{font-size:20px}
+  .cert-title{font-size:11px;letter-spacing:0.16em}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cert-backdrop.cert-open .cert-panel,
+  .cert-backdrop.cert-open .cert-row,
+  .cert-btn--flash{
+    animation:none!important;
+    opacity:1;
+    transform:none;
+  }
+}
