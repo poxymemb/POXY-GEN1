@@ -103,6 +103,8 @@
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=2" defer></script>
 <script src="assets/poxy-gens-motion.js?v=4" defer></script>
+<link rel="stylesheet" href="assets/poxy-onboarding.css?v=1">
+<script src="assets/poxy-onboarding.js?v=1" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
@@ -3167,6 +3169,13 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
               </div>
               <label class="poxy-settings-switch"><input type="checkbox" id="settingsHudSound" onchange="PoxyHudAudio&&PoxyHudAudio.setEnabled(this.checked)"><span class="poxy-settings-switch-slider"></span></label>
             </div>
+          </div>
+          </section>
+          <section class="poxy-settings-block">
+          <h3 class="poxy-settings-section-title">Onboarding</h3>
+          <div class="poxy-settings-glass" style="padding:14px 16px">
+            <p class="poxy-settings-toggle-desc" style="margin-bottom:10px">Re-experience the interactive cinematic tour shown on first login.</p>
+            <button type="button" class="ob-replay-btn" onclick="window.replayPoxyOnboarding&&window.replayPoxyOnboarding()">↺ Replay Onboarding Tour</button>
           </div>
           </section>
         </div>
