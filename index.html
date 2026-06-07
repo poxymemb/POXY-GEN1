@@ -84,6 +84,7 @@
 <link rel="stylesheet" href="assets/poxy-lore.css?v=1">
 <link rel="stylesheet" href="assets/poxy-passport-extras.css?v=1">
 <link rel="stylesheet" href="assets/poxy-discovery-feed.css?v=1">
+<link rel="stylesheet" href="assets/poxy-season-atlas.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -3297,12 +3298,29 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
       </div>
     </div>
     <main class="poxy-col-main">
-      <!-- Active Inventory sub-header (Stitch spec) -->
-      <div class="poxy-col-inv-header">
-        <h2 class="poxy-col-inv-title">Active Inventory</h2>
-        <span class="poxy-col-inv-count" id="archDisplayCount">DISPLAYING: — OF —</span>
+      <div class="poxy-col-view-tabs">
+        <button type="button" class="poxy-col-view-tab is-active" data-col-view="inventory" onclick="switchColView('inventory')">Inventory</button>
+        <button type="button" class="poxy-col-view-tab" data-col-view="atlas" onclick="switchColView('atlas')">Atlas</button>
       </div>
-      <div id="colContent"><div class="col-loading poxy-col-loading"><div class="col-spinner"></div></div></div>
+      <div id="colInventoryView">
+        <!-- Active Inventory sub-header (Stitch spec) -->
+        <div class="poxy-col-inv-header">
+          <h2 class="poxy-col-inv-title">Active Inventory</h2>
+          <span class="poxy-col-inv-count" id="archDisplayCount">DISPLAYING: — OF —</span>
+        </div>
+        <div id="colContent"><div class="col-loading poxy-col-loading"><div class="col-spinner"></div></div></div>
+      </div>
+      <div id="colAtlas" hidden>
+        <div class="atlas-head">
+          <div class="atlas-season">GEN CHINA MAGIC</div>
+          <div class="atlas-sub">Season Atlas</div>
+          <div class="atlas-progress-row">
+            <div class="atlas-progress-bar"><div class="atlas-progress-fill" id="atlasProgressFill"></div></div>
+            <span class="atlas-progress-label" id="atlasProgressLabel">0 / 6 Collected</span>
+          </div>
+        </div>
+        <div class="atlas-grid" id="atlasGrid"></div>
+      </div>
     </main>
   </div>
 </div>
@@ -8549,6 +8567,73 @@ async function loadCollection(){
     if($('storeGrid')&&currentProfile)renderStoreGrid();
   }catch(e){cont.innerHTML='<div class="poxy-col-empty">Failed to load archive.</div>';}
 }
+
+const ATLAS_SEASON_ID='gen_china_magic';
+const ATLAS_EMOJI={common:'🥚',uncommon:'🛡️',rare:'🐉',epic:'⚡',legendary:'👑',mythic:'🏮'};
+let _atlasLoaded=false;
+function switchColView(view){
+  document.querySelectorAll('.poxy-col-view-tab[data-col-view]').forEach(b=>b.classList.toggle('is-active',b.dataset.colView===view));
+  const inv=$('colInventoryView'),atlas=$('colAtlas');
+  if(view==='atlas'){
+    if(inv)inv.hidden=true;
+    if(atlas)atlas.hidden=false;
+    loadAtlas();
+  }else{
+    if(inv)inv.hidden=false;
+    if(atlas)atlas.hidden=true;
+  }
+}
+async function loadAtlas(){
+  const grid=$('atlasGrid');
+  if(!grid)return;
+  let items=null;
+  try{
+    const{data}=await sb.rpc('get_atlas_progress',{p_user_id:currentUser?currentUser.id:null,p_season_id:ATLAS_SEASON_ID});
+    if(data&&data.ok)items=data.items;
+  }catch(e){console.error('[atlas]',e);}
+  if(!items||!items.length)return;
+  grid.innerHTML='';
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let collected=0;
+  items.forEach((it,i)=>{
+    if(it.has_collected)collected++;
+    const meta=RARITY_TIER_META[it.rarity]||{};
+    const color=meta.accent||'#9E9E9E';
+    const card=document.createElement('div');
+    card.className='atlas-card '+(it.has_collected?'atlas-card--owned':'atlas-card--locked');
+    card.style.setProperty('--atlas-color',color);
+    if(!reduce)card.style.animationDelay=(i*60)+'ms';
+    const emoji=ATLAS_EMOJI[it.rarity]||'❔';
+    if(it.has_collected){
+      card.innerHTML=
+        '<span class="atlas-card-corner">✅</span>'+
+        '<div class="atlas-card-avatar">'+emoji+'</div>'+
+        '<div class="atlas-card-name">'+sanitizeText(it.display_name)+'</div>'+
+        '<div class="atlas-card-badge-row"><span class="atlas-card-badge">'+sanitizeText(it.rarity.toUpperCase())+'</span></div>'+
+        '<div class="atlas-card-lore">'+sanitizeText(it.lore_short||'')+'</div>';
+    }else{
+      card.innerHTML=
+        '<span class="atlas-card-corner">🔒</span>'+
+        '<div class="atlas-card-avatar">'+emoji+'</div>'+
+        '<div class="atlas-card-name">???</div>'+
+        '<div class="atlas-card-badge-row"><span class="atlas-card-badge">'+sanitizeText(it.rarity.toUpperCase())+'</span></div>'+
+        '<div class="atlas-card-hint">Open boxes to discover</div>';
+    }
+    grid.appendChild(card);
+  });
+  const total=items.length;
+  const fill=$('atlasProgressFill'),label=$('atlasProgressLabel');
+  if(label)label.textContent=collected+' / '+total+' Collected';
+  if(fill){
+    fill.style.width='0%';
+    requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+      fill.style.width=(collected/total*100)+'%';
+      if(collected===total)fill.classList.add('is-full');
+    });});
+  }
+  _atlasLoaded=true;
+}
+
 function renderFilterButtons(){
   const row=$('filterRow');if(!row)return;
   row.innerHTML='';
