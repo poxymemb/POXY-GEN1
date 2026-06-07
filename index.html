@@ -85,6 +85,7 @@
 <link rel="stylesheet" href="assets/poxy-passport-extras.css?v=1">
 <link rel="stylesheet" href="assets/poxy-discovery-feed.css?v=1">
 <link rel="stylesheet" href="assets/poxy-season-atlas.css?v=1">
+<link rel="stylesheet" href="assets/poxy-museum-mode.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -3306,9 +3307,16 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         <!-- Active Inventory sub-header (Stitch spec) -->
         <div class="poxy-col-inv-header">
           <h2 class="poxy-col-inv-title">Active Inventory</h2>
-          <span class="poxy-col-inv-count" id="archDisplayCount">DISPLAYING: — OF —</span>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="poxy-col-mode-toggle">
+              <button type="button" class="poxy-col-mode-btn is-active" data-col-mode="grid" onclick="switchColMode('grid')">Grid</button>
+              <button type="button" class="poxy-col-mode-btn" data-col-mode="museum" onclick="switchColMode('museum')">Museum</button>
+            </div>
+            <span class="poxy-col-inv-count" id="archDisplayCount">DISPLAYING: — OF —</span>
+          </div>
         </div>
         <div id="colContent"><div class="col-loading poxy-col-loading"><div class="col-spinner"></div></div></div>
+        <div id="colMuseum" hidden></div>
       </div>
       <div id="colAtlas" hidden>
         <div class="atlas-head">
@@ -8632,6 +8640,82 @@ async function loadAtlas(){
     });});
   }
   _atlasLoaded=true;
+}
+
+let _colMode='grid';
+let _museumObserver=null;
+function _pxIdOf(item){return item.serial_number||('PX-'+String(item.id||'').slice(0,6).toUpperCase());}
+function switchColMode(mode){
+  if(mode===_colMode)return;
+  document.querySelectorAll('.poxy-col-mode-btn[data-col-mode]').forEach(b=>b.classList.toggle('is-active',b.dataset.colMode===mode));
+  const grid=$('colContent'),museum=$('colMuseum');
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(mode==='museum'){
+    renderMuseum();
+    if(reduce){if(grid)grid.hidden=true;if(museum)museum.hidden=false;}
+    else{
+      if(grid){grid.classList.add('col-grid--dispersing');}
+      setTimeout(()=>{
+        if(grid){grid.hidden=true;grid.classList.remove('col-grid--dispersing');}
+        if(museum)museum.hidden=false;
+      },200);
+    }
+  }else{
+    if(museum)museum.hidden=true;
+    if(grid)grid.hidden=false;
+  }
+  _colMode=mode;
+}
+function renderMuseum(){
+  const wrap=$('colMuseum');
+  if(!wrap)return;
+  wrap.setAttribute('data-view','museum');
+  wrap.innerHTML='';
+  const items=(typeof applyPinSort==='function')?applyPinSort(colData||[]):(colData||[]);
+  if(!items.length){wrap.innerHTML='<div class="poxy-col-empty">No assets to exhibit.</div>';return;}
+  items.forEach((item,idx)=>{
+    if(idx>0){
+      const div=document.createElement('div');
+      div.className='museum-divider';
+      div.innerHTML='<span>✦</span>';
+      wrap.appendChild(div);
+    }
+    const tier=TIER_BY_ID[item.poxy_tier]||TIERS[0];
+    const color=tier.color||'#9E9E9E';
+    const glow=tier.glow||'rgba(255,255,255,0.08)';
+    const emoji=ATLAS_EMOJI[tier.id]||'❔';
+    const name=sanitizeText(item.character_name||tier.label||'POXY');
+    let traitsHtml='';
+    if(item.traits&&typeof item.traits==='object'){
+      const parts=[];
+      DNA_CATEGORY_ORDER.forEach(cat=>{const t=item.traits[cat];if(t&&t.name)parts.push('<span class="museum-trait">'+sanitizeText(t.name)+'</span>');});
+      if(parts.length)traitsHtml='<div class="museum-traits">'+parts.join('')+'</div>';
+    }
+    const dt=item.dropped_at?new Date(item.dropped_at):null;
+    const dateStr=dt?dt.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):'';
+    const ex=document.createElement('div');
+    ex.className='museum-exhibit';
+    ex.style.setProperty('--mus-color',color);
+    ex.style.setProperty('--mus-glow',glow);
+    ex.innerHTML=
+      '<div class="museum-rarity-bar"></div>'+
+      '<div class="museum-avatar">'+emoji+'</div>'+
+      '<div class="museum-info">'+
+        '<span class="museum-pxid">'+sanitizeText(_pxIdOf(item))+'</span>'+
+        '<span class="museum-name">'+name+'</span>'+
+        '<span class="museum-badge">'+sanitizeText(tier.label.toUpperCase())+'</span>'+
+        traitsHtml+
+        (dateStr?'<span class="museum-date">Acquired '+dateStr+'</span>':'')+
+      '</div>';
+    wrap.appendChild(ex);
+  });
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){wrap.querySelectorAll('.museum-exhibit').forEach(e=>e.classList.add('is-visible'));return;}
+  if(_museumObserver)_museumObserver.disconnect();
+  _museumObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('is-visible');_museumObserver.unobserve(en.target);}});
+  },{threshold:0.15});
+  wrap.querySelectorAll('.museum-exhibit').forEach(e=>_museumObserver.observe(e));
 }
 
 function renderFilterButtons(){
