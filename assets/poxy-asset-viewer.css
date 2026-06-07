@@ -122,6 +122,9 @@
   min-height: 500px;
   /* Stitch: perspective on the stasis pod container */
   perspective: 1000px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 90dvh;
 }
 
 /* Lower amber aura — Stitch: absolute bottom radial from-orange-500/30 blur-3xl */
