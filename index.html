@@ -6918,36 +6918,6 @@ window.closeCertificate=function(){
   modal.classList.remove('cert-open');
   setTimeout(()=>{modal.hidden=true;},280);
 };
-function _loadHtml2Canvas(){
-  return new Promise((resolve)=>{
-    if(window.html2canvas)return resolve(window.html2canvas);
-    const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload=()=>resolve(window.html2canvas||null);
-    s.onerror=()=>resolve(null);
-    document.head.appendChild(s);
-  });
-}
-window.downloadCertificate=async function(){
-  const btn=$('certDownloadBtn');
-  const node=$('certCapture');
-  if(!node)return;
-  const orig=btn?btn.textContent:'';
-  if(btn){btn.classList.add('cert-btn--flash');btn.textContent='Generating...';}
-  const h2c=await _loadHtml2Canvas();
-  if(!h2c){if(btn){btn.textContent='Right-click → Save image';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2600);}return;}
-  try{
-    const canvas=await h2c(node,{backgroundColor:'#0d0d0f',scale:2,useCORS:true});
-    const pxid=($('certPxId').textContent||'POXY').trim();
-    const link=document.createElement('a');
-    link.download='POXY-'+pxid+'-certificate.png';
-    link.href=canvas.toDataURL('image/png');
-    link.click();
-    if(btn){btn.textContent='Downloaded ✓';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2600);}
-  }catch(e){
-    if(btn){btn.textContent='Right-click → Save image';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2600);}
-  }
-};
 function _showLinkToast(msg){
   const t=$('poxyLinkToast');
   if(!t)return;
@@ -6996,6 +6966,20 @@ function _wrapText(ctx,text,maxWidth){
   let t=text;while(t.length&&ctx.measureText(t+'…').width>maxWidth)t=t.slice(0,-1);
   return t+'…';
 }
+function _cardWrapLines(ctx,text,maxWidth,maxLines){
+  const words=String(text).split(/\s+/);
+  const lines=[];let line='';
+  for(const w of words){
+    const test=line?(line+' '+w):w;
+    if(ctx.measureText(test).width>maxWidth){
+      if(line){lines.push(line);line=w;}
+      else{lines.push(_wrapText(ctx,w,maxWidth));line='';}
+    }else line=test;
+    if(lines.length>=maxLines)break;
+  }
+  if(line&&lines.length<maxLines)lines.push(_wrapText(ctx,line,maxWidth));
+  return lines.slice(0,maxLines);
+}
 
 async function _drawCard(item){
   const cvs=document.createElement('canvas');
@@ -7007,27 +6991,28 @@ async function _drawCard(item){
   const pxid=item.serial_number||item.serial||('PX-'+String(item.id||'').slice(0,6).toUpperCase());
   const tierLabel=(TIER_BY_ID[tier]||{}).label||(tier.charAt(0).toUpperCase()+tier.slice(1));
 
-  // Layer 1 – gradient bg
+  let loreText='';
+  try{
+    const{data:ld}=await sb.rpc('get_lore',{p_season_id:'gen_china_magic',p_poxy_type:item.character_name||'',p_rarity:tier});
+    if(ld&&ld.text)loreText=ld.text;
+  }catch(e){}
+
   const grad=ctx.createLinearGradient(0,0,0,900);
   grad.addColorStop(0,bg[0]);grad.addColorStop(1,bg[1]);
   ctx.fillStyle=grad;ctx.fillRect(0,0,600,900);
 
-  // Layer 2 – outer border
   ctx.strokeStyle=col;ctx.lineWidth=3;
   ctx.strokeRect(12,12,576,876);
-  // corner ornaments
   const cOff=12,cLen=22;
   [[cOff,cOff,1,1],[600-cOff,cOff,-1,1],[cOff,900-cOff,1,-1],[600-cOff,900-cOff,-1,-1]].forEach(([x,y,dx,dy])=>{
     ctx.beginPath();ctx.moveTo(x+dx*cLen,y);ctx.lineTo(x,y);ctx.lineTo(x,y+dy*cLen);
     ctx.strokeStyle=col;ctx.lineWidth=3;ctx.stroke();
   });
 
-  // Layer 4 – glow behind avatar
-  const gGrad=ctx.createRadialGradient(300,240,0,300,240,200);
+  const gGrad=ctx.createRadialGradient(300,175,0,300,175,180);
   gGrad.addColorStop(0,col+'4d');gGrad.addColorStop(1,'transparent');
-  ctx.fillStyle=gGrad;ctx.fillRect(100,40,400,400);
+  ctx.fillStyle=gGrad;ctx.fillRect(100,30,400,320);
 
-  // Layer 3 – avatar
   let imgLoaded=false;
   if(item.asset_url){
     try{
@@ -7035,7 +7020,7 @@ async function _drawCard(item){
         const img=new Image();img.crossOrigin='anonymous';
         img.onload=()=>{
           ctx.save();ctx.shadowBlur=40;ctx.shadowColor=col;
-          ctx.drawImage(img,140,80,320,320);ctx.restore();imgLoaded=true;res();
+          ctx.drawImage(img,180,55,240,240);ctx.restore();imgLoaded=true;res();
         };img.onerror=rej;img.src=item.asset_url;
         setTimeout(rej,3000);
       });
@@ -7043,66 +7028,85 @@ async function _drawCard(item){
   }
   if(!imgLoaded){
     const emoji=CARD_EMOJI[tier]||'👾';
-    ctx.font='120px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='100px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.save();ctx.shadowBlur=40;ctx.shadowColor=col;
-    ctx.fillText(emoji,300,240);ctx.restore();
+    ctx.fillText(emoji,300,175);ctx.restore();
   }
 
-  // Layer 5 – info
   ctx.textAlign='center';ctx.textBaseline='alphabetic';
   ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='12px monospace';
-  ctx.fillText(pxid,300,445);
+  ctx.fillText(pxid,300,318);
 
   const name=sanitizeText(item.character_name||tierLabel||'POXY');
-  let fontSize=28;
+  let fontSize=26;
   ctx.font='bold '+fontSize+'px sans-serif';
   while(ctx.measureText(name).width>480&&fontSize>18){fontSize--;ctx.font='bold '+fontSize+'px sans-serif';}
   ctx.fillStyle='#ffffff';
-  ctx.fillText(_wrapText(ctx,name,500),300,482);
+  ctx.fillText(_wrapText(ctx,name,500),300,352);
 
-  // rarity badge
   ctx.font='bold 11px monospace';
   const bText=tierLabel.toUpperCase();
   const bW=ctx.measureText(bText).width+24;
   const bX=300-bW/2;
-  _cardRoundRect(ctx,bX,506,bW,24,6);
+  _cardRoundRect(ctx,bX,366,bW,24,6);
   ctx.fillStyle=col+'4d';ctx.fill();
   ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();
-  ctx.fillStyle=col;ctx.textAlign='center';ctx.fillText(bText,300,523);
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.fillText(bText,300,383);
 
-  // Layer 6 – DNA traits
   ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='10px monospace';ctx.textAlign='left';
-  ctx.fillText('DNA SEQUENCE',60,550);
+  ctx.fillText('DNA SEQUENCE',60,408);
   const traitCats=DNA_CATEGORY_ORDER||['Eye','Horn','Aura','Element','Scale','Tail'];
   const traitData=item.traits&&typeof item.traits==='object'?item.traits:{};
-  let ty=580;
+  let ty=432;
   traitCats.forEach((cat,i)=>{
     const t=traitData[cat];
     const col2=(i<3)?60:310;
-    if(i===3)ty=580;
+    if(i===3)ty=432;
     ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='9px monospace';
-    ctx.fillText(cat.toUpperCase(),col2,ty-12);
+    ctx.fillText(cat.toUpperCase(),col2,ty-11);
     const pop=t?Number(t.pop||0):0;
     const rare=pop>0&&pop<=20;
     ctx.fillStyle=rare?col:'rgba(255,255,255,0.85)';
     ctx.font='bold 11px monospace';
     ctx.fillText(t?_wrapText(ctx,t.name||'—',220):'—',col2,ty);
-    if(i<2||(i>=3&&i<5))ty+=32;
+    if(i<2||(i>=3&&i<5))ty+=28;
   });
 
-  // Layer 7 – divider
-  ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(40,725);ctx.lineTo(560,725);ctx.stroke();
+  let ly=528;
+  if(loreText){
+    ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='10px monospace';ctx.textAlign='left';
+    ctx.fillText('LORE',60,ly);ly+=16;
+    ctx.font='italic 12px sans-serif';ctx.fillStyle='rgba(255,255,255,0.55)';
+    _cardWrapLines(ctx,loreText,480,3).forEach(line=>{ctx.fillText(line,60,ly);ly+=17;});
+    ly+=8;
+  }
 
-  // Layer 8 – footer
+  const dna=item.dna_hash?String(item.dna_hash):_certHex(item.id+'dna',64).toLowerCase();
+  const dnaDisp=dna.slice(0,16).toLowerCase()+'…'+dna.slice(-6).toLowerCase();
+  const sigRaw=item.signature?String(item.signature):_certHex(item.id+'sig',32);
+  const sigDisp=sigRaw.length>16?sigRaw.slice(0,10)+'…'+sigRaw.slice(-8):sigRaw;
+
+  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='10px monospace';ctx.textAlign='left';
+  ctx.fillText('CRYPTO',60,ly);ly+=16;
+  ctx.fillStyle='rgba(196,199,200,0.35)';ctx.font='9px monospace';
+  ctx.fillText('DNA HASH',60,ly);
+  ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='10px monospace';
+  ctx.fillText(dnaDisp,60,ly+14);ly+=32;
+  ctx.fillStyle='rgba(196,199,200,0.35)';ctx.font='9px monospace';
+  ctx.fillText('ED25519 SIGNATURE',60,ly);
+  ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='10px monospace';
+  ctx.fillText(sigDisp,60,ly+14);
+
+  ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(40,820);ctx.lineTo(560,820);ctx.stroke();
+
   ctx.textAlign='left';
-  ctx.fillStyle='#ffffff';ctx.font='bold 13px sans-serif';ctx.fillText('POXY WORLD',40,752);
-  ctx.fillStyle='rgba(196,199,200,0.45)';ctx.font='10px monospace';ctx.fillText('GEN CHINA MAGIC',40,768);
+  ctx.fillStyle='#ffffff';ctx.font='bold 13px sans-serif';ctx.fillText('POXY WORLD',40,848);
   ctx.fillStyle='rgba(196,199,200,0.4)';ctx.textAlign='right';ctx.font='10px monospace';
-  ctx.fillText('poxygen1.vercel.app',560,752);
+  ctx.fillText('poxygen1.vercel.app',560,848);
   ctx.textAlign='center';
   ctx.fillStyle=col;ctx.globalAlpha=0.7;ctx.font='9px monospace';
-  ctx.fillText('✦ CRYPTOGRAPHICALLY VERIFIED ✦',300,880);
+  ctx.fillText('✦ CRYPTOGRAPHICALLY VERIFIED ✦',300,878);
   ctx.globalAlpha=1;
 
   return cvs;
@@ -14685,8 +14689,7 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       </div>
     </div>
     <div class="cert-actions">
-      <button type="button" class="cert-btn cert-btn--primary" id="certDownloadBtn" onclick="downloadCertificate()">DOWNLOAD PNG</button>
-      <button type="button" class="cert-btn" id="certCardBtn" onclick="downloadShareCard(_avmCurrentItem,'certCardBtn')">DOWNLOAD CARD</button>
+      <button type="button" class="cert-btn cert-btn--primary" id="certCardBtn" onclick="downloadShareCard(_avmCurrentItem,'certCardBtn')">DOWNLOAD</button>
       <button type="button" class="cert-btn" onclick="shareCertificate()">SHARE</button>
       <button type="button" class="cert-btn" onclick="closeCertificate()">CLOSE</button>
     </div>
@@ -14716,7 +14719,7 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       <div class="spm-meta" id="spmMeta"></div>
     </div>
     <div class="spm-actions">
-      <button type="button" class="spm-btn" id="spmCardBtn" onclick="downloadShareCard(_spmItem,'spmCardBtn')">DOWNLOAD CARD</button>
+      <button type="button" class="spm-btn" id="spmCardBtn" onclick="downloadShareCard(_spmItem,'spmCardBtn')">DOWNLOAD</button>
       <button type="button" class="spm-btn spm-btn--open" onclick="closeSpm()">OPEN POXY WORLD</button>
       <button type="button" class="spm-btn" onclick="closeSpm()">CLOSE</button>
     </div>
