@@ -88,6 +88,7 @@
 <link rel="stylesheet" href="assets/poxy-museum-mode.css?v=1">
 <link rel="stylesheet" href="assets/poxy-milestones.css?v=1">
 <link rel="stylesheet" href="assets/poxy-certificate.css?v=1">
+<link rel="stylesheet" href="assets/poxy-share-preview.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6947,13 +6948,272 @@ window.downloadCertificate=async function(){
     if(btn){btn.textContent='Right-click → Save image';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2600);}
   }
 };
+function _showLinkToast(msg){
+  const t=$('poxyLinkToast');
+  if(!t)return;
+  t.textContent=msg;
+  t.classList.remove('is-show');
+  void t.offsetWidth;
+  t.classList.add('is-show');
+  setTimeout(()=>t.classList.remove('is-show'),3200);
+}
+
 window.shareCertificate=function(){
-  const pxid=($('certPxId').textContent||'').trim();
-  const text='POXY WORLD Certificate of Authenticity — '+pxid;
-  if(navigator.share){navigator.share({title:'POXY Certificate',text:text}).catch(()=>{});}
-  else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>showToast('Certificate info copied')).catch(()=>showToast(text));}
-  else{showToast(text);}
+  const item=_avmCurrentItem;
+  const pxid=(item&&item.serial_number)||($('certPxId').textContent||'').trim();
+  const shareUrl=window.location.origin+'/?poxy='+encodeURIComponent(pxid);
+  const tier=item?((TIER_BY_ID[item.poxy_tier]||TIERS[0]).label||''):'';
+  if(navigator.share){
+    navigator.share({url:shareUrl,title:'Check out my POXY: '+pxid,text:tier+' TIER · POXY WORLD'}).catch(()=>{});
+  }else if(navigator.clipboard){
+    navigator.clipboard.writeText(shareUrl).then(()=>_showLinkToast('Link copied! Share it with friends 🔗')).catch(()=>_showLinkToast(shareUrl));
+  }else{_showLinkToast(shareUrl);}
 };
+
+// ── CANVAS SHARE CARD ────────────────────────────────────────────────
+const CARD_BG={
+  mythic:['#0a0a1a','#1a0a2e'],legendary:['#1a0800','#2e1500'],
+  epic:['#0a0018','#180028'],rare:['#001818','#002525'],
+  uncommon:['#001200','#001e00'],common:['#0a0a0a','#1a1a1a']
+};
+const CARD_COLOR={
+  mythic:'#9d4dff',legendary:'#f5a623',epic:'#7b2fff',
+  rare:'#00d4d4',uncommon:'#4caf50',common:'#888888'
+};
+const CARD_EMOJI={common:'👾',uncommon:'🌿',rare:'🐉',epic:'⚡',legendary:'👑',mythic:'🏮'};
+
+function _cardRoundRect(ctx,x,y,w,h,r){
+  if(ctx.roundRect){ctx.roundRect(x,y,w,h,r);}else{
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+  }
+}
+function _wrapText(ctx,text,maxWidth){
+  if(ctx.measureText(text).width<=maxWidth)return text;
+  let t=text;while(t.length&&ctx.measureText(t+'…').width>maxWidth)t=t.slice(0,-1);
+  return t+'…';
+}
+
+async function _drawCard(item){
+  const cvs=document.createElement('canvas');
+  cvs.width=600;cvs.height=900;
+  const ctx=cvs.getContext('2d');
+  const tier=(item.poxy_tier||'common').toLowerCase();
+  const bg=CARD_BG[tier]||CARD_BG.common;
+  const col=CARD_COLOR[tier]||CARD_COLOR.common;
+  const pxid=item.serial_number||item.serial||('PX-'+String(item.id||'').slice(0,6).toUpperCase());
+  const tierLabel=(TIER_BY_ID[tier]||{}).label||(tier.charAt(0).toUpperCase()+tier.slice(1));
+
+  // Layer 1 – gradient bg
+  const grad=ctx.createLinearGradient(0,0,0,900);
+  grad.addColorStop(0,bg[0]);grad.addColorStop(1,bg[1]);
+  ctx.fillStyle=grad;ctx.fillRect(0,0,600,900);
+
+  // Layer 2 – outer border
+  ctx.strokeStyle=col;ctx.lineWidth=3;
+  ctx.strokeRect(12,12,576,876);
+  // corner ornaments
+  const cOff=12,cLen=22;
+  [[cOff,cOff,1,1],[600-cOff,cOff,-1,1],[cOff,900-cOff,1,-1],[600-cOff,900-cOff,-1,-1]].forEach(([x,y,dx,dy])=>{
+    ctx.beginPath();ctx.moveTo(x+dx*cLen,y);ctx.lineTo(x,y);ctx.lineTo(x,y+dy*cLen);
+    ctx.strokeStyle=col;ctx.lineWidth=3;ctx.stroke();
+  });
+
+  // Layer 4 – glow behind avatar
+  const gGrad=ctx.createRadialGradient(300,240,0,300,240,200);
+  gGrad.addColorStop(0,col+'4d');gGrad.addColorStop(1,'transparent');
+  ctx.fillStyle=gGrad;ctx.fillRect(100,40,400,400);
+
+  // Layer 3 – avatar
+  let imgLoaded=false;
+  if(item.asset_url){
+    try{
+      await new Promise((res,rej)=>{
+        const img=new Image();img.crossOrigin='anonymous';
+        img.onload=()=>{
+          ctx.save();ctx.shadowBlur=40;ctx.shadowColor=col;
+          ctx.drawImage(img,140,80,320,320);ctx.restore();imgLoaded=true;res();
+        };img.onerror=rej;img.src=item.asset_url;
+        setTimeout(rej,3000);
+      });
+    }catch(e){imgLoaded=false;}
+  }
+  if(!imgLoaded){
+    const emoji=CARD_EMOJI[tier]||'👾';
+    ctx.font='120px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.save();ctx.shadowBlur=40;ctx.shadowColor=col;
+    ctx.fillText(emoji,300,240);ctx.restore();
+  }
+
+  // Layer 5 – info
+  ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='12px monospace';
+  ctx.fillText(pxid,300,445);
+
+  const name=sanitizeText(item.character_name||tierLabel||'POXY');
+  let fontSize=28;
+  ctx.font='bold '+fontSize+'px sans-serif';
+  while(ctx.measureText(name).width>480&&fontSize>18){fontSize--;ctx.font='bold '+fontSize+'px sans-serif';}
+  ctx.fillStyle='#ffffff';
+  ctx.fillText(_wrapText(ctx,name,500),300,482);
+
+  // rarity badge
+  ctx.font='bold 11px monospace';
+  const bText=tierLabel.toUpperCase();
+  const bW=ctx.measureText(bText).width+24;
+  const bX=300-bW/2;
+  _cardRoundRect(ctx,bX,506,bW,24,6);
+  ctx.fillStyle=col+'4d';ctx.fill();
+  ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.fillText(bText,300,523);
+
+  // Layer 6 – DNA traits
+  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='10px monospace';ctx.textAlign='left';
+  ctx.fillText('DNA SEQUENCE',60,550);
+  const traitCats=DNA_CATEGORY_ORDER||['Eye','Horn','Aura','Element','Scale','Tail'];
+  const traitData=item.traits&&typeof item.traits==='object'?item.traits:{};
+  let ty=580;
+  traitCats.forEach((cat,i)=>{
+    const t=traitData[cat];
+    const col2=(i<3)?60:310;
+    if(i===3)ty=580;
+    ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='9px monospace';
+    ctx.fillText(cat.toUpperCase(),col2,ty-12);
+    const pop=t?Number(t.pop||0):0;
+    const rare=pop>0&&pop<=20;
+    ctx.fillStyle=rare?col:'rgba(255,255,255,0.85)';
+    ctx.font='bold 11px monospace';
+    ctx.fillText(t?_wrapText(ctx,t.name||'—',220):'—',col2,ty);
+    if(i<2||(i>=3&&i<5))ty+=32;
+  });
+
+  // Layer 7 – divider
+  ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(40,725);ctx.lineTo(560,725);ctx.stroke();
+
+  // Layer 8 – footer
+  ctx.textAlign='left';
+  ctx.fillStyle='#ffffff';ctx.font='bold 13px sans-serif';ctx.fillText('POXY WORLD',40,752);
+  ctx.fillStyle='rgba(196,199,200,0.45)';ctx.font='10px monospace';ctx.fillText('GEN CHINA MAGIC',40,768);
+  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.textAlign='right';ctx.font='10px monospace';
+  ctx.fillText('poxygen1.vercel.app',560,752);
+  ctx.textAlign='center';
+  ctx.fillStyle=col;ctx.globalAlpha=0.7;ctx.font='9px monospace';
+  ctx.fillText('✦ CRYPTOGRAPHICALLY VERIFIED ✦',300,880);
+  ctx.globalAlpha=1;
+
+  return cvs;
+}
+
+window.downloadShareCard=async function(item,btnId){
+  if(!item)return;
+  const btn=btnId?$(btnId):null;
+  const orig=btn?btn.textContent:'';
+  if(btn){btn.classList.add('cert-btn--flash');btn.textContent='Generating...';}
+  try{
+    const cvs=await _drawCard(item);
+    const pxid=item.serial_number||'POXY';
+    cvs.toBlob(blob=>{
+      if(!blob){if(btn){btn.textContent='Error';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2000);}return;}
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.download='POXY-'+pxid+'-card.png';a.href=url;a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),3000);
+      if(btn){btn.textContent='Downloaded ✓';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2500);}
+    },'image/png');
+  }catch(e){
+    if(btn){btn.textContent='Error';setTimeout(()=>{btn.textContent=orig;btn.classList.remove('cert-btn--flash');},2000);}
+  }
+};
+
+// ── SHARE PREVIEW (URL param) ─────────────────────────────────────────
+let _spmItem=null;
+const SPM_RELIC_WEIGHT={common:10,uncommon:25,rare:50,epic:100,legendary:200,mythic:500};
+function _spmRelicScore(item){
+  const droppedAt=item.dropped_at?new Date(item.dropped_at):null;
+  const days=droppedAt&&!isNaN(droppedAt.getTime())?Math.floor((Date.now()-droppedAt.getTime())/86400000):0;
+  const w=SPM_RELIC_WEIGHT[(item.poxy_tier||'common').toLowerCase()]||10;
+  return Math.round(days*0.5+w);
+}
+function _spmEraText(item){
+  const d=item.dropped_at?new Date(item.dropped_at):null;
+  if(!d||isNaN(d.getTime()))return '';
+  if(item.poxy_tier==='genesis'||d<new Date('2024-01-01'))return 'Genesis Era';
+  if(d<new Date('2025-06-01'))return 'Founding Collection';
+  return '';
+}
+
+async function _openSpmFromSharedSerial(serial){
+  let item=null;
+  try{
+    const{data}=await sb.rpc('get_shared_poxy',{p_serial:serial});
+    if(data&&data.ok&&data.item)item=data.item;
+  }catch(e){return;}
+  if(!item)return;
+  _spmItem=item;
+  const tier=TIER_BY_ID[(item.poxy_tier||'').toLowerCase()]||TIERS[0];
+  const col=tier.color||'#f59e0b';
+  const pxid=item.serial_number||serial;
+
+  const modal=$('spmModal');if(!modal)return;
+  modal.querySelector('.spm-panel').style.setProperty('--spm-color',col);
+
+  const av=$('spmOwnerAvatar');
+  if(item.owner_avatar){av.innerHTML='<img src="'+sanitizeText(item.owner_avatar)+'" crossorigin="anonymous" referrerpolicy="no-referrer" alt="avatar">';}
+  else{av.textContent='👤';}
+  $('spmOwnerText').innerHTML='<strong>'+sanitizeText(item.owner_username||'Someone')+'</strong> is sharing their POXY with you';
+
+  $('spmPxId').textContent=pxid;
+  const rb=$('spmRarity');
+  rb.textContent=tier.label.toUpperCase();rb.style.setProperty('--spm-color',col);
+  const era=_spmEraText(item);
+  const ee=$('spmEra');if(era){ee.textContent=era;ee.hidden=false;}else{ee.hidden=true;}
+
+  const tg=$('spmTraitsGrid');tg.innerHTML='';
+  const traitData=item.traits&&typeof item.traits==='object'?item.traits:{};
+  const cats=DNA_CATEGORY_ORDER||['Eye','Horn','Aura','Element','Scale','Tail'];
+  cats.forEach(cat=>{
+    const t=traitData[cat];
+    const pop=t?Number(t.pop||0):0;const rare=pop>0&&pop<=20;
+    const div=document.createElement('div');
+    div.className='spm-trait'+(rare?' spm-trait--rare':'');
+    div.innerHTML='<span class="spm-trait-cat">'+sanitizeText(cat)+'</span><span class="spm-trait-name">'+sanitizeText(t?t.name||'—':'—')+'</span>';
+    tg.appendChild(div);
+  });
+
+  const loreEl=$('spmLore');
+  let loreText='';
+  try{
+    const{data:ld}=await sb.rpc('get_lore',{p_season_id:'gen_china_magic',p_poxy_type:item.character_name||'',p_rarity:(item.poxy_tier||'').toLowerCase()});
+    if(ld&&ld.text)loreText=ld.text;
+  }catch(e){}
+  if(loreText){loreEl.textContent=loreText;loreEl.hidden=false;}else{loreEl.hidden=true;}
+
+  $('spmRelicVal').textContent=_spmRelicScore(item);
+
+  const dt=item.dropped_at?new Date(item.dropped_at):null;
+  const ds=dt&&!isNaN(dt.getTime())?dt.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):'';
+  $('spmMeta').textContent=(ds?'Minted '+ds+' · ':'')+'Owned by '+(item.owner_username||'—');
+
+  modal.hidden=false;
+  requestAnimationFrame(()=>modal.classList.add('spm-open'));
+  history.replaceState({},'','/');
+}
+
+window.closeSpm=function(){
+  const modal=$('spmModal');if(!modal)return;
+  modal.classList.remove('spm-open');
+  setTimeout(()=>{modal.hidden=true;},280);
+};
+
+(function _checkSharedPoxy(){
+  const q=new URLSearchParams(window.location.search).get('poxy');
+  if(!q)return;
+  history.replaceState({},'','/');
+  setTimeout(()=>_openSpmFromSharedSerial(decodeURIComponent(q)),300);
+})();
 
 // ── RELIC SCORE RENDER ───────────────────────────────────────────────
 const RELIC_RARITY_WEIGHT = {
@@ -14426,11 +14686,44 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
     </div>
     <div class="cert-actions">
       <button type="button" class="cert-btn cert-btn--primary" id="certDownloadBtn" onclick="downloadCertificate()">DOWNLOAD PNG</button>
+      <button type="button" class="cert-btn" id="certCardBtn" onclick="downloadShareCard(_avmCurrentItem,'certCardBtn')">DOWNLOAD CARD</button>
       <button type="button" class="cert-btn" onclick="shareCertificate()">SHARE</button>
       <button type="button" class="cert-btn" onclick="closeCertificate()">CLOSE</button>
     </div>
   </div>
 </div>
+
+<!-- SHARE PREVIEW MODAL -->
+<div id="spmModal" class="spm-backdrop" role="dialog" aria-modal="true" aria-label="Shared POXY" hidden onclick="if(event.target===this)closeSpm()">
+  <div class="spm-panel" id="spmPanel">
+    <div class="spm-head">
+      <div class="spm-owner-avatar" id="spmOwnerAvatar">👤</div>
+      <div class="spm-owner-text" id="spmOwnerText">is sharing their POXY with you</div>
+    </div>
+    <div class="spm-body">
+      <div class="spm-pxid" id="spmPxId">PX-——</div>
+      <div class="spm-badges">
+        <span class="spm-badge" id="spmRarity"></span>
+        <span class="spm-era" id="spmEra" hidden></span>
+      </div>
+      <div class="spm-traits-head">DNA SEQUENCE</div>
+      <div class="spm-traits-grid" id="spmTraitsGrid"></div>
+      <div class="spm-lore" id="spmLore" hidden></div>
+      <div class="spm-relic-row">
+        <span class="spm-relic-label">RELIC SCORE</span>
+        <span class="spm-relic-val" id="spmRelicVal">—</span>
+      </div>
+      <div class="spm-meta" id="spmMeta"></div>
+    </div>
+    <div class="spm-actions">
+      <button type="button" class="spm-btn" id="spmCardBtn" onclick="downloadShareCard(_spmItem,'spmCardBtn')">DOWNLOAD CARD</button>
+      <button type="button" class="spm-btn spm-btn--open" onclick="closeSpm()">OPEN POXY WORLD</button>
+      <button type="button" class="spm-btn" onclick="closeSpm()">CLOSE</button>
+    </div>
+    <div class="spm-hint">Sign in to start collecting</div>
+  </div>
+</div>
+<div class="poxy-link-toast" id="poxyLinkToast"></div>
 
 <!-- ══════════════════════════════════════════════════════════════
      TOP-UP MODAL  — triggered by header (+) button
