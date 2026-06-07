@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY WORLD - GENS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#ffd8ed",
+                        "primary-container": "#e2e2e2",
+                        "primary-fixed-dim": "#c6c6c7",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-tertiary-container": "#636565",
+                        "tertiary": "#ffffff",
+                        "surface-dim": "#131314",
+                        "inverse-on-surface": "#313031",
+                        "on-primary-fixed": "#1a1c1c",
+                        "on-tertiary": "#2f3131",
+                        "secondary-fixed-dim": "#e5bad3",
+                        "on-secondary": "#44273a",
+                        "primary": "#ffffff",
+                        "on-background": "#e5e2e3",
+                        "inverse-primary": "#5d5f5f",
+                        "surface-bright": "#3a393a",
+                        "surface-container-highest": "#353436",
+                        "tertiary-fixed-dim": "#c6c6c7",
+                        "glow-pink": "rgba(244, 114, 182, 0.15)",
+                        "surface-tint": "#c6c6c7",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "secondary-container": "#5f3f53",
+                        "surface-container-lowest": "#0e0e0f",
+                        "on-secondary-fixed-variant": "#5c3d51",
+                        "hotfix-accent": "#ec4899",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#353436",
+                        "background": "#131314",
+                        "on-secondary-fixed": "#2c1325",
+                        "surface-container-low": "#1c1b1d",
+                        "on-primary-container": "#636565",
+                        "on-error-container": "#ffdad6",
+                        "surface-container": "#201f21",
+                        "on-surface-variant": "#c4c7c8",
+                        "outline": "#8e9192",
+                        "on-primary": "#2f3131",
+                        "on-surface": "#e5e2e3",
+                        "surface-glass": "rgba(255, 255, 255, 0.03)",
+                        "surface": "#131314",
+                        "tertiary-container": "#e2e2e2",
+                        "border-glass": "rgba(255, 255, 255, 0.08)",
+                        "secondary": "#e5bad3",
+                        "primary-fixed": "#e2e2e2",
+                        "surface-container-high": "#2a2a2b",
+                        "on-error": "#690005",
+                        "on-secondary-container": "#d6adc5",
+                        "on-primary-fixed-variant": "#454747",
+                        "inverse-surface": "#e5e2e3",
+                        "tertiary-fixed": "#e2e2e2",
+                        "error-container": "#93000a",
+                        "outline-variant": "#444748"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "gutter": "24px",
+                        "stack-md": "32px",
+                        "margin-mobile": "20px",
+                        "base": "8px",
+                        "stack-lg": "80px",
+                        "stack-sm": "12px",
+                        "margin-desktop": "64px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Hanken Grotesk"],
+                        "label-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "headline-xl": ["Hanken Grotesk"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    fontSize: {
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-xl": ["80px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "900" }]
+                    },
+                    backgroundImage: {
+                        'glow-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .cyber-grid {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .radar-sweep {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg at 50% 50%, transparent 75%, rgba(236, 72, 153, 0.2) 100%);
+            animation: sweep 4s linear infinite;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+        }
+        @keyframes sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .glitch-pulse {
+            animation: pulse-glitch 2s infinite alternate;
+        }
+        @keyframes pulse-glitch {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.9; text-shadow: 2px 0 #ec4899, -2px 0 #fff; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen overflow-x-hidden selection:bg-hotfix-accent selection:text-white flex flex-col relative">
+<!-- Ambient Background Blobs -->
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-hotfix-accent/10 blur-[120px]"></div>
+<div class="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-surface-container-high/40 blur-[150px]"></div>
+</div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+<div class="flex justify-between items-center h-20 px-margin-desktop max-w-[1600px] mx-auto">
+<div class="font-headline-md text-headline-md font-black tracking-tighter text-primary dark:text-primary uppercase">
+                POXY WORLD
+            </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary hover:bg-white/5 hover:text-hotfix-accent transition-all duration-300 px-3 py-2 rounded-md" href="#">News</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary hover:bg-white/5 hover:text-hotfix-accent transition-all duration-300 px-3 py-2 rounded-md" href="#">Verify</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary hover:bg-white/5 hover:text-hotfix-accent transition-all duration-300 px-3 py-2 rounded-md" href="#">Whitepaper</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary hover:bg-white/5 hover:text-hotfix-accent transition-all duration-300 px-3 py-2 rounded-md" href="#">Explore</a>
+<a class="font-label-lg text-label-lg text-hotfix-accent border-b-2 border-hotfix-accent pb-1 transition-all" href="#">GENS</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-2">
+<button class="p-2 rounded-full hover:bg-white/10 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-white/10 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+<button class="p-2 rounded-full hover:bg-white/10 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chat</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary-fixed font-label-lg text-label-lg px-6 py-3 rounded-full hover:bg-hotfix-accent hover:text-white transition-all transform active:scale-95">
+                    Connect Wallet
+                </button>
+</div>
+</div>
+</nav>
+<main class="flex-grow pt-32 px-margin-mobile md:px-margin-desktop max-w-[1600px] mx-auto w-full flex flex-col gap-stack-lg z-10 relative">
+<!-- GLOBAL DATA_HEADER -->
+<header class="text-center mb-stack-md w-full">
+<div class="font-mono text-sm tracking-[0.2em] text-on-surface-variant uppercase opacity-70 border-b border-border-glass pb-4 inline-block w-full text-center">
+                GENERATIONS // TIMELINE LAYER_01 // CIRCULATING: 12,450 UNITS
+            </div>
+</header>
+<!-- ACTIVE KINETIC SHOWCASE (GEN 2) -->
+<section class="glass-panel rounded-xl overflow-hidden relative group">
+<div class="absolute inset-0 bg-gradient-to-tr from-hotfix-accent/15 via-transparent to-transparent opacity-50 pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter p-8 md:p-12 items-center relative z-10">
+<!-- Left: Info -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<div class="inline-flex items-center gap-3">
+<span class="px-3 py-1 bg-white/10 rounded-full font-label-lg text-label-lg text-primary border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.2)]">GEN 2</span>
+<div class="h-2 w-2 rounded-full bg-hotfix-accent animate-pulse shadow-[0_0_10px_#ec4899]"></div>
+<span class="font-mono text-xs text-hotfix-accent tracking-widest">[ACTIVE]</span>
+</div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary uppercase leading-tight text-shadow-sm">
+                        Obsidian Strike
+                    </h1>
+<div class="font-mono text-sm text-on-surface-variant flex flex-col gap-2 bg-surface-container-low/50 p-4 rounded-lg border border-border-glass">
+<div class="flex justify-between border-b border-white/5 pb-2"><span>YIELD_RATE:</span> <span class="text-primary">1.45x</span></div>
+<div class="flex justify-between border-b border-white/5 py-2"><span>RARITY_CAP:</span> <span class="text-primary">MYTHIC</span></div>
+<div class="flex justify-between pt-2"><span>NETWORK:</span> <span class="text-primary">L2 SECURE</span></div>
+</div>
+<button class="bg-primary text-on-primary-fixed font-label-lg text-label-lg px-8 py-4 rounded-lg uppercase tracking-[0.15em] hover:bg-hotfix-accent hover:text-white transition-all transform hover:scale-105 active:scale-95 w-max mt-4 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(236,72,153,0.4)]">
+                        Access Terminal
+                    </button>
+</div>
+<!-- Right: Gallery Track -->
+<div class="lg:col-span-7 overflow-x-auto pb-4 pt-4 hide-scrollbar flex gap-4 snap-x">
+<!-- Thumbnail 1 -->
+<div class="min-w-[200px] h-[280px] glass-panel rounded-lg flex-shrink-0 snap-center relative overflow-hidden group/item border border-white/20 hover:border-hotfix-accent/50 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(236,72,153,0.2)]">
+<div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover/item:opacity-100 transition-opacity" data-alt="A 3D schematic of a sleek, futuristic cybernetic core component, rendered with sharp geometric lines and glowing pink accents against a dark obsidian background. The lighting is dramatic, emphasizing metallic textures and high-tech energy flows. The aesthetic matches a premium sci-fi gaming UI." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjpNgCfVLfGO6sXRhJ-zH6MhGXA6TWP5ia2LL6UxNdTJiJXjJ17TNFPS7FX2guhfN9rE2uv91-Gzfi-WQ4W8hNcjaPlSKybeL0HDAst3Ive_BLxJDjFiXfjx41sToB9rwuFwbTVo_OYMn71-Vgm5haVs0VgasAShMR74UAyPUVkwdeP3vktGfWXR0t3yzppx72U-wyci9FLLbftBGb18lVLGblbELzqlCvB5GZvW4ftaevtIl51TOJskd8uXhpavNA8-9-I93kig');"></div>
+<div class="absolute bottom-0 w-full p-3 bg-gradient-to-t from-background to-transparent">
+<div class="font-mono text-xs text-on-surface-variant">001 // CORE</div>
+</div>
+</div>
+<!-- Thumbnail 2 -->
+<div class="min-w-[200px] h-[280px] glass-panel rounded-lg flex-shrink-0 snap-center relative overflow-hidden group/item border border-white/20 hover:border-hotfix-accent/50 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(236,72,153,0.2)]">
+<div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover/item:opacity-100 transition-opacity" data-alt="A detailed, abstract 3D rendering of a heavy mech chassis part, featuring brushed dark metal surfaces with subtle neon pink highlights. The composition is dynamic and aggressive, fitting a high-end dark mode interface. Shadows are deep, creating a strong sense of volume and industrial strength." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAUJVWWjbAlG4jeGoHLfrnzOeLFWqAMsO2SwUNWasj1v04B8b072L21MUMzcrHqSnd1_2rsQ1hfUi2Vq_9-D0YD1uS4yHMfyto77uWUtD97xyXXyAyRyqoD4IgwchZoihd8MxwqpXmszmPAlxZqlh0EpCGUOQHwXx-0wQiTnMuGG84D3ZnFBYkQKkAHXPR0plqKRbAFT7LXm9sP95quAWnkbmxjFWbFq4KH9FIAfqSGJGGkevmyRaESfTQkfn1R6708af0Z6cXfAw');"></div>
+<div class="absolute bottom-0 w-full p-3 bg-gradient-to-t from-background to-transparent">
+<div class="font-mono text-xs text-on-surface-variant">002 // CHASSIS</div>
+</div>
+</div>
+<!-- Thumbnail 3 -->
+<div class="min-w-[200px] h-[280px] glass-panel rounded-lg flex-shrink-0 snap-center relative overflow-hidden group/item border border-white/20 hover:border-hotfix-accent/50 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(236,72,153,0.2)]">
+<div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover/item:opacity-100 transition-opacity" data-alt="A close-up visualization of advanced optical sensors or cybernetic eyes, glowing intensely against a pitch-black void. The style is hyper-realistic vaporwave, utilizing glassmorphism and sharp vector-like edges. The dominant colors are deep blacks, stark whites, and vivid hot pink glows." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAGPwTt6X-neRLq5zEuCDFRhr6y9efGD6zL92zF9qdZ1XAHNg1GOxRzS7wSos2jkETCT0VETwvJGvAkRqZ6v8bfJc-4zYOOwwzMIo8uXERgMWSAT0JVoVb-iP-g5hxGtZD70fEVRuRjD1Wi3t60Uz_O1A5UmiTwV3gXmQI7u3lxhWCOLQN-ndJOUsi6pdG8Eo4gu_UiRfpcoIAzV0SIV0zy4bAi9Ue75iBf1rsSQgImW45J6wE-5iGsfDOEjVqW3Wlv7Qrx5XqaA');"></div>
+<div class="absolute bottom-0 w-full p-3 bg-gradient-to-t from-background to-transparent">
+<div class="font-mono text-xs text-on-surface-variant">003 // OPTICS</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ARCHIVED DROPS GRID (GEN 1 / GEN 0) -->
+<section class="flex flex-col gap-8">
+<h2 class="font-headline-md text-headline-md text-on-surface-variant border-b border-white/10 pb-4 inline-block w-max">ARCHIVE ARCHITECTURE</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- GEN 1 (Closed) -->
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-4 relative overflow-hidden group grayscale hover:grayscale-0 transition-all duration-500">
+<div class="absolute top-4 right-4 bg-surface-container-highest px-2 py-1 rounded text-[10px] font-mono text-on-surface-variant flex items-center gap-1 border border-white/10">
+<span class="material-symbols-outlined text-[14px]">lock</span> CAPSULE CLOSED
+                    </div>
+<div class="text-hotfix-accent/50 font-headline-md font-bold opacity-30 absolute -right-4 -bottom-4 text-[120px] leading-none pointer-events-none select-none">1</div>
+<h3 class="font-headline-md text-primary text-2xl">GEN 1: NEON DRIFT</h3>
+<div class="font-mono text-sm text-on-surface-variant flex gap-4">
+<span>SUPPLY: 5,000</span>
+<span>STATUS: EXHAUSTED</span>
+</div>
+<div class="h-1 w-full bg-surface-container-high rounded-full overflow-hidden mt-4">
+<div class="h-full bg-on-surface-variant w-full"></div>
+</div>
+</div>
+<!-- GEN 0 (Mastered) -->
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-4 relative overflow-hidden group border-white/30 hover:border-white/60 transition-colors duration-500 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+<div class="absolute top-4 right-4 bg-white/10 px-2 py-1 rounded text-[10px] font-mono text-primary flex items-center gap-1 border border-white/30 shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+<span class="material-symbols-outlined text-[14px]">verified</span> MASTERED
+                    </div>
+<div class="text-white/10 font-headline-md font-bold absolute -right-4 -bottom-4 text-[120px] leading-none pointer-events-none select-none">0</div>
+<h3 class="font-headline-md text-primary text-2xl">GEN 0: GENESIS BLOCK</h3>
+<div class="font-mono text-sm text-primary flex gap-4">
+<span>SUPPLY: 1,000</span>
+<span>STATUS: IMMORTALIZED</span>
+</div>
+<div class="h-1 w-full bg-surface-container-high rounded-full overflow-hidden mt-4 relative">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent w-[200%] animate-[slide_2s_linear_infinite]"></div>
+<div class="h-full bg-white w-full relative z-10 opacity-80"></div>
+</div>
+</div>
+</div>
+<style>
+                @keyframes slide {
+                    0% { transform: translateX(-50%); }
+                    100% { transform: translateX(0%); }
+                }
+            </style>
+</section>
+<!-- FUTURISTIC RADAR MODULE (GEN 3) -->
+<section class="glass-panel rounded-xl overflow-hidden relative min-h-[400px] flex items-center justify-center p-8 mt-8 border border-hotfix-accent/20">
+<!-- Radar Background -->
+<div class="absolute inset-0 cyber-grid opacity-30"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] border border-hotfix-accent/20 rounded-full flex items-center justify-center pointer-events-none">
+<div class="w-[60%] h-[60%] border border-hotfix-accent/30 rounded-full flex items-center justify-center">
+<div class="w-[30%] h-[30%] border border-hotfix-accent/50 rounded-full"></div>
+</div>
+<div class="radar-sweep"></div>
+<!-- Abstract locked chain graphic behind timer -->
+<div class="absolute inset-0 flex items-center justify-center opacity-10">
+<span class="material-symbols-outlined text-[200px]" style="font-variation-settings: 'wght' 200;">link</span>
+</div>
+</div>
+<!-- Foreground Content -->
+<div class="relative z-10 flex flex-col items-center text-center gap-6 p-8 bg-surface-dim/60 backdrop-blur-md rounded-2xl border border-white/5">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container/80 rounded-full font-mono text-xs text-on-surface-variant border border-white/10">
+<span class="w-1.5 h-1.5 rounded-full bg-hotfix-accent"></span> DETECTING INCOMING TRANSMISSION
+                </div>
+<h2 class="font-headline-md text-headline-md text-primary tracking-widest uppercase">GEN 3: <span class="text-hotfix-accent/80 blur-[1px] hover:blur-none transition-all cursor-crosshair">[CLASSIFIED]</span></h2>
+<div class="font-mono text-headline-xl text-primary font-black glitch-pulse tracking-tighter">
+                    23<span class="text-on-surface-variant font-light px-2">:</span>14<span class="text-on-surface-variant font-light px-2">:</span>05
+                </div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                    Telemetry data suggests a high-density asset drop approaching the outer rim. Keep terminal nodes online.
+                </p>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-md mt-stack-lg bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-white/5">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-4 max-w-[1600px] mx-auto">
+<div class="font-label-lg text-label-lg text-on-surface-variant">
+                © 2026 POXY WORLD. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>
