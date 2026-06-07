@@ -81,6 +81,7 @@
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
 <link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=12">
 <link rel="stylesheet" href="assets/poxy-dna-traits.css?v=1">
+<link rel="stylesheet" href="assets/poxy-lore.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6451,11 +6452,92 @@ window.openAssetViewerModal = function(item) {
   // ── DNA Traits (ЭТАП 1) ──
   renderDnaTraits(item);
 
+  // ── Lore (ЭТАП 2) ──
+  renderLore(item);
+
   // ── Show modal ──
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => modal.classList.add('avm-open'));
 };
+
+// ── LORE RENDER (ЭТАП 2) ─────────────────────────────────────────────
+const LORE_SEASON_ID = 'gen_china_magic';
+const LORE_FULL_TIERS = new Set(['rare','epic','legendary','mythic']);
+const LORE_EPIC_TIERS = new Set(['legendary','mythic']);
+
+async function renderLore(item){
+  const block = $('avmLoreBlock');
+  if(!block) return;
+  block.hidden = true;
+  block.innerHTML = '';
+  block.className = 'poxy-lore-block';
+  if(!item) return;
+
+  const rarity = (item.poxy_tier||'common').toLowerCase();
+  const poxyType = item.character_name || null;
+
+  let loreData = null;
+  try{
+    const{data} = await sb.rpc('get_lore',{
+      p_season_id: LORE_SEASON_ID,
+      p_poxy_type: poxyType,
+      p_rarity:    rarity
+    });
+    if(data && data.ok) loreData = data;
+  }catch(e){ console.error('[lore] fetch failed', e); }
+
+  if(!loreData) return;
+
+  const useFull = LORE_FULL_TIERS.has(rarity);
+  const isEpicFrame = LORE_EPIC_TIERS.has(rarity);
+  const text = (useFull ? loreData.lore_full : loreData.lore_short) || '';
+  if(!text.trim()) return;
+
+  if(isEpicFrame) block.classList.add('poxy-lore-block--epic-frame');
+
+  // Header row
+  const head = document.createElement('div');
+  head.className = 'poxy-lore-head';
+  head.innerHTML =
+    '<span class="poxy-lore-eyebrow">Lore</span>'+
+    '<span class="poxy-lore-tier-badge">'+sanitizeText(rarity.toUpperCase())+'</span>';
+
+  // Ornament for Legendary / Mythic
+  if(isEpicFrame){
+    const orn = document.createElement('span');
+    orn.className = 'poxy-lore-ornament';
+    orn.setAttribute('aria-hidden','true');
+    orn.textContent = '✦  ✦  ✦';
+    block.appendChild(orn);
+  }
+  block.appendChild(head);
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if(!useFull){
+    // Common / Uncommon — single italic line, fade-in
+    const p = document.createElement('p');
+    p.className = 'poxy-lore-short';
+    p.textContent = text;
+    block.appendChild(p);
+  } else {
+    // Rare+ — split into sentences/phrases, each line slides up
+    const phrases = text.match(/[^.!?]+[.!?—]?\s*/g) || [text];
+    const container = document.createElement('div');
+    container.className = 'poxy-lore-lines';
+    phrases.forEach((phrase, i){
+      const span = document.createElement('span');
+      span.className = 'poxy-lore-line';
+      span.textContent = phrase.trim();
+      if(!reduce) span.style.animationDelay = (80 + i * 120) + 'ms';
+      container.appendChild(span);
+    });
+    block.appendChild(container);
+  }
+
+  block.hidden = false;
+}
 
 // ── DNA TRAITS RENDER (ЭТАП 1) ───────────────────────────────────────
 const DNA_SEASON_ID = 'gen_china_magic';
@@ -13383,6 +13465,9 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         </div>
         <div class="poxy-dna-grid" id="avmDnaGrid"></div>
       </div>
+
+      <!-- Lore (ЭТАП 2) — per-rarity reveal, fetched from poxy_lore -->
+      <div class="poxy-lore-block" id="avmLoreBlock" hidden></div>
 
       <!-- Crypto proof shortcut -->
       <button type="button" class="avm-crypto-btn font-sans" id="avmCryptoBtn">
