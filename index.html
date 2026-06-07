@@ -6951,6 +6951,7 @@ const CARD_COLOR={
   rare:'#00d4d4',uncommon:'#4caf50',common:'#888888'
 };
 const CARD_EMOJI={common:'👾',uncommon:'🌿',rare:'🐉',epic:'⚡',legendary:'👑',mythic:'🏮'};
+const CARD_DISPLAY_NAME={common:'Jade Hatchling',uncommon:'Jade Sentinel',rare:'Azure Dragon',epic:'Storm Dragon',legendary:'Celestial Emperor Dragon',mythic:'Dragon of Ten Thousand Lanterns'};
 
 function _cardRoundRect(ctx,x,y,w,h,r){
   if(ctx.roundRect){ctx.roundRect(x,y,w,h,r);}else{
@@ -6997,9 +6998,20 @@ async function _drawCard(item){
     if(ld&&ld.text)loreText=ld.text;
   }catch(e){}
 
+  const creatureName=sanitizeText(item.display_name||item.character_name||CARD_DISPLAY_NAME[tier]||'POXY');
+  const eraText=_spmEraText(item);
+  const dna=item.dna_hash?String(item.dna_hash):_certHex(item.id+'dna',64).toLowerCase();
+  const dnaDisp=dna.slice(0,16).toLowerCase()+'…'+dna.slice(-6).toLowerCase();
+  const sigRaw=item.signature?String(item.signature):_certHex(item.id+'sig',32);
+  const sigDisp=sigRaw.length>16?sigRaw.slice(0,10)+'…'+sigRaw.slice(-8):sigRaw;
+  const bText=tierLabel.toUpperCase();
+
   const grad=ctx.createLinearGradient(0,0,0,900);
   grad.addColorStop(0,bg[0]);grad.addColorStop(1,bg[1]);
   ctx.fillStyle=grad;ctx.fillRect(0,0,600,900);
+
+  ctx.fillStyle='rgba(255,255,255,0.15)';
+  ctx.fillRect(0,0,600,60);
 
   ctx.strokeStyle=col;ctx.lineWidth=3;
   ctx.strokeRect(12,12,576,876);
@@ -7009,9 +7021,25 @@ async function _drawCard(item){
     ctx.strokeStyle=col;ctx.lineWidth=3;ctx.stroke();
   });
 
-  const gGrad=ctx.createRadialGradient(300,175,0,300,175,180);
-  gGrad.addColorStop(0,col+'4d');gGrad.addColorStop(1,'transparent');
-  ctx.fillStyle=gGrad;ctx.fillRect(100,30,400,320);
+  ctx.textBaseline='middle';
+  ctx.textAlign='left';
+  ctx.fillStyle=col;ctx.font='bold 11px sans-serif';
+  ctx.fillText('POXY WORLD',30,30);
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(196,199,200,0.45)';ctx.font='10px monospace';
+  ctx.fillText('GEN CHINA MAGIC',300,30);
+  ctx.font='bold 10px monospace';
+  const bW=ctx.measureText(bText).width+20;
+  const bH=22,bX=570-bW,bY=30-bH/2;
+  _cardRoundRect(ctx,bX,bY,bW,bH,11);
+  ctx.fillStyle=col;ctx.globalAlpha=0.35;ctx.fill();ctx.globalAlpha=1;
+  ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle=col;ctx.textAlign='center';ctx.fillText(bText,bX+bW/2,30);
+
+  const avSize=260,avX=(600-avSize)/2,avY=90,avCY=avY+avSize/2;
+  const gGrad=ctx.createRadialGradient(300,avCY,0,300,avCY,160);
+  gGrad.addColorStop(0,col+'66');gGrad.addColorStop(1,'transparent');
+  ctx.fillStyle=gGrad;ctx.fillRect(avX-40,avY-20,avSize+80,avSize+80);
 
   let imgLoaded=false;
   if(item.asset_url){
@@ -7020,7 +7048,7 @@ async function _drawCard(item){
         const img=new Image();img.crossOrigin='anonymous';
         img.onload=()=>{
           ctx.save();ctx.shadowBlur=40;ctx.shadowColor=col;
-          ctx.drawImage(img,180,55,240,240);ctx.restore();imgLoaded=true;res();
+          ctx.drawImage(img,avX,avY,avSize,avSize);ctx.restore();imgLoaded=true;res();
         };img.onerror=rej;img.src=item.asset_url;
         setTimeout(rej,3000);
       });
@@ -7028,86 +7056,79 @@ async function _drawCard(item){
   }
   if(!imgLoaded){
     const emoji=CARD_EMOJI[tier]||'👾';
-    ctx.font='100px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='110px serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.save();ctx.shadowBlur=40;ctx.shadowColor=col;
-    ctx.fillText(emoji,300,175);ctx.restore();
+    ctx.fillText(emoji,300,avCY);ctx.restore();
   }
 
-  ctx.textAlign='center';ctx.textBaseline='alphabetic';
-  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='12px monospace';
-  ctx.fillText(pxid,300,318);
+  const fadeGrad=ctx.createLinearGradient(0,300,0,380);
+  fadeGrad.addColorStop(0,'rgba(0,0,0,0)');fadeGrad.addColorStop(1,bg[1]);
+  ctx.fillStyle=fadeGrad;ctx.fillRect(0,300,600,80);
 
-  const name=sanitizeText(item.character_name||tierLabel||'POXY');
+  ctx.textBaseline='alphabetic';ctx.textAlign='center';
   let fontSize=26;
   ctx.font='bold '+fontSize+'px sans-serif';
-  while(ctx.measureText(name).width>480&&fontSize>18){fontSize--;ctx.font='bold '+fontSize+'px sans-serif';}
+  while(ctx.measureText(creatureName).width>480&&fontSize>18){fontSize--;ctx.font='bold '+fontSize+'px sans-serif';}
   ctx.fillStyle='#ffffff';
-  ctx.fillText(_wrapText(ctx,name,500),300,352);
-
-  ctx.font='bold 11px monospace';
-  const bText=tierLabel.toUpperCase();
-  const bW=ctx.measureText(bText).width+24;
-  const bX=300-bW/2;
-  _cardRoundRect(ctx,bX,366,bW,24,6);
-  ctx.fillStyle=col+'4d';ctx.fill();
-  ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();
-  ctx.fillStyle=col;ctx.textAlign='center';ctx.fillText(bText,300,383);
-
-  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='10px monospace';ctx.textAlign='left';
-  ctx.fillText('DNA SEQUENCE',60,408);
-  const traitCats=DNA_CATEGORY_ORDER||['Eye','Horn','Aura','Element','Scale','Tail'];
-  const traitData=item.traits&&typeof item.traits==='object'?item.traits:{};
-  let ty=432;
-  traitCats.forEach((cat,i)=>{
-    const t=traitData[cat];
-    const col2=(i<3)?60:310;
-    if(i===3)ty=432;
-    ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='9px monospace';
-    ctx.fillText(cat.toUpperCase(),col2,ty-11);
-    const pop=t?Number(t.pop||0):0;
-    const rare=pop>0&&pop<=20;
-    ctx.fillStyle=rare?col:'rgba(255,255,255,0.85)';
-    ctx.font='bold 11px monospace';
-    ctx.fillText(t?_wrapText(ctx,t.name||'—',220):'—',col2,ty);
-    if(i<2||(i>=3&&i<5))ty+=28;
-  });
-
-  let ly=528;
-  if(loreText){
-    ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='10px monospace';ctx.textAlign='left';
-    ctx.fillText('LORE',60,ly);ly+=16;
-    ctx.font='italic 12px sans-serif';ctx.fillStyle='rgba(255,255,255,0.55)';
-    _cardWrapLines(ctx,loreText,480,3).forEach(line=>{ctx.fillText(line,60,ly);ly+=17;});
-    ly+=8;
+  ctx.fillText(_wrapText(ctx,creatureName,500),300,408);
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='12px monospace';
+  ctx.fillText(pxid,300,434);
+  if(eraText){
+    ctx.fillStyle=col;ctx.font='10px monospace';
+    ctx.fillText(eraText,300,456);
   }
 
-  const dna=item.dna_hash?String(item.dna_hash):_certHex(item.id+'dna',64).toLowerCase();
-  const dnaDisp=dna.slice(0,16).toLowerCase()+'…'+dna.slice(-6).toLowerCase();
-  const sigRaw=item.signature?String(item.signature):_certHex(item.id+'sig',32);
-  const sigDisp=sigRaw.length>16?sigRaw.slice(0,10)+'…'+sigRaw.slice(-8):sigRaw;
+  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='9px monospace';
+  ctx.letterSpacing='0.15em';
+  ctx.fillText('DNA SEQUENCE',300,500);
+  ctx.letterSpacing='0px';
+  ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(50,512);ctx.lineTo(550,512);ctx.stroke();
 
-  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='10px monospace';ctx.textAlign='left';
-  ctx.fillText('CRYPTO',60,ly);ly+=16;
-  ctx.fillStyle='rgba(196,199,200,0.35)';ctx.font='9px monospace';
-  ctx.fillText('DNA HASH',60,ly);
-  ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='10px monospace';
-  ctx.fillText(dnaDisp,60,ly+14);ly+=32;
-  ctx.fillStyle='rgba(196,199,200,0.35)';ctx.font='9px monospace';
-  ctx.fillText('ED25519 SIGNATURE',60,ly);
-  ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='10px monospace';
-  ctx.fillText(sigDisp,60,ly+14);
+  const traitCats=DNA_CATEGORY_ORDER||['Eye','Horn','Aura','Element','Scale','Tail'];
+  const traitData=item.traits&&typeof item.traits==='object'?item.traits:{};
+  traitCats.forEach((cat,i)=>{
+    const t=traitData[cat];
+    const tx=(i<3)?50:310;
+    const row=Math.floor(i/3);
+    const rowY=530+row*36;
+    ctx.textAlign='left';
+    ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='9px monospace';
+    ctx.fillText(cat.toUpperCase(),tx,rowY);
+    const pop=t?Number(t.pop||0):0;
+    const rare=pop>0&&pop<=20;
+    ctx.fillStyle=rare?col:'#ffffff';
+    ctx.font='13px sans-serif';
+    ctx.fillText(t?_wrapText(ctx,t.name||'—',230):'—',tx,rowY+16);
+  });
+
+  ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(50,662);ctx.lineTo(550,662);ctx.stroke();
+  if(loreText){
+    ctx.textAlign='center';ctx.font='italic 12px sans-serif';
+    ctx.fillStyle='rgba(255,255,255,0.6)';
+    _cardWrapLines(ctx,loreText,480,2).forEach((line,i)=>{ctx.fillText(line,300,688+i*20);});
+  }
+
+  ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(12,745,576,75);
+  ctx.textAlign='left';
+  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='8px monospace';
+  ctx.fillText('DNA HASH',24,762);
+  ctx.fillStyle=col;ctx.font='10px monospace';
+  ctx.fillText(dnaDisp,24,776);
+  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='8px monospace';
+  ctx.fillText('ED25519',24,796);
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='10px monospace';
+  ctx.fillText(sigDisp,24,810);
 
   ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(40,820);ctx.lineTo(560,820);ctx.stroke();
-
-  ctx.textAlign='left';
-  ctx.fillStyle='#ffffff';ctx.font='bold 13px sans-serif';ctx.fillText('POXY WORLD',40,848);
-  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.textAlign='right';ctx.font='10px monospace';
-  ctx.fillText('poxygen1.vercel.app',560,848);
+  ctx.beginPath();ctx.moveTo(50,835);ctx.lineTo(550,835);ctx.stroke();
   ctx.textAlign='center';
   ctx.fillStyle=col;ctx.globalAlpha=0.7;ctx.font='9px monospace';
-  ctx.fillText('✦ CRYPTOGRAPHICALLY VERIFIED ✦',300,878);
+  ctx.fillText('✦ CRYPTOGRAPHICALLY VERIFIED ✦',300,858);
   ctx.globalAlpha=1;
+  ctx.fillStyle='rgba(196,199,200,0.4)';ctx.font='9px monospace';
+  ctx.fillText('poxygen1.vercel.app',300,876);
 
   return cvs;
 }
