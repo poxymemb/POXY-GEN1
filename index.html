@@ -6526,7 +6526,7 @@ async function renderLore(item){
     const phrases = text.match(/[^.!?]+[.!?—]?\s*/g) || [text];
     const container = document.createElement('div');
     container.className = 'poxy-lore-lines';
-    phrases.forEach((phrase, i){
+    phrases.forEach((phrase, i) => {
       const span = document.createElement('span');
       span.className = 'poxy-lore-line';
       span.textContent = phrase.trim();
