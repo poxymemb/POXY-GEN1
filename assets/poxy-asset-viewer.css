@@ -605,10 +605,8 @@
     border-right: none;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     min-height: 300px;
-    padding: 24px 20px;
-  }
-  .avm-stage {
     max-height: none;
+    padding: 24px 20px;
   }
   .avm-ops {
     padding: 20px;
