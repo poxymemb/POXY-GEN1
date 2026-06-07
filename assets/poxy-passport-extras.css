@@ -1,0 +1,217 @@
+/* POXY ASSET VIEWER — ЭТАП 3: TAB NAVIGATION + ERA BADGE + RELIC SCORE
+   Additive only. Lives inside .avm-ops. Uses only existing CSS variables/tokens.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Tab nav bar ─────────────────────────────────────────────────────── */
+.avm-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.avm-tab-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+}
+.avm-tab-btn:hover {
+  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+.avm-tab-btn.is-active {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #f59e0b;
+}
+
+/* ── Tab panels ──────────────────────────────────────────────────────── */
+.avm-tab-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* fade-in on reveal */
+  animation: avmTabFadeIn 0.15s ease both;
+}
+.avm-tab-panel::-webkit-scrollbar { display: none; }
+.avm-tab-panel.is-active { display: flex; }
+
+@keyframes avmTabFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Era Badge — inline next to tier pill ────────────────────────────── */
+.avm-era-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.40);
+  background: rgba(255, 255, 255, 0.04);
+  white-space: nowrap;
+}
+
+/* ── DNA tab — hash + copy row ──────────────────────────────────────── */
+.avm-dna-hash-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.avm-dna-hash-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(196, 199, 200, 0.45);
+  letter-spacing: 0.06em;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.avm-dna-copy-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 3px 8px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.avm-dna-copy-btn:hover {
+  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+.avm-dna-verify-btn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  align-self: flex-start;
+}
+.avm-dna-verify-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Relic Score ─────────────────────────────────────────────────────── */
+.avm-relic-score {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.avm-relic-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(196, 199, 200, 0.4);
+  margin-bottom: 6px;
+}
+.avm-relic-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+/* Progress bar */
+.avm-relic-bar-wrap {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.avm-relic-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(245,158,11,0.7), rgba(245,158,11,1));
+  width: 0%;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Breakdown rows */
+.avm-relic-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.avm-relic-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.avm-relic-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(196, 199, 200, 0.4);
+}
+.avm-relic-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Lore tab panel — reuses poxy-lore.css classes, just spacing ─────── */
+.avm-tab-panel--lore .poxy-lore-block {
+  display: block;      /* force visible inside tab */
+}
+
+/* ── DNA tab — inline the dna-traits block without its own margin ──── */
+.avm-tab-panel--dna .poxy-dna-traits {
+  margin-bottom: 0;
+}
+
+/* ── prefers-reduced-motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .avm-tab-panel      { animation: none; }
+  .avm-relic-bar-fill { transition: none; }
+}
+
+/* ── Mobile ≤420px ──────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  .avm-tab-btn { font-size: 9px; padding: 4px 10px; }
+  .avm-relic-number { font-size: 28px; }
+}

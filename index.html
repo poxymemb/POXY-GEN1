@@ -82,6 +82,7 @@
 <link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=13">
 <link rel="stylesheet" href="assets/poxy-dna-traits.css?v=1">
 <link rel="stylesheet" href="assets/poxy-lore.css?v=1">
+<link rel="stylesheet" href="assets/poxy-passport-extras.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6449,11 +6450,28 @@ window.openAssetViewerModal = function(item) {
     stageEl.addEventListener('mouseleave',_avmOnMouseLeave);
   }
 
+  // ── ЭТАП 3: reset to IDENTITY tab on each open ──
+  avmSwitchTab('identity');
+
+  // ── Era Badge (ЭТАП 3) ──
+  _renderEraBadge(item);
+
+  // ── Relic Score (ЭТАП 3) — compute now, animate when DNA tab opens ──
+  _renderRelicScore(item);
+
+  // ── Verify DNA button ──
+  const dnaVerifyBtn = $('avmDnaVerifyBtn');
+  if(dnaVerifyBtn){ dnaVerifyBtn.onclick = ()=>{ if(window.PoxyTrust&&PoxyTrust.inspect) PoxyTrust.inspect(item); else showToast('Crypto layer loading…'); }; }
+
   // ── DNA Traits (ЭТАП 1) ──
   renderDnaTraits(item);
 
   // ── Lore (ЭТАП 2) ──
   renderLore(item);
+
+  // ── Sync DNA hash into tab row ──
+  const dnaHashTab = $('avmDnaHashTab');
+  if(dnaHashTab) dnaHashTab.textContent = item.dna_hash ? ('DNA ' + String(item.dna_hash).slice(0,10).toUpperCase()) : '–';
 
   // ── Show modal ──
   modal.hidden = false;
@@ -6602,6 +6620,140 @@ window.closeAssetViewerModal = function() {
   document.body.style.overflow = '';
   setTimeout(() => { modal.hidden = true; _avmCurrentItem = null; }, 280);
 };
+
+// ── ЭТАП 3: TAB NAVIGATION ────────────────────────────────────────────
+let _avmActiveTab = 'identity';
+
+function avmSwitchTab(tabId) {
+  _avmActiveTab = tabId;
+  // Update buttons
+  document.querySelectorAll('.avm-tab-btn[data-avm-tab]').forEach(btn => {
+    const active = btn.dataset.avmTab === tabId;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-selected', String(active));
+  });
+  // Show/hide panels
+  ['identity','dna','lore'].forEach(id => {
+    const panel = $('avmTab' + id.charAt(0).toUpperCase() + id.slice(1));
+    if(!panel) return;
+    if(id === tabId){
+      panel.classList.add('is-active');
+      // Trigger relic animation on DNA tab open
+      if(id === 'dna') _animateRelicScore();
+      // Restart lore line animations on LORE tab open
+      if(id === 'lore') _restartLoreAnimations();
+    } else {
+      panel.classList.remove('is-active');
+    }
+  });
+}
+
+// Animate relic counter 0 → total over 800ms
+function _animateRelicScore() {
+  const numEl = $('avmRelicNumber');
+  const barEl = $('avmRelicBar');
+  if(!numEl) return;
+  const target = parseInt(numEl.dataset.relicTarget || '0', 10);
+  if(!target) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){ numEl.textContent = target; if(barEl) barEl.style.width = Math.min(target/10, 100)+'%'; return; }
+  const dur = 800;
+  const start = performance.now();
+  function step(now){
+    const p = Math.min((now - start) / dur, 1);
+    // ease-out cubic
+    const eased = 1 - Math.pow(1 - p, 3);
+    numEl.textContent = Math.round(eased * target);
+    if(barEl) barEl.style.width = Math.min(eased * target / 10, 100) + '%';
+    if(p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Restart CSS lore-line animations by re-cloning the container
+function _restartLoreAnimations() {
+  const loreBlock = $('avmLoreBlock');
+  if(!loreBlock || loreBlock.hidden) return;
+  const lines = loreBlock.querySelectorAll('.poxy-lore-line, .poxy-lore-short');
+  lines.forEach((el, i) => {
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = '';
+    el.style.animationDelay = (80 + i * 120) + 'ms';
+  });
+}
+
+// Copy DNA hash to clipboard
+function avmCopyDnaHash() {
+  const el = $('avmDnaHashTab');
+  const text = el ? el.textContent.trim() : '';
+  if(!text || text === '–') return;
+  navigator.clipboard.writeText(text).then(() => showToast('DNA hash copied')).catch(() => showToast(text));
+}
+
+// ── ERA BADGE ────────────────────────────────────────────────────────
+// GEN 1 seal date: items minted before this date are "Founding Collection"
+// GEN 0 items that predate even that are "Genesis Era" (poxy_tier === 'genesis' or very early)
+const AVM_GEN1_SEAL_DATE = new Date('2025-06-01T00:00:00Z');
+
+function _renderEraBadge(item) {
+  const badge = $('avmEraBadge');
+  if(!badge) return;
+  const droppedAt = item.dropped_at ? new Date(item.dropped_at) : null;
+  if(!droppedAt || isNaN(droppedAt.getTime())){ badge.hidden = true; return; }
+  if(item.poxy_tier === 'genesis' || droppedAt < new Date('2024-01-01T00:00:00Z')){
+    badge.textContent = 'Genesis Era';
+    badge.hidden = false;
+  } else if(droppedAt < AVM_GEN1_SEAL_DATE){
+    badge.textContent = 'Founding Collection';
+    badge.hidden = false;
+  } else {
+    badge.hidden = true;
+  }
+}
+
+// ── RELIC SCORE RENDER ───────────────────────────────────────────────
+const RELIC_RARITY_WEIGHT = {
+  common: 10, uncommon: 25, rare: 50, epic: 100, legendary: 200, mythic: 500
+};
+
+function _renderRelicScore(item) {
+  const numEl       = $('avmRelicNumber');
+  const barEl       = $('avmRelicBar');
+  const breakdown   = $('avmRelicBreakdown');
+  if(!numEl) return;
+
+  const now       = Date.now();
+  const createdAt = item.dropped_at ? new Date(item.dropped_at).getTime() : now;
+  const ageMs     = Math.max(0, now - createdAt);
+  const ageDays   = ageMs / 86400000;
+
+  const age_score      = Math.floor(ageDays * 0.5);
+  const prov_score     = (Number(item.provenance_count) || 0) * 10;
+  const rarity_score   = RELIC_RARITY_WEIGHT[item.poxy_tier] || 10;
+  const transfer_score = (Number(item.transfer_count) || 0) * 5;
+  const total          = age_score + prov_score + rarity_score + transfer_score;
+
+  // Store target for animation
+  numEl.dataset.relicTarget = String(total);
+  numEl.textContent = '0';
+  if(barEl) barEl.style.width = '0%';
+
+  if(breakdown){
+    breakdown.innerHTML = [
+      ['Age',        age_score],
+      ['Provenance', prov_score],
+      ['Rarity',     rarity_score],
+      ['Transfers',  transfer_score],
+    ].map(([k,v]) =>
+      '<div class="avm-relic-row">'
+      + '<span class="avm-relic-key">' + k + '</span>'
+      + '<span class="avm-relic-val">+' + v + '</span>'
+      + '</div>'
+    ).join('');
+  }
+}
+// ── END ЭТАП 3 ────────────────────────────────────────────────────────
 
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape' && $('assetViewerModal') && !$('assetViewerModal').hidden) closeAssetViewerModal();
@@ -13415,59 +13567,100 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
 
       <div class="avm-ops-eyebrow">ASSET INTELLIGENCE</div>
 
-      <!-- Title row: serial + tier capsule -->
+      <!-- Title row: serial + tier capsule + era badge -->
       <div class="avm-ops-title-row">
         <h2 class="avm-ops-title" id="avmOpsTitle">PX-––––––</h2>
         <span class="avm-ops-tier-pill" id="avmOpsTierPill">–– TIER</span>
+        <span class="avm-era-badge" id="avmEraBadge" hidden></span>
       </div>
 
-      <!-- Tactical data matrix — Group 1: Core Status (Stitch 1:1) -->
-      <div class="avm-data-group">
-        <div class="avm-data-row">
-          <span class="avm-data-key">ISSUED DATE</span>
-          <span class="avm-data-val" id="avmIssued">–</span>
+      <!-- ЭТАП 3: Tab navigation (IDENTITY / DNA / LORE) -->
+      <div class="avm-tabs" role="tablist" aria-label="Asset details">
+        <button type="button" class="avm-tab-btn is-active" role="tab" aria-selected="true"
+                data-avm-tab="identity" onclick="avmSwitchTab('identity')">IDENTITY</button>
+        <button type="button" class="avm-tab-btn" role="tab" aria-selected="false"
+                data-avm-tab="dna" onclick="avmSwitchTab('dna')">DNA</button>
+        <button type="button" class="avm-tab-btn" role="tab" aria-selected="false"
+                data-avm-tab="lore" onclick="avmSwitchTab('lore')">LORE</button>
+      </div>
+
+      <!-- TAB: IDENTITY (default) -->
+      <div class="avm-tab-panel is-active" id="avmTabIdentity" role="tabpanel">
+        <!-- Group 1: Core Status -->
+        <div class="avm-data-group">
+          <div class="avm-data-row">
+            <span class="avm-data-key">ISSUED DATE</span>
+            <span class="avm-data-val" id="avmIssued">–</span>
+          </div>
+          <div class="avm-data-row">
+            <span class="avm-data-key">COMPONENT STATUS</span>
+            <span class="avm-data-val avm-val-active" id="avmStatus">ACTIVE / SECURED</span>
+          </div>
+          <div class="avm-data-row">
+            <span class="avm-data-key">NETWORK</span>
+            <span class="avm-data-val" id="avmNetwork">MAINNET</span>
+          </div>
+          <div class="avm-data-row">
+            <span class="avm-data-key">SYSTEM ARCHITECTURE</span>
+            <span class="avm-data-val avm-val-dim">POXY PROTOCOL v4.2</span>
+          </div>
         </div>
-        <div class="avm-data-row">
-          <span class="avm-data-key">COMPONENT STATUS</span>
-          <span class="avm-data-val avm-val-active" id="avmStatus">ACTIVE / SECURED</span>
-        </div>
-        <div class="avm-data-row">
-          <span class="avm-data-key">NETWORK</span>
-          <span class="avm-data-val" id="avmNetwork">MAINNET</span>
-        </div>
-        <div class="avm-data-row">
-          <span class="avm-data-key">SYSTEM ARCHITECTURE</span>
-          <span class="avm-data-val avm-val-dim">POXY PROTOCOL v4.2</span>
+        <!-- Group 2: Identity -->
+        <div class="avm-data-group">
+          <div class="avm-data-row">
+            <span class="avm-data-key">SERIAL KEY</span>
+            <span class="avm-data-val avm-val-mono" id="avmSerial">–</span>
+          </div>
+          <div class="avm-data-row" id="avmForgeRow">
+            <span class="avm-data-key">FORGE</span>
+            <span class="avm-data-val avm-val-forge">IN SYNDICATE FORGE</span>
+          </div>
+          <div class="avm-data-row" id="avmPinnedRow">
+            <span class="avm-data-key">PINNED</span>
+            <span class="avm-data-val">COLLECTION TOP</span>
+          </div>
         </div>
       </div>
 
-      <!-- Tactical data matrix — Group 2: Identity (Stitch 1:1) -->
-      <div class="avm-data-group">
-        <div class="avm-data-row">
-          <span class="avm-data-key">SERIAL KEY</span>
-          <span class="avm-data-val avm-val-mono" id="avmSerial">–</span>
+      <!-- TAB: DNA (ЭТАП 1 traits + Relic Score) -->
+      <div class="avm-tab-panel avm-tab-panel--dna" id="avmTabDna" role="tabpanel">
+        <!-- Hash + copy row -->
+        <div class="avm-dna-hash-row">
+          <span class="avm-dna-hash-text" id="avmDnaHashTab">–</span>
+          <button type="button" class="avm-dna-copy-btn" id="avmDnaCopyBtn"
+                  title="Copy DNA hash" onclick="avmCopyDnaHash()">
+            <span class="material-symbols-outlined" style="font-size:13px;vertical-align:middle">content_copy</span>
+          </button>
         </div>
-        <div class="avm-data-row" id="avmForgeRow">
-          <span class="avm-data-key">FORGE</span>
-          <span class="avm-data-val avm-val-forge">IN SYNDICATE FORGE</span>
+        <!-- Traits block (ЭТАП 1) — rendered into grid -->
+        <div class="poxy-dna-traits" id="avmDnaTraits" hidden>
+          <div class="poxy-dna-head">
+            <span class="poxy-dna-eyebrow">DNA SEQUENCE</span>
+            <span class="poxy-dna-hash" id="avmDnaHash"></span>
+          </div>
+          <div class="poxy-dna-grid" id="avmDnaGrid"></div>
         </div>
-        <div class="avm-data-row" id="avmPinnedRow">
-          <span class="avm-data-key">PINNED</span>
-          <span class="avm-data-val">COLLECTION TOP</span>
+        <!-- Verify DNA button -->
+        <button type="button" class="avm-dna-verify-btn" id="avmDnaVerifyBtn">
+          <span class="material-symbols-outlined" style="font-size:13px">verified_user</span>
+          VERIFY DNA
+        </button>
+        <!-- Relic Score -->
+        <div class="avm-relic-score" id="avmRelicScore">
+          <div class="avm-relic-eyebrow">RELIC SCORE</div>
+          <div class="avm-relic-number" id="avmRelicNumber">0</div>
+          <div class="avm-relic-bar-wrap">
+            <div class="avm-relic-bar-fill" id="avmRelicBar"></div>
+          </div>
+          <div class="avm-relic-breakdown" id="avmRelicBreakdown"></div>
         </div>
       </div>
 
-      <!-- DNA Traits (ЭТАП 1) — staggered reveal, populated from item.traits -->
-      <div class="poxy-dna-traits" id="avmDnaTraits" hidden>
-        <div class="poxy-dna-head">
-          <span class="poxy-dna-eyebrow">DNA SEQUENCE</span>
-          <span class="poxy-dna-hash" id="avmDnaHash"></span>
-        </div>
-        <div class="poxy-dna-grid" id="avmDnaGrid"></div>
+      <!-- TAB: LORE (ЭТАП 2) -->
+      <div class="avm-tab-panel avm-tab-panel--lore" id="avmTabLore" role="tabpanel">
+        <!-- Lore block (ЭТАП 2) — populated by renderLore() -->
+        <div class="poxy-lore-block" id="avmLoreBlock" hidden></div>
       </div>
-
-      <!-- Lore (ЭТАП 2) — per-rarity reveal, fetched from poxy_lore -->
-      <div class="poxy-lore-block" id="avmLoreBlock" hidden></div>
 
       <!-- Crypto proof shortcut -->
       <button type="button" class="avm-crypto-btn font-sans" id="avmCryptoBtn">
