@@ -86,6 +86,7 @@
 <link rel="stylesheet" href="assets/poxy-discovery-feed.css?v=1">
 <link rel="stylesheet" href="assets/poxy-season-atlas.css?v=1">
 <link rel="stylesheet" href="assets/poxy-museum-mode.css?v=1">
+<link rel="stylesheet" href="assets/poxy-milestones.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -2881,6 +2882,13 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         </div>
         <div class="idhub-badge-list" id="badgeList"><span class="idhub-badge-empty">No badges yet.</span></div>
       </div>
+    </section>
+    <section class="idhub-panel poxy-milestones-panel" id="profileMilestonesSection" aria-label="Collection milestones">
+      <div class="idhub-panel-head">
+        <h2 class="idhub-panel-title">MILESTONES</h2>
+        <span class="idhub-panel-meta" id="milestonesCount">0 / 10</span>
+      </div>
+      <div class="poxy-milestones-grid" id="profileMilestonesGrid"></div>
     </section>
     <section class="idhub-panel idhub-directives-panel">
       <h2 class="idhub-panel-title idhub-panel-title--solo">DAILY DIRECTIVES</h2>
@@ -5880,7 +5888,81 @@ function renderProfilePage(){
   renderSettingsAvatar();
   refreshProfileAuraBanner();
   initProfileParallax();
+  renderMilestones();
 }
+
+const MILESTONE_DEFS=[
+  {id:'collector',name:'Collector',icon:'🎯',goal:1,metric:'total'},
+  {id:'apprentice',name:'Apprentice',icon:'📦',goal:10,metric:'total'},
+  {id:'archivist',name:'Archivist',icon:'🗄️',goal:25,metric:'total'},
+  {id:'curator',name:'Curator',icon:'🏛️',goal:50,metric:'total'},
+  {id:'jade_keeper',name:'Jade Keeper',icon:'🟢',goal:3,metric:'rare'},
+  {id:'storm_chaser',name:'Storm Chaser',icon:'⚡',goal:1,metric:'epic'},
+  {id:'legend_holder',name:'Legend Holder',icon:'👑',goal:1,metric:'legendary'},
+  {id:'mythic_bound',name:'Mythic Bound',icon:'🏮',goal:1,metric:'mythic'},
+  {id:'completionist',name:'Completionist',icon:'🧩',goal:6,metric:'types'},
+  {id:'founder',name:'Founder',icon:'🏆',goal:1,metric:'founder'}
+];
+const MILESTONE_LS_KEY='poxy_unlocked_milestones';
+async function renderMilestones(){
+  const grid=$('profileMilestonesGrid');
+  if(!grid||!currentUser)return;
+  let rows=[];
+  try{const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);rows=data||[];}catch(e){return;}
+  const counts={common:0,uncommon:0,rare:0,epic:0,legendary:0,mythic:0};
+  rows.forEach(r=>{const t=(r.poxy_tier||'').toLowerCase();if(counts[t]!==undefined)counts[t]++;});
+  const total=rows.length;
+  const baseTypes=['common','uncommon','rare','epic','legendary','mythic'];
+  const typesCollected=baseTypes.filter(t=>counts[t]>0).length;
+  const metricVal=(m)=>{
+    if(m==='total')return total;
+    if(m==='rare')return counts.rare;
+    if(m==='epic')return counts.epic;
+    if(m==='legendary')return counts.legendary;
+    if(m==='mythic')return counts.mythic;
+    if(m==='types')return typesCollected;
+    if(m==='founder')return (typeof isFounder==='function'&&isFounder())?1:0;
+    return 0;
+  };
+  let prev=[];
+  try{prev=JSON.parse(localStorage.getItem(MILESTONE_LS_KEY)||'[]');if(!Array.isArray(prev))prev=[];}catch(e){prev=[];}
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  grid.innerHTML='';
+  const nowUnlocked=[];
+  const newlyUnlocked=[];
+  MILESTONE_DEFS.forEach((m,i)=>{
+    const val=metricVal(m.metric);
+    const done=val>=m.goal;
+    if(done)nowUnlocked.push(m.id);
+    const isNew=done&&!prev.includes(m.id);
+    if(isNew)newlyUnlocked.push(m);
+    const tierForColor={jade_keeper:'rare',storm_chaser:'epic',legend_holder:'legendary',mythic_bound:'mythic'}[m.id]||'legendary';
+    const color=(RARITY_TIER_META[tierForColor]||{}).accent||'#f59e0b';
+    const el=document.createElement('div');
+    el.className='milestone-badge '+(done?'milestone-badge--done':'milestone-badge--locked')+(isNew&&!reduce?' milestone-badge--flash':'');
+    el.style.setProperty('--ms-color',color);
+    if(!reduce)el.style.animationDelay=(i*80)+'ms';
+    el.innerHTML=
+      '<span class="milestone-icon">'+m.icon+'</span>'+
+      '<span class="milestone-name">'+sanitizeText(m.name)+'</span>'+
+      (done?'':'<span class="milestone-progress">'+Math.min(val,m.goal)+' / '+m.goal+'</span>');
+    grid.appendChild(el);
+  });
+  const cntEl=$('milestonesCount');
+  if(cntEl)cntEl.textContent=nowUnlocked.length+' / '+MILESTONE_DEFS.length;
+  try{localStorage.setItem(MILESTONE_LS_KEY,JSON.stringify(nowUnlocked));}catch(e){}
+  if(newlyUnlocked.length)newlyUnlocked.forEach((m,i)=>setTimeout(()=>_showMilestoneToast(m.name),600+i*400));
+}
+function _showMilestoneToast(name){
+  let wrap=document.querySelector('.poxy-ms-toast-wrap');
+  if(!wrap){wrap=document.createElement('div');wrap.className='poxy-ms-toast-wrap';document.body.appendChild(wrap);}
+  const t=document.createElement('div');
+  t.className='poxy-ms-toast';
+  t.textContent='🏆 Milestone Unlocked: '+name;
+  wrap.appendChild(t);
+  setTimeout(()=>t.remove(),3200);
+}
+
 async function fetchMyEcosystemRank(){
   if(!currentUser)return null;
   if(leaderboardRankByUser[currentUser.id])return leaderboardRankByUser[currentUser.id];
