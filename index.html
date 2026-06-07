@@ -80,6 +80,7 @@
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
 <link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=12">
+<link rel="stylesheet" href="assets/poxy-dna-traits.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -6447,11 +6448,70 @@ window.openAssetViewerModal = function(item) {
     stageEl.addEventListener('mouseleave',_avmOnMouseLeave);
   }
 
+  // ── DNA Traits (ЭТАП 1) ──
+  renderDnaTraits(item);
+
   // ── Show modal ──
   modal.hidden = false;
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => modal.classList.add('avm-open'));
 };
+
+// ── DNA TRAITS RENDER (ЭТАП 1) ───────────────────────────────────────
+const DNA_SEASON_ID = 'gen_china_magic';
+const DNA_CATEGORY_ORDER = ['Eye','Horn','Aura','Element','Scale','Tail'];
+async function renderDnaTraits(item){
+  const block = $('avmDnaTraits');
+  const grid  = $('avmDnaGrid');
+  const hashEl= $('avmDnaHash');
+  if(!block||!grid) return;
+  grid.innerHTML='';
+  block.hidden=true;
+  if(hashEl) hashEl.textContent='';
+  if(!item) return;
+
+  let traits = item.traits;
+  let dnaHash = item.dna_hash;
+
+  // Lazy backfill: roll DNA the first time an owned poxy is opened.
+  const owned = currentUser && String(item.user_id||'')===String(currentUser.id);
+  if((!traits || Object.keys(traits).length===0) && owned){
+    try{
+      const{data}=await sb.rpc('assign_traits_on_mint',{p_poxy_id:item.id,p_season_id:DNA_SEASON_ID});
+      if(data&&data.ok){ traits=data.traits; dnaHash=data.dna_hash; item.traits=traits; item.dna_hash=dnaHash; }
+      else if(data&&data.error){ console.error('[dna] assign:', data.error); }
+    }catch(e){ console.error('[dna] assign failed', e); }
+  }
+
+  if(!traits || Object.keys(traits).length===0) return; // nothing to display
+
+  block.hidden=false;
+  if(hashEl&&dnaHash) hashEl.textContent='DNA '+String(dnaHash).slice(0,10).toUpperCase();
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let i=0;
+  DNA_CATEGORY_ORDER.forEach(cat=>{
+    const t = traits[cat];
+    if(!t) return;
+    const tier = t.tier||'common';
+    const meta = (typeof RARITY_TIER_META!=='undefined' && RARITY_TIER_META[tier]) ? RARITY_TIER_META[tier] : null;
+    const color = meta ? meta.accent : '#9E9E9E';
+    const pop = Number(t.pop||0);
+    const rare = pop>0 && pop<=20;
+    const tag = document.createElement('div');
+    tag.className='poxy-dna-trait'+(rare?' poxy-dna-trait--rare':'');
+    tag.style.setProperty('--trait-color', color);
+    if(!reduce) tag.style.animationDelay=(i*80)+'ms';
+    tag.innerHTML =
+      '<span class="poxy-dna-cat">'+sanitizeText(cat)+'</span>'+
+      '<span class="poxy-dna-name">'+sanitizeText(t.name||'—')+'</span>'+
+      (rare
+        ? '<span class="poxy-dna-only">Only '+pop+' exist</span>'
+        : '<span class="poxy-dna-pop">'+(pop?('~'+pop):'')+'</span>');
+    grid.appendChild(tag);
+    i++;
+  });
+}
 
 window.closeAssetViewerModal = function() {
   const modal = $('assetViewerModal');
@@ -13313,6 +13373,15 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
           <span class="avm-data-key">PINNED</span>
           <span class="avm-data-val">COLLECTION TOP</span>
         </div>
+      </div>
+
+      <!-- DNA Traits (ЭТАП 1) — staggered reveal, populated from item.traits -->
+      <div class="poxy-dna-traits" id="avmDnaTraits" hidden>
+        <div class="poxy-dna-head">
+          <span class="poxy-dna-eyebrow">DNA SEQUENCE</span>
+          <span class="poxy-dna-hash" id="avmDnaHash"></span>
+        </div>
+        <div class="poxy-dna-grid" id="avmDnaGrid"></div>
       </div>
 
       <!-- Crypto proof shortcut -->
