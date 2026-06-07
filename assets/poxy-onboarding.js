@@ -149,6 +149,7 @@
       var el = document.createElement('div');
       var ang = (i / n) * Math.PI * 2;
       var dist = 22 + Math.random() * 32;
+      el.className = 'onb-particle';
       el.style.cssText = 'position:fixed;left:' + cx + 'px;top:' + cy + 'px;width:6px;height:6px;border-radius:50%;background:' + color + ';pointer-events:none;z-index:100001;transform:translate(-50%,-50%)';
       document.body.appendChild(el);
       var tx = Math.cos(ang) * dist, ty = Math.sin(ang) * dist;
@@ -664,6 +665,13 @@
     OB.rafSc = requestAnimationFrame(raf);
   }
 
+  function _purgeTourDOM() {
+    document.querySelectorAll('[class*="onb"]').forEach(function(el) { el.remove(); });
+    document.querySelectorAll('[id*="onb"]').forEach(function(el) { el.remove(); });
+    var cvs = document.getElementById('onbCanvas');
+    if (cvs) cvs.remove();
+  }
+
   /* ── END TOUR ─────────────────────────────────────────────────── */
   function _endTour() {
     if (!OB.active) return;
@@ -673,9 +681,11 @@
     _stopDrone();
     localStorage.setItem(LS_KEY, 'true');
     var el = OB.el;
-    if (el) {
-      el.classList.add('ob-overlay--out');
-      setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); OB.el = null; }, 520);
+    if (el) el.classList.add('ob-overlay--out');
+    _purgeTourDOM();
+    OB.el = null;
+    if (el && el.parentNode) {
+      setTimeout(function() { _purgeTourDOM(); }, 520);
     }
   }
 
