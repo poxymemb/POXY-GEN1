@@ -716,14 +716,13 @@ body.poxy-stitch-dash:has(#collectionPage.visible){
   overflow:visible;
 }
 
-/* Passport card grid — Stitch: sm:grid-cols-2 lg:grid-cols-4 gap-gutter(24px)
-   Min 240px so passport cards have room for avatar + serial + data rows */
+/* Active Inventory quick cards — compact square grid */
 .poxy-col-inventory-grid,
 #collectionPage .poxy-col-inventory-grid{
   display:grid!important;
-  grid-template-columns:repeat(auto-fill,minmax(240px,1fr))!important;
-  gap:24px!important;
-  align-items:start!important;  /* stretch→start: passport cards are variable height */
+  grid-template-columns:repeat(auto-fill,minmax(176px,1fr))!important;
+  gap:16px!important;
+  align-items:stretch!important;
 }
 
 /* Matte titanium inventory cards */
@@ -745,13 +744,30 @@ body.poxy-stitch-dash:has(#collectionPage.visible){
   animation:fadeIn 0.4s ease both;
   position:relative;
 }
-/* Inner duplicate border removed — was mask-composite second perimeter */
-.poxy-collection-page .col-inv-card::before{display:none!important}
+.poxy-collection-page .col-inv-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  padding:1px;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,0.08),transparent);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.35s;
+}
 .poxy-collection-page .col-inv-card:hover{
   transform:scale(1.03)!important;
   z-index:6;
   border-color:rgba(255,255,255,0.18)!important;
-  box-shadow:0 8px 32px rgba(0,0,0,0.45),0 0 24px var(--rarity-glow,rgba(249,171,255,0.15))!important;
+  box-shadow:0 8px 32px rgba(0,0,0,0.45),0 0 24px var(--rarity-glow,rgba(249,171,255,0.15)),inset 0 0 24px var(--rarity-glow,transparent)!important;
+}
+.poxy-collection-page .col-inv-card:hover::before{
+  opacity:1;
+  box-shadow:0 0 0 1px var(--rarity-color,#f9abff),0 0 20px var(--rarity-glow,rgba(249,171,255,0.25));
 }
 body.col-multi-select-active .poxy-collection-page .col-inv-card{cursor:pointer}
 body.col-craft-zone-active .poxy-collection-page .col-inv-card[data-tier="common"]{cursor:grab}
