@@ -60,7 +60,7 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-gens-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-gens-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=7">
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=21">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
@@ -93,7 +93,7 @@
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=2" defer></script>
-<script src="assets/poxy-gens-motion.js?v=2" defer></script>
+<script src="assets/poxy-gens-motion.js?v=3" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
@@ -1930,22 +1930,22 @@ body.dark-club .club-sub{color:#888}
             <span class="poxy-gens-subhdr__line">GENERATIONS // TIMELINE LAYER_01 // CIRCULATING: 12,450 UNITS</span>
           </header>
 
-          <section class="poxy-gens-hero gens-stage" data-gens-stage="hero" aria-label="GEN 2 Obsidian Strike">
+          <section class="poxy-gens-hero gens-stage" data-gens-stage="hero" data-gens-tilt aria-label="GEN 2 Obsidian Strike">
             <div class="poxy-gens-hero__void" data-gens-parallax="void"></div>
             <div class="poxy-gens-hero__inner">
               <div class="poxy-gens-hero__meta">
-                <div class="poxy-gens-gen-pill">
+                <div class="poxy-gens-gen-pill gens-reveal-left" data-gens-reveal="0">
                   <span class="poxy-gens-gen-pill__tag">GEN 2</span>
                   <span class="poxy-gens-gen-pill__dot" aria-hidden="true"></span>
                   <span class="poxy-gens-gen-pill__status">[ACTIVE]</span>
                 </div>
-                <h1 class="poxy-gens-hero__title">Obsidian Strike</h1>
-                <div class="poxy-gens-stats">
+                <h1 class="poxy-gens-hero__title gens-reveal-left" data-gens-reveal="1">Obsidian Strike</h1>
+                <div class="poxy-gens-stats gens-reveal-left" data-gens-reveal="2">
                   <div class="poxy-gens-stats__row"><span>YIELD_RATE:</span><span class="poxy-gens-stats__val">1.45x</span></div>
                   <div class="poxy-gens-stats__row"><span>RARITY_CAP:</span><span class="poxy-gens-stats__val">MYTHIC</span></div>
                   <div class="poxy-gens-stats__row"><span>NETWORK:</span><span class="poxy-gens-stats__val">L2 SECURE</span></div>
                 </div>
-                <button type="button" class="poxy-gens-btn-terminal">Access Terminal</button>
+                <button type="button" class="poxy-gens-btn-terminal gens-reveal-left" data-gens-reveal="3">Access Terminal</button>
               </div>
               <div class="poxy-gens-gallery" role="list" aria-label="Schematic models">
                 <article class="poxy-gens-model" role="listitem">
