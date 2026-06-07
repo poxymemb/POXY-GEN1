@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-gens-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=7">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=22">
+<link rel="stylesheet" href="assets/poxy-collection-page.css?v=21">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-settings-page.css?v=7">
@@ -8421,7 +8421,16 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
   const inForge=findCraftSocketForItem(item.id)>=0;
   const isSelected=isColItemSelected(item.id);
 
-  const card = _buildQuickInvCard(item, tier, ds);
+  // ── Use the Card Engine for layered rendering ──
+  // Determine the best renderer for this asset tier (future: lottie, rive)
+  const rendererType = item.asset_url ? 'image' : 'icon';
+  const rendererData = rendererType === 'image'
+    ? { src: item.asset_url, alt: tier.label + ' POXY', color: tier.color }
+    : { color: tier.color, symbol: STITCH_TIER_ICON[tier.id] || 'view_in_ar' };
+
+  const card = window.PoxyCardEngine
+    ? window.PoxyCardEngine.buildCard(item, tier, ds, { renderer: rendererType, rendererData })
+    : _buildCollectionCardFallback(item, tier, ds); // graceful fallback
 
   // ── Preserve all existing class flags (forge, selection, VIP, locked) ──
   // IMPORTANT: keep 'col-card' so the delegated click handler on #colContent
@@ -8476,46 +8485,6 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     wrap.appendChild(overlay);
     return wrap;
   }
-  return card;
-}
-
-/** Active Inventory quick card — compact square thumb + tier/serial/date footer. */
-function _buildQuickInvCard(item, tier, ds){
-  const card=document.createElement('div');
-  card.dataset.id=item.id;
-  card.dataset.rarity=item.poxy_tier||'common';
-  card.style.setProperty('--rarity-color',tier.color);
-  card.style.setProperty('--rarity-glow',tier.glow);
-
-  const thumb=document.createElement('div');
-  thumb.className='col-inv-thumb poxy-col-preview';
-  const glow=document.createElement('div');
-  glow.className='col-inv-thumb-glow';
-  glow.style.background='radial-gradient(ellipse at 50% 80%,'+(tier.glow||'rgba(255,255,255,0.2)')+',transparent 70%)';
-  const ico=document.createElement('span');
-  ico.className='material-symbols-outlined col-card-icon poxy-col-preview-icon';
-  ico.style.color=tier.color;
-  ico.textContent=STITCH_TIER_ICON[tier.id]||'view_in_ar';
-  thumb.appendChild(glow);
-  thumb.appendChild(ico);
-  card.appendChild(thumb);
-
-  const foot=document.createElement('div');
-  foot.className='col-inv-foot poxy-col-foot';
-  const lbl=document.createElement('div');
-  lbl.className='col-card-tier';
-  lbl.style.color=tier.color;
-  lbl.textContent=(tier.label||'').toUpperCase();
-  const ser=document.createElement('div');
-  ser.className='col-card-serial';
-  ser.textContent=item.serial_number||'–';
-  const dt=document.createElement('div');
-  dt.className='col-card-date';
-  dt.textContent=ds;
-  foot.appendChild(lbl);
-  foot.appendChild(ser);
-  foot.appendChild(dt);
-  card.appendChild(foot);
   return card;
 }
 
