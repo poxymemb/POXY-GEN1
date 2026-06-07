@@ -60,7 +60,7 @@
 <link rel="stylesheet" href="assets/poxy-market-page.css?v=6">
 <link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-gens-page.css?v=3">
+<link rel="stylesheet" href="assets/poxy-gens-page.css?v=4">
 <link rel="stylesheet" href="assets/poxy-profile-page.css?v=7">
 <link rel="stylesheet" href="assets/poxy-collection-page.css?v=21">
 <link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
@@ -93,7 +93,7 @@
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=2" defer></script>
-<script src="assets/poxy-gens-motion.js?v=3" defer></script>
+<script src="assets/poxy-gens-motion.js?v=4" defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
@@ -1930,8 +1930,10 @@ body.dark-club .club-sub{color:#888}
             <span class="poxy-gens-subhdr__line">GENERATIONS // TIMELINE LAYER_01 // CIRCULATING: 12,450 UNITS</span>
           </header>
 
-          <section class="poxy-gens-hero gens-stage" data-gens-stage="hero" data-gens-tilt aria-label="GEN 2 Obsidian Strike">
-            <div class="poxy-gens-hero__void" data-gens-parallax="void"></div>
+          <section class="poxy-gens-hero gens-stage" data-gens-stage="hero" data-gens-scroll-root aria-label="GEN 2 Obsidian Strike">
+            <div class="poxy-gens-hero__tilt" data-gens-tilt>
+              <div class="poxy-gens-hero__void" data-gens-parallax="void"></div>
+              <div class="poxy-gens-hero__cursor-glow" data-gens-cursor-glow aria-hidden="true"></div>
             <div class="poxy-gens-hero__inner">
               <div class="poxy-gens-hero__meta">
                 <div class="poxy-gens-gen-pill gens-reveal-left" data-gens-reveal="0">
@@ -1939,7 +1941,7 @@ body.dark-club .club-sub{color:#888}
                   <span class="poxy-gens-gen-pill__dot" aria-hidden="true"></span>
                   <span class="poxy-gens-gen-pill__status">[ACTIVE]</span>
                 </div>
-                <h1 class="poxy-gens-hero__title gens-reveal-left" data-gens-reveal="1">Obsidian Strike</h1>
+                <h1 class="poxy-gens-hero__title gens-reveal-left" data-gens-reveal="1" data-gens-scroll-morph>Obsidian Strike</h1>
                 <div class="poxy-gens-stats gens-reveal-left" data-gens-reveal="2">
                   <div class="poxy-gens-stats__row"><span>YIELD_RATE:</span><span class="poxy-gens-stats__val">1.45x</span></div>
                   <div class="poxy-gens-stats__row"><span>RARITY_CAP:</span><span class="poxy-gens-stats__val">MYTHIC</span></div>
@@ -1948,19 +1950,26 @@ body.dark-club .club-sub{color:#888}
                 <button type="button" class="poxy-gens-btn-terminal gens-reveal-left" data-gens-reveal="3">Access Terminal</button>
               </div>
               <div class="poxy-gens-gallery" role="list" aria-label="Schematic models">
-                <article class="poxy-gens-model" role="listitem">
-                  <div class="poxy-gens-model__img" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjpNgCfVLfGO6sXRhJ-zH6MhGXA6TWP5ia2LL6UxNdTJiJXjJ17TNFPS7FX2guhfN9rE2uv91-Gzfi-WQ4W8hNcjaPlSKybeL0HDAst3Ive_BLxJDjFiXfjx41sToB9rwuFwbTVo_OYMn71-Vgm5haVs0VgasAShMR74UAyPUVkwdeP3vktGfWXR0t3yzppx72U-wyci9FLLbftBGb18lVLGblbELzqlCvB5GZvW4ftaevtIl51TOJskd8uXhpavNA8-9-I93kig')"></div>
-                  <div class="poxy-gens-model__label">001 // CORE</div>
+                <article class="poxy-gens-model" role="listitem" data-gens-model="core">
+                  <div class="poxy-gens-model__track">
+                    <div class="poxy-gens-model__img" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjpNgCfVLfGO6sXRhJ-zH6MhGXA6TWP5ia2LL6UxNdTJiJXjJ17TNFPS7FX2guhfN9rE2uv91-Gzfi-WQ4W8hNcjaPlSKybeL0HDAst3Ive_BLxJDjFiXfjx41sToB9rwuFwbTVo_OYMn71-Vgm5haVs0VgasAShMR74UAyPUVkwdeP3vktGfWXR0t3yzppx72U-wyci9FLLbftBGb18lVLGblbELzqlCvB5GZvW4ftaevtIl51TOJskd8uXhpavNA8-9-I93kig')"></div>
+                    <div class="poxy-gens-model__label">001 // CORE</div>
+                  </div>
                 </article>
-                <article class="poxy-gens-model" role="listitem">
-                  <div class="poxy-gens-model__img" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAUJVWWjbAlG4jeGoHLfrnzOeLFWqAMsO2SwUNWasj1v04B8b072L21MUMzcrHqSnd1_2rsQ1hfUi2Vq_9-D0YD1uS4yHMfyto77uWUtD97xyXXyAyRyqoD4IgwchZoihd8MxwqpXmszmPAlxZqlh0EpCGUOQHwXx-0wQiTnMuGG84D3ZnFBYkQKkAHXPR0plqKRbAFT7LXm9sP95quAWnkbmxjFWbFq4KH9FIAfqSGJGGkevmyRaESfTQkfn1R6708af0Z6cXfAw')"></div>
-                  <div class="poxy-gens-model__label">002 // CHASSIS</div>
+                <article class="poxy-gens-model" role="listitem" data-gens-model="chassis">
+                  <div class="poxy-gens-model__track">
+                    <div class="poxy-gens-model__img" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAUJVWWjbAlG4jeGoHLfrnzOeLFWqAMsO2SwUNWasj1v04B8b072L21MUMzcrHqSnd1_2rsQ1hfUi2Vq_9-D0YD1uS4yHMfyto77uWUtD97xyXXyAyRyqoD4IgwchZoihd8MxwqpXmszmPAlxZqlh0EpCGUOQHwXx-0wQiTnMuGG84D3ZnFBYkQKkAHXPR0plqKRbAFT7LXm9sP95quAWnkbmxjFWbFq4KH9FIAfqSGJGGkevmyRaESfTQkfn1R6708af0Z6cXfAw')"></div>
+                    <div class="poxy-gens-model__label">002 // CHASSIS</div>
+                  </div>
                 </article>
-                <article class="poxy-gens-model" role="listitem">
-                  <div class="poxy-gens-model__img" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAGPwTt6X-neRLq5zEuCDFRhr6y9efGD6zL92zF9qdZ1XAHNg1GOxRzS7wSos2jkETCT0VETwvJGvAkRqZ6v8bfJc-4zYOOwwzMIo8uXERgMWSAT0JVoVb-iP-g5hxGtZD70fEVRuRjD1Wi3t60Uz_O1A5UmiTwV3gXmQI7u3lxhWCOLQN-ndJOUsi6pdG8Eo4gu_UiRfpcoIAzV0SIV0zy4bAi9Ue75iBf1rsSQgImW45J6wE-5iGsfDOEjVqW3Wlv7Qrx5XqaA')"></div>
-                  <div class="poxy-gens-model__label">003 // OPTICS</div>
+                <article class="poxy-gens-model" role="listitem" data-gens-model="optics">
+                  <div class="poxy-gens-model__track">
+                    <div class="poxy-gens-model__img" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAGPwTt6X-neRLq5zEuCDFRhr6y9efGD6zL92zF9qdZ1XAHNg1GOxRzS7wSos2jkETCT0VETwvJGvAkRqZ6v8bfJc-4zYOOwwzMIo8uXERgMWSAT0JVoVb-iP-g5hxGtZD70fEVRuRjD1Wi3t60Uz_O1A5UmiTwV3gXmQI7u3lxhWCOLQN-ndJOUsi6pdG8Eo4gu_UiRfpcoIAzV0SIV0zy4bAi9Ue75iBf1rsSQgImW45J6wE-5iGsfDOEjVqW3Wlv7Qrx5XqaA')"></div>
+                    <div class="poxy-gens-model__label">003 // OPTICS</div>
+                  </div>
                 </article>
               </div>
+            </div>
             </div>
           </section>
 
@@ -1995,7 +2004,7 @@ body.dark-club .club-sub{color:#888}
             <div class="poxy-gens-uplink__panel">
               <div class="poxy-gens-uplink__badge"><span class="poxy-gens-uplink__badge-dot"></span> DETECTING INCOMING TRANSMISSION</div>
               <h2 class="poxy-gens-uplink__heading">GEN 3: <span class="poxy-gens-uplink__classified">[CLASSIFIED]</span></h2>
-              <div class="poxy-gens-timer" aria-live="polite">23<span class="poxy-gens-timer__sep">:</span>14<span class="poxy-gens-timer__sep">:</span>05</div>
+              <div class="poxy-gens-timer poxy-gens-timer--live" aria-live="polite">23<span class="poxy-gens-timer__sep">:</span>14<span class="poxy-gens-timer__sep">:</span>05</div>
               <p class="poxy-gens-uplink__desc">Telemetry data suggests a high-density asset drop approaching the outer rim. Keep terminal nodes online.</p>
               <button type="button" class="poxy-gens-btn-notify">Notify Transmission Layer</button>
             </div>

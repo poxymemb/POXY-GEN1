@@ -23,6 +23,7 @@
   --accent-muted: rgba(236, 72, 153, 0.8);
   --accent-glow: rgba(236, 72, 153, 0.15);
   --accent-glow-soft: rgba(236, 72, 153, 0.1);
+  --accent-cursor-glow: rgba(236, 72, 153, 0.18);
   --accent-shadow: rgba(236, 72, 153, 0.4);
   --accent-shadow-soft: rgba(236, 72, 153, 0.2);
   --accent-watermark: rgba(236, 72, 153, 0.3);
@@ -69,6 +70,7 @@ body[data-theme="arctic"] #stPanelGens {
   --accent-muted: rgba(219, 39, 119, 0.85);
   --accent-glow: rgba(219, 39, 119, 0.12);
   --accent-glow-soft: rgba(219, 39, 119, 0.08);
+  --accent-cursor-glow: rgba(219, 39, 119, 0.14);
   --accent-shadow: rgba(219, 39, 119, 0.28);
   --accent-shadow-soft: rgba(219, 39, 119, 0.16);
   --accent-watermark: rgba(219, 39, 119, 0.22);
@@ -192,17 +194,35 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   margin-bottom: 96px;
-  transform: perspective(1400px) rotateX(var(--gens-tilt-x, 0deg)) rotateY(var(--gens-tilt-y, 0deg));
-  transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.poxy-gens-hero__tilt {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
   will-change: transform;
 }
 .poxy-gens-hero__void {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top right, var(--accent-glow), transparent 55%);
-  opacity: 0.55;
+  opacity: var(--gens-void-opacity, 0.55);
   pointer-events: none;
-  will-change: transform;
+  will-change: transform, opacity;
+  transform: scale(var(--gens-void-scale, 1));
+  transform-origin: center center;
+}
+.poxy-gens-hero__cursor-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  mix-blend-mode: screen;
+}
+.poxy-gens-hero.is-pointer-active .poxy-gens-hero__cursor-glow {
+  opacity: 1;
 }
 .poxy-gens-hero__inner {
   position: relative;
@@ -273,6 +293,13 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   color: var(--text-primary);
   text-transform: uppercase;
   margin: 0;
+  transform: scale(var(--gens-morph-scale, 1));
+  opacity: var(--gens-morph-opacity, 1);
+  will-change: transform, opacity;
+}
+[data-gens-scroll-morph] {
+  transform: scale(var(--gens-morph-scale, 1));
+  opacity: var(--gens-morph-opacity, 1);
 }
 
 .poxy-gens-stats {
@@ -361,26 +388,42 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   min-height: 260px;
   height: 100%;
   border-radius: 1rem;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
+  background: transparent;
+  border: none;
   opacity: 0;
   transform: translateY(56px) scale(0.9);
-  transition: opacity 0.7s var(--gens-spring),
-              transform 0.7s var(--gens-spring),
-              border-color 0.3s, box-shadow 0.3s;
+  transition: opacity 0.7s var(--gens-spring), transform 0.7s var(--gens-spring);
 }
 @media (min-width: 1024px) {
   .poxy-gens-model { min-height: 340px; }
 }
 .poxy-gens-model.is-emerged {
   opacity: 1;
-  transform: translate3d(0, var(--gens-model-parallax, 0px), 0) scale(1);
+  transform: translateY(0) scale(1);
 }
 .poxy-gens-model:nth-child(1).is-emerged { transition-delay: 0s; }
 .poxy-gens-model:nth-child(2).is-emerged { transition-delay: 0.1s; }
 .poxy-gens-model:nth-child(3).is-emerged { transition-delay: 0.2s; }
+
+.poxy-gens-model__track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  transform: translate3d(0, var(--gens-scroll-y, 0px), 0);
+  will-change: transform;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.poxy-gens-model:hover .poxy-gens-model__track {
+  border-color: var(--border-accent-strong);
+  box-shadow: 0 0 32px var(--accent-shadow-soft);
+}
 
 .poxy-gens-model__img {
   position: absolute;
@@ -390,17 +433,13 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   opacity: 0.72;
   transition: opacity 0.35s, transform 0.5s var(--gens-enter), box-shadow 0.35s;
 }
-.poxy-gens-hero:hover .poxy-gens-model__img {
+.poxy-gens-hero.is-pointer-active .poxy-gens-model__img {
   box-shadow: inset 0 0 48px var(--accent-glow);
 }
 .poxy-gens-model:hover .poxy-gens-model__img {
   opacity: 1;
   transform: scale(1.05);
   box-shadow: inset 0 0 64px var(--accent-shadow-soft);
-}
-.poxy-gens-model:hover {
-  border-color: var(--border-accent-strong);
-  box-shadow: 0 0 32px var(--accent-shadow-soft);
 }
 .poxy-gens-model__label {
   position: absolute;
@@ -453,15 +492,15 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   flex-direction: column;
   gap: 20px;
   justify-content: flex-end;
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.6s var(--gens-spring),
-              transform 0.6s var(--gens-spring),
-              filter 0.5s, border-color 0.3s;
+  opacity: var(--gens-arch-opacity, 0);
+  transform: translateY(calc(40px * (1 - var(--gens-arch-progress, 0)))) scale(var(--gens-arch-scale, 0.9));
+  filter: blur(calc(8px * (1 - var(--gens-arch-progress, 0))));
+  transition: border-color 0.3s;
+  will-change: transform, filter, opacity;
 }
 .poxy-gens-arch-card.is-revealed {
   opacity: 1;
-  transform: translateY(0);
+  --gens-arch-opacity: 1;
 }
 .poxy-gens-arch-card--gen1 { filter: grayscale(1); }
 .poxy-gens-arch-card--gen1.is-revealed { filter: grayscale(0.35); }
@@ -703,6 +742,14 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   width: 100%;
   text-align: center;
 }
+.poxy-gens-timer--live {
+  display: inline-block;
+  animation: gensTimerBreathe 2s ease-in-out infinite;
+}
+@keyframes gensTimerBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
 .poxy-gens-timer__sep {
   color: var(--text-secondary);
   font-weight: 300;
@@ -710,7 +757,7 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   opacity: 0.65;
 }
 .poxy-gens-timer.is-glitch {
-  animation: gensTimerGlitch 0.55s var(--gens-spring);
+  animation: gensTimerGlitch 0.55s var(--gens-spring), gensTimerBreathe 2s ease-in-out infinite;
 }
 @keyframes gensTimerGlitch {
   0% { transform: scale(1); opacity: 1; text-shadow: none; }
@@ -825,11 +872,13 @@ body[data-theme="arctic"].poxy-stitch-dash:has(#stPanelGens:not([hidden])) {
   .poxy-gens-arch-card,
   .poxy-gens-radar__sweep,
   .poxy-gens-gen-pill__dot,
-  .poxy-gens-hero {
+  .poxy-gens-hero,
+  .poxy-gens-timer--live {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
   }
+  .poxy-gens-model__track { transform: none !important; }
 }
