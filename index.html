@@ -83,6 +83,7 @@
 <link rel="stylesheet" href="assets/poxy-dna-traits.css?v=1">
 <link rel="stylesheet" href="assets/poxy-lore.css?v=1">
 <link rel="stylesheet" href="assets/poxy-passport-extras.css?v=1">
+<link rel="stylesheet" href="assets/poxy-discovery-feed.css?v=1">
 <link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
 <link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
 <link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
@@ -3635,6 +3636,33 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         <section id="clubTabFeed" class="club-panel active" data-club-panel="feed">
           <div class="club-feed-layout">
             <div class="club-feed-main">
+
+              <!-- ── ЭТАП 4: Discovery Feed ──────────────────────────── -->
+              <div id="poxyDiscoveryFeed" hidden>
+                <!-- Scan line -->
+                <div class="pdf-scan-line" aria-hidden="true"></div>
+                <!-- Header -->
+                <div class="pdf-header">
+                  <div class="pdf-live-badge" id="pdfLiveBadge">
+                    <div class="pdf-live-dot-wrap" aria-hidden="true">
+                      <div class="pdf-live-dot"></div>
+                      <div class="pdf-live-ring"></div>
+                      <div class="pdf-live-ring"></div>
+                      <div class="pdf-live-ring"></div>
+                    </div>
+                    <span class="pdf-live-text">LIVE</span>
+                  </div>
+                  <span class="pdf-title">Discovery Feed</span>
+                  <span class="pdf-count-badge" id="pdfCountBadge">+1</span>
+                </div>
+                <span class="pdf-idle-text" id="pdfIdleText">Scanning for discoveries…</span>
+                <!-- Event list -->
+                <div class="pdf-list" id="pdfList"></div>
+                <!-- Sim button (localhost only) -->
+                <button type="button" class="pdf-sim-btn" id="pdfSimBtn" onclick="pdfSimulateDiscovery()">⚙ Simulate Discovery</button>
+              </div>
+              <!-- ── END Discovery Feed ───────────────────────────────── -->
+
               <div class="club-feed-tabs">
                 <button type="button" class="club-feed-tab active" data-feed-sub="announce" onclick="switchClubFeedSub('announce')">For You</button>
                 <button type="button" class="club-feed-tab" data-feed-sub="global" onclick="switchClubFeedSub('global')">Global</button>
@@ -13236,6 +13264,305 @@ function setupRealtimeSubscriptions(){
     realtimeSubs.push(commentSub);
   }catch(e){console.warn('Realtime subscription error:',e);}
 }
+// ══════════════════════════════════════════════════════════════════════
+// ЭТАП 4: DISCOVERY FEED — cinematic live event stream
+// ══════════════════════════════════════════════════════════════════════
+(function(){
+  'use strict';
+
+  const MAX_CARDS      = 20;
+  const IDLE_TIMEOUT   = 30000; // 30s
+  const DECRYPT_STEP   = 40;    // ms per character
+  const TYPEWRITER_DUR = 400;   // ms total for title
+  const HEX_CHARS      = '0123456789ABCDEF';
+
+  let _cards      = [];      // {el, ts}
+  let _idleTimer  = null;
+  let _idleActive = false;
+  let _discoveryCt= 0;
+  let _badgeTimer = null;
+  let _simCycle   = 0;
+  let _observer   = null;
+  let _paused     = false;
+  let _sub        = null;
+
+  // ── DOM refs ──────────────────────────────────────────────────────
+  function _$id(id){ return document.getElementById(id); }
+
+  // ── Idle management ───────────────────────────────────────────────
+  function _resetIdle(){
+    _idleActive = false;
+    const badge = _$id('pdfLiveBadge');
+    if(badge) badge.classList.remove('is-idle');
+    const txt = _$id('pdfIdleText');
+    if(txt) txt.classList.remove('is-visible');
+    clearTimeout(_idleTimer);
+    _idleTimer = setTimeout(_goIdle, IDLE_TIMEOUT);
+  }
+  function _goIdle(){
+    _idleActive = true;
+    const badge = _$id('pdfLiveBadge');
+    if(badge) badge.classList.add('is-idle');
+    const txt = _$id('pdfIdleText');
+    if(txt) txt.classList.add('is-visible');
+  }
+
+  // ── Count badge pop ───────────────────────────────────────────────
+  function _popCountBadge(){
+    _discoveryCt++;
+    const b = _$id('pdfCountBadge');
+    if(!b) return;
+    b.textContent = '+' + _discoveryCt;
+    b.classList.remove('is-visible');
+    b.offsetWidth; // reflow
+    b.classList.add('is-visible');
+    clearTimeout(_badgeTimer);
+    _badgeTimer = setTimeout(()=>{
+      b.classList.remove('is-visible');
+      _discoveryCt = 0;
+    }, 2000);
+  }
+
+  // ── Typewriter effect on title span ──────────────────────────────
+  function _typewrite(el, text){
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){ el.textContent = text; return; }
+    el.textContent = '';
+    const chars = text.split('');
+    const perChar = TYPEWRITER_DUR / chars.length;
+    let cur = 0;
+    // Cursor
+    const cursor = document.createElement('span');
+    cursor.style.cssText = 'border-right:2px solid currentColor;margin-left:1px;animation:pdfCursorBlink 0.5s step-end 4 forwards';
+    el.appendChild(cursor);
+    const style = document.createElement('style');
+    style.textContent = '@keyframes pdfCursorBlink{0%,100%{opacity:1}50%{opacity:0}}';
+    document.head.appendChild(style);
+    function addChar(){
+      if(cur < chars.length){
+        el.insertBefore(document.createTextNode(chars[cur]), cursor);
+        cur++;
+        setTimeout(addChar, perChar);
+      } else {
+        // blink 2 more times then remove cursor
+        setTimeout(()=>cursor.remove(), 1000);
+      }
+    }
+    // Delay typewriter until after entrance animation
+    setTimeout(addChar, 350);
+  }
+
+  // ── Decrypt effect for PX-ID ─────────────────────────────────────
+  function _decryptId(el, finalId){
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){ el.textContent = finalId; return; }
+    const chars = finalId.split('');
+    const revealed = chars.map(c => (c === '-' || c === 'P' || c === 'X') ? c : null);
+    let step = 0;
+    function tick(){
+      const display = chars.map((c, i) => {
+        if(revealed[i] !== null) return revealed[i];
+        return HEX_CHARS[Math.floor(Math.random() * HEX_CHARS.length)];
+      }).join('');
+      el.textContent = display;
+      // Reveal one character per step
+      const unrevealed = revealed.map((v,i)=>v===null?i:null).filter(i=>i!==null);
+      if(unrevealed.length && step < chars.length){
+        const idx = unrevealed[0];
+        revealed[idx] = chars[idx];
+        step++;
+        setTimeout(tick, DECRYPT_STEP);
+      }
+    }
+    // Start after card entrance
+    setTimeout(tick, 200);
+  }
+
+  // ── Remove oldest card with exit animation ─────────────────────────
+  function _evictOldest(){
+    if(_cards.length < MAX_CARDS) return;
+    const oldest = _cards.shift();
+    if(!oldest) return;
+    oldest.el.classList.add('pdf-card--exiting');
+    setTimeout(()=>oldest.el.remove(), 210);
+  }
+
+  // ── Build and insert a card ───────────────────────────────────────
+  function _addCard(type, data){
+    const list = _$id('pdfList');
+    const feed = _$id('poxyDiscoveryFeed');
+    if(!list || !feed) return;
+    if(feed.hidden) feed.hidden = false;
+
+    _evictOldest();
+
+    const card = document.createElement('div');
+    const rarityClass = type === 'mythic' ? 'pdf-card--mythic'
+                      : type === 'legendary' ? 'pdf-card--legendary'
+                      : 'pdf-card--rare-trait';
+    card.className = `pdf-card ${rarityClass}`;
+    card.style.willChange = 'transform';
+    // Remove will-change after animation
+    setTimeout(()=>card.style.willChange = '', 600);
+
+    // Head
+    const head = document.createElement('div');
+    head.className = 'pdf-card-head';
+    const emoji = document.createElement('span');
+    emoji.className = 'pdf-card-emoji';
+    emoji.textContent = type === 'mythic' ? '⚡' : type === 'legendary' ? '💎' : '🧬';
+    const title = document.createElement('span');
+    title.className = `pdf-card-title pdf-card-title--${type === 'rare-trait' ? 'rare' : type}`;
+    head.appendChild(emoji);
+    head.appendChild(title);
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'pdf-card-body';
+    if(type === 'mythic'){
+      body.textContent = (data.username || 'Unknown') + ' found ' + (data.name || 'a Mythic');
+    } else if(type === 'legendary'){
+      const idSpan = document.createElement('span');
+      idSpan.className = 'pdf-card-id';
+      idSpan.textContent = data.serial || 'PX-??????';
+      body.textContent = '';
+      const verLine = document.createElement('div');
+      verLine.textContent = 'Verified';
+      body.appendChild(idSpan);
+      body.appendChild(verLine);
+    } else {
+      body.textContent = (data.username || 'Unknown') + ' has "' + (data.trait || '?') + '"';
+    }
+
+    // Timestamp
+    const ts = document.createElement('div');
+    ts.className = 'pdf-card-time';
+    ts.textContent = 'just now';
+
+    card.appendChild(head);
+    card.appendChild(body);
+    card.appendChild(ts);
+
+    // Prepend (newest on top)
+    list.insertBefore(card, list.firstChild);
+    _cards.push({el: card, ts: Date.now()});
+
+    // Typewriter on title
+    const titleText = type === 'mythic' ? 'MYTHIC DISCOVERED'
+                    : type === 'legendary' ? 'LEGENDARY MINT'
+                    : 'RARE TRAIT';
+    _typewrite(title, titleText);
+
+    // Decrypt PX-ID for legendary
+    if(type === 'legendary'){
+      const idEl = body.querySelector('.pdf-card-id');
+      if(idEl) _decryptId(idEl, data.serial || 'PX-??????');
+    }
+
+    // Relative time updates
+    const startTs = Date.now();
+    const relTimer = setInterval(()=>{
+      if(!card.isConnected){ clearInterval(relTimer); return; }
+      const mins = Math.floor((Date.now()-startTs)/60000);
+      ts.textContent = mins < 1 ? 'just now' : mins + ' minute' + (mins>1?'s':'') + ' ago';
+    }, 30000);
+
+    _resetIdle();
+    _popCountBadge();
+  }
+
+  // ── Process a ledger_events row ───────────────────────────────────
+  function _processLedgerEvent(row){
+    if(!row) return;
+    const tier = (row.poxy_tier || '').toLowerCase();
+    if(tier === 'mythic'){
+      _addCard('mythic', {username: row.username || 'Hunter', name: row.poxy_name || 'Dragon of Ten Thousand Lanterns'});
+    } else if(tier === 'legendary'){
+      _addCard('legendary', {serial: row.serial_number || 'PX-??????'});
+    }
+  }
+
+  function _processRareTrait(row){
+    if(!row) return;
+    _addCard('rare-trait', {username: row.username || 'Hunter', trait: row.trait_name || 'Unknown'});
+  }
+
+  // ── Subscribe to Supabase Realtime ────────────────────────────────
+  function _subscribe(){
+    if(!window.sb) return;
+    try{
+      _sub = sb.channel('discovery-feed-global')
+        .on('postgres_changes', {event:'INSERT', schema:'public', table:'ledger_events'},
+          payload => {
+            if(_paused) return;
+            const row = payload.new || {};
+            const tier = (row.poxy_tier || '').toLowerCase();
+            if(tier === 'mythic' || tier === 'legendary'){
+              _processLedgerEvent(row);
+            }
+          }
+        )
+        .subscribe((status)=>{
+          if(status === 'SUBSCRIBED'){
+            const feed = _$id('poxyDiscoveryFeed');
+            if(feed) feed.hidden = false;
+            _resetIdle();
+          }
+        });
+      if(typeof realtimeSubs !== 'undefined') realtimeSubs.push(_sub);
+    }catch(e){ console.warn('[discovery-feed] Realtime subscribe failed:', e); }
+  }
+
+  // ── IntersectionObserver — pause when out of viewport ─────────────
+  function _setupObserver(){
+    const feed = _$id('poxyDiscoveryFeed');
+    if(!feed || !window.IntersectionObserver) return;
+    _observer = new IntersectionObserver(entries=>{
+      _paused = !entries[0].isIntersecting;
+    }, {threshold: 0.05});
+    _observer.observe(feed);
+  }
+
+  // ── Show simulate button on localhost ─────────────────────────────
+  function _maybeShowSimBtn(){
+    if(location.hostname === 'localhost' || location.hostname === '127.0.0.1'){
+      const btn = _$id('pdfSimBtn');
+      if(btn) btn.style.display = 'inline-block';
+      // Also show feed even without realtime on localhost
+      const feed = _$id('poxyDiscoveryFeed');
+      if(feed) feed.hidden = false;
+      _resetIdle();
+    }
+  }
+
+  // ── Simulate (cycles through 3 types) ────────────────────────────
+  const SIM_DATA = [
+    {type:'mythic',    data:{username:'DarkHunter_88', name:'Dragon of Ten Thousand Lanterns'}},
+    {type:'legendary', data:{serial:'PX-' + Math.random().toString(36).slice(2,8).toUpperCase()}},
+    {type:'rare-trait',data:{username:'VoidSeeker',    trait:'Imperial Crescent'}},
+  ];
+  window.pdfSimulateDiscovery = function(){
+    const evt = SIM_DATA[_simCycle % SIM_DATA.length];
+    _simCycle++;
+    _addCard(evt.type, evt.data);
+  };
+
+  // ── Init ──────────────────────────────────────────────────────────
+  function _init(){
+    _subscribe();
+    _setupObserver();
+    _maybeShowSimBtn();
+  }
+
+  // Wait until auth is ready (currentUser set) or DOM ready
+  if(document.readyState === 'complete'){
+    setTimeout(_init, 800);
+  } else {
+    window.addEventListener('load', ()=>setTimeout(_init, 800));
+  }
+})();
+// ══════════════════════════════════════════════════════════════════════
+
 function teardownRealtimeSubscriptions(){
   realtimeSubs.forEach(sub=>{try{sb.removeChannel(sub);}catch(e){}});
   realtimeSubs=[];

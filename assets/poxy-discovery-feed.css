@@ -1,0 +1,294 @@
+/* POXY — DISCOVERY FEED (ЭТАП 4)
+   Cinematic live event stream for Club Feed.
+   Additive only. Uses only existing CSS tokens.
+   ═══════════════════════════════════════════ */
+
+/* ── Outer wrapper ─────────────────────────────────────────────────── */
+#poxyDiscoveryFeed {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 20px;
+  padding: 16px;
+}
+
+/* ── Scan line ─────────────────────────────────────────────────────── */
+.pdf-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+  animation: pdfScanLine 8s linear infinite;
+  z-index: 10;
+  top: 0;
+}
+@keyframes pdfScanLine {
+  0%   { transform: translateY(-4px); }
+  100% { transform: translateY(calc(100vh)); }
+}
+
+/* ── Header ────────────────────────────────────────────────────────── */
+.pdf-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.pdf-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(220, 38, 38, 0.12);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  border-radius: 999px;
+  padding: 3px 10px 3px 6px;
+}
+
+/* Multi-ring ripple live dot */
+.pdf-live-dot-wrap {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+.pdf-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.pdf-live-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(239, 68, 68, 0.6);
+  animation: pdfRipple 1.8s ease-out infinite;
+}
+.pdf-live-ring:nth-child(2) { animation-delay: 0.4s; }
+.pdf-live-ring:nth-child(3) { animation-delay: 0.8s; }
+@keyframes pdfRipple {
+  0%   { transform: scale(1);  opacity: 0.7; }
+  100% { transform: scale(3);  opacity: 0; }
+}
+
+.pdf-live-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ef4444;
+  text-transform: uppercase;
+}
+
+.pdf-title {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+  flex: 1;
+}
+
+/* Discovery count badge */
+.pdf-count-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+  border-radius: 999px;
+  padding: 2px 8px;
+  transform: scale(0);
+  opacity: 0;
+  transition: none;
+}
+.pdf-count-badge.is-visible {
+  animation: pdfBadgePop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes pdfBadgePop {
+  0%   { transform: scale(0);   opacity: 0; }
+  70%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* ── Idle state — breathing on header ─────────────────────────────── */
+.pdf-live-badge.is-idle {
+  animation: pdfIdleBreathe 3s ease-in-out infinite;
+}
+@keyframes pdfIdleBreathe {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+.pdf-idle-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(196, 199, 200, 0.45);
+  letter-spacing: 0.06em;
+  display: none;
+  animation: pdfIdleBlink 2s ease-in-out infinite;
+}
+.pdf-idle-text.is-visible { display: block; }
+@keyframes pdfIdleBlink {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.8; }
+}
+
+/* ── Event list ────────────────────────────────────────────────────── */
+.pdf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Individual event card ─────────────────────────────────────────── */
+.pdf-card {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.025);
+  padding: 12px 14px;
+  perspective: 600px;
+  will-change: transform;
+  /* entrance: override below via .pdf-card--entering */
+}
+.pdf-card--entering {
+  animation: pdfCardEnter 500ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes pdfCardEnter {
+  0%   { opacity: 0; transform: translateY(-40px) rotateX(-15deg) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0)    rotateX(0deg)   scale(1); }
+}
+
+/* Rarity glow overlays */
+.pdf-card--mythic    { animation: pdfCardEnter 500ms cubic-bezier(0.34,1.56,0.64,1) both, pdfMythicFlare 1800ms ease-out both 0ms; }
+.pdf-card--legendary { animation: pdfCardEnter 500ms cubic-bezier(0.34,1.56,0.64,1) both, pdfLegendaryFlare 1400ms ease-out both 0ms; }
+.pdf-card--rare-trait{ animation: pdfCardEnter 500ms cubic-bezier(0.34,1.56,0.64,1) both, pdfRareFlare 1000ms ease-out both 0ms; }
+
+@keyframes pdfMythicFlare {
+  0%   { box-shadow: 0 0 0px rgba(255,200,50,0); }
+  30%  { box-shadow: 0 0 40px rgba(255,200,50,0.6), 0 0 80px rgba(255,200,50,0.2); }
+  100% { box-shadow: 0 0 8px  rgba(255,200,50,0.10); }
+}
+@keyframes pdfLegendaryFlare {
+  0%   { box-shadow: 0 0 0px rgba(100,150,255,0); }
+  30%  { box-shadow: 0 0 32px rgba(100,150,255,0.5); }
+  100% { box-shadow: 0 0 6px  rgba(100,150,255,0.05); }
+}
+@keyframes pdfRareFlare {
+  0%   { box-shadow: 0 0 0px rgba(50,220,120,0); }
+  30%  { box-shadow: 0 0 24px rgba(50,220,120,0.4); }
+  100% { box-shadow: 0 0 0px  rgba(50,220,120,0); }
+}
+
+/* ── Card exit ─────────────────────────────────────────────────────── */
+.pdf-card--exiting {
+  animation: pdfCardExit 200ms ease-in forwards;
+}
+@keyframes pdfCardExit {
+  0%   { opacity: 1; transform: translateY(0)   scale(1); }
+  100% { opacity: 0; transform: translateY(20px) scale(0.95); }
+}
+
+/* ── Card inner layout ─────────────────────────────────────────────── */
+.pdf-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.pdf-card-emoji {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.pdf-card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  /* typewriter: width grows via JS clip-path / custom approach */
+  overflow: hidden;
+  white-space: nowrap;
+}
+.pdf-card-title--mythic    { color: #fbc845; }
+.pdf-card-title--legendary { color: #a5b4fc; }
+.pdf-card-title--rare      { color: #6ee7b7; }
+
+.pdf-card-body {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 12px;
+  color: rgba(196, 199, 200, 0.65);
+  line-height: 1.4;
+  padding-left: 24px;
+}
+.pdf-card-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.06em;
+}
+.pdf-card-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: rgba(196, 199, 200, 0.3);
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+  padding-left: 24px;
+}
+
+/* ── Simulate button (localhost only, hidden by default) ─────────────── */
+.pdf-sim-btn {
+  display: none;
+  margin-top: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.pdf-sim-btn:hover { color: rgba(255, 255, 255, 0.65); border-color: rgba(255, 255, 255, 0.2); }
+
+/* ── prefers-reduced-motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .pdf-card--entering,
+  .pdf-card--mythic,
+  .pdf-card--legendary,
+  .pdf-card--rare-trait,
+  .pdf-card--exiting,
+  .pdf-scan-line,
+  .pdf-live-ring,
+  .pdf-live-badge,
+  .pdf-idle-text {
+    animation: none !important;
+    transition: none !important;
+  }
+  .pdf-card { opacity: 1; transform: none; }
+  .pdf-count-badge.is-visible { transform: scale(1); opacity: 1; }
+}
+
+/* ── Mobile ≤420px ──────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  #poxyDiscoveryFeed { padding: 12px; border-radius: 16px; }
+  .pdf-card { padding: 10px 12px; }
+  .pdf-card-body { font-size: 11px; }
+}
