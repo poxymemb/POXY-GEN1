@@ -54,7 +54,7 @@ begin
                 else exists (
                   select 1 from public.user_poxy up
                   where up.user_id = p_user_id
-                    and up.character_name = sc.poxy_type
+                    and lower(up.poxy_tier) = lower(sc.rarity)
                 )
            end as has_collected
     from public.season_collectibles sc
