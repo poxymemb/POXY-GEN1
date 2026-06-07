@@ -388,8 +388,11 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-height: 0;           /* grid child: allow shrink + internal scroll */
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 .avm-ops::-webkit-scrollbar { display: none; }
 
@@ -593,7 +596,13 @@
     min-height: 300px;
     padding: 24px 20px;
   }
-  .avm-ops { padding: 20px; }
+  .avm-ops {
+    padding: 20px;
+    max-height: calc(90dvh - 300px);
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
   .avm-asset-frame { width: 130px; height: 130px; }
   .avm-asset-icon { font-size: 56px; }
   .avm-secondary-actions { grid-template-columns: repeat(4, 1fr); }
@@ -679,4 +688,14 @@
   padding: 4px 12px;
   white-space: nowrap;
   box-shadow: 0 0 15px rgba(245,158,11,0.1);
+}
+
+/* ── Ops scroll — DNA / LORE overflow fix (≤420px iOS Safari) ─────── */
+@media (max-width: 420px) {
+  .avm-ops {
+    max-height: calc(88dvh - 260px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+  }
 }
