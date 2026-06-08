@@ -69,6 +69,7 @@
 <script src="assets/poxy-i18n-extra.js?v=5"></script>
 <script src="assets/poxy-i18n.js?v=5"></script>
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
+<link rel="stylesheet" href="assets/poxy-support-panel.css?v=1">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/lumina-chat-os.css?v=15">
 <link rel="stylesheet" href="assets/lumina-os/design-system.css?v=15">
@@ -1446,6 +1447,10 @@ body.dark-club .club-sub{color:#888}
             <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavNotify" data-i18n-aria="nav.notifications" aria-label="Notifications" onclick="openNotifyHub()">
               <span class="material-symbols-outlined">notifications</span>
               <span class="st-nav-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
+            </button>
+            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavSupport" aria-label="Support" title="Support" onclick="openSupportPanel()">
+              <span class="material-symbols-outlined">support_agent</span>
+              <span class="st-nav-badge" id="supportTicketBadge" hidden aria-hidden="true">0</span>
             </button>
             <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavChat" hidden data-beta-hidden="lumina" data-i18n-aria="nav.messages" aria-label="Messages" onclick="openLuminaOS(null,'messages')">
               <span class="material-symbols-outlined">chat_bubble</span>
@@ -4622,6 +4627,89 @@ Verification (anyone can do this):
       <button type="button" class="poxy-gift-unbox-skip" onclick="closeGiftUnboxOverlay()">Skip animation</button>
     </div>
   </div>
+</div>
+
+<!-- POXY SUPPORT PANEL (Session B) -->
+<div class="poxy-support-overlay" id="supportHubOverlay" hidden aria-hidden="true">
+  <div class="poxy-support-backdrop" onclick="closeSupportPanel()"></div>
+  <aside class="poxy-support-drawer" role="dialog" aria-labelledby="supportHubTitle">
+    <header class="poxy-support-head">
+      <h2 id="supportHubTitle">POXY Support</h2>
+      <button type="button" class="poxy-support-close" onclick="closeSupportPanel()" aria-label="Close support">✕</button>
+    </header>
+    <div class="poxy-support-tabs" id="supportMainTabs" role="tablist">
+      <button type="button" class="poxy-support-tab active" data-support-tab="faq" onclick="switchSupportTab('faq')">FAQ</button>
+      <button type="button" class="poxy-support-tab" data-support-tab="tickets" onclick="switchSupportTab('tickets')">My tickets</button>
+      <button type="button" class="poxy-support-tab" data-support-tab="new" onclick="switchSupportTab('new')">New ticket</button>
+    </div>
+    <div class="poxy-support-body">
+      <div id="supportPanelsWrap">
+        <div class="poxy-support-panel" id="supportPanelFaq" data-support-panel="faq">
+          <input type="search" class="poxy-support-search" id="supportFaqSearch" placeholder="Search FAQ…" oninput="onSupportFaqSearch()"/>
+          <div class="poxy-support-cats" id="supportFaqCats"></div>
+          <div id="supportFaqList"><p class="poxy-support-empty">Loading FAQ…</p></div>
+        </div>
+        <div class="poxy-support-panel" id="supportPanelTickets" data-support-panel="tickets" hidden>
+          <div id="supportTicketsList"><p class="poxy-support-empty">Loading tickets…</p></div>
+        </div>
+        <div class="poxy-support-panel" id="supportPanelNew" data-support-panel="new" hidden>
+          <div class="poxy-support-field">
+            <label class="poxy-support-label" for="supportNewSubject">Subject</label>
+            <input class="poxy-support-input" id="supportNewSubject" type="text" maxlength="120" placeholder="Brief summary of your issue"/>
+          </div>
+          <div class="poxy-support-field">
+            <label class="poxy-support-label" for="supportNewBody">Message</label>
+            <textarea class="poxy-support-textarea" id="supportNewBody" placeholder="Describe your issue…"></textarea>
+          </div>
+          <div class="poxy-support-field">
+            <label class="poxy-support-label">Photo (optional, max 1)</label>
+            <div class="poxy-support-attach-row">
+              <button type="button" class="poxy-support-attach-btn" onclick="document.getElementById('supportNewFile').click()">
+                <span class="material-symbols-outlined" style="font-size:16px">attach_file</span> Attach
+              </button>
+              <input type="file" id="supportNewFile" accept="image/jpeg,image/png,image/webp" hidden onchange="onSupportNewFile()"/>
+            </div>
+            <div class="poxy-support-attach-preview" id="supportNewAttachPreview">
+              <img id="supportNewAttachImg" alt="Preview"/>
+              <div class="poxy-support-attach-meta">
+                <span id="supportNewAttachMeta"></span>
+                <button type="button" class="poxy-support-attach-remove" onclick="clearSupportNewAttach()">Remove</button>
+              </div>
+            </div>
+          </div>
+          <p class="poxy-support-err" id="supportNewErr"></p>
+          <button type="button" class="poxy-support-submit" id="supportNewSubmit" onclick="createSupportTicket()">Create ticket</button>
+        </div>
+      </div>
+      <div class="poxy-support-chat" id="supportChatView" hidden>
+        <div class="poxy-support-chat-head">
+          <button type="button" class="poxy-support-back" onclick="supportBackToTickets()">← Back</button>
+          <div class="poxy-support-chat-info">
+            <div class="poxy-support-chat-subj" id="supportChatSubject">Ticket</div>
+            <span class="poxy-support-status open" id="supportChatStatus">open</span>
+          </div>
+        </div>
+        <div class="poxy-support-messages" id="supportChatMessages"></div>
+        <div class="poxy-support-compose" id="supportChatCompose">
+          <div class="poxy-support-attach-preview" id="supportChatAttachPreview">
+            <img id="supportChatAttachImg" alt="Preview"/>
+            <div class="poxy-support-attach-meta">
+              <span id="supportChatAttachMeta"></span>
+              <button type="button" class="poxy-support-attach-remove" onclick="clearSupportChatAttach()">Remove</button>
+            </div>
+          </div>
+          <div class="poxy-support-compose-row">
+            <button type="button" class="poxy-support-attach-btn" onclick="document.getElementById('supportChatFile').click()" aria-label="Attach photo">
+              <span class="material-symbols-outlined" style="font-size:18px">attach_file</span>
+            </button>
+            <input type="file" id="supportChatFile" accept="image/jpeg,image/png,image/webp" hidden onchange="onSupportChatFile()"/>
+            <textarea class="poxy-support-compose-input" id="supportChatInput" rows="1" placeholder="Type a message…" maxlength="2000" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendSupportChatMessage();}"></textarea>
+            <button type="button" class="poxy-support-send" id="supportChatSend" onclick="sendSupportChatMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
 </div>
 
 <!-- DIRECT MESSAGE SLIDE-OVER -->
@@ -14993,6 +15081,7 @@ function bootApp(){
 <script src="assets/lumina-os/panels.js?v=17"></script>
 <script src="assets/lumina-os/router.js?v=12"></script>
 <script src="assets/lumina-os/app.js?v=14"></script>
+<script src="assets/poxy-support-panel.js?v=1"></script>
 <script>
 bootApp();
 if(window._luminaOsPending&&typeof openLuminaOS==='function'){

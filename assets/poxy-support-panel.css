@@ -1,0 +1,472 @@
+/* POXY Support Panel — slide-in drawer (Session B) */
+
+.st-nav-icon-btn#stNavSupport{position:relative}
+
+.poxy-support-overlay{
+  position:fixed;
+  inset:0;
+  z-index:11600;
+  pointer-events:none;
+}
+.poxy-support-overlay.is-open{pointer-events:auto}
+.poxy-support-overlay[hidden]{display:none!important}
+
+.poxy-support-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  opacity:0;
+  transition:opacity 0.35s ease;
+}
+.poxy-support-overlay.is-open .poxy-support-backdrop{opacity:1}
+
+.poxy-support-drawer{
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  width:min(380px,100vw);
+  display:flex;
+  flex-direction:column;
+  background:rgba(10,10,15,0.98);
+  border-left:1px solid rgba(255,255,255,0.1);
+  box-shadow:-20px 0 60px rgba(0,0,0,0.55);
+  transform:translateX(100%);
+  transition:transform 0.45s cubic-bezier(0.1,1,0.1,1);
+  will-change:transform;
+}
+.poxy-support-overlay.is-open .poxy-support-drawer{transform:translateX(0)}
+
+.poxy-support-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:18px 16px 10px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  flex-shrink:0;
+}
+.poxy-support-head h2{
+  margin:0;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:17px;
+  font-weight:700;
+  color:#fff;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+}
+.poxy-support-close{
+  width:36px;height:36px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.35);
+  color:#9ca3af;
+  font-size:18px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s,color 0.2s;
+}
+.poxy-support-close:hover{background:rgba(255,255,255,0.1);color:#fff}
+
+.poxy-support-tabs{
+  display:flex;
+  gap:6px;
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+.poxy-support-tab{
+  flex:1;
+  padding:8px 6px;
+  border-radius:8px;
+  border:1px solid transparent;
+  background:transparent;
+  color:rgba(255,255,255,0.45);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:background 0.15s,color 0.15s,border-color 0.15s;
+}
+.poxy-support-tab:hover{color:rgba(255,255,255,0.75)}
+.poxy-support-tab.active{
+  background:rgba(0,245,160,0.12);
+  border-color:rgba(0,245,160,0.35);
+  color:#00f5a0;
+}
+
+.poxy-support-body{
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.poxy-support-panel{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  padding:12px 14px 16px;
+  -webkit-overflow-scrolling:touch;
+}
+.poxy-support-panel[hidden]{display:none!important}
+
+/* FAQ */
+.poxy-support-search{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);
+  color:#e2e8f0;
+  font-size:13px;
+  outline:none;
+  margin-bottom:10px;
+}
+.poxy-support-search:focus{border-color:rgba(0,245,160,0.45);box-shadow:0 0 0 2px rgba(0,245,160,0.15)}
+.poxy-support-cats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:12px;
+}
+.poxy-support-cat{
+  padding:5px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(0,0,0,0.25);
+  color:rgba(255,255,255,0.55);
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.poxy-support-cat.active{
+  border-color:rgba(0,245,160,0.4);
+  color:#00f5a0;
+  background:rgba(0,245,160,0.1);
+}
+.poxy-support-faq-item{
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;
+  margin-bottom:8px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.02);
+}
+.poxy-support-faq-q{
+  width:100%;
+  text-align:left;
+  padding:12px 14px;
+  border:none;
+  background:transparent;
+  color:#f1f5f9;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+.poxy-support-faq-q span.ico{color:rgba(0,245,160,0.8);font-size:12px;flex-shrink:0}
+.poxy-support-faq-a{
+  display:none;
+  padding:0 14px 12px;
+  font-size:12px;
+  line-height:1.55;
+  color:rgba(255,255,255,0.55);
+}
+.poxy-support-faq-item.open .poxy-support-faq-a{display:block}
+.poxy-support-faq-item.open .poxy-support-faq-q span.ico{transform:rotate(180deg)}
+
+/* Tickets list */
+.poxy-support-ticket{
+  display:block;
+  width:100%;
+  text-align:left;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.03);
+  margin-bottom:8px;
+  cursor:pointer;
+  transition:border-color 0.15s,background 0.15s;
+}
+.poxy-support-ticket:hover{border-color:rgba(0,245,160,0.35);background:rgba(0,245,160,0.06)}
+.poxy-support-ticket-subj{
+  font-size:13px;
+  font-weight:600;
+  color:#f8fafc;
+  margin-bottom:6px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.poxy-support-ticket-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:10px;
+  color:rgba(255,255,255,0.4);
+}
+.poxy-support-status{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:4px;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+}
+.poxy-support-status.open{background:rgba(59,130,246,0.2);color:#60a5fa}
+.poxy-support-status.in_progress{background:rgba(245,158,11,0.2);color:#fbbf24}
+.poxy-support-status.closed{background:rgba(100,116,139,0.25);color:#94a3b8}
+
+/* New ticket form */
+.poxy-support-field{margin-bottom:12px}
+.poxy-support-label{
+  display:block;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  margin-bottom:6px;
+}
+.poxy-support-input,.poxy-support-textarea{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);
+  color:#e2e8f0;
+  font-size:13px;
+  font-family:inherit;
+  outline:none;
+}
+.poxy-support-textarea{min-height:100px;resize:vertical}
+.poxy-support-input:focus,.poxy-support-textarea:focus{border-color:rgba(0,245,160,0.45)}
+.poxy-support-attach-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.poxy-support-attach-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.3);
+  color:rgba(255,255,255,0.7);
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+}
+.poxy-support-attach-btn:hover{border-color:rgba(0,245,160,0.35);color:#00f5a0}
+.poxy-support-attach-preview{
+  display:none;
+  margin-top:10px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(0,0,0,0.25);
+}
+.poxy-support-attach-preview.visible{display:block}
+.poxy-support-attach-preview img{
+  max-width:100%;
+  max-height:140px;
+  border-radius:8px;
+  display:block;
+  margin-bottom:8px;
+  object-fit:contain;
+}
+.poxy-support-attach-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:11px;
+  color:rgba(255,255,255,0.5);
+}
+.poxy-support-attach-remove{
+  border:none;
+  background:transparent;
+  color:#f87171;
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+}
+.poxy-support-submit{
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#00f5a0,#00c97a);
+  color:#060607;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.poxy-support-submit:disabled{opacity:0.5;cursor:not-allowed}
+
+/* Chat view */
+.poxy-support-chat{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+.poxy-support-chat[hidden]{display:none!important}
+.poxy-support-chat-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  flex-shrink:0;
+}
+.poxy-support-back{
+  border:none;
+  background:transparent;
+  color:rgba(255,255,255,0.6);
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  padding:6px 8px;
+  border-radius:8px;
+}
+.poxy-support-back:hover{background:rgba(255,255,255,0.06);color:#fff}
+.poxy-support-chat-info{flex:1;min-width:0}
+.poxy-support-chat-subj{
+  font-size:12px;
+  font-weight:700;
+  color:#fff;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.poxy-support-messages{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  -webkit-overflow-scrolling:touch;
+}
+.poxy-support-msg{
+  max-width:88%;
+  animation:supportMsgIn 0.25s ease-out;
+}
+@keyframes supportMsgIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.poxy-support-msg.player{align-self:flex-end}
+.poxy-support-msg.staff{align-self:flex-start}
+.poxy-support-msg.auto{align-self:center;max-width:95%}
+.poxy-support-bubble{
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:13px;
+  line-height:1.5;
+  word-break:break-word;
+}
+.poxy-support-msg.player .poxy-support-bubble{
+  background:linear-gradient(135deg,rgba(59,130,246,0.85),rgba(37,99,235,0.9));
+  color:#fff;
+  border-bottom-right-radius:4px;
+}
+.poxy-support-msg.staff .poxy-support-bubble{
+  background:rgba(255,255,255,0.1);
+  color:#e2e8f0;
+  border:1px solid rgba(255,255,255,0.08);
+  border-bottom-left-radius:4px;
+}
+.poxy-support-msg.auto .poxy-support-bubble{
+  background:transparent;
+  color:rgba(255,255,255,0.45);
+  font-style:italic;
+  font-size:12px;
+  text-align:center;
+  padding:6px 10px;
+}
+.poxy-support-msg img{
+  max-width:100%;
+  border-radius:10px;
+  margin-top:6px;
+  display:block;
+  cursor:pointer;
+}
+.poxy-support-msg-time{
+  font-size:9px;
+  color:rgba(255,255,255,0.3);
+  margin-top:4px;
+  padding:0 4px;
+}
+.poxy-support-msg.player .poxy-support-msg-time{text-align:right}
+.poxy-support-compose{
+  flex-shrink:0;
+  padding:10px 12px 14px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  background:rgba(0,0,0,0.2);
+}
+.poxy-support-compose.closed{display:none}
+.poxy-support-compose-row{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+}
+.poxy-support-compose-input{
+  flex:1;
+  min-width:0;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.05);
+  color:#fff;
+  font-size:13px;
+  outline:none;
+  resize:none;
+  max-height:80px;
+}
+.poxy-support-send{
+  flex-shrink:0;
+  padding:10px 14px;
+  border:none;
+  border-radius:10px;
+  background:#00f5a0;
+  color:#060607;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.poxy-support-send:disabled{opacity:0.45;cursor:not-allowed}
+.poxy-support-empty{
+  text-align:center;
+  padding:28px 16px;
+  color:rgba(255,255,255,0.4);
+  font-size:13px;
+  line-height:1.5;
+}
+.poxy-support-err{
+  color:#f87171;
+  font-size:12px;
+  margin-top:8px;
+}
+
+@media(max-width:480px){
+  .poxy-support-drawer{width:100vw}
+}
