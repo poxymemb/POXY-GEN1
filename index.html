@@ -138,6 +138,10 @@ body[data-theme="mayfair"]{background:#0e0608}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes burnOut{0%{opacity:1;transform:scale(1)}40%{transform:scale(1.05);opacity:0.6}100%{opacity:0;transform:scale(0.75)}}
+.st-win-proof{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08)}
+.st-win-proof-btn{background:none;border:1px solid rgba(0,245,160,0.35);color:#00f5a0;font-size:11px;font-family:inherit;letter-spacing:.06em;padding:5px 14px;border-radius:20px;cursor:pointer;transition:background .2s,border-color .2s}
+.st-win-proof-btn:hover{background:rgba(0,245,160,0.08);border-color:#00f5a0}
+.st-win-proof-round{font-size:10px;color:rgba(255,255,255,0.35);font-family:monospace;letter-spacing:.04em}
 @keyframes neonPulse{0%,100%{box-shadow:0 0 8px #FF5252,0 0 20px #FF525244}50%{box-shadow:0 0 18px #FF5252,0 0 44px #FF525288}}
 @keyframes balancePop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
 @keyframes screenShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-4px,2px)}30%{transform:translate(4px,-2px)}45%{transform:translate(-3px,-3px)}60%{transform:translate(3px,3px)}75%{transform:translate(-2px,1px)}}
@@ -1481,6 +1485,10 @@ body.dark-club .club-sub{color:#888}
         <button type="button" class="st-win-reveal-btn st-win-reveal-btn--add" id="stWinAdd" data-i18n="dash.winReveal.add">Add to Collection</button>
         <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard" data-i18n="dash.winReveal.discard">Discard</button>
       </div>
+      <div class="st-win-proof" id="stWinProof" hidden>
+        <button type="button" class="st-win-proof-btn" onclick="goToVerifyWithRound()">⚡ PROVABLY FAIR — Verify this drop</button>
+        <span class="st-win-proof-round" id="stWinProofRound"></span>
+      </div>
     </div>
   </div>
 <div id="huntPage" style="display:none">
@@ -1622,6 +1630,7 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="btn-discard" id="btnDiscard" data-i18n="dash.discard">DISCARD</button>
             </div>
             <button type="button" class="btn-list-market" id="btnListFromHunt" data-i18n="dash.listOnMarket">LIST ON MARKET INSTEAD</button>
+            <button type="button" class="st-win-proof-btn" id="btnHuntProof" onclick="goToVerifyWithRound()" hidden style="margin-top:8px;font-size:10px">⚡ PROVABLY FAIR — Verify this drop</button>
           </div>
           </div>
         </div>
@@ -4927,6 +4936,7 @@ function renderFrameSelector(){
 
 // ── STATE (PHASE 1 — synchronized in real-time UI) ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null, currentPoxyId=null;
+let currentRoundId=null, currentClientSeed=null; // Phase 3: provably fair proof
 let mythicCount=0, hasMythic=false, busy=false;
 let spinAnim=null, particleLoop=null, particles=[];
 let selectedAvatar=AVATARS[0], marketTab='buy';
@@ -8375,6 +8385,17 @@ function openWinRevealModal(tier,forcedSerial){
   if(t.id==='mythic'&&mythicCount<10){mythicCount++;$('fomoText').textContent='Mythic POXY claimed this month: '+mythicCount+'/10';}
   triggerRevealFX(t.id);
   setBodyBg(t.id);
+  // Show provably fair proof badge if round data is present
+  const proofEl=$('stWinProof');
+  const proofRound=$('stWinProofRound');
+  if(proofEl){
+    if(currentRoundId){
+      if(proofRound)proofRound.textContent='Round: '+currentRoundId.slice(0,8)+'…';
+      proofEl.hidden=false;
+    }else{
+      proofEl.hidden=true;
+    }
+  }
 }
 // =============================================================================
 // POXY CRYPTO TRANSPARENCY LAYER — /docs/cryptography + /verify
@@ -8681,8 +8702,37 @@ async function cryptoDrainQueue(){
   }
 }
 
-// ── cryptoTransfer — records a signed TRANSFER/TRADE ledger event ──
-// Called after any ownership change: marketplace buy, gift claim.
+// ── generateClientSeed — user entropy for provably fair RNG ──
+// SHA-256 of timestamp + performance + random. Shown to user so they can verify.
+async function generateClientSeed(){
+  const raw=Date.now()+':'+(typeof performance!=='undefined'?performance.now().toFixed(6):Math.random())+':'+Math.random().toString(36).slice(2)+':'+Math.random().toString(36).slice(2);
+  try{
+    if(window.crypto?.subtle){
+      const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+  }catch(e){}
+  // Fallback: simple deterministic hex
+  return Math.abs([...raw].reduce((h,c)=>Math.imul(31,h)+c.charCodeAt(0)|0,0)).toString(16).padStart(8,'0')+Date.now().toString(16);
+}
+
+// ── goToVerifyWithRound — open verify tab pre-filled with round proof ──
+function goToVerifyWithRound(){
+  if(!currentRoundId)return;
+  closeWinRevealModalOnly();
+  if(typeof showStitchTab==='function')showStitchTab('verify');
+  setTimeout(()=>{
+    const input=document.querySelector('.poxy-verify-input,.pcd-verify-input');
+    if(input){
+      input.value=currentRoundId;
+      input.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    const btn=document.querySelector('#pcdVerifyBtn');
+    if(btn)btn.click();
+  },350);
+}
+
+// ── cryptoTransfer — records a signed TRANSFER/TRADE ledger event ──// Called after any ownership change: marketplace buy, gift claim.
 async function cryptoTransfer(assetId, toOwnerId, eventType){
   if(!assetId||!toOwnerId||!currentUser)return null;
   try{
@@ -8794,6 +8844,9 @@ function showReward(tier,fromModal){
   $('postBtns').classList.add('visible');
   requestAnimationFrame(()=>requestAnimationFrame(()=>$('postBtns').classList.add('faded-in')));
   $('btnListFromHunt').classList.add('show');
+  // Show proof badge on hunt page if v3 round data is present
+  const huntProofBtn=$('btnHuntProof');
+  if(huntProofBtn)huntProofBtn.hidden=!currentRoundId;
 }
 function resetAll(){
   if(spinAnim)cancelAnimationFrame(spinAnim);if(particleLoop)cancelAnimationFrame(particleLoop);
@@ -8810,7 +8863,8 @@ function resetAll(){
   $('postBtns').classList.remove('faded-in');setTimeout(()=>$('postBtns').classList.remove('visible'),400);
   $('btnOpen').style.opacity='1';$('btnOpen').style.pointerEvents='auto';$('btnOpen').disabled=false;
   $('btnListFromHunt').classList.remove('show');
-  busy=false;currentTier=null;currentSerial=null;currentPoxyId=null;clearBg();
+  const huntProofBtn=$('btnHuntProof');if(huntProofBtn)huntProofBtn.hidden=true;
+  busy=false;currentTier=null;currentSerial=null;currentPoxyId=null;currentRoundId=null;currentClientSeed=null;clearBg();
 }
 $('btnOpen').addEventListener('click',async function(){
   if(busy||!currentUser)return;
@@ -8819,22 +8873,40 @@ $('btnOpen').addEventListener('click',async function(){
   busy=true;$('btnOpen').disabled=true;
   $('idleBox').style.opacity='0';
   try{
-    // Server-side RNG: atomic debit + asset creation
-    const{data:rpcResult,error:rpcErr}=await sb.rpc('open_standard_case_v2');
+    // ── Phase 1: Server commits to a seed (proves it cannot change outcome) ──
+    const{data:commitData,error:commitErr}=await sb.functions.invoke('rng_commit',{
+      body:{envelope:poxyEnvelope('rng_commit')}
+    });
+    if(commitErr||!commitData?.ok)throw new Error(commitData?.error||'RNG commit failed');
+    const round_id=commitData.round_id;
+
+    // ── Phase 2: Client generates entropy (player's contribution) ──
+    const client_seed=await generateClientSeed();
+    currentClientSeed=client_seed;
+
+    // ── Phase 3: Reveal — result = SHA256(server_seed + client_seed + nonce) ──
+    const{data:revealData,error:revealErr}=await sb.functions.invoke('rng_reveal',{
+      body:{round_id,client_seed,nonce:0}
+    });
+    if(revealErr||!revealData?.ok)throw new Error(revealData?.error||'RNG reveal failed');
+
+    // ── Phase 4: Open case — atomic debit + deterministic tier from result_hash ──
+    const{data:rpcResult,error:rpcErr}=await sb.rpc('open_standard_case_v3',{p_round_id:round_id});
     if(rpcErr)throw rpcErr;
     if(rpcResult?.ok===false)throw new Error(rpcResult.error||'Case open failed');
-    // Apply server result
-    const serverTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
+
+    currentRoundId=round_id;
     currentPoxyId=rpcResult.poxy_id;
     currentSerial=rpcResult.serial;
-    // Update balance from server response
     if(rpcResult.balance!=null&&currentProfile){
       currentProfile.balance=rpcResult.balance;
       updateBalanceBadge(currentProfile.balance);
     }
-    // Drive animation with server-determined tier (rigged win)
-    pendingSpinTier=serverTier;
-    runRouletteCarousel(serverTier);
+    // Auto-anchor to crypto ledger (non-blocking, retry queue handles failures)
+    cryptoMint(rpcResult.poxy_id,rpcResult.tier,'standard').catch(()=>{});
+    // Drive animation with server-determined tier
+    pendingSpinTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
+    runRouletteCarousel(pendingSpinTier);
   }catch(e){
     showToast(e.message||'Case open failed. Try again.');
     busy=false;$('btnOpen').disabled=false;
@@ -10333,7 +10405,9 @@ window.respondTradeOffer=async function(offerId,accept){
     removeNotificationByOfferId(offerId);
     pushNotification(accept?'trade_accepted':'trade_declined',{offer_id:offerId});
     showToast(accept?'Trade accepted — items transferred.':'Trade declined.');
-    if(accept)loadCollection().catch(e=>console.warn('loadCollection after trade',e));
+    if(accept){
+      loadCollection().catch(e=>console.warn('loadCollection after trade',e));
+    }
   }catch(e){logAndToast('trade-response',e);}
 };
 window.openNotifyHub=function(){

@@ -53,6 +53,20 @@ Use a **test account** with dev topup if needed.
 - [ ] **Cron** — `SELECT jobname, active FROM cron.job WHERE jobname='poxy-ledger-snapshot-daily'` → active = true
 - [ ] `purchase_poxy` returns `asset_id` in response (console: `[poxy-crypto] transfer anchored`)
 
+## Phase 3 — Provably Fair Gacha
+
+- [ ] Case open uses commit-reveal: console shows `[poxy-crypto] anchored` after click
+- [ ] `rng_rounds` row created with `status='revealed'` after open
+- [ ] `user_poxy.rng_round_id` is set on new drops
+- [ ] **PROVABLY FAIR** badge visible in win reveal modal + hunt page
+- [ ] Clicking badge opens verify tab (pre-filled with round_id)
+- [ ] Client can verify: `SHA256(server_seed + client_seed + '0') == result_hash`
+- [ ] Tier derivation verifiable: `parseInt(result_hash.slice(0,8), 16) / 4294967296` → float → tier
+- [ ] Serial verifiable: `'PX-' + result_hash.slice(8,14).toUpperCase()`
+- [ ] **Burn** writes DESTROY event in `ledger_events` for each burned asset
+- [ ] **Trade accept** writes TRADE event + updates `poxy_assets.current_owner_id`
+- [ ] SQL health: `SELECT count(*) FROM ledger_events WHERE event_type='DESTROY'` increases on burn
+
 ## Phase 1 — fixed (verify)
 
 - [ ] P2P trade **accept** (`accept_trade_offer`) — assets transfer to recipient

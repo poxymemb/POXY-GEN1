@@ -31,6 +31,7 @@ Run in **Supabase SQL Editor** or `supabase db push` (when linked):
 | 21 | `migration_phase1_trade_flash_store.sql` | `phase1_trade_flash_store` |
 | 22 | `migration_admin_emails_table.sql` | `admin_emails_table` |
 | 23 | `migration_phase2_crypto_bridge.sql` | `phase2_crypto_bridge` — backfill RPC, snapshot table, cron |
+| 24 | `migration_phase3_provably_fair_gacha.sql` | `phase3_provably_fair` — rng_round_id, open_standard_case_v3, burn DESTROY, trade TRADE events |
 
 ## Admin allowlist (manual — never commit emails/UUIDs)
 
