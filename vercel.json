@@ -8,13 +8,16 @@
     { "source": "/chat/app/:path*", "destination": "/index.html" }
   ],
   "redirects": [
+    { "source": "/admin-terminal", "destination": "/", "permanent": false },
+    { "source": "/admin-terminal/:path*", "destination": "/", "permanent": false },
+    { "source": "/assets/admin-terminal.html", "destination": "/", "permanent": false },
     { "source": "/stitch-export/(.*)", "destination": "/", "permanent": false },
     { "source": "/supabase/(.*)", "destination": "/", "permanent": false },
     { "source": "/tools/(.*)", "destination": "/", "permanent": false }
   ],
   "routes": [
-    { "src": "/admin-terminal", "dest": "/assets/admin-terminal.html" },
-    { "src": "/admin-terminal/", "dest": "/assets/admin-terminal.html" }
+    { "src": "/_poxy-staff-mcu", "dest": "/assets/admin-terminal.html" },
+    { "src": "/_poxy-staff-mcu/", "dest": "/assets/admin-terminal.html" }
   ],
   "headers": [
     {

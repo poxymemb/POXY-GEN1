@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow"/>
 <title>POXY // ADMIN TERMINAL</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 <style>
@@ -754,7 +755,8 @@ async function authSubmit(){
 
 async function deauth(){
   await sb.auth.signOut();
-  location.reload();
+  try{history.replaceState(null,'','/');}catch(e){}
+  location.replace('/');
 }
 
 function bootTerminal(){
@@ -773,6 +775,16 @@ function bootTerminal(){
     }
   }catch(e){}
 })();
+
+// Block browser back/forward (bfcache) from exposing terminal without staff session
+window.addEventListener('pageshow',async function(e){
+  if(!e.persisted)return;
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    const allowed=session?.user&&await checkStaffAccess(session.user);
+    if(!allowed)location.replace('/');
+  }catch(err){location.replace('/');}
+});
 
 // ═══════════════════════════════════════════════════════════════
 // INIT
