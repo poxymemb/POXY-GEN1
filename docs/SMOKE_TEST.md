@@ -67,7 +67,11 @@ Use a **test account** with dev topup if needed.
 - [x] **Burn** → `destroy_poxy` edge + DESTROY ledger event (`[poxy-crypto] destroyed` in console)
 - [x] Verify **burned asset hash** → `ok: true`, badge **Burned** (not Invalid)
 - [x] Verify **DESTROY ledger event** → `ok: true`, summary **BURN VERIFIED**
-- [ ] **Trade accept** → TRADE ledger event (Phase 2.2 — next)
+- [ ] **Trade accept** → signed TRADE ledger event via `transfer_poxy` edge (Phase 2.2)
+  - Recipient accepts offer → `accept_trade_offer` returns `from_id`, `to_id`, `asset_ids`
+  - Console: `[poxy-crypto] transfer anchored: … TRADE`
+  - Ledger: `event_type = TRADE`, real ED25519 signature (not `TRADE_STUB_RESIGN_REQUIRED`)
+  - `poxy_assets.current_owner_id` updated to recipient
 
 ## Phase 1 — fixed (verify)
 

@@ -92,11 +92,26 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
 .toggle-label{font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;cursor:pointer}
 /* ── TERMINAL LOG ── */
 .log-box{background:#000;border:1px solid var(--border);padding:10px;height:340px;overflow-y:auto;font-size:9px;line-height:1.65;scroll-behavior:smooth}
+.support-log-box{height:min(72vh,720px);font-size:10px;line-height:1.7}
 .log-line{color:#00ff9d;white-space:pre-wrap;word-break:break-all}
 .log-line.err{color:var(--red)}
 .log-line.warn{color:var(--amber)}
 .log-line.info{color:var(--cyan)}
 .log-line.sys{color:rgba(255,255,255,0.35);font-style:italic}
+.log-line.hidden-by-filter{display:none!important}
+.log-line.highlight{background:rgba(255,179,0,.1);outline:1px solid rgba(255,179,0,.25)}
+.support-filter-btn.active{background:rgba(255,179,0,.15);border-color:var(--amber);color:var(--amber)}
+.support-hints{font-size:8px;color:var(--muted);letter-spacing:.08em;line-height:1.7;margin-top:6px}
+.support-dossier-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:900px){.support-dossier-grid{grid-template-columns:1fr}}
+.support-kv{display:grid;grid-template-columns:110px 1fr;gap:4px 8px;font-size:9px;line-height:1.55}
+.support-kv .k{color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:7px;padding-top:2px}
+.support-kv .v{color:#c8d6e5;word-break:break-all}
+.support-kv .v.accent{color:var(--cyan)}
+.support-timeline{margin-top:10px;border-top:1px solid var(--border2);padding-top:8px}
+.support-tl-row{font-size:8px;padding:4px 0;border-bottom:1px solid var(--border2);display:grid;grid-template-columns:72px 64px 1fr;gap:6px}
+.support-tl-row .t{color:var(--muted)}
+.support-tl-row .e{font-weight:700}
 /* ── RT STATUS ── */
 .stream-status{display:inline-flex;align-items:center;gap:5px;font-size:8px;letter-spacing:.1em;text-transform:uppercase}
 .stream-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .4s}
@@ -191,6 +206,9 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
       </button>
       <button class="nav-btn" onclick="switchTab('telem')" data-tab="telem">
         <span class="ic">⬟</span>TELEMETRY
+      </button>
+      <button class="nav-btn" onclick="switchTab('support')" data-tab="support">
+        <span class="ic">⬡</span>SUPPORT OPS
       </button>
       <button class="nav-btn" onclick="switchTab('acc')" data-tab="acc">
         <span class="ic">⚙</span>ACCOUNT OPS
@@ -518,22 +536,9 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
         </div>
       </div>
 
-      <!-- LOG STREAM -->
       <div class="card">
-        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span>⬟ ACTION STREAM — LIVE SECURITY LEDGER</span>
-            <span class="stream-status" id="streamStatus">
-              <span class="stream-dot" id="streamDot"></span>
-              <span id="streamStatusTxt" style="color:var(--muted)">CONNECTING…</span>
-            </span>
-          </div>
-          <div class="row-flex" style="gap:6px">
-            <button class="btn btn-ghost btn-sm" onclick="clearLog()">CLEAR</button>
-            <button class="btn btn-ghost btn-sm" onclick="pauseLog()" id="pauseLogBtn">PAUSE</button>
-          </div>
-        </div>
-        <div class="log-box" id="logStream"></div>
+        <div class="card-title">⬡ LIVE ACTION STREAM</div>
+        <p style="font-size:8px;color:var(--muted);line-height:1.6;margin-bottom:10px">Full support log with search, filters and POXY dossier lives in <button class="btn btn-ghost btn-sm" onclick="switchTab('support')">SUPPORT OPS →</button></p>
       </div>
 
       <!-- RECENT AUDIT ACTIONS FROM DB -->
@@ -552,7 +557,64 @@ html,body{height:100%;background:var(--bg);color:#e8e8ec;font-family:var(--font)
     </div>
 
     <!-- ══════════════════════════════════════════════════════
-         TAB 5: ACCOUNT OPERATIONS (by #PX-hash / username / UUID)
+         TAB 5: SUPPORT OPS — ledger trace + player dossier
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-support" class="tab-pane">
+      <div class="section-hdr">SUPPORT OPS — LEDGER TRACE &amp; PLAYER DOSSIER</div>
+
+      <div class="card">
+        <div class="card-title">◆ UNIVERSAL LOOKUP</div>
+        <div class="row-flex" style="gap:8px;align-items:stretch">
+          <input id="supportQuery" class="f-input" type="text" style="flex:1;min-width:200px"
+            placeholder="PX-8D1E95 · poxy_hash · event UUID · @username · #PX-account · user UUID"
+            onkeydown="if(event.key==='Enter')supportLookup()"/>
+          <button class="btn btn-amber" onclick="supportLookup()">TRACE</button>
+          <button class="btn btn-ghost btn-sm" onclick="supportClearSearch()">CLEAR</button>
+        </div>
+        <div class="support-hints">
+          Serial <b>PX-…</b> · 64-char <b>hash</b> · <b>event / asset / user_poxy UUID</b> · <b>@username</b> · account <b>#PX-…</b>
+        </div>
+        <div class="row-flex" style="gap:6px;margin-top:12px;flex-wrap:wrap" id="supportFilters">
+          <button class="btn btn-ghost btn-sm support-filter-btn active" data-filter="ALL" onclick="supportSetFilter('ALL',this)">ALL</button>
+          <button class="btn btn-ghost btn-sm support-filter-btn" data-filter="MINT" onclick="supportSetFilter('MINT',this)">MINT</button>
+          <button class="btn btn-ghost btn-sm support-filter-btn" data-filter="TRADE" onclick="supportSetFilter('TRADE',this)">TRADE</button>
+          <button class="btn btn-ghost btn-sm support-filter-btn" data-filter="TRANSFER" onclick="supportSetFilter('TRANSFER',this)">TRANSFER</button>
+          <button class="btn btn-ghost btn-sm support-filter-btn" data-filter="DESTROY" onclick="supportSetFilter('DESTROY',this)">DESTROY</button>
+          <button class="btn btn-ghost btn-sm support-filter-btn" data-filter="BURN" onclick="supportSetFilter('BURN',this)">BURN</button>
+          <button class="btn btn-ghost btn-sm support-filter-btn" data-filter="LISTING" onclick="supportSetFilter('LISTING',this)">LISTING</button>
+          <button class="btn btn-ghost btn-sm support-filter-btn" data-filter="ADMIN" onclick="supportSetFilter('ADMIN',this)">ADMIN</button>
+        </div>
+      </div>
+
+      <div class="card" id="supportDossierCard" hidden>
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center">
+          <span>◆ TRACE RESULT</span>
+          <button class="btn btn-ghost btn-sm" onclick="supportCopyDossier()">COPY JSON</button>
+        </div>
+        <div id="supportDossier" class="dump-box" style="max-height:280px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span>⬟ ACTION STREAM — MINT · TRADE · TRANSFER · DESTROY · BURN</span>
+            <span class="stream-status" id="streamStatus">
+              <span class="stream-dot" id="streamDot"></span>
+              <span id="streamStatusTxt" style="color:var(--muted)">CONNECTING…</span>
+            </span>
+          </div>
+          <div class="row-flex" style="gap:6px">
+            <button class="btn btn-ghost btn-sm" onclick="supportReloadHistory()">↺ RELOAD HISTORY</button>
+            <button class="btn btn-ghost btn-sm" onclick="clearLog()">CLEAR</button>
+            <button class="btn btn-ghost btn-sm" onclick="pauseLog()" id="pauseLogBtn">PAUSE</button>
+          </div>
+        </div>
+        <div class="log-box support-log-box" id="logStream"></div>
+      </div>
+    </div><!-- /tab-support -->
+
+    <!-- ══════════════════════════════════════════════════════
+         TAB 6: ACCOUNT OPERATIONS (by #PX-hash / username / UUID)
          ══════════════════════════════════════════════════════ -->
     <div id="tab-acc" class="tab-pane">
       <div class="section-hdr">ACCOUNT OPERATIONS — SYSTEM CONTROL PANEL</div>
@@ -1236,20 +1298,75 @@ function refreshSimFlags(){
 // ═══════════════════════════════════════════════════════════════
 
 // ── CORE LOG ENGINE ────────────────────────────────────────────
-const LOG_BUFFER_CAP = 150;
+const LOG_BUFFER_CAP = 800;
+let _supportFilter = 'ALL';
+let _supportSearchQ = '';
+let _lastDossier = null;
+const _assetContextCache = new Map();
 
-function appendLog(msg, type=''){
-  if(logPaused) return;
+function appendLog(msg, type='', meta){
+  if(logPaused && !(meta && meta.force)) return;
   const box = document.getElementById('logStream');
   if(!box) return;
   const div = document.createElement('div');
   div.className = 'log-line' + (type ? ' '+type : '');
   div.textContent = msg;
+  if(meta){
+    if(meta.ev) div.dataset.ev = meta.ev;
+    if(meta.search) div.dataset.search = meta.search;
+    if(meta.highlight) div.classList.add('highlight');
+  }
   box.appendChild(div);
-  // smooth scroll-to-bottom (like a real terminal)
   box.scrollTop = box.scrollHeight;
-  // buffer cap — drop oldest entry when over limit
   while(box.children.length > LOG_BUFFER_CAP) box.removeChild(box.firstChild);
+  applySupportFilters();
+}
+
+function applySupportFilters(){
+  const q = (_supportSearchQ || '').trim().toLowerCase();
+  document.querySelectorAll('#logStream .log-line').forEach(el => {
+    const ev = el.dataset.ev || '';
+    const blob = (el.dataset.search || el.textContent || '').toLowerCase();
+    const matchFilter = _supportFilter === 'ALL' || ev === _supportFilter;
+    const matchSearch = !q || blob.includes(q);
+    el.classList.toggle('hidden-by-filter', !!(ev && !(matchFilter && matchSearch)));
+    el.classList.toggle('highlight', !!(q && matchSearch && ev));
+  });
+}
+
+function supportSetFilter(filter, btn){
+  _supportFilter = filter || 'ALL';
+  document.querySelectorAll('.support-filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+  applySupportFilters();
+}
+
+function supportClearSearch(){
+  const inp = document.getElementById('supportQuery');
+  if(inp) inp.value = '';
+  _supportSearchQ = '';
+  const card = document.getElementById('supportDossierCard');
+  if(card) card.hidden = true;
+  _lastDossier = null;
+  applySupportFilters();
+}
+
+async function getAssetContext(assetId){
+  if(!assetId) return null;
+  if(_assetContextCache.has(assetId)) return _assetContextCache.get(assetId);
+  try{
+    const { data } = await sb.rpc('admin_support_lookup', { p_query: assetId });
+    if(!data?.ok) return null;
+    const ctx = {
+      serial: data.user_poxy?.serial_number || data.poxy_asset?.serial_number || '?',
+      hash: (data.poxy_asset?.poxy_hash || '').slice(0, 16),
+      fullHash: data.poxy_asset?.poxy_hash || '',
+      tier: (data.user_poxy?.poxy_tier || data.poxy_asset?.poxy_tier || '').toUpperCase(),
+      state: data.poxy_asset?.asset_state || '',
+      owner: data.owner?.username || '',
+    };
+    _assetContextCache.set(assetId, ctx);
+    return ctx;
+  }catch(_){ return null; }
 }
 
 function clearLog(){
@@ -1262,7 +1379,7 @@ function pauseLog(){
   const sysMsg = `[${fmtLogTime()}] [◆ SYSTEM] STREAM ${logPaused ? 'PAUSED' : 'RESUMED'}`;
   // bypass pause guard for system messages
   const box = document.getElementById('logStream');
-  if(box){ const d=document.createElement('div'); d.className='log-line sys'; d.textContent=sysMsg; box.appendChild(d); box.scrollTop=box.scrollHeight; }
+  appendLog(sysMsg, 'sys', { force:true });
 }
 
 // ── ACTION STREAM — REALTIME + POLLING HYBRID ─────────────────
@@ -1278,55 +1395,84 @@ const _seenIds      = new Set(); // dedup cache (capped at 500)
 const _userLabelCache = new Map();
 
 const EV = {
-  MINT:    { css:'info', tag:'◈ MINT'    },
-  CRAFT:   { css:'',     tag:'✦ CRAFT'   },
-  BURN:    { css:'err',  tag:'⬡ BURN'    },
-  LOGIN:   { css:'',     tag:'◆ LOGIN'   },
-  TRADE:   { css:'warn', tag:'⬟ TRADE'  },
-  LISTING: { css:'warn', tag:'⬟ LISTING'},
-  AIRDROP: { css:'warn', tag:'⬡ AIRDROP'},
-  PUBLISH: { css:'info', tag:'◈ PUBLISH'},
-  DELETE:  { css:'err',  tag:'⬡ DELETE' },
-  ADMIN:   { css:'warn', tag:'⚠ ADMIN'  },
+  MINT:     { css:'info', tag:'◈ MINT'     },
+  TRANSFER: { css:'info', tag:'⇄ TRANSFER' },
+  DESTROY:  { css:'err',  tag:'☠ DESTROY'  },
+  CRAFT:    { css:'',     tag:'✦ CRAFT'    },
+  BURN:     { css:'err',  tag:'⬡ BURN'     },
+  LOGIN:    { css:'',     tag:'◆ LOGIN'    },
+  TRADE:    { css:'warn', tag:'⬟ TRADE'    },
+  LISTING:  { css:'warn', tag:'⬟ LISTING'  },
+  AIRDROP:  { css:'warn', tag:'⬡ AIRDROP'  },
+  PUBLISH:  { css:'info', tag:'◈ PUBLISH'  },
+  DELETE:   { css:'err',  tag:'⬡ DELETE'   },
+  ADMIN:    { css:'warn', tag:'⚠ ADMIN'    },
 };
 
-function streamLine(evKey, message, tsOverride){
+function streamLine(evKey, message, tsOverride, searchBlob){
   const meta = EV[evKey] || { css:'', tag:'◆ EVENT' };
   const ts   = tsOverride || `[${fmtLogTime()}]`;
-  appendLog(`${ts} [${meta.tag}] ${message}`, meta.css);
+  appendLog(`${ts} [${meta.tag}] ${message}`, meta.css, {
+    ev: EV[evKey] ? evKey : 'ADMIN',
+    search: (searchBlob || message || '').toLowerCase(),
+  });
+}
+
+async function formatLedgerLine(r){
+  const pl = r.payload || {};
+  const ev = (r.event_type || 'EVENT').toUpperCase();
+  const ctx = r.asset_id ? await getAssetContext(r.asset_id) : null;
+  const serial = ctx?.serial || '?';
+  const tier = ctx?.tier || (pl.tier || pl.poxy_tier || '').toUpperCase();
+  const tierStr = tier ? ` [${tier}]` : '';
+  let detail = '';
+  if(ev === 'TRADE' || ev === 'TRANSFER'){
+    const fromL = pl.from ? await resolveUserLabel(pl.from) : '?';
+    const toL = pl.to ? await resolveUserLabel(pl.to) : '?';
+    detail = `${fromL} → ${toL}`;
+    if(pl.offer_id) detail += ` | offer:${String(pl.offer_id).slice(0, 8)}…`;
+  } else if(ev === 'DESTROY'){
+    detail = `burned by ${await resolveUserLabel(r.actor_id)}`;
+  } else if(ev === 'MINT'){
+    detail = `minted by ${await resolveUserLabel(r.actor_id)}`;
+  } else {
+    detail = `actor ${await resolveUserLabel(r.actor_id)}`;
+  }
+  const hashBit = ctx?.hash ? ` | hash:${ctx.hash}…` : '';
+  const evtBit = r.id ? ` | evt:${String(r.id).slice(0, 8)}…` : '';
+  const seqBit = r.seq != null ? ` | seq:${r.seq}` : '';
+  const searchBlob = [
+    serial, tier, ev, r.id, r.asset_id, r.event_hash, ctx?.fullHash,
+    pl.from, pl.to, pl.offer_id, detail,
+  ].filter(Boolean).join(' ').toLowerCase();
+  return {
+    ev: EV[ev] ? ev : 'MINT',
+    msg: `${serial}${tierStr} | ${detail}${hashBit}${evtBit}${seqBit}`,
+    searchBlob,
+    ts: r.event_timestamp ? `[${fmtLogTime(new _nativeDate(r.event_timestamp))}]` : null,
+  };
 }
 
 // ── Core ledger row renderer (shared by realtime + poll) ───────
-function processLedgerRow(r, historical = false){
+async function processLedgerRow(r, historical = false){
   if(!r || !r.id) return;
-  // Deduplicate
   if(_seenIds.has(r.id)) return;
   _seenIds.add(r.id);
-  if(_seenIds.size > 500){ _seenIds.delete(_seenIds.values().next().value); }
+  if(_seenIds.size > 2000){ _seenIds.delete(_seenIds.values().next().value); }
 
-  // Track watermark for poll queries
-  if(r.event_timestamp &&
-     (!_lastLedgerTs || r.event_timestamp > _lastLedgerTs)){
+  if(r.event_timestamp && (!_lastLedgerTs || r.event_timestamp > _lastLedgerTs)){
     _lastLedgerTs = r.event_timestamp;
   }
 
-  const evType  = (r.event_type || 'EVENT').toUpperCase();
-  const user    = r.actor_id?.slice(0,10) || '?';
-  const asset   = r.asset_id?.slice(0,10) || '?';
-  const pl      = r.payload || {};
-  const tier    = (pl.tier || pl.poxy_tier || '').toUpperCase();
-  const tierStr = tier ? ` [${tier}]` : '';
-  const evKey   = EV[evType] ? evType : 'MINT';
-  const ts      = r.event_timestamp
-    ? `[${fmtLogTime(new _nativeDate(r.event_timestamp))}]`
-    : null;
-  const suffix  = historical ? '  ← historical' : '';
-
-  streamLine(evKey, `Asset 0x${asset}… → 0x${user}…${tierStr}${suffix}`, ts);
+  const line = await formatLedgerLine(r);
+  const suffix = historical ? '  ← historical' : '';
+  const meta = EV[line.ev] || { css:'', tag:'◆ EVENT' };
+  const ts = line.ts || `[${fmtLogTime()}]`;
+  appendLog(`${ts} [${meta.tag}] ${line.msg}${suffix}`, meta.css, { ev: line.ev, search: line.searchBlob });
 }
 
 // ── Realtime callback (instant) ────────────────────────────────
-function onLedgerInsert(payload){ processLedgerRow(payload.new, false); }
+function onLedgerInsert(payload){ processLedgerRow(payload.new, false).catch(()=>{}); }
 
 // ── Player case drops (user_poxy) — primary mint feed for standard opens ──
 async function resolveUserLabel(userId){
@@ -1370,7 +1516,8 @@ function processPoxyRow(r, historical=false, userLabel){
   const suffix = historical ? '  ← historical' : '';
   const meta   = EV.MINT;
   const msg    = `${ts||'['+fmtLogTime()+']'} [${meta.tag}] ${who} → ${tier} [${serial}] (${origin})${suffix}`;
-  appendLog(msg, css);
+  const searchBlob = [serial, tier, who, r.id, r.user_id, 'mint', 'drop'].join(' ').toLowerCase();
+  appendLog(msg, css, { ev:'MINT', search: searchBlob });
 }
 
 async function onPoxyInsert(payload){
@@ -1386,7 +1533,8 @@ async function onPoxyDelete(payload){
   const who = await resolveUserLabel(r.user_id);
   const tier = (r.poxy_tier || '').toUpperCase();
   const serial = r.serial_number || '?';
-  streamLine('BURN', `${who} discarded ${tier} [${serial}]`);
+  streamLine('BURN', `${who} discarded ${tier} [${serial}] (gameplay)`, null,
+    [serial, tier, who, 'burn', 'gameplay'].join(' ').toLowerCase());
 }
 
 // ── Polling fallback (every 8s) — guarantees delivery ─────────
@@ -1394,12 +1542,14 @@ async function pollLedger(){
   if(logPaused) return;
   try{
     let q = sb.from('ledger_events')
-      .select('id,event_type,actor_id,asset_id,payload,event_timestamp')
+      .select('id,seq,event_type,actor_id,asset_id,payload,event_timestamp,event_hash')
       .order('event_timestamp', { ascending:true })
-      .limit(20);
+      .limit(30);
     if(_lastLedgerTs) q = q.gt('event_timestamp', _lastLedgerTs);
     const { data } = await q;
-    if(data && data.length) data.forEach(r => processLedgerRow(r, false));
+    if(data && data.length){
+      for(const r of data) await processLedgerRow(r, false);
+    }
   } catch(_){}
 }
 
@@ -1452,57 +1602,130 @@ function setStreamUI(state){
 async function seedStreamHistory(){
   try{
     const { data } = await sb.from('ledger_events')
-      .select('id,event_type,actor_id,asset_id,payload,event_timestamp')
-      .order('event_timestamp', { ascending:false })
-      .limit(12);
-    if(!data||!data.length) return;
-    const box = document.getElementById('logStream');
-    if(!box) return;
-    // Render oldest-first, prepend to top of log
-    const frag = document.createDocumentFragment();
-    [...data].reverse().forEach(r => {
-      if(_seenIds.has(r.id)) return;
-      _seenIds.add(r.id);
-      if(r.event_timestamp &&
-         (!_lastLedgerTs || r.event_timestamp > _lastLedgerTs)){
-        _lastLedgerTs = r.event_timestamp;
-      }
-      const evType  = (r.event_type||'EVENT').toUpperCase();
-      const user    = r.actor_id?.slice(0,10)||'?';
-      const asset   = r.asset_id?.slice(0,10)||'?';
-      const pl      = r.payload||{};
-      const tier    = (pl.tier||pl.poxy_tier||'').toUpperCase();
-      const tierStr = tier?` [${tier}]`:'';
-      const ts      = r.event_timestamp
-        ?`[${fmtLogTime(new _nativeDate(r.event_timestamp))}]`
-        :`[${fmtLogTime()}]`;
-      const meta    = EV[evType]||{css:'info',tag:'◈ MINT'};
-      const d = document.createElement('div');
-      d.className = 'log-line '+meta.css;
-      d.textContent = `${ts} [${meta.tag}] Asset 0x${asset}… → 0x${user}…${tierStr}  ← historical`;
-      frag.appendChild(d);
-    });
-    box.insertBefore(frag, box.firstChild);
-    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} historical ledger events loaded`, 'sys');
+      .select('id,seq,event_type,actor_id,asset_id,payload,event_timestamp,event_hash')
+      .order('seq', { ascending:false })
+      .limit(60);
+    if(data && data.length){
+      const ordered = [...data].reverse();
+      for(const r of ordered) await processLedgerRow(r, true);
+      appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${data.length} ledger events loaded (seq desc)`, 'sys', { force:true });
+    }
   } catch(e){
-    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Ledger history seed skipped: ${e.message}`, 'sys');
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Ledger history seed skipped: ${e.message}`, 'sys', { force:true });
   }
   try{
     const { data: drops } = await sb.from('user_poxy')
       .select('id,user_id,poxy_tier,serial_number,case_origin,dropped_at')
       .order('dropped_at', { ascending:false })
-      .limit(16);
+      .limit(24);
     if(drops && drops.length){
       const ordered = [...drops].reverse();
       for(const r of ordered){
         const who = await resolveUserLabel(r.user_id);
         processPoxyRow(r, true, who);
       }
-      appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${drops.length} recent player drops loaded`, 'sys');
+      appendLog(`[${fmtLogTime()}] [◆ SYSTEM] ${drops.length} recent player drops loaded`, 'sys', { force:true });
     }
   } catch(e){
-    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Drop history seed skipped: ${e.message}`, 'sys');
+    appendLog(`[${fmtLogTime()}] [◆ SYSTEM] Drop history seed skipped: ${e.message}`, 'sys', { force:true });
   }
+}
+
+async function supportReloadHistory(){
+  _seenIds.clear();
+  _assetContextCache.clear();
+  clearLog();
+  _lastLedgerTs = null;
+  _lastPoxyTs = null;
+  await seedStreamHistory();
+  toast('HISTORY RELOADED');
+}
+
+async function supportLookup(){
+  const raw = (document.getElementById('supportQuery')?.value || '').trim().replace(/^@/, '');
+  if(!raw){ toast('ENTER QUERY', 'err'); return; }
+  _supportSearchQ = raw.toLowerCase();
+  applySupportFilters();
+  toast('TRACING…');
+  try{
+    const { data, error } = await sb.rpc('admin_support_lookup', { p_query: raw });
+    if(error) throw error;
+    if(!data?.ok) throw new Error(data?.error || 'No match');
+    _lastDossier = data;
+    renderSupportDossier(data);
+    streamLine('ADMIN', `TRACE ${raw} → ${data.user_poxy?.serial_number || data.poxy_asset?.poxy_hash?.slice(0, 12) || 'profile'}`, null,
+      [raw, data.user_poxy?.serial_number, data.poxy_asset?.poxy_hash, data.owner?.username].filter(Boolean).join(' ').toLowerCase());
+    applySupportFilters();
+    const first = document.querySelector('#logStream .log-line.highlight');
+    if(first) first.scrollIntoView({ block:'nearest' });
+  }catch(e){
+    toast((e.message || 'LOOKUP FAILED').slice(0, 80), 'err');
+    streamLine('ADMIN', `TRACE FAILED: ${raw} — ${e.message || 'error'}`, null, raw.toLowerCase());
+  }
+}
+
+function renderSupportDossier(d){
+  const card = document.getElementById('supportDossierCard');
+  const el = document.getElementById('supportDossier');
+  if(!card || !el) return;
+  card.hidden = false;
+  const up = d.user_poxy || {};
+  const pa = d.poxy_asset || {};
+  const owner = d.owner || {};
+  const creator = d.creator || {};
+  const events = Array.isArray(d.ledger_events) ? d.ledger_events : [];
+  const trades = Array.isArray(d.trade_offers) ? d.trade_offers : [];
+  let html = '<div class="support-dossier-grid"><div class="support-kv">';
+  html += kv('Serial', up.serial_number || pa.serial_number || '—', true);
+  html += kv('Tier', (up.poxy_tier || pa.poxy_tier || '—').toUpperCase());
+  html += kv('Owner', owner.username ? '@'+owner.username : (owner.id || '—').toString().slice(0, 12)+'…');
+  html += kv('Creator', creator.username ? '@'+creator.username : '—');
+  html += kv('Asset state', pa.asset_state || '—');
+  html += kv('user_poxy id', up.id || '—');
+  html += kv('asset id', pa.id || '—');
+  html += '</div><div class="support-kv">';
+  html += kv('poxy_hash', pa.poxy_hash || '—', true);
+  html += kv('genesis evt', pa.genesis_event_id || '—');
+  html += kv('RNG round', up.rng_round_id || '—');
+  html += kv('Dropped', fmtDate(up.dropped_at));
+  html += kv('Balance', owner.balance != null ? Number(owner.balance).toFixed(2)+' PC' : '—');
+  html += kv('Account', owner.account_hash ? '#PX-'+owner.account_hash : '—');
+  html += '</div></div>';
+  if(events.length){
+    html += '<div class="support-timeline"><div style="font-size:7px;color:var(--amber);letter-spacing:.2em;margin-bottom:6px">LEDGER CHAIN</div>';
+    events.forEach(ev => {
+      html += `<div class="support-tl-row"><span class="t">${fmtDate(ev.event_timestamp)}</span><span class="e">${esc(ev.event_type)}</span><span>seq ${ev.seq} · ${esc(String(ev.event_hash||'').slice(0, 18))}… · evt ${esc(String(ev.id||'').slice(0, 8))}…</span></div>`;
+    });
+    html += '</div>';
+  }
+  if(trades.length){
+    html += '<div class="support-timeline"><div style="font-size:7px;color:var(--amber);letter-spacing:.2em;margin-bottom:6px">TRADE OFFERS</div>';
+    trades.forEach(tr => {
+      html += `<div class="support-tl-row"><span class="t">${fmtDate(tr.updated_at)}</span><span class="e">${esc(tr.status)}</span><span>offer ${esc(String(tr.id||'').slice(0, 8))}… · from ${esc(String(tr.from_id||'').slice(0, 8))}… → ${esc(String(tr.to_id||'').slice(0, 8))}…</span></div>`;
+    });
+    html += '</div>';
+  }
+  const inv = Array.isArray(d.inventory) ? d.inventory : [];
+  if(inv.length){
+    html += '<div class="support-timeline"><div style="font-size:7px;color:var(--amber);letter-spacing:.2em;margin-bottom:6px">OWNER INVENTORY ('+inv.length+')</div>';
+    inv.slice(0, 20).forEach(row => {
+      html += `<div class="support-tl-row"><span class="t">${fmtDate(row.dropped_at)}</span><span class="e">${esc((row.poxy_tier||'').toUpperCase())}</span><span>${esc(row.serial_number||'?')} · ${esc(String(row.id||'').slice(0, 8))}…</span></div>`;
+    });
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function kv(label, val, accent){
+  return `<span class="k">${esc(label)}</span><span class="v${accent ? ' accent' : ''}">${esc(String(val))}</span>`;
+}
+
+function supportCopyDossier(){
+  if(!_lastDossier){ toast('NO DOSSIER', 'err'); return; }
+  const txt = JSON.stringify(_lastDossier, null, 2);
+  (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject())
+    .then(() => toast('DOSSIER COPIED'))
+    .catch(() => toast('COPY FAILED', 'err'));
 }
 
 // ── Main init ─────────────────────────────────────────────────

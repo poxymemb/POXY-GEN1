@@ -9029,6 +9029,15 @@ async function resolveCryptoAssetId(userPoxyId){
   }catch(e){return null;}
 }
 
+async function resolveCryptoAssetIdByUserPoxy(userPoxyId){
+  if(!userPoxyId)return null;
+  try{
+    const{data}=await sb.from('poxy_assets').select('id,asset_state')
+      .eq('user_poxy_id',userPoxyId).neq('asset_state','destroyed').maybeSingle();
+    return data?.id||null;
+  }catch(e){return null;}
+}
+
 // ── cryptoDestroy — signed DESTROY ledger event (call before burn_poxy_pc) ──
 async function cryptoDestroy(assetId,opts){
   if(!assetId||!currentUser)return null;
@@ -9059,26 +9068,48 @@ async function cryptoDestroyForUserPoxy(userPoxyId,tier){
   return cryptoDestroy(assetId,{userPoxyId,tier,reason:'burn'});
 }
 
-// ── cryptoTransfer — records a signed TRANSFER/TRADE ledger event ──// Called after any ownership change: marketplace buy, gift claim.
-async function cryptoTransfer(assetId, toOwnerId, eventType){
+// ── cryptoTransfer — signed TRANSFER/TRADE ledger event (after gameplay ownership change) ──
+async function cryptoTransfer(assetId,toOwnerId,eventType,opts){
   if(!assetId||!toOwnerId||!currentUser)return null;
+  const evType=eventType||'TRANSFER';
   try{
-    const{data,error}=await sb.functions.invoke('transfer_poxy',{body:{
+    const body={
       envelope:poxyEnvelope('transfer_poxy'),
       asset_id:assetId,
       to_owner:toOwnerId,
-      event_type:eventType||'TRANSFER'
-    }});
+      event_type:evType
+    };
+    if(opts?.fromOwner&&evType==='TRADE')body.from_owner=opts.fromOwner;
+    if(opts?.offerId)body.offer_id=opts.offerId;
+    const{data,error}=await sb.functions.invoke('transfer_poxy',{body});
     if(error||!data?.ok){
-      console.warn('[poxy-crypto] transfer failed:',error?.message||data?.error,{assetId,toOwnerId});
-      return null;
+      const msg=edgeFnError(error,data,'Crypto transfer failed');
+      console.warn('[poxy-crypto] transfer failed:',msg,{assetId,toOwnerId,evType});
+      throw new Error(msg);
     }
-    console.log('[poxy-crypto] transfer anchored:',data.event_hash?.slice(0,12));
+    console.log('[poxy-crypto] transfer anchored:',data.event_hash?.slice(0,12),evType);
     return data;
   }catch(e){
     console.warn('[poxy-crypto] transfer exception:',e?.message||e);
-    return null;
+    throw e;
   }
+}
+
+async function cryptoTransferTradesForOffer(offerData,offerId){
+  const fromId=offerData?.from_id;
+  const toId=offerData?.to_id||currentUser?.id;
+  const poxyIds=offerData?.poxy_ids||[];
+  const assetIds=offerData?.asset_ids||[];
+  if(!fromId||!toId||!poxyIds.length)return{skipped:true,anchored:0};
+  let anchored=0;
+  for(let i=0;i<poxyIds.length;i++){
+    let assetId=assetIds[i];
+    if(!assetId)assetId=await resolveCryptoAssetIdByUserPoxy(poxyIds[i]);
+    if(!assetId)continue;
+    await cryptoTransfer(assetId,toId,'TRADE',{fromOwner:fromId,offerId:offerId||null});
+    anchored++;
+  }
+  return{anchored};
 }
 async function addCurrentDropToCollection(sourceBtn){
   if(!currentTier||!currentUser||!currentSerial)return;
@@ -10738,9 +10769,19 @@ window.respondTradeOffer=async function(offerId,accept){
     if(data?.ok===false)throw new Error(data.error||(accept?'Trade failed':'Decline failed'));
     removeNotificationByOfferId(offerId);
     pushNotification(accept?'trade_accepted':'trade_declined',{offer_id:offerId});
-    showToast(accept?'Trade accepted — items transferred.':'Trade declined.');
     if(accept){
+      try{
+        const cr=await cryptoTransferTradesForOffer(data,offerId);
+        showToast(cr.anchored>0
+          ?'Trade accepted — '+cr.anchored+' item(s) transferred and anchored.'
+          :'Trade accepted — items transferred.');
+      }catch(cryptoErr){
+        logAndToast('trade-crypto',cryptoErr);
+        showToast('Trade completed but crypto anchoring failed: '+(cryptoErr?.message||'unknown'));
+      }
       loadCollection().catch(e=>console.warn('loadCollection after trade',e));
+    }else{
+      showToast('Trade declined.');
     }
   }catch(e){logAndToast('trade-response',e);}
 };

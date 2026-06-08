@@ -36,6 +36,8 @@ Run in **Supabase SQL Editor** or `supabase db push` (when linked):
 | 26 | `migration_burn_destroy_edge.sql` | `burn_destroy_edge` — crypto_destroy via edge; remove bulk burn SQL stub |
 | 27 | `migration_fix_crypto_destroy_owner.sql` | `fix_crypto_destroy_owner_null` — keep owner on DESTROY (NOT NULL column) |
 | 28 | `migration_fix_public_verify_event_asset.sql` | `fix_public_verify_event_asset` — DESTROY events resolve linked asset metadata |
+| 29 | `migration_trade_transfer_edge.sql` | `trade_transfer_edge` — accept_trade_offer gameplay-only; TRADE via transfer_poxy edge |
+| 30 | `migration_admin_support_lookup.sql` | `admin_support_lookup` — staff dossier RPC for support terminal |
 
 ## Admin allowlist (manual — never commit emails/UUIDs)
 

@@ -17,12 +17,35 @@ Deno.serve(async (req) => {
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
     const body = await req.json();
-    const { envelope, asset_id, to_owner, event_type = "TRANSFER" } = body ?? {};
+    const {
+      envelope,
+      asset_id,
+      to_owner,
+      event_type = "TRANSFER",
+      from_owner: explicitFrom = null,
+      offer_id = null,
+    } = body ?? {};
     if (!asset_id || !to_owner) return json({ ok: false, error: "asset_id and to_owner required" }, 400);
     if (!["TRANSFER", "TRADE"].includes(event_type)) {
       return json({ ok: false, error: "event_type must be TRANSFER or TRADE" }, 400);
     }
-    if (to_owner === userId) return json({ ok: false, error: "Cannot transfer to self" }, 400);
+
+    let fromOwner = userId;
+    let actorId = userId;
+
+    if (event_type === "TRADE" && explicitFrom) {
+      // P2P trade accept: recipient settles; seller is explicit from_owner.
+      if (userId !== to_owner) {
+        return json({ ok: false, error: "TRADE settlement: caller must be recipient (to_owner)" }, 400);
+      }
+      if (explicitFrom === to_owner) {
+        return json({ ok: false, error: "Invalid trade parties" }, 400);
+      }
+      fromOwner = explicitFrom;
+      actorId = userId;
+    } else {
+      if (to_owner === userId) return json({ ok: false, error: "Cannot transfer to self" }, 400);
+    }
 
     const admin = adminClient();
     await enforceReplayProtection(admin, userId, { ...envelope, action: "transfer_poxy" });
@@ -30,28 +53,31 @@ Deno.serve(async (req) => {
     const key = await loadActiveSigningKey(admin);
     const nonce = envelope?.nonce ?? crypto.randomUUID();
     const ts = isoMicro();
+    const payload: Record<string, unknown> = { from: fromOwner, to: to_owner };
+    if (offer_id) payload.offer_id = offer_id;
+
     const canonical = buildEventCanonical({
       v: 1,
       type: event_type,
       asset_id,
-      actor_id: userId,
+      actor_id: actorId,
       ts,
       nonce,
-      payload: { from: userId, to: to_owner },
+      payload,
     });
     const eventSignature = sign(canonical, key);
 
     const { data, error } = await admin.rpc("crypto_transfer_poxy", {
       p_asset_id: asset_id,
-      p_from_owner: userId,
+      p_from_owner: fromOwner,
       p_to_owner: to_owner,
       p_event_type: event_type,
       p_event_canonical: canonical,
       p_event_signature: eventSignature,
       p_key_version: key.keyVersion,
       p_nonce: nonce,
-      p_actor_id: userId,
-      p_payload: { from: userId, to: to_owner },
+      p_actor_id: actorId,
+      p_payload: payload,
     });
 
     if (error) return json({ ok: false, error: error.message }, 400);
@@ -60,7 +86,13 @@ Deno.serve(async (req) => {
       return json(data, 400);
     }
 
-    await writeAudit(admin, event_type, userId, req, { asset_id, to_owner, event_hash: data.event_hash });
+    await writeAudit(admin, event_type, userId, req, {
+      asset_id,
+      from_owner: fromOwner,
+      to_owner,
+      event_hash: data.event_hash,
+      offer_id,
+    });
     return json(data);
   } catch (e) {
     return json({ ok: false, error: String(e?.message ?? e) }, 400);
