@@ -3,39 +3,7 @@
 -- Synced from live Supabase project rbrtjkfawdnomvvyxwvp — 2026-06-08
 -- Requires: migration_account_control.sql (private_is_admin)
 
-create or replace function public.admin_set_balance(p_target_id uuid, p_amount numeric)
-returns numeric
-language plpgsql
-security definer
-set search_path to public
-as $$
-declare
-  caller_is_staff boolean;
-  new_bal         numeric;
-begin
-  select (
-    coalesce((select is_verified_employee from public.profiles where id = auth.uid()), false)
-    or (select email from auth.users where id = auth.uid()) in (
-      'syntaxdev0@gmail.com', 'admin@poxygen.com'
-    )
-  ) into caller_is_staff;
-
-  if not coalesce(caller_is_staff, false) then
-    raise exception 'admin_set_balance: unauthorized';
-  end if;
-
-  update public.profiles
-  set balance = p_amount
-  where id = p_target_id
-  returning balance into new_bal;
-
-  if new_bal is null then
-    raise exception 'admin_set_balance: user not found';
-  end if;
-
-  return new_bal;
-end;
-$$;
+-- admin_set_balance: see migration_admin_emails_table.sql (uses private_is_admin)
 
 create or replace function public.admin_set_frozen(p_target_id uuid, p_frozen boolean)
 returns void
@@ -121,7 +89,6 @@ begin
 end;
 $$;
 
-grant execute on function public.admin_set_balance(uuid, numeric) to authenticated;
 grant execute on function public.admin_set_frozen(uuid, boolean) to authenticated;
 grant execute on function public.admin_set_blocked(uuid, boolean) to authenticated;
 grant execute on function public.admin_set_verified(uuid, boolean) to authenticated;

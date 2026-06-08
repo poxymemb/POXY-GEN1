@@ -34,30 +34,4 @@ create trigger trg_assign_account_hash
   before insert on public.profiles
   for each row execute function public.assign_account_hash();
 
--- -----------------------------------------------------------------------------
--- Admin gate (used by admin_* RPCs)
--- -----------------------------------------------------------------------------
-create or replace function public.private_is_admin()
-returns boolean
-language sql
-stable
-security definer
-set search_path to public
-as $$
-  select (
-    coalesce(
-      (select is_verified_employee from public.profiles where id = auth.uid()),
-      false
-    )
-    or exists (
-      select 1 from public.profiles
-      where id = auth.uid() and 'founder' = any (coalesce(badges, array[]::text[]))
-    )
-    or (select email from auth.users where id = auth.uid()) in (
-      'nikitash0504@gmail.com',
-      'syntaxdev0@gmail.com',
-      'admin@poxygen.com'
-    )
-    or auth.uid() = '5dbbb61c-3c98-444b-8be3-ed42ff99091d'::uuid
-  );
-$$;
+-- Admin gate: see migration_admin_emails_table.sql (no hardcoded IDs in git)

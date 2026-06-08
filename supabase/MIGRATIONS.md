@@ -29,6 +29,20 @@ Run in **Supabase SQL Editor** or `supabase db push` (when linked):
 | 19 | `migration_season_atlas.sql` | `season_atlas*` |
 | 20 | `migration_share_links.sql` | `share_links_rpc` |
 | 21 | `migration_phase1_trade_flash_store.sql` | `phase1_trade_flash_store` |
+| 22 | `migration_admin_emails_table.sql` | `admin_emails_table` |
+
+## Admin allowlist (manual — never commit emails/UUIDs)
+
+After migration 22, seed founders in **Supabase SQL Editor only**:
+
+```sql
+insert into public.admin_emails (email, role) values
+  ('your-founder@email.com', 'admin'),
+  ('your-dev@email.com', 'dev_topup')
+on conflict (email) do nothing;
+```
+
+Access also works via `profiles.is_verified_employee` or `founder` badge.
 
 ## Prod-only ops (not in SQL files)
 

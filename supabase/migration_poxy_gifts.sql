@@ -162,47 +162,8 @@ begin
 end;
 $$;
 
--- -----------------------------------------------------------------------------
--- dev_topup — founder/dev accounts only
--- -----------------------------------------------------------------------------
-create or replace function public.dev_topup(p_amount numeric default 100)
-returns jsonb
-language plpgsql
-security definer
-as $$
-declare
-  v_uid         uuid := auth.uid();
-  v_email       text;
-  v_new_balance numeric;
-begin
-  if v_uid is null then
-    return jsonb_build_object('ok', false, 'error', 'Not authenticated');
-  end if;
-
-  select email into v_email from auth.users where id = v_uid;
-
-  if not (
-    v_email in ('nikitash0504@gmail.com', 'worldpoxy@gmail.com')
-    or exists (
-      select 1 from public.profiles
-      where id = v_uid and is_verified_employee = true
-    )
-  ) then
-    return jsonb_build_object('ok', false, 'error', 'Restricted to founder/dev accounts');
-  end if;
-
-  p_amount := least(p_amount, 50000);
-
-  update public.profiles
-  set balance = balance + p_amount
-  where id = v_uid
-  returning balance into v_new_balance;
-
-  return jsonb_build_object('ok', true, 'added', p_amount, 'new_balance', v_new_balance);
-end;
-$$;
+-- dev_topup: see migration_admin_emails_table.sql
 
 grant execute on function public.send_gift(uuid, uuid, text) to authenticated;
 grant execute on function public.get_my_pending_gifts() to authenticated;
 grant execute on function public.claim_gift(uuid) to authenticated;
-grant execute on function public.dev_topup(numeric) to authenticated;
