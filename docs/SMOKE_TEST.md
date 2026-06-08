@@ -1,6 +1,6 @@
 # POXY — Backend Smoke Test Checklist
 
-Run on **https://poxygen1.vercel.app** (or local `index.html`) after each backend phase.
+Run on **https://poxy-gens.vercel.app** after each backend phase.
 Use a **test account** with dev topup if needed.
 
 ## Auth
@@ -13,7 +13,7 @@ Use a **test account** with dev topup if needed.
 
 - [ ] Balance displays in HUD
 - [ ] **Dev topup** adds PC (founder/dev only)
-- [ ] **Standard case** (`open_standard_case_v2`) — debits 1 PC, returns tier/serial
+- [ ] **Standard case** (`open_standard_case_v3`) — debits 1 PC, returns tier/serial
 - [ ] Drop appears in **Collection**
 - [ ] **Burn** single + bulk returns PC
 - [ ] **Craft** 5× common → 1× uncommon
@@ -39,40 +39,39 @@ Use a **test account** with dev topup if needed.
 
 ## Crypto layer
 
-- [ ] After case open, `cryptoMint` runs (check browser console — no silent fail)
-- [ ] Failed mints are **queued** (`poxy_crypto_mint_queue` in localStorage) and drained on next login
-- [ ] **Verify terminal** — `public_verify` returns valid for minted asset
-- [ ] **Marketplace buy** → `cryptoTransfer` TRADE event in ledger (check console)
-- [ ] **Gift claim** → `cryptoMint` gift event for new asset (check console)
-- [ ] `count(poxy_assets)` = `count(user_poxy)` (all backfilled)
+- [x] After case open, `cryptoMint` runs (console: `[poxy-crypto] anchored`)
+- [ ] Failed mints queued in localStorage and drained on login
+- [x] **Verify terminal** — asset / event / rng all return `ok: true` for PX-31AEE1
+- [x] Verify works from **another account** (no Failed to fetch)
+- [ ] **Marketplace buy** → `cryptoTransfer` TRADE event
+- [ ] **Gift claim** → `cryptoMint` gift event
+- [x] `count(poxy_assets)` = `count(user_poxy)` → **1 = 1** (2026-06-08)
 
 ## Phase 2 — verified
 
-- [ ] **Backfill** — `SELECT COUNT(*) FROM user_poxy up LEFT JOIN poxy_assets pa ON pa.user_poxy_id=up.id WHERE pa.id IS NULL` → **0**
-- [ ] **Snapshot** — `SELECT * FROM ledger_snapshots ORDER BY snapshot_at DESC LIMIT 1` — row present with `root_hash`
-- [ ] **Cron** — `SELECT jobname, active FROM cron.job WHERE jobname='poxy-ledger-snapshot-daily'` → active = true
-- [ ] `purchase_poxy` returns `asset_id` in response (console: `[poxy-crypto] transfer anchored`)
+- [x] **Backfill** — unbackfilled `user_poxy` → **0**
+- [ ] **Snapshot** — `ledger_snapshots` row (cron `poxy-ledger-snapshot-daily` active; first row after 02:00 UTC)
+- [x] **Cron** — `poxy-ledger-snapshot-daily` active = true
+- [ ] `purchase_poxy` returns `asset_id` + `[poxy-crypto] transfer anchored`
 
-## Phase 3 — Provably Fair Gacha
+## Phase 3 — Provably Fair Gacha (prod verified 2026-06-08)
 
-- [ ] Case open uses commit-reveal: console shows `[poxy-crypto] anchored` after click
-- [ ] `rng_rounds` row created with `status='revealed'` after open
-- [ ] `user_poxy.rng_round_id` is set on new drops
-- [ ] **PROVABLY FAIR** badge visible in win reveal modal + hunt page
-- [ ] Clicking badge opens verify tab (pre-filled with round_id)
-- [ ] Client can verify: `SHA256(server_seed + client_seed + '0') == result_hash`
-- [ ] Tier derivation verifiable: `parseInt(result_hash.slice(0,8), 16) / 4294967296` → float → tier
-- [ ] Serial verifiable: `'PX-' + result_hash.slice(8,14).toUpperCase()`
-- [ ] **Burn** writes DESTROY event in `ledger_events` for each burned asset
-- [ ] **Trade accept** writes TRADE event + updates `poxy_assets.current_owner_id`
-- [ ] SQL health: `SELECT count(*) FROM ledger_events WHERE event_type='DESTROY'` increases on burn
+- [x] Case open uses commit-reveal → `[poxy-crypto] anchored`
+- [x] `rng_rounds` row `status='revealed'` after open
+- [x] `user_poxy.rng_round_id` set on drop
+- [x] **PROVABLY FAIR** badge + verify tab pre-fill
+- [x] `commit_matches` + `result_matches` = true (RPC)
+- [x] `serial_matches` = true (game serial = crypto serial)
+- [x] `rarity_seed` = RNG `result_hash`
+- [x] Receipt cross-links identical in all 3 verify tabs
+- [ ] **Burn** → DESTROY ledger event (needs edge hardening)
+- [ ] **Trade accept** → TRADE ledger event (needs edge hardening)
 
 ## Phase 1 — fixed (verify)
 
-- [ ] P2P trade **accept** (`accept_trade_offer`) — assets transfer to recipient
-- [ ] P2P trade **decline** (`decline_trade_offer`)
-- [ ] **Flash sale** (`purchase_flash_sale`) — single RPC, no double VIP charge
-- [ ] **Store themes/gradients** (`purchase_customization`) — works with economy guard
+- [ ] P2P trade **accept** / **decline**
+- [ ] **Flash sale** (`purchase_flash_sale`)
+- [ ] **Store themes** (`purchase_customization`)
 
 ## Known broken (later phases)
 
@@ -85,11 +84,22 @@ Use a **test account** with dev topup if needed.
 SELECT
   (SELECT count(*) FROM user_poxy) AS gameplay_assets,
   (SELECT count(*) FROM poxy_assets) AS crypto_assets,
-  (SELECT count(*) FROM ledger_events) AS ledger_events;
+  (SELECT count(*) FROM ledger_events) AS ledger_events,
+  (SELECT count(*) FROM user_poxy up
+   LEFT JOIN poxy_assets pa ON pa.user_poxy_id = up.id
+   WHERE pa.id IS NULL) AS unbackfilled;
 ```
 
-Target after Phase 2: `crypto_assets = gameplay_assets` (minus burned).
+Target: `crypto_assets = gameplay_assets`, `unbackfilled = 0`.
+
+## Canonical test asset (PX-31AEE1)
+
+| Verify mode | Input |
+|-------------|-------|
+| POXY ASSET | `258faad02e6c9cc9845c7e8574b55e0141f32e31fcc6928d802984ee2a13f6dd` |
+| LEDGER EVENT | `49f6034c-1886-4fd8-8275-bc47a3956929` |
+| RNG ROUND | `ae4b7a99-9825-4bb2-8bd5-ecec8592beca` |
 
 ---
 
-*Update this checklist as phases complete.*
+*Updated 2026-06-08 — Phase 3 crypto baseline PASS on prod.*

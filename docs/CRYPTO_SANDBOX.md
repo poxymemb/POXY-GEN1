@@ -1,33 +1,54 @@
 # POXY — Crypto Sandbox (single-asset dev)
 
-Empty prod sandbox — open **one standard case** on `syntax` to mint the first ideal v3.1 POXY.
+One ideal v3.1 POXY on prod — cryptographic baseline for lifecycle hardening.
 
-## Current state (2026-06-08)
+## Canonical asset (syntax)
+
+| Field | Value |
+|---|---|
+| Account | `syntax` (`5dbbb61c-3c98-444b-8be3-ed42ff99091d`) |
+| Serial | `PX-31AEE1` |
+| Tier | epic |
+| `user_poxy.id` | `e3104c36-0bad-4777-a74f-b054323f5c57` |
+| `poxy_assets.id` | `bd6ce999-3c73-44d4-a92c-274ae1d543aa` |
+| `poxy_hash` | `258faad02e6c9cc9845c7e8574b55e0141f32e31fcc6928d802984ee2a13f6dd` |
+| Signature | `v1FcutkwPyxTGpNlE2zFNS7SHA0dPqKaNzLK3FvBayHfhJJNPmMPUq4uszTbDbgnIYCqbtgX2LK86sdGCs/fCw==` |
+| RNG round | `ae4b7a99-9825-4bb2-8bd5-ecec8592beca` |
+| Genesis event | `49f6034c-1886-4fd8-8275-bc47a3956929` |
+| `rarity_seed` | `f783dd0531aee17cfb0b5da0655f9636be291083b2fb171f5b5c664899784c67` (= RNG `result_hash`) |
+
+## Prod counts (2026-06-08)
 
 | Table | Rows |
 |-------|------|
-| `user_poxy` | 0 |
-| `poxy_assets` | 0 |
-| `ledger_events` | 0 |
-| `rng_rounds` | 0 |
+| `user_poxy` | 1 |
+| `poxy_assets` | 1 |
+| `ledger_events` | 1 |
+| `rng_rounds` | 1 |
+| Unbackfilled | 0 |
 
-Test account: **syntax** (`5dbbb61c-3c98-444b-8be3-ed42ff99091d`)
+## Verify checklist (all PASS)
 
-## After opening one case — verify checklist
+1. **RNG** → `ae4b7a99-9825-4bb2-8bd5-ecec8592beca` → PROVABLY FAIR
+2. **Asset** → `258faad0…` → `serial_matches: true`, ED25519 valid
+3. **Event** → `49f6034c-…` → `hash_matches: true`
+4. Receipt shows same hash / event / rng in all three tabs
+5. Verify works from **any account** (invoke + RPC fallback)
 
-1. Console: `[poxy-crypto] anchored` + toast `POXY minted · signature on record`
-2. **RNG** — Verify → RNG ROUND → round ID from drop → PROVABLY FAIR
-3. **Asset** — Verify → POXY HASH → `hash_matches` + `serial_matches: true`
-4. **Event** — Verify → GENESIS EVENT ID → `hash_matches: true`
-5. All three modes show the **same** `poxy_hash`, `game_serial`, `rng_round_id`, `genesis_event_id` in receipt
+## v3.1 mint wiring
 
-## v3.1 mint wiring (index.html)
+`cryptoMint(serial, resultHash)` → `mint_poxy` → game serial = crypto serial.
 
-`cryptoMint` passes `serial_number` + `rarity_seed` (= RNG `result_hash`) so game identity = crypto identity.
+## Next hardening (Phase 2 crypto lifecycle)
+
+| # | Task |
+|---|------|
+| 1 | Burn → `transfer_poxy` DESTROY edge |
+| 2 | Trade accept → edge TRADE |
+| 3 | Gift send → `cryptoTransfer` |
+| 4 | Trust HUD → server commit/result hashes |
 
 ## Sandbox reset (admin SQL)
-
-Immutability triggers on `poxy_assets` / `rng_rounds` must be disabled briefly:
 
 ```sql
 BEGIN;
