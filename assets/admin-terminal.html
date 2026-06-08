@@ -237,6 +237,52 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mcu-search-result-sub{color:var(--muted);font-family:var(--font-mono);font-size:11px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mcu-search-result-tag{background:var(--bg2);border-radius:4px;color:var(--amber);flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 6px;text-transform:uppercase}
 .mcu-search-foot{border-top:1px solid var(--border);color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:12px 16px;padding:10px 16px}
+/* ── SUPPORT TICKETS (Session C) ── */
+.stkt-layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.2fr);gap:12px;margin-bottom:16px;min-height:420px}
+@media(max-width:1100px){.stkt-layout{grid-template-columns:1fr}}
+.stkt-queue-card,.stkt-chat-card{display:flex;flex-direction:column;min-height:420px}
+.stkt-queue-card .tbl-wrap,.stkt-chat-msgs{flex:1;min-height:0;overflow:auto}
+.stkt-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.stkt-filter-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.stkt-filter-btn.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.12)}
+.stkt-unread{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff;font-size:10px;font-weight:700}
+.stkt-chat-placeholder{flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;padding:24px;text-align:center}
+.stkt-chat-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border2)}
+.stkt-chat-title{font-size:14px;font-weight:700;color:var(--adm-text)}
+.stkt-chat-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.stkt-chat-actions{display:flex;gap:6px;flex-wrap:wrap}
+.stkt-chat-msgs{display:flex;flex-direction:column;gap:10px;padding:8px 4px;max-height:min(52vh,480px)}
+.stkt-msg{max-width:88%;animation:stktMsgIn .25s ease-out}
+@keyframes stktMsgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.stkt-msg.player{align-self:flex-start}
+.stkt-msg.staff{align-self:flex-end}
+.stkt-msg.auto{align-self:center;max-width:96%}
+.stkt-bubble{padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.5;word-break:break-word}
+.stkt-msg.player .stkt-bubble{background:var(--bg2);border:1px solid var(--border);color:var(--adm-text);border-bottom-left-radius:4px}
+.stkt-msg.staff .stkt-bubble{background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.35);color:var(--adm-text);border-bottom-right-radius:4px}
+.stkt-msg.auto .stkt-bubble{background:transparent;color:var(--muted);font-style:italic;font-size:11px;text-align:center}
+.stkt-bubble img{max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;display:block}
+.stkt-msg-time{font-size:9px;color:var(--muted);margin-top:3px;padding:0 4px}
+.stkt-msg.staff .stkt-msg-time{text-align:right}
+.stkt-quick-panel{margin-top:10px;border-top:1px solid var(--border2);padding-top:10px}
+.stkt-quick-toggle{width:100%;text-align:left;background:transparent;border:none;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:4px 0}
+.stkt-quick-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.stkt-quick-list[hidden]{display:none!important}
+.stkt-quick-chip{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--adm-text);font-size:11px;cursor:pointer}
+.stkt-quick-chip:hover{border-color:var(--amber);color:var(--amber)}
+.stkt-compose{margin-top:10px;padding-top:10px;border-top:1px solid var(--border2)}
+.stkt-compose-row{display:flex;align-items:flex-end;gap:8px}
+.stkt-compose-input{flex:1;min-width:0}
+.stkt-attach-preview{display:none;margin-bottom:8px;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--bg2);font-size:11px;color:var(--muted)}
+.stkt-attach-preview.visible{display:block}
+.stkt-attach-preview img{max-height:80px;border-radius:6px;margin-bottom:6px;display:block}
+.stkt-mgr-list{display:flex;flex-direction:column;gap:8px}
+.stkt-mgr-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--bg2)}
+.stkt-mgr-row-main{flex:1;min-width:0}
+.stkt-mgr-row-title{font-size:12px;font-weight:600;color:var(--adm-text)}
+.stkt-mgr-row-sub{font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stkt-stream-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px}
+.stkt-stream-dot.live{background:var(--green);animation:pulse 2s infinite}
 /* ── RNG AUDIT ── */
 .rng-report{background:var(--adm-log-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-family:var(--font-mono);font-size:11px}
 .rng-report-hdr{background:var(--dim);border-bottom:1px solid var(--border);padding:12px 16px;text-align:center}
@@ -483,6 +529,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       </button>
       <button class="nav-btn" onclick="switchTab('roles')" data-tab="roles">
         <span class="ic">🛡</span>Admin roles
+      </button>
+      <button class="nav-btn" onclick="switchTab('stkt')" data-tab="stkt">
+        <span class="ic">💬</span>Support tickets
       </button>
     </nav>
     <div class="sidebar-footer">
@@ -1205,6 +1254,163 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div><!-- /tab-roles -->
 
     <!-- ══════════════════════════════════════════════════════
+         TAB 14: SUPPORT TICKETS
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-stkt" class="tab-pane">
+
+      <div class="stkt-layout">
+        <!-- Ticket queue -->
+        <div class="card stkt-queue-card" style="margin-bottom:0">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <span><span class="stkt-stream-dot" id="stktStreamDot"></span>Ticket queue</span>
+            <button class="btn btn-ghost btn-sm" onclick="stktLoadQueue()">↺ Refresh</button>
+          </div>
+          <div class="stkt-filters" id="stktFilters">
+            <button type="button" class="stkt-filter-btn active" data-stkt-filter="all" onclick="stktSetFilter('all',this)">All</button>
+            <button type="button" class="stkt-filter-btn" data-stkt-filter="open" onclick="stktSetFilter('open',this)">Open</button>
+            <button type="button" class="stkt-filter-btn" data-stkt-filter="in_progress" onclick="stktSetFilter('in_progress',this)">In progress</button>
+            <button type="button" class="stkt-filter-btn" data-stkt-filter="closed" onclick="stktSetFilter('closed',this)">Closed</button>
+          </div>
+          <div class="f-row" style="margin-bottom:10px">
+            <input id="stktSearch" class="f-input" type="search" placeholder="Search username or subject…" oninput="stktRenderQueue()"/>
+          </div>
+          <div class="tbl-wrap" style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>User</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Assigned</th>
+                  <th>Updated</th>
+                </tr>
+              </thead>
+              <tbody id="stktQueueBody">
+                <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Ticket chat -->
+        <div class="card stkt-chat-card" style="margin-bottom:0" id="stktChatCard">
+          <div id="stktChatEmpty" class="stkt-chat-placeholder">Select a ticket from the queue to open the conversation.</div>
+          <div id="stktChatActive" hidden>
+            <div class="stkt-chat-head">
+              <div>
+                <div class="stkt-chat-title" id="stktChatUser">@player</div>
+                <div class="stkt-chat-sub" id="stktChatSubject">—</div>
+                <span class="role-badge support" id="stktChatStatus" style="margin-top:6px">OPEN</span>
+              </div>
+              <div class="stkt-chat-actions">
+                <button class="btn btn-ghost btn-sm" onclick="stktAssignMe()">Assign to me</button>
+                <button class="btn btn-ghost btn-sm" onclick="stktMarkInProgress()">In progress</button>
+                <button class="btn btn-red btn-sm" onclick="stktCloseTicket()">Close ticket</button>
+              </div>
+            </div>
+            <div class="stkt-chat-msgs" id="stktChatMsgs"></div>
+            <div class="stkt-quick-panel">
+              <button type="button" class="stkt-quick-toggle" onclick="stktToggleQuickReplies()">▸ Quick replies</button>
+              <div class="stkt-quick-list" id="stktQuickChips" hidden></div>
+            </div>
+            <div class="stkt-compose" id="stktCompose">
+              <div class="stkt-attach-preview" id="stktAttachPreview">
+                <img id="stktAttachImg" alt="Preview"/>
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                  <span id="stktAttachMeta"></span>
+                  <button type="button" class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="stktClearAttach()">Remove</button>
+                </div>
+              </div>
+              <div class="stkt-compose-row">
+                <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('stktAttachFile').click()" title="Attach image">📎</button>
+                <input type="file" id="stktAttachFile" accept="image/jpeg,image/png,image/webp" hidden onchange="stktOnAttachFile()"/>
+                <textarea id="stktReplyInput" class="f-textarea stkt-compose-input" rows="2" placeholder="Staff reply…" style="min-height:44px;resize:none" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();stktSendReply();}"></textarea>
+                <button type="button" class="btn btn-amber" id="stktSendBtn" onclick="stktSendReply()">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <!-- Quick replies manager -->
+        <div class="card">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <span>Quick replies manager</span>
+            <button class="btn btn-ghost btn-sm" onclick="stktShowAddReply()">+ Add</button>
+          </div>
+          <div id="stktReplyMgrList" class="stkt-mgr-list"><p style="color:var(--muted);font-size:12px">Loading…</p></div>
+          <div id="stktReplyForm" class="roles-add-row" style="display:none;margin-top:12px">
+            <div class="f-row" style="flex:1">
+              <label class="f-label">Title</label>
+              <input id="stktReplyTitle" class="f-input" type="text" placeholder="Internal label"/>
+            </div>
+            <div class="f-row" style="flex:2">
+              <label class="f-label">Body</label>
+              <textarea id="stktReplyBody" class="f-textarea" style="min-height:60px" placeholder="Paste text…"></textarea>
+            </div>
+            <button class="btn btn-amber btn-sm" onclick="stktSaveReply()">Save</button>
+            <button class="btn btn-ghost btn-sm" onclick="stktHideReplyForm()">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Auto messages config -->
+        <div class="card">
+          <div class="card-title">Auto messages config</div>
+          <div id="stktAutoList"></div>
+          <button class="btn btn-amber btn-sm" style="margin-top:12px" onclick="stktSaveAutoMessages()">Save changes</button>
+          <span id="stktAutoLog" style="font-size:11px;color:var(--muted);margin-left:10px"></span>
+        </div>
+      </div>
+
+      <!-- FAQ manager -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <span>FAQ manager</span>
+          <button class="btn btn-ghost btn-sm" onclick="stktShowAddFaq()">+ Add FAQ</button>
+        </div>
+        <div id="stktFaqMgrList" class="stkt-mgr-list"><p style="color:var(--muted);font-size:12px">Loading…</p></div>
+        <div id="stktFaqForm" class="roles-add-row" style="display:none;margin-top:12px;flex-direction:column;align-items:stretch">
+          <div class="grid2">
+            <div class="f-row">
+              <label class="f-label">Question</label>
+              <input id="stktFaqQuestion" class="f-input" type="text"/>
+            </div>
+            <div class="f-row">
+              <label class="f-label">Category</label>
+              <select id="stktFaqCategory" class="f-select">
+                <option value="general">General</option>
+                <option value="gameplay">Gameplay</option>
+                <option value="economy">Economy</option>
+                <option value="crypto">Crypto</option>
+                <option value="marketplace">Marketplace</option>
+                <option value="account">Account</option>
+              </select>
+            </div>
+          </div>
+          <div class="f-row">
+            <label class="f-label">Answer</label>
+            <textarea id="stktFaqAnswer" class="f-textarea" style="min-height:72px"></textarea>
+          </div>
+          <div class="row-flex">
+            <div class="f-row" style="max-width:120px;margin:0">
+              <label class="f-label">Sort</label>
+              <input id="stktFaqSort" class="f-input" type="number" value="0"/>
+            </div>
+            <label class="toggle-wrap" style="margin-left:8px">
+              <span class="toggle-label">Active</span>
+              <label class="toggle"><input type="checkbox" id="stktFaqActive" checked/><span class="toggle-slider"></span></label>
+            </label>
+            <button class="btn btn-amber btn-sm" onclick="stktSaveFaq()">Save</button>
+            <button class="btn btn-ghost btn-sm" onclick="stktHideFaqForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-stkt -->
+
+    <!-- ══════════════════════════════════════════════════════
          TAB 10: ECONOMY HEALTH
          ══════════════════════════════════════════════════════ -->
     <div id="tab-economy" class="tab-pane">
@@ -1859,7 +2065,8 @@ const MCU_PAGES = {
   rng:       { title: 'RNG audit',           sub: 'Provably fair drop verification and recent rounds' },
   disputes:  { title: 'Dispute resolution',  sub: 'Incident lookup, compensation tool, admin actions log' },
   dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' },
-  roles:     { title: 'Admin roles',        sub: 'Team members, role assignments, permissions matrix' }
+  roles:     { title: 'Admin roles',        sub: 'Team members, role assignments, permissions matrix' },
+  stkt:      { title: 'Support tickets',    sub: 'Ticket queue, realtime chat, quick replies, FAQ manager' }
 };
 
 function syncThemeToggleUI(){
@@ -1910,6 +2117,8 @@ function switchTab(id){
   if(id==='disputes')  { loadRecentDisputes(); }
   if(id==='dossier')   { /* stays on current loaded player */ }
   if(id==='roles')     { loadAdminRoles(); }
+  if(id==='stkt')      { stktTabEnter(); }
+  else                 { stktTabLeave(); }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5262,6 +5471,594 @@ function mcuSearchGo(result){
         auditLogApplyFilters(); }
       break;
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 14 — SUPPORT TICKETS (Session C)
+// ═══════════════════════════════════════════════════════════════
+
+const STKT_IMG_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const STKT_MAX_BYTES = 2 * 1024 * 1024;
+const STKT_MAX_DIM = 1200;
+const STKT_IMG_QUALITY = 0.7;
+
+let _stktFilter = 'all';
+let _stktTickets = [];
+let _stktProfiles = {};
+let _stktUnread = {};
+let _stktActiveId = null;
+let _stktActiveTicket = null;
+let _stktRenderedMsgIds = new Set();
+let _stktTicketsChannel = null;
+let _stktChatChannel = null;
+let _stktQuickReplies = [];
+let _stktEditingReplyId = null;
+let _stktEditingFaqId = null;
+let _stktAttach = null;
+let _stktSeenKey = 'poxy-mcu-stkt-seen';
+
+function _stktSeenMap(){
+  try{ return JSON.parse(localStorage.getItem(_stktSeenKey) || '{}'); }catch(e){ return {}; }
+}
+function _stktMarkSeen(ticketId){
+  const m = _stktSeenMap();
+  m[ticketId] = new Date().toISOString();
+  try{ localStorage.setItem(_stktSeenKey, JSON.stringify(m)); }catch(e){}
+}
+
+function stktStatusBadge(status){
+  const s = (status || 'open').replace('_', ' ');
+  const cls = status === 'in_progress' ? 'mod' : (status === 'closed' ? 'dev_topup' : 'support');
+  return '<span class="role-badge ' + cls + '">' + esc(s.toUpperCase()) + '</span>';
+}
+
+function stktFmtBytes(n){
+  if(n < 1024) return n + ' B';
+  if(n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+  return (n / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
+async function stktCompressImage(file){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = function(){
+      URL.revokeObjectURL(url);
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if(w > STKT_MAX_DIM || h > STKT_MAX_DIM){
+        const sc = Math.min(STKT_MAX_DIM / w, STKT_MAX_DIM / h);
+        w = Math.round(w * sc); h = Math.round(h * sc);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if(!ctx){ reject(new Error('Canvas unavailable')); return; }
+      ctx.drawImage(img, 0, 0, w, h);
+      const outType = file.type === 'image/png' ? 'image/png' : (file.type === 'image/webp' ? 'image/webp' : 'image/jpeg');
+      const q = outType === 'image/png' ? undefined : STKT_IMG_QUALITY;
+      canvas.toBlob(blob => {
+        if(!blob){ reject(new Error('Compression failed')); return; }
+        const ext = outType === 'image/png' ? 'png' : (outType === 'image/webp' ? 'webp' : 'jpg');
+        const base = (file.name || 'photo').replace(/\.[^.]+$/, '').replace(/[^\w.-]/g, '_') || 'photo';
+        resolve(new File([blob], base + '.' + ext, { type: outType }));
+      }, outType, q);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read image')); };
+    img.src = url;
+  });
+}
+
+async function stktUploadImage(file){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) throw new Error('Not authenticated');
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const path = 'tickets/' + user.id + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+  const { error } = await sb.storage.from('support-attachments').upload(path, file, { contentType: file.type });
+  if(error) throw error;
+  return sb.storage.from('support-attachments').getPublicUrl(path).data.publicUrl;
+}
+
+function stktTabEnter(){
+  stktLoadQueue();
+  stktLoadQuickRepliesMgr();
+  stktLoadAutoMessages();
+  stktLoadFaqMgr();
+  stktStartTicketsStream();
+}
+
+function stktTabLeave(){
+  stktStopTicketsStream();
+  stktStopChatStream();
+}
+
+function stktSetFilter(f, btn){
+  _stktFilter = f;
+  document.querySelectorAll('.stkt-filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+  stktRenderQueue();
+}
+
+function stktSetStreamLive(live){
+  const dot = document.getElementById('stktStreamDot');
+  if(dot) dot.className = 'stkt-stream-dot' + (live ? ' live' : '');
+}
+
+function stktStartTicketsStream(){
+  stktStopTicketsStream();
+  _stktTicketsChannel = sb.channel('support-tickets-stream')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'support_tickets' }, () => {
+      stktLoadQueue();
+      toast('NEW SUPPORT TICKET');
+    })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'support_tickets' }, () => {
+      stktLoadQueue();
+    })
+    .subscribe(status => stktSetStreamLive(status === 'SUBSCRIBED'));
+}
+
+function stktStopTicketsStream(){
+  if(_stktTicketsChannel){ sb.removeChannel(_stktTicketsChannel); _stktTicketsChannel = null; }
+  stktSetStreamLive(false);
+}
+
+function stktStartChatStream(ticketId){
+  stktStopChatStream();
+  _stktChatChannel = sb.channel('staff-ticket:' + ticketId)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'ticket_messages',
+      filter: 'ticket_id=eq.' + ticketId,
+    }, payload => {
+      stktAppendMessage(payload.new, true);
+      stktScrollChat();
+      if(payload.new && !payload.new.is_staff && payload.new.ticket_id !== _stktActiveId) stktLoadQueue();
+    })
+    .subscribe();
+}
+
+function stktStopChatStream(){
+  if(_stktChatChannel){ sb.removeChannel(_stktChatChannel); _stktChatChannel = null; }
+}
+
+async function stktLoadQueue(){
+  const tbody = document.getElementById('stktQueueBody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:16px">Loading…</td></tr>';
+  try{
+    const { data, error } = await sb.from('support_tickets').select('*').order('updated_at', { ascending: false }).limit(200);
+    if(error) throw error;
+    _stktTickets = data || [];
+    const ids = new Set();
+    _stktTickets.forEach(t => { if(t.user_id) ids.add(t.user_id); if(t.assigned_to) ids.add(t.assigned_to); });
+    if(ids.size){
+      const { data: profs } = await sb.from('profiles').select('id,username').in('id', [...ids]);
+      _stktProfiles = {};
+      (profs || []).forEach(p => { _stktProfiles[p.id] = p; });
+    }
+    await stktRefreshUnreadCounts();
+    stktRenderQueue();
+  }catch(err){
+    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--red);text-align:center;padding:16px">' + esc(err.message) + '</td></tr>';
+  }
+}
+
+async function stktRefreshUnreadCounts(){
+  const seen = _stktSeenMap();
+  _stktUnread = {};
+  await Promise.all(_stktTickets.map(async t => {
+    const since = seen[t.id] || t.created_at;
+    const { count } = await sb.from('ticket_messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('ticket_id', t.id).eq('is_staff', false).gt('created_at', since);
+    _stktUnread[t.id] = count || 0;
+  }));
+}
+
+function stktRenderQueue(){
+  const tbody = document.getElementById('stktQueueBody');
+  const q = (document.getElementById('stktSearch')?.value || '').trim().toLowerCase();
+  if(!tbody) return;
+  let rows = _stktTickets.slice();
+  if(_stktFilter !== 'all') rows = rows.filter(t => t.status === _stktFilter);
+  if(q){
+    rows = rows.filter(t => {
+      const un = (_stktProfiles[t.user_id]?.username || '').toLowerCase();
+      return un.includes(q) || (t.subject || '').toLowerCase().includes(q);
+    });
+  }
+  if(!rows.length){
+    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">No tickets</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map((t, i) => {
+    const un = _stktProfiles[t.user_id]?.username || t.user_id?.slice(0, 8) + '…' || '—';
+    const asn = t.assigned_to ? (_stktProfiles[t.assigned_to]?.username || '—') : '—';
+    const unread = _stktUnread[t.id] || 0;
+    const active = t.id === _stktActiveId ? ' style="background:var(--dim)"' : '';
+    return '<tr class="stkt-queue-row" data-id="' + t.id + '"' + active + ' onclick="stktOpenTicket(\'' + t.id + '\')">' +
+      '<td style="font-size:11px;color:var(--muted)">' + (i + 1) + (unread ? ' <span class="stkt-unread">' + unread + '</span>' : '') + '</td>' +
+      '<td class="mono" style="font-weight:600">@' + esc(un) + '</td>' +
+      '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(t.subject) + '">' + esc(t.subject) + '</td>' +
+      '<td>' + stktStatusBadge(t.status) + '</td>' +
+      '<td style="font-size:11px;color:var(--muted)">' + esc(asn) + '</td>' +
+      '<td style="font-size:11px;color:var(--muted);white-space:nowrap">' + esc(fmtDate(t.updated_at)) + '</td></tr>';
+  }).join('');
+}
+
+async function stktOpenTicket(ticketId){
+  const t = _stktTickets.find(x => x.id === ticketId);
+  if(!t) return;
+  _stktActiveId = ticketId;
+  _stktActiveTicket = t;
+  _stktRenderedMsgIds.clear();
+  _stktMarkSeen(ticketId);
+  _stktUnread[ticketId] = 0;
+  stktRenderQueue();
+
+  document.getElementById('stktChatEmpty').hidden = true;
+  document.getElementById('stktChatActive').hidden = false;
+  const un = _stktProfiles[t.user_id]?.username || 'player';
+  document.getElementById('stktChatUser').textContent = '@' + un;
+  document.getElementById('stktChatSubject').textContent = t.subject || '—';
+  const stEl = document.getElementById('stktChatStatus');
+  if(stEl){
+    stEl.textContent = (t.status || 'open').replace('_', ' ').toUpperCase();
+    stEl.className = 'role-badge ' + (t.status === 'in_progress' ? 'mod' : (t.status === 'closed' ? 'dev_topup' : 'support'));
+  }
+  const compose = document.getElementById('stktCompose');
+  if(compose) compose.style.display = t.status === 'closed' ? 'none' : '';
+
+  document.getElementById('stktChatMsgs').innerHTML = '<p class="poxy-support-empty" style="padding:16px;color:var(--muted)">Loading…</p>';
+  stktClearAttach();
+  document.getElementById('stktReplyInput').value = '';
+
+  await stktLoadMessages(ticketId);
+  stktRenderQuickChips();
+  stktStartChatStream(ticketId);
+}
+
+async function stktLoadMessages(ticketId){
+  const box = document.getElementById('stktChatMsgs');
+  try{
+    const { data, error } = await sb.from('ticket_messages').select('*').eq('ticket_id', ticketId).order('created_at', { ascending: true });
+    if(error) throw error;
+    box.innerHTML = '';
+    _stktRenderedMsgIds.clear();
+    (data || []).forEach(m => stktAppendMessage(m, false));
+    stktScrollChat();
+  }catch(err){
+    box.innerHTML = '<p style="color:var(--red);padding:12px">' + esc(err.message) + '</p>';
+  }
+}
+
+function stktAppendMessage(m, animate){
+  if(!m || _stktRenderedMsgIds.has(m.id)) return;
+  _stktRenderedMsgIds.add(m.id);
+  const box = document.getElementById('stktChatMsgs');
+  if(!box) return;
+
+  let kind = 'staff';
+  if(m.is_auto) kind = 'auto';
+  else if(!m.is_staff) kind = 'player';
+
+  const div = document.createElement('div');
+  div.className = 'stkt-msg ' + kind;
+  if(!animate) div.style.animation = 'none';
+  let inner = '';
+  if(m.body) inner += esc(m.body).replace(/\n/g, '<br>');
+  if(m.image_url) inner += '<img src="' + esc(m.image_url) + '" alt="Attachment" loading="lazy" onclick="window.open(this.src,\'_blank\')"/>';
+  div.innerHTML = '<div class="stkt-bubble">' + (inner || '<em style="opacity:.5">—</em>') + '</div>' +
+    '<div class="stkt-msg-time">' + esc(fmtDate(m.created_at)) + '</div>';
+  box.appendChild(div);
+}
+
+function stktScrollChat(){
+  const box = document.getElementById('stktChatMsgs');
+  if(box) box.scrollTop = box.scrollHeight;
+}
+
+async function stktAssignMe(){
+  if(!_stktActiveId) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) return;
+  const { error } = await sb.from('support_tickets').update({ assigned_to: user.id, status: 'in_progress', updated_at: new Date().toISOString() }).eq('id', _stktActiveId);
+  if(error){ toast('ASSIGN FAILED', 'err'); return; }
+  toast('ASSIGNED TO YOU');
+  await stktLoadQueue();
+  const t = _stktTickets.find(x => x.id === _stktActiveId);
+  if(t) stktOpenTicket(t.id);
+}
+
+async function stktMarkInProgress(){
+  if(!_stktActiveId) return;
+  const { error } = await sb.from('support_tickets').update({ status: 'in_progress', updated_at: new Date().toISOString() }).eq('id', _stktActiveId);
+  if(error){ toast('UPDATE FAILED', 'err'); return; }
+  toast('MARKED IN PROGRESS');
+  await stktLoadQueue();
+  stktOpenTicket(_stktActiveId);
+}
+
+async function stktCloseTicket(){
+  if(!_stktActiveId) return;
+  if(!confirm('Close this ticket?')) return;
+  const { error } = await sb.rpc('close_support_ticket', { p_ticket_id: _stktActiveId });
+  if(error){ toast(error.message, 'err'); return; }
+  toast('TICKET CLOSED');
+  await stktLoadQueue();
+  await stktLoadMessages(_stktActiveId);
+  const t = _stktTickets.find(x => x.id === _stktActiveId);
+  if(t){ t.status = 'closed'; stktOpenTicket(_stktActiveId); }
+}
+
+async function stktSendReply(){
+  if(!_stktActiveId || !_stktActiveTicket || _stktActiveTicket.status === 'closed') return;
+  const text = (document.getElementById('stktReplyInput')?.value || '').trim();
+  if(!text && !_stktAttach) { toast('ENTER REPLY OR ATTACH PHOTO', 'err'); return; }
+  const btn = document.getElementById('stktSendBtn');
+  if(btn) btn.disabled = true;
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    let imageUrl = null;
+    if(_stktAttach) imageUrl = await stktUploadImage(_stktAttach.file);
+    const { error } = await sb.from('ticket_messages').insert({
+      ticket_id: _stktActiveId,
+      sender_id: user?.id || null,
+      is_staff: true,
+      body: text || null,
+      image_url: imageUrl,
+      is_auto: false,
+    });
+    if(error) throw error;
+    document.getElementById('stktReplyInput').value = '';
+    stktClearAttach();
+    await sb.from('support_tickets').update({ updated_at: new Date().toISOString() }).eq('id', _stktActiveId);
+  }catch(err){
+    toast(err.message || 'Send failed', 'err');
+  }
+  if(btn) btn.disabled = false;
+}
+
+function stktToggleQuickReplies(){
+  const el = document.getElementById('stktQuickChips');
+  if(el) el.hidden = !el.hidden;
+}
+
+function stktRenderQuickChips(){
+  const el = document.getElementById('stktQuickChips');
+  if(!el) return;
+  if(!_stktQuickReplies.length){
+    el.innerHTML = '<span style="font-size:11px;color:var(--muted)">No quick replies</span>';
+    return;
+  }
+  el.innerHTML = _stktQuickReplies.map((r, i) =>
+    '<button type="button" class="stkt-quick-chip" onclick="stktInsertQuickReplyIdx(' + i + ')">' + esc(r.title) + '</button>'
+  ).join('');
+}
+
+function stktInsertQuickReplyIdx(i){
+  const r = _stktQuickReplies[i];
+  const inp = document.getElementById('stktReplyInput');
+  if(inp && r){ inp.value = r.body || ''; inp.focus(); }
+}
+
+async function stktOnAttachFile(){
+  const inp = document.getElementById('stktAttachFile');
+  const file = inp?.files?.[0];
+  if(inp) inp.value = '';
+  if(!file) return;
+  if(!STKT_IMG_TYPES.includes(file.type)){ toast('ONLY JPEG, PNG, WEBP', 'err'); return; }
+  if(file.size > STKT_MAX_BYTES){ toast('MAX 2MB BEFORE COMPRESS', 'err'); return; }
+  try{
+    const compressed = await stktCompressImage(file);
+    stktClearAttach();
+    const previewUrl = URL.createObjectURL(compressed);
+    _stktAttach = { file: compressed, previewUrl, size: compressed.size, name: compressed.name };
+    const wrap = document.getElementById('stktAttachPreview');
+    const img = document.getElementById('stktAttachImg');
+    const meta = document.getElementById('stktAttachMeta');
+    if(wrap) wrap.classList.add('visible');
+    if(img) img.src = previewUrl;
+    if(meta) meta.textContent = _stktAttach.name + ' · ' + stktFmtBytes(_stktAttach.size);
+  }catch(e){
+    toast(e.message || 'Image error', 'err');
+  }
+}
+
+function stktClearAttach(){
+  if(_stktAttach?.previewUrl) URL.revokeObjectURL(_stktAttach.previewUrl);
+  _stktAttach = null;
+  const wrap = document.getElementById('stktAttachPreview');
+  if(wrap) wrap.classList.remove('visible');
+  const inp = document.getElementById('stktAttachFile');
+  if(inp) inp.value = '';
+}
+
+async function stktLoadQuickRepliesMgr(){
+  try{
+    const { data, error } = await sb.from('support_quick_replies').select('*').order('created_at');
+    if(error) throw error;
+    _stktQuickReplies = data || [];
+    stktRenderQuickChips();
+    const list = document.getElementById('stktReplyMgrList');
+    if(!list) return;
+    if(!_stktQuickReplies.length){
+      list.innerHTML = '<p style="color:var(--muted);font-size:12px">No quick replies yet.</p>';
+      return;
+    }
+    list.innerHTML = _stktQuickReplies.map(r => `
+      <div class="stkt-mgr-row">
+        <div class="stkt-mgr-row-main">
+          <div class="stkt-mgr-row-title">${esc(r.title)}</div>
+          <div class="stkt-mgr-row-sub">${esc(r.body)}</div>
+        </div>
+        <div class="row-flex" style="gap:4px;flex-shrink:0">
+          <button class="btn btn-ghost btn-sm" onclick='stktEditReply(${JSON.stringify(r.id)})'>Edit</button>
+          <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick='stktDeleteReply(${JSON.stringify(r.id)})'>Delete</button>
+        </div>
+      </div>`).join('');
+  }catch(err){
+    const list = document.getElementById('stktReplyMgrList');
+    if(list) list.innerHTML = '<p style="color:var(--red)">' + esc(err.message) + '</p>';
+  }
+}
+
+function stktShowAddReply(){ _stktEditingReplyId = null; document.getElementById('stktReplyTitle').value = ''; document.getElementById('stktReplyBody').value = ''; document.getElementById('stktReplyForm').style.display = 'flex'; }
+function stktHideReplyForm(){ document.getElementById('stktReplyForm').style.display = 'none'; }
+function stktEditReply(id){
+  const r = _stktQuickReplies.find(x => x.id === id);
+  if(!r) return;
+  _stktEditingReplyId = id;
+  document.getElementById('stktReplyTitle').value = r.title;
+  document.getElementById('stktReplyBody').value = r.body;
+  document.getElementById('stktReplyForm').style.display = 'flex';
+}
+
+async function stktSaveReply(){
+  const title = document.getElementById('stktReplyTitle')?.value?.trim();
+  const body = document.getElementById('stktReplyBody')?.value?.trim();
+  if(!title || !body){ toast('TITLE AND BODY REQUIRED', 'err'); return; }
+  const { data: { user } } = await sb.auth.getUser();
+  try{
+    if(_stktEditingReplyId){
+      const { error } = await sb.from('support_quick_replies').update({ title, body }).eq('id', _stktEditingReplyId);
+      if(error) throw error;
+    }else{
+      const { error } = await sb.from('support_quick_replies').insert({ title, body, created_by: user?.id || null });
+      if(error) throw error;
+    }
+    stktHideReplyForm();
+    toast('QUICK REPLY SAVED');
+    stktLoadQuickRepliesMgr();
+  }catch(err){ toast(err.message, 'err'); }
+}
+
+async function stktDeleteReply(id){
+  if(!confirm('Delete this quick reply?')) return;
+  const { error } = await sb.from('support_quick_replies').delete().eq('id', id);
+  if(error){ toast(error.message, 'err'); return; }
+  toast('DELETED');
+  stktLoadQuickRepliesMgr();
+}
+
+async function stktLoadAutoMessages(){
+  const el = document.getElementById('stktAutoList');
+  if(!el) return;
+  try{
+    const { data, error } = await sb.from('support_auto_messages').select('*').order('trigger');
+    if(error) throw error;
+    el.innerHTML = (data || []).map(a => `
+      <div class="f-row" style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border2)">
+        <div class="row-flex" style="justify-content:space-between;width:100%;margin-bottom:6px">
+          <label class="f-label" style="margin:0">${esc(a.trigger)}</label>
+          <label class="toggle-wrap">
+            <span class="toggle-label">${a.is_active ? 'On' : 'Off'}</span>
+            <label class="toggle"><input type="checkbox" data-stkt-auto-id="${a.id}" class="stkt-auto-toggle" ${a.is_active ? 'checked' : ''}/><span class="toggle-slider"></span></label>
+          </label>
+        </div>
+        <textarea class="f-textarea stkt-auto-body" data-stkt-auto-id="${a.id}" style="min-height:72px">${esc(a.body)}</textarea>
+      </div>`).join('');
+  }catch(err){
+    el.innerHTML = '<p style="color:var(--red)">' + esc(err.message) + '</p>';
+  }
+}
+
+async function stktSaveAutoMessages(){
+  const log = document.getElementById('stktAutoLog');
+  if(log){ log.style.color = 'var(--muted)'; log.textContent = 'Saving…'; }
+  try{
+    const bodies = document.querySelectorAll('.stkt-auto-body');
+    for(const ta of bodies){
+      const id = ta.dataset.stktAutoId;
+      const toggle = document.querySelector('.stkt-auto-toggle[data-stkt-auto-id="' + id + '"]');
+      const { error } = await sb.from('support_auto_messages').update({
+        body: ta.value.trim(),
+        is_active: !!toggle?.checked,
+      }).eq('id', id);
+      if(error) throw error;
+    }
+    if(log){ log.style.color = 'var(--green)'; log.textContent = '✓ Saved'; setTimeout(() => log.textContent = '', 3000); }
+    toast('AUTO MESSAGES SAVED');
+  }catch(err){
+    if(log){ log.style.color = 'var(--red)'; log.textContent = err.message; }
+    toast(err.message, 'err');
+  }
+}
+
+async function stktLoadFaqMgr(){
+  const list = document.getElementById('stktFaqMgrList');
+  if(!list) return;
+  try{
+    const { data, error } = await sb.from('support_faq').select('*').order('sort_order');
+    if(error) throw error;
+    if(!data?.length){
+      list.innerHTML = '<p style="color:var(--muted);font-size:12px">No FAQ entries.</p>';
+      return;
+    }
+    list.innerHTML = data.map(f => `
+      <div class="stkt-mgr-row">
+        <div class="stkt-mgr-row-main">
+          <div class="stkt-mgr-row-title">${esc(f.question)} <span class="tag">${esc(f.category)}</span> ${f.is_active ? '' : '<span class="tag" style="color:var(--red)">off</span>'}</div>
+          <div class="stkt-mgr-row-sub">sort ${f.sort_order} · ${esc((f.answer || '').slice(0, 80))}…</div>
+        </div>
+        <div class="row-flex" style="gap:4px;flex-shrink:0">
+          <button class="btn btn-ghost btn-sm" onclick='stktEditFaq(${JSON.stringify(f.id)})'>Edit</button>
+          <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick='stktDeleteFaq(${JSON.stringify(f.id)})'>Delete</button>
+        </div>
+      </div>`).join('');
+  }catch(err){
+    list.innerHTML = '<p style="color:var(--red)">' + esc(err.message) + '</p>';
+  }
+}
+
+function stktShowAddFaq(){
+  _stktEditingFaqId = null;
+  document.getElementById('stktFaqQuestion').value = '';
+  document.getElementById('stktFaqAnswer').value = '';
+  document.getElementById('stktFaqCategory').value = 'general';
+  document.getElementById('stktFaqSort').value = '0';
+  document.getElementById('stktFaqActive').checked = true;
+  document.getElementById('stktFaqForm').style.display = 'flex';
+}
+function stktHideFaqForm(){ document.getElementById('stktFaqForm').style.display = 'none'; }
+
+async function stktEditFaq(id){
+  const { data, error } = await sb.from('support_faq').select('*').eq('id', id).maybeSingle();
+  if(error || !data) return;
+  _stktEditingFaqId = id;
+  document.getElementById('stktFaqQuestion').value = data.question || '';
+  document.getElementById('stktFaqAnswer').value = data.answer || '';
+  document.getElementById('stktFaqCategory').value = data.category || 'general';
+  document.getElementById('stktFaqSort').value = String(data.sort_order ?? 0);
+  document.getElementById('stktFaqActive').checked = !!data.is_active;
+  document.getElementById('stktFaqForm').style.display = 'flex';
+}
+
+async function stktSaveFaq(){
+  const question = document.getElementById('stktFaqQuestion')?.value?.trim();
+  const answer = document.getElementById('stktFaqAnswer')?.value?.trim();
+  const category = document.getElementById('stktFaqCategory')?.value || 'general';
+  const sort_order = parseInt(document.getElementById('stktFaqSort')?.value, 10) || 0;
+  const is_active = document.getElementById('stktFaqActive')?.checked ?? true;
+  if(!question || !answer){ toast('QUESTION AND ANSWER REQUIRED', 'err'); return; }
+  try{
+    const row = { question, answer, category, sort_order, is_active };
+    if(_stktEditingFaqId){
+      const { error } = await sb.from('support_faq').update(row).eq('id', _stktEditingFaqId);
+      if(error) throw error;
+    }else{
+      const { error } = await sb.from('support_faq').insert(row);
+      if(error) throw error;
+    }
+    stktHideFaqForm();
+    toast('FAQ SAVED');
+    stktLoadFaqMgr();
+  }catch(err){ toast(err.message, 'err'); }
+}
+
+async function stktDeleteFaq(id){
+  if(!confirm('Delete this FAQ entry?')) return;
+  const { error } = await sb.from('support_faq').delete().eq('id', id);
+  if(error){ toast(error.message, 'err'); return; }
+  toast('FAQ DELETED');
+  stktLoadFaqMgr();
 }
 </script>
 </body>
