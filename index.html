@@ -7625,6 +7625,70 @@ function vtLog(body,msg,delay){
   });
 }
 
+/* ── Receipt cross-links — always same columns regardless of verify tab ── */
+function vtNormalizeUuid(raw){
+  if(!raw)return null;
+  return String(raw).replace(/^#/,'').trim();
+}
+function vtLinksFromRpc(rpc){
+  if(!rpc||typeof rpc!=='object')return{};
+  return{
+    poxy_hash:rpc.poxy_hash||null,
+    genesis_event_id:rpc.genesis_event_id||rpc.event_id||null,
+    rng_round_id:rpc.rng_round_id||rpc.round_id||null,
+    game_serial:rpc.game_serial||rpc.serial_number||null,
+    serial_matches:rpc.serial_matches
+  };
+}
+function vtLinksFromEdge(edge,type,val){
+  const links={
+    poxy_hash:edge?.poxy_hash||null,
+    genesis_event_id:edge?.genesis_event_id||null,
+    rng_round_id:edge?.rng_round_id||edge?.round_id||null,
+    game_serial:edge?.game_serial||edge?.serial_number||null,
+    serial_matches:edge?.serial_matches
+  };
+  if(type==='asset'&&val&&!links.poxy_hash)links.poxy_hash=String(val).trim().toLowerCase();
+  if(type==='event'){
+    if(!links.genesis_event_id&&edge?.event_id)links.genesis_event_id=edge.event_id;
+    if(!links.genesis_event_id&&val)links.genesis_event_id=vtNormalizeUuid(val);
+  }
+  if(type==='rng'&&!links.rng_round_id&&val)links.rng_round_id=vtNormalizeUuid(val);
+  const steps=Array.isArray(edge?.steps)?edge.steps:[];
+  for(const s of steps){
+    if(s.genesis_event_id&&!links.genesis_event_id)links.genesis_event_id=s.genesis_event_id;
+  }
+  return links;
+}
+async function vtEnrichReceiptLinks(edge,type,val){
+  let links=vtLinksFromEdge(edge,type,val);
+  if(links.poxy_hash&&links.genesis_event_id&&links.rng_round_id)return links;
+  if(!window.sb)return links;
+  try{
+    let rpc=null;
+    const id=vtNormalizeUuid(val);
+    if(type==='asset'){
+      const{data}=await sb.rpc('public_verify_asset',{p_hash:String(val).trim().toLowerCase()});
+      rpc=data;
+    }else if(type==='event'&&id){
+      const{data}=await sb.rpc('public_verify_event',{p_event_id:id});
+      rpc=data;
+    }else if(type==='rng'&&id){
+      const{data}=await sb.rpc('public_verify_rng',{p_round_id:id});
+      rpc=data;
+    }
+    const fromRpc=vtLinksFromRpc(rpc);
+    links={
+      poxy_hash:links.poxy_hash||fromRpc.poxy_hash||null,
+      genesis_event_id:links.genesis_event_id||fromRpc.genesis_event_id||null,
+      rng_round_id:links.rng_round_id||fromRpc.rng_round_id||null,
+      game_serial:links.game_serial||fromRpc.game_serial||null,
+      serial_matches:links.serial_matches??fromRpc.serial_matches
+    };
+  }catch(e){console.warn('[vtEnrichReceiptLinks]',e);}
+  return links;
+}
+
 /* ── vtRunVerify — real cryptographic backend call ────────── */
 window.vtRunVerify=async function(){
   const body=$('vtConsoleBody');
@@ -7700,16 +7764,17 @@ window.vtRunVerify=async function(){
     }
 
     const now=new Date().toISOString().replace('T',' ').slice(0,19)+' UTC';
-    const linkedHash=data?.poxy_hash||null;
-    const linkedEvent=data?.genesis_event_id||data?.event_id||null;
-    const linkedRng=data?.rng_round_id||data?.round_id||(_vtType==='rng'?val:null);
-    const linkedSerial=data?.game_serial||data?.serial_number||null;
-    if(rcptHash)rcptHash.textContent=linkedHash||data?.result_hash||val;
-    if(rcptEvent)rcptEvent.textContent=linkedEvent||'—';
-    if(rcptRng)rcptRng.textContent=linkedRng?'#'+String(linkedRng).replace(/^#/,''):'—';
-    if(rcptTs)rcptTs.textContent=data?.timestamp||now;
-    if(linkedSerial)await vtLog(body,'&gt; linked serial: <span class="vt-log-accent">'+escHtml(linkedSerial)+'</span>',60);
-    if(data?.serial_matches===false)await vtLog(body,'&gt; <span class="vt-log-err">[WARN]</span> game serial differs from crypto serial — re-mint with v3.1+ flow',80);
+    const links=await vtEnrichReceiptLinks(data,type,val);
+    data.cross_links=links;
+    if(rcptHash)rcptHash.textContent=links.poxy_hash||'—';
+    if(rcptEvent)rcptEvent.textContent=links.genesis_event_id||'—';
+    if(rcptRng)rcptRng.textContent=links.rng_round_id?'#'+String(links.rng_round_id).replace(/^#/,''):'—';
+    if(rcptTs)rcptTs.textContent=data?.mint_timestamp||data?.created_at||now;
+    if(links.game_serial)await vtLog(body,'&gt; linked serial: <span class="vt-log-accent">'+escHtml(links.game_serial)+'</span>',60);
+    if(links.poxy_hash)await vtLog(body,'&gt; linked hash: <span class="vt-log-accent">'+escHtml(links.poxy_hash.slice(0,32))+'…</span>',50);
+    if(links.genesis_event_id)await vtLog(body,'&gt; linked event: <span class="vt-log-accent">'+escHtml(links.genesis_event_id)+'</span>',50);
+    if(links.rng_round_id)await vtLog(body,'&gt; linked rng: <span class="vt-log-accent">#'+escHtml(String(links.rng_round_id).replace(/^#/,''))+'</span>',50);
+    if(links.serial_matches===false)await vtLog(body,'&gt; <span class="vt-log-err">[WARN]</span> game serial differs from crypto serial — re-mint with v3.1+ flow',80);
 
     if(dlBtn){
       dlBtn.onclick=function(){
