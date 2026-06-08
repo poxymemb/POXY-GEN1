@@ -8,21 +8,12 @@
 import { adminClient } from "../_shared/supabase.ts";
 import { verifyMessage } from "../_shared/crypto.ts";
 
-// Production URL must match the deployed Vercel hostname exactly.
-// poxygen1 is the old/stale URL — keep it in case of old bookmarks.
-const ORIGINS = [
-  "https://poxy-gens.vercel.app",
-  "https://poxygen1.vercel.app",
-  "http://localhost:3000",
-  "http://localhost:8080",
-];
-
+// Public transparency endpoint — reflect any browser origin (verify works logged-out, any account).
 function cors(req: Request) {
-  const origin = req.headers.get("origin") ?? "";
-  const allowed = ORIGINS.includes(origin) ? origin : ORIGINS[0];
+  const origin = req.headers.get("origin");
   return {
-    "Access-Control-Allow-Origin": allowed,
-    "Access-Control-Allow-Headers": "content-type, authorization",
+    "Access-Control-Allow-Origin": origin || "*",
+    "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 }

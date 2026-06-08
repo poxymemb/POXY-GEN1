@@ -7660,6 +7660,77 @@ function vtLinksFromEdge(edge,type,val){
   }
   return links;
 }
+const POXY_ANON_KEY='sb_publishable_T3fYPzogYoTqzrYY2q9eBg_CjO1QFPG';
+async function vtCallPublicVerify(payload){
+  if(window.sb){
+    try{
+      const{data,error}=await sb.functions.invoke('public_verify',{body:payload});
+      if(data&&typeof data==='object')return data;
+      if(error)console.warn('[vtCallPublicVerify] invoke',error.message||error);
+    }catch(e){console.warn('[vtCallPublicVerify] invoke failed',e);}
+  }
+  const FUNCTIONS_BASE='https://rbrtjkfawdnomvvyxwvp.functions.supabase.co';
+  try{
+    const resp=await fetch(FUNCTIONS_BASE+'/public_verify',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':POXY_ANON_KEY,
+        'Authorization':'Bearer '+POXY_ANON_KEY
+      },
+      body:JSON.stringify(payload)
+    });
+    if(resp.ok||resp.status===404)return await resp.json();
+  }catch(e){console.warn('[vtCallPublicVerify] fetch failed',e);}
+  return vtVerifyViaRpc(payload);
+}
+function vtStepsFromRpc(type,rpc){
+  if(!rpc||typeof rpc!=='object')return[];
+  if(type==='asset'){
+    return[
+      {step:1,name:'SHA-256 Identity Hash',ok:!!rpc.hash_matches,result:rpc.hash_matches?'MATCH':'MISMATCH',computed_hash:rpc.computed_hash,stored_hash:rpc.poxy_hash},
+      {step:2,name:'ED25519 Signature',ok:!!rpc.signature,result:rpc.signature?'PRESENT — full verify via edge':'MISSING'},
+      {step:3,name:'Genesis Event Anchor',ok:!!rpc.genesis_event_id,genesis_event_id:rpc.genesis_event_id,result:rpc.genesis_event_id?'CONFIRMED':'MISSING'}
+    ];
+  }
+  if(type==='event'){
+    return[{step:1,name:'Event Hash Chain',ok:!!rpc.hash_matches,result:rpc.hash_matches?'MATCH':'BROKEN',computed_hash:rpc.computed_hash,stored_hash:rpc.event_hash}];
+  }
+  return[
+    {step:1,name:'Commit Verification',ok:!!rpc.commit_matches,result:rpc.commit_matches?'MATCH':'MISMATCH',recomputed_commit:rpc.recomputed_commit,stored_commit:rpc.commit_hash},
+    {step:2,name:'Result Derivation',ok:!!rpc.result_matches,result:rpc.result_matches?'MATCH':'MISMATCH',computed_result:rpc.computed_result,stored_result:rpc.result_hash},
+    {step:3,name:'Fairness Guarantee',ok:!!(rpc.commit_matches&&rpc.result_matches),result:(rpc.commit_matches&&rpc.result_matches)?'PROVABLY FAIR':'FAIRNESS BROKEN'}
+  ];
+}
+async function vtVerifyViaRpc(payload){
+  if(!window.sb)return{ok:false,error:'Network unavailable'};
+  const type=payload?.type||'asset';
+  try{
+    let rpc=null;
+    if(type==='asset'){
+      const{data}=await sb.rpc('public_verify_asset',{p_hash:String(payload.hash||'').trim().toLowerCase()});
+      rpc=data;
+      if(!rpc?.poxy_hash)return{ok:false,error:rpc?.error||'Asset not found'};
+      const ok=!!(rpc.hash_matches&&rpc.genesis_event_id&&rpc.serial_matches!==false);
+      return{ok,type:'asset',...rpc,summary:ok?'Asset verified (RPC path).':'Asset verification failed.',steps:vtStepsFromRpc('asset',rpc),via:'rpc'};
+    }
+    if(type==='event'){
+      const{data}=await sb.rpc('public_verify_event',{p_event_id:vtNormalizeUuid(payload.id)});
+      rpc=data;
+      if(!rpc?.event_id)return{ok:false,error:rpc?.error||'Event not found'};
+      return{ok:!!rpc.hash_matches,type:'event',...rpc,event_id:rpc.event_id,summary:rpc.hash_matches?'Event verified (RPC path).':'Event chain broken.',steps:vtStepsFromRpc('event',rpc),via:'rpc'};
+    }
+    if(type==='rng'){
+      const{data}=await sb.rpc('public_verify_rng',{p_round_id:vtNormalizeUuid(payload.id)});
+      rpc=data;
+      if(!rpc?.round_id)return{ok:false,error:rpc?.error||'Round not found'};
+      const fair=!!(rpc.commit_matches&&rpc.result_matches);
+      return{ok:fair,type:'rng',round_id:rpc.round_id,status:rpc.status,...rpc,summary:fair?'RNG verified (RPC path).':'RNG integrity failure.',steps:vtStepsFromRpc('rng',rpc),via:'rpc'};
+    }
+  }catch(e){return{ok:false,error:e?.message||'RPC verify failed'};}
+  return{ok:false,error:'Unknown verify type'};
+}
+
 async function vtEnrichReceiptLinks(edge,type,val){
   let links=vtLinksFromEdge(edge,type,val);
   if(links.poxy_hash&&links.genesis_event_id&&links.rng_round_id)return links;
@@ -7724,17 +7795,20 @@ window.vtRunVerify=async function(){
     const rcptTs=$('vtReceiptTs');
     const dlBtn=$('vtDownloadBtn');
 
-    const FUNCTIONS_BASE='https://rbrtjkfawdnomvvyxwvp.functions.supabase.co';
     const pcdTypeMap={asset:'asset',ledger:'event',rng:'rng'};
     const type=pcdTypeMap[_vtType]||'asset';
     const payload=type==='asset'?{type:'asset',hash:val}:{type:type,id:val};
 
     let data=null;
     try{
-      const resp=await fetch(FUNCTIONS_BASE+'/public_verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      data=await resp.json();
+      data=await vtCallPublicVerify(payload);
+      if(data?.via==='rpc')await vtLog(body,'&gt; <span class="vt-log-accent">[NOTE]</span> edge unreachable — verified via ledger RPC fallback',0);
     }catch(e){
       await vtLog(body,'<span class="vt-log-err">&gt; [FAIL] Network error: '+escHtml(e?.message||String(e))+'</span>',0);
+      return;
+    }
+    if(!data||typeof data!=='object'){
+      await vtLog(body,'<span class="vt-log-err">&gt; [FAIL] Empty verify response</span>',0);
       return;
     }
 
