@@ -194,6 +194,57 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 /* ── AUDIT LOG ── */
 @keyframes alogRowAppear{from{opacity:0;background:rgba(245,158,11,0.08);}to{opacity:1;background:transparent;}}
 .alog-row-new{animation:alogRowAppear 300ms ease-out;}
+/* ── PLAYER DOSSIER ── */
+.dossier-empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:13px}
+.dossier-empty .dossier-ic{font-size:32px;display:block;margin-bottom:12px;opacity:.4}
+/* Profile header */
+.dossier-profile{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.dossier-avatar{width:64px;height:64px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);flex-shrink:0;object-fit:cover;font-size:24px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.dossier-info{flex:1;min-width:0}
+.dossier-username{font-size:20px;font-weight:700;color:var(--adm-text);letter-spacing:-.02em}
+.dossier-uuid{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:2px;word-break:break-all}
+.dossier-meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.dossier-stat{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;min-width:80px;text-align:center}
+.dossier-stat-val{font-size:15px;font-weight:700;color:var(--adm-text);display:block}
+.dossier-stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-top:2px}
+.dossier-flags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.dossier-badge-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.dossier-user-badge{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--amber)}
+/* Status flags */
+.status-active{background:rgba(34,197,94,0.15);color:var(--green)}
+.status-frozen{background:rgba(245,158,11,0.15);color:var(--amber)}
+.status-blocked{background:rgba(239,68,68,0.15);color:var(--red)}
+/* Inventory */
+.inv-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.inv-filter-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;padding:4px 12px;transition:all .15s}
+.inv-filter-btn:hover{border-color:var(--amber);color:var(--amber)}
+.inv-filter-btn.active{background:rgba(245,158,11,0.15);border-color:var(--amber);color:var(--amber)}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.inv-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px;transition:border-color .15s}
+.inv-card:hover{border-color:var(--amber)}
+.inv-serial{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--adm-text);margin-bottom:4px}
+.inv-tier{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.inv-tier.common{color:#94a3b8}.inv-tier.uncommon{color:#22c55e}.inv-tier.rare{color:#3b82f6}
+.inv-tier.epic{color:#a855f7}.inv-tier.legendary{color:#f59e0b}.inv-tier.mythic{color:#ec4899}.inv-tier.secret{color:#fff}
+.inv-meta{font-size:10px;color:var(--muted);margin-top:4px}
+.inv-summary{font-size:12px;color:var(--muted);margin-bottom:10px;display:flex;gap:16px;flex-wrap:wrap}
+/* Ledger filters */
+.ledger-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ledger-filter-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;padding:4px 12px;transition:all .15s}
+.ledger-filter-btn:hover{border-color:var(--amber);color:var(--amber)}
+.ledger-filter-btn.active{background:rgba(245,158,11,0.15);border-color:var(--amber);color:var(--amber)}
+/* Timeline */
+.timeline-period-btns{display:flex;gap:6px;margin-bottom:14px}
+.timeline-period-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;padding:4px 12px;transition:all .15s}
+.timeline-period-btn:hover{border-color:var(--amber);color:var(--amber)}
+.timeline-period-btn.active{background:rgba(245,158,11,0.15);border-color:var(--amber);color:var(--amber)}
+.timeline-stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.timeline-stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.timeline-stat-val{font-size:22px;font-weight:700;color:var(--adm-text);display:block}
+.timeline-stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;display:block}
+/* Mini sparkline */
+.sparkline{display:flex;align-items:flex-end;gap:2px;height:28px;margin-top:6px}
+.spark-bar{flex:1;background:var(--amber);border-radius:1px 1px 0 0;opacity:.7;min-height:2px;transition:height .3s}
 </style>
 </head>
 <body>
@@ -269,6 +320,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         <span class="ic">⚙</span>Account ops
       </button>
       <div style="height:1px;background:var(--border);margin:8px 4px"></div>
+      <button class="nav-btn" onclick="switchTab('dossier')" data-tab="dossier">
+        <span class="ic">👤</span>Player dossier
+      </button>
       <button class="nav-btn" onclick="switchTab('auditlog')" data-tab="auditlog">
         <span class="ic">📋</span>Audit log
       </button>
@@ -910,6 +964,119 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 
     </div><!-- /tab-auditlog -->
 
+    <!-- ══════════════════════════════════════════════════════
+         TAB 8: PLAYER DOSSIER
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-dossier" class="tab-pane">
+
+      <!-- SEARCH BAR -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Player lookup</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input id="dossierQuery" class="f-input" type="text"
+            placeholder="@username · PX-hash · UUID"
+            style="max-width:360px"
+            onkeydown="if(event.key==='Enter')loadDossier()"/>
+          <button class="btn btn-amber" onclick="loadDossier()">Load dossier</button>
+          <button class="btn btn-ghost btn-sm" onclick="dossierClear()">Clear</button>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div id="dossierEmpty" class="dossier-empty">
+        <span class="dossier-ic">👤</span>
+        Search a player by @username, PX-hash, or UUID to load their full dossier.
+      </div>
+
+      <!-- DOSSIER CONTENT (hidden until loaded) -->
+      <div id="dossierContent" style="display:none">
+
+        <!-- ── 1. PROFILE HEADER ── -->
+        <div class="card" id="dossierProfileCard">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <span>Profile</span>
+            <span id="dossierStatusFlags" class="dossier-flags"></span>
+          </div>
+          <div class="dossier-profile">
+            <div class="dossier-avatar" id="dossierAvatar">?</div>
+            <div class="dossier-info">
+              <div class="dossier-username" id="dossierUsername">—</div>
+              <div class="dossier-uuid mono" id="dossierUuid">—</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px" id="dossierEmail">—</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">
+                Joined: <span id="dossierJoined">—</span>
+              </div>
+              <div class="dossier-meta-row" id="dossierMetaRow"></div>
+              <div class="dossier-badge-row" id="dossierBadges"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 2. INVENTORY ── -->
+        <div class="card">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <span>Inventory</span>
+            <span id="dossierInvSummary" class="inv-summary"></span>
+          </div>
+          <div class="inv-filters" id="dossierInvFilters">
+            <button class="inv-filter-btn active" data-tier="ALL" onclick="dossierFilterInv(this)">All</button>
+            <button class="inv-filter-btn" data-tier="COMMON"    onclick="dossierFilterInv(this)">Common</button>
+            <button class="inv-filter-btn" data-tier="UNCOMMON"  onclick="dossierFilterInv(this)">Uncommon</button>
+            <button class="inv-filter-btn" data-tier="RARE"      onclick="dossierFilterInv(this)">Rare</button>
+            <button class="inv-filter-btn" data-tier="EPIC"      onclick="dossierFilterInv(this)">Epic</button>
+            <button class="inv-filter-btn" data-tier="LEGENDARY" onclick="dossierFilterInv(this)">Legendary+</button>
+          </div>
+          <div id="dossierInvGrid" class="inv-grid"></div>
+        </div>
+
+        <!-- ── 3. LEDGER HISTORY ── -->
+        <div class="card">
+          <div class="card-title">Ledger history</div>
+          <div class="ledger-filters" id="dossierLedgerFilters">
+            <button class="ledger-filter-btn active" data-event="ALL"      onclick="dossierFilterLedger(this)">All</button>
+            <button class="ledger-filter-btn" data-event="MINT"            onclick="dossierFilterLedger(this)">Mint</button>
+            <button class="ledger-filter-btn" data-event="TRADE"           onclick="dossierFilterLedger(this)">Trade</button>
+            <button class="ledger-filter-btn" data-event="TRANSFER"        onclick="dossierFilterLedger(this)">Transfer</button>
+            <button class="ledger-filter-btn" data-event="DESTROY"         onclick="dossierFilterLedger(this)">Destroy</button>
+            <button class="ledger-filter-btn" data-event="BURN"            onclick="dossierFilterLedger(this)">Burn</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Seq</th>
+                  <th>Event</th>
+                  <th>Asset</th>
+                  <th>Counterparty</th>
+                  <th>Time</th>
+                  <th>Tx hash</th>
+                </tr>
+              </thead>
+              <tbody id="dossierLedgerBody"></tbody>
+            </table>
+          </div>
+          <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <span id="dossierLedgerCount" style="font-size:11px;color:var(--muted)"></span>
+            <button class="btn btn-ghost btn-sm" id="dossierLedgerMoreBtn"
+              onclick="dossierLoadMoreLedger()" style="display:none">Load 50 more</button>
+          </div>
+        </div>
+
+        <!-- ── 4. ACTIVITY TIMELINE ── -->
+        <div class="card">
+          <div class="card-title">Activity timeline</div>
+          <div class="timeline-period-btns">
+            <button class="timeline-period-btn active" data-days="1"  onclick="dossierTimeline(this)">24h</button>
+            <button class="timeline-period-btn" data-days="7"         onclick="dossierTimeline(this)">7 days</button>
+            <button class="timeline-period-btn" data-days="30"        onclick="dossierTimeline(this)">30 days</button>
+          </div>
+          <div class="timeline-stats-grid" id="dossierTimelineStats"></div>
+        </div>
+
+      </div><!-- /dossierContent -->
+
+    </div><!-- /tab-dossier -->
+
   </main>
   </div><!-- /mcu-shell -->
 </div><!-- /terminal -->
@@ -1045,7 +1212,8 @@ const MCU_PAGES = {
   telem:    { title: 'Telemetry',          sub: 'Live log stream and counters' },
   support:  { title: 'Support ops',        sub: 'Ledger trace and player dossier' },
   acc:      { title: 'Account ops',        sub: 'Balance, flags, and danger zone' },
-  auditlog: { title: 'Audit log',          sub: 'Live admin action stream with filters and CSV export' }
+  auditlog: { title: 'Audit log',          sub: 'Live admin action stream with filters and CSV export' },
+  dossier:  { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' }
 };
 
 function syncThemeToggleUI(){
@@ -1089,6 +1257,7 @@ function switchTab(id){
   if(id==='telem'){ loadTelemetryCounters(); }
   if(id==='users'){ loadCounters(); loadUsersTable(); }
   if(id==='auditlog'){ auditLogRefresh(); auditLogStartRealtime(); }
+  if(id==='dossier'){ /* stays on current loaded player */ }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2204,6 +2373,331 @@ function auditLogExportCSV(){
 
 // Legacy stub — old Telemetry tab called this, now a no-op
 function loadAuditLog(){ /* moved to audit log tab */ }
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 8 — PLAYER DOSSIER
+// ═══════════════════════════════════════════════════════════════
+const DOSSIER_LEDGER_PAGE = 50;
+let _dossierProfile    = null;
+let _dossierInventory  = [];
+let _dossierLedger     = [];
+let _dossierLedgerOffset = 0;
+let _dossierLedgerFilter = 'ALL';
+let _dossierTimelineDays = 1;
+
+const TIER_ORDER = ['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY','MYTHIC','SECRET','DIAMOND','STELLAR'];
+const TIER_VALUE = {COMMON:10,UNCOMMON:30,RARE:80,EPIC:200,LEGENDARY:500,MYTHIC:1500,SECRET:5000,DIAMOND:500,STELLAR:500};
+
+function dossierClear(){
+  _dossierProfile = null; _dossierInventory = []; _dossierLedger = []; _dossierLedgerOffset = 0;
+  document.getElementById('dossierQuery').value = '';
+  document.getElementById('dossierEmpty').style.display = '';
+  document.getElementById('dossierContent').style.display = 'none';
+}
+
+async function loadDossier(){
+  const raw = (document.getElementById('dossierQuery')?.value||'').trim();
+  if(!raw){ toast('Enter a username, hash, or UUID','err'); return; }
+
+  document.getElementById('dossierEmpty').style.display = 'none';
+  document.getElementById('dossierContent').style.display = 'none';
+
+  // ── Build query: UUID / PX-hash / @username / plain username ──
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(raw);
+  const isHash = /^[0-9a-f]{64}$/i.test(raw);
+  const uname  = raw.startsWith('@') ? raw.slice(1) : raw;
+
+  let q = sb.from('profiles').select('*');
+  if(isUUID)      q = q.eq('id', raw);
+  else if(isHash) q = q.eq('identity_hash', raw);
+  else            q = q.ilike('username', uname);
+
+  const {data: prof, error: profErr} = await q.maybeSingle();
+  if(profErr||!prof){
+    toast(profErr ? profErr.message : 'Player not found','err');
+    document.getElementById('dossierEmpty').style.display = '';
+    return;
+  }
+  _dossierProfile = prof;
+
+  // ── Render profile header ──
+  dossierRenderProfile(prof);
+
+  // ── Load inventory ──
+  const {data: inv} = await sb
+    .from('user_poxy')
+    .select('id,user_id,tier,collection_id,minted,created_at,poxy_assets(serial,identity_hash,signature)')
+    .eq('user_id', prof.id)
+    .order('created_at',{ascending:false});
+  _dossierInventory = inv || [];
+  dossierRenderInventory('ALL');
+
+  // ── Load ledger (first page) ──
+  _dossierLedgerOffset = 0;
+  _dossierLedger = [];
+  await dossierLoadLedgerPage(true);
+
+  // ── Load timeline (default 24h) ──
+  _dossierTimelineDays = 1;
+  document.querySelectorAll('.timeline-period-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.timeline-period-btn[data-days="1"]')?.classList.add('active');
+  await dossierComputeTimeline(1);
+
+  document.getElementById('dossierContent').style.display = '';
+}
+
+// ── Profile header ──────────────────────────────────────────────
+function dossierRenderProfile(p){
+  // Avatar
+  const avatarEl = document.getElementById('dossierAvatar');
+  if(p.avatar_url){
+    avatarEl.innerHTML = `<img src="${esc(p.avatar_url)}" style="width:64px;height:64px;border-radius:50%;object-fit:cover" onerror="this.parentElement.textContent='?'"/>`;
+  } else {
+    avatarEl.textContent = (p.username||'?')[0].toUpperCase();
+  }
+  document.getElementById('dossierUsername').textContent = '@' + (p.username||'—');
+  document.getElementById('dossierUuid').textContent = p.id || '—';
+  document.getElementById('dossierEmail').textContent = p.email || '—';
+  document.getElementById('dossierJoined').textContent = fmtDate(p.created_at);
+
+  // Status flags
+  const flags = document.getElementById('dossierStatusFlags');
+  const flagList = [];
+  if(p.is_frozen)  flagList.push(`<span class="badge status-frozen">Frozen</span>`);
+  if(p.is_blocked) flagList.push(`<span class="badge status-blocked">Blocked</span>`);
+  if(!p.is_frozen && !p.is_blocked) flagList.push(`<span class="badge status-active">Active</span>`);
+  if(p.is_verified_employee) flagList.push(`<span class="badge badge-cyan">Staff</span>`);
+  if(p.is_founder) flagList.push(`<span class="badge badge-amber">Founder</span>`);
+  flags.innerHTML = flagList.join('');
+
+  // Stats row
+  const metaRow = document.getElementById('dossierMetaRow');
+  const stats = [
+    {val: p.pc_balance ?? '—', lbl: 'PC Balance'},
+    {val: p.px_balance ?? p.xp ?? '—', lbl: 'PX / XP'},
+    {val: p.club_tier  || (p.is_club_member ? 'Club' : '—'), lbl: 'Club'},
+    {val: p.rank       || '—', lbl: 'Rank'},
+    {val: p.shield_level ?? '—', lbl: 'Shield'},
+  ];
+  metaRow.innerHTML = stats.map(s=>`
+    <div class="dossier-stat">
+      <span class="dossier-stat-val">${esc(String(s.val))}</span>
+      <span class="dossier-stat-lbl">${esc(s.lbl)}</span>
+    </div>`).join('');
+
+  // Badges
+  const badgesEl = document.getElementById('dossierBadges');
+  const rawBadges = p.badges || [];
+  if(rawBadges.length){
+    badgesEl.innerHTML = rawBadges.map(b=>`<span class="dossier-user-badge">${esc(b.badge_type||b.name||b)}</span>`).join('');
+  } else {
+    badgesEl.innerHTML = '<span style="font-size:11px;color:var(--muted)">No badges</span>';
+  }
+}
+
+// ── Inventory ───────────────────────────────────────────────────
+function dossierFilterInv(btn){
+  document.querySelectorAll('.inv-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  dossierRenderInventory(btn.dataset.tier);
+}
+
+function dossierRenderInventory(tierFilter){
+  const grid = document.getElementById('dossierInvGrid');
+  const summary = document.getElementById('dossierInvSummary');
+  let items = _dossierInventory;
+
+  // Legendary+ filter = LEGENDARY, MYTHIC, SECRET, DIAMOND, STELLAR
+  if(tierFilter === 'LEGENDARY'){
+    items = items.filter(i=>['LEGENDARY','MYTHIC','SECRET','DIAMOND','STELLAR'].includes((i.tier||'').toUpperCase()));
+  } else if(tierFilter !== 'ALL'){
+    items = items.filter(i=>(i.tier||'').toUpperCase() === tierFilter);
+  }
+
+  const total = _dossierInventory.length;
+  const totalValue = _dossierInventory.reduce((acc,i)=>acc+(TIER_VALUE[(i.tier||'').toUpperCase()]||0),0);
+  summary.innerHTML = `
+    <span><strong>${total}</strong> total assets</span>
+    <span>≈ <strong>${totalValue.toLocaleString()}</strong> PC est. value</span>
+    <span><strong>${items.length}</strong> shown</span>`;
+
+  if(!items.length){
+    grid.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:16px 0">No assets in this tier.</div>';
+    return;
+  }
+  grid.innerHTML = items.map(i=>{
+    const serial = i.poxy_assets?.serial || '—';
+    const tier   = (i.tier||'').toLowerCase();
+    const col    = i.collection_id ? esc(String(i.collection_id).slice(0,8)) : '—';
+    const minted = i.minted ? '<span style="color:var(--green)">✓ minted</span>' : '<span style="color:var(--muted)">—</span>';
+    const date   = fmtDate(i.created_at);
+    return `<div class="inv-card">
+      <div class="inv-serial">${esc(serial)}</div>
+      <div class="inv-tier ${tier}">${esc((i.tier||'—').toUpperCase())}</div>
+      <div class="inv-meta">${minted}</div>
+      <div class="inv-meta" style="color:var(--muted)">Col: ${col}</div>
+      <div class="inv-meta" style="color:var(--muted)">${date}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Ledger ──────────────────────────────────────────────────────
+const LEDGER_EVENT_BADGE = {
+  MINT:'badge-green', TRADE:'badge-cyan', TRANSFER:'badge-cyan',
+  DESTROY:'badge-red', BURN:'badge-red', LISTING:'badge-amber'
+};
+
+function dossierFilterLedger(btn){
+  document.querySelectorAll('.ledger-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _dossierLedgerFilter = btn.dataset.event;
+  dossierRenderLedger();
+}
+
+async function dossierLoadLedgerPage(reset=false){
+  if(!_dossierProfile) return;
+  if(reset){ _dossierLedger = []; _dossierLedgerOffset = 0; }
+
+  let q = sb.from('ledger_events')
+    .select('seq,event_type,asset_id,owner_id,counterparty_id,created_at,tx_hash,user_poxy_id')
+    .or(`owner_id.eq.${_dossierProfile.id},counterparty_id.eq.${_dossierProfile.id}`)
+    .order('seq',{ascending:false})
+    .range(_dossierLedgerOffset, _dossierLedgerOffset + DOSSIER_LEDGER_PAGE - 1);
+
+  const {data, error} = await q;
+  if(error){ toast(error.message,'err'); return; }
+  _dossierLedger = reset ? (data||[]) : [..._dossierLedger, ...(data||[])];
+  _dossierLedgerOffset = _dossierLedger.length;
+
+  dossierRenderLedger();
+  const moreBtn = document.getElementById('dossierLedgerMoreBtn');
+  if(moreBtn) moreBtn.style.display = (data||[]).length >= DOSSIER_LEDGER_PAGE ? '' : 'none';
+}
+
+async function dossierLoadMoreLedger(){ await dossierLoadLedgerPage(false); }
+
+function dossierRenderLedger(){
+  const tbody = document.getElementById('dossierLedgerBody');
+  const countEl = document.getElementById('dossierLedgerCount');
+  if(!tbody) return;
+
+  let rows = _dossierLedger;
+  if(_dossierLedgerFilter !== 'ALL'){
+    rows = rows.filter(r=>(r.event_type||'').toUpperCase() === _dossierLedgerFilter);
+  }
+  if(countEl) countEl.textContent = `${rows.length} events${_dossierLedgerFilter!=='ALL'?' (filtered)':''}`;
+
+  if(!rows.length){
+    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:16px">No events</td></tr>';
+    return;
+  }
+  const uid = _dossierProfile?.id || '';
+  tbody.innerHTML = rows.map(r=>{
+    const evType = (r.event_type||'').toUpperCase();
+    const badgeCls = LEDGER_EVENT_BADGE[evType] || 'badge-cyan';
+    // Counterparty: the other side
+    const cpty = r.owner_id === uid ? r.counterparty_id : r.owner_id;
+    const cptyStr = cpty ? esc(cpty.slice(0,12))+'…' : '—';
+    const hashStr = r.tx_hash ? esc(r.tx_hash.slice(0,12))+'…' : '—';
+    const assetStr = r.user_poxy_id ? esc(String(r.user_poxy_id).slice(0,10))+'…' : (r.asset_id ? esc(String(r.asset_id).slice(0,10))+'…' : '—');
+    return `<tr>
+      <td class="mono" style="color:var(--muted)">${r.seq ?? '—'}</td>
+      <td><span class="badge ${badgeCls}">${evType}</span></td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${assetStr}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${cptyStr}</td>
+      <td style="white-space:nowrap;color:var(--muted);font-size:11px">${fmtDate(r.created_at)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${hashStr}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Activity Timeline ───────────────────────────────────────────
+async function dossierTimeline(btn){
+  document.querySelectorAll('.timeline-period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _dossierTimelineDays = parseInt(btn.dataset.days,10);
+  await dossierComputeTimeline(_dossierTimelineDays);
+}
+
+async function dossierComputeTimeline(days){
+  if(!_dossierProfile) return;
+  const statsEl = document.getElementById('dossierTimelineStats');
+  if(!statsEl) return;
+  statsEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px 0">Computing…</div>';
+
+  const since = new _nativeDate(Date.now() - days * 86400000).toISOString();
+  const uid   = _dossierProfile.id;
+
+  // Fetch ledger events in window
+  const {data: events} = await sb
+    .from('ledger_events')
+    .select('event_type,created_at,owner_id,counterparty_id')
+    .or(`owner_id.eq.${uid},counterparty_id.eq.${uid}`)
+    .gte('created_at', since);
+
+  const evts = events || [];
+
+  // Compute counts
+  const casesOpened       = evts.filter(e=>e.event_type==='MINT' && e.owner_id===uid).length;
+  const burns             = evts.filter(e=>['BURN','DESTROY'].includes(e.event_type) && e.owner_id===uid).length;
+  const tradesInitiated   = evts.filter(e=>e.event_type==='TRADE' && e.owner_id===uid).length;
+  const tradesReceived    = evts.filter(e=>e.event_type==='TRADE' && e.counterparty_id===uid).length;
+  const transfersSent     = evts.filter(e=>e.event_type==='TRANSFER' && e.owner_id===uid).length;
+  const transfersReceived = evts.filter(e=>e.event_type==='TRANSFER' && e.counterparty_id===uid).length;
+
+  const statItems = [
+    {val:casesOpened,       lbl:'Cases opened'},
+    {val:burns,             lbl:'Burns / Destroys'},
+    {val:tradesInitiated,   lbl:'Trades sent'},
+    {val:tradesReceived,    lbl:'Trades received'},
+    {val:transfersSent,     lbl:'Transfers sent'},
+    {val:transfersReceived, lbl:'Transfers received'},
+  ];
+
+  // Build sparklines from daily buckets (only meaningful for 7d/30d)
+  const buckets = days > 1 ? buildDailyBuckets(evts, uid, days) : null;
+
+  statsEl.innerHTML = statItems.map((s,i)=>{
+    const sparkHtml = buckets ? buildSparkline(buckets[i] || []) : '';
+    return `<div class="timeline-stat-card">
+      <span class="timeline-stat-val">${s.val}</span>
+      <span class="timeline-stat-lbl">${esc(s.lbl)}</span>
+      ${sparkHtml}
+    </div>`;
+  }).join('');
+}
+
+function buildDailyBuckets(evts, uid, days){
+  // Returns array of per-day counts for each stat, indexed same as statItems
+  const filters = [
+    e=>e.event_type==='MINT' && e.owner_id===uid,
+    e=>['BURN','DESTROY'].includes(e.event_type) && e.owner_id===uid,
+    e=>e.event_type==='TRADE' && e.owner_id===uid,
+    e=>e.event_type==='TRADE' && e.counterparty_id===uid,
+    e=>e.event_type==='TRANSFER' && e.owner_id===uid,
+    e=>e.event_type==='TRANSFER' && e.counterparty_id===uid,
+  ];
+  const now = Date.now();
+  return filters.map(fn=>{
+    const relevant = evts.filter(fn);
+    const arr = Array(days).fill(0);
+    relevant.forEach(e=>{
+      const daysAgo = Math.floor((now - new _nativeDate(e.created_at).getTime()) / 86400000);
+      if(daysAgo < days) arr[days - 1 - daysAgo]++;
+    });
+    return arr;
+  });
+}
+
+function buildSparkline(values){
+  if(!values.length) return '';
+  const max = Math.max(...values, 1);
+  const bars = values.map(v=>{
+    const pct = Math.round((v/max)*100);
+    return `<div class="spark-bar" style="height:${Math.max(pct,4)}%"></div>`;
+  }).join('');
+  return `<div class="sparkline">${bars}</div>`;
+}
 
 // ═══════════════════════════════════════════════════════════════
 // HELPERS
