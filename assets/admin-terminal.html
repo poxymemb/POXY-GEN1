@@ -194,6 +194,23 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 /* ── AUDIT LOG ── */
 @keyframes alogRowAppear{from{opacity:0;background:rgba(245,158,11,0.08);}to{opacity:1;background:transparent;}}
 .alog-row-new{animation:alogRowAppear 300ms ease-out;}
+/* ── ADMIN ROLES ── */
+.roles-matrix-wrap{overflow-x:auto}
+.roles-matrix{width:100%;border-collapse:collapse;font-size:12px}
+.roles-matrix th,.roles-matrix td{padding:8px 10px;border-bottom:1px solid var(--border2);text-align:center}
+.roles-matrix th:first-child,.roles-matrix td:first-child{text-align:left;font-weight:500;color:var(--adm-text)}
+.roles-matrix thead th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--dim)}
+.roles-matrix .perm-yes{color:var(--green);font-size:14px}
+.roles-matrix .perm-no{color:var(--muted);opacity:.45;font-size:14px}
+.role-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px}
+.role-badge.superadmin{background:rgba(245,158,11,.18);color:var(--amber)}
+.role-badge.mod{background:rgba(129,140,248,.18);color:var(--cyan)}
+.role-badge.support{background:rgba(34,197,94,.15);color:var(--green)}
+.role-badge.dev_topup{background:rgba(148,163,184,.15);color:var(--muted)}
+.roles-add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;padding-top:12px;border-top:1px solid var(--border2)}
+.roles-add-row .f-row{margin:0;flex:1;min-width:160px}
+.roles-status-ok{color:var(--green)}
+.roles-status-off{color:var(--muted)}
 /* ── RNG AUDIT ── */
 .rng-report{background:var(--adm-log-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-family:var(--font-mono);font-size:11px}
 .rng-report-hdr{background:var(--dim);border-bottom:1px solid var(--border);padding:12px 16px;text-align:center}
@@ -437,6 +454,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       </button>
       <button class="nav-btn" onclick="switchTab('auditlog')" data-tab="auditlog">
         <span class="ic">📋</span>Audit log
+      </button>
+      <button class="nav-btn" onclick="switchTab('roles')" data-tab="roles">
+        <span class="ic">🛡</span>Admin roles
       </button>
     </nav>
     <div class="sidebar-footer">
@@ -1077,6 +1097,77 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div><!-- /tab-auditlog -->
 
     <!-- ══════════════════════════════════════════════════════
+         TAB 13: ADMIN ROLES
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-roles" class="tab-pane">
+
+      <!-- ── TEAM MEMBERS ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span>Team members</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span id="rolesMyRole" class="role-badge support">—</span>
+            <button class="btn btn-ghost btn-sm" onclick="loadAdminRoles()">↺ Refresh</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Added</th>
+                <th>Last login</th>
+                <th>Status</th>
+                <th id="rolesActionsCol" style="display:none">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rolesTeamBody">
+              <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Add member (superadmin only) -->
+        <div id="rolesAddPanel" class="roles-add-row" style="display:none">
+          <div class="f-row">
+            <label class="f-label">Email</label>
+            <input id="rolesAddEmail" class="f-input" type="email" placeholder="team@example.com"/>
+          </div>
+          <div class="f-row" style="max-width:160px">
+            <label class="f-label">Role</label>
+            <select id="rolesAddRole" class="f-select">
+              <option value="support">Support</option>
+              <option value="mod">Mod</option>
+              <option value="superadmin">Superadmin</option>
+            </select>
+          </div>
+          <button class="btn btn-amber" onclick="rolesAddMember()">+ Add team member</button>
+          <span id="rolesAddLog" style="font-size:12px;color:var(--muted)"></span>
+        </div>
+      </div>
+
+      <!-- ── ROLE PERMISSIONS MATRIX ── -->
+      <div class="card">
+        <div class="card-title">Role permissions matrix</div>
+        <div class="roles-matrix-wrap">
+          <table class="roles-matrix" id="rolesMatrixTable">
+            <thead>
+              <tr>
+                <th>Permission</th>
+                <th>Super</th>
+                <th>Mod</th>
+                <th>Support</th>
+              </tr>
+            </thead>
+            <tbody id="rolesMatrixBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-roles -->
+
+    <!-- ══════════════════════════════════════════════════════
          TAB 10: ECONOMY HEALTH
          ══════════════════════════════════════════════════════ -->
     <div id="tab-economy" class="tab-pane">
@@ -1665,7 +1756,8 @@ const MCU_PAGES = {
   alerts:    { title: 'Alert system',        sub: 'Suspicious activity flags, rule config, dismissed history' },
   rng:       { title: 'RNG audit',           sub: 'Provably fair drop verification and recent rounds' },
   disputes:  { title: 'Dispute resolution',  sub: 'Incident lookup, compensation tool, admin actions log' },
-  dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' }
+  dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' },
+  roles:     { title: 'Admin roles',        sub: 'Team members, role assignments, permissions matrix' }
 };
 
 function syncThemeToggleUI(){
@@ -1715,6 +1807,7 @@ function switchTab(id){
   if(id==='rng')       { loadRecentRngRounds(); }
   if(id==='disputes')  { loadRecentDisputes(); }
   if(id==='dossier')   { /* stays on current loaded player */ }
+  if(id==='roles')     { loadAdminRoles(); }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2830,6 +2923,160 @@ function auditLogExportCSV(){
 
 // Legacy stub — old Telemetry tab called this, now a no-op
 function loadAuditLog(){ /* moved to audit log tab */ }
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 13 — ADMIN ROLES
+// ═══════════════════════════════════════════════════════════════
+
+const ROLE_PERMISSIONS_MATRIX = [
+  { name: 'View all data',       super: true,  mod: true,  support: true  },
+  { name: 'Player Dossier',      super: true,  mod: true,  support: true  },
+  { name: 'Compensate player',   super: true,  mod: false, support: true  },
+  { name: 'Freeze account',      super: true,  mod: true,  support: false },
+  { name: 'Delete account',      super: true,  mod: false, support: false },
+  { name: 'Grant badges',        super: true,  mod: true,  support: false },
+  { name: 'Override mint',       super: true,  mod: false, support: false },
+  { name: 'Manage roles',        super: true,  mod: false, support: false },
+  { name: 'Content & CMS',       super: true,  mod: true,  support: false },
+];
+
+let _rolesCurrentRole = null;
+
+function rolesRenderMatrix(){
+  const tbody = document.getElementById('rolesMatrixBody');
+  if(!tbody) return;
+  const yes = '<span class="perm-yes">✅</span>';
+  const no  = '<span class="perm-no">❌</span>';
+  tbody.innerHTML = ROLE_PERMISSIONS_MATRIX.map(row => `
+    <tr>
+      <td>${row.name}</td>
+      <td>${row.super ? yes : no}</td>
+      <td>${row.mod ? yes : no}</td>
+      <td>${row.support ? yes : no}</td>
+    </tr>`).join('');
+}
+
+function rolesFmtRelative(ts){
+  if(!ts) return '—';
+  const d = new Date(ts);
+  if(isNaN(d.getTime())) return '—';
+  const diff = Date.now() - d.getTime();
+  const mins = Math.floor(diff / 60000);
+  if(mins < 2) return 'today';
+  if(mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if(hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs / 24);
+  if(days < 7) return days + 'd ago';
+  return d.toLocaleDateString();
+}
+
+function rolesBadge(role){
+  const r = (role || 'support').toLowerCase();
+  const label = r === 'superadmin' ? 'SUPERADMIN' : r.toUpperCase();
+  return `<span class="role-badge ${r}">${label}</span>`;
+}
+
+function rolesIsSuperadmin(role){
+  return role === 'superadmin' || role === 'admin';
+}
+
+async function loadAdminRoles(){
+  rolesRenderMatrix();
+  const tbody = document.getElementById('rolesTeamBody');
+  const myRoleEl = document.getElementById('rolesMyRole');
+  const addPanel = document.getElementById('rolesAddPanel');
+  const actionsCol = document.getElementById('rolesActionsCol');
+  if(!tbody) return;
+
+  tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:16px">Loading…</td></tr>';
+
+  try{
+    const [roleRes, teamRes] = await Promise.all([
+      sb.rpc('get_admin_role'),
+      sb.rpc('get_team_members'),
+    ]);
+
+    if(roleRes.error) throw roleRes.error;
+    if(teamRes.error) throw teamRes.error;
+
+    _rolesCurrentRole = roleRes.data || null;
+    const isSuper = rolesIsSuperadmin(_rolesCurrentRole);
+
+    if(myRoleEl){
+      const r = (_rolesCurrentRole || 'support').toLowerCase();
+      myRoleEl.className = 'role-badge ' + (r === '—' ? 'support' : r);
+      myRoleEl.textContent = r === 'superadmin' ? 'SUPERADMIN' : (r === '—' ? '—' : r.toUpperCase());
+      myRoleEl.title = 'Your MCU role';
+    }
+    if(addPanel) addPanel.style.display = isSuper ? 'flex' : 'none';
+    if(actionsCol) actionsCol.style.display = isSuper ? '' : 'none';
+
+    const members = teamRes.data || [];
+    if(!members.length){
+      tbody.innerHTML = `<tr><td colspan="${isSuper?6:5}" style="color:var(--muted);text-align:center;padding:16px">No team members in admin_emails</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = members.map(m => {
+      const emailDisplay = m.email ? esc(m.email.replace(/(.{2}).+(@.+)/,'$1…$2')) : '—';
+      const added = m.added_at ? new Date(m.added_at).toLocaleDateString() : '—';
+      const lastLogin = rolesFmtRelative(m.last_login);
+      const status = m.is_active
+        ? '<span class="roles-status-ok">✅</span>'
+        : '<span class="roles-status-off">—</span>';
+      const removeBtn = isSuper
+        ? `<button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick='rolesRemoveMember(${JSON.stringify(m.email)})'>Remove</button>`
+        : '';
+      return `<tr>
+        <td class="mono" style="font-size:11px" title="${esc(m.email||'')}">${emailDisplay}</td>
+        <td>${rolesBadge(m.role)}</td>
+        <td style="font-size:11px;color:var(--muted)">${added}</td>
+        <td style="font-size:11px;color:var(--muted)">${lastLogin}</td>
+        <td>${status}</td>
+        ${isSuper ? `<td>${removeBtn}</td>` : ''}
+      </tr>`;
+    }).join('');
+
+  } catch(err){
+    tbody.innerHTML = `<tr><td colspan="6" style="color:var(--red);text-align:center;padding:16px">ERROR: ${esc(err.message)}</td></tr>`;
+    toast('ROLES LOAD FAILED','err');
+  }
+}
+
+async function rolesAddMember(){
+  const email = document.getElementById('rolesAddEmail')?.value?.trim();
+  const role  = document.getElementById('rolesAddRole')?.value || 'support';
+  const logEl = document.getElementById('rolesAddLog');
+  if(!email){ toast('ENTER EMAIL','err'); return; }
+  if(logEl){ logEl.style.color='var(--muted)'; logEl.textContent='Adding…'; }
+
+  const {data, error} = await sb.rpc('admin_add_team_member', { p_email: email, p_role: role });
+  if(error || !data?.ok){
+    const msg = error?.message || data?.error || 'Failed';
+    if(logEl){ logEl.style.color='var(--red)'; logEl.textContent=msg; }
+    toast('ADD FAILED','err');
+    return;
+  }
+  if(logEl){ logEl.style.color='var(--green)'; logEl.textContent='✓ Added ' + data.email; }
+  document.getElementById('rolesAddEmail').value = '';
+  toast('TEAM MEMBER ADDED');
+  streamLine('ADMIN', `ROLE ADD: ${data.email} → ${data.role}`);
+  loadAdminRoles();
+}
+
+async function rolesRemoveMember(email){
+  if(!email) return;
+  if(!confirm('Remove ' + email + ' from staff?')) return;
+  const {data, error} = await sb.rpc('admin_remove_team_member', { p_email: email });
+  if(error || !data?.ok){
+    toast((error?.message || data?.error || 'Remove failed'), 'err');
+    return;
+  }
+  toast('MEMBER REMOVED');
+  streamLine('ADMIN', `ROLE REMOVE: ${email}`);
+  loadAdminRoles();
+}
 
 // ═══════════════════════════════════════════════════════════════
 // TAB 12 — RNG AUDIT TOOL
