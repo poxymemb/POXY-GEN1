@@ -194,6 +194,47 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 /* ── AUDIT LOG ── */
 @keyframes alogRowAppear{from{opacity:0;background:rgba(245,158,11,0.08);}to{opacity:1;background:transparent;}}
 .alog-row-new{animation:alogRowAppear 300ms ease-out;}
+/* ── ECONOMY HEALTH ── */
+.eco-stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:4px}
+.eco-stat-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.eco-stat-val{font-size:26px;font-weight:700;font-family:var(--font-mono);color:var(--adm-text);line-height:1.1}
+.eco-stat-val.green{color:var(--green)}
+.eco-stat-val.amber{color:var(--amber)}
+.eco-stat-val.red  {color:var(--red)}
+.eco-stat-lbl{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.eco-stat-sub{font-size:11px;color:var(--muted);margin-top:2px}
+/* rarity bars */
+.rarity-list{display:flex;flex-direction:column;gap:8px}
+.rarity-row{display:grid;grid-template-columns:88px 1fr 46px;align-items:center;gap:10px;font-size:12px}
+.rarity-label{font-family:var(--font-mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.rarity-track{background:var(--dim);border-radius:3px;height:8px;overflow:hidden}
+.rarity-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+.rarity-count{font-family:var(--font-mono);font-size:11px;color:var(--muted);text-align:right}
+/* mini line chart (pure CSS + inline SVG) */
+.eco-chart-wrap{position:relative;width:100%;height:120px;overflow:hidden}
+.eco-chart-wrap svg{width:100%;height:100%}
+.eco-chart-legend{display:flex;gap:16px;font-size:11px;color:var(--muted);margin-top:6px}
+.eco-chart-legend span{display:flex;align-items:center;gap:5px}
+.eco-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+/* indicator pill */
+.eco-indicator{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.eco-indicator.deflation{background:rgba(34,197,94,.15);color:var(--green)}
+.eco-indicator.inflation{background:rgba(245,158,11,.15);color:var(--amber)}
+.eco-indicator.neutral  {background:rgba(148,163,184,.12);color:var(--muted)}
+/* generation tracker */
+.gen-list{display:flex;flex-direction:column;gap:14px}
+.gen-row{display:flex;flex-direction:column;gap:5px}
+.gen-header{display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.gen-name{font-family:var(--font-mono);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--adm-text)}
+.gen-pct{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.gen-track{background:var(--dim);border-radius:4px;height:10px;overflow:hidden}
+.gen-fill{height:100%;border-radius:4px;background:var(--amber);transition:width .7s cubic-bezier(.16,1,.3,1)}
+.gen-sub{font-size:11px;color:var(--muted)}
+.gen-sealed{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--muted);opacity:.6;padding:8px 0}
+/* top-players table clickable rows */
+.eco-top-row{cursor:pointer;transition:background .1s}
+.eco-top-row:hover td{background:var(--dim)}
+.eco-rank{font-family:var(--font-mono);font-weight:700;font-size:12px;color:var(--muted);min-width:28px}
 /* ── DISPUTES ── */
 .chain-box{background:var(--adm-log-bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:var(--font-mono);font-size:11px;line-height:1.8}
 .chain-section{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border2)}
@@ -337,6 +378,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         <span class="ic">⚙</span>Account ops
       </button>
       <div style="height:1px;background:var(--border);margin:8px 4px"></div>
+      <button class="nav-btn" onclick="switchTab('economy')" data-tab="economy">
+        <span class="ic">◎</span>Economy
+      </button>
       <button class="nav-btn" onclick="switchTab('disputes')" data-tab="disputes">
         <span class="ic">⚖</span>Disputes
       </button>
@@ -985,6 +1029,92 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div><!-- /tab-auditlog -->
 
     <!-- ══════════════════════════════════════════════════════
+         TAB 10: ECONOMY HEALTH
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-economy" class="tab-pane">
+
+      <!-- Header row: refresh + indicator -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <span id="ecoIndicator" class="eco-indicator neutral">Loading…</span>
+        <div style="display:flex;gap:8px">
+          <span id="ecoLastUpdated" style="font-size:11px;color:var(--muted);align-self:center"></span>
+          <button class="btn btn-ghost btn-sm" onclick="loadEconomy()">↺ Refresh</button>
+        </div>
+      </div>
+
+      <!-- ── 1. SUPPLY OVERVIEW ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Supply overview</div>
+        <div id="ecoStatGrid" class="eco-stat-grid">
+          <div class="eco-stat-card"><div class="eco-stat-val" id="ecoTotalPC">—</div><div class="eco-stat-lbl">Total PC in circulation</div></div>
+          <div class="eco-stat-card"><div class="eco-stat-val" id="ecoTotalSpent">—</div><div class="eco-stat-lbl">Total PC spent (dust)</div></div>
+          <div class="eco-stat-card"><div class="eco-stat-val" id="ecoTotalMinted">—</div><div class="eco-stat-lbl">Total assets minted</div></div>
+          <div class="eco-stat-card"><div class="eco-stat-val" id="ecoTotalBurned">—</div><div class="eco-stat-lbl">Total assets burned</div></div>
+          <div class="eco-stat-card"><div class="eco-stat-val" id="ecoTotalPlayers">—</div><div class="eco-stat-lbl">Total players</div></div>
+          <div class="eco-stat-card"><div class="eco-stat-val" id="ecoInflationRate">—</div><div class="eco-stat-lbl">Inflation rate (7d)</div><div class="eco-stat-sub" id="ecoInflationNote"></div></div>
+        </div>
+
+        <!-- Rarity distribution -->
+        <div style="margin-top:18px">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px">Assets by rarity</div>
+          <div id="ecoRarityList" class="rarity-list">
+            <div style="color:var(--muted);font-size:12px">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 2. MINT vs BURN RATE ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span>Mint vs burn rate</span>
+          <div style="display:flex;gap:6px">
+            <button class="timeline-period-btn active" data-days="7"  onclick="ecoChartPeriod(this,7)">7 days</button>
+            <button class="timeline-period-btn"        data-days="14" onclick="ecoChartPeriod(this,14)">14 days</button>
+            <button class="timeline-period-btn"        data-days="30" onclick="ecoChartPeriod(this,30)">30 days</button>
+          </div>
+        </div>
+        <div class="eco-chart-wrap" id="ecoChartWrap">
+          <svg id="ecoChartSvg" viewBox="0 0 600 120" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="eco-chart-legend">
+          <span><span class="eco-legend-dot" style="background:#818cf8"></span>Mints</span>
+          <span><span class="eco-legend-dot" style="background:#ef4444"></span>Burns</span>
+          <span id="ecoChartMeta" style="margin-left:auto"></span>
+        </div>
+      </div>
+
+      <!-- ── 3. TOP 10 RICHEST PLAYERS ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Top 10 richest players</div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:36px">#</th>
+                <th>Username</th>
+                <th style="text-align:right">PC balance</th>
+                <th style="text-align:right">Assets</th>
+                <th>Club</th>
+              </tr>
+            </thead>
+            <tbody id="ecoTopBody">
+              <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 4. GENERATION SUPPLY TRACKER ── -->
+      <div class="card">
+        <div class="card-title">Generation supply tracker</div>
+        <div id="ecoGenList" class="gen-list">
+          <div style="color:var(--muted);font-size:12px">Loading…</div>
+        </div>
+      </div>
+
+    </div><!-- /tab-economy -->
+
+    <!-- ══════════════════════════════════════════════════════
          TAB 9: DISPUTE RESOLUTION
          ══════════════════════════════════════════════════════ -->
     <div id="tab-disputes" class="tab-pane">
@@ -1341,7 +1471,8 @@ const MCU_PAGES = {
   support:  { title: 'Support ops',        sub: 'Ledger trace and player dossier' },
   acc:      { title: 'Account ops',        sub: 'Balance, flags, and danger zone' },
   auditlog:  { title: 'Audit log',           sub: 'Live admin action stream with filters and CSV export' },
-  disputes:  { title: 'Dispute resolution', sub: 'Incident lookup, compensation tool, admin actions log' },
+  economy:   { title: 'Economy health',      sub: 'Supply overview, mint/burn rate, top players, generation tracker' },
+  disputes:  { title: 'Dispute resolution',  sub: 'Incident lookup, compensation tool, admin actions log' },
   dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' }
 };
 
@@ -1386,6 +1517,7 @@ function switchTab(id){
   if(id==='telem'){ loadTelemetryCounters(); }
   if(id==='users'){ loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
+  if(id==='economy')   { loadEconomy(); }
   if(id==='disputes')  { loadRecentDisputes(); }
   if(id==='dossier')   { /* stays on current loaded player */ }
 }
@@ -2503,6 +2635,268 @@ function auditLogExportCSV(){
 
 // Legacy stub — old Telemetry tab called this, now a no-op
 function loadAuditLog(){ /* moved to audit log tab */ }
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 10 — ECONOMY HEALTH
+// ═══════════════════════════════════════════════════════════════
+
+// ── Constants ────────────────────────────────────────────────
+const GEN_SUPPLY = [
+  { name: 'Gen 0', supply: 1000,    filter: 'gen0'  },
+  { name: 'Gen 1', supply: 5000,    filter: 'gen1'  },
+  { name: 'Gen 3', supply: null,    sealed: true    },
+];
+const RARITY_ORDER = ['common','uncommon','rare','epic','legendary','mythic','secret'];
+const RARITY_COLORS = {
+  common:    '#94a3b8',
+  uncommon:  '#22c55e',
+  rare:      '#3b82f6',
+  epic:      '#a855f7',
+  legendary: '#f59e0b',
+  mythic:    '#ec4899',
+  secret:    '#ffffff',
+};
+
+let _ecoChartDays = 7;
+let _ecoChartData = null;  // cached for period switches
+
+// ── Entry point ───────────────────────────────────────────────
+async function loadEconomy(){
+  document.getElementById('ecoLastUpdated').textContent = 'Loading…';
+  try {
+    // Fire all three RPCs in parallel
+    const [overviewRes, rarityRes, chartRes, topRes] = await Promise.all([
+      sb.rpc('get_supply_overview'),
+      sb.rpc('get_rarity_distribution'),
+      sb.rpc('get_economy_metrics', { days: _ecoChartDays }),
+      sb.from('profiles')
+        .select('id,username,balance,is_club_member')
+        .order('balance', { ascending: false })
+        .limit(10),
+    ]);
+    if(overviewRes.error) throw overviewRes.error;
+    if(rarityRes.error)   throw rarityRes.error;
+    if(chartRes.error)    throw chartRes.error;
+
+    const ov   = Array.isArray(overviewRes.data) ? overviewRes.data[0] : overviewRes.data;
+    const dist = rarityRes.data  || [];
+    _ecoChartData  = chartRes.data  || [];
+    const top  = topRes.data    || [];
+
+    _ecoRenderOverview(ov);
+    _ecoRenderRarity(dist);
+    _ecoRenderChart(_ecoChartData);
+    _ecoRenderTopPlayers(top);
+    _ecoRenderGenTracker(dist);
+
+    document.getElementById('ecoLastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  } catch(err) {
+    toast('ECONOMY LOAD FAILED: ' + err.message, 'err');
+    document.getElementById('ecoLastUpdated').textContent = 'Error';
+  }
+}
+
+// ── Supply overview ───────────────────────────────────────────
+function _ecoFmt(n){ if(n==null) return '—'; const v=Number(n); if(v>=1e6) return (v/1e6).toFixed(2)+'M'; if(v>=1e3) return (v/1e3).toFixed(1)+'K'; return v.toLocaleString(); }
+
+function _ecoRenderOverview(ov){
+  if(!ov){ return; }
+  document.getElementById('ecoTotalPC').textContent     = _ecoFmt(ov.total_pc_circulation);
+  document.getElementById('ecoTotalSpent').textContent  = _ecoFmt(ov.total_pc_spent);
+  document.getElementById('ecoTotalMinted').textContent = _ecoFmt(ov.total_minted);
+  document.getElementById('ecoTotalBurned').textContent = _ecoFmt(ov.total_burned);
+  document.getElementById('ecoTotalPlayers').textContent= _ecoFmt(ov.total_players);
+
+  const rate = Number(ov.inflation_rate_7d);
+  const rateEl = document.getElementById('ecoInflationRate');
+  const noteEl = document.getElementById('ecoInflationNote');
+  rateEl.textContent = (isFinite(rate) ? (rate > 0 ? '+' : '') + rate + '%' : '—');
+
+  const indEl = document.getElementById('ecoIndicator');
+  if(!isFinite(rate) || rate === 0){
+    indEl.className = 'eco-indicator neutral'; indEl.textContent = '● Balanced';
+    rateEl.className = 'eco-stat-val';
+    noteEl.textContent = 'mint ≈ burn';
+  } else if(rate > 0){
+    indEl.className = 'eco-indicator inflation'; indEl.textContent = '▲ Inflation';
+    rateEl.className = 'eco-stat-val amber';
+    noteEl.textContent = 'mints > burns this week';
+  } else {
+    indEl.className = 'eco-indicator deflation'; indEl.textContent = '▼ Deflation';
+    rateEl.className = 'eco-stat-val green';
+    noteEl.textContent = 'burns > mints this week';
+  }
+}
+
+// ── Rarity distribution ───────────────────────────────────────
+function _ecoRenderRarity(dist){
+  const el = document.getElementById('ecoRarityList');
+  if(!dist.length){ el.innerHTML='<div style="color:var(--muted);font-size:12px">No assets minted yet.</div>'; return; }
+
+  const map = {};
+  dist.forEach(r => { map[r.tier] = Number(r.cnt); });
+  const total = Object.values(map).reduce((a,b)=>a+b, 0) || 1;
+  const maxCnt = Math.max(...Object.values(map), 1);
+
+  el.innerHTML = RARITY_ORDER.map(tier => {
+    const cnt   = map[tier] || 0;
+    const barPct = Math.round(cnt / maxCnt * 100);
+    const color  = RARITY_COLORS[tier] || '#94a3b8';
+    return `<div class="rarity-row">
+      <span class="rarity-label" style="color:${color}">${tier}</span>
+      <div class="rarity-track"><div class="rarity-fill" style="width:${barPct}%;background:${color}"></div></div>
+      <span class="rarity-count">${cnt.toLocaleString()}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Mint/Burn SVG line chart ──────────────────────────────────
+function _ecoRenderChart(data){
+  const svg = document.getElementById('ecoChartSvg');
+  const meta = document.getElementById('ecoChartMeta');
+  if(!data || !data.length){ svg.innerHTML=''; meta.textContent='No data'; return; }
+
+  const W = 600, H = 120, PAD = 8;
+  const mints  = data.map(d => Number(d.mints));
+  const burns  = data.map(d => Number(d.burns));
+  const labels = data.map(d => {
+    const dt = new Date(d.day);
+    return (dt.getMonth()+1)+'/'+(dt.getDate());
+  });
+  const maxVal = Math.max(...mints, ...burns, 1);
+  const n = data.length;
+  const xStep = (W - PAD*2) / Math.max(n-1, 1);
+
+  function pts(arr){
+    return arr.map((v,i)=>{
+      const x = PAD + i * xStep;
+      const y = H - PAD - ((v / maxVal) * (H - PAD*2));
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+  }
+
+  // Build tick lines + labels
+  let ticks = '';
+  data.forEach((d,i) => {
+    if(i % Math.ceil(n/7) !== 0 && i !== n-1) return;
+    const x = (PAD + i * xStep).toFixed(1);
+    ticks += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="var(--border)" stroke-width="0.5"/>`;
+    ticks += `<text x="${x}" y="${H-1}" text-anchor="middle" font-size="8" fill="var(--adm-muted)" font-family="var(--font-mono)">${labels[i]}</text>`;
+  });
+
+  // Area fills under each line
+  function areaPath(arr, color){
+    const linePoints = arr.map((v,i)=>{
+      const x = PAD + i * xStep;
+      const y = H - PAD - ((v / maxVal) * (H - PAD*2));
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    });
+    const last  = `${(PAD + (n-1)*xStep).toFixed(1)},${(H-PAD).toFixed(1)}`;
+    const first = `${PAD.toFixed(1)},${(H-PAD).toFixed(1)}`;
+    const id = 'eco-grad-'+color.replace('#','');
+    return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <polygon points="${linePoints.join(' ')} ${last} ${first}" fill="url(#${id})"/>
+    <polyline points="${pts(arr)}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  }
+
+  svg.innerHTML = ticks + areaPath(burns, '#ef4444') + areaPath(mints, '#818cf8');
+
+  const totalMints = mints.reduce((a,b)=>a+b,0);
+  const totalBurns = burns.reduce((a,b)=>a+b,0);
+  meta.textContent = `${_ecoChartDays}d total: ${totalMints} mints · ${totalBurns} burns`;
+}
+
+function ecoChartPeriod(btn, days){
+  document.querySelectorAll('#tab-economy .timeline-period-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _ecoChartDays = days;
+  // Reload chart only
+  sb.rpc('get_economy_metrics', { days }).then(res => {
+    if(res.error){ toast('CHART LOAD FAILED','err'); return; }
+    _ecoChartData = res.data || [];
+    _ecoRenderChart(_ecoChartData);
+  });
+}
+
+// ── Top 10 players ────────────────────────────────────────────
+async function _ecoRenderTopPlayers(rows){
+  const tbody = document.getElementById('ecoTopBody');
+  if(!rows.length){
+    tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">No players found.</td></tr>';
+    return;
+  }
+
+  // Load asset counts for all 10 users in one query
+  const ids = rows.map(r=>r.id);
+  const {data:counts} = await sb.from('user_poxy')
+    .select('user_id')
+    .in('user_id', ids);
+  const assetMap = {};
+  (counts||[]).forEach(r => { assetMap[r.user_id] = (assetMap[r.user_id]||0) + 1; });
+
+  tbody.innerHTML = rows.map((r, i) => `
+    <tr class="eco-top-row" onclick="ecoOpenDossier('${r.username||r.id}')">
+      <td class="eco-rank">${i+1}</td>
+      <td class="mono" style="font-weight:600">@${r.username||'—'}</td>
+      <td style="text-align:right;font-family:var(--font-mono)">${Number(r.balance||0).toFixed(2)} <span style="color:var(--muted)">PC</span></td>
+      <td style="text-align:right;font-family:var(--font-mono)">${assetMap[r.id]||0}</td>
+      <td>${r.is_club_member ? '<span class="badge badge-green">VIP</span>' : '<span style="color:var(--muted)">—</span>'}</td>
+    </tr>`).join('');
+}
+
+function ecoOpenDossier(username){
+  // Pre-fill dossier query and open that tab
+  const el = document.getElementById('dossierQuery');
+  if(el) el.value = username;
+  switchTab('dossier');
+  loadDossier();
+}
+
+// ── Generation supply tracker ─────────────────────────────────
+async function _ecoRenderGenTracker(dist){
+  const el = document.getElementById('ecoGenList');
+
+  // Total active assets minted
+  const {count: gen0Count} = await sb.from('user_poxy')
+    .select('id', {count:'exact', head:true})
+    .eq('case_origin','gen0');
+  const {count: gen1Count} = await sb.from('user_poxy')
+    .select('id', {count:'exact', head:true})
+    .eq('case_origin','gen1');
+
+  // Fallback: if case_origin isn't tracked per-gen, use total minted
+  const totalMinted = dist.reduce((a,r)=>a+Number(r.cnt),0);
+  const g0 = gen0Count ?? 0;
+  const g1 = gen1Count ?? 0;
+
+  // If neither gen has data use total for Gen 0 row as best estimate
+  const g0display = (g0 === 0 && g1 === 0) ? totalMinted : g0;
+
+  el.innerHTML = `
+    <div class="gen-row">
+      <div class="gen-header">
+        <span class="gen-name">Gen 0</span>
+        <span class="gen-pct">${g0display} / 1,000 (${Math.min(100,(g0display/1000*100)).toFixed(1)}%)</span>
+      </div>
+      <div class="gen-track"><div class="gen-fill" style="width:${Math.min(100,g0display/1000*100).toFixed(1)}%"></div></div>
+      <div class="gen-sub">${1000-g0display > 0 ? (1000-g0display)+' remaining' : 'SUPPLY EXHAUSTED'}</div>
+    </div>
+    <div class="gen-row">
+      <div class="gen-header">
+        <span class="gen-name">Gen 1</span>
+        <span class="gen-pct">${g1} / 5,000 (${Math.min(100,(g1/5000*100)).toFixed(1)}%)</span>
+      </div>
+      <div class="gen-track"><div class="gen-fill" style="width:${Math.min(100,g1/5000*100).toFixed(1)}%;background:var(--cyan)"></div></div>
+      <div class="gen-sub">${5000-g1 > 0 ? (5000-g1)+' remaining' : 'SUPPLY EXHAUSTED'}</div>
+    </div>
+    <div class="gen-row">
+      <div class="gen-name">Gen 3</div>
+      <div class="gen-sealed">CLASSIFIED — SEALED</div>
+    </div>`;
+}
 
 // ═══════════════════════════════════════════════════════════════
 // TAB 9 — DISPUTE RESOLUTION
