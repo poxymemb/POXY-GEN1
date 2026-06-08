@@ -723,7 +723,7 @@
 
   function onMint(data) {
     if (!data) return;
-    // Use live round if still active; fall back to the snapshot saved on reset.
+    ensureRound();
     var r = current || _savedRound;
     if (!r) return;
     r.asset = {
@@ -738,7 +738,7 @@
     setPill('sig', '', 'Idle');
     setPill('evt', '', 'Idle');
     if (drawer && drawer.classList.contains('is-open')) renderDrawer();
-    if (current) toast('POXY minted \u00b7 signature on record');
+    toast('POXY minted \u00b7 signature on record');
   }
 
   /* ── POXY lifecycle / provenance visualization ───────────────────────── */
@@ -909,6 +909,8 @@
     // PHASE 1+2: begin a fair round right as the spin starts (after the
     // economy has already chosen pendingSpinTier inside the original).
     wrap('startSpin', function () { try { beginRound(); } catch (e) {} });
+    // Phase 3 gacha v3 uses runRouletteCarousel instead of startSpin — same HUD hook.
+    wrap('runRouletteCarousel', function () { try { beginRound(); } catch (e) {} });
     // PHASE 3: enhance the reveal modal.
     wrap('openWinRevealModal', function (ret, args) { onReveal(args && args[0]); });
     // capture real signed-asset data when minted on "Add to collection".

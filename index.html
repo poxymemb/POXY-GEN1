@@ -101,7 +101,7 @@
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
-<script src="assets/poxy-trust-motion.js?v=2" defer></script>
+<script src="assets/poxy-trust-motion.js?v=3" defer></script>
 <script src="assets/poxy-gens-motion.js?v=4" defer></script>
 <link rel="stylesheet" href="assets/poxy-onboarding.css?v=1">
 <script src="assets/poxy-onboarding.js?v=1" defer></script>
@@ -8966,11 +8966,11 @@ $('btnOpen').addEventListener('click',async function(){
       currentProfile.balance=rpcResult.balance;
       updateBalanceBadge(currentProfile.balance);
     }
-    // Auto-anchor to crypto ledger (non-blocking, retry queue handles failures)
-    cryptoMint(rpcResult.poxy_id,rpcResult.tier,'standard').catch(()=>{});
-    // Drive animation with server-determined tier
+    // Drive animation with server-determined tier (beginRound hooks inside runRouletteCarousel)
     pendingSpinTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
     runRouletteCarousel(pendingSpinTier);
+    // Auto-anchor to crypto ledger after HUD round exists (toast: "POXY minted · signature on record")
+    cryptoMint(rpcResult.poxy_id,rpcResult.tier,'standard').catch(()=>{});
   }catch(e){
     showToast(e.message||'Case open failed. Try again.');
     busy=false;$('btnOpen').disabled=false;
