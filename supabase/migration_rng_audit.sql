@@ -56,7 +56,7 @@ AS $$
     LIMIT 1
   ) drop_row ON true
   WHERE public.private_is_staff()
-  ORDER BY r.id DESC
+  ORDER BY drop_row.dropped_at DESC NULLS LAST
   LIMIT p_limit;
 $$;
 
