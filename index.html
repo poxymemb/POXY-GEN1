@@ -1486,7 +1486,7 @@ body.dark-club .club-sub{color:#888}
         <button type="button" class="st-win-reveal-btn st-win-reveal-btn--discard" id="stWinDiscard" data-i18n="dash.winReveal.discard">Discard</button>
       </div>
       <div class="st-win-proof" id="stWinProof" hidden>
-        <button type="button" class="st-win-proof-btn" onclick="goToVerifyWithRound()">⚡ PROVABLY FAIR — Verify this drop</button>
+        <button type="button" class="st-win-proof-btn" onclick="goToVerifyWithRound()">⚡ PROVABLY FAIR — Verify (drop stays saved)</button>
         <span class="st-win-proof-round" id="stWinProofRound"></span>
       </div>
     </div>
@@ -1630,7 +1630,7 @@ body.dark-club .club-sub{color:#888}
               <button type="button" class="btn-discard" id="btnDiscard" data-i18n="dash.discard">DISCARD</button>
             </div>
             <button type="button" class="btn-list-market" id="btnListFromHunt" data-i18n="dash.listOnMarket">LIST ON MARKET INSTEAD</button>
-            <button type="button" class="st-win-proof-btn" id="btnHuntProof" onclick="goToVerifyWithRound()" hidden style="margin-top:8px;font-size:10px">⚡ PROVABLY FAIR — Verify this drop</button>
+            <button type="button" class="st-win-proof-btn" id="btnHuntProof" onclick="goToVerifyWithRound()" hidden style="margin-top:8px;font-size:10px">⚡ PROVABLY FAIR — Verify (drop stays saved)</button>
           </div>
           </div>
         </div>
@@ -2401,7 +2401,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
               <button class="vt-tab-btn" onclick="vtSwitchTab('ledger',this)">
                 <span class="material-symbols-outlined">receipt_long</span> LEDGER EVENT
               </button>
-              <button class="vt-tab-btn vt-tab-btn--active" onclick="vtSwitchTab('rng',this)">
+              <button class="vt-tab-btn vt-tab-btn--active" id="vtTabRng" onclick="vtSwitchTab('rng',this)">
                 <span class="material-symbols-outlined">casino</span> RNG ROUND
               </button>
             </div>
@@ -8299,6 +8299,8 @@ function onRouletteLand(tier){
   currentPoxyId=landedPoxyId;
   playDrop(t.id);
   openWinRevealModal(t,landedSerial);
+  // v3: item already in DB — sync collection UI immediately so verify/dismiss never loses it
+  if(landedPoxyId)syncDropToCollectionUI({toast:false}).catch(()=>{});
 }
 function runRouletteCarousel(winTier){
   buildRouletteTrack(winTier);
@@ -8724,20 +8726,41 @@ async function generateClientSeed(){
   return Math.abs([...raw].reduce((h,c)=>Math.imul(31,h)+c.charCodeAt(0)|0,0)).toString(16).padStart(8,'0')+Date.now().toString(16);
 }
 
-// ── goToVerifyWithRound — open verify tab pre-filled with round proof ──
-function goToVerifyWithRound(){
+// v3 RPC already INSERTs user_poxy — sync local colData + dashboard preview so drop never "vanishes"
+async function syncDropToCollectionUI(opts){
+  if(!currentPoxyId||!currentTier||!currentUser)return;
+  const exists=(colData||[]).some(i=>String(i.id)===String(currentPoxyId));
+  if(!exists){
+    colData=[{
+      id:currentPoxyId,
+      user_id:currentUser.id,
+      poxy_tier:currentTier.id,
+      serial_number:currentSerial,
+      dropped_at:new Date().toISOString(),
+      rng_round_id:currentRoundId
+    },...(colData||[])];
+    renderDashColPreview();
+    if($('collectionPage')?.classList.contains('visible'))renderCollection();
+    refreshColArchMetrics();
+  }
+  loadCollection().catch(()=>{});
+  if(opts?.toast)showToast(opts.toastMsg||'Saved to collection!');
+}
+
+// ── goToVerifyWithRound — verify tab with RNG round ID; drop stays in collection ──
+async function goToVerifyWithRound(){
   if(!currentRoundId)return;
+  const roundId=currentRoundId;
+  await syncDropToCollectionUI({toast:false});
   closeWinRevealModalOnly();
+  try{sessionStorage.setItem('poxy_verify_round',roundId);}catch(e){}
   if(typeof showStitchTab==='function')showStitchTab('verify');
   setTimeout(()=>{
-    const input=document.querySelector('.poxy-verify-input,.pcd-verify-input');
-    if(input){
-      input.value=currentRoundId;
-      input.dispatchEvent(new Event('input',{bubbles:true}));
-    }
-    const btn=document.querySelector('#pcdVerifyBtn');
-    if(btn)btn.click();
-  },350);
+    if(typeof vtSwitchTab==='function')vtSwitchTab('rng',$('vtTabRng'));
+    const inp=$('vtHashInput');
+    if(inp){inp.value=roundId;inp.focus();}
+    if(typeof vtRunVerify==='function')vtRunVerify();
+  },450);
 }
 
 // ── cryptoTransfer — records a signed TRANSFER/TRADE ledger event ──// Called after any ownership change: marketplace buy, gift claim.
@@ -8766,19 +8789,18 @@ async function addCurrentDropToCollection(sourceBtn){
   const orig=sourceBtn?sourceBtn.textContent:'';
   if(sourceBtn){sourceBtn.disabled=true;sourceBtn.textContent='Saving...';}
   try{
-    // If already saved via server RPC (pendingPoxyId set), just update UI
     if(currentPoxyId){
       cryptoMint(currentPoxyId,currentTier.id).catch(()=>{});
+      await syncDropToCollectionUI({toast:true,toastMsg:'Saved to collection!'});
     } else {
-      // Fallback: direct insert (should not happen with v2 RPC flow)
       const{data:ins,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:currentTier.id,serial_number:currentSerial}).select('id').single();
       if(error)throw error;
-      cryptoMint(ins&&ins.id,currentTier.id).catch(()=>{});
+      currentPoxyId=ins&&ins.id;
+      cryptoMint(currentPoxyId,currentTier.id).catch(()=>{});
+      await syncDropToCollectionUI({toast:true,toastMsg:'Saved to collection!'});
     }
-    showToast('Saved to collection!');
     if(currentTier.id==='mythic'){hasMythic=true;toggleClubAccess(true);}
     if(['legendary','mythic'].includes(currentTier.id))refreshPremiumFrame();
-    loadCollection().catch(console.error);
   }catch(e){
     showToast('Error saving.');
     if(sourceBtn){sourceBtn.disabled=false;sourceBtn.textContent=orig;}
