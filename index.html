@@ -8653,6 +8653,14 @@ function poxyEnvelope(action){
   const nonce=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now()+'-'+Math.random().toString(16).slice(2));
   return {nonce,timestamp:new Date().toISOString(),action};
 }
+// Extract human-readable message from edge function invoke (non-2xx still may carry JSON body)
+function edgeFnError(err,data,fallback){
+  if(data?.error)return String(data.error);
+  if(err?.context?.body){
+    try{const b=typeof err.context.body==='string'?JSON.parse(err.context.body):err.context.body;if(b?.error)return String(b.error);}catch(e){}
+  }
+  return err?.message||fallback;
+}
 
 // ── Retry queue helpers ──
 function cryptoQueueLoad(){try{return JSON.parse(localStorage.getItem(CRYPTO_QUEUE_KEY)||'[]');}catch(e){return[];}}
@@ -8877,7 +8885,7 @@ $('btnOpen').addEventListener('click',async function(){
     const{data:commitData,error:commitErr}=await sb.functions.invoke('rng_commit',{
       body:{envelope:poxyEnvelope('rng_commit')}
     });
-    if(commitErr||!commitData?.ok)throw new Error(commitData?.error||'RNG commit failed');
+    if(commitErr||!commitData?.ok)throw new Error(edgeFnError(commitErr,commitData,'RNG commit failed'));
     const round_id=commitData.round_id;
 
     // ── Phase 2: Client generates entropy (player's contribution) ──
@@ -8888,7 +8896,7 @@ $('btnOpen').addEventListener('click',async function(){
     const{data:revealData,error:revealErr}=await sb.functions.invoke('rng_reveal',{
       body:{round_id,client_seed,nonce:0}
     });
-    if(revealErr||!revealData?.ok)throw new Error(revealData?.error||'RNG reveal failed');
+    if(revealErr||!revealData?.ok)throw new Error(edgeFnError(revealErr,revealData,'RNG reveal failed'));
 
     // ── Phase 4: Open case — atomic debit + deterministic tier from result_hash ──
     const{data:rpcResult,error:rpcErr}=await sb.rpc('open_standard_case_v3',{p_round_id:round_id});

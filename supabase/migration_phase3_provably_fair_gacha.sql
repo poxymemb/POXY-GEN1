@@ -1,3 +1,7 @@
+-- Hotfix: rng_commit needs extensions schema for gen_random_bytes (applied prod: fix_rng_commit_search_path)
+-- CREATE OR REPLACE FUNCTION public.rng_commit ... SET search_path TO public, extensions
+--   v_seed := encode(extensions.gen_random_bytes(32), 'hex');
+
 -- =============================================================================
 -- Phase 3: Provably Fair Gacha — Commit-Reveal RNG
 --
