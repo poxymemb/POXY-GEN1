@@ -191,6 +191,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 #main::-webkit-scrollbar-thumb,#sidebar .sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 .log-box::-webkit-scrollbar,.dump-box::-webkit-scrollbar{width:5px}
 .log-box::-webkit-scrollbar-thumb,.dump-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+/* ── AUDIT LOG ── */
+@keyframes alogRowAppear{from{opacity:0;background:rgba(245,158,11,0.08);}to{opacity:1;background:transparent;}}
+.alog-row-new{animation:alogRowAppear 300ms ease-out;}
 </style>
 </head>
 <body>
@@ -264,6 +267,10 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       </button>
       <button class="nav-btn" onclick="switchTab('acc')" data-tab="acc">
         <span class="ic">⚙</span>Account ops
+      </button>
+      <div style="height:1px;background:var(--border);margin:8px 4px"></div>
+      <button class="nav-btn" onclick="switchTab('auditlog')" data-tab="auditlog">
+        <span class="ic">📋</span>Audit log
       </button>
     </nav>
     <div class="sidebar-footer">
@@ -820,6 +827,89 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 
     </div><!-- /tab-acc -->
 
+    <!-- ══════════════════════════════════════════════════════
+         TAB 7: AUDIT LOG
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-auditlog" class="tab-pane">
+
+      <!-- FILTER BAR -->
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">Filters</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
+          <div class="f-row" style="margin:0;min-width:180px">
+            <label class="f-label">Search</label>
+            <input id="alogSearch" class="f-input" type="text" placeholder="username, action, UUID…"/>
+          </div>
+          <div class="f-row" style="margin:0;min-width:160px">
+            <label class="f-label">Action</label>
+            <select id="alogAction" class="f-select">
+              <option value="">All actions</option>
+              <option>MINT_OVERRIDE</option>
+              <option>ACCOUNT_FREEZE</option>
+              <option>ACCOUNT_UNBLOCK</option>
+              <option>ACCOUNT_DELETE</option>
+              <option>BADGE_GRANT</option>
+              <option>BADGE_REVOKE</option>
+              <option>USERNAME_OVERRIDE</option>
+              <option>BALANCE_ADJUST</option>
+              <option>COMPENSATION</option>
+              <option>AUTH_LOGIN</option>
+              <option>AUTH_LOGOUT</option>
+            </select>
+          </div>
+          <div class="f-row" style="margin:0;min-width:140px">
+            <label class="f-label">Date from</label>
+            <input id="alogDateFrom" class="f-input" type="date"/>
+          </div>
+          <div class="f-row" style="margin:0;min-width:140px">
+            <label class="f-label">Date to</label>
+            <input id="alogDateTo" class="f-input" type="date"/>
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0">
+            <button class="btn btn-amber btn-sm" onclick="auditLogApplyFilters()">Apply</button>
+            <button class="btn btn-ghost btn-sm" onclick="auditLogClearFilters()">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE LOG TABLE -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span style="display:flex;align-items:center;gap:10px">
+            Live audit log
+            <span class="stream-status"><span class="stream-dot" id="alogStreamDot"></span><span id="alogStreamTxt" style="font-size:10px;color:var(--muted)">connecting…</span></span>
+          </span>
+          <span style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" id="alogPauseBtn" onclick="auditLogTogglePause()">⏸ Pause</button>
+            <button class="btn btn-ghost btn-sm" onclick="auditLogExportCSV()">↓ Export CSV</button>
+            <button class="btn btn-ghost btn-sm" onclick="auditLogRefresh()">↺ Refresh</button>
+          </span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="min-width:90px">Time</th>
+                <th style="min-width:160px">Action</th>
+                <th style="min-width:130px">User</th>
+                <th style="min-width:110px">Admin</th>
+                <th>IP</th>
+                <th style="min-width:220px">Detail</th>
+              </tr>
+            </thead>
+            <tbody id="alogTableBody">
+              <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span id="alogCount" style="font-size:11px;color:var(--muted)">— rows</span>
+          <button class="btn btn-ghost btn-sm" id="alogLoadMoreBtn" onclick="auditLogLoadMore()" style="display:none">Load 30 more</button>
+        </div>
+      </div>
+
+    </div><!-- /tab-auditlog -->
+
   </main>
   </div><!-- /mcu-shell -->
 </div><!-- /terminal -->
@@ -949,12 +1039,13 @@ function initAll(){
 // ═══════════════════════════════════════════════════════════════
 const MCU_THEME_KEY = 'poxy-mcu-theme';
 const MCU_PAGES = {
-  cms:     { title: 'Content & CMS',      sub: 'News, broadcast, and maintenance' },
-  users:   { title: 'User matrix',        sub: 'Profiles, airdrops, and counters' },
-  sim:     { title: 'HW simulator',       sub: 'Performance sandbox and flags' },
-  telem:   { title: 'Telemetry',          sub: 'Live log stream and audit trail' },
-  support: { title: 'Support ops',        sub: 'Ledger trace and player dossier' },
-  acc:     { title: 'Account ops',        sub: 'Balance, flags, and danger zone' }
+  cms:      { title: 'Content & CMS',      sub: 'News, broadcast, and maintenance' },
+  users:    { title: 'User matrix',        sub: 'Profiles, airdrops, and counters' },
+  sim:      { title: 'HW simulator',       sub: 'Performance sandbox and flags' },
+  telem:    { title: 'Telemetry',          sub: 'Live log stream and counters' },
+  support:  { title: 'Support ops',        sub: 'Ledger trace and player dossier' },
+  acc:      { title: 'Account ops',        sub: 'Balance, flags, and danger zone' },
+  auditlog: { title: 'Audit log',          sub: 'Live admin action stream with filters and CSV export' }
 };
 
 function syncThemeToggleUI(){
@@ -995,8 +1086,9 @@ function switchTab(id){
   document.getElementById('tab-'+id).classList.add('active');
   document.querySelector('.nav-btn[data-tab="'+id+'"]').classList.add('active');
   setMcuHeader(id);
-  if(id==='telem'){ loadAuditLog(); loadTelemetryCounters(); }
+  if(id==='telem'){ loadTelemetryCounters(); }
   if(id==='users'){ loadCounters(); loadUsersTable(); }
+  if(id==='auditlog'){ auditLogRefresh(); auditLogStartRealtime(); }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1923,27 +2015,195 @@ async function loadTelemetryCounters(){
   document.getElementById('telUsers').textContent    = usersRes.count ?? '—';
 }
 
-async function loadAuditLog(){
-  const tbody = document.getElementById('auditTableBody');
-  tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:12px">LOADING...</td></tr>';
-  // Try poxy_audit_log table, fall back if not available
-  const {data,error} = await sb.from('poxy_audit_log')
-    .select('created_at,action_type,user_id,ip_address,payload')
-    .order('created_at',{ascending:false}).limit(30);
+// ═══════════════════════════════════════════════════════════════
+// TAB 7 — AUDIT LOG
+// ═══════════════════════════════════════════════════════════════
+const ALOG_PAGE_SIZE = 30;
+let _alogOffset = 0;
+let _alogPaused = false;
+let _alogChannel = null;
+let _alogRows = []; // accumulated rows for CSV export
+
+const ALOG_ACTION_BADGE = {
+  MINT_OVERRIDE:      'badge-cyan',
+  ACCOUNT_FREEZE:     'badge-danger',
+  ACCOUNT_UNBLOCK:    'badge-green',
+  ACCOUNT_DELETE:     'badge-danger',
+  BADGE_GRANT:        'badge-amber',
+  BADGE_REVOKE:       'badge-amber',
+  USERNAME_OVERRIDE:  'badge-amber',
+  BALANCE_ADJUST:     'badge-cyan',
+  COMPENSATION:       'badge-green',
+  AUTH_LOGIN:         'badge-info',
+  AUTH_LOGOUT:        'badge-info',
+};
+
+function auditLogActionBadge(action){
+  const cls = ALOG_ACTION_BADGE[action] || 'badge-info';
+  return `<span class="badge ${cls}">${esc(action||'—')}</span>`;
+}
+
+function auditLogBuildRow(r){
+  const detail = r.detail ? JSON.stringify(r.detail) : '—';
+  return `<tr class="alog-row-new">
+    <td class="mono" style="white-space:nowrap;color:var(--muted)">${fmtDate(r.created_at)}</td>
+    <td>${auditLogActionBadge(r.action)}</td>
+    <td class="mono" style="font-size:11px;color:var(--muted)">${r.user_id ? esc(r.user_id.slice(0,13))+'…' : '—'}</td>
+    <td class="mono" style="font-size:11px;color:var(--muted)">${r.admin_id ? esc(r.admin_id.slice(0,13))+'…' : '—'}</td>
+    <td style="color:var(--muted)">${esc(r.ip||'—')}</td>
+    <td style="font-size:11px;color:var(--muted);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(detail)}">${esc(detail)}</td>
+  </tr>`;
+}
+
+function auditLogSetStreamStatus(state){
+  const dot = document.getElementById('alogStreamDot');
+  const txt = document.getElementById('alogStreamTxt');
+  if(!dot||!txt) return;
+  dot.className = 'stream-dot' + (state==='live'?' live':state==='error'?' error':'');
+  txt.textContent = state==='live'?'live':state==='error'?'error':'offline';
+}
+
+function auditLogGetFilters(){
+  return {
+    search:   (document.getElementById('alogSearch')?.value||'').trim().toLowerCase(),
+    action:   document.getElementById('alogAction')?.value||'',
+    dateFrom: document.getElementById('alogDateFrom')?.value||'',
+    dateTo:   document.getElementById('alogDateTo')?.value||''
+  };
+}
+
+function auditLogBuildQuery(offset=0){
+  const f = auditLogGetFilters();
+  let q = sb.from('poxy_audit_log')
+    .select('id,created_at,action,user_id,admin_id,ip,detail', {count:'exact'})
+    .order('created_at',{ascending:false})
+    .range(offset, offset + ALOG_PAGE_SIZE - 1);
+  if(f.action) q = q.eq('action', f.action);
+  if(f.dateFrom) q = q.gte('created_at', f.dateFrom+'T00:00:00Z');
+  if(f.dateTo)   q = q.lte('created_at', f.dateTo+'T23:59:59Z');
+  return {q, search: f.search};
+}
+
+async function auditLogRefresh(){
+  _alogOffset = 0;
+  _alogRows = [];
+  const tbody = document.getElementById('alogTableBody');
+  if(!tbody) return;
+  tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Loading…</td></tr>';
+  const {q, search} = auditLogBuildQuery(0);
+  const {data, error, count} = await q;
   if(error){
-    tbody.innerHTML=`<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:12px">AUDIT LOG TABLE NOT ACCESSIBLE (${esc(error.message)})</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="6" style="color:var(--red);text-align:center;padding:16px">
+      ${error.code==='42P01'
+        ? '⚠ Table <code>poxy_audit_log</code> does not exist — run SQL migration first'
+        : esc(error.message)}
+    </td></tr>`;
+    auditLogSetStreamStatus('error');
     return;
   }
-  if(!data||!data.length){ tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center">NO RECORDS</td></tr>'; return; }
-  tbody.innerHTML = data.map(r=>`
-    <tr>
-      <td style="font-size:8px;white-space:nowrap;color:var(--muted)">${fmtDate(r.created_at)}</td>
-      <td><span class="badge badge-cyan">${esc(r.action_type||'—')}</span></td>
-      <td style="font-size:8px;color:var(--muted)">${r.user_id?esc(r.user_id.slice(0,12))+'…':'—'}</td>
-      <td style="font-size:8px;color:var(--muted)">${esc(r.ip_address||'—')}</td>
-      <td style="font-size:8px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(JSON.stringify(r.payload||{}))}</td>
-    </tr>`).join('');
+  let rows = data||[];
+  if(search) rows = rows.filter(r=>
+    (r.action||'').toLowerCase().includes(search) ||
+    (r.user_id||'').toLowerCase().includes(search) ||
+    (r.admin_id||'').toLowerCase().includes(search) ||
+    (r.ip||'').includes(search) ||
+    JSON.stringify(r.detail||{}).toLowerCase().includes(search)
+  );
+  _alogRows = rows;
+  if(!rows.length){
+    tbody.innerHTML='<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">No records</td></tr>';
+  } else {
+    tbody.innerHTML = rows.map(auditLogBuildRow).join('');
+  }
+  const countEl = document.getElementById('alogCount');
+  if(countEl) countEl.textContent = `${count ?? rows.length} rows`;
+  const moreBtn = document.getElementById('alogLoadMoreBtn');
+  if(moreBtn) moreBtn.style.display = (count ?? 0) > ALOG_PAGE_SIZE ? '' : 'none';
 }
+
+async function auditLogLoadMore(){
+  _alogOffset += ALOG_PAGE_SIZE;
+  const tbody = document.getElementById('alogTableBody');
+  const {q, search} = auditLogBuildQuery(_alogOffset);
+  const {data, error} = await q;
+  if(error||!data||!data.length){
+    document.getElementById('alogLoadMoreBtn').style.display='none';
+    return;
+  }
+  let rows = data;
+  if(search) rows = rows.filter(r=>
+    (r.action||'').toLowerCase().includes(search) ||
+    (r.user_id||'').toLowerCase().includes(search) ||
+    (r.admin_id||'').toLowerCase().includes(search) ||
+    (r.ip||'').includes(search) ||
+    JSON.stringify(r.detail||{}).toLowerCase().includes(search)
+  );
+  _alogRows = [..._alogRows, ...rows];
+  if(rows.length) tbody.innerHTML += rows.map(auditLogBuildRow).join('');
+  if(rows.length < ALOG_PAGE_SIZE) document.getElementById('alogLoadMoreBtn').style.display='none';
+}
+
+function auditLogApplyFilters(){ auditLogRefresh(); }
+
+function auditLogClearFilters(){
+  ['alogSearch','alogDateFrom','alogDateTo'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  const sel=document.getElementById('alogAction'); if(sel) sel.value='';
+  auditLogRefresh();
+}
+
+function auditLogTogglePause(){
+  _alogPaused = !_alogPaused;
+  const btn = document.getElementById('alogPauseBtn');
+  if(btn) btn.textContent = _alogPaused ? '▶ Resume' : '⏸ Pause';
+}
+
+function auditLogStartRealtime(){
+  if(_alogChannel) return;
+  _alogChannel = sb.channel('poxy_audit_log_rt')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'poxy_audit_log'},
+      payload=>{
+        if(_alogPaused) return;
+        const r = payload.new;
+        const f = auditLogGetFilters();
+        if(f.action && r.action !== f.action) return;
+        const tbody = document.getElementById('alogTableBody');
+        if(!tbody) return;
+        const existing = tbody.querySelector('td[colspan]');
+        if(existing) tbody.innerHTML='';
+        tbody.insertAdjacentHTML('afterbegin', auditLogBuildRow(r));
+        _alogRows.unshift(r);
+        const countEl = document.getElementById('alogCount');
+        if(countEl) countEl.textContent = `${_alogRows.length} rows`;
+      }
+    )
+    .subscribe(status=>{
+      auditLogSetStreamStatus(status==='SUBSCRIBED'?'live':'error');
+    });
+}
+
+function auditLogExportCSV(){
+  if(!_alogRows.length){ toast('No rows to export','err'); return; }
+  const headers = ['created_at','action','user_id','admin_id','ip','detail'];
+  const lines = [
+    headers.join(','),
+    ..._alogRows.map(r=>headers.map(h=>{
+      const v = h==='detail' ? JSON.stringify(r[h]||{}) : (r[h]||'');
+      return `"${String(v).replace(/"/g,'""')}"`;
+    }).join(','))
+  ];
+  const blob = new Blob([lines.join('\n')],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`poxy_audit_log_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('CSV exported');
+}
+
+// Legacy stub — old Telemetry tab called this, now a no-op
+function loadAuditLog(){ /* moved to audit log tab */ }
 
 // ═══════════════════════════════════════════════════════════════
 // HELPERS
