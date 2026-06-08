@@ -1,46 +1,46 @@
 # POXY — Crypto Sandbox (single-asset dev)
 
-One POXY on prod for perfecting the cryptographic engine end-to-end.
+Empty prod sandbox — open **one standard case** on `syntax` to mint the first ideal v3.1 POXY.
 
-## Current canonical asset (syntax)
+## Current state (2026-06-08)
 
-| Field | Value |
-|---|---|
-| Account | `syntax` (`5dbbb61c-3c98-444b-8be3-ed42ff99091d`) |
-| `user_poxy.id` | `030cf5cc-9709-43d0-9624-8b6713652140` |
-| Serial | `PX-802B69` |
-| Tier | common |
-| RNG round | `2ae965f0-16fc-4237-913c-f9b5a3d81f2b` |
-| `poxy_assets.id` | `933c3d87-b4db-4c03-8a64-ac9df3339836` |
-| `poxy_hash` | `8504876cf26ebd8440da5bf6a80a5365b498305e80328b9d47e92174cd390ec1` |
-| Genesis event | `ca905698-4912-416f-b8c1-51804d1dd43f` (ledger `seq = 1`) |
-| Signatures | Real ED25519 (not STUB) |
+| Table | Rows |
+|-------|------|
+| `user_poxy` | 0 |
+| `poxy_assets` | 0 |
+| `ledger_events` | 0 |
+| `rng_rounds` | 0 |
 
-## Verify checklist (this asset)
+Test account: **syntax** (`5dbbb61c-3c98-444b-8be3-ed42ff99091d`)
 
-1. **RNG** — Verify tab → RNG ROUND → `2ae965f0-16fc-4237-913c-f9b5a3d81f2b` → PROVABLY FAIR
-2. **Asset** — Verify tab → POXY ASSET → `8504876cf26ebd8440da5bf6a80a5365b498305e80328b9d47e92174cd390ec1`
-3. **Event** — Verify tab → LEDGER EVENT → `ca905698-4912-416f-b8c1-51804d1dd43f`
-4. Console after case open: `[poxy-crypto] anchored` + toast `POXY minted · signature on record`
+## After opening one case — verify checklist
 
-## Crypto engine — next steps to “ideal”
+1. Console: `[poxy-crypto] anchored` + toast `POXY minted · signature on record`
+2. **RNG** — Verify → RNG ROUND → round ID from drop → PROVABLY FAIR
+3. **Asset** — Verify → POXY HASH → `hash_matches` + `serial_matches: true`
+4. **Event** — Verify → GENESIS EVENT ID → `hash_matches: true`
+5. All three modes show the **same** `poxy_hash`, `game_serial`, `rng_round_id`, `genesis_event_id` in receipt
 
-| # | Task | Why |
-|---|---|---|
-| 1 | Burn → real `transfer_poxy` DESTROY edge (not SQL stub) | Full signed destroy chain |
-| 2 | Trade accept → edge TRADE (not SQL stub) | Consistent signatures |
-| 3 | Gift send → TRANSFER out + claim mint | Both sides anchored |
-| 4 | Trust HUD uses **server** `commit_hash` / `result_hash` (not client demo round) | One source of truth |
-| 5 | Re-sign any future STUB events | ED25519 only |
-| 6 | `get_pubkey_helper` in repo + snapshot cron smoke | Ops parity |
+## v3.1 mint wiring (index.html)
 
-## Sandbox reset (admin SQL only)
+`cryptoMint` passes `serial_number` + `rarity_seed` (= RNG `result_hash`) so game identity = crypto identity.
 
-Prod tables `poxy_assets` / `rng_rounds` block hard DELETE — disable immutability triggers briefly, then:
+## Sandbox reset (admin SQL)
 
-1. `TRUNCATE ledger_events RESTART IDENTITY`
-2. Delete extra `user_poxy` rows
-3. Delete extra `poxy_assets` / `rng_rounds` (trigger off)
-4. Re-insert single genesis MINT with `prev_event_hash = 000…000`
+Immutability triggers on `poxy_assets` / `rng_rounds` must be disabled briefly:
 
-*Executed 2026-06-08 — kept PX-802B69 only.*
+```sql
+BEGIN;
+DELETE FROM marketplace; DELETE FROM burn_log; DELETE FROM case_open_events;
+DELETE FROM poxy_gifts; DELETE FROM ledger_snapshots;
+UPDATE poxy_assets SET genesis_event_id = NULL;
+TRUNCATE ledger_events RESTART IDENTITY;
+DELETE FROM user_poxy;
+ALTER TABLE poxy_assets DISABLE TRIGGER poxy_assets_immutable;
+DELETE FROM poxy_assets;
+ALTER TABLE poxy_assets ENABLE TRIGGER poxy_assets_immutable;
+ALTER TABLE rng_rounds DISABLE TRIGGER rng_rounds_immutable;
+DELETE FROM rng_rounds;
+ALTER TABLE rng_rounds ENABLE TRIGGER rng_rounds_immutable;
+COMMIT;
+```

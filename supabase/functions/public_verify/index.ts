@@ -111,7 +111,8 @@ Deno.serve(async (req) => {
         },
       ];
 
-      const allOk = Boolean(data.hash_matches && signatureValid && data.genesis_event_id);
+      const serialAligned = data.serial_matches !== false;
+      const allOk = Boolean(data.hash_matches && signatureValid && data.genesis_event_id && serialAligned);
 
       return new Response(
         JSON.stringify({
@@ -122,12 +123,18 @@ Deno.serve(async (req) => {
           poxy_tier: data.poxy_tier,
           collection_id: data.collection_id,
           serial_number: data.serial_number,
+          game_serial: data.game_serial,
+          serial_matches: data.serial_matches,
+          rng_round_id: data.rng_round_id,
+          genesis_event_id: data.genesis_event_id,
           generation_version: data.generation_version,
           asset_state: data.asset_state,
           mint_timestamp: data.mint_ts_canonical,
           summary: allOk
             ? "FULLY VERIFIED — this POXY is authentic, unmodified, and cryptographically signed."
-            : "VERIFICATION FAILED — one or more integrity checks did not pass.",
+            : serialAligned
+              ? "VERIFICATION FAILED — one or more integrity checks did not pass."
+              : "IDENTITY MISMATCH — game serial and crypto serial differ (re-mint required).",
           steps,
         }),
         { status: 200, headers },
@@ -182,6 +189,10 @@ Deno.serve(async (req) => {
           event_hash: data.event_hash,
           seq: data.seq,
           created_at: data.created_at,
+          poxy_hash: data.poxy_hash,
+          game_serial: data.game_serial,
+          rng_round_id: data.rng_round_id,
+          genesis_event_id: data.event_id,
           summary: data.hash_matches
             ? "EVENT VERIFIED — this ledger entry is part of the valid hash chain."
             : "EVENT INVALID — hash chain broken at this event.",
@@ -271,6 +282,12 @@ Deno.serve(async (req) => {
           round_id: id,
           commit_hash: data.commit_hash,
           result_hash: data.result_hash,
+          poxy_hash: data.poxy_hash,
+          game_serial: data.game_serial,
+          poxy_tier: data.poxy_tier,
+          genesis_event_id: data.genesis_event_id,
+          asset_id: data.asset_id,
+          rng_round_id: id,
           summary: (data.commit_matches && data.result_matches)
             ? "PROVABLY FAIR — the RNG result is cryptographically verifiable and manipulation-proof."
             : "INTEGRITY FAILURE — one or more RNG checks failed.",

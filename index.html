@@ -7700,10 +7700,16 @@ window.vtRunVerify=async function(){
     }
 
     const now=new Date().toISOString().replace('T',' ').slice(0,19)+' UTC';
-    if(rcptHash)rcptHash.textContent=data?.poxy_hash||data?.result_hash||val;
-    if(rcptEvent)rcptEvent.textContent=data?.event_id||'—';
-    if(rcptRng)rcptRng.textContent=(data?.round_id||(_vtType==='rng'?val:null))?'#'+(data?.round_id||val):'—';
+    const linkedHash=data?.poxy_hash||null;
+    const linkedEvent=data?.genesis_event_id||data?.event_id||null;
+    const linkedRng=data?.rng_round_id||data?.round_id||(_vtType==='rng'?val:null);
+    const linkedSerial=data?.game_serial||data?.serial_number||null;
+    if(rcptHash)rcptHash.textContent=linkedHash||data?.result_hash||val;
+    if(rcptEvent)rcptEvent.textContent=linkedEvent||'—';
+    if(rcptRng)rcptRng.textContent=linkedRng?'#'+String(linkedRng).replace(/^#/,''):'—';
     if(rcptTs)rcptTs.textContent=data?.timestamp||now;
+    if(linkedSerial)await vtLog(body,'&gt; linked serial: <span class="vt-log-accent">'+escHtml(linkedSerial)+'</span>',60);
+    if(data?.serial_matches===false)await vtLog(body,'&gt; <span class="vt-log-err">[WARN]</span> game serial differs from crypto serial — re-mint with v3.1+ flow',80);
 
     if(dlBtn){
       dlBtn.onclick=function(){
@@ -8709,19 +8715,24 @@ function cryptoQueueSave(q){try{localStorage.setItem(CRYPTO_QUEUE_KEY,JSON.strin
 function cryptoQueuePush(item){const q=cryptoQueueLoad();q.push({...item,t:Date.now()});cryptoQueueSave(q);}
 function cryptoQueueRemove(userPoxyId){const q=cryptoQueueLoad().filter(x=>x.userPoxyId!==userPoxyId);cryptoQueueSave(q);}
 
-async function cryptoMint(userPoxyId,tier,collectionId){
+async function cryptoMint(userPoxyId,tier,collectionId,opts){
   if(!userPoxyId||!tier)return null;
+  const serial=opts?.serial||currentSerial||null;
+  const raritySeed=opts?.raritySeed||opts?.resultHash||null;
   try{
-    const{data,error}=await sb.functions.invoke('mint_poxy',{body:{
+    const body={
       envelope:poxyEnvelope('mint_poxy'),
       tier,
-      collection_id:collectionId||'genesis',
+      collection_id:collectionId||'standard',
       link_user_poxy_id:userPoxyId
-    }});
+    };
+    if(serial)body.serial_number=serial;
+    if(raritySeed)body.rarity_seed=raritySeed;
+    const{data,error}=await sb.functions.invoke('mint_poxy',{body});
     if(error||!data?.ok){
       const msg=error?.message||data?.error||'unknown';
-      console.warn('[poxy-crypto] mint failed (queued for retry):',msg,{userPoxyId,tier});
-      cryptoQueuePush({userPoxyId,tier,collectionId:collectionId||'genesis'});
+      console.warn('[poxy-crypto] mint failed (queued for retry):',msg,{userPoxyId,tier,serial});
+      cryptoQueuePush({userPoxyId,tier,collectionId:collectionId||'standard',serial,raritySeed});
       return null;
     }
     console.log('[poxy-crypto] anchored:',data.poxy_hash?.slice(0,12),'→',userPoxyId);
@@ -8729,7 +8740,7 @@ async function cryptoMint(userPoxyId,tier,collectionId){
     return data;
   }catch(e){
     console.warn('[poxy-crypto] mint exception (queued):',e?.message||e,{userPoxyId,tier});
-    cryptoQueuePush({userPoxyId,tier,collectionId:collectionId||'genesis'});
+    cryptoQueuePush({userPoxyId,tier,collectionId:collectionId||'standard',serial,raritySeed});
     return null;
   }
 }
@@ -8746,7 +8757,7 @@ async function cryptoDrainQueue(){
       const{data:check}=await sb.from('user_poxy').select('id').eq('id',item.userPoxyId).eq('user_id',currentUser.id).maybeSingle();
       if(!check){cryptoQueueRemove(item.userPoxyId);continue;}
     }catch(e){continue;}
-    await cryptoMint(item.userPoxyId,item.tier,item.collectionId);
+    await cryptoMint(item.userPoxyId,item.tier,item.collectionId,{serial:item.serial,raritySeed:item.raritySeed});
     await new Promise(r=>setTimeout(r,300)); // rate-limit
   }
 }
@@ -8969,8 +8980,11 @@ $('btnOpen').addEventListener('click',async function(){
     // Drive animation with server-determined tier (beginRound hooks inside runRouletteCarousel)
     pendingSpinTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
     runRouletteCarousel(pendingSpinTier);
-    // Auto-anchor to crypto ledger after HUD round exists (toast: "POXY minted · signature on record")
-    cryptoMint(rpcResult.poxy_id,rpcResult.tier,'standard').catch(()=>{});
+    // Auto-anchor — pass game serial + RNG result_hash so crypto identity matches gameplay
+    cryptoMint(rpcResult.poxy_id,rpcResult.tier,'standard',{
+      serial:rpcResult.serial,
+      resultHash:revealData?.result||rpcResult.result_hash
+    }).catch(()=>{});
   }catch(e){
     showToast(e.message||'Case open failed. Try again.');
     busy=false;$('btnOpen').disabled=false;
