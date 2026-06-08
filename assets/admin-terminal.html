@@ -2378,21 +2378,47 @@ function loadAuditLog(){ /* moved to audit log tab */ }
 // TAB 8 — PLAYER DOSSIER
 // ═══════════════════════════════════════════════════════════════
 const DOSSIER_LEDGER_PAGE = 50;
-let _dossierProfile    = null;
-let _dossierInventory  = [];
-let _dossierLedger     = [];
+let _dossierProfile      = null;
+let _dossierInventory    = [];
+let _dossierLedger       = [];
 let _dossierLedgerOffset = 0;
 let _dossierLedgerFilter = 'ALL';
 let _dossierTimelineDays = 1;
+let _dossierMintedMap    = {};  // user_poxy.id → poxy_assets row
+let _dossierAssetById    = {};  // poxy_assets.id → row (for ledger + serial lookup)
 
 const TIER_ORDER = ['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY','MYTHIC','SECRET','DIAMOND','STELLAR'];
 const TIER_VALUE = {COMMON:10,UNCOMMON:30,RARE:80,EPIC:200,LEGENDARY:500,MYTHIC:1500,SECRET:5000,DIAMOND:500,STELLAR:500};
 
 function dossierClear(){
-  _dossierProfile = null; _dossierInventory = []; _dossierLedger = []; _dossierLedgerOffset = 0;
+  _dossierProfile = null; _dossierInventory = []; _dossierLedger = [];
+  _dossierLedgerOffset = 0; _dossierMintedMap = {}; _dossierAssetById = {};
   document.getElementById('dossierQuery').value = '';
   document.getElementById('dossierEmpty').style.display = '';
   document.getElementById('dossierContent').style.display = 'none';
+}
+
+function dossierBuildLedgerOr(uid){
+  const parts = [`actor_id.eq.${uid}`];
+  const assetIds = Object.keys(_dossierAssetById);
+  if(assetIds.length) parts.push(`asset_id.in.(${assetIds.join(',')})`);
+  return parts.join(',');
+}
+
+async function dossierLoadCryptoContext(){
+  _dossierMintedMap = {};
+  _dossierAssetById = {};
+  const upIds = (_dossierInventory||[]).map(i=>i.id).filter(Boolean);
+  if(!upIds.length) return;
+  const {data: assets, error} = await sb
+    .from('poxy_assets')
+    .select('id,user_poxy_id,serial_number,current_owner_id')
+    .in('user_poxy_id', upIds);
+  if(error){ console.warn('dossier crypto context:', error.message); return; }
+  (assets||[]).forEach(a=>{
+    _dossierMintedMap[a.user_poxy_id] = a;
+    _dossierAssetById[a.id] = a;
+  });
 }
 
 async function loadDossier(){
@@ -2423,13 +2449,15 @@ async function loadDossier(){
   // ── Render profile header ──
   dossierRenderProfile(prof);
 
-  // ── Load inventory ──
-  const {data: inv} = await sb
+  // ── Load inventory (user_poxy.user_id → profiles.id) ──
+  const {data: inv, error: invErr} = await sb
     .from('user_poxy')
-    .select('id,user_id,tier,collection_id,minted,created_at,poxy_assets(serial,identity_hash,signature)')
+    .select('id,user_id,poxy_tier,serial_number,dropped_at,pinned_at,case_origin')
     .eq('user_id', prof.id)
-    .order('created_at',{ascending:false});
+    .order('dropped_at',{ascending:false});
+  if(invErr){ toast('Inventory: '+invErr.message,'err'); }
   _dossierInventory = inv || [];
+  await dossierLoadCryptoContext();
   dossierRenderInventory('ALL');
 
   // ── Load ledger (first page) ──
@@ -2473,11 +2501,11 @@ function dossierRenderProfile(p){
   // Stats row
   const metaRow = document.getElementById('dossierMetaRow');
   const stats = [
-    {val: p.pc_balance ?? '—', lbl: 'PC Balance'},
-    {val: p.px_balance ?? p.xp ?? '—', lbl: 'PX / XP'},
-    {val: p.club_tier  || (p.is_club_member ? 'Club' : '—'), lbl: 'Club'},
-    {val: p.rank       || '—', lbl: 'Rank'},
-    {val: p.shield_level ?? '—', lbl: 'Shield'},
+    {val: p.balance != null ? Number(p.balance).toLocaleString() : '—', lbl: 'PC Balance'},
+    {val: p.dust != null ? p.dust : '—', lbl: 'Dust'},
+    {val: p.is_club_member ? 'Club' : '—', lbl: 'Club'},
+    {val: p.account_hash ? '#PX-'+p.account_hash : '—', lbl: 'Account'},
+    {val: (p.badges||[]).length || '—', lbl: 'Badges'},
   ];
   metaRow.innerHTML = stats.map(s=>`
     <div class="dossier-stat">
@@ -2487,9 +2515,9 @@ function dossierRenderProfile(p){
 
   // Badges
   const badgesEl = document.getElementById('dossierBadges');
-  const rawBadges = p.badges || [];
+  const rawBadges = Array.isArray(p.badges) ? p.badges : [];
   if(rawBadges.length){
-    badgesEl.innerHTML = rawBadges.map(b=>`<span class="dossier-user-badge">${esc(b.badge_type||b.name||b)}</span>`).join('');
+    badgesEl.innerHTML = rawBadges.map(b=>`<span class="dossier-user-badge">${esc(String(b))}</span>`).join('');
   } else {
     badgesEl.innerHTML = '<span style="font-size:11px;color:var(--muted)">No badges</span>';
   }
@@ -2509,13 +2537,13 @@ function dossierRenderInventory(tierFilter){
 
   // Legendary+ filter = LEGENDARY, MYTHIC, SECRET, DIAMOND, STELLAR
   if(tierFilter === 'LEGENDARY'){
-    items = items.filter(i=>['LEGENDARY','MYTHIC','SECRET','DIAMOND','STELLAR'].includes((i.tier||'').toUpperCase()));
+    items = items.filter(i=>['legendary','mythic','secret','diamond','stellar'].includes((i.poxy_tier||'').toLowerCase()));
   } else if(tierFilter !== 'ALL'){
-    items = items.filter(i=>(i.tier||'').toUpperCase() === tierFilter);
+    items = items.filter(i=>(i.poxy_tier||'').toLowerCase() === tierFilter.toLowerCase());
   }
 
   const total = _dossierInventory.length;
-  const totalValue = _dossierInventory.reduce((acc,i)=>acc+(TIER_VALUE[(i.tier||'').toUpperCase()]||0),0);
+  const totalValue = _dossierInventory.reduce((acc,i)=>acc+(TIER_VALUE[(i.poxy_tier||'').toUpperCase()]||0),0);
   summary.innerHTML = `
     <span><strong>${total}</strong> total assets</span>
     <span>≈ <strong>${totalValue.toLocaleString()}</strong> PC est. value</span>
@@ -2526,16 +2554,20 @@ function dossierRenderInventory(tierFilter){
     return;
   }
   grid.innerHTML = items.map(i=>{
-    const serial = i.poxy_assets?.serial || '—';
-    const tier   = (i.tier||'').toLowerCase();
-    const col    = i.collection_id ? esc(String(i.collection_id).slice(0,8)) : '—';
-    const minted = i.minted ? '<span style="color:var(--green)">✓ minted</span>' : '<span style="color:var(--muted)">—</span>';
-    const date   = fmtDate(i.created_at);
+    const crypto = _dossierMintedMap[i.id];
+    const serial = i.serial_number || crypto?.serial_number || '—';
+    const tier   = (i.poxy_tier||'').toLowerCase();
+    const origin = i.case_origin ? esc(String(i.case_origin)) : '—';
+    const minted = crypto
+      ? '<span style="color:var(--green)">✓ on ledger</span>'
+      : '<span style="color:var(--muted)">gameplay only</span>';
+    const date   = fmtDate(i.dropped_at);
+    const pin    = i.pinned_at ? ' 📌' : '';
     return `<div class="inv-card">
-      <div class="inv-serial">${esc(serial)}</div>
-      <div class="inv-tier ${tier}">${esc((i.tier||'—').toUpperCase())}</div>
+      <div class="inv-serial">${esc(serial)}${pin}</div>
+      <div class="inv-tier ${tier}">${esc((i.poxy_tier||'—').toUpperCase())}</div>
       <div class="inv-meta">${minted}</div>
-      <div class="inv-meta" style="color:var(--muted)">Col: ${col}</div>
+      <div class="inv-meta" style="color:var(--muted)">Origin: ${origin}</div>
       <div class="inv-meta" style="color:var(--muted)">${date}</div>
     </div>`;
   }).join('');
@@ -2558,9 +2590,10 @@ async function dossierLoadLedgerPage(reset=false){
   if(!_dossierProfile) return;
   if(reset){ _dossierLedger = []; _dossierLedgerOffset = 0; }
 
+  const uid = _dossierProfile.id;
   let q = sb.from('ledger_events')
-    .select('seq,event_type,asset_id,owner_id,counterparty_id,created_at,tx_hash,user_poxy_id')
-    .or(`owner_id.eq.${_dossierProfile.id},counterparty_id.eq.${_dossierProfile.id}`)
+    .select('seq,event_type,asset_id,actor_id,payload,event_timestamp,event_hash,created_at')
+    .or(dossierBuildLedgerOr(uid))
     .order('seq',{ascending:false})
     .range(_dossierLedgerOffset, _dossierLedgerOffset + DOSSIER_LEDGER_PAGE - 1);
 
@@ -2595,18 +2628,27 @@ function dossierRenderLedger(){
   tbody.innerHTML = rows.map(r=>{
     const evType = (r.event_type||'').toUpperCase();
     const badgeCls = LEDGER_EVENT_BADGE[evType] || 'badge-cyan';
-    // Counterparty: the other side
-    const cpty = r.owner_id === uid ? r.counterparty_id : r.owner_id;
+    const pl = r.payload || {};
+    const fromId = pl.from || pl.from_owner || null;
+    const toId   = pl.to   || pl.to_owner   || null;
+    let cpty = null;
+    if(fromId === uid) cpty = toId;
+    else if(toId === uid) cpty = fromId;
+    else if(r.actor_id && r.actor_id !== uid) cpty = r.actor_id;
     const cptyStr = cpty ? esc(cpty.slice(0,12))+'…' : '—';
-    const hashStr = r.tx_hash ? esc(r.tx_hash.slice(0,12))+'…' : '—';
-    const assetStr = r.user_poxy_id ? esc(String(r.user_poxy_id).slice(0,10))+'…' : (r.asset_id ? esc(String(r.asset_id).slice(0,10))+'…' : '—');
+    const hashStr = r.event_hash ? esc(r.event_hash.slice(0,12))+'…' : '—';
+    const assetRow = r.asset_id ? _dossierAssetById[r.asset_id] : null;
+    const assetStr = assetRow?.serial_number
+      ? esc(assetRow.serial_number)
+      : (r.asset_id ? esc(String(r.asset_id).slice(0,10))+'…' : '—');
+    const ts = r.event_timestamp || r.created_at;
     return `<tr>
       <td class="mono" style="color:var(--muted)">${r.seq ?? '—'}</td>
       <td><span class="badge ${badgeCls}">${evType}</span></td>
       <td class="mono" style="font-size:11px;color:var(--muted)">${assetStr}</td>
       <td class="mono" style="font-size:11px;color:var(--muted)">${cptyStr}</td>
-      <td style="white-space:nowrap;color:var(--muted);font-size:11px">${fmtDate(r.created_at)}</td>
-      <td class="mono" style="font-size:11px;color:var(--muted)">${hashStr}</td>
+      <td style="white-space:nowrap;color:var(--muted);font-size:11px">${fmtDate(ts)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)" title="${esc(r.event_hash||'')}">${hashStr}</td>
     </tr>`;
   }).join('');
 }
@@ -2628,22 +2670,25 @@ async function dossierComputeTimeline(days){
   const since = new _nativeDate(Date.now() - days * 86400000).toISOString();
   const uid   = _dossierProfile.id;
 
-  // Fetch ledger events in window
+  // Fetch ledger events in window (actor_id or owned asset_ids)
   const {data: events} = await sb
     .from('ledger_events')
-    .select('event_type,created_at,owner_id,counterparty_id')
-    .or(`owner_id.eq.${uid},counterparty_id.eq.${uid}`)
-    .gte('created_at', since);
+    .select('event_type,event_timestamp,created_at,actor_id,asset_id,payload')
+    .or(dossierBuildLedgerOr(uid))
+    .gte('event_timestamp', since);
 
   const evts = events || [];
 
-  // Compute counts
-  const casesOpened       = evts.filter(e=>e.event_type==='MINT' && e.owner_id===uid).length;
-  const burns             = evts.filter(e=>['BURN','DESTROY'].includes(e.event_type) && e.owner_id===uid).length;
-  const tradesInitiated   = evts.filter(e=>e.event_type==='TRADE' && e.owner_id===uid).length;
-  const tradesReceived    = evts.filter(e=>e.event_type==='TRADE' && e.counterparty_id===uid).length;
-  const transfersSent     = evts.filter(e=>e.event_type==='TRANSFER' && e.owner_id===uid).length;
-  const transfersReceived = evts.filter(e=>e.event_type==='TRANSFER' && e.counterparty_id===uid).length;
+  const isActor = e => e.actor_id === uid;
+  const isFrom  = e => (e.payload?.from || e.payload?.from_owner) === uid;
+  const isTo    = e => (e.payload?.to   || e.payload?.to_owner)   === uid;
+
+  const casesOpened       = evts.filter(e=>e.event_type==='MINT' && isActor(e)).length;
+  const burns             = evts.filter(e=>e.event_type==='DESTROY' && isActor(e)).length;
+  const tradesInitiated   = evts.filter(e=>e.event_type==='TRADE' && isFrom(e)).length;
+  const tradesReceived    = evts.filter(e=>e.event_type==='TRADE' && isTo(e)).length;
+  const transfersSent     = evts.filter(e=>e.event_type==='TRANSFER' && isFrom(e)).length;
+  const transfersReceived = evts.filter(e=>e.event_type==='TRANSFER' && isTo(e)).length;
 
   const statItems = [
     {val:casesOpened,       lbl:'Cases opened'},
@@ -2669,20 +2714,24 @@ async function dossierComputeTimeline(days){
 
 function buildDailyBuckets(evts, uid, days){
   // Returns array of per-day counts for each stat, indexed same as statItems
+  const isActor = e => e.actor_id === uid;
+  const isFrom  = e => (e.payload?.from || e.payload?.from_owner) === uid;
+  const isTo    = e => (e.payload?.to   || e.payload?.to_owner)   === uid;
   const filters = [
-    e=>e.event_type==='MINT' && e.owner_id===uid,
-    e=>['BURN','DESTROY'].includes(e.event_type) && e.owner_id===uid,
-    e=>e.event_type==='TRADE' && e.owner_id===uid,
-    e=>e.event_type==='TRADE' && e.counterparty_id===uid,
-    e=>e.event_type==='TRANSFER' && e.owner_id===uid,
-    e=>e.event_type==='TRANSFER' && e.counterparty_id===uid,
+    e=>e.event_type==='MINT' && isActor(e),
+    e=>e.event_type==='DESTROY' && isActor(e),
+    e=>e.event_type==='TRADE' && isFrom(e),
+    e=>e.event_type==='TRADE' && isTo(e),
+    e=>e.event_type==='TRANSFER' && isFrom(e),
+    e=>e.event_type==='TRANSFER' && isTo(e),
   ];
   const now = Date.now();
   return filters.map(fn=>{
     const relevant = evts.filter(fn);
     const arr = Array(days).fill(0);
     relevant.forEach(e=>{
-      const daysAgo = Math.floor((now - new _nativeDate(e.created_at).getTime()) / 86400000);
+      const ts = e.event_timestamp || e.created_at;
+      const daysAgo = Math.floor((now - new _nativeDate(ts).getTime()) / 86400000);
       if(daysAgo < days) arr[days - 1 - daysAgo]++;
     });
     return arr;
