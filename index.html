@@ -7598,7 +7598,7 @@ function vtVerifyRoundId(roundId,autoRun){
   _vtType='rng';
   if(typeof vtSwitchTab==='function')vtSwitchTab('rng',$('vtTabRng'));
   const inp=$('vtHashInput');
-  if(inp){inp.value=roundId;inp.focus();}
+  if(inp){inp.value=String(roundId).replace(/^#/,'');inp.focus();}
   if(autoRun!==false&&typeof vtRunVerify==='function')vtRunVerify();
 }
 /* ── Verify Terminal type state ───────────────────────────────────── */
@@ -7607,7 +7607,7 @@ window.vtSwitchTab=function(type,btn){
   _vtType=type;
   document.querySelectorAll('.vt-tab-btn').forEach(b=>b.classList.remove('vt-tab-btn--active'));
   if(btn)btn.classList.add('vt-tab-btn--active');
-  const placeholders={asset:'Enter poxy_hash (64 lowercase hex chars)…',ledger:'Enter ledger event ID (evt_…)…',rng:'Enter RNG round ID (#xxxxxxx)…'};
+  const placeholders={asset:'Enter poxy_hash (64 lowercase hex chars)…',ledger:'Enter ledger event ID (uuid)…',rng:'Enter RNG round ID (uuid, # optional)…'};
   const inp=$('vtHashInput');if(inp)inp.placeholder=placeholders[type]||'';
   // Sync with the underlying pcd type selector if overlay is present
   const pcdTypeMap={asset:'asset',ledger:'event',rng:'rng'};
@@ -7694,7 +7694,8 @@ window.vtRunVerify=async function(){
   const body=$('vtConsoleBody');
   const inp=$('vtHashInput');
   if(!body||!inp)return;
-  const val=inp.value.trim();
+  let val=inp.value.trim();
+  if(_vtType==='rng'||_vtType==='ledger')val=val.replace(/^#/,'').trim();
   if(!val){
     body.innerHTML='<span class="vt-log-err">&gt; [ERR] No input provided. Enter a hash, event ID, or round ID.</span>';
     return;

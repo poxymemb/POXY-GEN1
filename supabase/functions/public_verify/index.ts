@@ -36,7 +36,8 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { type, hash, id } = body ?? {};
+    const { type, hash } = body ?? {};
+    const id = body?.id != null ? String(body.id).replace(/^#/, "").trim() : undefined;
 
     if (!type) {
       return new Response(
