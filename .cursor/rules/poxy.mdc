@@ -1,0 +1,185 @@
+---
+description: POXY WORLD — master rules for all code, design, and architecture decisions
+globs: ["**/*.html", "**/*.css", "**/*.js", "**/*.sql", "**/*.json"]
+alwaysApply: true
+---
+
+# POXY WORLD — Cursor AI Rules
+
+## Project Identity
+
+POXY WORLD is a mobile-first, single-file web app (`poxy_v3.html` + supporting scripts).
+It is a gacha/lootbox collectibles ecosystem with a full cryptographic integrity engine,
+social layer, marketplace, DAO governance, and POXY Club.
+
+Stack: Vanilla HTML/CSS/JS · Supabase (auth, RPC, storage, Edge Functions) · Vercel · GitHub
+
+---
+
+## 1. Code Architecture Rules
+
+### Single-File Integrity
+- The primary app lives in `poxy_v3.html`. Every edit must preserve ALL existing features.
+- NEVER remove or break existing functionality when adding new features.
+- Before adding code, read the full relevant section to understand what already exists.
+- Test mentally on mobile (375px viewport) before finalizing any UI change.
+
+### JavaScript
+- Use `async/await` for all Supabase calls — never raw `.then()` chains.
+- All Supabase RPC calls go through named functions, never inline.
+- Always handle errors explicitly — never silent `catch(e) {}`.
+- Use `const` by default, `let` only when reassignment is required.
+- No external JS libraries unless already present in the file.
+
+### Supabase
+- Auth: always check session before any protected operation.
+- RLS is enabled — never assume admin access from client.
+- Use RPC functions for complex logic, not raw SQL from client.
+- Storage bucket paths: `avatars/{user_id}`, `assets/{asset_id}`.
+- Edge Functions handle: mint, transfer, verify, RNG commit-reveal.
+- Supabase URL: `https://rbrtjkfawdnomvvyxwvp.supabase.co`
+
+### Cryptographic Engine (DO NOT BREAK)
+- SHA-256 identity hashes are immutable after mint — never regenerate.
+- ED25519 signatures are server-side only (Edge Functions) — never client-side.
+- Ledger events are append-only — never suggest UPDATE/DELETE on `ledger_events`.
+- Commit-reveal RNG: Phase 1 (server commit) always precedes Phase 2 (client seed).
+- Merkle roots are computed server-side every 24h — do not touch this logic.
+
+### Git / Deploy
+- Commit messages: `feat:`, `fix:`, `refactor:`, `style:`, `chore:` prefixes always.
+- Never commit secrets, API keys, or Supabase service role keys.
+- Vercel auto-deploys from main branch — test locally before pushing.
+
+---
+
+## 2. Design & UI Rules
+
+### POXY Aesthetic — Dark Cyber-Luxury
+POXY is dark, immersive, and cryptographic. Think: underground digital vault meets
+neo-brutalist collector's world. NOT generic SaaS. NOT purple gradients on white.
+
+**Color Palette (CSS variables — always use these):**
+```css
+--poxy-bg: #0a0a0f;          /* near-black base */
+--poxy-surface: #111118;     /* card surfaces */
+--poxy-border: #1e1e2e;      /* subtle borders */
+--poxy-accent: #00f5a0;      /* neon mint — primary accent */
+--poxy-accent-2: #7c3aed;    /* deep violet — secondary */
+--poxy-accent-3: #f59e0b;    /* amber — legendary/rare glow */
+--poxy-text: #e2e8f0;        /* primary text */
+--poxy-muted: #64748b;       /* muted/secondary text */
+--poxy-danger: #ef4444;      /* burn/danger actions */
+```
+
+**Rarity Glow Colors:**
+```css
+--rarity-common: #94a3b8;
+--rarity-uncommon: #22c55e;
+--rarity-rare: #3b82f6;
+--rarity-epic: #a855f7;
+--rarity-legendary: #f59e0b;
+--rarity-mythic: #ec4899;
+--rarity-secret: #ffffff;
+```
+
+### Typography
+- Display/headings: `'Syne'` or `'Bricolage Grotesque'` (Google Fonts) — bold, geometric
+- Body/UI: `'DM Mono'` or `'IBM Plex Mono'` for crypto/data elements
+- Secondary body: `'Plus Jakarta Sans'` for readable prose
+- NEVER use: Inter, Roboto, Arial, system-ui as primary fonts
+- Font sizes: mobile-first, minimum 14px for body, 11px for labels
+
+### Animations
+- Entry animations: staggered reveals with `animation-delay` (50ms increments)
+- Rarity reveals: scale + glow pulse — legendary/mythic get dramatic entrance
+- Hover states: subtle lift (`translateY(-2px)`) + border glow
+- Page transitions: fade + slight upward drift (200ms ease-out)
+- Lootbox opening: multi-stage — suspense build → flash → reveal
+- Performance mode toggle exists — respect it (reduce/remove animations when active)
+- NO animations that block interaction or cause layout shift
+
+### Layout
+- Mobile-first always — design for 375px, enhance for larger screens
+- Bottom navigation bar is sacred — never move or restructure it
+- Cards: rounded-xl (16px), dark surface, subtle border, glow on hover
+- Modals: full-screen on mobile, centered max-width on desktop
+- Spacing: 8px base unit — use multiples (8, 16, 24, 32, 48)
+- Safe areas: account for iOS notch/home bar (`env(safe-area-inset-*)`)
+
+### Component Patterns
+- Buttons: primary = accent fill + dark text; secondary = border only; danger = red
+- Inputs: dark background, accent border on focus, monospace font for hashes
+- Badges/chips: small, uppercase, letter-spacing 0.05em
+- Loading states: pulsing skeleton or spinner — never blank white flash
+- Empty states: always have icon + message + action CTA
+
+---
+
+## 3. Game Economy Rules
+
+When touching economy logic, preserve these invariants:
+
+- PC (Poxy Coin) is the primary currency — 1 PC = 1 unit, integer only
+- PX (Poxy Points) are XP-like rewards — separate from PC
+- Dust is burn reward currency — cannot be converted back to PC
+- Anti-dump tax: 5% on OTC transfers — never remove this
+- Founder discount is permanent and applies from London launch date
+- Generation supply is fixed: Gen 0 = 1,000 · Gen 1 = 5,000
+- Rarity weights: Common > Uncommon > Rare > Epic > Legendary > Mythic > Secret
+- Craft ratio: 5x Common → 1x Uncommon (never change without explicit instruction)
+
+---
+
+## 4. Security Rules
+
+- Never expose Supabase service_role key in client code
+- All ownership checks happen server-side (RPC/Edge Functions) — never trust client
+- Nonce + timestamp on every signed request — reject replays
+- Session validation before every protected route render
+- OTC air-gap: 24h freeze after new login — do not bypass in code
+- Recovery keys shown once — never store in plaintext
+
+---
+
+## 5. Workflow Rules
+
+### When asked to add a feature:
+1. Read the existing relevant code section first
+2. Identify what already exists to avoid duplication
+3. Write the minimum code needed — no over-engineering
+4. Preserve all existing CSS variables and class names
+5. Test the mental model on mobile before suggesting
+
+### When asked to fix a bug:
+1. Identify root cause before touching code
+2. Fix only what's broken — don't refactor surrounding code
+3. State what you changed and why
+
+### When asked to improve design:
+1. Stay within the POXY dark cyber-luxury aesthetic
+2. Use existing CSS variables — don't introduce new colors without reason
+3. Animations must be CSS-only (no new JS libraries)
+4. Mobile experience is primary — desktop is enhancement
+
+### Commit message format:
+```
+feat(scope): short description
+fix(scope): short description
+style(ui): short description
+refactor(crypto): short description
+```
+
+---
+
+## 6. What POXY Is NOT
+
+- NOT a standard SaaS dashboard — avoid that aesthetic entirely
+- NOT a blockchain app (yet) — it's crypto-verified but centralized on Supabase
+- NOT a React app — pure vanilla JS, no JSX, no virtual DOM
+- NOT desktop-first — always mobile-first
+- NOT a simple lootbox site — it's a full ecosystem with DAO, Club, Passport, OTC
+
+---
+
+*POXY WORLD © 2026 — The Awakening*

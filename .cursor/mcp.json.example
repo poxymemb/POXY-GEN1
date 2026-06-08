@@ -1,10 +1,30 @@
 {
   "mcpServers": {
     "stitch": {
-      "url": "https://stitch.googleapis.com/mcp",
-      "headers": {
-        "X-Goog-Api-Key": "PASTE_MCP_KEY_FROM_STITCH_SETTINGS"
+      "command": "node",
+      "args": ["C:/Users/Satoru Gojo/Desktop/POXY GENS/tools/stitch-mcp-proxy.mjs"],
+      "env": {
+        "STITCH_API_KEY": "PASTE_MCP_KEY_FROM_STITCH_SETTINGS"
       }
+    },
+    "magic": {
+      "command": "npx",
+      "args": ["-y", "@21st-dev/magic@latest"],
+      "env": {
+        "TWENTY_FIRST_API_KEY": "PASTE_KEY_FROM_21ST_DEV"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     }
   }
 }
