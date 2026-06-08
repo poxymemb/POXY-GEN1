@@ -1696,16 +1696,55 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
 
 // ═══════════════════════════════════════════════════════════════
 // AUTH — Supabase session-based (no hardcoded secret)
-// Access gate: user must have is_verified_employee=true or be founder
+// Access gate: founder allowlist · profiles.is_verified_employee · admin_emails (via RPC)
 // ═══════════════════════════════════════════════════════════════
 async function checkStaffAccess(user){
   if(!user) return false;
+  const authEmail = (user.email || '').toLowerCase();
+  console.log('[MCU auth] checkStaffAccess — user.id:', user.id, 'auth.email:', authEmail);
+
   const FOUNDER = ['nikitash0504@gmail.com','worldpoxy@gmail.com'];
-  if(FOUNDER.includes((user.email||'').toLowerCase())) return true;
+  if(FOUNDER.includes(authEmail)){
+    console.log('[MCU auth] allowed: founder allowlist');
+    return true;
+  }
+
   try{
-    const {data} = await sb.from('profiles').select('is_verified_employee').eq('id',user.id).single();
-    return !!(data?.is_verified_employee);
-  }catch(e){ return false; }
+    const {data: prof, error: profErr} = await sb
+      .from('profiles')
+      .select('is_verified_employee,email')
+      .eq('id', user.id)
+      .single();
+    console.log('[MCU auth] profiles:', {
+      is_verified_employee: prof?.is_verified_employee,
+      profiles_email: prof?.email ?? null,
+      error: profErr?.message ?? null,
+    });
+
+    const {data: adminRole, error: roleErr} = await sb.rpc('get_admin_role', { p_user_id: user.id });
+    console.log('[MCU auth] get_admin_role RPC:', { role: adminRole ?? null, error: roleErr?.message ?? null });
+
+    const {data: adminRow, error: adminErr} = await sb
+      .from('admin_emails')
+      .select('email, role')
+      .ilike('email', authEmail)
+      .maybeSingle();
+    console.log('[MCU auth] admin_emails direct query:', {
+      row: adminRow ?? null,
+      error: adminErr?.message ?? null,
+      note: adminErr ? 'expected if RLS blocks client read — use get_admin_role instead' : null,
+    });
+
+    const allowed = !!(prof?.is_verified_employee) || !!adminRole;
+    console.log('[MCU auth] result:', allowed ? 'ALLOWED' : 'DENIED', {
+      via_verified_employee: !!(prof?.is_verified_employee),
+      via_admin_emails: !!adminRole,
+    });
+    return allowed;
+  }catch(e){
+    console.warn('[MCU auth] checkStaffAccess exception:', e);
+    return false;
+  }
 }
 
 async function authSubmit(){
@@ -1717,8 +1756,10 @@ async function authSubmit(){
   if(!email||!pass){ errEl.textContent='[ ENTER EMAIL AND PASSWORD ]'; return; }
   if(btn){ btn.disabled=true; btn.textContent='VERIFYING…'; }
   try{
+    console.log('[MCU auth] login attempt:', email);
     const {data,error} = await sb.auth.signInWithPassword({email, password:pass});
     if(error) throw error;
+    console.log('[MCU auth] signIn ok — session user:', data?.user?.id, data?.user?.email);
     const allowed = await checkStaffAccess(data?.user);
     if(!allowed){
       await sb.auth.signOut();
