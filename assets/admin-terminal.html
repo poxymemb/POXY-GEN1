@@ -194,6 +194,23 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 /* ── AUDIT LOG ── */
 @keyframes alogRowAppear{from{opacity:0;background:rgba(245,158,11,0.08);}to{opacity:1;background:transparent;}}
 .alog-row-new{animation:alogRowAppear 300ms ease-out;}
+/* ── DISPUTES ── */
+.chain-box{background:var(--adm-log-bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:var(--font-mono);font-size:11px;line-height:1.8}
+.chain-section{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border2)}
+.chain-section:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.chain-type{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:10px}
+.chain-type.case-open{background:rgba(34,197,94,0.15);color:var(--green)}
+.chain-type.trade{background:rgba(99,102,241,0.15);color:var(--cyan)}
+.chain-type.transfer{background:rgba(245,158,11,0.15);color:var(--amber)}
+.chain-type.error{background:rgba(239,68,68,0.15);color:var(--red)}
+.chain-step{display:flex;gap:10px;padding:3px 0;align-items:baseline}
+.chain-step-key{color:var(--muted);min-width:130px;flex-shrink:0;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.chain-step-val{color:var(--adm-text);word-break:break-all}
+.chain-step-val.ok{color:var(--green)}
+.chain-step-val.warn{color:var(--amber)}
+.chain-step-val.err{color:var(--red)}
+.chain-step-arr{color:var(--muted);padding:0 4px;flex-shrink:0}
+.disp-empty{text-align:center;padding:32px;color:var(--muted);font-size:13px}
 /* ── PLAYER DOSSIER ── */
 .dossier-empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:13px}
 .dossier-empty .dossier-ic{font-size:32px;display:block;margin-bottom:12px;opacity:.4}
@@ -320,6 +337,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         <span class="ic">⚙</span>Account ops
       </button>
       <div style="height:1px;background:var(--border);margin:8px 4px"></div>
+      <button class="nav-btn" onclick="switchTab('disputes')" data-tab="disputes">
+        <span class="ic">⚖</span>Disputes
+      </button>
       <button class="nav-btn" onclick="switchTab('dossier')" data-tab="dossier">
         <span class="ic">👤</span>Player dossier
       </button>
@@ -965,6 +985,114 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div><!-- /tab-auditlog -->
 
     <!-- ══════════════════════════════════════════════════════
+         TAB 9: DISPUTE RESOLUTION
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-disputes" class="tab-pane">
+
+      <!-- ── 1. INCIDENT LOOKUP ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Incident lookup</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input id="dispQuery" class="f-input mono" type="text"
+            placeholder="round_id · offer_id · tx_hash · serial PX-… · UUID"
+            style="max-width:480px"
+            onkeydown="if(event.key==='Enter')dispInvestigate()"/>
+          <button class="btn btn-amber" onclick="dispInvestigate()">Investigate</button>
+          <button class="btn btn-ghost btn-sm" onclick="dispClear()">Clear</button>
+        </div>
+        <div class="support-hints" style="margin-top:8px">
+          Accepts: round_id (UUID) · offer_id (UUID) · event_hash (64-char hex) · serial PX-… · asset UUID · user UUID
+        </div>
+      </div>
+
+      <!-- Incident result -->
+      <div id="dispResult" style="display:none;margin-bottom:16px">
+        <div class="card">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span>Incident chain</span>
+            <button class="btn btn-ghost btn-sm" onclick="dispCopyReport()">Copy report</button>
+          </div>
+          <div id="dispChainBox" class="chain-box">
+            <div class="disp-empty">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 2. COMPENSATION TOOL ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Compensation tool</div>
+        <div class="grid2" style="align-items:start;gap:12px">
+          <div>
+            <div class="f-row">
+              <label class="f-label">Target user</label>
+              <input id="dispCompTarget" class="f-input" type="text"
+                placeholder="@username · #PX-hash · UUID"/>
+            </div>
+            <div class="f-row">
+              <label class="f-label">Action</label>
+              <select id="dispCompAction" class="f-select" onchange="dispCompActionChange()">
+                <option value="compensate_pc">Add PC balance</option>
+                <option value="grant_badge">Grant badge</option>
+                <option value="note">Staff note (no action)</option>
+              </select>
+            </div>
+            <!-- PC amount -->
+            <div id="dispCompAmountRow" class="f-row">
+              <label class="f-label">Amount (PC)</label>
+              <input id="dispCompAmount" class="f-input" type="number" value="50" min="1" max="100000"/>
+            </div>
+            <!-- Badge picker -->
+            <div id="dispCompBadgeRow" class="f-row" style="display:none">
+              <label class="f-label">Badge</label>
+              <select id="dispCompBadge" class="f-select">
+                <option value="founder">founder</option>
+                <option value="core_dev">core_dev</option>
+                <option value="vip_club">vip_club</option>
+                <option value="market_baron">market_baron</option>
+                <option value="first_drop_set">first_drop_set</option>
+                <option value="early_adopter">early_adopter</option>
+                <option value="bug_hunter">bug_hunter</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="f-row">
+              <label class="f-label">Reason <span style="color:var(--red)">*</span></label>
+              <textarea id="dispCompReason" class="f-textarea" placeholder="Describe the incident and why this compensation is warranted…" style="min-height:100px"></textarea>
+            </div>
+            <button class="btn btn-amber" style="width:100%" onclick="dispExecuteComp()">Execute compensation</button>
+            <div id="dispCompLog" style="margin-top:8px;font-size:12px;color:var(--muted);min-height:18px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3. RECENT DISPUTES LOG ── -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Recent admin actions</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadRecentDisputes()">↺ Refresh</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Admin</th>
+                <th>Target user</th>
+                <th>Action</th>
+                <th style="min-width:220px">Reason</th>
+                <th style="min-width:90px">Time</th>
+              </tr>
+            </thead>
+            <tbody id="dispActionsBody">
+              <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Click refresh to load</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-disputes -->
+
+    <!-- ══════════════════════════════════════════════════════
          TAB 8: PLAYER DOSSIER
          ══════════════════════════════════════════════════════ -->
     <div id="tab-dossier" class="tab-pane">
@@ -1212,8 +1340,9 @@ const MCU_PAGES = {
   telem:    { title: 'Telemetry',          sub: 'Live log stream and counters' },
   support:  { title: 'Support ops',        sub: 'Ledger trace and player dossier' },
   acc:      { title: 'Account ops',        sub: 'Balance, flags, and danger zone' },
-  auditlog: { title: 'Audit log',          sub: 'Live admin action stream with filters and CSV export' },
-  dossier:  { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' }
+  auditlog:  { title: 'Audit log',           sub: 'Live admin action stream with filters and CSV export' },
+  disputes:  { title: 'Dispute resolution', sub: 'Incident lookup, compensation tool, admin actions log' },
+  dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' }
 };
 
 function syncThemeToggleUI(){
@@ -1256,8 +1385,9 @@ function switchTab(id){
   setMcuHeader(id);
   if(id==='telem'){ loadTelemetryCounters(); }
   if(id==='users'){ loadCounters(); loadUsersTable(); }
-  if(id==='auditlog'){ auditLogRefresh(); auditLogStartRealtime(); }
-  if(id==='dossier'){ /* stays on current loaded player */ }
+  if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
+  if(id==='disputes')  { loadRecentDisputes(); }
+  if(id==='dossier')   { /* stays on current loaded player */ }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2373,6 +2503,390 @@ function auditLogExportCSV(){
 
 // Legacy stub — old Telemetry tab called this, now a no-op
 function loadAuditLog(){ /* moved to audit log tab */ }
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 9 — DISPUTE RESOLUTION
+// ═══════════════════════════════════════════════════════════════
+
+// ── helpers ──────────────────────────────────────────────────
+function dispFmt(v){ return v == null ? '<span style="color:var(--muted)">—</span>' : String(v); }
+function dispTrunc(v,n=24){ if(!v) return '<span style="color:var(--muted)">—</span>'; const s=String(v); return s.length>n ? s.slice(0,n)+'…' : s; }
+function dispTs(v){ if(!v) return '—'; try{ return new Date(v).toLocaleString(); }catch(e){ return v; } }
+function dispTierBadge(t){
+  const map={common:'--rarity-common',uncommon:'--rarity-uncommon',rare:'--rarity-rare',epic:'--rarity-epic',legendary:'--rarity-legendary',mythic:'--rarity-mythic',secret:'--rarity-secret'};
+  const c = map[String(t).toLowerCase()] || '--adm-text';
+  return `<span style="color:var(${c});text-transform:uppercase;font-weight:700">${t||'—'}</span>`;
+}
+function dispStatusBadge(s){
+  const m={pending:'warn',accepted:'ok',declined:'err',cancelled:'err',committed:'warn',revealed:'ok',failed:'err',completed:'ok'};
+  const cls = m[String(s).toLowerCase()] || '';
+  return `<span class="chain-step-val ${cls}">${s||'—'}</span>`;
+}
+function dispStep(key,val,valClass=''){
+  return `<div class="chain-step"><span class="chain-step-key">${key}</span><span class="chain-step-arr">→</span><span class="chain-step-val ${valClass}">${val}</span></div>`;
+}
+
+// ── clear state ───────────────────────────────────────────────
+function dispClear(){
+  document.getElementById('dispQuery').value='';
+  document.getElementById('dispResult').style.display='none';
+  document.getElementById('dispChainBox').innerHTML='<div class="disp-empty">Enter an ID above to investigate.</div>';
+}
+
+// ── copy report ───────────────────────────────────────────────
+function dispCopyReport(){
+  const el = document.getElementById('dispChainBox');
+  navigator.clipboard.writeText(el.innerText).then(()=>toast('COPIED')).catch(()=>toast('COPY FAILED','err'));
+}
+
+// ── investigate ───────────────────────────────────────────────
+async function dispInvestigate(){
+  const raw = document.getElementById('dispQuery').value.trim();
+  if(!raw){ toast('ENTER AN ID OR HASH','err'); return; }
+  const box = document.getElementById('dispChainBox');
+  box.innerHTML='<div class="disp-empty">Investigating…</div>';
+  document.getElementById('dispResult').style.display='block';
+  document.getElementById('dispResult').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  try{
+    const r = await _dispResolve(raw);
+    box.innerHTML = r;
+  } catch(e){
+    box.innerHTML = `<div class="disp-empty" style="color:var(--red)">ERROR: ${e.message}</div>`;
+  }
+}
+
+async function _dispResolve(raw){
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const HEX64   = /^[0-9a-f]{64}$/i;
+  const SERIAL  = /^(#?PX-[A-Z0-9]+(?:-\d+)?)/i;
+  const SHORTID = /^[0-9a-f]{6,12}$/i;
+
+  // ── A. Serial number → asset ───────────────────────────────
+  if(SERIAL.test(raw)){
+    return await _dispResolveSerial(raw);
+  }
+
+  // ── B. 64-char hex → event_hash lookup ────────────────────
+  if(HEX64.test(raw)){
+    return await _dispResolveEventHash(raw);
+  }
+
+  // ── C. UUID → try rng_round → trade_offer → asset → user ──
+  if(UUID_RE.test(raw)){
+    const id = raw.toLowerCase();
+
+    // try rng_round
+    const {data:rng} = await sb.from('rng_rounds').select('*').eq('id',id).maybeSingle();
+    if(rng) return _dispRenderCaseOpen(rng);
+
+    // try trade_offer
+    const {data:offer} = await sb.from('poxy_trade_offers').select('*').eq('id',id).maybeSingle();
+    if(offer) return await _dispRenderTrade(offer);
+
+    // try asset UUID
+    const {data:asset} = await sb.from('poxy_assets').select('*').eq('id',id).maybeSingle();
+    if(asset) return await _dispRenderAsset(asset);
+
+    // try user_poxy UUID
+    const {data:up} = await sb.from('user_poxy').select('*').eq('id',id).maybeSingle();
+    if(up) return await _dispRenderUserPoxy(up);
+
+    // try ledger event UUID
+    const {data:ev} = await sb.from('ledger_events').select('*').eq('id',id).maybeSingle();
+    if(ev) return await _dispRenderLedgerEvent(ev);
+
+    return '<div class="disp-empty" style="color:var(--red)">No record found for this UUID in rng_rounds, poxy_trade_offers, poxy_assets, user_poxy, or ledger_events.</div>';
+  }
+
+  // ── D. Username / PX-hash – resolve as player ──────────────
+  const prof = await resolveAccTarget(raw);
+  if(prof) return await _dispRenderPlayerSummary(prof);
+
+  return '<div class="disp-empty" style="color:var(--red)">Unrecognised format. Provide a UUID, 64-char event hash, serial (PX-…), or username.</div>';
+}
+
+async function _dispResolveSerial(raw){
+  const sn = raw.replace(/^#/,'');
+  const {data:up} = await sb.from('user_poxy').select('*').ilike('serial_number',sn).limit(1);
+  if(!up||!up.length){
+    const {data:a} = await sb.from('poxy_assets').select('*').ilike('serial_number',sn).limit(1);
+    if(a&&a.length) return await _dispRenderAsset(a[0]);
+    return `<div class="disp-empty" style="color:var(--red)">Serial ${sn} not found.</div>`;
+  }
+  return await _dispRenderUserPoxy(up[0]);
+}
+
+async function _dispResolveEventHash(hash){
+  const {data:ev} = await sb.from('ledger_events').select('*').eq('event_hash',hash).maybeSingle();
+  if(ev) return await _dispRenderLedgerEvent(ev);
+  return `<div class="disp-empty" style="color:var(--red)">No ledger event matches hash ${hash.slice(0,16)}…</div>`;
+}
+
+// ── Render helpers ────────────────────────────────────────────
+function _sectionStart(typeLabel, typeClass='case-open'){
+  return `<div class="chain-section"><span class="chain-type ${typeClass}">${typeLabel}</span>`;
+}
+const _sectionEnd = `</div>`;
+
+function _dispRenderCaseOpen(rng){
+  // fetch user_poxy linked via rng_round_id
+  return (async()=>{
+    const {data:drops} = await sb.from('user_poxy')
+      .select('id,serial_number,poxy_tier,dropped_at,case_origin')
+      .eq('rng_round_id',rng.id);
+
+    let html = _sectionStart('CASE OPEN','case-open');
+    html += dispStep('round_id',        dispTrunc(rng.id,36));
+    html += dispStep('user_id',         dispTrunc(rng.user_id,36));
+    html += dispStep('commit_hash',     dispTrunc(rng.commit_hash,48));
+    html += dispStep('client_seed',     rng.client_seed ? dispTrunc(rng.client_seed,32) : '<span class="warn">NOT YET SEEDED</span>');
+    html += dispStep('result_hash',     rng.result_hash  ? dispTrunc(rng.result_hash,48) : '<span class="warn">PENDING</span>');
+    html += dispStep('status',          dispStatusBadge(rng.status).match(/<[^>]+>([^<]+)<\/span>/)?.[1] || rng.status);
+    html += dispStep('committed_at',    dispTs(rng.committed_at));
+    html += dispStep('revealed_at',     dispTs(rng.revealed_at));
+    if(drops&&drops.length){
+      html += dispStep('minted_drop',   `serial <b>${drops[0].serial_number||'—'}</b> · tier ${dispTierBadge(drops[0].poxy_tier)} · origin ${drops[0].case_origin||'—'}`);
+      html += dispStep('drop_time',     dispTs(drops[0].dropped_at));
+    } else {
+      html += dispStep('minted_drop', '<span class="warn">NO DROP LINKED — round may still be pending or was aborted</span>');
+    }
+    html += _sectionEnd;
+    return html;
+  })();
+}
+
+async function _dispRenderTrade(offer){
+  // Enrich: fetch profiles for from/to, and asset serials
+  const [fromP, toP] = await Promise.all([
+    sb.from('profiles').select('username,account_hash').eq('id',offer.from_id).maybeSingle().then(r=>r.data),
+    sb.from('profiles').select('username,account_hash').eq('id',offer.to_id).maybeSingle().then(r=>r.data),
+  ]);
+  let assetList = '—';
+  if(offer.offered_poxy_ids && offer.offered_poxy_ids.length){
+    const {data:assets} = await sb.from('user_poxy')
+      .select('serial_number,poxy_tier').in('id', offer.offered_poxy_ids);
+    assetList = assets ? assets.map(a=>`${a.serial_number||'?'} (${a.poxy_tier})`).join(', ') : '—';
+  }
+  // Check for ledger event linked
+  const {data:ev} = await sb.from('ledger_events')
+    .select('id,event_type,event_hash,event_timestamp,seq')
+    .eq('event_type','trade')
+    .contains('payload',{offer_id:offer.id})
+    .limit(1);
+
+  let html = _sectionStart('TRADE','trade');
+  html += dispStep('offer_id',      dispTrunc(offer.id,36));
+  html += dispStep('initiator',     fromP ? `@${fromP.username||'—'} (#PX-${fromP.account_hash||'??'})` : dispTrunc(offer.from_id,36));
+  html += dispStep('receiver',      toP   ? `@${toP.username||'—'} (#PX-${toP.account_hash||'??'})`   : dispTrunc(offer.to_id,36));
+  html += dispStep('assets offered',assetList);
+  html += dispStep('message',       offer.message||'(none)');
+  html += dispStep('status',        dispStatusBadge(offer.status).replace(/<[^>]*>/g,(m,i)=>i===0?m:'').replace(/<\/span>/,''));
+  html += dispStep('created_at',    dispTs(offer.created_at));
+  html += dispStep('updated_at',    dispTs(offer.updated_at));
+  if(ev&&ev.length){
+    html += dispStep('ledger event', `${ev[0].event_type} · seq ${ev[0].seq} · ${dispTs(ev[0].event_timestamp)}`);
+    html += dispStep('event_hash',   dispTrunc(ev[0].event_hash,48));
+  } else {
+    html += dispStep('ledger event', '<span class="warn">NOT FOUND — trade may be pending or was cancelled before settlement</span>');
+  }
+  html += _sectionEnd;
+  return html;
+}
+
+async function _dispRenderLedgerEvent(ev){
+  const payload = ev.payload || {};
+  const fromId  = payload.from || payload.actor || ev.actor_id || null;
+  const toId    = payload.to   || payload.receiver || null;
+  const assetId = ev.asset_id || payload.asset_id || null;
+
+  const [fromP, toP, asset] = await Promise.all([
+    fromId ? sb.from('profiles').select('username,account_hash').eq('id',fromId).maybeSingle().then(r=>r.data) : Promise.resolve(null),
+    toId   ? sb.from('profiles').select('username,account_hash').eq('id',toId).maybeSingle().then(r=>r.data)   : Promise.resolve(null),
+    assetId ? sb.from('poxy_assets').select('serial_number,poxy_tier,asset_state').eq('id',assetId).maybeSingle().then(r=>r.data) : Promise.resolve(null),
+  ]);
+
+  let html = _sectionStart('TRANSFER / LEDGER EVENT','transfer');
+  html += dispStep('event_id',    dispTrunc(ev.id,36));
+  html += dispStep('event_type',  ev.event_type||'—');
+  html += dispStep('seq',         ev.seq != null ? String(ev.seq) : '—');
+  html += dispStep('actor/from',  fromP ? `@${fromP.username||'—'} (#PX-${fromP.account_hash||'??'})` : (fromId ? dispTrunc(fromId,36) : '—'));
+  html += dispStep('to',          toP   ? `@${toP.username||'—'} (#PX-${toP.account_hash||'??'})`     : (toId   ? dispTrunc(toId,36)   : '—'));
+  if(asset){
+    html += dispStep('asset',     `${asset.serial_number||'—'} · tier ${dispTierBadge(asset.poxy_tier)} · state ${asset.asset_state||'—'}`);
+  }
+  html += dispStep('event_hash',  dispTrunc(ev.event_hash,48));
+  html += dispStep('timestamp',   dispTs(ev.event_timestamp || ev.created_at));
+  html += dispStep('payload',     `<pre style="margin:0;font-size:10px;white-space:pre-wrap">${JSON.stringify(payload,null,2)}</pre>`);
+  html += _sectionEnd;
+  return html;
+}
+
+async function _dispRenderAsset(asset){
+  const owner = asset.current_owner_id
+    ? (await sb.from('profiles').select('username,account_hash').eq('id',asset.current_owner_id).maybeSingle()).data
+    : null;
+  let html = _sectionStart('ASSET','case-open');
+  html += dispStep('asset_id',       dispTrunc(asset.id,36));
+  html += dispStep('serial_number',  asset.serial_number||'—');
+  html += dispStep('poxy_tier',      dispTierBadge(asset.poxy_tier));
+  html += dispStep('current_owner',  owner ? `@${owner.username||'—'} (#PX-${owner.account_hash||'??'})` : (asset.current_owner_id ? dispTrunc(asset.current_owner_id,36) : '—'));
+  html += dispStep('asset_state',    asset.asset_state||'—');
+  html += dispStep('poxy_hash',      asset.poxy_hash ? dispTrunc(asset.poxy_hash,48) : '—');
+  html += dispStep('created_at',     dispTs(asset.created_at));
+  html += _sectionEnd;
+  return html;
+}
+
+async function _dispRenderUserPoxy(up){
+  const [owner, asset] = await Promise.all([
+    sb.from('profiles').select('username,account_hash').eq('id',up.user_id).maybeSingle().then(r=>r.data),
+    up.poxy_asset_id
+      ? sb.from('poxy_assets').select('serial_number,poxy_tier,asset_state,poxy_hash').eq('id',up.poxy_asset_id).maybeSingle().then(r=>r.data)
+      : Promise.resolve(null),
+  ]);
+  let html = _sectionStart('USER POXY ENTRY','case-open');
+  html += dispStep('user_poxy_id',  dispTrunc(up.id,36));
+  html += dispStep('serial_number', up.serial_number||'—');
+  html += dispStep('poxy_tier',     dispTierBadge(up.poxy_tier));
+  html += dispStep('owner',         owner ? `@${owner.username||'—'} (#PX-${owner.account_hash||'??'})` : (up.user_id ? dispTrunc(up.user_id,36) : '—'));
+  html += dispStep('case_origin',   up.case_origin||'—');
+  html += dispStep('dropped_at',    dispTs(up.dropped_at||up.created_at));
+  html += dispStep('rng_round_id',  up.rng_round_id ? dispTrunc(up.rng_round_id,36) : '—');
+  if(asset){
+    html += dispStep('asset_state',   asset.asset_state||'—');
+    html += dispStep('poxy_hash',     asset.poxy_hash ? dispTrunc(asset.poxy_hash,48) : '—');
+  }
+  html += _sectionEnd;
+  return html;
+}
+
+async function _dispRenderPlayerSummary(prof){
+  const [{count:assetCount},{count:ledgerCount}] = await Promise.all([
+    sb.from('user_poxy').select('id',{count:'exact',head:true}).eq('user_id',prof.id),
+    sb.from('ledger_events').select('id',{count:'exact',head:true}).eq('actor_id',prof.id),
+  ]);
+  let html = _sectionStart('PLAYER OVERVIEW','transfer');
+  html += dispStep('user_id',       dispTrunc(prof.id,36));
+  html += dispStep('username',      '@'+(prof.username||'—'));
+  html += dispStep('system_id',     '#PX-'+(prof.account_hash||'??'));
+  html += dispStep('balance',       (prof.balance||0)+' PC');
+  html += dispStep('is_frozen',     prof.is_frozen   ? '<span class="err">YES</span>'  : '<span class="ok">NO</span>');
+  html += dispStep('is_blocked',    prof.is_blocked  ? '<span class="err">YES</span>'  : '<span class="ok">NO</span>');
+  html += dispStep('assets_held',   String(assetCount??'?'));
+  html += dispStep('ledger_events', String(ledgerCount??'?')+' events (as actor)');
+  html += dispStep('joined',        dispTs(prof.created_at));
+  html += `<div style="margin-top:8px;font-size:11px;color:var(--muted)">→ Use Player Dossier tab for full detail, or supply a specific round_id / offer_id.</div>`;
+  html += _sectionEnd;
+  return html;
+}
+
+// ── Compensation ──────────────────────────────────────────────
+function dispCompActionChange(){
+  const action = document.getElementById('dispCompAction').value;
+  document.getElementById('dispCompAmountRow').style.display  = action==='compensate_pc' ? '' : 'none';
+  document.getElementById('dispCompBadgeRow').style.display   = action==='grant_badge'   ? '' : 'none';
+}
+
+async function dispExecuteComp(){
+  const targetRaw = document.getElementById('dispCompTarget').value.trim();
+  const action    = document.getElementById('dispCompAction').value;
+  const reason    = document.getElementById('dispCompReason').value.trim();
+  const logEl     = document.getElementById('dispCompLog');
+
+  if(!targetRaw){ toast('ENTER TARGET USER','err'); return; }
+  if(!reason)   { toast('REASON IS REQUIRED','err'); return; }
+
+  logEl.style.color='var(--muted)'; logEl.textContent='Resolving target…';
+
+  const prof = await resolveAccTarget(targetRaw);
+  if(!prof){ logEl.style.color='var(--red)'; logEl.textContent='USER NOT FOUND'; toast('USER NOT FOUND','err'); return; }
+
+  logEl.textContent='Executing…';
+
+  try{
+    let payload = {};
+
+    if(action==='compensate_pc'){
+      const amt = parseFloat(document.getElementById('dispCompAmount').value)||0;
+      if(amt<=0){ toast('ENTER POSITIVE AMOUNT','err'); logEl.textContent=''; return; }
+      const newBal = (prof.balance||0) + amt;
+      const {data,error} = await sb.rpc('admin_set_balance',{p_target_id:prof.id, p_amount:newBal});
+      if(error) throw error;
+      payload = {amount_added: amt, new_balance: data};
+      logEl.style.color='var(--green)'; logEl.textContent=`✓ BALANCE NOW: ${Number(data).toFixed(2)} PC`;
+
+    } else if(action==='grant_badge'){
+      const badge = document.getElementById('dispCompBadge').value;
+      // load current badges first
+      const {data:current_prof} = await sb.from('profiles').select('badges').eq('id',prof.id).maybeSingle();
+      const current = Array.isArray(current_prof?.badges) ? [...current_prof.badges] : [];
+      if(!current.includes(badge)) current.push(badge);
+      const {error} = await sb.rpc('admin_set_badges',{p_target_id:prof.id, p_badges:current});
+      if(error) throw error;
+      payload = {badge_granted: badge};
+      logEl.style.color='var(--green)'; logEl.textContent=`✓ BADGE GRANTED: ${badge}`;
+
+    } else if(action==='note'){
+      payload = {note: reason};
+      logEl.style.color='var(--green)'; logEl.textContent='✓ NOTE RECORDED';
+    }
+
+    // Log to admin_actions
+    const {error:logErr} = await sb.rpc('log_admin_action',{
+      p_target_user_id: prof.id,
+      p_action_type:    action,
+      p_payload:        payload,
+      p_reason:         reason
+    });
+    if(logErr) console.warn('admin_actions log failed:', logErr.message);
+
+    toast(`COMPENSATION APPLIED — @${prof.username||prof.id.slice(0,12)}`);
+    streamLine('ADMIN',`DISPUTE COMP: ${action} → @${prof.username||prof.id.slice(0,12)} | ${reason.slice(0,60)}`);
+
+    // Pre-fill target for quick follow-up investigation
+    document.getElementById('dispQuery').value = prof.username;
+
+    // Refresh log
+    loadRecentDisputes();
+
+  } catch(err){
+    logEl.style.color='var(--red)'; logEl.textContent='ERROR: '+err.message;
+    toast('FAILED','err');
+  }
+}
+
+// ── Recent disputes log ───────────────────────────────────────
+async function loadRecentDisputes(){
+  const tbody = document.getElementById('dispActionsBody');
+  tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">Loading…</td></tr>';
+
+  const {data, error} = await sb.rpc('get_recent_admin_actions',{p_limit:20});
+  if(error){
+    tbody.innerHTML=`<tr><td colspan="5" style="color:var(--red);text-align:center;padding:16px">ERROR: ${error.message}</td></tr>`;
+    return;
+  }
+  if(!data||!data.length){
+    tbody.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">No admin actions recorded yet.</td></tr>';
+    return;
+  }
+  const ACTION_LABELS={
+    compensate_pc:  '<span class="badge badge-amber">+ PC</span>',
+    grant_asset:    '<span class="badge badge-green">ASSET</span>',
+    grant_badge:    '<span class="badge badge-green">BADGE</span>',
+    freeze:         '<span class="badge badge-red">FREEZE</span>',
+    unfreeze:       '<span class="badge badge-amber">UNFREEZE</span>',
+    note:           '<span class="badge">NOTE</span>',
+  };
+  tbody.innerHTML = data.map(row=>`
+    <tr>
+      <td class="mono" style="font-size:11px">@${row.admin_username||'—'}</td>
+      <td class="mono" style="font-size:11px">@${row.target_username||'—'}</td>
+      <td>${ACTION_LABELS[row.action_type]||`<span class="badge">${row.action_type}</span>`}</td>
+      <td style="font-size:12px;color:var(--adm-text);max-width:280px;word-break:break-word">${row.reason}</td>
+      <td style="font-size:11px;color:var(--muted);white-space:nowrap">${dispTs(row.created_at)}</td>
+    </tr>`).join('');
+}
 
 // ═══════════════════════════════════════════════════════════════
 // TAB 8 — PLAYER DOSSIER
