@@ -194,6 +194,28 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 /* ── AUDIT LOG ── */
 @keyframes alogRowAppear{from{opacity:0;background:rgba(245,158,11,0.08);}to{opacity:1;background:transparent;}}
 .alog-row-new{animation:alogRowAppear 300ms ease-out;}
+/* ── ALERT SYSTEM ── */
+.alert-list{display:flex;flex-direction:column;gap:10px}
+.alert-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;animation:alogRowAppear .3s ease}
+.alert-card.high  {border-left:3px solid var(--red)}
+.alert-card.medium{border-left:3px solid var(--amber)}
+.alert-card.info  {border-left:3px solid var(--cyan)}
+.alert-head{display:flex;align-items:flex-start;gap:10px}
+.alert-sev{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:1px}
+.alert-sev.high  {background:rgba(239,68,68,.15);color:var(--red)}
+.alert-sev.medium{background:rgba(245,158,11,.15);color:var(--amber)}
+.alert-sev.info  {background:rgba(129,140,248,.15);color:var(--cyan)}
+.alert-msg{font-size:13px;color:var(--adm-text);flex:1;line-height:1.45}
+.alert-actions{display:flex;flex-wrap:wrap;gap:6px}
+.alert-empty{text-align:center;padding:32px;color:var(--muted);font-size:13px}
+.alert-poll-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.alert-poll-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:data-pulse 2.5s linear infinite}
+@keyframes data-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.alert-rules-table{width:100%;border-collapse:collapse;font-size:13px}
+.alert-rules-table td{padding:8px 6px;border-bottom:1px solid var(--border2);vertical-align:middle}
+.alert-rules-table tr:last-child td{border-bottom:none}
+.alert-rules-table input[type=number]{width:80px}
+.alert-rules-table input[type=checkbox]{accent-color:var(--amber);width:15px;height:15px;cursor:pointer}
 /* ── ECONOMY HEALTH ── */
 .eco-stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:4px}
 .eco-stat-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
@@ -380,6 +402,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       <div style="height:1px;background:var(--border);margin:8px 4px"></div>
       <button class="nav-btn" onclick="switchTab('economy')" data-tab="economy">
         <span class="ic">◎</span>Economy
+      </button>
+      <button class="nav-btn" onclick="switchTab('alerts')" data-tab="alerts">
+        <span class="ic">🔔</span>Alerts
       </button>
       <button class="nav-btn" onclick="switchTab('disputes')" data-tab="disputes">
         <span class="ic">⚖</span>Disputes
@@ -1115,6 +1140,94 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div><!-- /tab-economy -->
 
     <!-- ══════════════════════════════════════════════════════
+         TAB 11: ALERT SYSTEM
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-alerts" class="tab-pane">
+
+      <!-- Poll status bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <div class="alert-poll-status">
+          <span class="alert-poll-dot" id="alertPollDot"></span>
+          <span id="alertPollStatus">Polling every 60s</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="alertActiveCount" style="font-size:11px;color:var(--muted)"></span>
+          <button class="btn btn-ghost btn-sm" onclick="checkAlerts()">↺ Check now</button>
+        </div>
+      </div>
+
+      <!-- ── 1. ACTIVE ALERTS ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Active alerts</div>
+        <div id="alertActiveList" class="alert-list">
+          <div class="alert-empty">Checking for suspicious activity…</div>
+        </div>
+      </div>
+
+      <!-- ── 2. ALERT RULES CONFIG ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Alert rules config</div>
+        <table class="alert-rules-table">
+          <tbody>
+            <tr>
+              <td style="width:32px"><input type="checkbox" id="ruleCasesEnabled" checked/></td>
+              <td>Cases per hour threshold</td>
+              <td style="text-align:right"><input id="ruleCasesPerHour" class="f-input" type="number" value="20" min="1" max="999" style="width:72px"/> <span style="color:var(--muted);font-size:11px">per user</span></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" id="ruleBurnEnabled" checked/></td>
+              <td>Burn spike threshold</td>
+              <td style="text-align:right"><input id="ruleBurnSpike" class="f-input" type="number" value="30" min="1" max="9999" style="width:72px"/> <span style="color:var(--muted);font-size:11px">per 30 min</span></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" id="ruleOtcEnabled" checked/></td>
+              <td>New account OTC threshold</td>
+              <td style="text-align:right"><input id="ruleNewAccountOtc" class="f-input" type="number" value="200" min="1" max="999999" style="width:72px"/> <span style="color:var(--muted);font-size:11px">PC</span></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" id="ruleMintEnabled" checked/></td>
+              <td>Failed mint threshold</td>
+              <td style="text-align:right"><input id="ruleFailedMint" class="f-input" type="number" value="5" min="1" max="99" style="width:72px"/> <span style="color:var(--muted);font-size:11px">stuck rounds</span></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" id="ruleTransferEnabled" checked/></td>
+              <td>Large transfer threshold</td>
+              <td style="text-align:right"><input id="ruleLargeTransfer" class="f-input" type="number" value="1000" min="1" max="9999999" style="width:80px"/> <span style="color:var(--muted);font-size:11px">PC</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:10px">
+          <button class="btn btn-amber" onclick="alertSaveRules()">Save rules</button>
+          <span id="alertRulesLog" style="font-size:12px;color:var(--muted)"></span>
+        </div>
+      </div>
+
+      <!-- ── 3. DISMISSED ALERTS HISTORY ── -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Dismissed alerts history</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadDismissedAlerts()">↺ Refresh</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Alert</th>
+                <th>Dismissed by</th>
+                <th style="min-width:160px">Reason</th>
+                <th style="min-width:90px">Time</th>
+              </tr>
+            </thead>
+            <tbody id="alertDismissedBody">
+              <tr><td colspan="4" style="color:var(--muted);text-align:center;padding:20px">No dismissals yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-alerts -->
+
+    <!-- ══════════════════════════════════════════════════════
          TAB 9: DISPUTE RESOLUTION
          ══════════════════════════════════════════════════════ -->
     <div id="tab-disputes" class="tab-pane">
@@ -1472,6 +1585,7 @@ const MCU_PAGES = {
   acc:      { title: 'Account ops',        sub: 'Balance, flags, and danger zone' },
   auditlog:  { title: 'Audit log',           sub: 'Live admin action stream with filters and CSV export' },
   economy:   { title: 'Economy health',      sub: 'Supply overview, mint/burn rate, top players, generation tracker' },
+  alerts:    { title: 'Alert system',        sub: 'Suspicious activity flags, rule config, dismissed history' },
   disputes:  { title: 'Dispute resolution',  sub: 'Incident lookup, compensation tool, admin actions log' },
   dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' }
 };
@@ -1518,6 +1632,8 @@ function switchTab(id){
   if(id==='users'){ loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
   if(id==='economy')   { loadEconomy(); }
+  if(id==='alerts')    { alertTabEnter(); }
+  else                 { alertTabLeave(); }
   if(id==='disputes')  { loadRecentDisputes(); }
   if(id==='dossier')   { /* stays on current loaded player */ }
 }
@@ -2635,6 +2751,281 @@ function auditLogExportCSV(){
 
 // Legacy stub — old Telemetry tab called this, now a no-op
 function loadAuditLog(){ /* moved to audit log tab */ }
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 11 — ALERT SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+const ALERT_RULES_KEY = 'poxy-mcu-alert-rules';
+const ALERT_POLL_MS   = 60000;
+
+const ALERT_DEFAULT_RULES = {
+  casesPerHour:    { enabled: true, value: 20   },
+  burnSpike:       { enabled: true, value: 30   },
+  newAccountOtc:   { enabled: true, value: 200  },
+  failedMint:      { enabled: true, value: 5    },
+  largeTransfer:   { enabled: true, value: 1000 },
+};
+
+let _alertRules        = { ...ALERT_DEFAULT_RULES };
+let _alertActiveList    = [];
+let _alertByKey         = {};
+let _alertDismissedKeys = new Set();
+let _alertPollTimer     = null;
+
+// ── Rules persistence ─────────────────────────────────────────
+function alertLoadRules(){
+  try{
+    const raw = localStorage.getItem(ALERT_RULES_KEY);
+    if(raw) _alertRules = { ...ALERT_DEFAULT_RULES, ...JSON.parse(raw) };
+  }catch(e){ _alertRules = { ...ALERT_DEFAULT_RULES }; }
+  alertSyncRulesUI();
+}
+
+function alertSyncRulesUI(){
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+  const chk = (id, val) => { const el = document.getElementById(id); if(el) el.checked = !!val; };
+  chk('ruleCasesEnabled',     _alertRules.casesPerHour.enabled);
+  chk('ruleBurnEnabled',      _alertRules.burnSpike.enabled);
+  chk('ruleOtcEnabled',       _alertRules.newAccountOtc.enabled);
+  chk('ruleMintEnabled',      _alertRules.failedMint.enabled);
+  chk('ruleTransferEnabled',  _alertRules.largeTransfer.enabled);
+  set('ruleCasesPerHour',     _alertRules.casesPerHour.value);
+  set('ruleBurnSpike',        _alertRules.burnSpike.value);
+  set('ruleNewAccountOtc',    _alertRules.newAccountOtc.value);
+  set('ruleFailedMint',       _alertRules.failedMint.value);
+  set('ruleLargeTransfer',    _alertRules.largeTransfer.value);
+}
+
+function alertSaveRules(){
+  _alertRules = {
+    casesPerHour:   { enabled: document.getElementById('ruleCasesEnabled').checked,    value: parseInt(document.getElementById('ruleCasesPerHour').value)||20 },
+    burnSpike:      { enabled: document.getElementById('ruleBurnEnabled').checked,     value: parseInt(document.getElementById('ruleBurnSpike').value)||30 },
+    newAccountOtc:  { enabled: document.getElementById('ruleOtcEnabled').checked,      value: parseInt(document.getElementById('ruleNewAccountOtc').value)||200 },
+    failedMint:     { enabled: document.getElementById('ruleMintEnabled').checked,     value: parseInt(document.getElementById('ruleFailedMint').value)||5 },
+    largeTransfer:  { enabled: document.getElementById('ruleTransferEnabled').checked,value: parseInt(document.getElementById('ruleLargeTransfer').value)||1000 },
+  };
+  try{ localStorage.setItem(ALERT_RULES_KEY, JSON.stringify(_alertRules)); }catch(e){}
+  const log = document.getElementById('alertRulesLog');
+  if(log){ log.style.color='var(--green)'; log.textContent='✓ Rules saved'; setTimeout(()=>log.textContent='',3000); }
+  toast('ALERT RULES SAVED');
+  checkAlerts();
+}
+
+// ── Polling lifecycle ─────────────────────────────────────────
+function alertTabEnter(){
+  alertLoadRules();
+  loadDismissedAlerts();
+  checkAlerts();
+  alertStartPolling();
+}
+
+function alertTabLeave(){
+  alertStopPolling();
+}
+
+function alertStartPolling(){
+  alertStopPolling();
+  _alertPollTimer = setInterval(checkAlerts, ALERT_POLL_MS);
+  const dot = document.getElementById('alertPollDot');
+  if(dot) dot.style.background = 'var(--green)';
+}
+
+function alertStopPolling(){
+  if(_alertPollTimer){ clearInterval(_alertPollTimer); _alertPollTimer = null; }
+}
+
+// ── Main check ────────────────────────────────────────────────
+async function checkAlerts(){
+  const statusEl = document.getElementById('alertPollStatus');
+  if(statusEl) statusEl.textContent = 'Checking…';
+
+  const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
+  const alerts = [];
+
+  try{
+    const tasks = [];
+
+    if(_alertRules.casesPerHour.enabled){
+      tasks.push(
+        sb.rpc('check_case_spam', { p_threshold: _alertRules.casesPerHour.value, p_since: oneHourAgo })
+          .then(r => { if(r.error) throw r.error; return r.data||[]; })
+      );
+    } else { tasks.push(Promise.resolve([])); }
+
+    if(_alertRules.burnSpike.enabled){
+      tasks.push(
+        sb.rpc('check_burn_spike', { p_threshold: _alertRules.burnSpike.value, p_window_minutes: 30 })
+          .then(r => { if(r.error) throw r.error; return r.data||[]; })
+      );
+    } else { tasks.push(Promise.resolve([])); }
+
+    if(_alertRules.newAccountOtc.enabled){
+      tasks.push(
+        sb.rpc('check_new_account_otc', { p_threshold: _alertRules.newAccountOtc.value })
+          .then(r => { if(r.error) throw r.error; return r.data||[]; })
+      );
+    } else { tasks.push(Promise.resolve([])); }
+
+    if(_alertRules.failedMint.enabled){
+      tasks.push(
+        sb.rpc('check_stuck_mint_rounds', { p_threshold: _alertRules.failedMint.value })
+          .then(r => { if(r.error) throw r.error; return r.data||[]; })
+      );
+    } else { tasks.push(Promise.resolve([])); }
+
+    if(_alertRules.largeTransfer.enabled){
+      tasks.push(
+        sb.rpc('check_large_transfers', { p_threshold: _alertRules.largeTransfer.value, p_since: oneHourAgo })
+          .then(r => { if(r.error) throw r.error; return r.data||[]; })
+      );
+    } else { tasks.push(Promise.resolve([])); }
+
+    const results = await Promise.all(tasks);
+    results.forEach(batch => alerts.push(...batch));
+
+    // Filter dismissed keys (session + DB)
+    _alertActiveList = alerts.filter(a => !_alertDismissedKeys.has(a.alert_key));
+    renderAlerts(_alertActiveList);
+
+    const countEl = document.getElementById('alertActiveCount');
+    if(countEl) countEl.textContent = _alertActiveList.length + ' active';
+    if(statusEl) statusEl.textContent = 'Last check ' + new Date().toLocaleTimeString() + ' · polling every 60s';
+
+  } catch(err){
+    if(statusEl) statusEl.textContent = 'Check failed: ' + err.message;
+    toast('ALERT CHECK FAILED','err');
+  }
+}
+
+// ── Render active alerts ──────────────────────────────────────
+function renderAlerts(alerts){
+  const el = document.getElementById('alertActiveList');
+  if(!el) return;
+
+  if(!alerts.length){
+    el.innerHTML = '<div class="alert-empty">No active alerts — all clear.</div>';
+    return;
+  }
+
+  const SEV_LABEL = { high: 'HIGH', medium: 'MEDIUM', info: 'INFO' };
+  _alertByKey = {};
+  alerts.forEach(a => { if(a.alert_key) _alertByKey[a.alert_key] = a; });
+
+  el.innerHTML = alerts.map(a => {
+    const sev = a.severity || 'info';
+    const actions = _alertActionButtons(a);
+    return `<div class="alert-card ${sev}" data-key="${a.alert_key}">
+      <div class="alert-head">
+        <span class="alert-sev ${sev}">${SEV_LABEL[sev]||sev.toUpperCase()}</span>
+        <span class="alert-msg">${_alertEsc(a.message)}</span>
+      </div>
+      <div class="alert-actions">${actions}</div>
+    </div>`;
+  }).join('');
+}
+
+function _alertEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function _alertActionButtons(a){
+  const type = a.alert_type || '';
+  const uid  = a.user_id || '';
+  const un   = a.username || '';
+  const key  = a.alert_key || '';
+
+  const dismiss = `<button class="btn btn-ghost btn-sm" onclick="alertDismiss('${key}')">Dismiss</button>`;
+
+  if(type === 'case_spam'){
+    return `<button class="btn btn-amber btn-sm" onclick="alertInvestigate('${un||uid}')">Investigate</button>${dismiss}
+      <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="alertFreezeUser('${uid}','${un}')">Freeze user</button>`;
+  }
+  if(type === 'burn_spike'){
+    return `<button class="btn btn-amber btn-sm" onclick="switchTab('auditlog')">View in ledger</button>${dismiss}`;
+  }
+  if(type === 'new_account_otc' || type === 'large_transfer'){
+    return `<button class="btn btn-amber btn-sm" onclick="alertOpenDossier('${un||uid}')">Player dossier</button>${dismiss}`;
+  }
+  if(type === 'failed_mint'){
+    return `<button class="btn btn-amber btn-sm" onclick="switchTab('auditlog')">View logs</button>${dismiss}`;
+  }
+  return dismiss;
+}
+
+// ── Alert actions ─────────────────────────────────────────────
+function alertInvestigate(query){
+  const el = document.getElementById('dispQuery');
+  if(el) el.value = query;
+  switchTab('disputes');
+  dispInvestigate();
+}
+
+function alertOpenDossier(query){
+  const el = document.getElementById('dossierQuery');
+  if(el) el.value = query;
+  switchTab('dossier');
+  loadDossier();
+}
+
+async function alertFreezeUser(uid, username){
+  if(!uid){ toast('NO USER ID','err'); return; }
+  if(!confirm('Freeze @'+(username||uid.slice(0,8))+'?')) return;
+  const {error} = await sb.rpc('admin_set_frozen',{ p_target_id: uid, p_frozen: true });
+  if(error){ toast('FREEZE FAILED: '+error.message,'err'); return; }
+  toast('USER FROZEN');
+  streamLine('ADMIN','ALERT FREEZE → @'+(username||uid.slice(0,12)));
+}
+
+async function alertDismiss(alertKey){
+  _alertDismissedKeys.add(alertKey);
+  _alertActiveList = _alertActiveList.filter(a => a.alert_key !== alertKey);
+  renderAlerts(_alertActiveList);
+  const countEl = document.getElementById('alertActiveCount');
+  if(countEl) countEl.textContent = _alertActiveList.length + ' active';
+
+  const snap = _alertByKey[alertKey] || {};
+  const {error} = await sb.rpc('dismiss_alert',{
+    p_alert_key: alertKey,
+    p_reason: 'Dismissed by staff',
+    p_alert_snapshot: snap
+  });
+  if(error) console.warn('dismiss_alert failed:', error.message);
+  loadDismissedAlerts();
+}
+
+// ── Dismissed history ─────────────────────────────────────────
+async function loadDismissedAlerts(){
+  const tbody = document.getElementById('alertDismissedBody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:16px">Loading…</td></tr>';
+
+  const {data, error} = await sb.rpc('get_dismissed_alerts',{ p_limit: 20 });
+  if(error){
+    tbody.innerHTML = `<tr><td colspan="4" style="color:var(--red);text-align:center;padding:16px">ERROR: ${error.message}</td></tr>`;
+    return;
+  }
+  if(!data||!data.length){
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:16px">No dismissals yet</td></tr>';
+    return;
+  }
+
+  // Seed dismissed keys from DB so they stay filtered across reloads
+  data.forEach(r => _alertDismissedKeys.add(r.alert_key));
+
+  tbody.innerHTML = data.map(r => {
+    const snap = r.alert_snapshot || {};
+    const label = snap.message || r.alert_key;
+    const ts = r.created_at ? new Date(r.created_at).toLocaleString() : '—';
+    return `<tr>
+      <td style="font-size:12px;max-width:280px;word-break:break-word">${_alertEsc(label)}</td>
+      <td class="mono" style="font-size:11px">@${r.dismissed_by_username||'—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${_alertEsc(r.reason||'—')}</td>
+      <td style="font-size:11px;color:var(--muted);white-space:nowrap">${ts}</td>
+    </tr>`;
+  }).join('');
+}
+
+// Load rules on boot (for any future header badge use)
+alertLoadRules();
 
 // ═══════════════════════════════════════════════════════════════
 // TAB 10 — ECONOMY HEALTH
