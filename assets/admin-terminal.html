@@ -211,6 +211,32 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .roles-add-row .f-row{margin:0;flex:1;min-width:160px}
 .roles-status-ok{color:var(--green)}
 .roles-status-off{color:var(--muted)}
+/* ── GLOBAL CHROME (Session 8) ── */
+.mcu-header-center{flex:1;min-width:0;max-width:min(560px,42vw)}
+.mcu-search-trigger{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--muted);cursor:pointer;display:flex;font-family:var(--font);font-size:12px;gap:8px;padding:8px 12px;text-align:left;transition:border-color .15s,color .15s;width:100%}
+.mcu-search-trigger:hover{border-color:var(--amber);color:var(--adm-text)}
+.mcu-search-ic{flex-shrink:0;font-size:14px;line-height:1}
+.mcu-search-ph{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mcu-kbd{background:var(--dim);border:1px solid var(--border);border-radius:4px;color:var(--muted);flex-shrink:0;font-family:var(--font-mono);font-size:10px;padding:2px 6px}
+.mcu-bell-btn{background:var(--bg2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:16px;line-height:1;padding:8px 12px;position:relative;transition:border-color .15s}
+.mcu-bell-btn:hover{border-color:var(--amber)}
+.mcu-bell-badge{align-items:center;background:var(--red);border-radius:9px;color:#fff;display:flex;font-size:10px;font-weight:700;height:18px;justify-content:center;min-width:18px;padding:0 5px;position:absolute;right:-4px;top:-4px}
+.mcu-bell-badge[hidden]{display:none}
+.mcu-search-overlay{align-items:flex-start;backdrop-filter:blur(2px);background:rgba(0,0,0,.55);display:flex;inset:0;justify-content:center;padding:12vh 16px 16px;position:fixed;z-index:10000}
+.mcu-search-overlay.hidden{display:none}
+.mcu-search-panel{background:var(--bg1);border:1px solid var(--border);border-radius:12px;box-shadow:var(--adm-shadow);overflow:hidden;width:min(640px,100%)}
+.mcu-search-input-wrap{align-items:center;border-bottom:1px solid var(--border);display:flex;gap:10px;padding:14px 16px}
+.mcu-search-input-wrap input{background:transparent;border:none;color:var(--adm-text);flex:1;font-family:var(--font);font-size:15px;outline:none}
+.mcu-search-results{max-height:360px;overflow-y:auto;padding:8px}
+.mcu-search-empty{color:var(--muted);font-size:13px;padding:24px;text-align:center}
+.mcu-search-result{align-items:flex-start;border:1px solid transparent;border-radius:8px;cursor:pointer;display:flex;gap:12px;padding:10px 12px;transition:background .1s,border-color .1s}
+.mcu-search-result:hover,.mcu-search-result.active{background:var(--dim);border-color:var(--border)}
+.mcu-search-result-ic{flex-shrink:0;font-size:18px;text-align:center;width:24px}
+.mcu-search-result-body{flex:1;min-width:0}
+.mcu-search-result-title{font-size:13px;font-weight:600}
+.mcu-search-result-sub{color:var(--muted);font-family:var(--font-mono);font-size:11px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mcu-search-result-tag{background:var(--bg2);border-radius:4px;color:var(--amber);flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 6px;text-transform:uppercase}
+.mcu-search-foot{border-top:1px solid var(--border);color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:12px 16px;padding:10px 16px}
 /* ── RNG AUDIT ── */
 .rng-report{background:var(--adm-log-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-family:var(--font-mono);font-size:11px}
 .rng-report-hdr{background:var(--dim);border-bottom:1px solid var(--border);padding:12px 16px;text-align:center}
@@ -472,7 +498,18 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         <h1 class="mcu-page-title" id="mcuPageTitle">Content &amp; CMS</h1>
         <p class="mcu-page-sub" id="mcuPageSub">News, broadcast, and maintenance</p>
       </div>
+      <div class="mcu-header-center">
+        <button type="button" class="mcu-search-trigger" id="mcuSearchTrigger" onclick="mcuOpenSearch()" title="Universal search (Ctrl+K)">
+          <span class="mcu-search-ic">🔍</span>
+          <span class="mcu-search-ph">Universal search — @user · PX-hash · UUID · round · offer</span>
+          <kbd class="mcu-kbd">Ctrl+K</kbd>
+        </button>
+      </div>
       <div class="mcu-header-meta">
+        <button type="button" class="mcu-bell-btn" id="mcuAlertBell" onclick="mcuOpenAlerts()" title="Active alerts">
+          <span aria-hidden="true">🔔</span>
+          <span class="mcu-bell-badge" id="mcuAlertBadge" hidden>0</span>
+        </button>
         <span class="mcu-header-badge"><span class="uplink-dot"></span>Staff session</span>
       </div>
     </header>
@@ -1620,6 +1657,29 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
   </div><!-- /mcu-shell -->
 </div><!-- /terminal -->
 
+<!-- GLOBAL SEARCH OVERLAY (Session 8) -->
+<div id="mcuSearchOverlay" class="mcu-search-overlay hidden" onclick="if(event.target===this)mcuCloseSearch()">
+  <div class="mcu-search-panel" role="dialog" aria-label="Universal search">
+    <div class="mcu-search-input-wrap">
+      <span class="mcu-search-ic">🔍</span>
+      <input id="mcuSearchInput" type="text" autocomplete="off" spellcheck="false"
+        placeholder="Search @username · PX serial · UUID · round_id · offer_id · tx hash…"
+        oninput="mcuSearchOnInput()"
+        onkeydown="mcuSearchInputKey(event)"/>
+      <kbd class="mcu-kbd">Esc</kbd>
+    </div>
+    <div class="mcu-search-results" id="mcuSearchResults">
+      <div class="mcu-search-empty">Type to search across profiles, assets, rounds, and events…</div>
+    </div>
+    <div class="mcu-search-foot">
+      <span>↑↓ navigate</span>
+      <span>Enter open</span>
+      <span>Ctrl+K toggle</span>
+      <span>Ctrl+1–7 modules</span>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST AREA -->
 <div class="toast-area" id="toastArea"></div>
 
@@ -1738,6 +1798,7 @@ function initAll(){
   initActionStream();
   startCharts();
   loadTelemetryCounters();
+  mcuInitGlobalChrome();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3382,7 +3443,7 @@ function alertTabEnter(){
 }
 
 function alertTabLeave(){
-  alertStopPolling();
+  /* polling kept global for header notification bell */
 }
 
 function alertStartPolling(){
@@ -3448,6 +3509,7 @@ async function checkAlerts(){
     // Filter dismissed keys (session + DB)
     _alertActiveList = alerts.filter(a => !_alertDismissedKeys.has(a.alert_key));
     renderAlerts(_alertActiveList);
+    mcuUpdateAlertBell(_alertActiveList.length);
 
     const countEl = document.getElementById('alertActiveCount');
     if(countEl) countEl.textContent = _alertActiveList.length + ' active';
@@ -3540,6 +3602,7 @@ async function alertDismiss(alertKey){
   _alertDismissedKeys.add(alertKey);
   _alertActiveList = _alertActiveList.filter(a => a.alert_key !== alertKey);
   renderAlerts(_alertActiveList);
+  mcuUpdateAlertBell(_alertActiveList.length);
   const countEl = document.getElementById('alertActiveCount');
   if(countEl) countEl.textContent = _alertActiveList.length + ' active';
 
@@ -4871,6 +4934,293 @@ async function accDeleteAccount(){
   logEl.style.color='var(--red)'; logEl.textContent='⛔ ACCOUNT DELETED: '+realName;
   toast('ACCOUNT DELETED','err');
   streamLine('ADMIN', `DELETE → @${realName} | ${uid.slice(0,12)}`);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SESSION 8 — GLOBAL SEARCH · NOTIFICATION BELL · HOTKEYS
+// ═══════════════════════════════════════════════════════════════
+
+const MCU_HOTKEY_TABS = ['cms','users','sim','telem','support','acc','economy'];
+let _mcuSearchDebounce  = null;
+let _mcuSearchResults   = [];
+let _mcuSearchActiveIdx = -1;
+
+function mcuInitGlobalChrome(){
+  mcuInitHotkeys();
+  alertLoadRules();
+  checkAlerts();
+  alertStartPolling();
+}
+
+function mcuUpdateAlertBell(count){
+  const badge = document.getElementById('mcuAlertBadge');
+  const btn   = document.getElementById('mcuAlertBell');
+  if(!badge) return;
+  const n = typeof count === 'number' ? count : (_alertActiveList?.length ?? 0);
+  badge.textContent = n > 99 ? '99+' : String(n);
+  badge.hidden = n <= 0;
+  if(btn) btn.title = n > 0 ? `${n} active alert${n === 1 ? '' : 's'}` : 'No active alerts';
+}
+
+function mcuOpenAlerts(){
+  switchTab('alerts');
+}
+
+function mcuOpenSearch(){
+  const ov  = document.getElementById('mcuSearchOverlay');
+  const inp = document.getElementById('mcuSearchInput');
+  if(!ov) return;
+  ov.classList.remove('hidden');
+  _mcuSearchResults = [];
+  _mcuSearchActiveIdx = -1;
+  mcuRenderSearchResults([]);
+  if(inp){ inp.value = ''; setTimeout(()=>inp.focus(), 40); }
+}
+
+function mcuCloseSearch(){
+  document.getElementById('mcuSearchOverlay')?.classList.add('hidden');
+  _mcuSearchActiveIdx = -1;
+}
+
+function mcuInitHotkeys(){
+  document.addEventListener('keydown', mcuOnKeydown);
+}
+
+function mcuOnKeydown(e){
+  const overlayOpen = !document.getElementById('mcuSearchOverlay')?.classList.contains('hidden');
+
+  if(e.key === 'Escape'){
+    if(overlayOpen){
+      e.preventDefault();
+      mcuCloseSearch();
+    }
+    return;
+  }
+
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+    e.preventDefault();
+    if(overlayOpen) mcuCloseSearch();
+    else mcuOpenSearch();
+    return;
+  }
+
+  if((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey){
+    const num = parseInt(e.key, 10);
+    if(num >= 1 && num <= 7 && MCU_HOTKEY_TABS[num - 1]){
+      e.preventDefault();
+      switchTab(MCU_HOTKEY_TABS[num - 1]);
+      return;
+    }
+  }
+
+  if(overlayOpen && _mcuSearchResults.length){
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      _mcuSearchActiveIdx = Math.min(_mcuSearchActiveIdx + 1, _mcuSearchResults.length - 1);
+      mcuRenderSearchResults(_mcuSearchResults);
+      return;
+    }
+    if(e.key === 'ArrowUp'){
+      e.preventDefault();
+      _mcuSearchActiveIdx = Math.max(_mcuSearchActiveIdx - 1, 0);
+      mcuRenderSearchResults(_mcuSearchResults);
+      return;
+    }
+  }
+}
+
+function mcuSearchInputKey(e){
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    if(_mcuSearchActiveIdx >= 0 && _mcuSearchResults[_mcuSearchActiveIdx]){
+      mcuSearchGo(_mcuSearchResults[_mcuSearchActiveIdx]);
+      return;
+    }
+    const q = document.getElementById('mcuSearchInput')?.value?.trim();
+    if(q && _mcuSearchResults.length) mcuSearchGo(_mcuSearchResults[0]);
+    else if(q) mcuSearchOnInput(true);
+  }
+}
+
+function mcuSearchOnInput(immediate){
+  clearTimeout(_mcuSearchDebounce);
+  const q = document.getElementById('mcuSearchInput')?.value || '';
+  if(q.length < 2){
+    _mcuSearchActiveIdx = -1;
+    mcuRenderSearchResults([]);
+    return;
+  }
+  const run = async()=>{
+    const el = document.getElementById('mcuSearchResults');
+    if(el) el.innerHTML = '<div class="mcu-search-empty">Searching…</div>';
+    try{
+      const list = await mcuRunUniversalSearch(q);
+      _mcuSearchActiveIdx = list.length ? 0 : -1;
+      mcuRenderSearchResults(list);
+    } catch(err){
+      if(el) el.innerHTML = `<div class="mcu-search-empty" style="color:var(--red)">${esc(err.message)}</div>`;
+    }
+  };
+  if(immediate) run();
+  else _mcuSearchDebounce = setTimeout(run, 280);
+}
+
+async function mcuRunUniversalSearch(raw){
+  const q = raw.trim();
+  if(!q || q.length < 2) return [];
+
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const HEX64   = /^[0-9a-f]{64}$/i;
+  const SERIAL  = /^#?PX-/i;
+  const results = [];
+  const tasks   = [];
+
+  function push(item){
+    const key = item.type + '|' + item.query;
+    if(results.some(r => (r.type + '|' + r.query) === key)) return;
+    results.push(item);
+  }
+
+  if(!UUID_RE.test(q) && !HEX64.test(q)){
+    tasks.push((async()=>{
+      const uname = q.replace(/^@/, '');
+      let pq = sb.from('profiles').select('id,username,email').limit(5);
+      if(SERIAL.test(q)){
+        const ah = q.replace(/^#?PX-/i, '');
+        pq = sb.from('profiles').select('id,username,email').eq('account_hash', ah).limit(3);
+      } else if(/^[0-9a-f]{8}-/.test(uname)){
+        pq = sb.from('profiles').select('id,username,email').eq('id', uname).limit(1);
+      } else {
+        pq = sb.from('profiles').select('id,username,email').ilike('username', uname).limit(5);
+      }
+      const {data, error} = await pq;
+      if(error) return;
+      (data || []).forEach(p => push({
+        type: 'profile', label: '@' + (p.username || '—'), sub: p.id,
+        target: 'dossier', query: p.username || p.id, icon: '👤'
+      }));
+    })());
+  }
+
+  if(UUID_RE.test(q)){
+    const id = q.toLowerCase();
+    tasks.push((async()=>{
+      const [profRes, rngRes, offerRes, evRes, auditRes, lookupRes] = await Promise.all([
+        sb.from('profiles').select('id,username').eq('id', id).maybeSingle(),
+        sb.from('rng_rounds').select('id').eq('id', id).maybeSingle(),
+        sb.from('poxy_trade_offers').select('id,status').eq('id', id).maybeSingle(),
+        sb.from('ledger_events').select('id,event_type,seq,event_hash').eq('id', id).maybeSingle(),
+        sb.from('poxy_audit_log').select('id,action,created_at').eq('id', id).maybeSingle(),
+        sb.rpc('admin_support_lookup', { p_query: q }),
+      ]);
+      const prof  = profRes.data;
+      const rng   = rngRes.data;
+      const offer = offerRes.data;
+      const ev    = evRes.data;
+      const audit = auditRes.data;
+      const lookup = lookupRes.data;
+
+      if(prof) push({ type:'profile', label:'@'+(prof.username||'—'), sub:id, target:'dossier', query:prof.username||id, icon:'👤' });
+      if(rng)  push({ type:'round',   label:'RNG round', sub:rngTrunc(id, 24), target:'rng', query:id, icon:'🎲' });
+      if(offer) push({ type:'offer',   label:'Trade offer', sub:(offer.status||'—')+' · '+rngTrunc(id, 20), target:'disputes', query:id, icon:'⚖' });
+      if(ev)   push({ type:'event',   label:'Ledger '+ev.event_type, sub:'seq '+ev.seq+' · '+rngTrunc(ev.event_hash, 16), target:'auditlog', query:ev.event_hash||id, icon:'📋' });
+      if(audit) push({ type:'audit',  label:'Audit '+audit.action, sub:fmtDate(audit.created_at), target:'auditlog', query:id, icon:'📋' });
+      if(lookup?.ok){
+        const sn = lookup.user_poxy?.serial_number || lookup.poxy_asset?.serial_number || 'Asset';
+        push({ type:'asset', label:sn, sub:(lookup.poxy_asset?.poxy_hash||'').slice(0, 24), target:'support', query:q, icon:'◆' });
+        if(lookup.owner?.username){
+          push({ type:'profile', label:'@'+lookup.owner.username, sub:'Asset owner', target:'dossier', query:lookup.owner.username, icon:'👤' });
+        }
+      }
+    })());
+  }
+
+  if(SERIAL.test(q) || HEX64.test(q)){
+    tasks.push((async()=>{
+      const {data, error} = await sb.rpc('admin_support_lookup', { p_query: q });
+      if(error || !data?.ok) return;
+      const sn = data.user_poxy?.serial_number || data.poxy_asset?.serial_number || 'Asset';
+      push({ type:'asset', label:sn, sub:(data.poxy_asset?.poxy_hash||'').slice(0, 24), target:'support', query:q, icon:'◆' });
+      if(data.owner?.username){
+        push({ type:'profile', label:'@'+data.owner.username, sub:'Owner', target:'dossier', query:data.owner.username, icon:'👤' });
+      }
+    })());
+  }
+
+  if(HEX64.test(q)){
+    tasks.push((async()=>{
+      const [{data:prof}, {data:ev}] = await Promise.all([
+        sb.from('profiles').select('id,username').eq('identity_hash', q).maybeSingle(),
+        sb.from('ledger_events').select('id,event_type,seq,event_hash').eq('event_hash', q).maybeSingle(),
+      ]);
+      if(prof) push({ type:'profile', label:'@'+(prof.username||'—'), sub:'identity hash', target:'dossier', query:prof.username||prof.id, icon:'👤' });
+      if(ev) push({ type:'event', label:'Ledger '+ev.event_type, sub:'seq '+ev.seq+' · '+rngTrunc(ev.event_hash, 16), target:'auditlog', query:ev.event_hash, icon:'📋' });
+    })());
+  }
+
+  await Promise.all(tasks);
+  return results;
+}
+
+function mcuRenderSearchResults(list){
+  const el = document.getElementById('mcuSearchResults');
+  if(!el) return;
+  _mcuSearchResults = list;
+  if(!list.length){
+    el.innerHTML = '<div class="mcu-search-empty">No matches — try @username, PX serial, UUID, or tx hash</div>';
+    return;
+  }
+  el.innerHTML = list.map((r, i) => `
+    <div class="mcu-search-result${i === _mcuSearchActiveIdx ? ' active' : ''}" onclick="mcuSearchGoByIdx(${i})">
+      <span class="mcu-search-result-ic">${r.icon}</span>
+      <div class="mcu-search-result-body">
+        <div class="mcu-search-result-title">${esc(r.label)}</div>
+        <div class="mcu-search-result-sub">${esc(r.sub || '')}</div>
+      </div>
+      <span class="mcu-search-result-tag">${esc(r.type)}</span>
+    </div>`).join('');
+}
+
+function mcuSearchGoByIdx(i){
+  mcuSearchGo(_mcuSearchResults[i]);
+}
+
+function mcuSearchGo(result){
+  if(!result) return;
+  mcuCloseSearch();
+  switch(result.target){
+    case 'dossier': {
+      const el = document.getElementById('dossierQuery');
+      if(el) el.value = result.query;
+      switchTab('dossier');
+      loadDossier();
+      break;
+    }
+    case 'support': {
+      const el = document.getElementById('supportQuery');
+      if(el) el.value = result.query;
+      switchTab('support');
+      supportLookup();
+      break;
+    }
+    case 'rng':
+      switchTab('rng');
+      rngVerifyDrop(result.query);
+      break;
+    case 'disputes': {
+      const el = document.getElementById('dispQuery');
+      if(el) el.value = result.query;
+      switchTab('disputes');
+      dispInvestigate();
+      break;
+    }
+    case 'auditlog':
+      switchTab('auditlog');
+      { const el = document.getElementById('alogSearch');
+        if(el) el.value = result.query;
+        auditLogApplyFilters(); }
+      break;
+  }
 }
 </script>
 </body>
