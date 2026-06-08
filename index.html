@@ -5486,6 +5486,8 @@ function bootstrapAfterLogin(){
     setTimeout(()=>{loadDailyQuests();},800);
     syncNavUsernameLabels();
     await openPendingPassportDeepLink();
+    // Drain any pending crypto mints from previous sessions (non-blocking)
+    setTimeout(()=>{cryptoDrainQueue().catch(e=>console.warn('[poxy-crypto] drain:',e));},3000);
   })();
 }
 async function applyAuthSession(session){
@@ -8619,26 +8621,85 @@ function openWinRevealModal(tier,forcedSerial){
   });
 })();
 
-// --- POXY Cryptographic Core (best-effort signed mint + ledger) -------------
-// Mints a signed cryptographic twin + genesis ledger event for a freshly created
-// user_poxy. Non-blocking: if the signing key isn't configured yet, gameplay is
-// unaffected and we just log a notice.
+// =============================================================================
+// POXY Cryptographic Core — mint + transfer ledger bridge
+// Non-blocking: gameplay never fails if crypto layer is unavailable.
+// Failed mints are queued in localStorage and retried on next session start.
+// =============================================================================
+const CRYPTO_QUEUE_KEY='poxy_crypto_mint_queue';
+const CRYPTO_QUEUE_MAX=50;
 function poxyEnvelope(action){
   const nonce=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now()+'-'+Math.random().toString(16).slice(2));
   return {nonce,timestamp:new Date().toISOString(),action};
 }
+
+// ── Retry queue helpers ──
+function cryptoQueueLoad(){try{return JSON.parse(localStorage.getItem(CRYPTO_QUEUE_KEY)||'[]');}catch(e){return[];}}
+function cryptoQueueSave(q){try{localStorage.setItem(CRYPTO_QUEUE_KEY,JSON.stringify(q.slice(-CRYPTO_QUEUE_MAX)));}catch(e){}}
+function cryptoQueuePush(item){const q=cryptoQueueLoad();q.push({...item,t:Date.now()});cryptoQueueSave(q);}
+function cryptoQueueRemove(userPoxyId){const q=cryptoQueueLoad().filter(x=>x.userPoxyId!==userPoxyId);cryptoQueueSave(q);}
+
 async function cryptoMint(userPoxyId,tier,collectionId){
   if(!userPoxyId||!tier)return null;
   try{
-    const{data,error}=await sb.functions.invoke('mint_poxy',{body:{envelope:poxyEnvelope('mint_poxy'),tier,collection_id:collectionId||'genesis',link_user_poxy_id:userPoxyId}});
+    const{data,error}=await sb.functions.invoke('mint_poxy',{body:{
+      envelope:poxyEnvelope('mint_poxy'),
+      tier,
+      collection_id:collectionId||'genesis',
+      link_user_poxy_id:userPoxyId
+    }});
     if(error||!data?.ok){
-      console.error('[poxy-crypto] mint_poxy failed:',error?.message||data?.error||error,{userPoxyId,tier});
+      const msg=error?.message||data?.error||'unknown';
+      console.warn('[poxy-crypto] mint failed (queued for retry):',msg,{userPoxyId,tier});
+      cryptoQueuePush({userPoxyId,tier,collectionId:collectionId||'genesis'});
       return null;
     }
-    console.log('[poxy-crypto] anchored:',data.poxy_hash?.slice(0,12),'for',userPoxyId);
-    return data; // { poxy_hash, signature, event_hash, seq, ... }
+    console.log('[poxy-crypto] anchored:',data.poxy_hash?.slice(0,12),'→',userPoxyId);
+    cryptoQueueRemove(userPoxyId); // clear from retry queue if it was there
+    return data;
   }catch(e){
-    console.error('[poxy-crypto] mint_poxy exception:',e?.message||e,{userPoxyId,tier});
+    console.warn('[poxy-crypto] mint exception (queued):',e?.message||e,{userPoxyId,tier});
+    cryptoQueuePush({userPoxyId,tier,collectionId:collectionId||'genesis'});
+    return null;
+  }
+}
+
+// Drain the retry queue — called on login, max 10 attempts per session
+async function cryptoDrainQueue(){
+  if(!currentUser)return;
+  const q=cryptoQueueLoad();
+  if(!q.length)return;
+  console.log('[poxy-crypto] draining',q.length,'queued mints');
+  for(const item of q.slice(0,10)){
+    // Verify asset still belongs to current user before minting
+    try{
+      const{data:check}=await sb.from('user_poxy').select('id').eq('id',item.userPoxyId).eq('user_id',currentUser.id).maybeSingle();
+      if(!check){cryptoQueueRemove(item.userPoxyId);continue;}
+    }catch(e){continue;}
+    await cryptoMint(item.userPoxyId,item.tier,item.collectionId);
+    await new Promise(r=>setTimeout(r,300)); // rate-limit
+  }
+}
+
+// ── cryptoTransfer — records a signed TRANSFER/TRADE ledger event ──
+// Called after any ownership change: marketplace buy, gift claim.
+async function cryptoTransfer(assetId, toOwnerId, eventType){
+  if(!assetId||!toOwnerId||!currentUser)return null;
+  try{
+    const{data,error}=await sb.functions.invoke('transfer_poxy',{body:{
+      envelope:poxyEnvelope('transfer_poxy'),
+      asset_id:assetId,
+      to_owner:toOwnerId,
+      event_type:eventType||'TRANSFER'
+    }});
+    if(error||!data?.ok){
+      console.warn('[poxy-crypto] transfer failed:',error?.message||data?.error,{assetId,toOwnerId});
+      return null;
+    }
+    console.log('[poxy-crypto] transfer anchored:',data.event_hash?.slice(0,12));
+    return data;
+  }catch(e){
+    console.warn('[poxy-crypto] transfer exception:',e?.message||e);
     return null;
   }
 }
@@ -10446,6 +10507,10 @@ window.claimGiftById=async function(giftId){
     showToast('POXY added to your collection!');
     await loadCollection();
     if(activeStitchTab==='dashboard')renderDashColPreview();
+    // Anchor the newly claimed POXY to the crypto ledger (non-blocking)
+    if(res?.poxy_id||res?.new_poxy_id){
+      cryptoMint(res.poxy_id||res.new_poxy_id,g.poxy_tier||g.tier,'gift').catch(()=>{});
+    }
   }catch(e){
     showToast('Could not claim gift: '+(e.message||'error'));
     console.error(e);
@@ -11293,6 +11358,9 @@ async function quickBuyListing(item,tier,buyBtn){
     updateBalanceBadge(currentProfile?.balance||0);
     showToast('Purchased! Check your collection.');
     loadMarket();
+    if(data.asset_id){
+      cryptoTransfer(data.asset_id,currentUser.id,'TRADE').catch(e=>console.warn('[poxy-crypto] market transfer:',e));
+    }
   }catch(e){logAndToast('quick-buy',e);if(buyBtn){buyBtn.disabled=false;buyBtn.textContent='Quick Buy';}}
 }
 async function loadMarket(){
@@ -11410,6 +11478,10 @@ $('buyModalOk').addEventListener('click',async function(){
     updateBalanceBadge(currentProfile?.balance||0);
     showToast('Purchased! Check your collection.');
     closeBuyModal();loadMarket();
+    // Ledger transfer event — non-blocking
+    if(data.asset_id){
+      cryptoTransfer(data.asset_id,currentUser.id,'TRADE').catch(e=>console.warn('[poxy-crypto] market transfer:',e));
+    }
   }catch(e){logAndToast('purchase',e);}
   btn.disabled=false;
 });

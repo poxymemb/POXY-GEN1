@@ -40,8 +40,18 @@ Use a **test account** with dev topup if needed.
 ## Crypto layer
 
 - [ ] After case open, `cryptoMint` runs (check browser console — no silent fail)
+- [ ] Failed mints are **queued** (`poxy_crypto_mint_queue` in localStorage) and drained on next login
 - [ ] **Verify terminal** — `public_verify` returns valid for minted asset
-- [ ] `count(poxy_assets)` approaches `count(user_poxy)` over time
+- [ ] **Marketplace buy** → `cryptoTransfer` TRADE event in ledger (check console)
+- [ ] **Gift claim** → `cryptoMint` gift event for new asset (check console)
+- [ ] `count(poxy_assets)` = `count(user_poxy)` (all backfilled)
+
+## Phase 2 — verified
+
+- [ ] **Backfill** — `SELECT COUNT(*) FROM user_poxy up LEFT JOIN poxy_assets pa ON pa.user_poxy_id=up.id WHERE pa.id IS NULL` → **0**
+- [ ] **Snapshot** — `SELECT * FROM ledger_snapshots ORDER BY snapshot_at DESC LIMIT 1` — row present with `root_hash`
+- [ ] **Cron** — `SELECT jobname, active FROM cron.job WHERE jobname='poxy-ledger-snapshot-daily'` → active = true
+- [ ] `purchase_poxy` returns `asset_id` in response (console: `[poxy-crypto] transfer anchored`)
 
 ## Phase 1 — fixed (verify)
 

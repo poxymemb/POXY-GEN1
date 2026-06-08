@@ -30,6 +30,7 @@ Run in **Supabase SQL Editor** or `supabase db push` (when linked):
 | 20 | `migration_share_links.sql` | `share_links_rpc` |
 | 21 | `migration_phase1_trade_flash_store.sql` | `phase1_trade_flash_store` |
 | 22 | `migration_admin_emails_table.sql` | `admin_emails_table` |
+| 23 | `migration_phase2_crypto_bridge.sql` | `phase2_crypto_bridge` — backfill RPC, snapshot table, cron |
 
 ## Admin allowlist (manual — never commit emails/UUIDs)
 
@@ -77,7 +78,8 @@ WHERE n.nspname = 'public'
   AND proname IN (
     'open_standard_case_v2', 'send_gift', 'claim_gift', 'get_my_pending_gifts',
     'dev_topup', 'purchase_poxy', 'open_vip_case', 'craft_upgrade',
-    'crypto_mint_poxy', 'private_is_admin'
+    'crypto_mint_poxy', 'private_is_admin',
+    'admin_backfill_crypto_assets', 'compute_ledger_snapshot'
   )
 ORDER BY 1;
 ```
