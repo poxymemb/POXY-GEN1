@@ -42,6 +42,7 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 /* ── AUTH ── */
 #authScreen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:9999;padding:24px}
 #authScreen.hidden{display:none}
+.auth-theme-bar{position:absolute;top:16px;right:16px}
 .auth-logo{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
 .auth-title{font-size:22px;font-weight:700;color:var(--adm-text);letter-spacing:-.02em}
 .auth-sub{font-size:13px;color:var(--muted)}
@@ -212,6 +213,12 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
      AUTH GATE
      ═══════════════════════════════════════════════════════ -->
 <div id="authScreen">
+  <div class="auth-theme-bar">
+    <button type="button" class="theme-toggle-btn" onclick="toggleMcuTheme()" aria-label="Toggle light or dark theme">
+      <span class="theme-ic" id="authThemeIcon">☀</span>
+      <span id="authThemeLabel">Light</span>
+    </button>
+  </div>
   <div class="auth-logo">POXY World</div>
   <div class="auth-title">Master Control Unit</div>
   <div class="auth-sub">Restricted access — verified staff only</div>
@@ -953,11 +960,16 @@ const MCU_PAGES = {
 function syncThemeToggleUI(){
   const theme = document.documentElement.getAttribute('data-theme') || 'dark';
   const isDark = theme !== 'light';
-  const icon = document.getElementById('themeToggleIcon');
-  const label = document.getElementById('themeToggleLabel');
-  if(icon) icon.textContent = isDark ? '☀' : '☾';
-  if(label) label.textContent = isDark ? 'Light' : 'Dark';
+  const iconText = isDark ? '☀' : '☾';
+  const labelText = isDark ? 'Light' : 'Dark';
+  [['themeToggleIcon','themeToggleLabel'],['authThemeIcon','authThemeLabel']].forEach(([icId,lbId])=>{
+    const icon = document.getElementById(icId);
+    const label = document.getElementById(lbId);
+    if(icon) icon.textContent = iconText;
+    if(label) label.textContent = labelText;
+  });
 }
+document.addEventListener('DOMContentLoaded', syncThemeToggleUI);
 
 function toggleMcuTheme(){
   const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
