@@ -155,8 +155,9 @@
       if (data?.ok) showToast('Trade executed! Items exchanged.');
       else showToast(data?.error || 'Trade failed.');
     } else if (action === 'decline-trade') {
-      await sb.from('poxy_trade_offers').update({ status: 'declined' }).eq('id', tradeId);
-      showToast('Trade declined.');
+      const { data } = await sb.rpc('decline_trade_offer', { p_offer_id: tradeId });
+      if (data?.ok) showToast('Trade declined.');
+      else showToast(data?.error || 'Decline failed.');
     }
   }
 

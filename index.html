@@ -10264,14 +10264,15 @@ async function handleIncomingTradeOffer(offer){
 }
 window.respondTradeOffer=async function(offerId,accept){
   if(!offerId||!currentUser)return;
-  const status=accept?'accepted':'declined';
   try{
-    const{error}=await sb.from('poxy_trade_offers').update({status,updated_at:new Date().toISOString()}).eq('id',offerId).eq('to_id',currentUser.id).eq('status','pending');
+    const rpcName=accept?'accept_trade_offer':'decline_trade_offer';
+    const{data,error}=await sb.rpc(rpcName,{p_offer_id:offerId});
     if(error)throw error;
+    if(data?.ok===false)throw new Error(data.error||(accept?'Trade failed':'Decline failed'));
     removeNotificationByOfferId(offerId);
     pushNotification(accept?'trade_accepted':'trade_declined',{offer_id:offerId});
-    showToast(accept?'Trade accepted.':'Trade declined.');
-    if(accept)loadCollection().catch(console.error);
+    showToast(accept?'Trade accepted — items transferred.':'Trade declined.');
+    if(accept)loadCollection().catch(e=>console.warn('loadCollection after trade',e));
   }catch(e){logAndToast('trade-response',e);}
 };
 window.openNotifyHub=function(){
@@ -12944,23 +12945,19 @@ async function buyFlashSale(sale,tier,btn){
   if(sale.stock<=0){showToast('Sold out.');return;}
   btn.disabled=true;btn.textContent='...';
   try{
-    // Atomic-ish: debit balance, decrement stock, mint VIP item
-    const newBal=bal-parseFloat(sale.price_pc);
-    await sb.from('profiles').update({balance:newBal}).eq('id',currentUser.id);
-    currentProfile.balance=newBal;updateBalanceBadge(newBal);
-    await sb.from('flash_sales').update({stock:Math.max(0,sale.stock-1)}).eq('id',sale.id);
-    if(VIP_TIERS.find(t=>t.id===sale.poxy_tier)){
-      const{data,error}=await sb.rpc('open_vip_case',{p_user_id:currentUser.id,p_tier:sale.poxy_tier,p_serial:null});
-      if(error)throw error;if(!data.ok)throw new Error(data.error);
-      cryptoMint(data.new_id,sale.poxy_tier,'vip').catch(()=>{});
-    } else {
-      const serial=genSerial();
-      const{data:inserted,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:sale.poxy_tier,serial_number:serial,case_origin:'vip'}).select('id').single();
-      if(error)throw error;
-      cryptoMint(inserted&&inserted.id,sale.poxy_tier,'vip').catch(()=>{});
+    const{data,error}=await sb.rpc('purchase_flash_sale',{p_sale_id:sale.id});
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Purchase failed');
+    if(data.balance!=null&&currentProfile){
+      currentProfile.balance=data.balance;
+      updateBalanceBadge(data.balance);
+    }
+    if(data.new_id){
+      cryptoMint(data.new_id,data.tier||sale.poxy_tier,'flash').catch(e=>console.warn('cryptoMint flash',e));
     }
     showToast('Flash drop claimed!');
     loadFlashSales();
+    loadCollection().catch(e=>console.warn('loadCollection after flash',e));
   }catch(e){showToast('Purchase failed: '+(e.message||'error'));btn.disabled=false;btn.textContent=formatPC(sale.price_pc)+' · BUY';}
 }
 async function doClubOpen(count){
@@ -13797,20 +13794,23 @@ window.purchaseCustomization=async function(itemId){
   if(bal<item.cost){showToast('Insufficient Poxy Coins. Need '+item.cost+' PC.');return;}
   const isOwned=item.type==='theme'?currentProfile.profile_theme===item.themeVal:currentProfile.name_gradient===item.gradientVal;
   if(isOwned){showToast('Already active!');return;}
-  const updateData={balance:bal-item.cost};
-  if(item.type==='theme')updateData.profile_theme=item.themeVal;
-  else if(item.type==='gradient')updateData.name_gradient=item.gradientVal;
   try{
-    const{error}=await sb.from('profiles').update(updateData).eq('id',currentUser.id);
+    const{data,error}=await sb.rpc('purchase_customization',{p_item_id:itemId});
     if(error)throw error;
-    currentProfile={...currentProfile,...updateData};
+    if(!data?.ok)throw new Error(data.error||'Purchase failed');
+    currentProfile={
+      ...currentProfile,
+      balance:data.balance??currentProfile.balance,
+      profile_theme:data.profile_theme??currentProfile.profile_theme,
+      name_gradient:data.name_gradient??currentProfile.name_gradient
+    };
     updateBalanceBadge(currentProfile.balance);
     if(item.type==='theme')applyTheme(item.themeVal);
     else if(item.type==='gradient')applyNameGradientUI(item.gradientVal);
     showToast(item.name+' activated!');
     renderStorePage();
     renderCustomizeTab();
-  }catch(e){showToast('Purchase failed: '+(e.message||'error'));}
+  }catch(e){logAndToast('store-purchase',e);}
 };
 
 // ── REALTIME SUBSCRIPTIONS (PHASE 1) ──

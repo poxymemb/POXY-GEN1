@@ -28,6 +28,7 @@ Run in **Supabase SQL Editor** or `supabase db push` (when linked):
 | 18 | `migration_serial_uniqueness.sql` | `unique_serial_number_and_clean_poxy` |
 | 19 | `migration_season_atlas.sql` | `season_atlas*` |
 | 20 | `migration_share_links.sql` | `share_links_rpc` |
+| 21 | `migration_phase1_trade_flash_store.sql` | `phase1_trade_flash_store` |
 
 ## Prod-only ops (not in SQL files)
 

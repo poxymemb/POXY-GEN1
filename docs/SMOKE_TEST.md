@@ -43,12 +43,17 @@ Use a **test account** with dev topup if needed.
 - [ ] **Verify terminal** — `public_verify` returns valid for minted asset
 - [ ] `count(poxy_assets)` approaches `count(user_poxy)` over time
 
-## Known broken (Phase 1 targets)
+## Phase 1 — fixed (verify)
 
-- [ ] P2P trade **accept** — assets must transfer (currently broken)
-- [ ] Club **OTC** — mock hash only
-- [ ] Club **DAO** — localStorage only
-- [ ] Flash sale — client-side balance race
+- [ ] P2P trade **accept** (`accept_trade_offer`) — assets transfer to recipient
+- [ ] P2P trade **decline** (`decline_trade_offer`)
+- [ ] **Flash sale** (`purchase_flash_sale`) — single RPC, no double VIP charge
+- [ ] **Store themes/gradients** (`purchase_customization`) — works with economy guard
+
+## Known broken (later phases)
+
+- [ ] Club **OTC** — mock hash only (Phase 4)
+- [ ] Club **DAO** — localStorage only (Phase 4)
 
 ## SQL health (Supabase SQL Editor)
 
