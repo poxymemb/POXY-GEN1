@@ -103,8 +103,36 @@ Deno.serve(async (req) => {
         },
       ];
 
+      const destroyed = String(data.asset_state ?? "").toLowerCase() === "destroyed";
       const serialAligned = data.serial_matches !== false;
-      const allOk = Boolean(data.hash_matches && signatureValid && data.genesis_event_id && serialAligned);
+      const cryptoOk = Boolean(data.hash_matches && signatureValid && data.genesis_event_id);
+      // Burned POXY: gameplay row is gone → serial_matches false is expected, not a tamper signal.
+      const allOk = destroyed ? cryptoOk : Boolean(cryptoOk && serialAligned);
+
+      if (destroyed && cryptoOk) {
+        steps.push({
+          step: 5,
+          name: "Asset Lifecycle State",
+          description: "A destroyed asset no longer exists in gameplay inventory, but its cryptographic identity and ledger history remain verifiable.",
+          asset_state: data.asset_state,
+          serial_number: data.serial_number,
+          ok: true,
+          result: "DESTROYED — POXY was burned; identity hash still authentic",
+        });
+      }
+
+      let summary: string;
+      if (!cryptoOk) {
+        summary = serialAligned
+          ? "VERIFICATION FAILED — one or more integrity checks did not pass."
+          : "IDENTITY MISMATCH — game serial and crypto serial differ (re-mint required).";
+      } else if (destroyed) {
+        summary = "BURN VERIFIED — cryptographic identity is valid; this POXY was burned and is no longer active.";
+      } else if (allOk) {
+        summary = "FULLY VERIFIED — this POXY is authentic, unmodified, and cryptographically signed.";
+      } else {
+        summary = "IDENTITY MISMATCH — game serial and crypto serial differ (re-mint required).";
+      }
 
       return new Response(
         JSON.stringify({
@@ -116,17 +144,13 @@ Deno.serve(async (req) => {
           collection_id: data.collection_id,
           serial_number: data.serial_number,
           game_serial: data.game_serial,
-          serial_matches: data.serial_matches,
+          serial_matches: destroyed ? null : data.serial_matches,
           rng_round_id: data.rng_round_id,
           genesis_event_id: data.genesis_event_id,
           generation_version: data.generation_version,
           asset_state: data.asset_state,
           mint_timestamp: data.mint_ts_canonical,
-          summary: allOk
-            ? "FULLY VERIFIED — this POXY is authentic, unmodified, and cryptographically signed."
-            : serialAligned
-              ? "VERIFICATION FAILED — one or more integrity checks did not pass."
-              : "IDENTITY MISMATCH — game serial and crypto serial differ (re-mint required).",
+          summary,
           steps,
         }),
         { status: 200, headers },
@@ -140,6 +164,10 @@ Deno.serve(async (req) => {
       const { data, error } = await admin.rpc("public_verify_event", { p_event_id: id });
       if (error) return new Response(JSON.stringify({ ok: false, error: error.message }), { status: 400, headers });
       if (!data?.ok) return new Response(JSON.stringify(data), { status: 404, headers });
+
+      const eventType = String(data.event_type ?? "").toUpperCase();
+      const assetState = String(data.asset_state ?? "").toLowerCase();
+      const destroyed = eventType === "DESTROY" || assetState === "destroyed";
 
       const steps = [
         {
@@ -172,6 +200,29 @@ Deno.serve(async (req) => {
         },
       ];
 
+      if (destroyed && data.hash_matches) {
+        steps.push({
+          step: 4,
+          name: "Asset Lifecycle State",
+          description: "A DESTROY event marks the end of an asset's active lifecycle. The cryptographic record remains verifiable, but the POXY is burned and no longer held in inventory.",
+          asset_state: data.asset_state ?? "destroyed",
+          serial_number: data.serial_number,
+          ok: true,
+          result: "DESTROYED — POXY was burned; no longer active in collection",
+        });
+      }
+
+      let summary: string;
+      if (!data.hash_matches) {
+        summary = "EVENT INVALID — hash chain broken at this event.";
+      } else if (destroyed) {
+        summary = "BURN VERIFIED — valid DESTROY ledger entry. This POXY has been burned and is no longer active.";
+      } else if (eventType === "MINT") {
+        summary = "MINT VERIFIED — genesis ledger entry is part of the valid hash chain.";
+      } else {
+        summary = "EVENT VERIFIED — this ledger entry is part of the valid hash chain.";
+      }
+
       return new Response(
         JSON.stringify({
           ok: data.hash_matches,
@@ -181,13 +232,14 @@ Deno.serve(async (req) => {
           event_hash: data.event_hash,
           seq: data.seq,
           created_at: data.created_at,
+          asset_id: data.asset_id,
+          asset_state: data.asset_state,
+          serial_number: data.serial_number,
           poxy_hash: data.poxy_hash,
           game_serial: data.game_serial,
           rng_round_id: data.rng_round_id,
-          genesis_event_id: data.event_id,
-          summary: data.hash_matches
-            ? "EVENT VERIFIED — this ledger entry is part of the valid hash chain."
-            : "EVENT INVALID — hash chain broken at this event.",
+          genesis_event_id: data.genesis_event_id ?? null,
+          summary,
           steps,
         }),
         { status: 200, headers },

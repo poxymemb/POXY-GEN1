@@ -33,6 +33,9 @@ Run in **Supabase SQL Editor** or `supabase db push` (when linked):
 | 23 | `migration_phase2_crypto_bridge.sql` | `phase2_crypto_bridge` — backfill RPC, snapshot table, cron |
 | 24 | `migration_phase3_provably_fair_gacha.sql` | `phase3_provably_fair` — rng_round_id, open_standard_case_v3, burn DESTROY, trade TRADE events |
 | 25 | `migration_fix_rng_commit_search_path.sql` | `fix_rng_commit_search_path` — extensions.gen_random_bytes in rng_commit |
+| 26 | `migration_burn_destroy_edge.sql` | `burn_destroy_edge` — crypto_destroy via edge; remove bulk burn SQL stub |
+| 27 | `migration_fix_crypto_destroy_owner.sql` | `fix_crypto_destroy_owner_null` — keep owner on DESTROY (NOT NULL column) |
+| 28 | `migration_fix_public_verify_event_asset.sql` | `fix_public_verify_event_asset` — DESTROY events resolve linked asset metadata |
 
 ## Admin allowlist (manual — never commit emails/UUIDs)
 
@@ -60,7 +63,7 @@ These were applied on prod but are **operational**, not schema:
 Deploy from `supabase/functions/`:
 
 ```
-mint_poxy, transfer_poxy, verify_poxy, verify_event_chain, verify_merkle_tree,
+mint_poxy, transfer_poxy, destroy_poxy, verify_poxy, verify_event_chain, verify_merkle_tree,
 rng_commit, rng_reveal, snapshot, export_proof, public_verify
 ```
 

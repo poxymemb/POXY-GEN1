@@ -531,6 +531,24 @@
 }
 .vt-receipt__badge--ok .material-symbols-outlined { font-size: 10px; }
 
+/* DESTROY / burn — amber warning, not mint-teal "verified" */
+.vt-receipt__badge--burn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: 9999px;
+  font-family: 'Hanken Grotesk', Inter, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fbbf24;
+}
+.vt-receipt__badge--burn .material-symbols-outlined { font-size: 10px; }
+
 /* Receipt title — Stitch: font-headline-md text-[24px] font-black text-white uppercase tracking-tight */
 .vt-receipt__title {
   font-family: 'Hanken Grotesk', Inter, sans-serif;

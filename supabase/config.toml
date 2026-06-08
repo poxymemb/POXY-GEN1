@@ -12,6 +12,9 @@ verify_jwt = true
 [functions.transfer_poxy]
 verify_jwt = true
 
+[functions.destroy_poxy]
+verify_jwt = true
+
 [functions.verify_poxy]
 verify_jwt = true
 

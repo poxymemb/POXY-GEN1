@@ -64,8 +64,10 @@ Use a **test account** with dev topup if needed.
 - [x] `serial_matches` = true (game serial = crypto serial)
 - [x] `rarity_seed` = RNG `result_hash`
 - [x] Receipt cross-links identical in all 3 verify tabs
-- [ ] **Burn** → DESTROY ledger event (needs edge hardening)
-- [ ] **Trade accept** → TRADE ledger event (needs edge hardening)
+- [x] **Burn** → `destroy_poxy` edge + DESTROY ledger event (`[poxy-crypto] destroyed` in console)
+- [x] Verify **burned asset hash** → `ok: true`, badge **Burned** (not Invalid)
+- [x] Verify **DESTROY ledger event** → `ok: true`, summary **BURN VERIFIED**
+- [ ] **Trade accept** → TRADE ledger event (Phase 2.2 — next)
 
 ## Phase 1 — fixed (verify)
 

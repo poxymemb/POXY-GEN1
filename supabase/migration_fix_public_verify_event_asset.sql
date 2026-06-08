@@ -1,4 +1,4 @@
--- Fix public_verify RPCs: correct ledger chain formula + cross-link game/crypto/RNG metadata
+-- public_verify_event: join asset by ledger_events.asset_id (DESTROY/TRADE/etc.), not only genesis MINT.
 
 CREATE OR REPLACE FUNCTION public.public_verify_event(p_event_id uuid)
 RETURNS jsonb
@@ -28,6 +28,7 @@ BEGIN
   IF v_asset.id IS NULL AND v_event.event_type = 'MINT' THEN
     SELECT * INTO v_asset FROM public.poxy_assets WHERE genesis_event_id = v_event.id LIMIT 1;
   END IF;
+
   IF v_asset.id IS NOT NULL AND v_asset.user_poxy_id IS NOT NULL THEN
     SELECT * INTO v_game FROM public.user_poxy WHERE id = v_asset.user_poxy_id LIMIT 1;
   END IF;
@@ -54,5 +55,3 @@ BEGIN
   );
 END;
 $$;
-
--- (public_verify_asset and public_verify_rng updated in same migration applied to prod)

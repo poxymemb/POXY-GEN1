@@ -7650,8 +7650,9 @@ function vtLinksFromEdge(edge,type,val){
   };
   if(type==='asset'&&val&&!links.poxy_hash)links.poxy_hash=String(val).trim().toLowerCase();
   if(type==='event'){
-    if(!links.genesis_event_id&&edge?.event_id)links.genesis_event_id=edge.event_id;
-    if(!links.genesis_event_id&&val)links.genesis_event_id=vtNormalizeUuid(val);
+    if(!links.genesis_event_id&&edge?.genesis_event_id)links.genesis_event_id=edge.genesis_event_id;
+    if(!links.genesis_event_id&&edge?.event_type==='MINT'&&edge?.event_id)links.genesis_event_id=edge.event_id;
+    if(!links.genesis_event_id&&val&&edge?.event_type==='MINT')links.genesis_event_id=vtNormalizeUuid(val);
   }
   if(type==='rng'&&!links.rng_round_id&&val)links.rng_round_id=vtNormalizeUuid(val);
   const steps=Array.isArray(edge?.steps)?edge.steps:[];
@@ -7711,14 +7712,23 @@ async function vtVerifyViaRpc(payload){
       const{data}=await sb.rpc('public_verify_asset',{p_hash:String(payload.hash||'').trim().toLowerCase()});
       rpc=data;
       if(!rpc?.poxy_hash)return{ok:false,error:rpc?.error||'Asset not found'};
-      const ok=!!(rpc.hash_matches&&rpc.genesis_event_id&&rpc.serial_matches!==false);
-      return{ok,type:'asset',...rpc,summary:ok?'Asset verified (RPC path).':'Asset verification failed.',steps:vtStepsFromRpc('asset',rpc),via:'rpc'};
+      const destroyed=rpc.asset_state==='destroyed';
+      const cryptoOk=!!(rpc.hash_matches&&rpc.genesis_event_id&&rpc.signature);
+      const ok=destroyed?cryptoOk:!!(cryptoOk&&rpc.serial_matches!==false);
+      const summary=ok
+        ?(destroyed?'BURN VERIFIED — identity valid; POXY was burned (RPC path).':'Asset verified (RPC path).')
+        :(destroyed&&cryptoOk?'BURN VERIFIED — identity valid; POXY was burned (RPC path).':'Asset verification failed.');
+      return{ok:destroyed?cryptoOk:ok,type:'asset',...rpc,summary,steps:vtStepsFromRpc('asset',rpc),via:'rpc'};
     }
     if(type==='event'){
       const{data}=await sb.rpc('public_verify_event',{p_event_id:vtNormalizeUuid(payload.id)});
       rpc=data;
       if(!rpc?.event_id)return{ok:false,error:rpc?.error||'Event not found'};
-      return{ok:!!rpc.hash_matches,type:'event',...rpc,event_id:rpc.event_id,summary:rpc.hash_matches?'Event verified (RPC path).':'Event chain broken.',steps:vtStepsFromRpc('event',rpc),via:'rpc'};
+      const destroyed=rpc.event_type==='DESTROY'||rpc.asset_state==='destroyed';
+      const evSummary=rpc.hash_matches
+        ?(destroyed?'BURN VERIFIED — valid DESTROY entry; POXY is burned and no longer active.':rpc.event_type==='MINT'?'MINT VERIFIED (RPC path).':'Event verified (RPC path).')
+        :'Event chain broken.';
+      return{ok:!!rpc.hash_matches,type:'event',...rpc,event_id:rpc.event_id,summary:evSummary,steps:vtStepsFromRpc('event',rpc),via:'rpc'};
     }
     if(type==='rng'){
       const{data}=await sb.rpc('public_verify_rng',{p_round_id:vtNormalizeUuid(payload.id)});
@@ -7758,6 +7768,57 @@ async function vtEnrichReceiptLinks(edge,type,val){
     };
   }catch(e){console.warn('[vtEnrichReceiptLinks]',e);}
   return links;
+}
+
+/* ── Verify outcome labels — event type / lifecycle aware ───── */
+function vtCryptoIntegrityOk(data){
+  if(data?.hash_matches===true&&data?.genesis_event_id)return true;
+  const steps=Array.isArray(data?.steps)?data.steps:[];
+  const hashStep=steps.find(s=>/identity hash/i.test(s.name||''));
+  const sigStep=steps.find(s=>/ED25519/i.test(s.name||''));
+  const genStep=steps.find(s=>/genesis/i.test(s.name||''));
+  return!!(hashStep?.ok&&sigStep?.ok&&genStep?.ok);
+}
+function vtFormatVerifyOutcome(data,vtType){
+  const ok=!!data?.ok;
+  const mode=data?.type||(vtType==='ledger'?'event':vtType==='rng'?'rng':'asset');
+  const eventType=String(data?.event_type||'').toUpperCase();
+  const assetState=String(data?.asset_state||'').toLowerCase();
+  const destroyed=eventType==='DESTROY'||assetState==='destroyed';
+  const cryptoOk=vtCryptoIntegrityOk(data);
+  const burnedAsset=(mode==='asset'||vtType==='asset')&&destroyed&&cryptoOk;
+  const burnedLedger=(mode==='event'||vtType==='ledger')&&destroyed&&(ok||data?.hash_matches===true);
+  const invalidBadge='<span class="vt-receipt__badge" style="background:rgba(255,65,65,0.15);color:#ff6565;border-color:rgba(255,65,65,0.3)">Invalid</span>';
+  const chainSig='<span class="vt-receipt__badge vt-receipt__badge--sig">Valid Chain</span>';
+  const burnBadge=chainSig+'<span class="vt-receipt__badge vt-receipt__badge--burn"><span class="material-symbols-outlined">local_fire_department</span> Burned</span>';
+  const okBadge=chainSig+'<span class="vt-receipt__badge vt-receipt__badge--ok"><span class="material-symbols-outlined">verified</span> Chain Valid</span>';
+  const assetOk='<span class="vt-receipt__badge vt-receipt__badge--sig">Valid Signatures</span><span class="vt-receipt__badge vt-receipt__badge--ok"><span class="material-symbols-outlined">verified</span> Verified</span>';
+
+  if(burnedAsset||burnedLedger){
+    return{
+      badgeHtml:burnBadge,
+      passMsg:burnedAsset?'identity verified (asset burned)':'destroy event chain verified',
+      summary:data?.summary||(burnedAsset
+        ?'BURN VERIFIED — cryptographic identity is valid; this POXY was burned and is no longer active.'
+        :'BURN VERIFIED — valid DESTROY ledger entry. This POXY has been burned and is no longer active.'),
+      statusLabel:'BURN VERIFIED',
+      receiptTitle:burnedAsset?'Burned Asset Receipt':'Destroy Proof Receipt',
+      destroyed:true
+    };
+  }
+  if(!ok){
+    return{badgeHtml:invalidBadge,passMsg:'verification failed',summary:data?.summary||data?.error||'Verification failed.',statusLabel:'FAILED',receiptTitle:null,destroyed:false};
+  }
+  if(mode==='event'||vtType==='ledger'){
+    if(eventType==='MINT'){
+      return{badgeHtml:okBadge,passMsg:'genesis mint verified',summary:data?.summary||'MINT VERIFIED — genesis ledger entry is valid.',statusLabel:'MINT VERIFIED',receiptTitle:'Mint Proof Receipt',destroyed:false};
+    }
+    return{badgeHtml:okBadge,passMsg:'event chain verified',summary:data?.summary||'Ledger event is part of the valid hash chain.',statusLabel:'EVENT VERIFIED',receiptTitle:'Ledger Event Receipt',destroyed:false};
+  }
+  if(mode==='rng'||vtType==='rng'){
+    return{badgeHtml:okBadge,passMsg:'commit-reveal integrity verified',summary:data?.summary||'RNG round verified.',statusLabel:'RNG VERIFIED',receiptTitle:'RNG Proof Receipt',destroyed:false};
+  }
+  return{badgeHtml:assetOk,passMsg:'signature chain verified',summary:data?.summary||'Verification complete.',statusLabel:'VERIFIED',receiptTitle:'Asset Proof Receipt',destroyed:false};
 }
 
 /* ── vtRunVerify — real cryptographic backend call ────────── */
@@ -7812,15 +7873,18 @@ window.vtRunVerify=async function(){
       return;
     }
 
-    const ok=data?.ok;
-    if(ok){
-      const passMsg=_vtType==='rng'?'commit-reveal integrity verified':_vtType==='ledger'?'event chain verified':'signature chain verified';
-      await vtLog(body,'&gt; <span class="vt-log-ok">[OK]</span> '+passMsg,0);
-      await vtLog(body,'&gt; <span class="vt-log-ok">[PASS]</span> '+escHtml(data.summary||'Verification complete.'),0);
-      if(rcptBadges)rcptBadges.innerHTML='<span class="vt-receipt__badge vt-receipt__badge--sig">Valid Signatures</span><span class="vt-receipt__badge vt-receipt__badge--ok"><span class="material-symbols-outlined">verified</span> Verified</span>';
+    const outcome=vtFormatVerifyOutcome(data,_vtType);
+    const pass=!!data?.ok||outcome.destroyed;
+    if(pass){
+      await vtLog(body,'&gt; <span class="vt-log-ok">[OK]</span> '+outcome.passMsg,0);
+      await vtLog(body,'&gt; <span class="vt-log-ok">[PASS]</span> '+escHtml(outcome.summary),0);
+      if(outcome.destroyed)await vtLog(body,'&gt; <span class="vt-log-accent">[NOTE]</span> lifecycle status: <span class="vt-log-err">DESTROYED — burned, not active</span>',80);
+      if(rcptBadges)rcptBadges.innerHTML=outcome.badgeHtml;
+      const rcptTitle=document.querySelector('#stPanelVerify .vt-receipt__title');
+      if(rcptTitle&&outcome.receiptTitle)rcptTitle.textContent=outcome.receiptTitle;
     }else{
-      await vtLog(body,'<span class="vt-log-err">&gt; [FAIL] '+escHtml(data?.error||data?.summary||'Verification failed.')+'</span>',0);
-      if(rcptBadges)rcptBadges.innerHTML='<span class="vt-receipt__badge" style="background:rgba(255,65,65,0.15);color:#ff6565;border-color:rgba(255,65,65,0.3)">Invalid</span>';
+      await vtLog(body,'<span class="vt-log-err">&gt; [FAIL] '+escHtml(data?.error||outcome.summary||data?.summary||'Verification failed.')+'</span>',0);
+      if(rcptBadges)rcptBadges.innerHTML=outcome.badgeHtml;
     }
 
     // Log each proof step into sys_log console
@@ -7849,7 +7913,8 @@ window.vtRunVerify=async function(){
     if(links.poxy_hash)await vtLog(body,'&gt; linked hash: <span class="vt-log-accent">'+escHtml(links.poxy_hash.slice(0,32))+'…</span>',50);
     if(links.genesis_event_id)await vtLog(body,'&gt; linked event: <span class="vt-log-accent">'+escHtml(links.genesis_event_id)+'</span>',50);
     if(links.rng_round_id)await vtLog(body,'&gt; linked rng: <span class="vt-log-accent">#'+escHtml(String(links.rng_round_id).replace(/^#/,''))+'</span>',50);
-    if(links.serial_matches===false)await vtLog(body,'&gt; <span class="vt-log-err">[WARN]</span> game serial differs from crypto serial — re-mint with v3.1+ flow',80);
+    if(links.serial_matches===false&&data?.asset_state!=='destroyed')await vtLog(body,'&gt; <span class="vt-log-err">[WARN]</span> game serial differs from crypto serial — re-mint with v3.1+ flow',80);
+    if(data?.asset_state==='destroyed')await vtLog(body,'&gt; <span class="vt-log-accent">[INFO]</span> gameplay row removed after burn — serial cross-check N/A',60);
 
     if(dlBtn){
       dlBtn.onclick=function(){
@@ -8707,15 +8772,19 @@ function openWinRevealModal(tier,forcedSerial){
     if (!results) return;
 
     const ok = data.ok;
+    const pcdOutcome = typeof vtFormatVerifyOutcome === 'function'
+      ? vtFormatVerifyOutcome(data, data.type === 'event' ? 'ledger' : data.type === 'rng' ? 'rng' : 'asset')
+      : { statusLabel: ok ? 'VERIFIED' : 'FAILED', summary: data.summary || (ok ? 'Verification passed.' : 'Verification failed.'), destroyed: false };
+    const pcdPass = ok || pcdOutcome.destroyed;
     if (icon) {
-      icon.className = 'pcd-result-icon ' + (ok ? 'ok' : 'fail');
-      icon.textContent = ok ? '✓' : '✗';
+      icon.className = 'pcd-result-icon ' + (pcdPass ? (pcdOutcome.destroyed ? 'warn' : 'ok') : 'fail');
+      icon.textContent = pcdPass ? (pcdOutcome.destroyed ? '🔥' : '✓') : '✗';
     }
     if (status) {
-      status.className = 'pcd-result-status ' + (ok ? 'ok' : 'fail');
-      status.textContent = ok ? 'VERIFIED' : 'FAILED';
+      status.className = 'pcd-result-status ' + (pcdPass ? (pcdOutcome.destroyed ? 'warn' : 'ok') : 'fail');
+      status.textContent = pcdOutcome.statusLabel || (pcdPass ? 'VERIFIED' : 'FAILED');
     }
-    if (summary) summary.textContent = data.summary || (ok ? 'Verification passed.' : 'Verification failed.');
+    if (summary) summary.textContent = pcdOutcome.summary || data.summary || (ok ? 'Verification passed.' : 'Verification failed.');
 
     // Meta chips
     if (meta) {
@@ -8946,6 +9015,48 @@ async function goToVerifyWithRound(){
   try{sessionStorage.setItem('poxy_verify_round',roundId);}catch(e){}
   if(typeof showStitchTab==='function')showStitchTab('verify');
   else vtVerifyRoundId(roundId,true);
+}
+
+// ── resolveCryptoAssetId — poxy_assets.id for a gameplay user_poxy row ──
+async function resolveCryptoAssetId(userPoxyId){
+  if(!userPoxyId||!currentUser)return null;
+  try{
+    const{data}=await sb.from('poxy_assets').select('id,asset_state')
+      .eq('user_poxy_id',userPoxyId).eq('current_owner_id',currentUser.id).maybeSingle();
+    if(!data?.id)return null;
+    if(data.asset_state==='destroyed')return null;
+    return data.id;
+  }catch(e){return null;}
+}
+
+// ── cryptoDestroy — signed DESTROY ledger event (call before burn_poxy_pc) ──
+async function cryptoDestroy(assetId,opts){
+  if(!assetId||!currentUser)return null;
+  try{
+    const{data,error}=await sb.functions.invoke('destroy_poxy',{body:{
+      envelope:poxyEnvelope('destroy_poxy'),
+      asset_id:assetId,
+      user_poxy_id:opts?.userPoxyId||null,
+      tier:opts?.tier||null,
+      reason:opts?.reason||'burn'
+    }});
+    if(error||!data?.ok){
+      const msg=edgeFnError(error,data,'Crypto destroy failed');
+      console.warn('[poxy-crypto] destroy failed:',msg,{assetId});
+      throw new Error(msg);
+    }
+    console.log('[poxy-crypto] destroyed:',data.event_hash?.slice(0,12),'asset',String(assetId).slice(0,8));
+    return data;
+  }catch(e){
+    console.warn('[poxy-crypto] destroy exception:',e?.message||e);
+    throw e;
+  }
+}
+
+async function cryptoDestroyForUserPoxy(userPoxyId,tier){
+  const assetId=await resolveCryptoAssetId(userPoxyId);
+  if(!assetId)return{skipped:true};
+  return cryptoDestroy(assetId,{userPoxyId,tier,reason:'burn'});
 }
 
 // ── cryptoTransfer — records a signed TRANSFER/TRADE ledger event ──// Called after any ownership change: marketplace buy, gift claim.
@@ -10051,6 +10162,7 @@ async function burnPoxySecure(itemId,cardEl){
     return;
   }
   try{
+    await cryptoDestroyForUserPoxy(itemId,tier?.id||item?.poxy_tier);
     const{data,error}=await sb.rpc('burn_poxy_pc',{p_poxy_id:itemId,p_user_id:currentUser.id});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error||'Burn failed');
@@ -10077,6 +10189,10 @@ $('btnBulkDust').addEventListener('click',async function(){
   const commonsBeingBurned=colData.filter(i=>ids.includes(i.id)&&i.poxy_tier==='common').length;
   const btn=$('btnBulkDust');btn.disabled=true;btn.textContent='Burning...';
   try{
+    for(const id of ids){
+      const row=colData.find(i=>i.id===id);
+      await cryptoDestroyForUserPoxy(id,row?.poxy_tier);
+    }
     const{data,error}=await sb.rpc('burn_poxy_bulk_pc',{p_poxy_ids:ids,p_user_id:currentUser.id});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);

@@ -41,12 +41,21 @@ One ideal v3.1 POXY on prod — cryptographic baseline for lifecycle hardening.
 
 ## Next hardening (Phase 2 crypto lifecycle)
 
-| # | Task |
-|---|------|
-| 1 | Burn → `transfer_poxy` DESTROY edge |
-| 2 | Trade accept → edge TRADE |
-| 3 | Gift send → `cryptoTransfer` |
-| 4 | Trust HUD → server commit/result hashes |
+| # | Task | Status |
+|---|------|--------|
+| 1 | Burn → `destroy_poxy` DESTROY edge | ✓ deployed + smoke PASS |
+| 2 | Trade accept → edge TRADE | ⏳ |
+| 3 | Gift send → `cryptoTransfer` | ⏳ |
+| 4 | Trust HUD → server commit/result hashes | ⏳ |
+
+### Burn test (PASS — PX-F1BACD common)
+
+| Check | Result |
+|-------|--------|
+| Console | `[poxy-crypto] destroyed: …` |
+| DESTROY event | `8b6eac8b-8dd1-4823-80c0-50aa80a01e1a` |
+| Asset hash verify | `c0787cca…` → `ok: true`, **Burned** badge |
+| Ledger tab | DESTROY event → **BURN VERIFIED** |
 
 ## Sandbox reset (admin SQL)
 
