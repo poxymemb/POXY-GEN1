@@ -1,0 +1,89 @@
+---
+description: MCU admin UI — Discord-inspired design system (light/dark, data-dense)
+globs: ["assets/admin-terminal.html", "**/*admin-terminal*", "**/*staff-mcu*"]
+alwaysApply: false
+---
+
+# POXY MCU — UI Style
+
+Applies to **Master Control Unit** (`assets/admin-terminal.html`, `/_poxy-staff-mcu`) only.
+Consumer app (`index.html`) keeps POXY dark cyber-luxury — do not mix styles.
+
+## Layout (Discord-inspired)
+
+- Fixed **left sidebar** (~220px): logo, theme toggle, nav groups, staff user + disconnect at bottom.
+- **Header bar** above content: page title + subtitle (updates per tab).
+- **Content pane** scrolls independently; max-width ~1400px, padding 24px.
+- Nav item: icon + label, active = amber left border + subtle fill.
+- Section title: sentence case; uppercase only for micro-labels (11px).
+
+## Theme (dual light / dark + toggle)
+
+Use CSS variables on `html[data-theme="light"|"dark"]`. Persist in `localStorage` key `poxy-mcu-theme`.
+Apply theme before paint via inline `<script>` in `<head>`.
+
+```css
+/* Dark (default) */
+--adm-bg: #1e1f22;
+--adm-surface: #2b2d31;
+--adm-surface-2: #313338;
+--adm-border: rgba(255,255,255,0.08);
+--adm-text: #f2f3f5;
+--adm-muted: #949ba4;
+
+/* Light */
+--adm-bg: #f2f3f5;
+--adm-surface: #ffffff;
+--adm-surface-2: #ebedef;
+--adm-border: rgba(0,0,0,0.08);
+--adm-text: #060607;
+--adm-muted: #4e5058;
+
+/* Shared */
+--adm-accent: #f59e0b;
+--adm-accent-hover: #d97706;
+--adm-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+```
+
+Legacy aliases (`--bg`, `--amber`, etc.) map to `--adm-*` so existing inline styles keep working.
+
+- Theme toggle in sidebar header; **150ms** transitions on `background-color`, `color`, `border-color`, `box-shadow`.
+- Tab switch: **150ms** opacity + `translateY(4px)`.
+
+## Typography
+
+- UI: **Plus Jakarta Sans** — never monospace for body chrome.
+- Sizes: 13px body, 11px labels, 15–18px section titles; line-height 1.45–1.55.
+- **Monospace only** for hashes, UUIDs, serials, ledger codes: `'IBM Plex Mono'`.
+- No decorative gradients, glow blobs, or terminal-green UI chrome.
+
+## Cards & tables
+
+- Cards: `border-radius: 8px`, `background: var(--adm-surface)`, `border: 1px solid var(--adm-border)`, `box-shadow: var(--adm-shadow)`.
+- Tables: 12px text; sticky header on long views; row hover `background: var(--adm-surface-2)`.
+
+## Status badges
+
+| State | Background | Text |
+|-------|------------|------|
+| active / ok | `rgba(34,197,94,0.15)` | `#22c55e` |
+| pending / warn | `rgba(245,158,11,0.15)` | `#f59e0b` |
+| error / blocked | `rgba(239,68,68,0.15)` | `#ef4444` |
+| info / neutral | `rgba(99,102,241,0.12)` | `#818cf8` |
+
+## Buttons & forms
+
+- Primary: `background: var(--adm-accent)`, dark text on amber.
+- Secondary: border on `var(--adm-border)`; hover → accent.
+- Inputs: card surface; focus ring `0 0 0 2px rgba(245,158,11,0.35)`.
+
+## Do / Don't
+
+| ❌ Don't | ✅ Do |
+|----------|--------|
+| Terminal-green-on-black for whole UI | Neutral Discord-like surfaces + amber accent |
+| Monospace everywhere | Sans body + mono hashes only |
+| Heavy animations, blur blobs | 150ms transitions, flat cards |
+| ALL CAPS paragraphs | Sentence case; caps for badges/labels only |
+
+Preserve existing JS/auth/Supabase logic when restyling MCU modules.
