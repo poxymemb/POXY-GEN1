@@ -36,11 +36,23 @@ DROP POLICY IF EXISTS "admin_actions_insert" ON public.admin_actions;
 
 CREATE POLICY "admin_actions_read" ON public.admin_actions
   FOR SELECT
-  USING (private_is_admin(auth.uid()) OR is_founder(auth.uid()));
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.admin_emails ae
+      JOIN public.profiles p ON p.email = ae.email
+      WHERE p.id = auth.uid()
+    )
+  );
 
 CREATE POLICY "admin_actions_insert" ON public.admin_actions
   FOR INSERT
-  WITH CHECK (private_is_admin(auth.uid()) OR is_founder(auth.uid()));
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.admin_emails ae
+      JOIN public.profiles p ON p.email = ae.email
+      WHERE p.id = auth.uid()
+    )
+  );
 
 -- 4. Helper RPC — write a log entry (called from MCU after each compensation)
 CREATE OR REPLACE FUNCTION public.log_admin_action(
@@ -102,6 +114,6 @@ REVOKE ALL ON FUNCTION public.get_recent_admin_actions(INT) FROM PUBLIC;
 GRANT  EXECUTE ON FUNCTION public.get_recent_admin_actions(INT) TO authenticated;
 
 -- ══════════════════════════════════════════════════════════════
--- NOTE: requires private_is_admin() and is_founder() to exist.
--- Both are defined in migration_admin_emails_table.sql.
+-- NOTE: requires admin_emails table (see migration_admin_emails_table.sql).
+-- Seed staff emails manually in Supabase SQL Editor — not committed to git.
 -- ══════════════════════════════════════════════════════════════

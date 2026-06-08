@@ -5,7 +5,8 @@
 -- Depends on: public_verify_rng (migration_public_verify.sql)
 -- ══════════════════════════════════════════════════════════════
 
--- Helper: staff gate (admin_emails + profiles join)
+-- Helper: staff gate (admin_emails + auth.users email join)
+-- NOTE: profiles.email is often NULL — match via auth.users.email instead.
 CREATE OR REPLACE FUNCTION public.private_is_staff()
 RETURNS BOOLEAN
 LANGUAGE sql
@@ -14,9 +15,10 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
   SELECT EXISTS (
-    SELECT 1 FROM public.admin_emails ae
-    JOIN public.profiles p ON p.email = ae.email
-    WHERE p.id = auth.uid()
+    SELECT 1
+    FROM public.admin_emails ae
+    INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+    WHERE u.id = auth.uid()
   );
 $$;
 
@@ -41,14 +43,20 @@ AS $$
     p.username,
     r.user_id,
     r.status,
-    up.poxy_tier,
-    up.serial_number,
-    COALESCE(r.revealed_at, r.committed_at) AS round_ts
+    drop_row.poxy_tier,
+    drop_row.serial_number,
+    drop_row.dropped_at AS round_ts
   FROM public.rng_rounds r
-  LEFT JOIN public.profiles p  ON p.id = r.user_id
-  LEFT JOIN public.user_poxy up ON up.rng_round_id = r.id
+  LEFT JOIN public.profiles p ON p.id = r.user_id
+  LEFT JOIN LATERAL (
+    SELECT up.poxy_tier, up.serial_number, up.dropped_at
+    FROM public.user_poxy up
+    WHERE up.rng_round_id = r.id
+    ORDER BY up.dropped_at DESC NULLS LAST
+    LIMIT 1
+  ) drop_row ON true
   WHERE public.private_is_staff()
-  ORDER BY r.committed_at DESC
+  ORDER BY r.id DESC
   LIMIT p_limit;
 $$;
 
@@ -106,8 +114,7 @@ BEGIN
     'user_id',      v_round.user_id,
     'username',     v_prof.username,
     'status',       v_round.status,
-    'committed_at', v_round.committed_at,
-    'revealed_at',  v_round.revealed_at,
+    'dropped_at',   v_up.dropped_at,
     'drop', CASE WHEN v_up.id IS NOT NULL THEN jsonb_build_object(
       'user_poxy_id',  v_up.id,
       'serial_number', v_up.serial_number,

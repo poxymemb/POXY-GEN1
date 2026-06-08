@@ -329,6 +329,10 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .ledger-filter-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;padding:4px 12px;transition:all .15s}
 .ledger-filter-btn:hover{border-color:var(--amber);color:var(--amber)}
 .ledger-filter-btn.active{background:rgba(245,158,11,0.15);border-color:var(--amber);color:var(--amber)}
+.dossier-copyable{user-select:text;cursor:pointer;position:relative;display:inline;border-bottom:1px dashed rgba(245,158,11,.35);transition:color .15s}
+.dossier-copyable:hover{color:var(--amber)}
+.dossier-copy-tip{position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);background:var(--green);color:#060607;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:10;font-family:var(--font);user-select:none}
+.dossier-copy-tip.dossier-copy-tip-visible{opacity:1}
 /* Timeline */
 .timeline-period-btns{display:flex;gap:6px;margin-bottom:14px}
 .timeline-period-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;padding:4px 12px;transition:all .15s}
@@ -2923,7 +2927,7 @@ function rngBuildReport(v, c){
   const metaRows = [
     rngReportRow('Round ID', rngTrunc(v.round_id || c.round_id, 36)),
     rngReportRow('Player', '@' + (c.username || '—')),
-    rngReportRow('Timestamp', rngTs(c.revealed_at || c.committed_at)),
+    rngReportRow('Timestamp', rngTs(c.drop?.dropped_at || c.dropped_at)),
   ].join('');
   lines.push(rngReportStep('Overview', metaRows));
 
@@ -4218,6 +4222,33 @@ async function dossierLoadLedgerPage(reset=false){
 
 async function dossierLoadMoreLedger(){ await dossierLoadLedgerPage(false); }
 
+function dossierCopyCell(display, fullValue){
+  if(!fullValue) return esc(display);
+  return `<span class="dossier-copyable" data-copy="${esc(fullValue)}" onclick="dossierCopyField(event)">${esc(display)}</span>`;
+}
+
+function dossierCopyField(e){
+  e.stopPropagation();
+  const el = e.currentTarget;
+  const val = el.dataset.copy;
+  if(!val) return;
+  navigator.clipboard.writeText(val).then(()=>dossierFlashCopied(el))
+    .catch(()=>toast('COPY FAILED','err'));
+}
+
+function dossierFlashCopied(el){
+  let tip = el.querySelector('.dossier-copy-tip');
+  if(!tip){
+    tip = document.createElement('span');
+    tip.className = 'dossier-copy-tip';
+    tip.textContent = 'Copied!';
+    el.appendChild(tip);
+  }
+  tip.classList.add('dossier-copy-tip-visible');
+  clearTimeout(el._dossierCopyTimer);
+  el._dossierCopyTimer = setTimeout(()=>tip.classList.remove('dossier-copy-tip-visible'), 1500);
+}
+
 function dossierRenderLedger(){
   const tbody = document.getElementById('dossierLedgerBody');
   const countEl = document.getElementById('dossierLedgerCount');
@@ -4244,20 +4275,20 @@ function dossierRenderLedger(){
     if(fromId === uid) cpty = toId;
     else if(toId === uid) cpty = fromId;
     else if(r.actor_id && r.actor_id !== uid) cpty = r.actor_id;
-    const cptyStr = cpty ? esc(cpty.slice(0,12))+'…' : '—';
-    const hashStr = r.event_hash ? esc(r.event_hash.slice(0,12))+'…' : '—';
+    const cptyDisplay = cpty ? cpty.slice(0,12)+'…' : '—';
+    const hashDisplay = r.event_hash ? r.event_hash.slice(0,12)+'…' : '—';
     const assetRow = r.asset_id ? _dossierAssetById[r.asset_id] : null;
-    const assetStr = assetRow?.serial_number
-      ? esc(assetRow.serial_number)
-      : (r.asset_id ? esc(String(r.asset_id).slice(0,10))+'…' : '—');
+    const assetDisplay = assetRow?.serial_number
+      ? assetRow.serial_number
+      : (r.asset_id ? String(r.asset_id).slice(0,10)+'…' : '—');
     const ts = r.event_timestamp || r.created_at;
     return `<tr>
       <td class="mono" style="color:var(--muted)">${r.seq ?? '—'}</td>
       <td><span class="badge ${badgeCls}">${evType}</span></td>
-      <td class="mono" style="font-size:11px;color:var(--muted)">${assetStr}</td>
-      <td class="mono" style="font-size:11px;color:var(--muted)">${cptyStr}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${dossierCopyCell(assetDisplay, r.asset_id)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${dossierCopyCell(cptyDisplay, cpty)}</td>
       <td style="white-space:nowrap;color:var(--muted);font-size:11px">${fmtDate(ts)}</td>
-      <td class="mono" style="font-size:11px;color:var(--muted)" title="${esc(r.event_hash||'')}">${hashStr}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${dossierCopyCell(hashDisplay, r.event_hash)}</td>
     </tr>`;
   }).join('');
 }

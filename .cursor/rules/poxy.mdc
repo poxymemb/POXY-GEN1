@@ -39,6 +39,21 @@ Stack: Vanilla HTML/CSS/JS · Supabase (auth, RPC, storage, Edge Functions) · V
 - Edge Functions handle: mint, transfer, verify, RNG commit-reveal.
 - Supabase URL: `https://rbrtjkfawdnomvvyxwvp.supabase.co`
 
+### SQL migrations — admin RLS (mandatory)
+- **Never** use `private_is_admin()`, `is_founder()`, or other helper functions in RLS policies.
+- **Always** gate staff-only tables with the `admin_emails` + `profiles` join:
+
+```sql
+EXISTS (
+  SELECT 1 FROM public.admin_emails ae
+  JOIN public.profiles p ON p.email = ae.email
+  WHERE p.id = auth.uid()
+)
+```
+
+- `admin_emails` is seeded manually in Supabase — never commit real emails to git.
+- SECURITY DEFINER RPCs may still call `private_is_admin()` internally; RLS policies must not.
+
 ### Cryptographic Engine (DO NOT BREAK)
 - SHA-256 identity hashes are immutable after mint — never regenerate.
 - ED25519 signatures are server-side only (Edge Functions) — never client-side.
