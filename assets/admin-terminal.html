@@ -194,6 +194,22 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 /* ── AUDIT LOG ── */
 @keyframes alogRowAppear{from{opacity:0;background:rgba(245,158,11,0.08);}to{opacity:1;background:transparent;}}
 .alog-row-new{animation:alogRowAppear 300ms ease-out;}
+/* ── RNG AUDIT ── */
+.rng-report{background:var(--adm-log-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-family:var(--font-mono);font-size:11px}
+.rng-report-hdr{background:var(--dim);border-bottom:1px solid var(--border);padding:12px 16px;text-align:center}
+.rng-report-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--adm-text)}
+.rng-report-body{padding:0}
+.rng-rstep{border-bottom:1px solid var(--border2);padding:12px 16px}
+.rng-rstep:last-child{border-bottom:none}
+.rng-rstep-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.rng-rrow{display:flex;gap:8px;padding:2px 0;align-items:baseline;flex-wrap:wrap}
+.rng-rkey{color:var(--muted);min-width:140px;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.rng-rval{color:var(--adm-text);word-break:break-all;flex:1}
+.rng-rok{color:var(--green);font-weight:600;font-size:10px;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+.rng-rwarn{color:var(--amber);font-weight:600;font-size:10px;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+.rng-rfail{color:var(--red);font-weight:600;font-size:10px;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+.rng-round-row{cursor:pointer;transition:background .1s}
+.rng-round-row:hover td{background:var(--dim)}
 /* ── ALERT SYSTEM ── */
 .alert-list{display:flex;flex-direction:column;gap:10px}
 .alert-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;animation:alogRowAppear .3s ease}
@@ -405,6 +421,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       </button>
       <button class="nav-btn" onclick="switchTab('alerts')" data-tab="alerts">
         <span class="ic">🔔</span>Alerts
+      </button>
+      <button class="nav-btn" onclick="switchTab('rng')" data-tab="rng">
+        <span class="ic">🎲</span>RNG audit
       </button>
       <button class="nav-btn" onclick="switchTab('disputes')" data-tab="disputes">
         <span class="ic">⚖</span>Disputes
@@ -1228,6 +1247,60 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div><!-- /tab-alerts -->
 
     <!-- ══════════════════════════════════════════════════════
+         TAB 12: RNG AUDIT TOOL
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-rng" class="tab-pane">
+
+      <!-- ── DROP VERIFIER ── -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Drop verifier</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+          <input id="rngQuery" class="f-input mono" type="text"
+            placeholder="round_id (UUID)"
+            style="max-width:400px"
+            onkeydown="if(event.key==='Enter')rngVerifyDrop()"/>
+          <button class="btn btn-amber" onclick="rngVerifyDrop()">Verify drop</button>
+          <button class="btn btn-ghost btn-sm" onclick="rngClear()">Clear</button>
+        </div>
+
+        <div id="rngReportWrap" style="display:none">
+          <div id="rngReportBox" class="rng-report"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+            <button class="btn btn-ghost btn-sm" onclick="rngCopyReport()">Copy report</button>
+            <button class="btn btn-ghost btn-sm" onclick="rngSendToPlayer()">Send to player</button>
+            <button class="btn btn-ghost btn-sm" onclick="rngOpenInVerify()">Open in verify</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RECENT ROUNDS ── -->
+      <div class="card">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Recent rounds</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadRecentRngRounds()">↺ Refresh</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Round ID</th>
+                <th>Player</th>
+                <th>Tier</th>
+                <th>Serial</th>
+                <th>Status</th>
+                <th style="min-width:90px">Time</th>
+              </tr>
+            </thead>
+            <tbody id="rngRecentBody">
+              <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-rng -->
+
+    <!-- ══════════════════════════════════════════════════════
          TAB 9: DISPUTE RESOLUTION
          ══════════════════════════════════════════════════════ -->
     <div id="tab-disputes" class="tab-pane">
@@ -1586,6 +1659,7 @@ const MCU_PAGES = {
   auditlog:  { title: 'Audit log',           sub: 'Live admin action stream with filters and CSV export' },
   economy:   { title: 'Economy health',      sub: 'Supply overview, mint/burn rate, top players, generation tracker' },
   alerts:    { title: 'Alert system',        sub: 'Suspicious activity flags, rule config, dismissed history' },
+  rng:       { title: 'RNG audit',           sub: 'Provably fair drop verification and recent rounds' },
   disputes:  { title: 'Dispute resolution',  sub: 'Incident lookup, compensation tool, admin actions log' },
   dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' }
 };
@@ -1634,6 +1708,7 @@ function switchTab(id){
   if(id==='economy')   { loadEconomy(); }
   if(id==='alerts')    { alertTabEnter(); }
   else                 { alertTabLeave(); }
+  if(id==='rng')       { loadRecentRngRounds(); }
   if(id==='disputes')  { loadRecentDisputes(); }
   if(id==='dossier')   { /* stays on current loaded player */ }
 }
@@ -2751,6 +2826,241 @@ function auditLogExportCSV(){
 
 // Legacy stub — old Telemetry tab called this, now a no-op
 function loadAuditLog(){ /* moved to audit log tab */ }
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 12 — RNG AUDIT TOOL
+// ═══════════════════════════════════════════════════════════════
+
+let _rngLastReportText = '';
+let _rngLastRoundId    = '';
+
+function rngClear(){
+  document.getElementById('rngQuery').value = '';
+  document.getElementById('rngReportWrap').style.display = 'none';
+  document.getElementById('rngReportBox').innerHTML = '';
+  _rngLastReportText = '';
+  _rngLastRoundId = '';
+}
+
+function rngTrunc(v, n=20){
+  if(!v) return '—';
+  const s = String(v);
+  return s.length > n ? s.slice(0,n)+'…' : s;
+}
+
+function rngTs(v){
+  if(!v) return '—';
+  try{ return new Date(v).toISOString().replace('T',' ').replace(/\.\d{3}Z$/,' UTC'); }
+  catch(e){ return String(v); }
+}
+
+function rngTierFromHash(resultHash){
+  if(!resultHash || resultHash.length < 8) return null;
+  const hex = resultHash.slice(0, 8);
+  let uint = parseInt(hex, 16);
+  if(!Number.isFinite(uint) || uint < 0) uint = (uint >>> 0);
+  const f = uint / 4294967296;
+  let tier, threshold;
+  if(f < 0.500){ tier='common';    threshold='< 0.500 → COMMON'; }
+  else if(f < 0.800){ tier='uncommon'; threshold='0.500 ≤ x < 0.800 → UNCOMMON'; }
+  else if(f < 0.940){ tier='rare';      threshold='0.800 ≤ x < 0.940 → RARE'; }
+  else if(f < 0.990){ tier='epic';      threshold='0.940 ≤ x < 0.990 → EPIC'; }
+  else if(f < 0.999){ tier='legendary'; threshold='0.990 ≤ x < 0.999 → LEGENDARY'; }
+  else { tier='mythic'; threshold='≥ 0.999 → MYTHIC'; }
+  const serial = 'PX-' + resultHash.slice(8, 14).toUpperCase();
+  return { float: f, tier, threshold, serial };
+}
+
+function rngReportRow(key, val, status){
+  const st = status
+    ? `<span class="${status.cls||'rng-rok'}">${status.label}</span>`
+    : '';
+  return `<div class="rng-rrow"><span class="rng-rkey">${key}</span><span class="rng-rval">${val}</span>${st}</div>`;
+}
+
+function rngReportStep(title, rows){
+  return `<div class="rng-rstep"><div class="rng-rstep-lbl">${title}</div>${rows}</div>`;
+}
+
+async function rngVerifyDrop(roundId){
+  const raw = (roundId || document.getElementById('rngQuery').value || '').trim();
+  if(!raw){ toast('ENTER ROUND ID','err'); return; }
+  if(!/^[0-9a-f-]{36}$/i.test(raw)){ toast('INVALID UUID FORMAT','err'); return; }
+
+  const box = document.getElementById('rngReportBox');
+  const wrap = document.getElementById('rngReportWrap');
+  box.innerHTML = '<div class="disp-empty">Verifying…</div>';
+  wrap.style.display = 'block';
+  document.getElementById('rngQuery').value = raw;
+  _rngLastRoundId = raw;
+
+  try{
+    const [verifyRes, ctxRes] = await Promise.all([
+      sb.rpc('public_verify_rng', { p_round_id: raw }),
+      sb.rpc('get_rng_round_context', { p_round_id: raw }),
+    ]);
+    if(verifyRes.error) throw verifyRes.error;
+    if(ctxRes.error) throw ctxRes.error;
+
+    const v = verifyRes.data || {};
+    const c = ctxRes.data || {};
+    if(v.ok === false) throw new Error(v.error || 'Verification failed');
+    if(c.ok === false) throw new Error(c.error || 'Context load failed');
+
+    const html = rngBuildReport(v, c);
+    box.innerHTML = html;
+    _rngLastReportText = document.getElementById('rngReportBox').innerText;
+    wrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  } catch(err){
+    box.innerHTML = `<div class="disp-empty" style="color:var(--red)">ERROR: ${err.message}</div>`;
+    _rngLastReportText = '';
+  }
+}
+
+function rngBuildReport(v, c){
+  const lines = [];
+  const hdr = `<div class="rng-report-hdr"><div class="rng-report-title">Provably fair verification report</div></div>`;
+  const metaRows = [
+    rngReportRow('Round ID', rngTrunc(v.round_id || c.round_id, 36)),
+    rngReportRow('Player', '@' + (c.username || '—')),
+    rngReportRow('Timestamp', rngTs(c.revealed_at || c.committed_at)),
+  ].join('');
+  lines.push(rngReportStep('Overview', metaRows));
+
+  if(v.status === 'pending'){
+    lines.push(rngReportStep('Step 1 — Server commit', [
+      rngReportRow('commit_hash', rngTrunc(v.commit_hash, 48)),
+      rngReportRow('status', 'PENDING REVEAL', { cls:'rng-rwarn', label:'⏳ WAITING' }),
+    ].join('')));
+    lines.push(`<div class="rng-rstep" style="color:var(--muted);font-size:11px">Round not yet revealed — steps 2–5 unavailable.</div>`);
+    return hdr + '<div class="rng-report-body">' + lines.join('') + '</div>';
+  }
+
+  const commitOk = !!v.commit_matches;
+  const resultOk = !!v.result_matches;
+  const tierCalc = v.result_hash ? rngTierFromHash(v.result_hash) : null;
+  const actualTier = c.drop?.poxy_tier || null;
+  const tierOk = tierCalc && actualTier
+    ? tierCalc.tier === actualTier
+    : (tierCalc && !actualTier ? null : false);
+  const expectedSerial = tierCalc?.serial;
+  const actualSerial = c.drop?.serial_number;
+  const serialOk = expectedSerial && actualSerial
+    ? expectedSerial === actualSerial
+    : null;
+  const ledgerSeq = c.ledger?.seq;
+  const onLedger = ledgerSeq != null;
+
+  lines.push(rngReportStep('Step 1 — Server commit', [
+    rngReportRow('server_seed_hash', rngTrunc(v.recomputed_commit || v.commit_hash, 48),
+      commitOk ? { cls:'rng-rok', label:'✓ VERIFIED' } : { cls:'rng-rfail', label:'✗ MISMATCH' }),
+    rngReportRow('stored commit', rngTrunc(v.commit_hash, 48)),
+  ].join('')));
+
+  lines.push(rngReportStep('Step 2 — Client entropy', [
+    rngReportRow('client_seed', v.client_seed ? rngTrunc(v.client_seed, 32) : '—',
+      v.client_seed ? { cls:'rng-rok', label:'✓ PROVIDED' } : { cls:'rng-rwarn', label:'MISSING' }),
+    rngReportRow('nonce', String(v.nonce ?? '—')),
+  ].join('')));
+
+  lines.push(rngReportStep('Step 3 — Result hash', [
+    rngReportRow('formula', 'SHA256(server_seed + client_seed + nonce)'),
+    rngReportRow('result_hash', rngTrunc(v.result_hash, 48),
+      resultOk ? { cls:'rng-rok', label:'✓ COMPUTED' } : { cls:'rng-rfail', label:'✗ MISMATCH' }),
+    rngReportRow('computed', rngTrunc(v.computed_result, 48)),
+  ].join('')));
+
+  if(tierCalc){
+    const tierStatus = actualTier == null
+      ? { cls:'rng-rwarn', label:'NO DROP' }
+      : tierOk
+        ? { cls:'rng-rok', label:'✓ CORRECT' }
+        : { cls:'rng-rfail', label:'✗ WRONG' };
+    lines.push(rngReportStep('Step 4 — Tier determination', [
+      rngReportRow('float value', tierCalc.float.toFixed(4)),
+      rngReportRow('threshold', tierCalc.threshold),
+      rngReportRow('computed tier', tierCalc.tier.toUpperCase()),
+      rngReportRow('minted tier', actualTier ? actualTier.toUpperCase() : '—', tierStatus),
+      rngReportRow('expected serial', expectedSerial || '—'),
+    ].join('')));
+  }
+
+  lines.push(rngReportStep('Step 5 — Asset minted', [
+    rngReportRow('Serial', actualSerial || '—',
+      serialOk === true ? { cls:'rng-rok', label:'✓ MATCH' }
+        : serialOk === false ? { cls:'rng-rfail', label:'✗ MISMATCH' }
+        : { cls:'rng-rwarn', label:'NOT MINTED' }),
+    rngReportRow('Ledger seq', ledgerSeq != null ? String(ledgerSeq) : '—',
+      onLedger ? { cls:'rng-rok', label:'✓ ON LEDGER' } : { cls:'rng-rwarn', label:'NOT FOUND' }),
+    rngReportRow('Event hash', c.ledger?.event_hash ? rngTrunc(c.ledger.event_hash, 48) : '—'),
+  ].join('')));
+
+  return hdr + '<div class="rng-report-body">' + lines.join('') + '</div>';
+}
+
+function rngCopyReport(){
+  if(!_rngLastReportText){ toast('NO REPORT TO COPY','err'); return; }
+  navigator.clipboard.writeText(_rngLastReportText).then(()=>toast('REPORT COPIED')).catch(()=>toast('COPY FAILED','err'));
+}
+
+function rngSendToPlayer(){
+  if(!_rngLastRoundId){ toast('VERIFY A ROUND FIRST','err'); return; }
+  const msg = [
+    'POXY WORLD — Drop Verification',
+    'Round ID: ' + _rngLastRoundId,
+    'Verify independently: https://poxy-gens.vercel.app/#/verify',
+    'Paste the Round ID in the RNG ROUND tab.',
+    '',
+    _rngLastReportText || '(Run verification first for full report)',
+  ].join('\n');
+  navigator.clipboard.writeText(msg).then(()=>toast('PLAYER MESSAGE COPIED')).catch(()=>toast('COPY FAILED','err'));
+}
+
+function rngOpenInVerify(){
+  if(!_rngLastRoundId){ toast('VERIFY A ROUND FIRST','err'); return; }
+  const url = (location.origin || 'https://poxy-gens.vercel.app') + '/#/verify';
+  navigator.clipboard.writeText(_rngLastRoundId).then(()=>{
+    window.open(url, '_blank', 'noopener');
+    toast('ROUND ID COPIED — PASTE IN VERIFY');
+  }).catch(()=>{
+    window.open(url, '_blank', 'noopener');
+    toast('VERIFY OPENED');
+  });
+}
+
+async function loadRecentRngRounds(){
+  const tbody = document.getElementById('rngRecentBody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:16px">Loading…</td></tr>';
+
+  const { data, error } = await sb.rpc('get_recent_rng_rounds', { p_limit: 20 });
+  if(error){
+    tbody.innerHTML = `<tr><td colspan="6" style="color:var(--red);text-align:center;padding:16px">ERROR: ${error.message}</td></tr>`;
+    return;
+  }
+  if(!data || !data.length){
+    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:16px">No rounds found</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map(r => {
+    const rid = r.round_id;
+    const ts = r.round_ts ? new Date(r.round_ts).toLocaleString() : '—';
+    return `<tr class="rng-round-row" onclick="rngPickRound('${rid}')">
+      <td class="mono" style="font-size:10px">${rngTrunc(rid, 16)}</td>
+      <td class="mono" style="font-weight:600">@${r.username || '—'}</td>
+      <td style="text-transform:uppercase;font-size:11px">${r.tier || '—'}</td>
+      <td class="mono" style="font-size:11px">${r.serial_number || '—'}</td>
+      <td><span class="badge">${r.status || '—'}</span></td>
+      <td style="font-size:11px;color:var(--muted);white-space:nowrap">${ts}</td>
+    </tr>`;
+  }).join('');
+}
+
+function rngPickRound(roundId){
+  document.getElementById('rngQuery').value = roundId;
+  rngVerifyDrop(roundId);
+}
 
 // ═══════════════════════════════════════════════════════════════
 // TAB 11 — ALERT SYSTEM
