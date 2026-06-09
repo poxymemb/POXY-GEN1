@@ -2394,6 +2394,7 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
           <div class="stkt-bulk-bar" id="stktBulkBar">
             <span class="stkt-bulk-count" id="stktBulkCount">Selected: 0</span>
             <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkCloseAll()">Close all</button>
+            <button type="button" class="btn btn-red btn-sm" onclick="stktBulkDeleteAll()">Delete all</button>
             <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkAssignMe()">Assign to me</button>
             <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkMarkAbuse()">Mark abuse</button>
             <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkClear()">Clear</button>
@@ -2460,6 +2461,7 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
                 <button type="button" class="btn btn-amber btn-sm" onclick="stktEscalateTicket()">Escalate</button>
               </div>
               <button class="btn btn-red btn-sm" onclick="stktCloseTicket()">Close ticket</button>
+              <button class="btn btn-red btn-sm" onclick="stktDeleteTicket()" style="opacity:0.85">Delete ticket</button>
             </div>
             <div class="stkt-side-quick">
               <div class="stkt-side-quick-title">Quick replies</div>
@@ -11593,6 +11595,38 @@ async function stktBulkCloseAll(){
   await stktLoadQueue();
 }
 
+async function stktBulkDeleteAll(){
+  const ids = [..._stktSelected];
+  if(!ids.length) return;
+  const reason = prompt('Deletion reason for ' + ids.length + ' ticket(s) (required):');
+  if(!reason || !reason.trim()) return;
+  if(!confirm('Permanently delete ' + ids.length + ' ticket(s)? This cannot be undone.')) return;
+  let ok = 0;
+  for(const id of ids){
+    const { error } = await sb.rpc('delete_support_ticket', { p_ticket_id: id, p_reason: reason.trim() });
+    if(!error) ok++;
+  }
+  toast(ok + ' ticket(s) deleted', ok ? 'ok' : 'err');
+  if(_stktActiveId && ids.includes(_stktActiveId)) stktClearActiveTicket();
+  _stktSelected.clear();
+  stktUpdateBulkBar();
+  await stktLoadQueue();
+}
+
+function stktClearActiveTicket(){
+  stktStopChatStream();
+  stktStopPresenceStream();
+  _stktActiveId = null;
+  _stktActiveTicket = null;
+  const empty = document.getElementById('stktChatEmpty');
+  const active = document.getElementById('stktChatActive');
+  if(empty) empty.hidden = false;
+  if(active) active.hidden = true;
+  stktUpdateSidePanel(null);
+  stktSyncLayout();
+  stktRenderQueue();
+}
+
 async function stktBulkAssignMe(){
   const ids = [..._stktSelected];
   if(!ids.length) return;
@@ -12039,6 +12073,19 @@ async function stktCloseTicket(){
   await stktLoadMessages(_stktActiveId);
   const t = _stktTickets.find(x => x.id === _stktActiveId);
   if(t){ t.status = 'closed'; stktOpenTicket(_stktActiveId); }
+}
+
+async function stktDeleteTicket(){
+  if(!_stktActiveId) return;
+  const reason = prompt('Deletion reason (required):');
+  if(!reason || !reason.trim()) return;
+  if(!confirm('Permanently delete this ticket? This cannot be undone.')) return;
+  const id = _stktActiveId;
+  const { error } = await sb.rpc('delete_support_ticket', { p_ticket_id: id, p_reason: reason.trim() });
+  if(error){ toast(error.message, 'err'); return; }
+  toast('TICKET DELETED', 'ok');
+  stktClearActiveTicket();
+  await stktLoadQueue();
 }
 
 async function stktSendReply(){
