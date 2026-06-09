@@ -276,7 +276,22 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-status-dot.in_progress{background:var(--amber)}
 .stkt-status-dot.closed{background:var(--muted)}
 .stkt-queue-time{font-size:9px;color:var(--muted);white-space:nowrap}
+.stkt-sla{display:inline-flex;align-items:center;justify-content:center;padding:1px 5px;border-radius:4px;font-size:8px;font-weight:700;letter-spacing:.03em;white-space:nowrap;font-family:var(--font-mono)}
+.stkt-sla--muted{color:var(--muted);background:var(--bg2);border:1px solid var(--border)}
+.stkt-sla--green{color:var(--green);background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25)}
+.stkt-sla--yellow{color:var(--amber);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3)}
+.stkt-sla--red{color:var(--red);background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35)}
+.stkt-sla--pulse{animation:stktSlaPulse 1.5s ease-in-out infinite}
+@keyframes stktSlaPulse{0%,100%{opacity:1}50%{opacity:.45}}
 .stkt-unread{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700}
+.stkt-chat-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border2);background:var(--bg1);flex-shrink:0;flex-wrap:wrap}
+.stkt-chat-head-user{font-size:13px;font-weight:700;color:var(--adm-text);flex-shrink:0}
+.stkt-chat-head-subj{flex:1;min-width:0;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stkt-chat-head-presence{font-size:10px;color:var(--muted);white-space:nowrap;display:inline-flex;align-items:center;gap:5px;flex-shrink:0}
+.stkt-chat-head-presence.is-online{color:var(--green)}
+.stkt-presence-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.stkt-presence-dot.online{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,.55)}
+.stkt-presence-dot.offline{background:var(--muted)}
 .stkt-chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:13px;padding:32px 20px;text-align:center;min-height:200px}
 .stkt-side-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;text-align:center;min-height:200px;color:var(--muted);font-size:12px;opacity:.55;letter-spacing:.02em}
 .stkt-chat-empty-icon{font-size:32px;opacity:.35;line-height:1}
@@ -1327,6 +1342,11 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         <section class="card stkt-col-chat" id="stktChatCard">
           <div id="stktChatEmpty"></div>
           <div id="stktChatActive" hidden>
+            <div class="stkt-chat-head" id="stktChatHead">
+              <span class="stkt-chat-head-user" id="stktChatHeadUser">@player</span>
+              <span class="stkt-chat-head-subj" id="stktChatHeadSubj">Ticket</span>
+              <span class="stkt-chat-head-presence" id="stktChatPresence"><span class="stkt-presence-dot offline"></span> Offline</span>
+            </div>
             <div class="stkt-chat-msgs" id="stktChatMsgs"></div>
             <div class="stkt-compose" id="stktCompose">
               <div class="stkt-attach-preview" id="stktAttachPreview">
@@ -5527,6 +5547,9 @@ let _stktActiveTicket = null;
 let _stktRenderedMsgIds = new Set();
 let _stktTicketsChannel = null;
 let _stktChatChannel = null;
+let _stktPresenceChannel = null;
+let _stktSlaMap = {};
+let _stktSlaTick = null;
 let _stktQuickReplies = [];
 let _stktEditingReplyId = null;
 let _stktEditingFaqId = null;
@@ -5572,6 +5595,103 @@ function stktTimeAgo(iso){
     if(d < 7) return d + 'd ago';
     return fmtDate(iso);
   }catch(e){ return '—'; }
+}
+
+function stktGetSLAStatus(ticket){
+  if(!ticket || ticket.status === 'closed') return { text: '—', color: 'muted' };
+  const lastIso = _stktSlaMap[ticket.id];
+  if(!lastIso) return { text: 'No msgs', color: 'muted' };
+  const hoursWaiting = (Date.now() - new _nativeDate(lastIso).getTime()) / 3600000;
+  if(hoursWaiting < 1) return { text: Math.round(hoursWaiting * 60) + 'm', color: 'green' };
+  if(hoursWaiting < 4){
+    const h = Math.floor(hoursWaiting);
+    const m = Math.round((hoursWaiting % 1) * 60);
+    return { text: h + 'h ' + m + 'm', color: 'yellow' };
+  }
+  return { text: Math.floor(hoursWaiting) + 'h', color: 'red', pulse: true };
+}
+
+function stktSlaHtml(ticket){
+  const s = stktGetSLAStatus(ticket);
+  const cls = 'stkt-sla stkt-sla--' + s.color + (s.pulse ? ' stkt-sla--pulse' : '');
+  return '<span class="' + cls + '" title="SLA">' + esc(s.text) + '</span>';
+}
+
+async function stktRefreshSlaMap(){
+  _stktSlaMap = {};
+  const ids = _stktTickets.filter(t => t.status !== 'closed').map(t => t.id);
+  if(!ids.length) return;
+  try{
+    const { data, error } = await sb.from('ticket_messages')
+      .select('ticket_id, created_at')
+      .in('ticket_id', ids)
+      .eq('is_staff', false)
+      .eq('is_auto', false)
+      .order('created_at', { ascending: false });
+    if(error) throw error;
+    (data || []).forEach(m => {
+      if(!_stktSlaMap[m.ticket_id]) _stktSlaMap[m.ticket_id] = m.created_at;
+    });
+  }catch(e){ /* SLA map is best-effort */ }
+}
+
+function stktUpdateChatHead(t){
+  if(!t) return;
+  const un = _stktProfiles[t.user_id]?.username || 'player';
+  const userEl = document.getElementById('stktChatHeadUser');
+  const subjEl = document.getElementById('stktChatHeadSubj');
+  if(userEl) userEl.textContent = '@' + un;
+  if(subjEl) subjEl.textContent = t.subject || 'Ticket';
+}
+
+function stktUpdatePresenceIndicator(isOnline, lastSeen){
+  const el = document.getElementById('stktChatPresence');
+  if(!el) return;
+  if(isOnline){
+    el.className = 'stkt-chat-head-presence is-online';
+    el.innerHTML = '<span class="stkt-presence-dot online"></span> Online';
+    return;
+  }
+  el.className = 'stkt-chat-head-presence is-offline';
+  const ago = lastSeen ? stktTimeAgo(lastSeen) : '—';
+  el.innerHTML = '<span class="stkt-presence-dot offline"></span> Last seen ' + esc(ago);
+}
+
+function stktStopPresenceStream(){
+  if(_stktPresenceChannel){ sb.removeChannel(_stktPresenceChannel); _stktPresenceChannel = null; }
+}
+
+async function stktStartPresenceStream(userId){
+  stktStopPresenceStream();
+  if(!userId) return;
+  try{
+    const { data } = await sb.from('user_presence').select('is_online, last_seen').eq('user_id', userId).maybeSingle();
+    stktUpdatePresenceIndicator(!!data?.is_online, data?.last_seen);
+  }catch(e){
+    stktUpdatePresenceIndicator(false, null);
+  }
+  _stktPresenceChannel = sb.channel('presence:' + userId)
+    .on('postgres_changes', {
+      event: '*', schema: 'public', table: 'user_presence',
+      filter: 'user_id=eq.' + userId,
+    }, payload => {
+      const row = payload.new || payload.old;
+      if(row && row.user_id === userId){
+        stktUpdatePresenceIndicator(!!row.is_online, row.last_seen);
+      }
+    })
+    .subscribe();
+}
+
+function stktStartSlaTick(){
+  stktStopSlaTick();
+  _stktSlaTick = setInterval(() => {
+    if(document.getElementById('tab-stkt')?.classList.contains('active')) stktRenderQueue();
+  }, 60000);
+}
+
+function stktStopSlaTick(){
+  if(_stktSlaTick){ clearInterval(_stktSlaTick); _stktSlaTick = null; }
 }
 
 function stktSyncLayout(){
@@ -5656,11 +5776,14 @@ function stktTabEnter(){
   stktLoadAutoMessages();
   stktLoadFaqMgr();
   stktStartTicketsStream();
+  stktStartSlaTick();
 }
 
 function stktTabLeave(){
   stktStopTicketsStream();
   stktStopChatStream();
+  stktStopPresenceStream();
+  stktStopSlaTick();
 }
 
 function stktSetFilter(f, btn){
@@ -5701,6 +5824,10 @@ function stktStartChatStream(ticketId){
     }, payload => {
       stktAppendMessage(payload.new, true);
       stktScrollChat();
+      if(payload.new && !payload.new.is_staff && !payload.new.is_auto){
+        _stktSlaMap[ticketId] = payload.new.created_at;
+        stktRenderQueue();
+      }
       if(payload.new && !payload.new.is_staff && payload.new.ticket_id !== _stktActiveId) stktLoadQueue();
     })
     .subscribe();
@@ -5708,6 +5835,7 @@ function stktStartChatStream(ticketId){
 
 function stktStopChatStream(){
   if(_stktChatChannel){ sb.removeChannel(_stktChatChannel); _stktChatChannel = null; }
+  stktStopPresenceStream();
 }
 
 async function stktLoadQueue(){
@@ -5726,6 +5854,7 @@ async function stktLoadQueue(){
       (profs || []).forEach(p => { _stktProfiles[p.id] = p; });
     }
     await stktRefreshUnreadCounts();
+    await stktRefreshSlaMap();
     stktRenderQueue();
   }catch(err){
     list.innerHTML = '<p style="color:var(--red);font-size:12px;padding:12px;text-align:center">' + esc(err.message) + '</p>';
@@ -5769,7 +5898,7 @@ function stktRenderQueue(){
       '<div class="stkt-queue-body">' +
         '<div class="stkt-queue-top">' +
           '<span class="stkt-queue-user">@' + esc(un) + '</span>' +
-          '<span class="stkt-queue-meta">' + stktStatusDot(t.status) +
+          '<span class="stkt-queue-meta">' + stktSlaHtml(t) + stktStatusDot(t.status) +
             '<span class="stkt-queue-time">' + esc(stktTimeAgo(t.updated_at || t.created_at)) + '</span>' +
             (unread ? '<span class="stkt-unread">' + unread + '</span>' : '') +
           '</span>' +
@@ -5793,6 +5922,7 @@ async function stktOpenTicket(ticketId){
   document.getElementById('stktChatEmpty').hidden = true;
   document.getElementById('stktChatActive').hidden = false;
   stktUpdateSidePanel(t);
+  stktUpdateChatHead(t);
   const compose = document.getElementById('stktCompose');
   if(compose) compose.style.display = t.status === 'closed' ? 'none' : '';
 
@@ -5803,6 +5933,7 @@ async function stktOpenTicket(ticketId){
   await stktLoadMessages(ticketId);
   stktRenderQuickChips();
   stktStartChatStream(ticketId);
+  await stktStartPresenceStream(t.user_id);
 }
 
 async function stktLoadMessages(ticketId){
