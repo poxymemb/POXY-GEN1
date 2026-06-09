@@ -228,15 +228,36 @@
     if (tab === 'tickets') loadTickets();
   };
 
+  function enterChatView() {
+    const body = document.querySelector('.poxy-support-body');
+    const tabs = $('supportMainTabs');
+    const panels = $('supportPanelsWrap');
+    const chat = $('supportChatView');
+    if (body) body.classList.add('is-chat-active');
+    if (tabs) tabs.hidden = true;
+    document.querySelectorAll('.poxy-support-panel').forEach(function (p) {
+      p.classList.remove('is-visible');
+      p.hidden = true;
+    });
+    if (panels) panels.hidden = true;
+    if (chat) {
+      chat.hidden = false;
+      chat.classList.add('is-active-view');
+      chat.classList.remove('is-visible');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { chat.classList.add('is-visible'); });
+      });
+    }
+  }
+
   function leaveChatView() {
+    const body = document.querySelector('.poxy-support-body');
     const chat = $('supportChatView');
     const tabs = $('supportMainTabs');
     const panels = $('supportPanelsWrap');
-    if (chat && !chat.hidden) {
-      chat.classList.remove('is-visible');
-      setTimeout(function () { chat.hidden = true; }, 150);
-    } else if (chat) {
-      chat.classList.remove('is-visible');
+    if (body) body.classList.remove('is-chat-active');
+    if (chat) {
+      chat.classList.remove('is-visible', 'is-active-view');
       chat.hidden = true;
     }
     if (tabs) tabs.hidden = false;
@@ -355,16 +376,7 @@
     if (!t) return;
     activeTicket = t;
     renderedMsgIds.clear();
-    $('supportMainTabs').hidden = true;
-    $('supportPanelsWrap').hidden = true;
-    const chat = $('supportChatView');
-    if (chat) {
-      chat.hidden = false;
-      chat.classList.remove('is-visible');
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () { chat.classList.add('is-visible'); });
-      });
-    }
+    enterChatView();
     $('supportChatSubject').textContent = t.subject || 'Ticket';
     const badge = $('supportChatStatus');
     if (badge) {

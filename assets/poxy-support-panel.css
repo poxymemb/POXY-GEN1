@@ -208,6 +208,16 @@
   flex-direction: column;
   background: transparent;
 }
+/* Tickets list and chat are mutually exclusive views */
+.poxy-support-body.is-chat-active #supportPanelsWrap,
+.poxy-support-body.is-chat-active #supportMainTabs {
+  display: none !important;
+}
+.poxy-support-body.is-chat-active #supportChatView {
+  display: flex !important;
+  flex: 1;
+  min-height: 0;
+}
 #supportPanelsWrap {
   flex: 1;
   min-height: 0;
@@ -505,19 +515,26 @@
 .poxy-support-submit:hover:not(:disabled) { background: rgba(255, 255, 255, 0.9); }
 .poxy-support-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Chat view ── */
-.poxy-support-chat {
+/* ── Chat view (replaces tickets list when active) ── */
+.poxy-support-chat,
+#supportChatView {
   flex: 1;
   min-height: 0;
-  display: flex;
+  display: none;
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
   transition: opacity 120ms ease;
   background: transparent;
 }
-.poxy-support-chat.is-visible { opacity: 1; }
-.poxy-support-chat[hidden] { display: none !important; }
+.poxy-support-chat.is-active-view,
+#supportChatView.is-active-view {
+  display: flex;
+}
+.poxy-support-chat.is-visible,
+#supportChatView.is-visible { opacity: 1; }
+.poxy-support-chat[hidden],
+#supportChatView[hidden] { display: none !important; }
 
 .poxy-support-chat-head {
   display: flex;
