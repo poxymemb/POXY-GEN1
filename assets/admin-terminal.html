@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <meta name="robots" content="noindex,nofollow"/>
-<title>POXY MCU — Master Control Unit</title>
+<title>POXY OS — Operations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -77,6 +77,60 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .nav-btn:hover{color:var(--adm-text);background:var(--dim)}
 .nav-btn.active{color:var(--amber);background:rgba(245,158,11,0.12);border-left-color:var(--amber);font-weight:600}
 .nav-btn .ic{font-size:14px;width:18px;text-align:center;opacity:.85;flex-shrink:0}
+.sidebar-section{margin-bottom:4px}
+.sidebar-section-label{padding:14px 12px 4px;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.sidebar-item{position:relative}
+.sidebar-nav-badge{align-items:center;background:var(--red);border-radius:8px;color:#fff;display:none;font-size:9px;font-weight:700;height:16px;justify-content:center;margin-left:auto;min-width:16px;padding:0 4px}
+.sidebar-nav-badge.visible{display:inline-flex}
+.header-left{align-items:center;display:flex;flex-shrink:0;gap:12px;min-width:0}
+.header-logo{font-size:15px;font-weight:700;color:var(--adm-text);letter-spacing:-.02em;white-space:nowrap}
+.header-breadcrumb{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.header-breadcrumb::before{content:'/';margin:0 8px;color:var(--border);opacity:.8}
+.header-right{align-items:center;display:flex;flex-shrink:0;gap:8px}
+.header-btn{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--adm-text);cursor:pointer;display:inline-flex;font-family:var(--font);font-size:14px;gap:4px;line-height:1;padding:7px 11px;position:relative;transition:border-color .15s}
+.header-btn:hover{border-color:var(--amber)}
+.badge-count{align-items:center;background:var(--red);border-radius:9px;color:#fff;display:none;font-size:10px;font-weight:700;height:18px;justify-content:center;min-width:18px;padding:0 5px;position:absolute;right:-4px;top:-4px}
+.badge-count.visible{display:inline-flex}
+.shift-status-btn{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:8px;cursor:pointer;display:inline-flex;font-size:12px;font-weight:500;gap:6px;padding:6px 10px;position:relative;user-select:none}
+.shift-status-btn:hover{border-color:var(--amber)}
+.status-dot{border-radius:50%;flex-shrink:0;height:8px;width:8px}
+.status-dot.online{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,.5)}
+.status-dot.away{background:var(--amber)}
+.status-dot.busy{background:var(--red)}
+.status-dot.offline{background:var(--muted)}
+.shift-status-menu{background:var(--bg1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--adm-shadow);display:none;min-width:140px;padding:4px;position:absolute;right:0;top:calc(100% + 6px);z-index:50}
+.shift-status-menu.open{display:block}
+.shift-status-opt{align-items:center;border-radius:6px;cursor:pointer;display:flex;font-size:12px;gap:8px;padding:8px 10px;transition:background .1s}
+.shift-status-opt:hover{background:var(--dim)}
+.header-session{align-items:center;color:var(--muted);display:inline-flex;font-size:11px;font-weight:600;gap:6px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.os-stub-wrap{align-items:center;display:flex;flex-direction:column;gap:12px;justify-content:center;min-height:320px;padding:48px 24px;text-align:center}
+.os-stub-wrap p{color:var(--muted);font-size:14px;max-width:420px}
+.os-dash-greet{align-items:flex-start;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:20px}
+.os-dash-greet h2{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.2;margin:0}
+.os-dash-greet-meta{align-items:center;color:var(--muted);display:flex;flex-wrap:wrap;font-size:12px;gap:8px;margin-top:6px}
+.os-dash-role{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);border-radius:4px;color:var(--amber);font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 8px;text-transform:uppercase}
+.os-dash-today{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin-bottom:16px}
+.os-dash-stat{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 12px;text-align:center}
+.os-dash-stat-val{display:block;font-size:22px;font-weight:700;line-height:1.1}
+.os-dash-stat-lbl{color:var(--muted);display:block;font-size:9px;font-weight:700;letter-spacing:.06em;margin-top:6px;text-transform:uppercase}
+.os-dash-stat.warn .os-dash-stat-val{color:var(--amber)}
+.os-dash-stat.alert .os-dash-stat-val{color:var(--red)}
+.os-dash-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.os-dash-list{display:flex;flex-direction:column;gap:8px}
+.os-dash-row{align-items:center;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;cursor:pointer;display:flex;gap:10px;padding:10px 12px;transition:border-color .15s,background .15s}
+.os-dash-row:hover{border-color:var(--amber);background:var(--dim)}
+.os-dash-row-main{flex:1;min-width:0}
+.os-dash-row-title{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.os-dash-row-sub{color:var(--muted);font-size:11px;margin-top:2px}
+.os-dash-pri{font-size:10px;font-weight:700;flex-shrink:0;letter-spacing:.04em;text-transform:uppercase}
+.os-dash-pri.high,.os-dash-pri.urgent{color:var(--red)}
+.os-dash-pri.normal{color:var(--amber)}
+.os-dash-pri.low{color:var(--green)}
+.os-dash-empty{color:var(--muted);font-size:12px;padding:16px 0;text-align:center}
+.os-dash-super{margin-top:16px;padding-top:16px;border-top:1px solid var(--border2)}
+.os-dash-super.hidden{display:none}
+.hidden{display:none!important}
+.os-dash-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -561,8 +615,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
   <!-- SIDEBAR -->
   <aside id="sidebar">
     <div class="sidebar-hdr">
-      <div class="sidebar-brand">POXY MCU</div>
-      <div class="sidebar-sub">Master Control Unit</div>
+      <div class="sidebar-brand">POXY OS</div>
+      <div class="sidebar-sub">Internal operations</div>
       <div class="theme-toggle-wrap">
         <span class="theme-toggle-label">Theme</span>
         <button type="button" class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleMcuTheme()" aria-label="Toggle light or dark theme">
@@ -571,50 +625,106 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         </button>
       </div>
     </div>
-    <nav class="sidebar-nav" aria-label="MCU modules">
-      <button class="nav-btn active" onclick="switchTab('cms')" data-tab="cms">
-        <span class="ic">◈</span>Content &amp; CMS
-      </button>
-      <button class="nav-btn" onclick="switchTab('users')" data-tab="users">
-        <span class="ic">◆</span>User matrix
-      </button>
-      <button class="nav-btn" onclick="switchTab('sim')" data-tab="sim">
-        <span class="ic">✦</span>HW simulator
-      </button>
-      <button class="nav-btn" onclick="switchTab('telem')" data-tab="telem">
-        <span class="ic">⬟</span>Telemetry
-      </button>
-      <button class="nav-btn" onclick="switchTab('support')" data-tab="support">
-        <span class="ic">⬡</span>Support ops
-      </button>
-      <button class="nav-btn" onclick="switchTab('acc')" data-tab="acc">
-        <span class="ic">⚙</span>Account ops
-      </button>
-      <div style="height:1px;background:var(--border);margin:8px 4px"></div>
-      <button class="nav-btn" onclick="switchTab('economy')" data-tab="economy">
-        <span class="ic">◎</span>Economy
-      </button>
-      <button class="nav-btn" onclick="switchTab('alerts')" data-tab="alerts">
-        <span class="ic">🔔</span>Alerts
-      </button>
-      <button class="nav-btn" onclick="switchTab('rng')" data-tab="rng">
-        <span class="ic">🎲</span>RNG audit
-      </button>
-      <button class="nav-btn" onclick="switchTab('disputes')" data-tab="disputes">
-        <span class="ic">⚖</span>Disputes
-      </button>
-      <button class="nav-btn" onclick="switchTab('dossier')" data-tab="dossier">
-        <span class="ic">👤</span>Player dossier
-      </button>
-      <button class="nav-btn" onclick="switchTab('auditlog')" data-tab="auditlog">
-        <span class="ic">📋</span>Audit log
-      </button>
-      <button class="nav-btn" onclick="switchTab('roles')" data-tab="roles">
-        <span class="ic">🛡</span>Admin roles
-      </button>
-      <button class="nav-btn" onclick="switchTab('stkt')" data-tab="stkt">
-        <span class="ic">💬</span>Support tickets
-      </button>
+    <nav class="sidebar-nav" aria-label="POXY OS modules">
+      <div class="sidebar-section" data-section="personal">
+        <div class="sidebar-section-label">Personal</div>
+        <button type="button" class="nav-btn sidebar-item active" onclick="switchTab('os-dash')" data-tab="os-dash" data-dept="shared">
+          <span class="ic">🏠</span>Dashboard
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('mytasks')" data-tab="mytasks" data-dept="shared">
+          <span class="ic">📋</span>My Tasks<span class="sidebar-nav-badge" id="badge-tasks"></span>
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('messenger')" data-tab="messenger" data-dept="shared">
+          <span class="ic">💬</span>Messages<span class="sidebar-nav-badge" id="badge-msgs"></span>
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('notes')" data-tab="notes" data-dept="shared">
+          <span class="ic">📝</span>Notes
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('updates')" data-tab="updates" data-dept="shared">
+          <span class="ic">📣</span>Updates<span class="sidebar-nav-badge" id="badge-updates"></span>
+        </button>
+      </div>
+      <div class="sidebar-section" data-section="support">
+        <div class="sidebar-section-label">Support</div>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('stkt')" data-tab="stkt" data-dept="support">
+          <span class="ic">🎫</span>Support tickets
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('supportdash')" data-tab="supportdash" data-dept="support">
+          <span class="ic">📊</span>Support dashboard
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('dossier')" data-tab="dossier" data-dept="support">
+          <span class="ic">👤</span>Player dossier
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('disputes')" data-tab="disputes" data-dept="support">
+          <span class="ic">⚖</span>Disputes
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('rng')" data-tab="rng" data-dept="support">
+          <span class="ic">🎲</span>RNG audit
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('handbook')" data-tab="handbook" data-dept="support">
+          <span class="ic">📖</span>Handbook
+        </button>
+      </div>
+      <div class="sidebar-section" data-section="tech">
+        <div class="sidebar-section-label">Tech</div>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('telem')" data-tab="telem" data-dept="tech">
+          <span class="ic">📡</span>Telemetry
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('economy')" data-tab="economy" data-dept="tech">
+          <span class="ic">💰</span>Economy
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('alerts')" data-tab="alerts" data-dept="tech">
+          <span class="ic">🚨</span>Alerts
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('support')" data-tab="support" data-dept="tech">
+          <span class="ic">🔍</span>Support ops
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('auditlog')" data-tab="auditlog" data-dept="tech">
+          <span class="ic">📜</span>Audit log
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('syshealth')" data-tab="syshealth" data-dept="tech">
+          <span class="ic">🖥</span>Sys health
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('changelog')" data-tab="changelog" data-dept="tech">
+          <span class="ic">📋</span>Changelog
+        </button>
+      </div>
+      <div class="sidebar-section" data-section="marketing">
+        <div class="sidebar-section-label">Marketing</div>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('campaigns')" data-tab="campaigns" data-dept="marketing">
+          <span class="ic">🚀</span>Campaigns
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('calendar')" data-tab="calendar" data-dept="marketing">
+          <span class="ic">📅</span>Content calendar
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('mkt-analytics')" data-tab="mkt-analytics" data-dept="marketing">
+          <span class="ic">📈</span>Analytics
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('assets')" data-tab="assets" data-dept="marketing">
+          <span class="ic">🎨</span>Creative assets
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('influencers')" data-tab="influencers" data-dept="marketing">
+          <span class="ic">👥</span>Influencers
+        </button>
+      </div>
+      <div class="sidebar-section" data-section="command">
+        <div class="sidebar-section-label">Command</div>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('cms')" data-tab="cms" data-dept="command">
+          <span class="ic">📰</span>Content &amp; CMS
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('users')" data-tab="users" data-dept="command">
+          <span class="ic">👥</span>User matrix
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('sim')" data-tab="sim" data-dept="command">
+          <span class="ic">⚙</span>HW simulator
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('acc')" data-tab="acc" data-dept="command">
+          <span class="ic">🔐</span>Account ops
+        </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('roles')" data-tab="roles" data-dept="command">
+          <span class="ic">👑</span>Admin roles
+        </button>
+      </div>
     </nav>
     <div class="sidebar-footer">
       <div><span class="uplink-dot"></span><span class="uplink-txt">Uplink active</span></div>
@@ -625,9 +735,11 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 
   <div class="mcu-shell">
     <header class="mcu-header">
-      <div class="mcu-header-titles">
-        <h1 class="mcu-page-title" id="mcuPageTitle">Content &amp; CMS</h1>
-        <p class="mcu-page-sub" id="mcuPageSub">News, broadcast, and maintenance</p>
+      <div class="header-left mcu-header-titles">
+        <span class="header-logo">POXY OS</span>
+        <span class="header-breadcrumb" id="header-breadcrumb">Dashboard</span>
+        <p class="mcu-page-sub" id="mcuPageSub" style="display:none">Personal operations hub</p>
+        <h1 class="mcu-page-title" id="mcuPageTitle" style="display:none">Dashboard</h1>
       </div>
       <div class="mcu-header-center">
         <button type="button" class="mcu-search-trigger" id="mcuSearchTrigger" onclick="mcuOpenSearch()" title="Universal search (Ctrl+K)">
@@ -636,12 +748,30 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
           <kbd class="mcu-kbd">Ctrl+K</kbd>
         </button>
       </div>
-      <div class="mcu-header-meta">
-        <button type="button" class="mcu-bell-btn" id="mcuAlertBell" onclick="mcuOpenAlerts()" title="Active alerts">
+      <div class="header-right mcu-header-meta">
+        <button type="button" class="header-btn mcu-bell-btn" id="mcuAlertBell" onclick="mcuOpenAlerts()" title="Alerts">
           <span aria-hidden="true">🔔</span>
-          <span class="mcu-bell-badge" id="mcuAlertBadge" hidden>0</span>
+          <span class="badge-count mcu-bell-badge" id="mcuAlertBadge" hidden>0</span>
         </button>
-        <span class="mcu-header-badge"><span class="uplink-dot"></span>Staff session</span>
+        <button type="button" class="header-btn" onclick="switchTab('updates')" title="Updates">
+          <span aria-hidden="true">📣</span>
+          <span class="badge-count" id="hdr-badge-updates" hidden></span>
+        </button>
+        <button type="button" class="header-btn" onclick="switchTab('messenger')" title="Messages">
+          <span aria-hidden="true">💬</span>
+          <span class="badge-count" id="hdr-badge-msgs" hidden></span>
+        </button>
+        <div class="shift-status-btn" id="shift-status-btn" onclick="osToggleShiftMenu(event)" title="Shift status">
+          <span id="shift-dot" class="status-dot online"></span>
+          <span id="shift-label">Online</span>
+          <div class="shift-status-menu" id="shift-status-menu" onclick="event.stopPropagation()">
+            <div class="shift-status-opt" onclick="osSetShiftStatus('online')"><span class="status-dot online"></span>Online</div>
+            <div class="shift-status-opt" onclick="osSetShiftStatus('away')"><span class="status-dot away"></span>Away</div>
+            <div class="shift-status-opt" onclick="osSetShiftStatus('busy')"><span class="status-dot busy"></span>Busy</div>
+            <div class="shift-status-opt" onclick="osSetShiftStatus('offline')"><span class="status-dot offline"></span>Offline</div>
+          </div>
+        </div>
+        <span class="header-session"><span class="uplink-dot"></span>Staff session</span>
       </div>
     </header>
 
@@ -649,9 +779,74 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
   <main id="main">
 
     <!-- ══════════════════════════════════════════════════════
+         POXY OS — PERSONAL DASHBOARD
+         ══════════════════════════════════════════════════════ -->
+    <div id="tab-os-dash" class="tab-pane active">
+      <div class="os-dash-greet">
+        <div>
+          <h2 id="osDashGreeting">Good morning</h2>
+          <div class="os-dash-greet-meta">
+            <span class="os-dash-role" id="osDashRole">support</span>
+            <span id="osDashDept">Support</span>
+            <span>·</span>
+            <span><span class="status-dot online" id="osDashPresenceDot"></span> <span id="osDashPresenceLabel">Online</span></span>
+            <span>·</span>
+            <span id="osDashDate"></span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">My today</div>
+        <div class="os-dash-today" id="osDashStats">
+          <div class="os-dash-stat"><span class="os-dash-stat-val" id="osStatTickets">—</span><span class="os-dash-stat-lbl">Open tickets</span></div>
+          <div class="os-dash-stat warn"><span class="os-dash-stat-val" id="osStatSla">—</span><span class="os-dash-stat-lbl">SLA breach</span></div>
+          <div class="os-dash-stat"><span class="os-dash-stat-val" id="osStatTasks">—</span><span class="os-dash-stat-lbl">My tasks</span></div>
+          <div class="os-dash-stat"><span class="os-dash-stat-val" id="osStatMsgs">—</span><span class="os-dash-stat-lbl">Unread msgs</span></div>
+          <div class="os-dash-stat alert"><span class="os-dash-stat-val" id="osStatUrgent">—</span><span class="os-dash-stat-lbl">Urgent updates</span></div>
+        </div>
+        <div class="os-dash-actions">
+          <button type="button" class="btn btn-amber btn-sm" onclick="switchTab('stkt')">Go to tickets</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('mytasks')">My tasks</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('messenger')">Messages</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('updates')">Updates</button>
+        </div>
+        <div class="os-dash-super hidden" id="osDashSuper">
+          <div class="card-title" style="margin-bottom:8px">Command overview</div>
+          <div class="grid4" id="osDashSuperStats"></div>
+          <div class="os-dash-links" id="osDashSuperLinks"></div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">My tasks today</div>
+          <div class="os-dash-list" id="osDashTasksList"><p class="os-dash-empty">Loading…</p></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Recent messages</div>
+          <div class="os-dash-list" id="osDashMsgsList"><p class="os-dash-empty">Loading…</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OS stubs — filled in later sessions -->
+    <div id="tab-mytasks" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>My Tasks</strong> — task list view ships in Session 3.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-messenger" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">💬</div><p><strong>Messages</strong> — internal messenger ships in Session 4.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-notes" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📝</div><p><strong>Notes</strong> — personal notes editor ships in Session 5.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-updates" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📣</div><p><strong>Updates</strong> — MCU updates center ships in Session 2.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-supportdash" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📊</div><p><strong>Support Dashboard</strong> — metrics &amp; heatmap ship in Session 10.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-handbook" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📖</div><p><strong>Handbook</strong> — staff guide ships in Session 9.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-syshealth" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🖥</div><p><strong>Sys Health</strong> — monitoring ships in Session 6.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-changelog" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>Changelog</strong> — release notes ship in Session 11.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-campaigns" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🚀</div><p><strong>Campaigns</strong> — marketing module ships in Session 7.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-calendar" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📅</div><p><strong>Content Calendar</strong> — ships in Session 7.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-mkt-analytics" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📈</div><p><strong>Analytics</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-assets" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🎨</div><p><strong>Creative Assets</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-influencers" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">👥</div><p><strong>Influencers</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+
+    <!-- ══════════════════════════════════════════════════════
          TAB 1: SYSTEM CONTENT & CMS
          ══════════════════════════════════════════════════════ -->
-    <div id="tab-cms" class="tab-pane active">
+    <div id="tab-cms" class="tab-pane">
       <div class="section-hdr">SYSTEM CONTENT &amp; CMS ENGINE</div>
 
       <div class="grid2" style="align-items:start">
@@ -2140,7 +2335,7 @@ let _nativeDate  = window.Date;
 
 function initAll(){
   syncThemeToggleUI();
-  setMcuHeader(document.querySelector('.nav-btn.active')?.dataset.tab || 'cms');
+  setMcuHeader(document.querySelector('.sidebar-item.active,.nav-btn.active')?.dataset.tab || 'os-dash');
   // Show current user
   sb.auth.getUser().then(({data})=>{
     const el = document.getElementById('sidebarUser');
@@ -2162,6 +2357,7 @@ function initAll(){
   startCharts();
   loadTelemetryCounters();
   mcuInitGlobalChrome();
+  osInitChrome();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2169,21 +2365,328 @@ function initAll(){
 // ═══════════════════════════════════════════════════════════════
 const MCU_THEME_KEY = 'poxy-mcu-theme';
 const MCU_PAGES = {
-  cms:      { title: 'Content & CMS',      sub: 'News, broadcast, and maintenance' },
-  users:    { title: 'User matrix',        sub: 'Profiles, airdrops, and counters' },
-  sim:      { title: 'HW simulator',       sub: 'Performance sandbox and flags' },
-  telem:    { title: 'Telemetry',          sub: 'Live log stream and counters' },
-  support:  { title: 'Support ops',        sub: 'Ledger trace and player dossier' },
-  acc:      { title: 'Account ops',        sub: 'Balance, flags, and danger zone' },
-  auditlog:  { title: 'Audit log',           sub: 'Live admin action stream with filters and CSV export' },
-  economy:   { title: 'Economy health',      sub: 'Supply overview, mint/burn rate, top players, generation tracker' },
-  alerts:    { title: 'Alert system',        sub: 'Suspicious activity flags, rule config, dismissed history' },
-  rng:       { title: 'RNG audit',           sub: 'Provably fair drop verification and recent rounds' },
-  disputes:  { title: 'Dispute resolution',  sub: 'Incident lookup, compensation tool, admin actions log' },
-  dossier:   { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' },
-  roles:     { title: 'Admin roles',        sub: 'Team members, role assignments, permissions matrix' },
-  stkt:      { title: 'Support tickets',    sub: 'Ticket queue, realtime chat, quick replies, FAQ manager' }
+  'os-dash':       { title: 'Dashboard',          sub: 'Personal operations hub' },
+  mytasks:         { title: 'My Tasks',           sub: 'Tasks assigned to you' },
+  messenger:       { title: 'Messages',           sub: 'Internal team messenger' },
+  notes:           { title: 'Notes',              sub: 'Private staff notes' },
+  updates:         { title: 'Updates',            sub: 'MCU announcements and policies' },
+  supportdash:     { title: 'Support Dashboard',  sub: 'Support metrics and heatmap' },
+  handbook:        { title: 'Handbook',           sub: 'Staff guide and procedures' },
+  syshealth:       { title: 'Sys Health',         sub: 'System monitoring' },
+  changelog:       { title: 'Changelog',          sub: 'Internal release notes' },
+  campaigns:       { title: 'Campaigns',          sub: 'Marketing campaigns' },
+  calendar:        { title: 'Content Calendar',   sub: 'Scheduled posts' },
+  'mkt-analytics': { title: 'Analytics',          sub: 'Marketing analytics' },
+  assets:          { title: 'Creative Assets',    sub: 'Marketing asset library' },
+  influencers:     { title: 'Influencers',        sub: 'Influencer tracker' },
+  cms:             { title: 'Content & CMS',      sub: 'News, broadcast, and maintenance' },
+  users:           { title: 'User matrix',        sub: 'Profiles, airdrops, and counters' },
+  sim:             { title: 'HW simulator',       sub: 'Performance sandbox and flags' },
+  telem:           { title: 'Telemetry',          sub: 'Live log stream and counters' },
+  support:         { title: 'Support ops',        sub: 'Ledger trace and player dossier' },
+  acc:             { title: 'Account ops',        sub: 'Balance, flags, and danger zone' },
+  auditlog:        { title: 'Audit log',          sub: 'Live admin action stream with filters and CSV export' },
+  economy:         { title: 'Economy health',     sub: 'Supply overview, mint/burn rate, top players, generation tracker' },
+  alerts:          { title: 'Alert system',       sub: 'Suspicious activity flags, rule config, dismissed history' },
+  rng:             { title: 'RNG audit',          sub: 'Provably fair drop verification and recent rounds' },
+  disputes:        { title: 'Dispute resolution', sub: 'Incident lookup, compensation tool, admin actions log' },
+  dossier:         { title: 'Player dossier',     sub: 'Full player profile, inventory, ledger, and activity timeline' },
+  roles:           { title: 'Admin roles',        sub: 'Team members, role assignments, permissions matrix' },
+  stkt:            { title: 'Support tickets',    sub: 'Ticket queue, realtime chat, quick replies, FAQ manager' }
 };
+
+const DEPT_ACCESS = {
+  superadmin: ['command', 'support', 'tech', 'marketing', 'shared'],
+  mod:        ['support', 'tech', 'shared'],
+  support:    ['support', 'shared'],
+  marketing:  ['marketing', 'shared'],
+  dev:        ['tech', 'shared']
+};
+
+const OS_DEPT_LABELS = {
+  superadmin: 'Command Center',
+  mod:        'Support & Tech',
+  support:    'Support',
+  marketing:  'Marketing',
+  dev:        'Tech',
+  dev_topup:  'Tech'
+};
+
+let _osStaffRole = 'support';
+let _osUnreadTimer = null;
+let _osShiftStatus = 'online';
+
+function osNormalizeRole(role){
+  const r = (role || 'support').toLowerCase();
+  if(r === 'admin') return 'superadmin';
+  if(r === 'dev_topup') return 'dev';
+  return r;
+}
+
+function osIsSuperadmin(role){
+  const r = osNormalizeRole(role);
+  return r === 'superadmin';
+}
+
+async function applySidebarAccess(){
+  try{
+    const { data: roleData, error } = await sb.rpc('get_admin_role');
+    if(error) throw error;
+    _osStaffRole = osNormalizeRole(roleData || 'support');
+    const allowed = DEPT_ACCESS[_osStaffRole] || ['shared'];
+    document.querySelectorAll('.sidebar-item[data-dept]').forEach(item => {
+      item.style.display = allowed.includes(item.dataset.dept) ? 'flex' : 'none';
+    });
+    document.querySelectorAll('.sidebar-section').forEach(section => {
+      const hasVisible = [...section.querySelectorAll('.sidebar-item')]
+        .some(i => i.style.display !== 'none');
+      section.style.display = hasVisible ? 'block' : 'none';
+    });
+  }catch(err){
+    console.warn('[POXY OS] applySidebarAccess:', err.message);
+  }
+}
+
+function setOsBadge(id, count){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const n = parseInt(count, 10) || 0;
+  if(el.classList.contains('sidebar-nav-badge')){
+    el.textContent = n > 99 ? '99+' : (n > 0 ? String(n) : '');
+    el.classList.toggle('visible', n > 0);
+    return;
+  }
+  el.textContent = n > 99 ? '99+' : String(n);
+  if(n > 0){
+    el.classList.add('visible');
+    el.hidden = false;
+  }else{
+    el.classList.remove('visible');
+    el.hidden = true;
+  }
+}
+
+async function refreshUnreadCounts(){
+  try{
+    const { data, error } = await sb.rpc('get_unread_counts');
+    if(error) throw error;
+    if(!data) return;
+    setOsBadge('hdr-badge-updates', data.updates);
+    setOsBadge('hdr-badge-msgs', data.messages);
+    setOsBadge('badge-tasks', data.tasks);
+    setOsBadge('badge-msgs', data.messages);
+    setOsBadge('badge-updates', data.updates);
+  }catch(err){
+    console.warn('[POXY OS] refreshUnreadCounts:', err.message);
+  }
+}
+
+function osGreeting(){
+  const h = new Date().getHours();
+  if(h < 12) return 'Good morning';
+  if(h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
+function osFmtRelative(ts){
+  if(!ts) return '';
+  const d = new Date(ts);
+  if(isNaN(d.getTime())) return '';
+  const diff = Date.now() - d.getTime();
+  const mins = Math.floor(diff / 60000);
+  if(mins < 2) return 'just now';
+  if(mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if(hrs < 24) return hrs + 'h ago';
+  return d.toLocaleDateString();
+}
+
+function osFmtDue(due){
+  if(!due) return 'No due date';
+  const d = new Date(due + 'T12:00:00');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const dueDay = new Date(d);
+  dueDay.setHours(0,0,0,0);
+  if(dueDay.getTime() === today.getTime()) return 'Today';
+  if(dueDay < today) return 'Overdue';
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+function osToggleShiftMenu(e){
+  e.stopPropagation();
+  document.getElementById('shift-status-menu')?.classList.toggle('open');
+}
+
+function osSetShiftStatus(status){
+  _osShiftStatus = status;
+  const labels = { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' };
+  const dot = document.getElementById('shift-dot');
+  const label = document.getElementById('shift-label');
+  const dashDot = document.getElementById('osDashPresenceDot');
+  const dashLabel = document.getElementById('osDashPresenceLabel');
+  if(dot){ dot.className = 'status-dot ' + status; }
+  if(label) label.textContent = labels[status] || 'Online';
+  if(dashDot){ dashDot.className = 'status-dot ' + status; }
+  if(dashLabel) dashLabel.textContent = labels[status] || 'Online';
+  document.getElementById('shift-status-menu')?.classList.remove('open');
+  try{ localStorage.setItem('poxy-os-shift', status); }catch(e){}
+  sb.rpc('update_presence', { p_online: status !== 'offline' }).catch(err => {
+    console.warn('[POXY OS] update_presence:', err.message);
+  });
+}
+
+function osInitShiftStatus(){
+  try{
+    const saved = localStorage.getItem('poxy-os-shift');
+    if(saved && ['online','away','busy','offline'].includes(saved)) osSetShiftStatus(saved);
+  }catch(e){}
+  document.addEventListener('click', () => {
+    document.getElementById('shift-status-menu')?.classList.remove('open');
+  });
+}
+
+function osInitChrome(){
+  applySidebarAccess();
+  refreshUnreadCounts();
+  if(_osUnreadTimer) clearInterval(_osUnreadTimer);
+  _osUnreadTimer = setInterval(refreshUnreadCounts, 30000);
+  osInitShiftStatus();
+  osDashLoad();
+}
+
+async function osDashLoad(){
+  const greetEl = document.getElementById('osDashGreeting');
+  const roleEl = document.getElementById('osDashRole');
+  const deptEl = document.getElementById('osDashDept');
+  const dateEl = document.getElementById('osDashDate');
+  const tasksList = document.getElementById('osDashTasksList');
+  const msgsList = document.getElementById('osDashMsgsList');
+  const superWrap = document.getElementById('osDashSuper');
+  if(!greetEl) return;
+
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const [{ data: prof }, { data: dash, error: dashErr }, roleRes] = await Promise.all([
+      user ? sb.from('profiles').select('username').eq('id', user.id).maybeSingle() : Promise.resolve({ data: null }),
+      sb.rpc('get_my_dashboard'),
+      sb.rpc('get_admin_role'),
+    ]);
+    if(dashErr) throw dashErr;
+
+    const role = osNormalizeRole(roleRes.data || dash?.role || _osStaffRole);
+    _osStaffRole = role;
+    const username = prof?.username || (user?.email || 'staff').split('@')[0];
+    greetEl.textContent = osGreeting() + ', @' + username;
+    if(roleEl) roleEl.textContent = role === 'superadmin' ? 'superadmin' : role;
+    if(deptEl) deptEl.textContent = OS_DEPT_LABELS[role] || 'Staff';
+    if(dateEl) dateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+
+    const d = dash || {};
+    const setStat = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val ?? '0'; };
+    setStat('osStatTickets', d.open_tickets);
+    setStat('osStatSla', d.sla_breach);
+    setStat('osStatTasks', d.my_tasks_today);
+    setStat('osStatMsgs', d.unread_messages);
+    setStat('osStatUrgent', d.urgent_updates);
+
+    if(superWrap){
+      const isSuper = osIsSuperadmin(role);
+      superWrap.classList.toggle('hidden', !isSuper);
+      if(isSuper){
+        const [{ count: allOpen }, { count: allSla }] = await Promise.all([
+          sb.from('support_tickets').select('*', { count: 'exact', head: true }).in('status', ['open','in_progress']),
+          sb.from('support_tickets').select('*', { count: 'exact', head: true }).in('status', ['open','in_progress']).lt('updated_at', new Date(Date.now() - 4*3600000).toISOString()),
+        ]);
+        const superStats = document.getElementById('osDashSuperStats');
+        const superLinks = document.getElementById('osDashSuperLinks');
+        if(superStats){
+          superStats.innerHTML = [
+            { v: allOpen ?? 0, l: 'All open tickets' },
+            { v: allSla ?? 0, l: 'System SLA breach' },
+            { v: d.urgent_updates ?? 0, l: 'Urgent updates' },
+            { v: d.unread_messages ?? 0, l: 'Team unread msgs' },
+          ].map(s => `<div class="os-dash-stat"><span class="os-dash-stat-val">${s.v}</span><span class="os-dash-stat-lbl">${s.l}</span></div>`).join('');
+        }
+        if(superLinks){
+          const links = [
+            ['stkt','Tickets'],['supportdash','Support dash'],['economy','Economy'],
+            ['alerts','Alerts'],['roles','Admin roles'],['campaigns','Marketing'],
+          ];
+          superLinks.innerHTML = links.map(([tab, lbl]) =>
+            `<button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('${tab}')">${lbl}</button>`
+          ).join('');
+        }
+      }
+    }
+
+    if(user && tasksList){
+      const today = new Date().toISOString().slice(0, 10);
+      const { data: tasks, error: tErr } = await sb.from('os_tasks')
+        .select('id, title, priority, due_date, status')
+        .eq('assigned_to', user.id)
+        .not('status', 'eq', 'done')
+        .order('due_date', { ascending: true, nullsFirst: false })
+        .limit(8);
+      if(tErr) throw tErr;
+      if(!tasks?.length){
+        tasksList.innerHTML = '<p class="os-dash-empty">No open tasks assigned to you</p>';
+      }else{
+        tasksList.innerHTML = tasks.map(t => {
+          const pri = (t.priority || 'normal').toLowerCase();
+          const priIcon = pri === 'urgent' || pri === 'high' ? '🔴' : pri === 'low' ? '🟢' : '🟡';
+          return `<div class="os-dash-row" onclick="switchTab('mytasks')" title="Open in My Tasks">
+            <span class="os-dash-pri ${pri}">${priIcon}</span>
+            <div class="os-dash-row-main">
+              <div class="os-dash-row-title">${esc(t.title)}</div>
+              <div class="os-dash-row-sub">Due: ${esc(osFmtDue(t.due_date))} · ${esc(t.status || 'todo')}</div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+    }
+
+    if(msgsList){
+      const { data: msgs, error: mErr } = await sb.from('os_messages')
+        .select('id, body, created_at, channel_id, sender_id')
+        .eq('is_system', false)
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if(mErr) throw mErr;
+      if(!msgs?.length){
+        msgsList.innerHTML = '<p class="os-dash-empty">No messages yet — channels are ready in #general</p>';
+      }else{
+        const senderIds = [...new Set(msgs.map(m => m.sender_id).filter(Boolean))];
+        const channelIds = [...new Set(msgs.map(m => m.channel_id).filter(Boolean))];
+        let profMap = {};
+        let chMap = {};
+        if(senderIds.length){
+          const { data: senders } = await sb.from('profiles').select('id, username').in('id', senderIds);
+          (senders || []).forEach(p => { profMap[p.id] = p.username; });
+        }
+        if(channelIds.length){
+          const { data: channels } = await sb.from('os_channels').select('id, name').in('id', channelIds);
+          (channels || []).forEach(c => { chMap[c.id] = c.name; });
+        }
+        msgsList.innerHTML = msgs.map(m => {
+          const ch = chMap[m.channel_id] || '#channel';
+          const who = profMap[m.sender_id] ? '@' + profMap[m.sender_id] : 'staff';
+          const preview = (m.body || '').slice(0, 72) + ((m.body || '').length > 72 ? '…' : '');
+          return `<div class="os-dash-row" onclick="switchTab('messenger')" title="Open messenger">
+            <div class="os-dash-row-main">
+              <div class="os-dash-row-title">${esc(ch)} · ${esc(who)}</div>
+              <div class="os-dash-row-sub">${esc(preview || '(attachment)')} · ${esc(osFmtRelative(m.created_at))}</div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+    }
+  }catch(err){
+    if(tasksList) tasksList.innerHTML = '<p class="os-dash-empty" style="color:var(--red)">' + esc(err.message) + '</p>';
+    if(msgsList && msgsList.innerHTML.includes('Loading')) msgsList.innerHTML = '<p class="os-dash-empty">Messages unavailable</p>';
+    console.warn('[POXY OS] osDashLoad:', err.message);
+  }
+}
 
 function syncThemeToggleUI(){
   const theme = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -2207,24 +2710,31 @@ function toggleMcuTheme(){
 }
 
 function setMcuHeader(tabId){
-  const meta = MCU_PAGES[tabId] || MCU_PAGES.cms;
+  const meta = MCU_PAGES[tabId] || MCU_PAGES['os-dash'];
   const titleEl = document.getElementById('mcuPageTitle');
   const subEl = document.getElementById('mcuPageSub');
+  const crumbEl = document.getElementById('header-breadcrumb');
   if(titleEl) titleEl.textContent = meta.title;
   if(subEl) subEl.textContent = meta.sub;
+  if(crumbEl) crumbEl.textContent = meta.title;
+  document.title = 'POXY OS — ' + meta.title;
 }
 
 // ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
+  const pane = document.getElementById('tab-'+id);
+  if(!pane){ toast('Module not found', 'err'); return; }
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  document.querySelector('.nav-btn[data-tab="'+id+'"]').classList.add('active');
+  document.querySelectorAll('.sidebar-item,.nav-btn').forEach(b=>b.classList.remove('active'));
+  pane.classList.add('active');
+  const navBtn = document.querySelector('.sidebar-item[data-tab="'+id+'"], .nav-btn[data-tab="'+id+'"]');
+  if(navBtn) navBtn.classList.add('active');
   setMcuHeader(id);
-  if(id==='telem'){ loadTelemetryCounters(); }
-  if(id==='users'){ loadCounters(); loadUsersTable(); }
+  if(id==='os-dash')   { osDashLoad(); }
+  if(id==='telem')     { loadTelemetryCounters(); }
+  if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
   if(id==='economy')   { loadEconomy(); }
   if(id==='alerts')    { alertTabEnter(); }
@@ -5517,6 +6027,7 @@ function mcuInitGlobalChrome(){
   alertLoadRules();
   checkAlerts();
   alertStartPolling();
+  refreshUnreadCounts();
 }
 
 function mcuUpdateAlertBell(count){
@@ -5526,6 +6037,7 @@ function mcuUpdateAlertBell(count){
   const n = typeof count === 'number' ? count : (_alertActiveList?.length ?? 0);
   badge.textContent = n > 99 ? '99+' : String(n);
   badge.hidden = n <= 0;
+  badge.classList.toggle('visible', n > 0);
   if(btn) btn.title = n > 0 ? `${n} active alert${n === 1 ? '' : 's'}` : 'No active alerts';
 }
 
