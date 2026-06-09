@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <meta name="robots" content="noindex,nofollow"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
 <title>POXY OS — Operations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -876,11 +878,11 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       </div>
     </div>
 
-    <!-- OS stubs — filled in later sessions -->
+    <!-- OS stubs — filled in later sessions (updates: Session 2 — live) -->
     <div id="tab-mytasks" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>My Tasks</strong> — task list view ships in Session 3.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-messenger" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">💬</div><p><strong>Messages</strong> — internal messenger ships in Session 4.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-notes" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📝</div><p><strong>Notes</strong> — personal notes editor ships in Session 5.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-updates" class="tab-pane">
+    <div id="tab-updates" class="tab-pane" data-poxy-module="updates-center">
       <div class="upd-head">
         <h2>MCU Updates Center</h2>
         <button type="button" class="btn btn-amber btn-sm hidden" id="updNewBtn" onclick="updShowPublish()">+ New update</button>
@@ -2678,6 +2680,7 @@ function osInitChrome(){
   _osUnreadTimer = setInterval(refreshUnreadCounts, 30000);
   osInitShiftStatus();
   osDashLoad();
+  updEnsureTabDom();
   updCheckUrgentReminder();
 }
 
@@ -2834,6 +2837,34 @@ let _updCurrentUserId = null;
 let _updCanPublish = false;
 let _updActiveId = null;
 
+function updEnsureTabDom(){
+  const tab = document.getElementById('tab-updates');
+  if(!tab) return;
+  const isStub = tab.querySelector('.os-stub-wrap') || !document.getElementById('updList');
+  if(!isStub) return;
+  tab.innerHTML = (
+    '<div class="upd-head">' +
+      '<h2>MCU Updates Center</h2>' +
+      '<button type="button" class="btn btn-amber btn-sm hidden" id="updNewBtn" onclick="updShowPublish()">+ New update</button>' +
+    '</div>' +
+    '<div class="upd-filters" id="updFilters">' +
+      '<button type="button" class="upd-filter-btn active" data-filter="all" onclick="updSetFilter(\'all\')">All</button>' +
+      '<button type="button" class="upd-filter-btn" data-filter="urgent" onclick="updSetFilter(\'urgent\')">🔴 Urgent</button>' +
+      '<button type="button" class="upd-filter-btn" data-filter="policy" onclick="updSetFilter(\'policy\')">🟠 Policy</button>' +
+      '<button type="button" class="upd-filter-btn" data-filter="mcu_update" onclick="updSetFilter(\'mcu_update\')">🟡 MCU</button>' +
+      '<button type="button" class="upd-filter-btn" data-filter="game_update" onclick="updSetFilter(\'game_update\')">🟢 Game</button>' +
+      '<button type="button" class="upd-filter-btn" data-filter="general" onclick="updSetFilter(\'general\')">🔵 Info</button>' +
+    '</div>' +
+    '<div id="updPinnedWrap" class="hidden">' +
+      '<div class="upd-section-title">Pinned</div>' +
+      '<div class="upd-list" id="updPinnedList"></div>' +
+    '</div>' +
+    '<div class="upd-section-title" id="updAllLabel">All updates</div>' +
+    '<div class="upd-list" id="updList"><p class="os-dash-empty">Loading…</p></div>'
+  );
+  tab.setAttribute('data-poxy-module', 'updates-center');
+}
+
 function updCanPublishRole(role){
   const r = osNormalizeRole(role);
   return r === 'superadmin' || r === 'mod';
@@ -2976,11 +3007,16 @@ async function updLoadUpdates(){
     }
     updRenderLists();
   }catch(err){
-    if(listEl) listEl.innerHTML = '<p class="os-dash-empty" style="color:var(--red)">' + esc(err.message) + '</p>';
+    const msg = err.message || String(err);
+    const hint = /mcu_updates|schema cache|relation/i.test(msg)
+      ? '<br><span style="font-size:11px">Apply <code>migration_poxy_os.sql</code> in Supabase SQL Editor.</span>'
+      : '';
+    if(listEl) listEl.innerHTML = '<p class="os-dash-empty" style="color:var(--red)">' + esc(msg) + hint + '</p>';
   }
 }
 
 async function updTabEnter(){
+  updEnsureTabDom();
   try{
     const [{ data: { user } }, roleRes] = await Promise.all([
       sb.auth.getUser(),
