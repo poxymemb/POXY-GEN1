@@ -239,11 +239,14 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mcu-search-foot{border-top:1px solid var(--border);color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:12px 16px;padding:10px 16px}
 /* ── SUPPORT TICKETS (Session C) ── */
 #tab-stkt.tab-pane{max-width:none;width:100%}
-.stkt-main{display:flex;align-items:stretch;gap:14px;margin:0 0 16px;width:100%;height:calc(100vh - 180px);min-height:360px;flex-shrink:0}
+.stkt-main{display:flex;align-items:stretch;gap:14px;margin:0 0 16px;width:100%;height:calc(75vh - 120px);min-height:280px;flex-shrink:0}
+.stkt-main:not(.stkt-has-ticket) .stkt-col-side{display:none!important}
+.stkt-main:not(.stkt-has-ticket) .stkt-col-chat{max-width:none;flex:1 1 auto}
+.stkt-main.stkt-has-ticket .stkt-col-chat{max-width:600px}
 @media(max-width:960px){.stkt-main{flex-direction:column;height:auto;min-height:0}}
 .stkt-col-queue,.stkt-col-chat,.stkt-col-side{display:flex;flex-direction:column;min-height:0;height:100%;margin-bottom:0;overflow-y:auto;overflow-x:hidden}
 .stkt-col-queue{flex:0 0 280px;width:280px;max-width:280px}
-.stkt-col-chat{flex:1 1 auto;min-width:0;max-width:600px}
+.stkt-col-chat{flex:1 1 auto;min-width:0}
 .stkt-col-side{flex:0 0 280px;width:280px;max-width:280px;margin-left:auto}
 @media(max-width:960px){.stkt-col-queue,.stkt-col-chat,.stkt-col-side{flex:1 1 auto;width:100%;max-width:none;height:auto;max-height:50vh;margin-left:0}}
 .stkt-col-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-shrink:0}
@@ -267,7 +270,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-status-dot.closed{background:var(--muted)}
 .stkt-queue-time{font-size:9px;color:var(--muted);white-space:nowrap}
 .stkt-unread{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700}
-.stkt-chat-empty,.stkt-side-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:13px;padding:32px 20px;text-align:center;min-height:200px}
+.stkt-chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:13px;padding:32px 20px;text-align:center;min-height:200px}
+.stkt-side-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;text-align:center;min-height:200px;color:var(--muted);font-size:12px;opacity:.55;letter-spacing:.02em}
 .stkt-chat-empty-icon{font-size:32px;opacity:.35;line-height:1}
 #stktChatActive{display:flex;flex-direction:column;flex:1;min-height:0;width:100%}
 .stkt-chat-msgs{display:flex;flex-direction:column;gap:8px;padding:10px 12px;min-height:120px;justify-content:flex-start;align-content:flex-start;flex:1 1 auto}
@@ -1339,11 +1343,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         </section>
 
         <!-- Right: ticket info + quick replies -->
-        <aside class="card stkt-col-side">
-          <div id="stktSideEmpty" class="stkt-side-empty">
-            <div class="stkt-chat-empty-icon">🎫</div>
-            <div>Ticket details appear here</div>
-          </div>
+        <aside class="card stkt-col-side" id="stktColSide">
+          <div id="stktSideEmpty" class="stkt-side-empty">Select a ticket to view details</div>
           <div id="stktSideActive" hidden>
             <div class="stkt-side-info">
               <div class="stkt-side-info-row"><span class="lbl">User</span><span class="val" id="stktSideUser">—</span></div>
@@ -5569,12 +5570,21 @@ function stktTimeAgo(iso){
   }catch(e){ return '—'; }
 }
 
+function stktSyncLayout(){
+  const main = document.querySelector('#tab-stkt .stkt-main');
+  const has = !!_stktActiveId;
+  if(main) main.classList.toggle('stkt-has-ticket', has);
+  const side = document.getElementById('stktColSide');
+  if(side) side.style.display = has ? '' : 'none';
+}
+
 function stktUpdateSidePanel(t){
   const empty = document.getElementById('stktSideEmpty');
   const active = document.getElementById('stktSideActive');
   if(!t){
     if(empty) empty.hidden = false;
     if(active) active.hidden = true;
+    stktSyncLayout();
     return;
   }
   if(empty) empty.hidden = true;
@@ -5636,6 +5646,7 @@ async function stktUploadImage(file){
 }
 
 function stktTabEnter(){
+  stktSyncLayout();
   stktLoadQueue();
   stktLoadQuickRepliesMgr();
   stktLoadAutoMessages();
@@ -5772,6 +5783,7 @@ async function stktOpenTicket(ticketId){
   _stktRenderedMsgIds.clear();
   _stktMarkSeen(ticketId);
   _stktUnread[ticketId] = 0;
+  stktSyncLayout();
   stktRenderQueue();
 
   document.getElementById('stktChatEmpty').hidden = true;
