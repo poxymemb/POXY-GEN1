@@ -101,12 +101,12 @@
     position: fixed;
     right: 0;
     top: 0;
-    bottom: auto;
+    bottom: 0;
     left: auto;
     width: 420px;
     max-width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
+    height: auto;
+    max-height: none;
     border-radius: 20px 0 0 20px;
     border: none;
     border-left: 1px solid var(--poxy-border-light);
@@ -822,4 +822,22 @@
 
 @media (max-width: 768px) {
   .poxy-support-drag-handle { display: block; }
+}
+
+/* Chat mode: drop transform so fixed compose anchors to viewport (not transformed drawer) */
+.poxy-support-overlay.is-open .poxy-support-drawer.is-chat-active {
+  transform: none;
+}
+
+/* Desktop: compose pinned to viewport bottom-right */
+@media (min-width: 769px) {
+  .poxy-support-drawer.is-chat-active #supportChatCompose {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 420px;
+    max-width: 100vw;
+    z-index: 11602;
+  }
 }
