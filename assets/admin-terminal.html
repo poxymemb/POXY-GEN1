@@ -264,6 +264,48 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .msg-empty-chat{align-items:center;color:var(--muted);display:flex;flex:1;flex-direction:column;font-size:13px;gap:8px;justify-content:center;padding:32px;text-align:center}
 #msgChatActive{display:flex;flex:1;flex-direction:column;min-height:0}
 #msgChatActive.hidden,#msgChatEmpty.hidden{display:none!important}
+/* ── NOTES (Session 5) ── */
+#tab-notes.tab-pane{max-width:none;padding:16px 20px;width:100%}
+.nts-layout{display:flex;gap:0;height:calc(100vh - 130px);min-height:400px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg1)}
+.nts-sidebar{background:var(--bg1);border-right:1px solid var(--border);display:flex;flex:0 0 260px;flex-direction:column;min-width:0;overflow:hidden}
+.nts-sidebar-head{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border2)}
+.nts-list-scroll{flex:1;min-height:0;overflow-y:auto;padding:6px 8px}
+.nts-note-item{align-items:center;border-radius:8px;cursor:pointer;display:flex;font-size:12px;font-weight:500;gap:6px;padding:8px 10px;transition:background .15s}
+.nts-note-item:hover{background:var(--dim)}
+.nts-note-item.active{background:rgba(245,158,11,.12);color:var(--amber)}
+.nts-pin-icon{flex-shrink:0;font-size:11px;opacity:.85;width:14px}
+.nts-pin-icon.off{opacity:0}
+.nts-note-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nts-list-sep{border-top:1px solid var(--border2);margin:6px 4px}
+.nts-tags-sec{border-top:1px solid var(--border2);flex-shrink:0;padding:4px 8px 10px}
+.nts-tag-cloud{display:flex;flex-wrap:wrap;gap:6px;padding:4px 4px 0}
+.nts-tag-chip{background:var(--bg2);border:1px solid var(--border);border-radius:12px;color:var(--muted);cursor:pointer;font-size:10px;font-weight:600;padding:3px 8px;transition:border-color .15s,color .15s}
+.nts-tag-chip:hover,.nts-tag-chip.active{border-color:rgba(245,158,11,.45);color:var(--amber)}
+.nts-editor{background:var(--bg);display:flex;flex:1;flex-direction:column;min-width:0}
+.nts-empty{align-items:center;color:var(--muted);display:flex;flex:1;flex-direction:column;font-size:13px;gap:8px;justify-content:center;padding:32px;text-align:center}
+.nts-empty.hidden,#ntsEditorActive.hidden{display:none!important}
+#ntsEditorActive{display:flex;flex:1;flex-direction:column;min-height:0}
+.nts-editor-head{align-items:center;border-bottom:1px solid var(--border2);display:flex;flex-shrink:0;gap:10px;padding:12px 16px}
+.nts-title-input{background:transparent;border:none;color:var(--adm-text);flex:1;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;min-width:0;outline:none}
+.nts-title-input::placeholder{color:var(--muted)}
+.nts-editor-actions{align-items:center;display:flex;flex-shrink:0;gap:6px}
+.nts-save-status{color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.04em;min-width:88px;text-align:right;text-transform:uppercase}
+.nts-save-status.unsaved{color:var(--amber)}
+.nts-save-status.saving{color:var(--green)}
+.nts-tags-row{align-items:center;border-bottom:1px solid var(--border2);display:flex;flex-shrink:0;flex-wrap:wrap;gap:6px;padding:8px 16px}
+.nts-editor-tags{display:flex;flex-wrap:wrap;gap:6px}
+.nts-editor-tag{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;display:inline-flex;font-size:10px;font-weight:600;gap:4px;padding:3px 8px}
+.nts-editor-tag button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;padding:0}
+.nts-editor-tag button:hover{color:var(--red)}
+.nts-tag-input{flex:1;max-width:200px;min-width:120px}
+.nts-body-wrap{display:flex;flex:1;min-height:0;position:relative}
+.nts-body-input{background:var(--bg1);border:none;color:var(--adm-text);flex:1;font-family:'IBM Plex Mono','DM Mono',monospace;font-size:13px;line-height:1.55;min-height:0;outline:none;padding:16px;resize:none;width:100%}
+.nts-body-input.hidden{display:none}
+.nts-preview-pane{color:var(--adm-text);flex:1;font-size:13px;line-height:1.6;min-height:0;overflow-y:auto;padding:16px 20px}
+.nts-preview-pane.hidden{display:none}
+.nts-preview-pane h3,.nts-preview-pane h4{font-family:'Syne',sans-serif;margin:12px 0 8px}
+.nts-preview-pane code{background:var(--bg2);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:1px 5px}
+.nts-preview-pane p{margin:0 0 10px}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -1080,7 +1122,47 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         </div>
       </div>
     </div>
-    <div id="tab-notes" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📝</div><p><strong>Notes</strong> — personal notes editor ships in Session 5.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-notes" class="tab-pane" data-poxy-module="notes">
+      <div class="nts-layout">
+        <aside class="nts-sidebar">
+          <div class="nts-sidebar-head">
+            <button type="button" class="btn btn-amber btn-sm" onclick="ntsNewNote()">+ New Note</button>
+            <input id="ntsSearchInput" class="f-input" type="search" placeholder="🔍 Search notes…" oninput="ntsOnSearch()"/>
+          </div>
+          <div class="nts-list-scroll" id="ntsNoteList"></div>
+          <div class="nts-tags-sec">
+            <div class="msg-sec-title">Tags</div>
+            <div id="ntsTagList" class="nts-tag-cloud"></div>
+          </div>
+        </aside>
+        <div class="nts-editor" id="ntsEditorPane">
+          <div class="nts-empty" id="ntsEmpty">
+            <span style="font-size:32px;opacity:.35">📝</span>
+            <p>Select a note or create a new one</p>
+          </div>
+          <div id="ntsEditorActive" class="hidden">
+            <div class="nts-editor-head">
+              <input id="ntsTitleInput" class="nts-title-input" type="text" placeholder="Note title" oninput="ntsOnEdit()"/>
+              <div class="nts-editor-actions">
+                <span id="ntsSaveStatus" class="nts-save-status">Saved</span>
+                <button type="button" class="btn btn-ghost btn-sm" id="ntsPreviewBtn" onclick="ntsTogglePreview()">Preview</button>
+                <button type="button" class="btn btn-amber btn-sm" onclick="ntsSave(true)">Save</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="ntsPinBtn" onclick="ntsTogglePin()">Pin</button>
+                <button type="button" class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="ntsDelete()">Delete</button>
+              </div>
+            </div>
+            <div class="nts-tags-row">
+              <div id="ntsEditorTags" class="nts-editor-tags"></div>
+              <input id="ntsTagInput" class="f-input nts-tag-input" type="text" placeholder="Add tag, press Enter" onkeydown="if(event.key==='Enter'){event.preventDefault();ntsAddTag()}"/>
+            </div>
+            <div class="nts-body-wrap">
+              <textarea id="ntsBodyInput" class="nts-body-input" placeholder="Write in markdown…" oninput="ntsOnEdit()"></textarea>
+              <div id="ntsPreviewPane" class="nts-preview-pane hidden"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="tab-updates" class="tab-pane" data-poxy-module="updates-center">
       <div class="upd-head">
         <h2>MCU Updates Center</h2>
@@ -4526,6 +4608,349 @@ function msgOpenChannelAfter(channelId){
 }
 
 // ═══════════════════════════════════════════════════════════════
+// MY NOTES (Session 5)
+// ═══════════════════════════════════════════════════════════════
+
+let _ntsNotes = [];
+let _ntsActiveId = null;
+let _ntsSearch = '';
+let _ntsTagFilter = null;
+let _ntsPreview = false;
+let _ntsSaving = false;
+let _ntsAutosaveTimer = null;
+let _ntsSnapshot = null;
+
+function ntsSetStatus(state){
+  const el = document.getElementById('ntsSaveStatus');
+  if(!el) return;
+  el.textContent = state;
+  el.classList.remove('unsaved', 'saving');
+  if(state === 'Unsaved changes') el.classList.add('unsaved');
+  if(state === 'Saving...') el.classList.add('saving');
+}
+
+function ntsGetEditorState(){
+  const note = _ntsNotes.find(n => n.id === _ntsActiveId);
+  return {
+    title: (document.getElementById('ntsTitleInput')?.value || '').trim() || 'Untitled',
+    body: document.getElementById('ntsBodyInput')?.value || '',
+    tags: JSON.stringify(note?.tags || []),
+    is_pinned: !!note?.is_pinned,
+  };
+}
+
+function ntsCaptureSnapshot(){
+  _ntsSnapshot = ntsGetEditorState();
+  ntsSetStatus('Saved');
+}
+
+function ntsIsDirty(){
+  if(!_ntsActiveId || !_ntsSnapshot) return false;
+  const cur = ntsGetEditorState();
+  return cur.title !== _ntsSnapshot.title
+    || cur.body !== _ntsSnapshot.body
+    || cur.tags !== _ntsSnapshot.tags
+    || cur.is_pinned !== _ntsSnapshot.is_pinned;
+}
+
+function ntsOnEdit(){
+  if(!_ntsActiveId) return;
+  if(ntsIsDirty()) ntsSetStatus('Unsaved changes');
+  else ntsSetStatus('Saved');
+  ntsScheduleAutosave();
+}
+
+function ntsScheduleAutosave(){
+  clearTimeout(_ntsAutosaveTimer);
+  _ntsAutosaveTimer = setTimeout(() => ntsSave(false), 30000);
+}
+
+function ntsFilteredNotes(){
+  let list = _ntsNotes.slice();
+  const q = (_ntsSearch || '').trim().toLowerCase();
+  if(q){
+    list = list.filter(n => {
+      const tags = (n.tags || []).join(' ');
+      return (n.title || '').toLowerCase().includes(q)
+        || (n.body || '').toLowerCase().includes(q)
+        || tags.toLowerCase().includes(q);
+    });
+  }
+  if(_ntsTagFilter){
+    list = list.filter(n => (n.tags || []).includes(_ntsTagFilter));
+  }
+  const pinned = list.filter(n => n.is_pinned).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+  const rest = list.filter(n => !n.is_pinned).sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+  return { pinned, rest };
+}
+
+function ntsRenderList(){
+  const box = document.getElementById('ntsNoteList');
+  if(!box) return;
+  const { pinned, rest } = ntsFilteredNotes();
+  const row = (n) => {
+    const active = n.id === _ntsActiveId ? ' active' : '';
+    const pinCls = n.is_pinned ? '' : ' off';
+    return `<div class="nts-note-item${active}" onclick="ntsOpenNote('${n.id}')"><span class="nts-pin-icon${pinCls}">📌</span><span class="nts-note-title">${esc(n.title || 'Untitled')}</span></div>`;
+  };
+  if(!pinned.length && !rest.length){
+    box.innerHTML = '<p class="os-dash-empty" style="padding:12px;font-size:11px">No notes yet</p>';
+    return;
+  }
+  let html = pinned.map(row).join('');
+  if(pinned.length && rest.length) html += '<div class="nts-list-sep"></div>';
+  html += rest.map(row).join('');
+  box.innerHTML = html;
+}
+
+function ntsCollectTags(){
+  const map = {};
+  _ntsNotes.forEach(n => {
+    (n.tags || []).forEach(t => { map[t] = (map[t] || 0) + 1; });
+  });
+  return Object.entries(map).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+
+function ntsRenderTagCloud(){
+  const box = document.getElementById('ntsTagList');
+  if(!box) return;
+  const tags = ntsCollectTags();
+  if(!tags.length){
+    box.innerHTML = '<span style="font-size:10px;color:var(--muted);padding:4px 6px">No tags yet</span>';
+    return;
+  }
+  box.innerHTML = tags.map(([t, c]) => {
+    const active = _ntsTagFilter === t ? ' active' : '';
+    return `<span class="nts-tag-chip${active}" onclick="ntsFilterByTag('${esc(t)}')">#${esc(t)} <span style="opacity:.6">${c}</span></span>`;
+  }).join('');
+}
+
+function ntsFilterByTag(tag){
+  _ntsTagFilter = _ntsTagFilter === tag ? null : tag;
+  ntsRenderTagCloud();
+  ntsRenderList();
+}
+
+function ntsOnSearch(){
+  _ntsSearch = document.getElementById('ntsSearchInput')?.value || '';
+  ntsRenderList();
+}
+
+function ntsRenderEditorTags(){
+  const box = document.getElementById('ntsEditorTags');
+  const note = _ntsNotes.find(n => n.id === _ntsActiveId);
+  if(!box || !note) return;
+  box.innerHTML = (note.tags || []).map(t =>
+    `<span class="nts-editor-tag">#${esc(t)}<button type="button" onclick="ntsRemoveTag('${esc(t)}')" title="Remove tag">×</button></span>`
+  ).join('');
+}
+
+function ntsAddTag(){
+  const inp = document.getElementById('ntsTagInput');
+  let tag = (inp?.value || '').trim().replace(/^#/, '').toLowerCase().replace(/[^\w-]/g, '');
+  if(!tag || tag.length < 2){ toast('Tag must be 2+ characters', 'err'); return; }
+  const note = _ntsNotes.find(n => n.id === _ntsActiveId);
+  if(!note) return;
+  if(!note.tags) note.tags = [];
+  if(!note.tags.includes(tag)) note.tags.push(tag);
+  if(inp) inp.value = '';
+  ntsRenderEditorTags();
+  ntsRenderTagCloud();
+  ntsOnEdit();
+}
+
+function ntsRemoveTag(tag){
+  const note = _ntsNotes.find(n => n.id === _ntsActiveId);
+  if(!note || !note.tags) return;
+  note.tags = note.tags.filter(t => t !== tag);
+  ntsRenderEditorTags();
+  ntsRenderTagCloud();
+  ntsOnEdit();
+}
+
+function ntsTogglePreview(){
+  _ntsPreview = !_ntsPreview;
+  const body = document.getElementById('ntsBodyInput');
+  const prev = document.getElementById('ntsPreviewPane');
+  const btn = document.getElementById('ntsPreviewBtn');
+  if(_ntsPreview){
+    if(prev){
+      prev.classList.remove('hidden');
+      prev.innerHTML = updRenderMarkdown(body?.value || '');
+    }
+    body?.classList.add('hidden');
+    if(btn) btn.textContent = 'Edit';
+  }else{
+    prev?.classList.add('hidden');
+    body?.classList.remove('hidden');
+    if(btn) btn.textContent = 'Preview';
+  }
+}
+
+function ntsSyncPinBtn(){
+  const note = _ntsNotes.find(n => n.id === _ntsActiveId);
+  const btn = document.getElementById('ntsPinBtn');
+  if(btn) btn.textContent = note?.is_pinned ? 'Unpin' : 'Pin';
+}
+
+async function ntsLoadNotes(){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user){ _ntsNotes = []; return; }
+  const { data, error } = await sb.from('os_notes')
+    .select('*')
+    .eq('staff_id', user.id)
+    .order('is_pinned', { ascending: false })
+    .order('updated_at', { ascending: false });
+  if(error) throw error;
+  _ntsNotes = data || [];
+}
+
+async function ntsOpenNote(noteId){
+  if(_ntsActiveId && ntsIsDirty()) await ntsSave(false);
+  const note = _ntsNotes.find(n => n.id === noteId);
+  if(!note) return;
+  _ntsActiveId = noteId;
+  _ntsPreview = false;
+  document.getElementById('ntsEmpty')?.classList.add('hidden');
+  document.getElementById('ntsEditorActive')?.classList.remove('hidden');
+  const title = document.getElementById('ntsTitleInput');
+  const body = document.getElementById('ntsBodyInput');
+  const prev = document.getElementById('ntsPreviewPane');
+  const btn = document.getElementById('ntsPreviewBtn');
+  if(title) title.value = note.title || 'Untitled';
+  if(body){ body.value = note.body || ''; body.classList.remove('hidden'); }
+  if(prev) prev.classList.add('hidden');
+  if(btn) btn.textContent = 'Preview';
+  ntsRenderEditorTags();
+  ntsSyncPinBtn();
+  ntsCaptureSnapshot();
+  ntsRenderList();
+}
+
+async function ntsNewNote(){
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    if(!user){ toast('Not authenticated', 'err'); return; }
+    if(_ntsActiveId && ntsIsDirty()) await ntsSave(false);
+    const { data, error } = await sb.from('os_notes').insert({
+      staff_id: user.id,
+      title: 'Untitled',
+      body: '',
+      tags: [],
+      is_pinned: false,
+    }).select().single();
+    if(error) throw error;
+    _ntsNotes.unshift(data);
+    ntsRenderTagCloud();
+    ntsRenderList();
+    await ntsOpenNote(data.id);
+    document.getElementById('ntsTitleInput')?.focus();
+    document.getElementById('ntsTitleInput')?.select();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function ntsSave(manual){
+  if(!_ntsActiveId || _ntsSaving) return;
+  if(!ntsIsDirty() && !manual) return;
+  _ntsSaving = true;
+  ntsSetStatus('Saving...');
+  try{
+    const note = _ntsNotes.find(n => n.id === _ntsActiveId);
+    const title = (document.getElementById('ntsTitleInput')?.value || '').trim() || 'Untitled';
+    const body = document.getElementById('ntsBodyInput')?.value || '';
+    const tags = note?.tags || [];
+    const { error } = await sb.from('os_notes').update({
+      title,
+      body,
+      tags,
+      updated_at: new Date().toISOString(),
+    }).eq('id', _ntsActiveId);
+    if(error) throw error;
+    if(note){
+      note.title = title;
+      note.body = body;
+      note.updated_at = new Date().toISOString();
+    }
+    ntsCaptureSnapshot();
+    ntsRenderList();
+    ntsRenderTagCloud();
+    if(manual) toast('Note saved', 'ok');
+  }catch(err){
+    ntsSetStatus('Unsaved changes');
+    toast(err.message, 'err');
+  }finally{
+    _ntsSaving = false;
+  }
+}
+
+async function ntsTogglePin(){
+  const note = _ntsNotes.find(n => n.id === _ntsActiveId);
+  if(!note) return;
+  const next = !note.is_pinned;
+  try{
+    const { error } = await sb.from('os_notes').update({
+      is_pinned: next,
+      updated_at: new Date().toISOString(),
+    }).eq('id', _ntsActiveId);
+    if(error) throw error;
+    note.is_pinned = next;
+    note.updated_at = new Date().toISOString();
+    ntsSyncPinBtn();
+    ntsCaptureSnapshot();
+    ntsRenderList();
+    toast(next ? 'Note pinned' : 'Note unpinned', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function ntsDelete(){
+  if(!_ntsActiveId) return;
+  if(!confirm('Delete this note permanently?')) return;
+  try{
+    const id = _ntsActiveId;
+    const { error } = await sb.from('os_notes').delete().eq('id', id);
+    if(error) throw error;
+    _ntsNotes = _ntsNotes.filter(n => n.id !== id);
+    _ntsActiveId = null;
+    _ntsSnapshot = null;
+    clearTimeout(_ntsAutosaveTimer);
+    document.getElementById('ntsEditorActive')?.classList.add('hidden');
+    document.getElementById('ntsEmpty')?.classList.remove('hidden');
+    ntsRenderList();
+    ntsRenderTagCloud();
+    toast('Note deleted', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function ntsTabEnter(){
+  try{
+    await ntsLoadNotes();
+    ntsRenderTagCloud();
+    ntsRenderList();
+    if(_ntsActiveId && _ntsNotes.some(n => n.id === _ntsActiveId)){
+      await ntsOpenNote(_ntsActiveId);
+    }else if(_ntsNotes.length){
+      await ntsOpenNote(_ntsNotes[0].id);
+    }else{
+      document.getElementById('ntsEditorActive')?.classList.add('hidden');
+      document.getElementById('ntsEmpty')?.classList.remove('hidden');
+    }
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function ntsTabLeave(){
+  clearTimeout(_ntsAutosaveTimer);
+  if(ntsIsDirty()) ntsSave(false);
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -4544,6 +4969,8 @@ function switchTab(id){
   else if(id !== 'tasks' && id !== 'mytasks') { tskCloseDetail(); }
   if(id==='messenger') { msgTabEnter(); }
   else                 { msgTabLeave(); }
+  if(id==='notes')     { ntsTabEnter(); }
+  else                 { ntsTabLeave(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
