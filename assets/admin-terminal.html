@@ -239,56 +239,75 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mcu-search-foot{border-top:1px solid var(--border);color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:12px 16px;padding:10px 16px}
 /* ── SUPPORT TICKETS (Session C) ── */
 #tab-stkt.tab-pane{max-width:none;width:100%}
-.stkt-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:14px;margin-bottom:16px;min-height:0;width:100%;align-items:stretch}
-@media(max-width:900px){.stkt-layout{grid-template-columns:1fr}}
-.stkt-queue-card{display:flex;flex-direction:column;min-height:360px;max-height:min(58vh,520px);min-width:0;margin-bottom:0;overflow:hidden}
-.stkt-queue-card .tbl-wrap{flex:1;min-height:0;overflow:auto}
-.stkt-chat-card{display:flex;flex-direction:column;min-height:380px;max-height:min(62vh,560px);min-width:0;margin-bottom:0;overflow:hidden;isolation:isolate}
-#stktChatEmpty{flex:1;min-height:0}
-#stktChatActive{display:grid;grid-template-rows:auto minmax(100px,1fr) auto auto;flex:1;min-height:0;width:100%;overflow:hidden}
-.stkt-chat-msgs{min-height:0;overflow-y:auto}
-.stkt-bottom{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,1fr);gap:14px;align-items:start;width:100%;clear:both}
-@media(max-width:1000px){.stkt-bottom{grid-template-columns:1fr}}
-.stkt-bottom .card{margin-bottom:0;min-width:0}
-.stkt-mgr-list{max-height:300px;overflow-y:auto;padding-right:4px}
-.stkt-reply-form{display:none;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border2)}
-.stkt-reply-form.visible{display:flex}
-.stkt-reply-form-actions{display:flex;gap:8px;flex-wrap:wrap}
-.stkt-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.stkt-filter-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.stkt-main{display:grid;grid-template-columns:280px minmax(0,1fr) 320px;gap:14px;margin-bottom:16px;min-height:min(68vh,600px);width:100%;align-items:stretch}
+@media(max-width:1200px){.stkt-main{grid-template-columns:240px minmax(0,1fr) 280px}}
+@media(max-width:960px){.stkt-main{grid-template-columns:1fr;min-height:0}}
+.stkt-col-queue,.stkt-col-chat,.stkt-col-side{display:flex;flex-direction:column;min-width:0;margin-bottom:0;overflow:hidden}
+.stkt-col-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-shrink:0}
+.stkt-col-title{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.stkt-filters{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;flex-shrink:0}
+.stkt-filter-btn{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
 .stkt-filter-btn.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.12)}
-.stkt-unread{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff;font-size:10px;font-weight:700}
-.stkt-chat-placeholder{flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;padding:24px;text-align:center}
-.stkt-chat-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border2);flex-shrink:0}
-.stkt-chat-title{font-size:14px;font-weight:700;color:var(--adm-text)}
-.stkt-chat-sub{font-size:11px;color:var(--muted);margin-top:2px}
-.stkt-chat-actions{display:flex;gap:6px;flex-wrap:wrap}
-.stkt-chat-msgs{display:flex;flex-direction:column;gap:10px;padding:10px 8px}
-.stkt-msg{max-width:72%;animation:stktMsgIn .25s ease-out}
+.stkt-queue-list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding-right:2px}
+.stkt-queue-item{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:transparent;cursor:pointer;transition:background .15s,border-color .15s}
+.stkt-queue-item:hover{background:var(--dim)}
+.stkt-queue-item.active{background:rgba(217,70,239,0.08);border-color:rgba(217,70,239,0.25)}
+.stkt-queue-avatar{flex-shrink:0;width:32px;height:32px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--adm-text)}
+.stkt-queue-body{flex:1;min-width:0}
+.stkt-queue-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:2px}
+.stkt-queue-user{font-size:12px;font-weight:600;color:var(--adm-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stkt-queue-meta{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.stkt-queue-subj{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stkt-status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.stkt-status-dot.open{background:#d946ef}
+.stkt-status-dot.in_progress{background:var(--amber)}
+.stkt-status-dot.closed{background:var(--muted)}
+.stkt-queue-time{font-size:9px;color:var(--muted);white-space:nowrap}
+.stkt-unread{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700}
+.stkt-chat-empty,.stkt-side-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:13px;padding:32px 20px;text-align:center}
+.stkt-chat-empty-icon{font-size:32px;opacity:.35;line-height:1}
+.stkt-col-chat{display:flex;flex-direction:column}
+#stktChatActive{display:grid;grid-template-rows:minmax(0,1fr) auto;flex:1;min-height:0;overflow:hidden;width:100%}
+.stkt-chat-msgs{display:flex;flex-direction:column;gap:10px;padding:12px 10px;min-height:0;overflow-y:auto}
+.stkt-msg{max-width:70%;animation:stktMsgIn .25s ease-out;display:flex;flex-direction:column}
 @keyframes stktMsgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.stkt-msg.player{align-self:flex-start}
-.stkt-msg.staff{align-self:flex-end}
-.stkt-msg.auto{align-self:center;max-width:96%}
+.stkt-msg.player{align-self:flex-end;align-items:flex-end}
+.stkt-msg.staff{align-self:flex-start;align-items:flex-start}
+.stkt-msg.auto{align-self:center;align-items:center;max-width:88%}
 .stkt-bubble{padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.5;word-break:break-word}
-.stkt-msg.player .stkt-bubble{background:var(--bg2);border:1px solid var(--border);color:var(--adm-text);border-bottom-left-radius:4px}
-.stkt-msg.staff .stkt-bubble{background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.35);color:var(--adm-text);border-bottom-right-radius:4px}
-.stkt-msg.auto .stkt-bubble{background:transparent;color:var(--muted);font-style:italic;font-size:11px;text-align:center}
-.stkt-bubble img{max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;display:block}
+.stkt-msg.player .stkt-bubble{background:linear-gradient(135deg,rgba(217,70,239,0.22) 0%,rgba(217,70,239,0.12) 100%);border:1px solid rgba(217,70,239,0.45);color:var(--adm-text);border-bottom-right-radius:4px}
+.stkt-msg.staff .stkt-bubble{background:var(--bg2);border:1px solid var(--border);color:var(--adm-text);border-bottom-left-radius:4px}
+.stkt-msg.auto .stkt-auto-text{color:var(--muted);font-style:italic;font-size:11px;text-align:center;line-height:1.45;padding:4px 8px}
+.stkt-bubble img,.stkt-auto-text img{max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;display:block}
 .stkt-msg-time{font-size:9px;color:var(--muted);margin-top:3px;padding:0 4px}
-.stkt-msg.staff .stkt-msg-time{text-align:right}
-.stkt-quick-panel{margin-top:0;border-top:1px solid var(--border2);padding:8px 0 4px;background:var(--bg1);min-height:0}
-.stkt-quick-toggle{width:100%;text-align:left;background:transparent;border:none;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:4px 0}
-.stkt-quick-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;margin-top:6px;max-height:110px;overflow-y:auto;padding:2px 4px 4px 0}
-.stkt-quick-list[hidden]{display:none!important}
-.stkt-quick-chip{padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--adm-text);font-size:10px;font-weight:600;line-height:1.35;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
-.stkt-quick-chip:hover{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.08)}
-.stkt-compose{margin-top:0;padding:10px 0 2px;border-top:1px solid var(--border2);background:var(--bg1)}
+.stkt-msg.player .stkt-msg-time{text-align:right}
+.stkt-compose{padding:10px 10px 8px;border-top:1px solid var(--border2);background:var(--bg1);flex-shrink:0}
 .stkt-compose-row{display:flex;align-items:flex-end;gap:8px}
 .stkt-compose-input{flex:1;min-width:0}
 .stkt-attach-preview{display:none;margin-bottom:8px;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--bg2);font-size:11px;color:var(--muted)}
 .stkt-attach-preview.visible{display:block}
 .stkt-attach-preview img{max-height:80px;border-radius:6px;margin-bottom:6px;display:block}
-.stkt-mgr-list{display:flex;flex-direction:column;gap:8px}
+#stktSideActive{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+.stkt-side-info{padding-bottom:12px;border-bottom:1px solid var(--border2);flex-shrink:0}
+.stkt-side-info-row{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-bottom:6px}
+.stkt-side-info-row .lbl{color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-size:9px;font-weight:600}
+.stkt-side-info-row .val{color:var(--adm-text);font-weight:500;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:58%}
+.stkt-side-actions{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-bottom:1px solid var(--border2);flex-shrink:0}
+.stkt-side-actions .btn{width:100%;justify-content:center}
+.stkt-side-quick{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px;overflow:hidden}
+.stkt-side-quick-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;flex-shrink:0}
+.stkt-quick-list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px}
+.stkt-quick-chip{display:flex;flex-direction:column;gap:3px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:border-color .15s,background .15s}
+.stkt-quick-chip:hover{border-color:rgba(217,70,239,0.45);background:rgba(217,70,239,0.08)}
+.stkt-quick-chip-title{font-size:11px;font-weight:600;color:var(--adm-text)}
+.stkt-quick-chip-preview{font-size:10px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.stkt-managers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%}
+@media(max-width:1100px){.stkt-managers{grid-template-columns:1fr}}
+.stkt-managers .card{margin-bottom:0;min-width:0}
+.stkt-mgr-list{max-height:280px;overflow-y:auto;padding-right:4px;display:flex;flex-direction:column;gap:8px}
+.stkt-reply-form{display:none;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border2)}
+.stkt-reply-form.visible{display:flex}
+.stkt-reply-form-actions{display:flex;gap:8px;flex-wrap:wrap}
 .stkt-mgr-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--bg2)}
 .stkt-mgr-row-main{flex:1;min-width:0}
 .stkt-mgr-row-title{font-size:12px;font-weight:600;color:var(--adm-text)}
@@ -1270,62 +1289,35 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
          ══════════════════════════════════════════════════════ -->
     <div id="tab-stkt" class="tab-pane">
 
-      <div class="stkt-layout">
-        <!-- Ticket queue -->
-        <div class="card stkt-queue-card" style="margin-bottom:0">
-          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-            <span><span class="stkt-stream-dot" id="stktStreamDot"></span>Ticket queue</span>
-            <button class="btn btn-ghost btn-sm" onclick="stktLoadQueue()">↺ Refresh</button>
+      <div class="stkt-main">
+        <!-- Left: ticket queue -->
+        <aside class="card stkt-col-queue">
+          <div class="stkt-col-head">
+            <span class="stkt-col-title"><span class="stkt-stream-dot" id="stktStreamDot"></span>Queue</span>
+            <button class="btn btn-ghost btn-sm" onclick="stktLoadQueue()">↺</button>
           </div>
           <div class="stkt-filters" id="stktFilters">
             <button type="button" class="stkt-filter-btn active" data-stkt-filter="all" onclick="stktSetFilter('all',this)">All</button>
             <button type="button" class="stkt-filter-btn" data-stkt-filter="open" onclick="stktSetFilter('open',this)">Open</button>
-            <button type="button" class="stkt-filter-btn" data-stkt-filter="in_progress" onclick="stktSetFilter('in_progress',this)">In progress</button>
+            <button type="button" class="stkt-filter-btn" data-stkt-filter="in_progress" onclick="stktSetFilter('in_progress',this)">Progress</button>
             <button type="button" class="stkt-filter-btn" data-stkt-filter="closed" onclick="stktSetFilter('closed',this)">Closed</button>
           </div>
-          <div class="f-row" style="margin-bottom:10px">
-            <input id="stktSearch" class="f-input" type="search" placeholder="Search username or subject…" oninput="stktRenderQueue()"/>
+          <div class="f-row" style="margin-bottom:8px;flex-shrink:0">
+            <input id="stktSearch" class="f-input" type="search" placeholder="Search…" oninput="stktRenderQueue()"/>
           </div>
-          <div class="tbl-wrap" style="overflow-x:auto">
-            <table class="tbl">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>User</th>
-                  <th>Subject</th>
-                  <th>Status</th>
-                  <th>Assigned</th>
-                  <th>Updated</th>
-                </tr>
-              </thead>
-              <tbody id="stktQueueBody">
-                <tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Loading…</td></tr>
-              </tbody>
-            </table>
+          <div id="stktQueueList" class="stkt-queue-list">
+            <p style="color:var(--muted);font-size:12px;padding:12px;text-align:center">Loading…</p>
           </div>
-        </div>
+        </aside>
 
-        <!-- Ticket chat -->
-        <div class="card stkt-chat-card" style="margin-bottom:0" id="stktChatCard">
-          <div id="stktChatEmpty" class="stkt-chat-placeholder">Select a ticket from the queue to open the conversation.</div>
+        <!-- Middle: chat -->
+        <section class="card stkt-col-chat" id="stktChatCard">
+          <div id="stktChatEmpty" class="stkt-chat-empty">
+            <div class="stkt-chat-empty-icon">💬</div>
+            <div>Select a ticket</div>
+          </div>
           <div id="stktChatActive" hidden>
-            <div class="stkt-chat-head">
-              <div>
-                <div class="stkt-chat-title" id="stktChatUser">@player</div>
-                <div class="stkt-chat-sub" id="stktChatSubject">—</div>
-                <span class="role-badge support" id="stktChatStatus" style="margin-top:6px">OPEN</span>
-              </div>
-              <div class="stkt-chat-actions">
-                <button class="btn btn-ghost btn-sm" onclick="stktAssignMe()">Assign to me</button>
-                <button class="btn btn-ghost btn-sm" onclick="stktMarkInProgress()">In progress</button>
-                <button class="btn btn-red btn-sm" onclick="stktCloseTicket()">Close ticket</button>
-              </div>
-            </div>
             <div class="stkt-chat-msgs" id="stktChatMsgs"></div>
-            <div class="stkt-quick-panel">
-              <button type="button" class="stkt-quick-toggle" id="stktQuickToggle" onclick="stktToggleQuickReplies()">▾ Quick replies</button>
-              <div class="stkt-quick-list" id="stktQuickChips"></div>
-            </div>
             <div class="stkt-compose" id="stktCompose">
               <div class="stkt-attach-preview" id="stktAttachPreview">
                 <img id="stktAttachImg" alt="Preview"/>
@@ -1342,11 +1334,36 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
               </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        <!-- Right: ticket info + quick replies -->
+        <aside class="card stkt-col-side">
+          <div id="stktSideEmpty" class="stkt-side-empty">
+            <div class="stkt-chat-empty-icon">🎫</div>
+            <div>Ticket details appear here</div>
+          </div>
+          <div id="stktSideActive" hidden>
+            <div class="stkt-side-info">
+              <div class="stkt-side-info-row"><span class="lbl">User</span><span class="val" id="stktSideUser">—</span></div>
+              <div class="stkt-side-info-row"><span class="lbl">Subject</span><span class="val" id="stktSideSubject">—</span></div>
+              <div class="stkt-side-info-row"><span class="lbl">Status</span><span class="val" id="stktSideStatus">—</span></div>
+              <div class="stkt-side-info-row"><span class="lbl">Created</span><span class="val" id="stktSideCreated">—</span></div>
+              <div class="stkt-side-info-row"><span class="lbl">Assigned</span><span class="val" id="stktSideAssigned">—</span></div>
+            </div>
+            <div class="stkt-side-actions">
+              <button class="btn btn-ghost btn-sm" onclick="stktAssignMe()">Assign to me</button>
+              <button class="btn btn-ghost btn-sm" onclick="stktMarkInProgress()">In progress</button>
+              <button class="btn btn-red btn-sm" onclick="stktCloseTicket()">Close ticket</button>
+            </div>
+            <div class="stkt-side-quick">
+              <div class="stkt-side-quick-title">Quick replies</div>
+              <div class="stkt-quick-list" id="stktQuickChips"></div>
+            </div>
+          </div>
+        </aside>
       </div>
 
-      <div class="stkt-bottom">
-        <!-- Quick replies manager -->
+      <div class="stkt-managers">
         <div class="card stkt-replies-card">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
             <span>Quick replies manager</span>
@@ -1369,55 +1386,53 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
           </div>
         </div>
 
-        <!-- Auto messages config -->
         <div class="card stkt-auto-card">
           <div class="card-title">Auto messages config</div>
           <div id="stktAutoList"></div>
           <button class="btn btn-amber btn-sm" style="margin-top:12px" onclick="stktSaveAutoMessages()">Save changes</button>
           <span id="stktAutoLog" style="font-size:11px;color:var(--muted);margin-left:10px"></span>
         </div>
-      </div>
 
-      <!-- FAQ manager -->
-      <div class="card">
-        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-          <span>FAQ manager</span>
-          <button class="btn btn-ghost btn-sm" onclick="stktShowAddFaq()">+ Add FAQ</button>
-        </div>
-        <div id="stktFaqMgrList" class="stkt-mgr-list"><p style="color:var(--muted);font-size:12px">Loading…</p></div>
-        <div id="stktFaqForm" class="roles-add-row" style="display:none;margin-top:12px;flex-direction:column;align-items:stretch">
-          <div class="grid2">
-            <div class="f-row">
-              <label class="f-label">Question</label>
-              <input id="stktFaqQuestion" class="f-input" type="text"/>
-            </div>
-            <div class="f-row">
-              <label class="f-label">Category</label>
-              <select id="stktFaqCategory" class="f-select">
-                <option value="general">General</option>
-                <option value="gameplay">Gameplay</option>
-                <option value="economy">Economy</option>
-                <option value="crypto">Crypto</option>
-                <option value="marketplace">Marketplace</option>
-                <option value="account">Account</option>
-              </select>
-            </div>
+        <div class="card">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <span>FAQ manager</span>
+            <button class="btn btn-ghost btn-sm" onclick="stktShowAddFaq()">+ Add FAQ</button>
           </div>
-          <div class="f-row">
-            <label class="f-label">Answer</label>
-            <textarea id="stktFaqAnswer" class="f-textarea" style="min-height:72px"></textarea>
-          </div>
-          <div class="row-flex">
-            <div class="f-row" style="max-width:120px;margin:0">
-              <label class="f-label">Sort</label>
-              <input id="stktFaqSort" class="f-input" type="number" value="0"/>
+          <div id="stktFaqMgrList" class="stkt-mgr-list"><p style="color:var(--muted);font-size:12px">Loading…</p></div>
+          <div id="stktFaqForm" class="roles-add-row" style="display:none;margin-top:12px;flex-direction:column;align-items:stretch">
+            <div class="grid2">
+              <div class="f-row">
+                <label class="f-label">Question</label>
+                <input id="stktFaqQuestion" class="f-input" type="text"/>
+              </div>
+              <div class="f-row">
+                <label class="f-label">Category</label>
+                <select id="stktFaqCategory" class="f-select">
+                  <option value="general">General</option>
+                  <option value="gameplay">Gameplay</option>
+                  <option value="economy">Economy</option>
+                  <option value="crypto">Crypto</option>
+                  <option value="marketplace">Marketplace</option>
+                  <option value="account">Account</option>
+                </select>
+              </div>
             </div>
-            <label class="toggle-wrap" style="margin-left:8px">
-              <span class="toggle-label">Active</span>
-              <label class="toggle"><input type="checkbox" id="stktFaqActive" checked/><span class="toggle-slider"></span></label>
-            </label>
-            <button class="btn btn-amber btn-sm" onclick="stktSaveFaq()">Save</button>
-            <button class="btn btn-ghost btn-sm" onclick="stktHideFaqForm()">Cancel</button>
+            <div class="f-row">
+              <label class="f-label">Answer</label>
+              <textarea id="stktFaqAnswer" class="f-textarea" style="min-height:72px"></textarea>
+            </div>
+            <div class="row-flex">
+              <div class="f-row" style="max-width:120px;margin:0">
+                <label class="f-label">Sort</label>
+                <input id="stktFaqSort" class="f-input" type="number" value="0"/>
+              </div>
+              <label class="toggle-wrap" style="margin-left:8px">
+                <span class="toggle-label">Active</span>
+                <label class="toggle"><input type="checkbox" id="stktFaqActive" checked/><span class="toggle-slider"></span></label>
+              </label>
+              <button class="btn btn-amber btn-sm" onclick="stktSaveFaq()">Save</button>
+              <button class="btn btn-ghost btn-sm" onclick="stktHideFaqForm()">Cancel</button>
+            </div>
           </div>
         </div>
       </div>
@@ -5526,6 +5541,52 @@ function stktStatusBadge(status){
   return '<span class="role-badge ' + cls + '">' + esc(s.toUpperCase()) + '</span>';
 }
 
+function stktStatusDot(status){
+  const s = status || 'open';
+  const cls = s === 'in_progress' ? 'in_progress' : (s === 'closed' ? 'closed' : 'open');
+  return '<span class="stkt-status-dot ' + cls + '" title="' + esc(s.replace('_', ' ')) + '"></span>';
+}
+
+function stktInitial(name){
+  const n = String(name || '?').replace(/^@/, '').trim();
+  return (n[0] || '?').toUpperCase();
+}
+
+function stktTimeAgo(iso){
+  if(!iso) return '—';
+  try{
+    const diff = Date.now() - new _nativeDate(iso).getTime();
+    const m = Math.floor(diff / 60000);
+    if(m < 1) return 'now';
+    if(m < 60) return m + 'm ago';
+    const h = Math.floor(m / 60);
+    if(h < 24) return h + 'h ago';
+    const d = Math.floor(h / 24);
+    if(d < 7) return d + 'd ago';
+    return fmtDate(iso);
+  }catch(e){ return '—'; }
+}
+
+function stktUpdateSidePanel(t){
+  const empty = document.getElementById('stktSideEmpty');
+  const active = document.getElementById('stktSideActive');
+  if(!t){
+    if(empty) empty.hidden = false;
+    if(active) active.hidden = true;
+    return;
+  }
+  if(empty) empty.hidden = true;
+  if(active) active.hidden = false;
+  const un = _stktProfiles[t.user_id]?.username || 'player';
+  const asn = t.assigned_to ? (_stktProfiles[t.assigned_to]?.username || '—') : 'Unassigned';
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('stktSideUser', '@' + un);
+  set('stktSideSubject', t.subject || '—');
+  set('stktSideStatus', (t.status || 'open').replace('_', ' '));
+  set('stktSideCreated', fmtDate(t.created_at));
+  set('stktSideAssigned', asn);
+}
+
 function stktFmtBytes(n){
   if(n < 1024) return n + ' B';
   if(n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
@@ -5633,9 +5694,9 @@ function stktStopChatStream(){
 }
 
 async function stktLoadQueue(){
-  const tbody = document.getElementById('stktQueueBody');
-  if(!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:16px">Loading…</td></tr>';
+  const list = document.getElementById('stktQueueList');
+  if(!list) return;
+  list.innerHTML = '<p style="color:var(--muted);font-size:12px;padding:12px;text-align:center">Loading…</p>';
   try{
     const { data, error } = await sb.from('support_tickets').select('*').order('updated_at', { ascending: false }).limit(200);
     if(error) throw error;
@@ -5650,7 +5711,7 @@ async function stktLoadQueue(){
     await stktRefreshUnreadCounts();
     stktRenderQueue();
   }catch(err){
-    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--red);text-align:center;padding:16px">' + esc(err.message) + '</td></tr>';
+    list.innerHTML = '<p style="color:var(--red);font-size:12px;padding:12px;text-align:center">' + esc(err.message) + '</p>';
   }
 }
 
@@ -5667,9 +5728,9 @@ async function stktRefreshUnreadCounts(){
 }
 
 function stktRenderQueue(){
-  const tbody = document.getElementById('stktQueueBody');
+  const list = document.getElementById('stktQueueList');
   const q = (document.getElementById('stktSearch')?.value || '').trim().toLowerCase();
-  if(!tbody) return;
+  if(!list) return;
   let rows = _stktTickets.slice();
   if(_stktFilter !== 'all') rows = rows.filter(t => t.status === _stktFilter);
   if(q){
@@ -5679,21 +5740,25 @@ function stktRenderQueue(){
     });
   }
   if(!rows.length){
-    tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">No tickets</td></tr>';
+    list.innerHTML = '<p style="color:var(--muted);font-size:12px;padding:16px;text-align:center">No tickets</p>';
     return;
   }
-  tbody.innerHTML = rows.map((t, i) => {
-    const un = _stktProfiles[t.user_id]?.username || t.user_id?.slice(0, 8) + '…' || '—';
-    const asn = t.assigned_to ? (_stktProfiles[t.assigned_to]?.username || '—') : '—';
+  list.innerHTML = rows.map(t => {
+    const un = _stktProfiles[t.user_id]?.username || 'player';
     const unread = _stktUnread[t.id] || 0;
-    const active = t.id === _stktActiveId ? ' style="background:var(--dim)"' : '';
-    return '<tr class="stkt-queue-row" data-id="' + t.id + '"' + active + ' onclick="stktOpenTicket(\'' + t.id + '\')">' +
-      '<td style="font-size:11px;color:var(--muted)">' + (i + 1) + (unread ? ' <span class="stkt-unread">' + unread + '</span>' : '') + '</td>' +
-      '<td class="mono" style="font-weight:600">@' + esc(un) + '</td>' +
-      '<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(t.subject) + '">' + esc(t.subject) + '</td>' +
-      '<td>' + stktStatusBadge(t.status) + '</td>' +
-      '<td style="font-size:11px;color:var(--muted)">' + esc(asn) + '</td>' +
-      '<td style="font-size:11px;color:var(--muted);white-space:nowrap">' + esc(fmtDate(t.updated_at)) + '</td></tr>';
+    const active = t.id === _stktActiveId ? ' active' : '';
+    return '<button type="button" class="stkt-queue-item' + active + '" onclick="stktOpenTicket(\'' + t.id + '\')">' +
+      '<div class="stkt-queue-avatar">' + esc(stktInitial(un)) + '</div>' +
+      '<div class="stkt-queue-body">' +
+        '<div class="stkt-queue-top">' +
+          '<span class="stkt-queue-user">@' + esc(un) + '</span>' +
+          '<span class="stkt-queue-meta">' + stktStatusDot(t.status) +
+            '<span class="stkt-queue-time">' + esc(stktTimeAgo(t.updated_at || t.created_at)) + '</span>' +
+            (unread ? '<span class="stkt-unread">' + unread + '</span>' : '') +
+          '</span>' +
+        '</div>' +
+        '<div class="stkt-queue-subj" title="' + esc(t.subject) + '">' + esc(t.subject || '—') + '</div>' +
+      '</div></button>';
   }).join('');
 }
 
@@ -5709,24 +5774,16 @@ async function stktOpenTicket(ticketId){
 
   document.getElementById('stktChatEmpty').hidden = true;
   document.getElementById('stktChatActive').hidden = false;
-  const un = _stktProfiles[t.user_id]?.username || 'player';
-  document.getElementById('stktChatUser').textContent = '@' + un;
-  document.getElementById('stktChatSubject').textContent = t.subject || '—';
-  const stEl = document.getElementById('stktChatStatus');
-  if(stEl){
-    stEl.textContent = (t.status || 'open').replace('_', ' ').toUpperCase();
-    stEl.className = 'role-badge ' + (t.status === 'in_progress' ? 'mod' : (t.status === 'closed' ? 'dev_topup' : 'support'));
-  }
+  stktUpdateSidePanel(t);
   const compose = document.getElementById('stktCompose');
   if(compose) compose.style.display = t.status === 'closed' ? 'none' : '';
 
-  document.getElementById('stktChatMsgs').innerHTML = '<p class="poxy-support-empty" style="padding:16px;color:var(--muted)">Loading…</p>';
+  document.getElementById('stktChatMsgs').innerHTML = '<p style="padding:16px;color:var(--muted);text-align:center">Loading…</p>';
   stktClearAttach();
   document.getElementById('stktReplyInput').value = '';
 
   await stktLoadMessages(ticketId);
   stktRenderQuickChips();
-  stktExpandQuickReplies(true);
   stktStartChatStream(ticketId);
 }
 
@@ -5760,8 +5817,12 @@ function stktAppendMessage(m, animate){
   let inner = '';
   if(m.body) inner += esc(m.body).replace(/\n/g, '<br>');
   if(m.image_url) inner += '<img src="' + esc(m.image_url) + '" alt="Attachment" loading="lazy" onclick="window.open(this.src,\'_blank\')"/>';
-  div.innerHTML = '<div class="stkt-bubble">' + (inner || '<em style="opacity:.5">—</em>') + '</div>' +
-    '<div class="stkt-msg-time">' + esc(fmtDate(m.created_at)) + '</div>';
+  if(kind === 'auto'){
+    div.innerHTML = '<div class="stkt-auto-text">' + (inner || '') + '</div>';
+  }else{
+    div.innerHTML = '<div class="stkt-bubble">' + (inner || '<em style="opacity:.5">—</em>') + '</div>' +
+      '<div class="stkt-msg-time">' + esc(stktTimeAgo(m.created_at)) + '</div>';
+  }
   box.appendChild(div);
 }
 
@@ -5779,7 +5840,7 @@ async function stktAssignMe(){
   toast('ASSIGNED TO YOU');
   await stktLoadQueue();
   const t = _stktTickets.find(x => x.id === _stktActiveId);
-  if(t) stktOpenTicket(t.id);
+  if(t){ stktUpdateSidePanel(t); stktOpenTicket(t.id); }
 }
 
 async function stktMarkInProgress(){
@@ -5831,31 +5892,19 @@ async function stktSendReply(){
   if(btn) btn.disabled = false;
 }
 
-function stktExpandQuickReplies(expanded){
-  const el = document.getElementById('stktQuickChips');
-  const btn = document.getElementById('stktQuickToggle');
-  if(el) el.hidden = !expanded;
-  if(btn) btn.textContent = (expanded ? '▾' : '▸') + ' Quick replies' + (_stktQuickReplies.length ? ' (' + _stktQuickReplies.length + ')' : '');
-}
-
-function stktToggleQuickReplies(){
-  const el = document.getElementById('stktQuickChips');
-  stktExpandQuickReplies(!!(el && el.hidden));
-}
-
 function stktRenderQuickChips(){
   const el = document.getElementById('stktQuickChips');
   if(!el) return;
   if(!_stktQuickReplies.length){
     el.innerHTML = '<span style="font-size:11px;color:var(--muted)">No quick replies</span>';
-    stktExpandQuickReplies(false);
     return;
   }
-  el.innerHTML = _stktQuickReplies.map((r, i) =>
-    '<button type="button" class="stkt-quick-chip" title="' + esc(r.body) + '" onclick="stktInsertQuickReplyIdx(' + i + ')">' + esc(r.title) + '</button>'
-  ).join('');
-  const btn = document.getElementById('stktQuickToggle');
-  if(btn && !el.hidden) btn.textContent = '▾ Quick replies (' + _stktQuickReplies.length + ')';
+  el.innerHTML = _stktQuickReplies.map((r, i) => {
+    const preview = (r.body || '').slice(0, 72) + ((r.body || '').length > 72 ? '…' : '');
+    return '<button type="button" class="stkt-quick-chip" onclick="stktInsertQuickReplyIdx(' + i + ')">' +
+      '<span class="stkt-quick-chip-title">' + esc(r.title) + '</span>' +
+      '<span class="stkt-quick-chip-preview">' + esc(preview) + '</span></button>';
+  }).join('');
 }
 
 function stktInsertQuickReplyIdx(i){
