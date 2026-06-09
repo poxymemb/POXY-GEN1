@@ -224,6 +224,40 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .tsk-comment-meta{color:var(--muted);font-size:10px;margin-bottom:3px}
 .tsk-create-form{display:none;flex-direction:column;gap:10px;margin-bottom:16px}
 .tsk-create-form.open{display:flex}
+/* ── MESSENGER (Session 4) ── */
+#tab-messenger.tab-pane{max-width:none;padding:16px 20px;width:100%}
+.msg-layout{display:flex;gap:0;height:calc(100vh - 130px);min-height:400px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg1)}
+.msg-sidebar{background:var(--bg1);border-right:1px solid var(--border);display:flex;flex:0 0 240px;flex-direction:column;min-width:0;overflow:hidden}
+.msg-sidebar-scroll{flex:1;overflow-y:auto;padding:8px}
+.msg-sec-title{color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.1em;padding:10px 12px 4px;text-transform:uppercase}
+.msg-ch-item{align-items:center;border-radius:8px;cursor:pointer;display:flex;font-size:12px;font-weight:500;gap:8px;padding:8px 10px;transition:background .15s}
+.msg-ch-item:hover{background:var(--dim)}
+.msg-ch-item.active{background:rgba(245,158,11,.12);color:var(--amber)}
+.msg-ch-dot{border-radius:50%;flex-shrink:0;height:7px;width:7px}
+.msg-ch-dot.on{background:var(--green)}
+.msg-ch-dot.off{background:var(--muted)}
+.msg-ch-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg-ch-badge{align-items:center;background:var(--red);border-radius:8px;color:#fff;display:none;font-size:9px;font-weight:700;height:16px;justify-content:center;min-width:16px;padding:0 4px}
+.msg-ch-badge.visible{display:inline-flex}
+.msg-new-dm{margin:8px 10px 10px;width:calc(100% - 20px)}
+.msg-chat{display:flex;flex:1;flex-direction:column;min-width:0;background:var(--bg)}
+.msg-chat-head{align-items:center;border-bottom:1px solid var(--border2);display:flex;flex-shrink:0;gap:10px;padding:12px 16px}
+.msg-chat-head-title{font-size:14px;font-weight:700}
+.msg-chat-head-sub{color:var(--muted);font-size:11px}
+.msg-chat-msgs{display:flex;flex:1;flex-direction:column;gap:8px;min-height:0;overflow-y:auto;padding:12px 16px}
+.msg-compose{align-items:flex-end;border-top:1px solid var(--border2);display:flex;flex-shrink:0;gap:8px;padding:10px 12px;background:var(--bg1);position:relative}
+.msg-compose-input{flex:1;min-width:0}
+.msg-attach-wrap{position:relative}
+.msg-attach-menu{background:var(--bg1);border:1px solid var(--border);border-radius:8px;bottom:calc(100% + 6px);box-shadow:var(--adm-shadow);display:none;left:0;min-width:180px;padding:4px;position:absolute;z-index:20}
+.msg-attach-menu.open{display:block}
+.msg-attach-opt{border-radius:6px;cursor:pointer;font-size:12px;padding:8px 10px;transition:background .1s}
+.msg-attach-opt:hover{background:var(--dim)}
+.msg-attach-preview{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;font-size:11px;margin-bottom:8px;padding:8px 10px;width:100%}
+.msg-inline-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:11px;margin-top:6px;padding:8px 10px}
+.msg-inline-card strong{display:block;font-size:12px;margin-bottom:2px}
+.msg-empty-chat{align-items:center;color:var(--muted);display:flex;flex:1;flex-direction:column;font-size:13px;gap:8px;justify-content:center;padding:32px;text-align:center}
+#msgChatActive{display:flex;flex:1;flex-direction:column;min-height:0}
+#msgChatActive.hidden,#msgChatEmpty.hidden{display:none!important}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -990,7 +1024,49 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         <div class="tsk-col" data-status="done"><div class="tsk-col-head">Done <span class="tsk-col-count" id="tskCntDone">0</span></div><div class="tsk-col-body" id="tskColDone" data-status="done" ondragover="tskDragOver(event)" ondragleave="tskDragLeave(event)" ondrop="tskDrop(event,'done')"></div></div>
       </div>
     </div>
-    <div id="tab-messenger" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">💬</div><p><strong>Messages</strong> — internal messenger ships in Session 4.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-messenger" class="tab-pane" data-poxy-module="messenger">
+      <div class="msg-layout">
+        <aside class="msg-sidebar">
+          <div class="msg-sidebar-scroll">
+            <div class="msg-sec-title">Channels</div>
+            <div id="msgGroupList"></div>
+            <div class="msg-sec-title">Direct messages</div>
+            <div id="msgDmList"></div>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm msg-new-dm" onclick="msgShowNewDm()">+ New DM</button>
+        </aside>
+        <div class="msg-chat" id="msgChatPane">
+          <div class="msg-empty-chat" id="msgChatEmpty">
+            <span style="font-size:32px;opacity:.35">💬</span>
+            <p>Select a channel or start a direct message</p>
+          </div>
+          <div id="msgChatActive" class="hidden">
+            <div class="msg-chat-head">
+              <div>
+                <div class="msg-chat-head-title" id="msgChatTitle">#general</div>
+                <div class="msg-chat-head-sub" id="msgChatSub">Team channel</div>
+              </div>
+            </div>
+            <div class="msg-chat-msgs stkt-chat-msgs" id="msgChatMsgs"></div>
+            <div class="msg-compose">
+              <div class="msg-attach-wrap">
+                <button type="button" class="btn btn-ghost btn-sm" onclick="msgToggleAttachMenu(event)" title="Attach">📎</button>
+                <div class="msg-attach-menu" id="msgAttachMenu">
+                  <div class="msg-attach-opt" onclick="msgAttachPick('ticket')">🎫 Attach ticket</div>
+                  <div class="msg-attach-opt" onclick="msgAttachPick('asset')">📦 Attach asset</div>
+                  <div class="msg-attach-opt" onclick="msgAttachPick('round')">🎲 Attach RNG round</div>
+                </div>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div class="msg-attach-preview hidden" id="msgAttachPreview"></div>
+                <input id="msgReplyInput" class="f-input msg-compose-input" type="text" placeholder="Type a message…" onkeydown="if(event.key==='Enter')msgSend()"/>
+              </div>
+              <button type="button" class="btn btn-amber btn-sm" id="msgSendBtn" onclick="msgSend()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="tab-notes" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📝</div><p><strong>Notes</strong> — personal notes editor ships in Session 5.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-updates" class="tab-pane" data-poxy-module="updates-center">
       <div class="upd-head">
@@ -2401,6 +2477,24 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
   </div>
 </div>
 
+<!-- MESSENGER MODALS (Session 4) -->
+<div id="msgDmModal" class="upd-overlay hidden" onclick="if(event.target===this)msgCloseNewDm()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()" style="width:min(400px,100%)">
+    <div class="card-title" style="margin-bottom:12px">New direct message</div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:12px">Online staff shown first</p>
+    <div id="msgDmStaffList" style="max-height:320px;overflow-y:auto"></div>
+    <button type="button" class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="msgCloseNewDm()">Cancel</button>
+  </div>
+</div>
+<div id="msgSearchModal" class="upd-overlay hidden" onclick="if(event.target===this)msgCloseSearch()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" id="msgSearchTitle" style="margin-bottom:12px">Attach</div>
+    <input id="msgSearchInput" class="f-input" type="text" placeholder="Search…" oninput="msgSearchRun()" onkeydown="if(event.key==='Enter')msgSearchRun()"/>
+    <div id="msgSearchResults" style="max-height:280px;overflow-y:auto;margin-top:12px"></div>
+    <button type="button" class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="msgCloseSearch()">Cancel</button>
+  </div>
+</div>
+
 <!-- TASK DETAIL MODAL (Session 3) -->
 <div id="tskDetailModal" class="upd-overlay hidden" onclick="if(event.target===this)tskCloseDetail()">
   <div class="upd-modal upd-modal-wide card" role="dialog" onclick="event.stopPropagation()">
@@ -2919,7 +3013,7 @@ async function osDashLoad(){
           const ch = chMap[m.channel_id] || '#channel';
           const who = profMap[m.sender_id] ? '@' + profMap[m.sender_id] : 'staff';
           const preview = (m.body || '').slice(0, 72) + ((m.body || '').length > 72 ? '…' : '');
-          return `<div class="os-dash-row" onclick="switchTab('messenger')" title="Open messenger">
+          return `<div class="os-dash-row" onclick="msgOpenChannelAfter('${m.channel_id}')" title="Open messenger">
             <div class="os-dash-row-main">
               <div class="os-dash-row-title">${esc(ch)} · ${esc(who)}</div>
               <div class="os-dash-row-sub">${esc(preview || '(attachment)')} · ${esc(osFmtRelative(m.created_at))}</div>
@@ -3885,6 +3979,422 @@ function setMcuHeader(tabId){
 }
 
 // ═══════════════════════════════════════════════════════════════
+// INTERNAL MESSENGER (Session 4)
+// ═══════════════════════════════════════════════════════════════
+
+let _msgChannels = [];
+let _msgUnread = {};
+let _msgActiveChannelId = null;
+let _msgProfMap = {};
+let _msgTeam = [];
+let _msgCurrentUserId = null;
+let _msgRealtimeCh = null;
+let _msgPendingAttach = null;
+let _msgSearchKind = null;
+let _msgPendingOpenChannel = null;
+
+function msgDmChannelName(id1, id2){
+  const [a, b] = [id1, id2].sort();
+  return 'dm_' + a + '_' + b;
+}
+
+function msgChannelLabel(ch){
+  if(ch.type === 'direct'){
+    const parts = (ch.name || '').replace(/^dm_/, '').split('_');
+    const other = parts.find(p => p !== _msgCurrentUserId) || parts[1] || parts[0];
+    return '@' + (_msgProfMap[other] || 'staff');
+  }
+  return ch.name || '#channel';
+}
+
+async function msgLoadTeam(){
+  const { data, error } = await sb.rpc('get_team_members');
+  if(error) throw error;
+  _msgTeam = data || [];
+  const ids = _msgTeam.map(m => m.profile_id).filter(Boolean);
+  if(ids.length){
+    const { data: profs } = await sb.from('profiles').select('id, username').in('id', ids);
+    (profs || []).forEach(p => { _msgProfMap[p.id] = p.username; });
+  }
+}
+
+async function msgEnsureMemberships(){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) return;
+  const role = _osStaffRole || 'support';
+  const allowed = DEPT_ACCESS[role] || ['shared'];
+  const { data: channels, error } = await sb.from('os_channels').select('id, type, department');
+  if(error) throw error;
+  const rows = [];
+  (channels || []).forEach(ch => {
+    if(ch.type === 'direct') return;
+    if(!ch.department) rows.push({ channel_id: ch.id, staff_id: user.id });
+    else if(allowed.includes(ch.department)) rows.push({ channel_id: ch.id, staff_id: user.id });
+  });
+  if(rows.length){
+    await sb.from('os_channel_members').upsert(rows, { onConflict: 'channel_id,staff_id', ignoreDuplicates: true });
+  }
+}
+
+async function msgComputeUnread(){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) return;
+  _msgUnread = {};
+  const { data: members } = await sb.from('os_channel_members').select('channel_id').eq('staff_id', user.id);
+  const channelIds = (members || []).map(m => m.channel_id);
+  if(!channelIds.length) return;
+  const { data: reads } = await sb.from('os_message_reads').select('channel_id, last_read_at').eq('staff_id', user.id).in('channel_id', channelIds);
+  const readMap = {};
+  (reads || []).forEach(r => { readMap[r.channel_id] = r.last_read_at; });
+  const { data: msgs } = await sb.from('os_messages').select('channel_id, sender_id, created_at').in('channel_id', channelIds).neq('sender_id', user.id);
+  (msgs || []).forEach(m => {
+    const lr = readMap[m.channel_id];
+    if(!lr || new Date(m.created_at) > new Date(lr)){
+      _msgUnread[m.channel_id] = (_msgUnread[m.channel_id] || 0) + 1;
+    }
+  });
+}
+
+async function msgLoadChannels(){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) return;
+  const { data: memberRows } = await sb.from('os_channel_members').select('channel_id').eq('staff_id', user.id);
+  const ids = (memberRows || []).map(r => r.channel_id);
+  if(!ids.length){ _msgChannels = []; return; }
+  const { data, error } = await sb.from('os_channels').select('*').in('id', ids).order('type').order('name');
+  if(error) throw error;
+  _msgChannels = data || [];
+  const dmParts = new Set();
+  _msgChannels.filter(c => c.type === 'direct').forEach(c => {
+    c.name.replace(/^dm_/, '').split('_').forEach(p => { if(p && p !== user.id) dmParts.add(p); });
+  });
+  if(dmParts.size){
+    const { data: profs } = await sb.from('profiles').select('id, username').in('id', [...dmParts]);
+    (profs || []).forEach(p => { _msgProfMap[p.id] = p.username; });
+  }
+}
+
+function msgRenderChannelLists(){
+  const groups = _msgChannels.filter(c => c.type !== 'direct');
+  const dms = _msgChannels.filter(c => c.type === 'direct');
+  const row = (ch, isDm) => {
+    const unread = _msgUnread[ch.id] || 0;
+    const active = ch.id === _msgActiveChannelId ? ' active' : '';
+    const urgent = ch.name === '#urgent' ? '🔴 ' : '';
+    const dot = isDm ? '<span class="msg-ch-dot on"></span>' : (unread ? '<span class="msg-ch-dot on"></span>' : '<span class="msg-ch-dot off"></span>');
+    return `<div class="msg-ch-item${active}" onclick="msgOpenChannel('${ch.id}')">${dot}<span class="msg-ch-name">${urgent}${esc(msgChannelLabel(ch))}</span><span class="msg-ch-badge${unread ? ' visible' : ''}">${unread > 99 ? '99+' : unread || ''}</span></div>`;
+  };
+  const gEl = document.getElementById('msgGroupList');
+  const dEl = document.getElementById('msgDmList');
+  if(gEl) gEl.innerHTML = groups.length ? groups.map(c => row(c, false)).join('') : '<p class="os-dash-empty" style="padding:8px;font-size:11px">No channels</p>';
+  if(dEl) dEl.innerHTML = dms.length ? dms.map(c => row(c, true)).join('') : '<p class="os-dash-empty" style="padding:8px;font-size:11px">No DMs yet</p>';
+}
+
+async function msgMarkChannelRead(channelId){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user || !channelId) return;
+  await sb.from('os_message_reads').upsert({
+    channel_id: channelId,
+    staff_id: user.id,
+    last_read_at: new Date().toISOString(),
+  }, { onConflict: 'channel_id,staff_id' });
+  delete _msgUnread[channelId];
+  msgRenderChannelLists();
+  refreshUnreadCounts();
+}
+
+function msgStopRealtime(){
+  if(_msgRealtimeCh){ sb.removeChannel(_msgRealtimeCh); _msgRealtimeCh = null; }
+}
+
+function msgStartRealtime(channelId){
+  msgStopRealtime();
+  _msgRealtimeCh = sb.channel('messenger-' + channelId)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'os_messages',
+      filter: 'channel_id=eq.' + channelId,
+    }, payload => {
+      msgAppendMessage(payload.new, true);
+      if(payload.new.sender_id !== _msgCurrentUserId) msgMarkChannelRead(channelId);
+    })
+    .subscribe();
+}
+
+function msgRenderAttachment(m){
+  if(!m.attachment_type || !m.attachment_ref) return '';
+  const t = m.attachment_type;
+  const ref = String(m.attachment_ref).slice(0, 8) + '…';
+  if(t === 'ticket') return `<div class="msg-inline-card"><strong>🎫 Support ticket</strong>${esc(ref)}</div>`;
+  if(t === 'asset') return `<div class="msg-inline-card"><strong>📦 Asset</strong>${esc(m.attachment_url || ref)}</div>`;
+  if(t === 'round' || t === 'rng') return `<div class="msg-inline-card"><strong>🎲 RNG round</strong>${esc(ref)}</div>`;
+  return `<div class="msg-inline-card">${esc(t)} · ${esc(ref)}</div>`;
+}
+
+function msgRenderMessageEl(m){
+  const isMine = m.sender_id === _msgCurrentUserId;
+  const isSys = m.is_system;
+  const who = _msgProfMap[m.sender_id] ? '@' + _msgProfMap[m.sender_id] : 'staff';
+  const time = osFmtRelative(m.created_at);
+  if(isSys){
+    return `<div class="stkt-msg auto" data-msg-id="${m.id}"><div class="stkt-auto-text">${esc(m.body || '')}</div><div class="stkt-msg-time">${esc(time)}</div></div>`;
+  }
+  const cls = isMine ? 'player' : 'staff';
+  const head = isMine ? '' : `<span style="font-size:10px;color:var(--muted);margin-bottom:2px">${esc(who)}</span>`;
+  return `<div class="stkt-msg ${cls}" data-msg-id="${m.id}">${head}<div class="stkt-bubble">${esc(m.body || '')}${msgRenderAttachment(m)}</div><div class="stkt-msg-time">${esc(time)}</div></div>`;
+}
+
+function msgAppendMessage(m, scroll){
+  const box = document.getElementById('msgChatMsgs');
+  if(!box || box.querySelector('[data-msg-id="' + m.id + '"]')) return;
+  if(m.sender_id && !_msgProfMap[m.sender_id]){
+    sb.from('profiles').select('username').eq('id', m.sender_id).maybeSingle().then(({ data }) => {
+      if(data) _msgProfMap[m.sender_id] = data.username;
+    });
+  }
+  box.insertAdjacentHTML('beforeend', msgRenderMessageEl(m));
+  if(scroll !== false){
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
+async function msgLoadMessages(channelId){
+  const box = document.getElementById('msgChatMsgs');
+  if(box) box.innerHTML = '<p class="os-dash-empty">Loading…</p>';
+  const { data, error } = await sb.from('os_messages').select('*').eq('channel_id', channelId).order('created_at', { ascending: true }).limit(300);
+  if(error) throw error;
+  const msgs = data || [];
+  const senderIds = [...new Set(msgs.map(m => m.sender_id).filter(Boolean))];
+  const missing = senderIds.filter(id => !_msgProfMap[id]);
+  if(missing.length){
+    const { data: profs } = await sb.from('profiles').select('id, username').in('id', missing);
+    (profs || []).forEach(p => { _msgProfMap[p.id] = p.username; });
+  }
+  if(box){
+    box.innerHTML = msgs.length ? msgs.map(msgRenderMessageEl).join('') : '<p class="os-dash-empty">No messages yet — say hello!</p>';
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
+async function msgOpenChannel(channelId){
+  _msgActiveChannelId = channelId;
+  const ch = _msgChannels.find(c => c.id === channelId);
+  document.getElementById('msgChatEmpty')?.classList.add('hidden');
+  const active = document.getElementById('msgChatActive');
+  if(active) active.classList.remove('hidden');
+  const title = document.getElementById('msgChatTitle');
+  const sub = document.getElementById('msgChatSub');
+  if(title) title.textContent = ch ? msgChannelLabel(ch) : 'Channel';
+  if(sub) sub.textContent = ch?.type === 'direct' ? 'Direct message' : (ch?.department ? tskDeptLabel(ch.department) + ' team' : 'All staff');
+  msgRenderChannelLists();
+  await msgLoadMessages(channelId);
+  await msgMarkChannelRead(channelId);
+  msgStartRealtime(channelId);
+}
+
+async function msgTabEnter(){
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    _msgCurrentUserId = user?.id || null;
+    await msgLoadTeam();
+    await msgEnsureMemberships();
+    await msgLoadChannels();
+    await msgComputeUnread();
+    msgRenderChannelLists();
+    if(_msgPendingOpenChannel){
+      const id = _msgPendingOpenChannel;
+      _msgPendingOpenChannel = null;
+      await msgOpenChannel(id);
+    }else if(!_msgActiveChannelId && _msgChannels.length){
+      const general = _msgChannels.find(c => c.name === '#general');
+      await msgOpenChannel(general?.id || _msgChannels[0].id);
+    }else if(_msgActiveChannelId){
+      await msgOpenChannel(_msgActiveChannelId);
+    }
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function msgTabLeave(){
+  msgStopRealtime();
+  document.getElementById('msgAttachMenu')?.classList.remove('open');
+}
+
+function msgToggleAttachMenu(e){
+  e.stopPropagation();
+  document.getElementById('msgAttachMenu')?.classList.toggle('open');
+}
+
+document.addEventListener('click', () => document.getElementById('msgAttachMenu')?.classList.remove('open'));
+
+function msgAttachPick(kind){
+  _msgSearchKind = kind;
+  document.getElementById('msgAttachMenu')?.classList.remove('open');
+  const titles = { ticket: 'Attach ticket', asset: 'Attach asset (serial)', round: 'Attach RNG round' };
+  const placeholders = { ticket: 'Search ticket subject…', asset: 'PX serial or hash…', round: 'Round UUID…' };
+  document.getElementById('msgSearchTitle').textContent = titles[kind] || 'Attach';
+  const inp = document.getElementById('msgSearchInput');
+  if(inp){ inp.value = ''; inp.placeholder = placeholders[kind] || 'Search…'; }
+  document.getElementById('msgSearchResults').innerHTML = '';
+  document.getElementById('msgSearchModal')?.classList.remove('hidden');
+  setTimeout(() => inp?.focus(), 40);
+}
+
+function msgCloseSearch(){
+  document.getElementById('msgSearchModal')?.classList.add('hidden');
+  _msgSearchKind = null;
+}
+
+async function msgSearchRun(){
+  const q = (document.getElementById('msgSearchInput')?.value || '').trim();
+  const box = document.getElementById('msgSearchResults');
+  if(!box || !q || q.length < 2){ if(box) box.innerHTML = '<p class="os-dash-empty">Type at least 2 characters</p>'; return; }
+  box.innerHTML = '<p class="os-dash-empty">Searching…</p>';
+  try{
+    let html = '';
+    if(_msgSearchKind === 'ticket'){
+      const { data } = await sb.from('support_tickets').select('id, subject, status').ilike('subject', '%' + q + '%').limit(12);
+      html = (data || []).map(t =>
+        `<div class="msg-attach-opt" data-type="ticket" data-ref="${t.id}" data-label="🎫 ${esc(t.subject)}" onclick="msgSetAttachFromEl(this)"><strong>${esc(t.status)}</strong> ${esc(t.subject)}</div>`
+      ).join('') || '<p class="os-dash-empty">No tickets found</p>';
+    }else if(_msgSearchKind === 'asset'){
+      const { data: up } = await sb.from('user_poxy').select('id, serial_number, poxy_tier').ilike('serial_number', '%' + q + '%').limit(8);
+      const rows = up || [];
+      if(!rows.length){
+        const { data: pa } = await sb.from('poxy_assets').select('id, serial_number').ilike('serial_number', '%' + q + '%').limit(8);
+        html = (pa || []).map(a =>
+          `<div class="msg-attach-opt" data-type="asset" data-ref="${a.id}" data-label="📦 ${esc(a.serial_number || a.id)}" onclick="msgSetAttachFromEl(this)">${esc(a.serial_number || a.id)}</div>`
+        ).join('') || '<p class="os-dash-empty">No assets found</p>';
+      }else{
+        html = rows.map(a =>
+          `<div class="msg-attach-opt" data-type="asset" data-ref="${a.id}" data-label="📦 ${esc(a.serial_number)} · ${esc(a.poxy_tier)}" onclick="msgSetAttachFromEl(this)">${esc(a.serial_number)} · ${esc(a.poxy_tier)}</div>`
+        ).join('');
+      }
+    }else if(_msgSearchKind === 'round'){
+      const { data } = await sb.from('rng_rounds').select('id, status').ilike('id', q + '%').limit(10);
+      html = (data || []).map(r =>
+        `<div class="msg-attach-opt" data-type="round" data-ref="${r.id}" data-label="🎲 Round ${esc(String(r.id).slice(0,8))}…" onclick="msgSetAttachFromEl(this)">${esc(String(r.id))} · ${esc(r.status || '')}</div>`
+      ).join('') || '<p class="os-dash-empty">No rounds found</p>';
+    }
+    box.innerHTML = html;
+  }catch(err){
+    box.innerHTML = '<p style="color:var(--red);font-size:12px">' + esc(err.message) + '</p>';
+  }
+}
+
+function msgSetAttachFromEl(el){
+  if(!el) return;
+  msgSetAttach(el.dataset.type, el.dataset.ref, el.dataset.label);
+}
+
+function msgSetAttach(type, ref, label){
+  _msgPendingAttach = { type, ref, label: label || (type + ' ' + String(ref).slice(0, 8)) };
+  const prev = document.getElementById('msgAttachPreview');
+  if(prev){
+    prev.classList.remove('hidden');
+    prev.innerHTML = esc(label) + ' <button type="button" class="btn btn-ghost btn-sm" onclick="msgClearAttach()">×</button>';
+  }
+  msgCloseSearch();
+}
+
+function msgClearAttach(){
+  _msgPendingAttach = null;
+  const prev = document.getElementById('msgAttachPreview');
+  if(prev){ prev.classList.add('hidden'); prev.innerHTML = ''; }
+}
+
+async function msgSend(){
+  if(!_msgActiveChannelId) return;
+  const text = (document.getElementById('msgReplyInput')?.value || '').trim();
+  if(!text && !_msgPendingAttach){ toast('ENTER MESSAGE OR ATTACH', 'err'); return; }
+  const btn = document.getElementById('msgSendBtn');
+  if(btn) btn.disabled = true;
+  try{
+    const row = {
+      channel_id: _msgActiveChannelId,
+      sender_id: _msgCurrentUserId,
+      body: text || null,
+      is_system: false,
+    };
+    if(_msgPendingAttach){
+      row.attachment_type = _msgPendingAttach.type === 'round' ? 'round' : _msgPendingAttach.type;
+      row.attachment_ref = _msgPendingAttach.ref;
+      row.attachment_url = _msgPendingAttach.label;
+    }
+    const { error } = await sb.from('os_messages').insert(row);
+    if(error) throw error;
+    document.getElementById('msgReplyInput').value = '';
+    msgClearAttach();
+    await msgMarkChannelRead(_msgActiveChannelId);
+  }catch(err){
+    toast(err.message, 'err');
+  }finally{
+    if(btn) btn.disabled = false;
+  }
+}
+
+async function msgShowNewDm(){
+  const list = document.getElementById('msgDmStaffList');
+  if(!list) return;
+  list.innerHTML = '<p class="os-dash-empty">Loading…</p>';
+  document.getElementById('msgDmModal')?.classList.remove('hidden');
+  try{
+    await msgLoadTeam();
+    const { data: presence } = await sb.from('user_presence').select('user_id, is_online');
+    const onMap = {};
+    (presence || []).forEach(p => { onMap[p.user_id] = p.is_online; });
+    const others = _msgTeam.filter(m => m.profile_id && m.profile_id !== _msgCurrentUserId);
+    others.sort((a, b) => (onMap[b.profile_id] ? 1 : 0) - (onMap[a.profile_id] ? 1 : 0));
+    if(!others.length){
+      list.innerHTML = '<p class="os-dash-empty">No other staff with profiles</p>';
+      return;
+    }
+    list.innerHTML = others.map(m => {
+      const un = _msgProfMap[m.profile_id] || (m.email || '').split('@')[0];
+      const on = onMap[m.profile_id];
+      return `<div class="msg-ch-item" onclick="msgStartDm('${m.profile_id}')"><span class="msg-ch-dot ${on ? 'on' : 'off'}"></span><span class="msg-ch-name">@${esc(un)}</span>${on ? '<span style="font-size:9px;color:var(--green)">online</span>' : ''}</div>`;
+    }).join('');
+  }catch(err){
+    list.innerHTML = '<p style="color:var(--red)">' + esc(err.message) + '</p>';
+  }
+}
+
+function msgCloseNewDm(){
+  document.getElementById('msgDmModal')?.classList.add('hidden');
+}
+
+async function msgStartDm(otherId){
+  if(!otherId || !_msgCurrentUserId) return;
+  msgCloseNewDm();
+  try{
+    const name = msgDmChannelName(_msgCurrentUserId, otherId);
+    let { data: ch } = await sb.from('os_channels').select('id').eq('name', name).maybeSingle();
+    if(!ch){
+      const { data: created, error } = await sb.from('os_channels').insert({
+        name, type: 'direct', created_by: _msgCurrentUserId,
+      }).select('id').single();
+      if(error) throw error;
+      ch = created;
+      await sb.from('os_channel_members').upsert([
+        { channel_id: ch.id, staff_id: _msgCurrentUserId },
+        { channel_id: ch.id, staff_id: otherId },
+      ], { onConflict: 'channel_id,staff_id', ignoreDuplicates: true });
+    }
+    await msgLoadChannels();
+    await msgComputeUnread();
+    await msgOpenChannel(ch.id);
+    msgRenderChannelLists();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function msgOpenChannelAfter(channelId){
+  _msgPendingOpenChannel = channelId;
+  switchTab('messenger');
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -3901,6 +4411,8 @@ function switchTab(id){
   if(id==='tasks')     { tskKanbanEnter(); }
   if(id==='mytasks')   { tskMyTasksEnter(); }
   else if(id !== 'tasks' && id !== 'mytasks') { tskCloseDetail(); }
+  if(id==='messenger') { msgTabEnter(); }
+  else                 { msgTabLeave(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
@@ -7261,6 +7773,10 @@ function mcuOnKeydown(e){
       tskCloseDetail();
       return;
     }
+    const msgDmOpen = !document.getElementById('msgDmModal')?.classList.contains('hidden');
+    if(msgDmOpen){ e.preventDefault(); msgCloseNewDm(); return; }
+    const msgSrchOpen = !document.getElementById('msgSearchModal')?.classList.contains('hidden');
+    if(msgSrchOpen){ e.preventDefault(); msgCloseSearch(); return; }
     const updUrgentOpen = !document.getElementById('updUrgentModal')?.classList.contains('hidden');
     if(updUrgentOpen){
       e.preventDefault();
