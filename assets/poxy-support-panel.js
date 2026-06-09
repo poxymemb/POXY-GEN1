@@ -193,7 +193,19 @@
       b.classList.toggle('active', b.dataset.supportTab === tab);
     });
     document.querySelectorAll('.poxy-support-panel').forEach(function (p) {
-      p.hidden = p.dataset.supportPanel !== tab;
+      const isTarget = p.dataset.supportPanel === tab;
+      if (isTarget) {
+        p.hidden = false;
+        requestAnimationFrame(function () { p.classList.add('is-visible'); });
+      } else if (p.classList.contains('is-visible')) {
+        p.classList.remove('is-visible');
+        setTimeout(function () {
+          if (p.dataset.supportPanel !== activeTab) p.hidden = true;
+        }, 150);
+      } else {
+        p.hidden = true;
+        p.classList.remove('is-visible');
+      }
     });
     if (tab === 'faq') loadFaq();
     if (tab === 'tickets') loadTickets();
@@ -203,7 +215,13 @@
     const chat = $('supportChatView');
     const tabs = $('supportMainTabs');
     const panels = $('supportPanelsWrap');
-    if (chat) chat.hidden = true;
+    if (chat && !chat.hidden) {
+      chat.classList.remove('is-visible');
+      setTimeout(function () { chat.hidden = true; }, 150);
+    } else if (chat) {
+      chat.classList.remove('is-visible');
+      chat.hidden = true;
+    }
     if (tabs) tabs.hidden = false;
     if (panels) panels.hidden = false;
     activeTicket = null;
@@ -323,7 +341,13 @@
     $('supportMainTabs').hidden = true;
     $('supportPanelsWrap').hidden = true;
     const chat = $('supportChatView');
-    if (chat) chat.hidden = false;
+    if (chat) {
+      chat.hidden = false;
+      chat.classList.remove('is-visible');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { chat.classList.add('is-visible'); });
+      });
+    }
     $('supportChatSubject').textContent = t.subject || 'Ticket';
     const badge = $('supportChatStatus');
     if (badge) {
@@ -371,8 +395,7 @@
     else if (!m.is_staff) kind = 'player';
 
     const div = document.createElement('div');
-    div.className = 'poxy-support-msg ' + kind;
-    if (!animate) div.style.animation = 'none';
+    div.className = 'poxy-support-msg ' + kind + (animate ? ' poxy-support-msg--enter' : ' poxy-support-msg--static');
     let body = m.body ? '<div>' + esc(m.body).replace(/\n/g, '<br>') + '</div>' : '';
     if (m.image_url) {
       body += '<img src="' + esc(m.image_url) + '" alt="Attachment" loading="lazy" onclick="window.open(this.src,\'_blank\')"/>';
