@@ -377,6 +377,39 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .sdash-staff-cell .roles-staff-avatar{border-radius:50%;font-size:13px;height:28px;width:28px}
 .sdash-staff-cell .roles-staff-avatar--emoji{font-size:14px}
 @media(max-width:700px){.sdash-heatmap-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+/* ── CHANGELOG (Session 11) ── */
+#tab-changelog.tab-pane{max-width:none;padding:16px 20px;width:100%}
+.chlog-head{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:14px}
+.chlog-head h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0}
+.chlog-toolbar{align-items:center;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-bottom:14px}
+.chlog-filters{display:flex;flex-wrap:wrap;gap:6px}
+.chlog-filter-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;letter-spacing:.04em;padding:6px 12px;text-transform:uppercase;transition:border-color .15s,color .15s,background .15s}
+.chlog-filter-btn:hover{border-color:var(--amber);color:var(--adm-text)}
+.chlog-filter-btn.active{background:rgba(245,158,11,.12);border-color:var(--amber);color:var(--amber)}
+.chlog-gameplay-toggle{align-items:center;color:var(--muted);display:inline-flex;font-size:12px;gap:8px;user-select:none}
+.chlog-list{display:flex;flex-direction:column;gap:10px}
+.chlog-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;cursor:pointer;padding:14px 16px;transition:border-color .15s,box-shadow .15s}
+.chlog-card:hover{border-color:rgba(245,158,11,.35)}
+.chlog-card.type-feature{border-left:3px solid var(--green)}
+.chlog-card.type-bugfix{border-left:3px solid var(--cyan)}
+.chlog-card.type-economy{border-left:3px solid var(--amber)}
+.chlog-card.type-urgent{border-left:3px solid var(--red)}
+.chlog-card-header{align-items:center;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.chlog-version-badge{background:var(--bg2);border:1px solid var(--border2);border-radius:4px;color:var(--adm-text);font-family:var(--font-mono);font-size:11px;font-weight:600;padding:2px 8px}
+.chlog-cat-badge{border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.05em;padding:2px 8px;text-transform:uppercase}
+.chlog-cat-badge.feature{background:rgba(34,197,94,.12);color:var(--green)}
+.chlog-cat-badge.bugfix{background:rgba(129,140,248,.12);color:var(--cyan)}
+.chlog-cat-badge.economy{background:rgba(245,158,11,.12);color:var(--amber)}
+.chlog-cat-badge.urgent{background:rgba(239,68,68,.12);color:var(--red)}
+.chlog-meta{color:var(--muted);font-size:11px;margin-left:auto}
+.chlog-title{font-size:15px;font-weight:700;line-height:1.35;margin:0 0 6px}
+.chlog-desc{color:var(--adm-text);font-size:13px;line-height:1.55;margin:0;white-space:pre-wrap}
+.chlog-desc.truncated{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:normal}
+.chlog-card.expanded .chlog-desc.truncated{-webkit-line-clamp:unset;display:block;overflow:visible;white-space:pre-wrap}
+.chlog-card-footer{align-items:center;display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chlog-gameplay-pill{align-items:center;background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.25);border-radius:4px;color:var(--cyan);display:inline-flex;font-size:10px;font-weight:700;gap:4px;letter-spacing:.04em;padding:2px 8px;text-transform:uppercase}
+.chlog-expand-hint{color:var(--muted);font-size:11px}
+.chlog-card-actions{margin-left:auto}
 /* ── MARKETING (Session 7) ── */
 #tab-campaigns.tab-pane,#tab-calendar.tab-pane{max-width:none;padding:16px 20px;width:100%}
 .mkt-head{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:14px}
@@ -1435,7 +1468,26 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         </div>
       </div>
     </div>
-    <div id="tab-changelog" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>Changelog</strong> — release notes ship in Session 11.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-changelog" class="tab-pane" data-poxy-module="changelog">
+      <div class="chlog-head">
+        <h2>Changelog</h2>
+        <button type="button" class="btn btn-amber btn-sm hidden" id="chlogAddBtn" onclick="chlogShowForm()">+ Add Entry</button>
+      </div>
+      <div class="chlog-toolbar">
+        <div class="chlog-filters" id="chlogFilters">
+          <button type="button" class="chlog-filter-btn active" data-filter="all" onclick="chlogSetFilter('all')">All</button>
+          <button type="button" class="chlog-filter-btn" data-filter="feature" onclick="chlogSetFilter('feature')">Feature</button>
+          <button type="button" class="chlog-filter-btn" data-filter="bugfix" onclick="chlogSetFilter('bugfix')">Bugfix</button>
+          <button type="button" class="chlog-filter-btn" data-filter="economy" onclick="chlogSetFilter('economy')">Economy</button>
+          <button type="button" class="chlog-filter-btn" data-filter="urgent" onclick="chlogSetFilter('urgent')">Urgent</button>
+        </div>
+        <label class="chlog-gameplay-toggle toggle-wrap">
+          <span class="toggle"><input type="checkbox" id="chlogGameplayOnly" onchange="chlogRenderList()"/><span class="toggle-slider"></span></span>
+          <span class="toggle-label">Affects gameplay only</span>
+        </label>
+      </div>
+      <div class="chlog-list" id="chlogList"><p class="os-dash-empty">Loading…</p></div>
+    </div>
     <div id="tab-campaigns" class="tab-pane" data-poxy-module="campaigns">
       <div class="mkt-head">
         <h2>Campaigns</h2>
@@ -2914,6 +2966,42 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       <button type="button" class="btn btn-ghost btn-sm" onclick="updTogglePreview()">Preview</button>
       <button type="button" class="btn btn-amber btn-sm" onclick="updPublish()">Publish</button>
       <button type="button" class="btn btn-ghost btn-sm" onclick="updClosePublish()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGELOG FORM MODAL (Session 11) -->
+<div id="chlogFormModal" class="upd-overlay hidden" onclick="if(event.target===this)chlogCloseForm()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" id="chlogFormTitle" style="margin-bottom:14px">Add changelog entry</div>
+    <input type="hidden" id="chlogEditId" value=""/>
+    <div class="f-row">
+      <label class="f-label">Version</label>
+      <input id="chlogVersion" class="f-input mono" type="text" placeholder="x.x.x"/>
+    </div>
+    <div class="f-row">
+      <label class="f-label">Category</label>
+      <select id="chlogCategory" class="f-select">
+        <option value="feature" selected>Feature</option>
+        <option value="bugfix">Bugfix</option>
+        <option value="economy">Economy</option>
+        <option value="urgent">Urgent</option>
+      </select>
+    </div>
+    <div class="f-row">
+      <label class="f-label">Title</label>
+      <input id="chlogTitle" class="f-input" type="text" placeholder="Release note title"/>
+    </div>
+    <div class="f-row">
+      <label class="f-label">Description</label>
+      <textarea id="chlogDescription" class="f-textarea" rows="6" placeholder="What changed and why…"></textarea>
+    </div>
+    <div class="f-row row-flex">
+      <label class="toggle-wrap"><span class="toggle"><input type="checkbox" id="chlogAffectsGameplay"/><span class="toggle-slider"></span></span><span class="toggle-label">Affects gameplay</span></label>
+    </div>
+    <div class="row-flex" style="margin-top:14px">
+      <button type="button" class="btn btn-amber btn-sm" onclick="chlogPublish()">Publish</button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="chlogCloseForm()">Cancel</button>
     </div>
   </div>
 </div>
@@ -7136,6 +7224,211 @@ async function sdashTabEnter(silent){
 
 
 // ═══════════════════════════════════════════════════════════════
+// CHANGELOG (Session 11)
+// ═══════════════════════════════════════════════════════════════
+const CHLOG_CAT_META = {
+  feature: { label: 'Feature', cls: 'feature', card: 'type-feature' },
+  bugfix:  { label: 'Bugfix',  cls: 'bugfix',  card: 'type-bugfix' },
+  economy: { label: 'Economy', cls: 'economy', card: 'type-economy' },
+  urgent:  { label: 'Urgent',  cls: 'urgent',  card: 'type-urgent' },
+};
+
+let _chlogList = [];
+let _chlogFilter = 'all';
+let _chlogProfMap = {};
+let _chlogCanEdit = false;
+let _chlogExpanded = new Set();
+
+function chlogCanEditRole(role){
+  const r = osNormalizeRole(role);
+  return r === 'superadmin' || r === 'mod';
+}
+
+function chlogCatMeta(cat){
+  return CHLOG_CAT_META[cat] || CHLOG_CAT_META.feature;
+}
+
+function chlogFmtDate(ts){
+  if(!ts) return '—';
+  const d = new Date(ts);
+  return isNaN(d.getTime()) ? '—' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function chlogNeedsTruncate(text){
+  return (text || '').length > 180 || (text || '').split('\n').length > 3;
+}
+
+function chlogToggleExpand(id, ev){
+  if(ev && (ev.target.closest('.chlog-card-actions') || ev.target.closest('button'))) return;
+  const card = document.querySelector('.chlog-card[data-id="' + id + '"]');
+  if(!card) return;
+  if(_chlogExpanded.has(id)){
+    _chlogExpanded.delete(id);
+    card.classList.remove('expanded');
+  }else{
+    _chlogExpanded.add(id);
+    card.classList.add('expanded');
+  }
+  const hint = card.querySelector('.chlog-expand-hint');
+  if(hint) hint.textContent = _chlogExpanded.has(id) ? 'Click to collapse' : 'Click to expand';
+}
+
+function chlogRenderCard(e){
+  const meta = chlogCatMeta(e.category);
+  const author = _chlogProfMap[e.published_by] ? '@' + _chlogProfMap[e.published_by] : 'staff';
+  const desc = e.description || '';
+  const trunc = chlogNeedsTruncate(desc) && !_chlogExpanded.has(e.id);
+  const expanded = _chlogExpanded.has(e.id);
+  const editBtn = _chlogCanEdit
+    ? '<div class="chlog-card-actions"><button type="button" class="btn btn-ghost btn-sm" onclick="event.stopPropagation();chlogShowForm(\'' + e.id + '\')">Edit</button></div>'
+    : '';
+  const gameplay = e.affects_gameplay
+    ? '<span class="chlog-gameplay-pill">🎮 Affects gameplay</span>'
+    : '';
+  const hint = trunc || expanded
+    ? '<span class="chlog-expand-hint">' + (expanded ? 'Click to collapse' : 'Click to expand') + '</span>'
+    : '';
+  return (
+    '<div class="chlog-card ' + meta.card + (expanded ? ' expanded' : '') + '" data-id="' + e.id + '" onclick="chlogToggleExpand(\'' + e.id + '\', event)">' +
+      '<div class="chlog-card-header">' +
+        '<span class="chlog-version-badge">v' + esc(e.version || '0.0.0') + '</span>' +
+        '<span class="chlog-cat-badge ' + meta.cls + '">' + meta.label + '</span>' +
+        '<span class="chlog-meta">' + chlogFmtDate(e.created_at) + ' · ' + esc(author) + '</span>' +
+      '</div>' +
+      '<h3 class="chlog-title">' + esc(e.title || '') + '</h3>' +
+      '<p class="chlog-desc' + (trunc ? ' truncated' : '') + '">' + esc(desc) + '</p>' +
+      '<div class="chlog-card-footer">' + gameplay + hint + editBtn + '</div>' +
+    '</div>'
+  );
+}
+
+function chlogFilterEntries(list){
+  let out = list;
+  if(_chlogFilter !== 'all') out = out.filter(e => e.category === _chlogFilter);
+  if(document.getElementById('chlogGameplayOnly')?.checked) out = out.filter(e => e.affects_gameplay);
+  return out;
+}
+
+function chlogRenderList(){
+  const box = document.getElementById('chlogList');
+  if(!box) return;
+  const filtered = chlogFilterEntries(_chlogList);
+  if(!filtered.length){
+    box.innerHTML = '<p class="os-dash-empty">No changelog entries match filters</p>';
+    return;
+  }
+  box.innerHTML = filtered.map(chlogRenderCard).join('');
+}
+
+function chlogSetFilter(filter){
+  _chlogFilter = filter;
+  document.querySelectorAll('#chlogFilters .chlog-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === filter);
+  });
+  chlogRenderList();
+}
+
+async function chlogLoadEntries(){
+  const box = document.getElementById('chlogList');
+  if(box) box.innerHTML = '<p class="os-dash-empty">Loading…</p>';
+  try{
+    const { data, error } = await sb.from('os_changelog')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if(error) throw error;
+    _chlogList = data || [];
+    const pubIds = [...new Set(_chlogList.map(e => e.published_by).filter(Boolean))];
+    if(pubIds.length){
+      const { data: profs } = await sb.from('profiles').select('id, username').in('id', pubIds);
+      (profs || []).forEach(p => { _chlogProfMap[p.id] = p.username; });
+    }
+    chlogRenderList();
+  }catch(err){
+    const msg = err.message || String(err);
+    const hint = /os_changelog|schema cache|relation/i.test(msg)
+      ? '<br><span style="font-size:11px">Apply <code>migration_os_changelog.sql</code> in Supabase SQL Editor.</span>'
+      : '';
+    if(box) box.innerHTML = '<p class="os-dash-empty" style="color:var(--red)">' + esc(msg) + hint + '</p>';
+  }
+}
+
+function chlogShowForm(id){
+  if(!_chlogCanEdit){ toast('Edit: superadmin/mod only', 'err'); return; }
+  const titleEl = document.getElementById('chlogFormTitle');
+  const editId = document.getElementById('chlogEditId');
+  if(id){
+    const entry = _chlogList.find(e => e.id === id);
+    if(!entry){ toast('Entry not found', 'err'); return; }
+    if(titleEl) titleEl.textContent = 'Edit changelog entry';
+    if(editId) editId.value = id;
+    document.getElementById('chlogVersion').value = entry.version || '';
+    document.getElementById('chlogCategory').value = entry.category || 'feature';
+    document.getElementById('chlogTitle').value = entry.title || '';
+    document.getElementById('chlogDescription').value = entry.description || '';
+    document.getElementById('chlogAffectsGameplay').checked = !!entry.affects_gameplay;
+  }else{
+    if(titleEl) titleEl.textContent = 'Add changelog entry';
+    if(editId) editId.value = '';
+    document.getElementById('chlogVersion').value = '';
+    document.getElementById('chlogCategory').value = 'feature';
+    document.getElementById('chlogTitle').value = '';
+    document.getElementById('chlogDescription').value = '';
+    document.getElementById('chlogAffectsGameplay').checked = false;
+  }
+  document.getElementById('chlogFormModal')?.classList.remove('hidden');
+}
+
+function chlogCloseForm(){
+  document.getElementById('chlogFormModal')?.classList.add('hidden');
+}
+
+async function chlogPublish(){
+  if(!_chlogCanEdit){ toast('Publish: superadmin/mod only', 'err'); return; }
+  const version = document.getElementById('chlogVersion')?.value?.trim();
+  const category = document.getElementById('chlogCategory')?.value || 'feature';
+  const title = document.getElementById('chlogTitle')?.value?.trim();
+  const description = document.getElementById('chlogDescription')?.value?.trim();
+  const affects_gameplay = !!document.getElementById('chlogAffectsGameplay')?.checked;
+  const editId = document.getElementById('chlogEditId')?.value?.trim();
+  if(!version || !title || !description){ toast('VERSION, TITLE AND DESCRIPTION REQUIRED', 'err'); return; }
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    if(editId){
+      const { error } = await sb.from('os_changelog').update({
+        version, category, title, description, affects_gameplay,
+        updated_at: new Date().toISOString(),
+      }).eq('id', editId);
+      if(error) throw error;
+      toast('Entry updated', 'ok');
+    }else{
+      const { error } = await sb.from('os_changelog').insert({
+        version, category, title, description, affects_gameplay,
+        published_by: user?.id || null,
+      });
+      if(error) throw error;
+      toast('Entry published', 'ok');
+    }
+    chlogCloseForm();
+    await chlogLoadEntries();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function chlogTabEnter(){
+  try{
+    const { data: role } = await sb.rpc('get_admin_role');
+    _chlogCanEdit = chlogCanEditRole(role);
+    const addBtn = document.getElementById('chlogAddBtn');
+    if(addBtn) addBtn.classList.toggle('hidden', !_chlogCanEdit);
+    await chlogLoadEntries();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -7165,6 +7458,7 @@ function switchTab(id){
   if(id==='influencers'){ mktInfTabEnter(); }
   if(id==='handbook')  { hbTabEnter(); }
   if(id==='supportdash') { sdashTabEnter(); }
+  if(id==='changelog') { chlogTabEnter(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
