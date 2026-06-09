@@ -24,8 +24,12 @@
   let tickets = [];
   let activeTicket = null;
   let realtimeChannel = null;
+  let presenceInterval = null;
+  let csatSelectedRating = 0;
   const renderedMsgIds = new Set();
   const attach = { new: null, chat: null };
+  const CSAT_EMOJI = ['', '😞', '😐', '🙂', '😊', '🤩'];
+  const CSAT_WAIT_MS = 5 * 60 * 1000;
 
   function $(id) { return document.getElementById(id); }
   function sb() { return global.sb; }
@@ -172,6 +176,29 @@
     drawer.style.transform = '';
   }
 
+  async function pingPresence(online) {
+    if (!user() || !sb()) return;
+    try {
+      await sb().rpc('update_presence', { p_online: online !== false });
+    } catch (e) {
+      /* presence is best-effort */
+    }
+  }
+
+  function startPresenceTracking() {
+    stopPresenceTracking(false);
+    pingPresence(true);
+    presenceInterval = setInterval(function () { pingPresence(true); }, 30000);
+  }
+
+  function stopPresenceTracking(sendOffline) {
+    if (presenceInterval) {
+      clearInterval(presenceInterval);
+      presenceInterval = null;
+    }
+    if (sendOffline !== false) pingPresence(false);
+  }
+
   function openOverlay() {
     const ov = $('supportHubOverlay');
     if (!ov) return;
@@ -179,11 +206,13 @@
     ov.hidden = false;
     ov.setAttribute('aria-hidden', 'false');
     requestAnimationFrame(function () { ov.classList.add('is-open'); });
+    if (user()) startPresenceTracking();
   }
 
   function closeSupportPanel() {
     const ov = $('supportHubOverlay');
     if (!ov) return;
+    stopPresenceTracking(true);
     resetDrawerTransform();
     ov.classList.remove('is-open');
     ov.setAttribute('aria-hidden', 'true');
@@ -232,10 +261,13 @@
 
   function relayoutSupportChat() {
     const compose = $('supportChatCompose');
+    const csat = $('supportChatCsat');
     const msgs = $('supportChatMessages');
     const drawer = document.querySelector('.poxy-support-drawer');
     if (!compose || !msgs || !drawer || !drawer.classList.contains('is-chat-active')) return;
-    const h = Math.max(compose.offsetHeight || 0, 64);
+    const composeH = Math.max(compose.offsetHeight || 0, 64);
+    const csatH = (csat && !csat.hidden) ? (csat.offsetHeight || 0) : 0;
+    const h = composeH + csatH;
     msgs.style.paddingBottom = (h + 8) + 'px';
     drawer.style.setProperty('--support-compose-h', h + 'px');
   }
@@ -312,6 +344,139 @@
     renderedMsgIds.clear();
     unsubscribeRealtime();
     clearAttachment('chat');
+    hideCsatUi();
+    csatSelectedRating = 0;
+  }
+
+  function injectCsatStyles() {
+    if ($('poxySupportCsatStyles')) return;
+    const s = document.createElement('style');
+    s.id = 'poxySupportCsatStyles';
+    s.textContent =
+      '.poxy-support-csat{flex-shrink:0;padding:14px 16px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(44,44,48,0.95)}' +
+      '.poxy-support-csat-title{margin:0 0 10px;font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.55)}' +
+      '.poxy-support-csat-stars{display:flex;gap:6px;margin-bottom:10px}' +
+      '.poxy-support-csat-star{width:40px;height:40px;border:1px solid rgba(255,255,255,0.12);border-radius:10px;background:rgba(255,255,255,0.06);font-size:20px;line-height:1;cursor:pointer;transition:background 150ms ease,transform 150ms ease}' +
+      '.poxy-support-csat-star:hover,.poxy-support-csat-star.is-active{background:rgba(255,255,255,0.14);transform:translateY(-1px)}' +
+      '.poxy-support-csat-comment{width:100%;min-height:56px;padding:10px 12px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;font-family:inherit;font-size:14px;resize:vertical;outline:none}' +
+      '.poxy-support-csat-comment::placeholder{color:rgba(255,255,255,0.35)}' +
+      '.poxy-support-csat-submit{width:100%;padding:11px 16px;border:none;border-radius:12px;background:#fff;color:#000;font-size:13px;font-weight:600;cursor:pointer}' +
+      '.poxy-support-csat-submit:disabled{opacity:0.45;cursor:not-allowed}' +
+      '.poxy-support-csat-thanks,.poxy-support-csat-wait{text-align:center;padding:8px 4px 4px;font-size:14px;color:rgba(255,255,255,0.75)}';
+    document.head.appendChild(s);
+  }
+
+  function ensureCsatUi() {
+    injectCsatStyles();
+    let el = $('supportChatCsat');
+    if (el) return el;
+    const chat = $('supportChatView');
+    const compose = $('supportChatCompose');
+    if (!chat || !compose) return null;
+    el = document.createElement('div');
+    el.id = 'supportChatCsat';
+    el.className = 'poxy-support-csat';
+    el.hidden = true;
+    chat.insertBefore(el, compose);
+    return el;
+  }
+
+  function hideCsatUi() {
+    const el = $('supportChatCsat');
+    if (el) el.hidden = true;
+    requestAnimationFrame(relayoutSupportChat);
+  }
+
+  function renderCsatForm() {
+    const el = ensureCsatUi();
+    if (!el) return;
+    csatSelectedRating = 0;
+    el.hidden = false;
+    el.innerHTML =
+      '<p class="poxy-support-csat-title">Как мы справились?</p>' +
+      '<div class="poxy-support-csat-stars" id="supportCsatStars" role="group" aria-label="Rate support">' +
+      [1, 2, 3, 4, 5].map(function (n) {
+        return '<button type="button" class="poxy-support-csat-star" data-rating="' + n + '" onclick="selectSupportCsatStar(' + n + ')" aria-label="' + n + ' stars">' + CSAT_EMOJI[n] + '</button>';
+      }).join('') +
+      '</div>' +
+      '<textarea class="poxy-support-csat-comment" id="supportCsatComment" rows="2" maxlength="500" placeholder="Оставить комментарий…"></textarea>' +
+      '<button type="button" class="poxy-support-csat-submit" id="supportCsatSubmit" onclick="submitSupportCsat()" disabled>Отправить оценку</button>';
+    requestAnimationFrame(relayoutSupportChat);
+  }
+
+  function renderCsatThanks() {
+    const el = ensureCsatUi();
+    if (!el) return;
+    el.hidden = false;
+    el.innerHTML = '<p class="poxy-support-csat-thanks">Спасибо за оценку! ⭐</p>';
+    requestAnimationFrame(relayoutSupportChat);
+  }
+
+  function renderCsatWait(minutesLeft) {
+    const el = ensureCsatUi();
+    if (!el) return;
+    el.hidden = false;
+    el.innerHTML = '<p class="poxy-support-csat-wait">Оценку можно оставить через ' + minutesLeft + ' мин</p>';
+    requestAnimationFrame(relayoutSupportChat);
+  }
+
+  global.selectSupportCsatStar = function selectSupportCsatStar(n) {
+    csatSelectedRating = n;
+    document.querySelectorAll('.poxy-support-csat-star').forEach(function (btn) {
+      const r = parseInt(btn.dataset.rating, 10);
+      btn.classList.toggle('is-active', r <= n);
+    });
+    const submit = $('supportCsatSubmit');
+    if (submit) submit.disabled = !n;
+  };
+
+  global.submitSupportCsat = async function submitSupportCsat() {
+    if (!activeTicket || !csatSelectedRating) {
+      toast('Выбери оценку от 1 до 5.');
+      return;
+    }
+    const btn = $('supportCsatSubmit');
+    const comment = ($('supportCsatComment')?.value || '').trim();
+    if (btn) btn.disabled = true;
+    try {
+      const { error } = await sb().rpc('submit_ticket_rating', {
+        p_ticket_id: activeTicket.id,
+        p_rating: csatSelectedRating,
+        p_comment: comment || null,
+      });
+      if (error) throw error;
+      renderCsatThanks();
+    } catch (e) {
+      toast(e.message || 'Не удалось отправить оценку.');
+      if (btn) btn.disabled = !csatSelectedRating;
+    }
+  };
+
+  async function updateCsatPanel() {
+    if (!activeTicket || activeTicket.status !== 'closed') {
+      hideCsatUi();
+      return;
+    }
+    const closedAt = activeTicket.closed_at ? new Date(activeTicket.closed_at).getTime() : 0;
+    if (closedAt && (Date.now() - closedAt) < CSAT_WAIT_MS) {
+      const mins = Math.max(1, Math.ceil((CSAT_WAIT_MS - (Date.now() - closedAt)) / 60000));
+      renderCsatWait(mins);
+      return;
+    }
+    try {
+      const { data, error } = await sb().from('ticket_ratings')
+        .select('id')
+        .eq('ticket_id', activeTicket.id)
+        .maybeSingle();
+      if (error) throw error;
+      if (data) {
+        renderCsatThanks();
+        return;
+      }
+      renderCsatForm();
+    } catch (e) {
+      hideCsatUi();
+    }
   }
 
   global.supportBackToTickets = function supportBackToTickets() {
@@ -388,7 +553,7 @@
     list.innerHTML = '<p class="poxy-support-empty">Loading tickets…</p>';
     try {
       const { data, error } = await sb().from('support_tickets')
-        .select('id,subject,status,updated_at,created_at')
+        .select('id,subject,status,updated_at,created_at,closed_at')
         .eq('user_id', u.id)
         .order('updated_at', { ascending: false });
       if (error) throw error;
@@ -433,6 +598,7 @@
     $('supportChatMessages').innerHTML = '<p class="poxy-support-empty">Loading messages…</p>';
     clearAttachment('chat');
     await loadChatMessages(ticketId);
+    await updateCsatPanel();
     subscribeRealtime(ticketId);
   };
 
@@ -670,7 +836,10 @@
     if (client?.auth) {
       client.auth.onAuthStateChange(function (event, session) {
         if (session?.user) refreshTicketBadge();
-        else closeSupportPanel();
+        else {
+          stopPresenceTracking(false);
+          closeSupportPanel();
+        }
       });
     }
     document.addEventListener('keydown', function (e) {
