@@ -131,6 +131,54 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .os-dash-super.hidden{display:none}
 .hidden{display:none!important}
 .os-dash-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+/* ── UPDATES CENTER (Session 2) ── */
+.upd-head{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:16px}
+.upd-head h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0}
+.upd-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.upd-filter-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;letter-spacing:.04em;padding:6px 12px;text-transform:uppercase;transition:border-color .15s,color .15s,background .15s}
+.upd-filter-btn:hover{border-color:var(--amber);color:var(--adm-text)}
+.upd-filter-btn.active{background:rgba(245,158,11,.12);border-color:var(--amber);color:var(--amber)}
+.upd-section-title{color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.08em;margin:16px 0 10px;text-transform:uppercase}
+.upd-list{display:flex;flex-direction:column;gap:10px}
+.update-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .15s,box-shadow .15s}
+.update-card:hover{border-color:rgba(245,158,11,.35)}
+.update-card.type-urgent{border-left:3px solid var(--red)}
+.update-card.type-policy{border-left:3px solid var(--amber)}
+.update-card.type-mcu{border-left:3px solid #eab308}
+.update-card.type-game{border-left:3px solid var(--green)}
+.update-card.type-general{border-left:3px solid var(--cyan)}
+.update-header{align-items:center;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.update-type-badge{border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.05em;padding:2px 8px;text-transform:uppercase}
+.update-type-badge.urgent{background:rgba(239,68,68,.12);color:var(--red)}
+.update-type-badge.policy{background:rgba(245,158,11,.12);color:var(--amber)}
+.update-type-badge.mcu{background:rgba(234,179,8,.12);color:#eab308}
+.update-type-badge.game{background:rgba(34,197,94,.12);color:var(--green)}
+.update-type-badge.general{background:rgba(129,140,248,.12);color:var(--cyan)}
+.update-pin{font-size:12px}
+.update-date,.update-read-count{color:var(--muted);font-size:11px}
+.update-read-count{margin-left:auto}
+.update-title{font-size:15px;font-weight:700;line-height:1.35;margin:0 0 6px}
+.update-preview{color:var(--muted);font-size:12px;line-height:1.5;margin:0 0 12px}
+.update-card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.upd-read-by-you{color:var(--green);font-size:11px;font-weight:600}
+.upd-overlay{align-items:flex-start;backdrop-filter:blur(2px);background:rgba(0,0,0,.6);display:flex;inset:0;justify-content:center;overflow-y:auto;padding:24px 16px;position:fixed;z-index:10002}
+.upd-overlay.hidden{display:none}
+.upd-modal{background:var(--bg1);border:1px solid var(--border);border-radius:12px;box-shadow:var(--adm-shadow);max-height:90vh;overflow-y:auto;padding:20px 22px;width:min(720px,100%)}
+.upd-modal-wide{width:min(800px,100%)}
+.upd-detail-meta{align-items:center;color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:8px;margin-bottom:14px}
+.upd-detail-body{color:var(--adm-text);font-size:14px;line-height:1.65;margin:16px 0}
+.upd-detail-body h3,.upd-detail-body h4{font-size:15px;font-weight:700;margin:14px 0 8px}
+.upd-detail-body code{background:var(--bg2);border-radius:4px;font-family:var(--font-mono);font-size:12px;padding:2px 6px}
+.upd-detail-body p{margin:0 0 10px}
+.upd-confirm-list{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.upd-confirm-row{align-items:center;border-bottom:1px solid var(--border2);display:flex;font-size:12px;gap:8px;justify-content:space-between;padding:6px 0}
+.upd-confirm-row:last-child{border-bottom:none}
+.upd-confirm-pending{color:var(--muted)}
+.upd-confirm-done{color:var(--green)}
+.upd-publish-preview{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-top:12px;max-height:240px;overflow-y:auto;padding:14px}
+.upd-urgent-modal{text-align:center}
+.upd-urgent-modal h3{font-size:18px;font-weight:700;margin:0 0 8px}
+.upd-urgent-modal p{color:var(--muted);font-size:13px;margin:0 0 18px}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -832,7 +880,26 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     <div id="tab-mytasks" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>My Tasks</strong> — task list view ships in Session 3.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-messenger" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">💬</div><p><strong>Messages</strong> — internal messenger ships in Session 4.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-notes" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📝</div><p><strong>Notes</strong> — personal notes editor ships in Session 5.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-updates" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📣</div><p><strong>Updates</strong> — MCU updates center ships in Session 2.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-updates" class="tab-pane">
+      <div class="upd-head">
+        <h2>MCU Updates Center</h2>
+        <button type="button" class="btn btn-amber btn-sm hidden" id="updNewBtn" onclick="updShowPublish()">+ New update</button>
+      </div>
+      <div class="upd-filters" id="updFilters">
+        <button type="button" class="upd-filter-btn active" data-filter="all" onclick="updSetFilter('all')">All</button>
+        <button type="button" class="upd-filter-btn" data-filter="urgent" onclick="updSetFilter('urgent')">🔴 Urgent</button>
+        <button type="button" class="upd-filter-btn" data-filter="policy" onclick="updSetFilter('policy')">🟠 Policy</button>
+        <button type="button" class="upd-filter-btn" data-filter="mcu_update" onclick="updSetFilter('mcu_update')">🟡 MCU</button>
+        <button type="button" class="upd-filter-btn" data-filter="game_update" onclick="updSetFilter('game_update')">🟢 Game</button>
+        <button type="button" class="upd-filter-btn" data-filter="general" onclick="updSetFilter('general')">🔵 Info</button>
+      </div>
+      <div id="updPinnedWrap" class="hidden">
+        <div class="upd-section-title">Pinned</div>
+        <div class="upd-list" id="updPinnedList"></div>
+      </div>
+      <div class="upd-section-title" id="updAllLabel">All updates</div>
+      <div class="upd-list" id="updList"><p class="os-dash-empty">Loading…</p></div>
+    </div>
     <div id="tab-supportdash" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📊</div><p><strong>Support Dashboard</strong> — metrics &amp; heatmap ship in Session 10.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-handbook" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📖</div><p><strong>Handbook</strong> — staff guide ships in Session 9.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-syshealth" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🖥</div><p><strong>Sys Health</strong> — monitoring ships in Session 6.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
@@ -2164,6 +2231,64 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
   </div><!-- /mcu-shell -->
 </div><!-- /terminal -->
 
+<!-- UPDATES DETAIL MODAL (Session 2) -->
+<div id="updDetailModal" class="upd-overlay hidden" onclick="if(event.target===this)updCloseDetail()">
+  <div class="upd-modal upd-modal-wide card" role="dialog" onclick="event.stopPropagation()">
+    <div id="updDetailBody"><p class="os-dash-empty">Loading…</p></div>
+  </div>
+</div>
+
+<!-- UPDATES PUBLISH MODAL (Session 2) -->
+<div id="updPublishModal" class="upd-overlay hidden" onclick="if(event.target===this)updClosePublish()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" style="margin-bottom:14px">New update</div>
+    <div class="f-row">
+      <label class="f-label">Type</label>
+      <select id="updPubType" class="f-select">
+        <option value="urgent">🔴 Urgent</option>
+        <option value="policy">🟠 Policy</option>
+        <option value="mcu_update">🟡 MCU update</option>
+        <option value="game_update">🟢 Game update</option>
+        <option value="general" selected>🔵 General / Info</option>
+      </select>
+    </div>
+    <div class="f-row">
+      <label class="f-label">Title</label>
+      <input id="updPubTitle" class="f-input" type="text" placeholder="Update title"/>
+    </div>
+    <div class="f-row">
+      <label class="f-label">Body (markdown)</label>
+      <textarea id="updPubBody" class="f-textarea mono" rows="8" placeholder="# Heading&#10;&#10;**Bold** text…"></textarea>
+    </div>
+    <div class="f-row row-flex">
+      <label class="toggle-wrap"><span class="toggle"><input type="checkbox" id="updPubPin"/><span class="toggle-slider"></span></span><span class="toggle-label">Pin to top</span></label>
+      <label class="toggle-wrap"><span class="toggle"><input type="checkbox" id="updPubConfirm"/><span class="toggle-slider"></span></span><span class="toggle-label">Requires confirmation from all staff</span></label>
+    </div>
+    <div id="updPubPreviewWrap" class="upd-publish-preview hidden">
+      <div class="card-title" style="margin-bottom:8px">Preview</div>
+      <div id="updPubPreview" class="upd-detail-body"></div>
+    </div>
+    <div class="row-flex" style="margin-top:14px">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="updTogglePreview()">Preview</button>
+      <button type="button" class="btn btn-amber btn-sm" onclick="updPublish()">Publish</button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="updClosePublish()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- URGENT UPDATES REMINDER (Session 2) -->
+<div id="updUrgentModal" class="upd-overlay hidden" onclick="if(event.target===this)updSnoozeUrgent()">
+  <div class="upd-modal upd-urgent-modal card" role="alertdialog" onclick="event.stopPropagation()">
+    <div style="font-size:36px;margin-bottom:8px">⚠️</div>
+    <h3>Unread urgent updates</h3>
+    <p id="updUrgentMsg">You have unread urgent updates that require your attention.</p>
+    <div class="row-flex" style="justify-content:center">
+      <button type="button" class="btn btn-amber btn-sm" onclick="updGoToUpdates()">Go to updates</button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="updSnoozeUrgent()">Remind later</button>
+    </div>
+  </div>
+</div>
+
 <!-- STAFF PROFILE MODAL (Session D) -->
 <div id="rolesStaffModal" class="roles-staff-overlay hidden" onclick="if(event.target===this)rolesCloseStaffProfile()">
   <div class="roles-staff-card card" role="dialog" aria-labelledby="rolesStaffModalTitle" onclick="event.stopPropagation()">
@@ -2553,6 +2678,7 @@ function osInitChrome(){
   _osUnreadTimer = setInterval(refreshUnreadCounts, 30000);
   osInitShiftStatus();
   osDashLoad();
+  updCheckUrgentReminder();
 }
 
 async function osDashLoad(){
@@ -2688,6 +2814,379 @@ async function osDashLoad(){
   }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// UPDATES CENTER (Session 2)
+// ═══════════════════════════════════════════════════════════════
+
+const UPD_TYPE_META = {
+  urgent:      { label: 'URGENT', filter: '🔴 URGENT', cls: 'urgent', card: 'type-urgent' },
+  policy:      { label: 'POLICY', filter: '🟠 POLICY', cls: 'policy', card: 'type-policy' },
+  mcu_update:  { label: 'MCU UPDATE', filter: '🟡 MCU', cls: 'mcu', card: 'type-mcu' },
+  game_update: { label: 'GAME', filter: '🟢 GAME', cls: 'game', card: 'type-game' },
+  general:     { label: 'INFO', filter: '🔵 INFO', cls: 'general', card: 'type-general' },
+};
+
+let _updList = [];
+let _updFilter = 'all';
+let _updTeamMembers = [];
+let _updProfMap = {};
+let _updCurrentUserId = null;
+let _updCanPublish = false;
+let _updActiveId = null;
+
+function updCanPublishRole(role){
+  const r = osNormalizeRole(role);
+  return r === 'superadmin' || r === 'mod';
+}
+
+function updTypeMeta(type){
+  return UPD_TYPE_META[type] || UPD_TYPE_META.general;
+}
+
+function updRenderMarkdown(text){
+  if(!text) return '';
+  let s = esc(text);
+  s = s.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+  s = s.replace(/^## (.+)$/gm, '<h4>$1</h4>');
+  s = s.replace(/^# (.+)$/gm, '<h3>$1</h3>');
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+  s = s.replace(/\n\n/g, '</p><p>');
+  s = s.replace(/\n/g, '<br>');
+  return '<p>' + s + '</p>';
+}
+
+function updFmtDate(ts){
+  if(!ts) return '—';
+  const d = new Date(ts);
+  return isNaN(d.getTime()) ? '—' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function updFmtDateTime(ts){
+  if(!ts) return '—';
+  const d = new Date(ts);
+  return isNaN(d.getTime()) ? '—' : d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function updGetReadState(update){
+  const reads = update.mcu_update_reads || [];
+  const mine = reads.find(r => r.staff_id === _updCurrentUserId);
+  const staffTotal = _updTeamMembers.filter(m => m.profile_id).length;
+  const confirmed = reads.filter(r => r.confirmed).length;
+  return { reads, mine, staffTotal, confirmed };
+}
+
+function updRenderCard(u){
+  const meta = updTypeMeta(u.type);
+  const { mine, staffTotal, confirmed } = updGetReadState(u);
+  const author = _updProfMap[u.published_by] ? '@' + _updProfMap[u.published_by] : 'staff';
+  const preview = (u.body || '').replace(/\n/g, ' ').slice(0, 120) + ((u.body || '').length > 120 ? '…' : '');
+  let readHtml = '';
+  if(u.requires_confirmation && staffTotal > 0){
+    readHtml = `<span class="update-read-count">✅ ${confirmed}/${staffTotal} confirmed</span>`;
+  }else if(mine){
+    readHtml = `<span class="upd-read-by-you">✓ Read by you</span>`;
+  }
+  const needsConfirm = u.requires_confirmation && (!mine || !mine.confirmed);
+  const btnLabel = needsConfirm ? 'Read & confirm →' : 'Read →';
+  return (
+    `<div class="update-card ${meta.card}" data-id="${u.id}">` +
+      `<div class="update-header">` +
+        `<span class="update-type-badge ${meta.cls}">${meta.filter}</span>` +
+        (u.is_pinned ? '<span class="update-pin">📌</span>' : '') +
+        (u.requires_confirmation ? '<span class="update-read-count" style="color:var(--amber)">Requires confirmation</span>' : '') +
+        `<span class="update-date">${updFmtDate(u.created_at)} · ${esc(author)}</span>` +
+        readHtml +
+      `</div>` +
+      `<h3 class="update-title">${esc(u.title)}</h3>` +
+      `<p class="update-preview">${esc(preview)}</p>` +
+      `<div class="update-card-actions">` +
+        `<button type="button" class="btn btn-amber btn-sm" onclick="updOpenDetail('${u.id}')">${btnLabel}</button>` +
+      `</div>` +
+    `</div>`
+  );
+}
+
+function updFilterList(list){
+  if(_updFilter === 'all') return list;
+  return list.filter(u => u.type === _updFilter);
+}
+
+function updRenderLists(){
+  const pinnedWrap = document.getElementById('updPinnedWrap');
+  const pinnedList = document.getElementById('updPinnedList');
+  const allList = document.getElementById('updList');
+  const allLabel = document.getElementById('updAllLabel');
+  if(!allList) return;
+
+  const filtered = updFilterList(_updList);
+  const pinned = filtered.filter(u => u.is_pinned);
+  const rest = filtered.filter(u => !u.is_pinned);
+
+  if(pinnedWrap && pinnedList){
+    pinnedWrap.classList.toggle('hidden', !pinned.length);
+    pinnedList.innerHTML = pinned.length ? pinned.map(updRenderCard).join('') : '';
+  }
+  if(allLabel) allLabel.textContent = pinned.length ? 'All updates' : (_updFilter === 'all' ? 'All updates' : 'Filtered updates');
+  if(!rest.length && !pinned.length){
+    allList.innerHTML = '<p class="os-dash-empty">No updates in this category</p>';
+  }else{
+    allList.innerHTML = rest.length ? rest.map(updRenderCard).join('') : '<p class="os-dash-empty">No more updates</p>';
+  }
+}
+
+function updSetFilter(filter){
+  _updFilter = filter;
+  document.querySelectorAll('.upd-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === filter);
+  });
+  updRenderLists();
+}
+
+async function updLoadTeam(){
+  try{
+    const { data, error } = await sb.rpc('get_team_members');
+    if(error) throw error;
+    _updTeamMembers = data || [];
+    const ids = _updTeamMembers.map(m => m.profile_id).filter(Boolean);
+    if(ids.length){
+      const { data: profs } = await sb.from('profiles').select('id, username').in('id', ids);
+      (profs || []).forEach(p => { _updProfMap[p.id] = p.username; });
+    }
+  }catch(err){
+    console.warn('[UPD] updLoadTeam:', err.message);
+  }
+}
+
+async function updLoadUpdates(){
+  const listEl = document.getElementById('updList');
+  if(listEl) listEl.innerHTML = '<p class="os-dash-empty">Loading…</p>';
+  try{
+    const { data, error } = await sb.from('mcu_updates')
+      .select('*, mcu_update_reads(staff_id, confirmed, confirmed_at, read_at)')
+      .order('is_pinned', { ascending: false })
+      .order('created_at', { ascending: false });
+    if(error) throw error;
+    _updList = data || [];
+    const pubIds = [...new Set(_updList.map(u => u.published_by).filter(Boolean))];
+    if(pubIds.length){
+      const { data: profs } = await sb.from('profiles').select('id, username').in('id', pubIds);
+      (profs || []).forEach(p => { _updProfMap[p.id] = p.username; });
+    }
+    updRenderLists();
+  }catch(err){
+    if(listEl) listEl.innerHTML = '<p class="os-dash-empty" style="color:var(--red)">' + esc(err.message) + '</p>';
+  }
+}
+
+async function updTabEnter(){
+  try{
+    const [{ data: { user } }, roleRes] = await Promise.all([
+      sb.auth.getUser(),
+      sb.rpc('get_admin_role'),
+    ]);
+    _updCurrentUserId = user?.id || null;
+    _updCanPublish = updCanPublishRole(roleRes.data);
+    const newBtn = document.getElementById('updNewBtn');
+    if(newBtn) newBtn.classList.toggle('hidden', !_updCanPublish);
+    await updLoadTeam();
+    await updLoadUpdates();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function updMarkRead(updateId, confirm){
+  if(!_updCurrentUserId) return;
+  if(confirm){
+    const { error } = await sb.rpc('confirm_update_read', { p_update_id: updateId });
+    if(error) throw error;
+  }else{
+    const { error } = await sb.from('mcu_update_reads').upsert({
+      update_id: updateId,
+      staff_id: _updCurrentUserId,
+      read_at: new Date().toISOString(),
+      confirmed: false,
+    }, { onConflict: 'update_id,staff_id' });
+    if(error) throw error;
+  }
+}
+
+function updBuildConfirmList(update){
+  const { reads } = updGetReadState(update);
+  const readMap = {};
+  reads.forEach(r => { readMap[r.staff_id] = r; });
+  const staff = _updTeamMembers.filter(m => m.profile_id);
+  if(!staff.length) return '<p class="os-dash-empty">No staff profiles registered</p>';
+  return staff.map(m => {
+    const r = readMap[m.profile_id];
+    const un = _updProfMap[m.profile_id] || (m.email || 'staff').split('@')[0];
+    if(r?.confirmed){
+      return `<div class="upd-confirm-row"><span class="upd-confirm-done">✅ @${esc(un)}</span><span>${updFmtDateTime(r.confirmed_at || r.read_at)}</span></div>`;
+    }
+    if(r){
+      return `<div class="upd-confirm-row"><span class="upd-confirm-pending">⏳ @${esc(un)}</span><span>read, not confirmed</span></div>`;
+    }
+    return `<div class="upd-confirm-row"><span class="upd-confirm-pending">⏳ @${esc(un)}</span><span>not confirmed</span></div>`;
+  }).join('');
+}
+
+async function updOpenDetail(id){
+  const update = _updList.find(u => u.id === id);
+  if(!update) return;
+  _updActiveId = id;
+  const modal = document.getElementById('updDetailModal');
+  const body = document.getElementById('updDetailBody');
+  if(!modal || !body) return;
+  modal.classList.remove('hidden');
+  const meta = updTypeMeta(update.type);
+  const author = _updProfMap[update.published_by] ? '@' + _updProfMap[update.published_by] : 'staff';
+  const { mine } = updGetReadState(update);
+  const showConfirm = update.requires_confirmation && (!mine || !mine.confirmed);
+  const confirmedYou = mine?.confirmed;
+
+  body.innerHTML = (
+    `<div class="upd-detail-meta">` +
+      `<span class="update-type-badge ${meta.cls}">${meta.filter}</span>` +
+      (update.is_pinned ? '<span>📌 Pinned</span>' : '') +
+      (update.requires_confirmation ? '<span style="color:var(--amber)">Requires confirmation</span>' : '') +
+    `</div>` +
+    `<h2 style="font-size:20px;font-weight:700;margin:0 0 8px">${esc(update.title)}</h2>` +
+    `<div class="upd-detail-meta">${updFmtDate(update.created_at)} · Published by ${esc(author)}</div>` +
+    `<div class="upd-detail-body">${updRenderMarkdown(update.body)}</div>` +
+    `<div class="sep"></div>` +
+    `<div class="card-title" style="margin-bottom:8px">Read confirmations</div>` +
+    `<div class="upd-confirm-list">${updBuildConfirmList(update)}</div>` +
+    `<div class="row-flex" style="margin-top:16px">` +
+      (showConfirm ? `<button type="button" class="btn btn-amber btn-sm" id="updConfirmBtn" onclick="updConfirmRead('${id}')">✓ Confirm read</button>` : '') +
+      (confirmedYou ? `<span class="upd-read-by-you">✅ You confirmed reading</span>` : '') +
+      (!update.requires_confirmation && mine ? `<span class="upd-read-by-you">✓ You read this update</span>` : '') +
+      `<button type="button" class="btn btn-ghost btn-sm" onclick="updCloseDetail()">Close</button>` +
+    `</div>`
+  );
+
+  try{
+    await updMarkRead(id, false);
+    const idx = _updList.findIndex(u => u.id === id);
+    if(idx >= 0){
+      const reads = _updList[idx].mcu_update_reads || [];
+      if(!reads.some(r => r.staff_id === _updCurrentUserId)){
+        reads.push({ staff_id: _updCurrentUserId, confirmed: false, read_at: new Date().toISOString() });
+        _updList[idx].mcu_update_reads = reads;
+      }
+    }
+  }catch(err){
+    console.warn('[UPD] mark read:', err.message);
+  }
+}
+
+function updCloseDetail(){
+  document.getElementById('updDetailModal')?.classList.add('hidden');
+  _updActiveId = null;
+}
+
+async function updConfirmRead(id){
+  try{
+    await updMarkRead(id, true);
+    toast('READ CONFIRMED');
+    await updLoadUpdates();
+    refreshUnreadCounts();
+    updOpenDetail(id);
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function updShowPublish(){
+  if(!_updCanPublish){ toast('Publish: superadmin/mod only', 'err'); return; }
+  document.getElementById('updPubType').value = 'general';
+  document.getElementById('updPubTitle').value = '';
+  document.getElementById('updPubBody').value = '';
+  document.getElementById('updPubPin').checked = false;
+  document.getElementById('updPubConfirm').checked = false;
+  document.getElementById('updPubPreviewWrap')?.classList.add('hidden');
+  document.getElementById('updPublishModal')?.classList.remove('hidden');
+}
+
+function updClosePublish(){
+  document.getElementById('updPublishModal')?.classList.add('hidden');
+  document.getElementById('updPubPreviewWrap')?.classList.add('hidden');
+}
+
+function updTogglePreview(){
+  const wrap = document.getElementById('updPubPreviewWrap');
+  const prev = document.getElementById('updPubPreview');
+  const body = document.getElementById('updPubBody')?.value || '';
+  if(!wrap || !prev) return;
+  const show = wrap.classList.contains('hidden');
+  if(show){
+    prev.innerHTML = updRenderMarkdown(body);
+    wrap.classList.remove('hidden');
+  }else{
+    wrap.classList.add('hidden');
+  }
+}
+
+async function updPublish(){
+  if(!_updCanPublish){ toast('Publish: superadmin/mod only', 'err'); return; }
+  const title = document.getElementById('updPubTitle')?.value?.trim();
+  const body = document.getElementById('updPubBody')?.value?.trim();
+  const type = document.getElementById('updPubType')?.value || 'general';
+  const is_pinned = !!document.getElementById('updPubPin')?.checked;
+  const requires_confirmation = !!document.getElementById('updPubConfirm')?.checked;
+  if(!title || !body){ toast('TITLE AND BODY REQUIRED', 'err'); return; }
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('mcu_updates').insert({
+      title, body, type, is_pinned, requires_confirmation,
+      published_by: user?.id || null,
+    });
+    if(error) throw error;
+    updClosePublish();
+    toast('UPDATE PUBLISHED');
+    await updLoadUpdates();
+    refreshUnreadCounts();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function updCheckUrgentReminder(){
+  try{
+    const snooze = parseInt(localStorage.getItem('poxy-upd-urgent-snooze') || '0', 10);
+    if(snooze && Date.now() < snooze) return;
+    const { data: { user } } = await sb.auth.getUser();
+    if(!user) return;
+    const { data, error } = await sb.from('mcu_updates')
+      .select('id, title, mcu_update_reads(staff_id)')
+      .eq('type', 'urgent');
+    if(error) throw error;
+    const unread = (data || []).filter(u =>
+      !(u.mcu_update_reads || []).some(r => r.staff_id === user.id)
+    );
+    if(!unread.length) return;
+    const msg = document.getElementById('updUrgentMsg');
+    if(msg){
+      const titles = unread.slice(0, 2).map(u => '«' + u.title + '»').join(', ');
+      msg.textContent = `You have ${unread.length} unread urgent update${unread.length === 1 ? '' : 's'}: ${titles}${unread.length > 2 ? '…' : ''}`;
+    }
+    document.getElementById('updUrgentModal')?.classList.remove('hidden');
+  }catch(err){
+    console.warn('[UPD] urgent reminder:', err.message);
+  }
+}
+
+function updSnoozeUrgent(){
+  try{ localStorage.setItem('poxy-upd-urgent-snooze', String(Date.now() + 3600000)); }catch(e){}
+  document.getElementById('updUrgentModal')?.classList.add('hidden');
+}
+
+function updGoToUpdates(){
+  document.getElementById('updUrgentModal')?.classList.add('hidden');
+  switchTab('updates');
+}
+
 function syncThemeToggleUI(){
   const theme = document.documentElement.getAttribute('data-theme') || 'dark';
   const isDark = theme !== 'light';
@@ -2733,6 +3232,7 @@ function switchTab(id){
   if(navBtn) navBtn.classList.add('active');
   setMcuHeader(id);
   if(id==='os-dash')   { osDashLoad(); }
+  if(id==='updates')   { updTabEnter(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
@@ -6073,6 +6573,24 @@ function mcuOnKeydown(e){
     if(staffModalOpen){
       e.preventDefault();
       rolesCloseStaffProfile();
+      return;
+    }
+    const updDetailOpen = !document.getElementById('updDetailModal')?.classList.contains('hidden');
+    if(updDetailOpen){
+      e.preventDefault();
+      updCloseDetail();
+      return;
+    }
+    const updPubOpen = !document.getElementById('updPublishModal')?.classList.contains('hidden');
+    if(updPubOpen){
+      e.preventDefault();
+      updClosePublish();
+      return;
+    }
+    const updUrgentOpen = !document.getElementById('updUrgentModal')?.classList.contains('hidden');
+    if(updUrgentOpen){
+      e.preventDefault();
+      updSnoozeUrgent();
       return;
     }
     if(overlayOpen){
