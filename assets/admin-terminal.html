@@ -306,6 +306,40 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .nts-preview-pane h3,.nts-preview-pane h4{font-family:'Syne',sans-serif;margin:12px 0 8px}
 .nts-preview-pane code{background:var(--bg2);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:1px 5px}
 .nts-preview-pane p{margin:0 0 10px}
+/* ── SYS HEALTH (Session 6) ── */
+#tab-syshealth.tab-pane{max-width:none;padding:16px 20px;width:100%}
+.hlth-wrap{display:flex;flex-direction:column;gap:0}
+.hlth-card-head{align-items:center;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-bottom:14px}
+.hlth-head-meta{align-items:center;color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:10px}
+.hlth-auto-label{color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.hlth-status-grid{display:flex;flex-direction:column;gap:8px}
+.hlth-status-row{align-items:center;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;display:grid;gap:8px;grid-template-columns:minmax(0,1fr) auto auto;padding:10px 14px}
+.hlth-status-name{align-items:center;display:flex;font-size:13px;font-weight:600;gap:8px;min-width:0}
+.hlth-status-dot{border-radius:50%;flex-shrink:0;height:8px;width:8px}
+.hlth-status-dot.online{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.45)}
+.hlth-status-dot.degraded{background:var(--amber)}
+.hlth-status-dot.offline{background:var(--red)}
+.hlth-status-badge{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.hlth-status-badge.online{color:var(--green)}
+.hlth-status-badge.degraded{color:var(--amber)}
+.hlth-status-badge.offline{color:var(--red)}
+.hlth-status-meta{color:var(--muted);font-size:11px;text-align:right;white-space:nowrap}
+.hlth-perf-grid{display:grid;gap:10px;grid-template-columns:repeat(3,1fr)}
+.hlth-perf-stat{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px;text-align:center}
+.hlth-perf-val{display:block;font-size:20px;font-weight:700;line-height:1.1}
+.hlth-perf-lbl{color:var(--muted);display:block;font-size:9px;font-weight:700;letter-spacing:.06em;margin-top:6px;text-transform:uppercase}
+.hlth-bar-row{align-items:center;display:grid;gap:10px;grid-template-columns:110px 1fr 72px;margin-bottom:10px}
+.hlth-bar-row:last-child{margin-bottom:0}
+.hlth-bar-label{color:var(--muted);font-size:11px;font-weight:600}
+.hlth-bar-track{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;height:10px;overflow:hidden}
+.hlth-bar-fill{background:linear-gradient(90deg,rgba(245,158,11,.55),var(--amber));border-radius:6px;height:100%;min-width:2px;transition:width .4s ease}
+.hlth-bar-val{color:var(--adm-text);font-family:var(--font-mono);font-size:10px;text-align:right}
+.hlth-error-row{border-bottom:1px solid var(--border2);font-size:12px;padding:10px 0}
+.hlth-error-row:last-child{border-bottom:none;padding-bottom:0}
+.hlth-error-time{color:var(--muted);font-size:10px;margin-bottom:3px}
+.hlth-error-msg{color:var(--red);line-height:1.45}
+.hlth-ok-msg{align-items:center;color:var(--green);display:flex;font-size:13px;font-weight:600;gap:8px;padding:8px 0}
+@media(max-width:900px){.hlth-perf-grid{grid-template-columns:1fr}.hlth-status-row{grid-template-columns:1fr;gap:4px}.hlth-status-meta{text-align:left}}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -1185,7 +1219,41 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div>
     <div id="tab-supportdash" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📊</div><p><strong>Support Dashboard</strong> — metrics &amp; heatmap ship in Session 10.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-handbook" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📖</div><p><strong>Handbook</strong> — staff guide ships in Session 9.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-syshealth" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🖥</div><p><strong>Sys Health</strong> — monitoring ships in Session 6.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-syshealth" class="tab-pane" data-poxy-module="sys-health">
+      <div class="hlth-wrap">
+        <div class="card">
+          <div class="hlth-card-head">
+            <div class="card-title" style="margin:0">Live status</div>
+            <div class="hlth-head-meta">
+              <span id="hlthLastChecked">Last checked: —</span>
+              <button type="button" class="btn btn-ghost btn-sm" id="hlthRefreshBtn" onclick="hlthCheckHealth(true)">Refresh</button>
+              <span class="hlth-auto-label">Auto: every 60s</span>
+            </div>
+          </div>
+          <div class="hlth-status-grid" id="hlthStatusGrid">
+            <p class="os-dash-empty">Running health check…</p>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Performance</div>
+            <div class="hlth-perf-grid" id="hlthPerfGrid">
+              <div class="hlth-perf-stat"><span class="hlth-perf-val" id="hlthRpcToday">—</span><span class="hlth-perf-lbl">RPC calls today</span></div>
+              <div class="hlth-perf-stat"><span class="hlth-perf-val" id="hlthErrRate">—</span><span class="hlth-perf-lbl">Error rate 1h</span></div>
+              <div class="hlth-perf-stat"><span class="hlth-perf-val" id="hlthAvgLatency">—</span><span class="hlth-perf-lbl">Avg response</span></div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Storage breakdown</div>
+            <div id="hlthStorageBars"><p class="os-dash-empty">Measuring storage…</p></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Recent errors</div>
+          <div id="hlthErrorsList"><p class="os-dash-empty">Checking…</p></div>
+        </div>
+      </div>
+    </div>
     <div id="tab-changelog" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>Changelog</strong> — release notes ship in Session 11.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-campaigns" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🚀</div><p><strong>Campaigns</strong> — marketing module ships in Session 7.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-calendar" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📅</div><p><strong>Content Calendar</strong> — ships in Session 7.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
@@ -4951,6 +5019,333 @@ function ntsTabLeave(){
 }
 
 // ═══════════════════════════════════════════════════════════════
+// SYSTEM HEALTH (Session 6)
+// ═══════════════════════════════════════════════════════════════
+
+const HLTH_EDGE_FN_COUNT = 17;
+const HLTH_STORAGE_QUOTA_GB = 5;
+const HLTH_STORAGE_BUCKETS = [
+  { id: 'avatars', label: 'avatars' },
+  { id: 'support-attachments', label: 'support-attachments' },
+  { id: 'assets', label: 'assets' },
+];
+const HLTH_VERCEL_DEPLOY_KEY = 'poxy-mcu-vercel-deploy';
+
+let _hlthInterval = null;
+let _hlthChecking = false;
+let _hlthLastDeployAt = null;
+
+function hlthFmtBytes(bytes){
+  if(!bytes || bytes < 1) return '0 B';
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  if(bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+}
+
+function hlthFmtAgo(iso){
+  if(!iso) return '—';
+  const ms = Date.now() - new Date(iso).getTime();
+  if(ms < 60000) return 'just now';
+  if(ms < 3600000) return Math.floor(ms / 60000) + 'm ago';
+  if(ms < 86400000) return Math.floor(ms / 3600000) + 'h ago';
+  return Math.floor(ms / 86400000) + 'd ago';
+}
+
+function hlthFmtTime(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  return isNaN(d.getTime()) ? '—' : d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function hlthStatusRow(name, state, meta){
+  const cls = state === 'online' ? 'online' : (state === 'degraded' ? 'degraded' : 'offline');
+  const label = state === 'online' ? 'ONLINE' : (state === 'degraded' ? 'DEGRADED' : 'OFFLINE');
+  return `<div class="hlth-status-row">
+    <div class="hlth-status-name"><span class="hlth-status-dot ${cls}"></span>${esc(name)}</div>
+    <span class="hlth-status-badge ${cls}">${label}</span>
+    <span class="hlth-status-meta">${esc(meta || '—')}</span>
+  </div>`;
+}
+
+function hlthRenderStatus(rows){
+  const box = document.getElementById('hlthStatusGrid');
+  if(box) box.innerHTML = rows.join('');
+}
+
+function hlthRenderStorageBars(breakdown, totalBytes){
+  const box = document.getElementById('hlthStorageBars');
+  if(!box) return;
+  const quotaBytes = HLTH_STORAGE_QUOTA_GB * 1024 * 1024 * 1024;
+  const maxBar = Math.max(quotaBytes, totalBytes, 1);
+  const rows = HLTH_STORAGE_BUCKETS.map(b => {
+    const bytes = breakdown[b.id] || 0;
+    const pct = Math.min(100, Math.round((bytes / maxBar) * 100));
+    return `<div class="hlth-bar-row">
+      <span class="hlth-bar-label">${esc(b.label)}</span>
+      <div class="hlth-bar-track"><div class="hlth-bar-fill" style="width:${pct}%"></div></div>
+      <span class="hlth-bar-val">${hlthFmtBytes(bytes)}</span>
+    </div>`;
+  }).join('');
+  const totalGb = (totalBytes / (1024 * 1024 * 1024)).toFixed(2);
+  box.innerHTML = rows + `<p style="font-size:11px;color:var(--muted);margin-top:8px">Total: ${totalGb} GB / ${HLTH_STORAGE_QUOTA_GB} GB</p>`;
+}
+
+async function hlthSumBucket(bucket, prefix, depth){
+  if(depth > 4) return 0;
+  let total = 0;
+  const { data, error } = await sb.storage.from(bucket).list(prefix, { limit: 200 });
+  if(error) throw error;
+  for(const item of (data || [])){
+    const path = prefix ? prefix + '/' + item.name : item.name;
+    if(item.id === null){
+      total += await hlthSumBucket(bucket, path, depth + 1);
+    }else{
+      total += item.metadata?.size || 0;
+    }
+  }
+  return total;
+}
+
+async function hlthProbeStorage(){
+  const breakdown = {};
+  let totalBytes = 0;
+  const errors = [];
+  for(const b of HLTH_STORAGE_BUCKETS){
+    try{
+      const bytes = await hlthSumBucket(b.id, '', 0);
+      breakdown[b.id] = bytes;
+      totalBytes += bytes;
+    }catch(err){
+      breakdown[b.id] = 0;
+      errors.push(b.label + ': ' + (err.message || 'unavailable'));
+    }
+  }
+  const state = errors.length === HLTH_STORAGE_BUCKETS.length ? 'offline' : (errors.length ? 'degraded' : 'online');
+  return {
+    state,
+    totalBytes,
+    breakdown,
+    meta: hlthFmtBytes(totalBytes) + ' / ' + HLTH_STORAGE_QUOTA_GB + ' GB',
+    errors,
+  };
+}
+
+async function hlthProbeDb(){
+  const start = Date.now();
+  const { error } = await sb.from('profiles').select('id').limit(1);
+  const latency = Date.now() - start;
+  return {
+    state: error ? 'offline' : 'online',
+    latency,
+    meta: latency + 'ms latency',
+    error: error?.message || null,
+  };
+}
+
+async function hlthProbeEdge(){
+  const url = SUPABASE_URL + '/functions/v1/public_verify';
+  try{
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': 'Bearer ' + SUPABASE_ANON,
+      },
+      body: '{}',
+    });
+    const state = res.status < 500 ? 'online' : 'degraded';
+    return {
+      state,
+      meta: HLTH_EDGE_FN_COUNT + ' deployed',
+      error: res.status >= 500 ? 'HTTP ' + res.status : null,
+    };
+  }catch(err){
+    return { state: 'offline', meta: 'Unreachable', error: err.message || 'Edge probe failed' };
+  }
+}
+
+async function hlthProbeVercel(){
+  const start = Date.now();
+  try{
+    const res = await fetch(window.location.origin + '/', { method: 'HEAD', cache: 'no-store' });
+    const latency = Date.now() - start;
+    const lm = res.headers.get('last-modified');
+    if(lm){
+      _hlthLastDeployAt = lm;
+      try{ localStorage.setItem(HLTH_VERCEL_DEPLOY_KEY, lm); }catch(e){}
+    }
+    const deployAgo = _hlthLastDeployAt ? hlthFmtAgo(_hlthLastDeployAt) : 'session active';
+    return {
+      state: res.ok ? 'online' : 'degraded',
+      meta: 'Last deploy: ' + deployAgo,
+      error: res.ok ? null : 'HTTP ' + res.status,
+    };
+  }catch(err){
+    return { state: 'offline', meta: 'Unreachable', error: err.message || 'Vercel probe failed' };
+  }
+}
+
+function hlthProbeRealtime(){
+  let count = 0;
+  try{
+    const ch = sb.realtime?.channels;
+    if(Array.isArray(ch)) count = ch.length;
+    else if(ch && typeof ch === 'object') count = Object.keys(ch).length;
+  }catch(e){}
+  return {
+    state: 'online',
+    count: Math.max(count, 1),
+    meta: Math.max(count, 1) + ' connections',
+  };
+}
+
+async function hlthLoadPerfMetrics(insertLatency){
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const hourAgo = new Date(Date.now() - 3600000).toISOString();
+  let rpcToday = 0;
+  let errRate = 0;
+  let avgLatency = insertLatency || 0;
+  try{
+    const { count } = await sb.from('poxy_audit_log').select('*', { count: 'exact', head: true }).gte('created_at', todayStart.toISOString());
+    if(count != null) rpcToday = count;
+  }catch(e){}
+  if(!rpcToday){
+    try{
+      const { count } = await sb.from('system_health_log').select('*', { count: 'exact', head: true }).gte('checked_at', todayStart.toISOString());
+      if(count != null) rpcToday = count;
+    }catch(e){}
+  }
+  try{
+    const { data } = await sb.from('system_health_log')
+      .select('supabase_latency_ms, notes')
+      .gte('checked_at', hourAgo)
+      .order('checked_at', { ascending: false })
+      .limit(60);
+    const rows = data || [];
+    if(rows.length){
+      const latencies = rows.map(r => r.supabase_latency_ms).filter(n => typeof n === 'number' && n >= 0);
+      if(latencies.length) avgLatency = Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length);
+      const errs = rows.filter(r => r.notes).length;
+      errRate = rows.length ? +(errs / rows.length).toFixed(3) : 0;
+    }
+  }catch(e){}
+  const rpcEl = document.getElementById('hlthRpcToday');
+  const errEl = document.getElementById('hlthErrRate');
+  const latEl = document.getElementById('hlthAvgLatency');
+  if(rpcEl) rpcEl.textContent = String(rpcToday);
+  if(errEl) errEl.textContent = (errRate * 100).toFixed(1) + '%';
+  if(latEl) latEl.textContent = avgLatency + 'ms';
+  return { rpcToday, errRate, avgLatency };
+}
+
+async function hlthLoadRecentErrors(sessionErrors){
+  const box = document.getElementById('hlthErrorsList');
+  if(!box) return;
+  const items = (sessionErrors || []).map(e => ({
+    at: e.at,
+    msg: e.msg,
+  }));
+  try{
+    const { data } = await sb.from('system_health_log')
+      .select('checked_at, notes')
+      .not('notes', 'is', null)
+      .order('checked_at', { ascending: false })
+      .limit(12);
+    (data || []).forEach(row => {
+      if(row.notes){
+        items.push({ at: row.checked_at, msg: row.notes });
+      }
+    });
+  }catch(e){}
+  const seen = new Set();
+  const unique = [];
+  items.forEach(it => {
+    const key = (it.at || '') + '|' + (it.msg || '');
+    if(seen.has(key)) return;
+    seen.add(key);
+    unique.push(it);
+  });
+  if(!unique.length){
+    box.innerHTML = '<div class="hlth-ok-msg">✓ No errors</div>';
+    return;
+  }
+  box.innerHTML = unique.slice(0, 10).map(it =>
+    `<div class="hlth-error-row"><div class="hlth-error-time">${esc(hlthFmtTime(it.at))} · ${esc(hlthFmtAgo(it.at))}</div><div class="hlth-error-msg">${esc(it.msg)}</div></div>`
+  ).join('');
+}
+
+async function hlthCheckHealth(manual){
+  if(_hlthChecking) return;
+  _hlthChecking = true;
+  const btn = document.getElementById('hlthRefreshBtn');
+  if(btn) btn.disabled = true;
+  const checkedAt = new Date();
+  const sessionErrors = [];
+  try{
+    try{ _hlthLastDeployAt = localStorage.getItem(HLTH_VERCEL_DEPLOY_KEY) || _hlthLastDeployAt; }catch(e){}
+    const [db, edge, vercel, storage, realtime] = await Promise.all([
+      hlthProbeDb(),
+      hlthProbeEdge(),
+      hlthProbeVercel(),
+      hlthProbeStorage(),
+      Promise.resolve(hlthProbeRealtime()),
+    ]);
+    if(db.error) sessionErrors.push({ at: checkedAt.toISOString(), msg: 'Supabase DB: ' + db.error });
+    if(edge.error) sessionErrors.push({ at: checkedAt.toISOString(), msg: 'Edge Functions: ' + edge.error });
+    if(vercel.error) sessionErrors.push({ at: checkedAt.toISOString(), msg: 'Vercel: ' + vercel.error });
+    (storage.errors || []).forEach(msg => sessionErrors.push({ at: checkedAt.toISOString(), msg: 'Storage: ' + msg }));
+    hlthRenderStatus([
+      hlthStatusRow('Supabase DB', db.state, db.meta),
+      hlthStatusRow('Edge Functions', edge.state, edge.meta),
+      hlthStatusRow('Vercel', vercel.state, vercel.meta),
+      hlthStatusRow('Storage', storage.state, storage.meta),
+      hlthStatusRow('Realtime', realtime.state, realtime.meta),
+    ]);
+    hlthRenderStorageBars(storage.breakdown, storage.totalBytes);
+    const perf = await hlthLoadPerfMetrics(db.latency);
+    const notes = sessionErrors.length ? sessionErrors.map(e => e.msg).join('; ') : null;
+    try{
+      await sb.from('system_health_log').insert({
+        supabase_latency_ms: db.latency,
+        edge_functions_status: edge.state === 'online' ? 'online' : edge.state,
+        storage_used_mb: Math.round(storage.totalBytes / (1024 * 1024)),
+        active_connections: realtime.count,
+        rpc_calls_today: perf.rpcToday,
+        error_rate_1h: perf.errRate,
+        notes,
+      });
+    }catch(e){
+      if(notes) sessionErrors.push({ at: checkedAt.toISOString(), msg: 'Health log insert: ' + (e.message || 'failed') });
+    }
+    await hlthLoadRecentErrors(sessionErrors);
+    const lc = document.getElementById('hlthLastChecked');
+    if(lc) lc.textContent = 'Last checked: ' + hlthFmtTime(checkedAt.toISOString());
+    if(manual) toast(sessionErrors.length ? 'Health check completed with issues' : 'Health check OK', sessionErrors.length ? 'err' : 'ok');
+  }catch(err){
+    sessionErrors.push({ at: checkedAt.toISOString(), msg: err.message || 'Health check failed' });
+    await hlthLoadRecentErrors(sessionErrors);
+    toast(err.message || 'Health check failed', 'err');
+  }finally{
+    _hlthChecking = false;
+    if(btn) btn.disabled = false;
+  }
+}
+
+function hlthTabEnter(){
+  hlthCheckHealth(false);
+  clearInterval(_hlthInterval);
+  _hlthInterval = setInterval(() => hlthCheckHealth(false), 60000);
+}
+
+function hlthTabLeave(){
+  clearInterval(_hlthInterval);
+  _hlthInterval = null;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -4971,6 +5366,8 @@ function switchTab(id){
   else                 { msgTabLeave(); }
   if(id==='notes')     { ntsTabEnter(); }
   else                 { ntsTabLeave(); }
+  if(id==='syshealth') { hlthTabEnter(); }
+  else                 { hlthTabLeave(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
