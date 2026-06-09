@@ -259,11 +259,19 @@
     if (panels) panels.hidden = true;
     if (chat) {
       chat.hidden = false;
+      chat.removeAttribute('hidden');
       chat.classList.add('is-active-view');
       chat.classList.remove('is-visible');
       requestAnimationFrame(function () {
         requestAnimationFrame(function () { chat.classList.add('is-visible'); });
       });
+    }
+    const compose = $('supportChatCompose');
+    if (compose) {
+      compose.hidden = false;
+      compose.removeAttribute('hidden');
+      compose.classList.remove('closed');
+      compose.style.display = 'flex';
     }
   }
 

@@ -545,33 +545,44 @@
   transition: opacity 120ms ease;
   background: transparent;
 }
-.poxy-support-drawer.is-chat-active #supportChatView.is-active-view,
-.poxy-support-body.is-chat-active #supportChatView,
-.poxy-support-chat.is-active-view,
-#supportChatView.is-active-view {
-  display: grid !important;
-  grid-template-rows: auto 1fr auto;
+.poxy-support-drawer.is-chat-active .poxy-support-body {
+  position: relative;
   flex: 1 1 0%;
   min-height: 0;
-  max-height: 100%;
   overflow: hidden;
 }
+.poxy-support-drawer.is-chat-active #supportChatView.is-active-view,
+.poxy-support-body.is-chat-active #supportChatView.is-active-view {
+  position: absolute;
+  inset: 0;
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 1;
+  max-height: none;
+  height: auto;
+}
 .poxy-support-drawer.is-chat-active .poxy-support-chat-head {
-  grid-row: 1;
+  flex: 0 0 auto;
 }
 .poxy-support-drawer.is-chat-active .poxy-support-messages,
 .poxy-support-drawer.is-chat-active #supportChatMessages {
-  grid-row: 2;
+  flex: 1 1 0%;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .poxy-support-drawer.is-chat-active .poxy-support-compose,
 .poxy-support-drawer.is-chat-active #supportChatCompose {
-  grid-row: 3;
+  flex: 0 0 auto;
+  flex-shrink: 0;
   display: flex !important;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
   visibility: visible;
-  min-height: 52px;
+  min-height: 56px;
+  z-index: 2;
 }
 .poxy-support-chat.is-visible,
 #supportChatView.is-visible { opacity: 1; }
@@ -740,6 +751,7 @@
 .poxy-support-compose-input {
   flex: 1;
   min-width: 0;
+  min-height: 36px;
   padding: 10px 4px;
   border: none;
   border-radius: 0;
@@ -751,6 +763,7 @@
   outline: none;
   resize: none;
   max-height: 80px;
+  line-height: 1.4;
 }
 .poxy-support-compose-input::placeholder {
   color: var(--poxy-text-muted);
