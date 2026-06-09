@@ -640,7 +640,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .role-badge.superadmin{background:rgba(245,158,11,.18);color:var(--amber)}
 .role-badge.mod{background:rgba(129,140,248,.18);color:var(--cyan)}
 .role-badge.support{background:rgba(34,197,94,.15);color:var(--green)}
-.role-badge.dev_topup{background:rgba(148,163,184,.15);color:var(--muted)}
+.role-badge.dev_topup,.role-badge.dev{background:rgba(148,163,184,.15);color:var(--muted)}
+.role-badge.marketing{background:rgba(236,72,153,.15);color:#ec4899}
 .roles-add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;padding-top:12px;border-top:1px solid var(--border2)}
 .roles-add-row .f-row{margin:0;flex:1;min-width:160px}
 .roles-status-ok{color:var(--green)}
@@ -2297,11 +2298,13 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
             <label class="f-label">Email</label>
             <input id="rolesAddEmail" class="f-input" type="email" placeholder="team@example.com"/>
           </div>
-          <div class="f-row" style="max-width:160px">
+          <div class="f-row" style="max-width:200px">
             <label class="f-label">Role</label>
             <select id="rolesAddRole" class="f-select">
               <option value="support">Support</option>
               <option value="mod">Mod</option>
+              <option value="marketing">Marketing</option>
+              <option value="dev">Dev</option>
               <option value="superadmin">Superadmin</option>
             </select>
           </div>
@@ -3537,7 +3540,7 @@ let _osShiftStatus = 'online';
 function osNormalizeRole(role){
   const r = (role || 'support').toLowerCase();
   if(r === 'admin') return 'superadmin';
-  if(r === 'dev_topup') return 'dev';
+  if(r === 'dev_topup' || r === 'dev') return 'dev';
   return r;
 }
 
@@ -8986,8 +8989,10 @@ function rolesFmtRelative(ts){
 
 function rolesBadge(role){
   const r = (role || 'support').toLowerCase();
-  const label = r === 'superadmin' ? 'SUPERADMIN' : r.toUpperCase();
-  return `<span class="role-badge ${r}">${label}</span>`;
+  const labels = { superadmin: 'SUPERADMIN', dev_topup: 'DEV', dev: 'DEV', marketing: 'MARKETING' };
+  const label = labels[r] || r.toUpperCase();
+  const cls = (r === 'dev_topup') ? 'dev' : r;
+  return `<span class="role-badge ${cls}">${label}</span>`;
 }
 
 function rolesIsSuperadmin(role){
