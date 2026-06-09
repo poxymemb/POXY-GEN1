@@ -497,9 +497,6 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .hb-table th{background:var(--bg2);padding:8px 12px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .hb-table td{padding:8px 12px;border-top:1px solid var(--border);vertical-align:top}
 @media(max-width:768px){.handbook-layout{flex-direction:column;height:auto;margin:12px}.handbook-nav{width:100%;border-right:none;border-bottom:1px solid var(--border);max-height:180px}}
-.shift-status-bar{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:8px;display:flex;gap:8px;margin:0 8px 8px;padding:8px 10px}
-.shift-status-bar select{background:var(--bg1);border:1px solid var(--border);border-radius:6px;color:var(--adm-text);flex:1;font-family:var(--font);font-size:11px;font-weight:500;min-width:0;padding:5px 8px}
-.shift-status-bar select:focus{border-color:var(--amber);outline:none}
 .header-staff-online{align-items:center;display:inline-flex;gap:4px;margin-right:4px}
 .header-staff-avatar{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:50%;display:inline-flex;flex-shrink:0;height:24px;justify-content:center;overflow:hidden;position:relative;width:24px}
 .header-staff-avatar img{height:100%;object-fit:cover;width:100%}
@@ -1140,15 +1137,6 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         </button>
       </div>
     </nav>
-    <div class="shift-status-bar">
-      <span class="status-dot online" id="my-status-dot"></span>
-      <select id="shift-status-select" onchange="osSidebarShiftChange(this.value)" aria-label="Shift status">
-        <option value="online">● Online</option>
-        <option value="away">🟡 Away</option>
-        <option value="busy">🔴 Busy</option>
-        <option value="offline">⚫ Offline</option>
-      </select>
-    </div>
     <div class="sidebar-footer">
       <div><span class="uplink-dot"></span><span class="uplink-txt">Uplink active</span></div>
       <div class="sidebar-user" id="sidebarUser"></div>
@@ -3654,14 +3642,10 @@ function osApplyShiftStatusUi(status){
   const label = document.getElementById('shift-label');
   const dashDot = document.getElementById('osDashPresenceDot');
   const dashLabel = document.getElementById('osDashPresenceLabel');
-  const sideDot = document.getElementById('my-status-dot');
-  const sideSel = document.getElementById('shift-status-select');
   if(dot){ dot.className = 'status-dot ' + status; }
   if(label) label.textContent = labels[status] || 'Online';
   if(dashDot){ dashDot.className = 'status-dot ' + status; }
   if(dashLabel) dashLabel.textContent = labels[status] || 'Online';
-  if(sideDot){ sideDot.className = 'status-dot ' + status; }
-  if(sideSel) sideSel.value = status;
 }
 
 function osSetShiftStatus(status, skipPersist){
@@ -3679,10 +3663,6 @@ function osSetShiftStatus(status, skipPersist){
     });
     osLoadOnlineStaff();
   }
-}
-
-function osSidebarShiftChange(status){
-  osSetShiftStatus(status);
 }
 
 async function osLoadShiftFromDb(){
