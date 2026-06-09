@@ -1,17 +1,16 @@
-/* POXY Support Panel — glassmorphism · monochrome · bottom sheet mobile · modal desktop */
+/* POXY Support Panel — Apple-inspired · bottom sheet mobile · sidebar desktop */
 
 :root {
-  --poxy-bg: #0a0a0a;
-  --poxy-surface: #0f0f17;
-  --poxy-surface-2: #13131f;
-  --poxy-text: #f1f5f9;
+  --poxy-surface: rgba(28, 28, 30, 0.95);
+  --poxy-text: #ffffff;
+  --poxy-text-body: rgba(255, 255, 255, 0.6);
   --poxy-text-muted: rgba(255, 255, 255, 0.3);
+  --poxy-text-subtle: rgba(255, 255, 255, 0.25);
   --poxy-border: rgba(255, 255, 255, 0.08);
-  --poxy-glass: rgba(255, 255, 255, 0.04);
-  --poxy-glass-border: rgba(255, 255, 255, 0.08);
-  --poxy-panel-bg: rgba(10, 10, 15, 0.85);
-  --poxy-active: #ffffff;
-  --poxy-hover: rgba(255, 255, 255, 0.05);
+  --poxy-border-light: rgba(255, 255, 255, 0.1);
+  --poxy-hover: rgba(255, 255, 255, 0.07);
+  --poxy-ease: cubic-bezier(0.32, 0, 0.15, 1);
+  --poxy-font: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
 }
 
 .st-nav-icon-btn#stNavSupport { position: relative; }
@@ -25,6 +24,9 @@
   align-items: flex-end;
   justify-content: center;
   pointer-events: none;
+  font-family: var(--poxy-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .poxy-support-overlay.is-open { pointer-events: auto; }
 .poxy-support-overlay[hidden] { display: none !important; }
@@ -32,11 +34,11 @@
 .poxy-support-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   opacity: 0;
-  transition: opacity 300ms ease-out;
+  transition: opacity 300ms var(--poxy-ease);
 }
 .poxy-support-overlay.is-open .poxy-support-backdrop { opacity: 1; }
 
@@ -49,18 +51,21 @@
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  background: var(--poxy-panel-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-surface);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--poxy-border-light);
   border-bottom: none;
   border-radius: 20px 20px 0 0;
-  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6);
   transform: translateY(100%);
   opacity: 1;
-  transition: transform 300ms ease-out;
+  transition: transform 300ms var(--poxy-ease);
   overflow: hidden;
   will-change: transform;
+  font-family: var(--poxy-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .poxy-support-overlay.is-open .poxy-support-drawer { transform: translateY(0); }
 .poxy-support-drawer.is-dragging { transition: none; }
@@ -79,29 +84,28 @@
 }
 .poxy-support-drag-handle:active { cursor: grabbing; }
 
-/* ── Desktop: centered modal ── */
+/* ── Desktop: centered modal (Apple open animation) ── */
 @media (min-width: 769px) {
   .poxy-support-overlay {
     align-items: center;
     padding: 24px 16px;
   }
   .poxy-support-backdrop {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    transition: opacity 200ms ease-out;
+    transition: opacity 250ms var(--poxy-ease);
   }
   .poxy-support-drawer {
     width: 680px;
     max-width: calc(100vw - 32px);
     height: auto;
     max-height: 80vh;
-    border-radius: 16px;
-    border-bottom: 1px solid var(--poxy-glass-border);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
-    transform: scale(0.95);
+    border-radius: 20px;
+    border-bottom: 1px solid var(--poxy-border-light);
+    transform: scale(0.96);
     opacity: 0;
-    transition: transform 200ms ease-out, opacity 200ms ease-out;
+    transition: transform 250ms var(--poxy-ease), opacity 250ms var(--poxy-ease);
   }
   .poxy-support-overlay.is-open .poxy-support-drawer {
     transform: scale(1);
@@ -110,17 +114,16 @@
   .poxy-support-drag-handle { display: none !important; }
 }
 
-/* ── Scrollbars (panel scope) ── */
-.poxy-support-drawer ::-webkit-scrollbar { width: 4px; height: 4px; }
+/* ── Scrollbars ── */
+.poxy-support-drawer ::-webkit-scrollbar { width: 3px; height: 3px; }
 .poxy-support-drawer ::-webkit-scrollbar-track { background: transparent; }
 .poxy-support-drawer ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
 }
-.poxy-support-drawer ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
 .poxy-support-drawer {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 /* ── Header ── */
@@ -129,69 +132,68 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 18px 12px;
+  padding: 18px 20px 16px;
   border-bottom: 1px solid var(--poxy-border);
   flex-shrink: 0;
   background: transparent;
 }
 .poxy-support-head h2 {
   margin: 0;
-  font-family: 'Plus Jakarta Sans', 'Hanken Grotesk', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--poxy-active);
+  font-family: var(--poxy-font);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--poxy-text);
 }
 .poxy-support-close {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid var(--poxy-glass-border);
-  background: var(--poxy-glass);
-  color: var(--poxy-text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--poxy-text);
   font-size: 16px;
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 150ms, color 150ms, background 150ms;
+  transition: background 150ms ease;
 }
-.poxy-support-close:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: var(--poxy-active);
-  background: var(--poxy-hover);
-}
+.poxy-support-close:hover { background: rgba(255, 255, 255, 0.2); }
 
 /* ── Tabs ── */
 .poxy-support-tabs {
   display: flex;
   gap: 0;
-  padding: 0 14px;
+  padding: 0 16px;
   border-bottom: 1px solid var(--poxy-border);
   flex-shrink: 0;
   background: transparent;
 }
 .poxy-support-tab {
   flex: 1;
-  padding: 12px 6px;
+  padding: 14px 8px;
   border: none;
   border-bottom: 2px solid transparent;
   border-radius: 0;
   background: transparent;
-  color: var(--poxy-text-muted);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--poxy-font);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: none;
   cursor: pointer;
-  transition: color 150ms ease-out, border-color 150ms ease-out;
+  transition: color 120ms ease, border-color 120ms ease;
   margin-bottom: -1px;
 }
-.poxy-support-tab:hover { color: var(--poxy-active); }
+.poxy-support-tab:hover { color: rgba(255, 255, 255, 0.7); }
 .poxy-support-tab.active {
-  color: var(--poxy-active);
-  border-bottom-color: rgba(255, 255, 255, 0.6);
+  color: var(--poxy-text);
+  font-weight: 600;
+  border-bottom-color: #ffffff;
 }
 
 /* ── Body ── */
@@ -221,109 +223,119 @@
   min-height: 0;
   width: 100%;
   overflow-y: auto;
-  padding: 14px 16px 18px;
+  padding: 16px 18px 20px;
   -webkit-overflow-scrolling: touch;
   opacity: 1;
+  font-weight: 400;
 }
 .poxy-support-panel[data-support-panel="faq"],
 .poxy-support-panel[data-support-panel="new"] {
-  padding: 20px 24px 24px;
+  padding: 20px 22px 24px;
 }
 .poxy-support-panel.is-visible,
 .support-tab-active {
   display: block;
-  animation: fadeIn 150ms ease;
+  animation: fadeIn 120ms ease;
 }
 .poxy-support-panel[hidden] { display: none !important; }
 
 /* ── FAQ ── */
 .poxy-support-search {
   width: 100%;
-  padding: 11px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--poxy-glass-border);
-  background: var(--poxy-glass);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--poxy-border);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--poxy-text);
-  font-size: 13px;
+  font-family: var(--poxy-font);
+  font-size: 14px;
+  font-weight: 400;
   outline: none;
-  margin-bottom: 12px;
-  transition: border-color 150ms, background 150ms;
+  margin-bottom: 14px;
+  transition: border-color 150ms ease;
 }
-.poxy-support-search::placeholder { color: var(--poxy-text-muted); }
-.poxy-support-search:focus {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: var(--poxy-hover);
-}
+.poxy-support-search::placeholder { color: rgba(255, 255, 255, 0.3); font-weight: 300; }
+.poxy-support-search:focus { border-color: rgba(255, 255, 255, 0.2); }
 
 .poxy-support-cats {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 14px;
 }
 .poxy-support-cat {
-  padding: 5px 11px;
-  border-radius: 999px;
-  border: 1px solid var(--poxy-active);
-  background: var(--poxy-glass);
-  color: var(--poxy-active);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--poxy-font);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: none;
   cursor: pointer;
-  transition: border-color 150ms, color 150ms, background 150ms;
+  transition: background 150ms ease, color 150ms ease;
 }
-.poxy-support-cat:hover { background: var(--poxy-hover); }
+.poxy-support-cat:hover { background: rgba(255, 255, 255, 0.1); }
 .poxy-support-cat.active {
-  border-color: var(--poxy-active);
-  color: var(--poxy-active);
-  background: var(--poxy-hover);
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--poxy-text);
+  font-weight: 400;
 }
 
 .poxy-support-faq-item {
-  border: 1px solid var(--poxy-glass-border);
+  border: none;
   border-radius: 12px;
   margin-bottom: 8px;
   overflow: hidden;
-  background: var(--poxy-glass);
-  transition: border-color 150ms, background 150ms;
+  background: rgba(255, 255, 255, 0.04);
+  transition: background 150ms ease;
 }
 .poxy-support-faq-item:hover { background: var(--poxy-hover); }
-.poxy-support-faq-item.open {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: var(--poxy-hover);
-}
+.poxy-support-faq-item.open { background: var(--poxy-hover); }
 
 .poxy-support-faq-q {
   width: 100%;
   text-align: left;
-  padding: 13px 14px;
+  padding: 14px 16px;
   border: none;
   background: transparent;
-  color: var(--poxy-active);
-  font-size: 13px;
+  color: var(--poxy-text);
+  font-family: var(--poxy-font);
+  font-size: 14px;
   font-weight: 600;
+  letter-spacing: -0.01em;
   cursor: pointer;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
 }
 .poxy-support-faq-q span.ico {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 12px;
+  color: #ffffff;
+  font-size: 11px;
   flex-shrink: 0;
-  transition: transform 200ms ease-out;
+  transition: transform 200ms ease;
 }
 .poxy-support-faq-a {
-  display: none;
-  padding: 0 14px 13px;
-  font-size: 12px;
+  display: block;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 16px;
+  font-family: var(--poxy-font);
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1.55;
-  color: var(--poxy-text-muted);
+  color: var(--poxy-text-body);
+  transition: max-height 200ms ease, padding 200ms ease, opacity 200ms ease;
+  opacity: 0;
 }
-.poxy-support-faq-item.open .poxy-support-faq-a { display: block; }
+.poxy-support-faq-item.open .poxy-support-faq-a {
+  max-height: 600px;
+  padding: 0 16px 14px;
+  opacity: 1;
+}
 .poxy-support-faq-item.open .poxy-support-faq-q span.ico { transform: rotate(180deg); }
 
 /* ── Tickets list ── */
@@ -331,22 +343,20 @@
   display: block;
   width: 100%;
   text-align: left;
-  padding: 13px 14px;
+  padding: 14px 16px;
   border-radius: 12px;
-  border: 1px solid var(--poxy-glass-border);
-  background: var(--poxy-glass);
+  border: none;
+  background: rgba(255, 255, 255, 0.04);
   margin-bottom: 8px;
   cursor: pointer;
-  transition: border-color 150ms, background 150ms;
+  transition: background 150ms ease;
 }
-.poxy-support-ticket:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: var(--poxy-hover);
-}
+.poxy-support-ticket:hover { background: var(--poxy-hover); }
 .poxy-support-ticket-subj {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--poxy-active);
+  letter-spacing: -0.01em;
+  color: var(--poxy-text);
   margin-bottom: 6px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -357,64 +367,62 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 300;
   color: var(--poxy-text-muted);
 }
 .poxy-support-status {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 3px 8px;
   border-radius: 6px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  border: none;
 }
 .poxy-support-status.open {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--poxy-active);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
 }
 .poxy-support-status.in_progress {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--poxy-active);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
 }
 .poxy-support-status.closed {
-  background: var(--poxy-glass);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--poxy-text-muted);
-  border: 1px solid var(--poxy-glass-border);
 }
 
-/* ── Forms ── */
-.poxy-support-field { margin-bottom: 14px; }
+/* ── Forms (New Ticket) ── */
+.poxy-support-field { margin-bottom: 16px; }
 .poxy-support-label {
   display: block;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
+  font-family: var(--poxy-font);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--poxy-text-muted);
-  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
 }
 .poxy-support-input,
 .poxy-support-textarea {
   width: 100%;
-  padding: 11px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--poxy-glass-border);
-  background: var(--poxy-glass);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--poxy-border);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--poxy-text);
-  font-size: 13px;
-  font-family: inherit;
+  font-family: var(--poxy-font);
+  font-size: 14px;
+  font-weight: 400;
   outline: none;
-  transition: border-color 150ms, background 150ms;
+  transition: border-color 150ms ease;
 }
 .poxy-support-textarea { min-height: 100px; resize: vertical; }
 .poxy-support-input:focus,
-.poxy-support-textarea:focus {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: var(--poxy-hover);
-}
+.poxy-support-textarea:focus { border-color: rgba(255, 255, 255, 0.2); }
 
 .poxy-support-attach-row {
   display: flex;
@@ -428,26 +436,26 @@
   gap: 6px;
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid var(--poxy-glass-border);
-  background: var(--poxy-glass);
-  color: var(--poxy-text-muted);
-  font-size: 11px;
-  font-weight: 600;
+  border: 1px solid var(--poxy-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--poxy-font);
+  font-size: 13px;
+  font-weight: 400;
   cursor: pointer;
-  transition: border-color 150ms, color 150ms, background 150ms;
+  transition: background 150ms ease, color 150ms ease;
 }
 .poxy-support-attach-btn:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: var(--poxy-active);
   background: var(--poxy-hover);
+  color: var(--poxy-text);
 }
 .poxy-support-attach-preview {
   display: none;
   margin-top: 10px;
   padding: 10px;
-  border-radius: 12px;
-  border: 1px solid var(--poxy-glass-border);
-  background: var(--poxy-glass);
+  border-radius: 10px;
+  border: 1px solid var(--poxy-border);
+  background: rgba(255, 255, 255, 0.04);
 }
 .poxy-support-attach-preview.visible { display: block; }
 .poxy-support-attach-preview img {
@@ -463,39 +471,38 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 300;
   color: var(--poxy-text-muted);
 }
 .poxy-support-attach-remove {
   border: none;
   background: transparent;
   color: #f87171;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 400;
   cursor: pointer;
 }
 .poxy-support-submit {
   width: 100%;
   margin-top: 8px;
-  padding: 13px;
+  padding: 14px;
   border: none;
   border-radius: 12px;
   background: #ffffff;
   color: #000000;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  font-family: var(--poxy-font);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
   cursor: pointer;
-  transition: transform 150ms, opacity 150ms, background 150ms;
+  transition: background 150ms ease, opacity 150ms ease;
 }
-.poxy-support-submit:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.92);
-}
+.poxy-support-submit:hover:not(:disabled) { background: rgba(255, 255, 255, 0.9); }
 .poxy-support-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Chat view (MY TICKETS — unchanged sizing) ── */
+/* ── Chat view ── */
 .poxy-support-chat {
   flex: 1;
   min-height: 0;
@@ -503,7 +510,7 @@
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 150ms ease-out;
+  transition: opacity 120ms ease;
   background: transparent;
 }
 .poxy-support-chat.is-visible { opacity: 1; }
@@ -513,47 +520,48 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--poxy-border);
   flex-shrink: 0;
   background: transparent;
 }
 .poxy-support-back {
-  border: 1px solid var(--poxy-glass-border);
-  background: var(--poxy-glass);
-  color: var(--poxy-text-muted);
-  font-size: 12px;
-  font-weight: 600;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--poxy-font);
+  font-size: 13px;
+  font-weight: 400;
   cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 10px;
-  transition: border-color 150ms, color 150ms, background 150ms;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: background 150ms ease, color 150ms ease;
 }
 .poxy-support-back:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: var(--poxy-active);
   background: var(--poxy-hover);
+  color: var(--poxy-text);
 }
 .poxy-support-chat-info { flex: 1; min-width: 0; }
 .poxy-support-chat-subj {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--poxy-active);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--poxy-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* ── Messages ── */
+/* ── Messages (iMessage style) ── */
 .poxy-support-messages {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -567,7 +575,7 @@
   animation: poxySupportMsgIn 200ms ease-out forwards;
 }
 @keyframes poxySupportMsgIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -576,116 +584,134 @@
 .poxy-support-msg.auto { align-self: center; align-items: center; max-width: 90%; }
 
 .poxy-support-bubble {
-  padding: 14px 16px;
-  border-radius: 16px;
-  font-size: 13px;
-  line-height: 1.5;
+  padding: 10px 14px;
+  font-family: var(--poxy-font);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
   word-break: break-word;
 }
 
-/* Staff — left, dark card */
-.poxy-support-msg.staff .poxy-support-bubble {
-  background: rgba(20, 20, 28, 0.9);
-  border: 1px solid var(--poxy-border);
-  color: #fff;
-}
-
-/* Player — right, subtle white tint */
+/* Player — right */
 .poxy-support-msg.player .poxy-support-bubble {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px 18px 4px 18px;
+  color: var(--poxy-text);
 }
 
-/* Auto — centered, no border */
+/* Staff — left */
+.poxy-support-msg.staff .poxy-support-bubble {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--poxy-border);
+  border-radius: 18px 18px 18px 4px;
+  color: var(--poxy-text);
+}
+
+/* Auto — no bubble */
 .poxy-support-msg.auto .poxy-support-bubble {
-  background: rgba(255, 255, 255, 0.04);
+  background: none;
   border: none;
-  color: var(--poxy-text-muted);
-  font-style: italic;
+  border-radius: 0;
+  padding: 4px 8px;
   font-size: 12px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--poxy-text-muted);
   text-align: center;
-  padding: 10px 16px;
 }
 
 .poxy-support-msg img {
   max-width: 100%;
-  border-radius: 10px;
-  margin-top: 8px;
+  border-radius: 12px;
+  margin-top: 6px;
   display: block;
   cursor: pointer;
 }
 .poxy-support-msg-time {
-  font-size: 9px;
-  color: var(--poxy-text-muted);
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--poxy-text-subtle);
   margin-top: 4px;
   padding: 0 4px;
-  letter-spacing: 0.03em;
 }
 .poxy-support-msg.player .poxy-support-msg-time { text-align: right; }
 
 /* ── Compose — pinned bottom ── */
 .poxy-support-compose {
   flex-shrink: 0;
-  padding: 12px 14px 16px;
-  border-top: 1px solid var(--poxy-border);
-  background: var(--poxy-glass);
+  padding: 12px 16px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
 }
 .poxy-support-compose.closed { display: none; }
 .poxy-support-compose-row {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 10px;
+}
+.poxy-support-compose .poxy-support-attach-btn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 8px;
+  border-radius: 50%;
+}
+.poxy-support-compose .poxy-support-attach-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
 }
 .poxy-support-compose-input {
   flex: 1;
   min-width: 0;
-  padding: 11px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--poxy-glass-border);
-  background: rgba(255, 255, 255, 0.03);
+  padding: 10px 4px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   color: var(--poxy-text);
-  font-size: 13px;
+  font-family: var(--poxy-font);
+  font-size: 14px;
+  font-weight: 400;
   outline: none;
   resize: none;
   max-height: 80px;
-  transition: border-color 150ms, background 150ms;
 }
-.poxy-support-compose-input:focus {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: var(--poxy-hover);
+.poxy-support-compose-input::placeholder {
+  color: var(--poxy-text-muted);
+  font-weight: 300;
 }
+.poxy-support-compose-input:focus { outline: none; }
 
 .poxy-support-send {
   flex-shrink: 0;
-  padding: 11px 16px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 12px;
+  border-radius: 20px;
   background: #ffffff;
   color: #000000;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-family: var(--poxy-font);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
   cursor: pointer;
-  transition: transform 150ms, opacity 150ms, background 150ms;
+  transition: background 150ms ease, opacity 150ms ease;
 }
-.poxy-support-send:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.92);
-}
+.poxy-support-send:hover:not(:disabled) { background: rgba(255, 255, 255, 0.9); }
 .poxy-support-send:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .poxy-support-empty {
   text-align: center;
   padding: 32px 16px;
   color: var(--poxy-text-muted);
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 300;
   line-height: 1.5;
 }
 .poxy-support-err {
   color: #f87171;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 400;
   margin-top: 8px;
 }
 
