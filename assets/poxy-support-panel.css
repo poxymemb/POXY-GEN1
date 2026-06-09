@@ -1,17 +1,17 @@
-/* POXY Support Panel — glassmorphism · bottom sheet mobile · modal desktop */
+/* POXY Support Panel — glassmorphism · monochrome · bottom sheet mobile · modal desktop */
 
 :root {
   --poxy-bg: #0a0a0a;
   --poxy-surface: #0f0f17;
   --poxy-surface-2: #13131f;
-  --poxy-accent: #c084fc;
-  --poxy-accent-2: #c084fc;
   --poxy-text: #f1f5f9;
-  --poxy-text-muted: rgba(255, 255, 255, 0.4);
-  --poxy-border: rgba(255, 255, 255, 0.06);
+  --poxy-text-muted: rgba(255, 255, 255, 0.3);
+  --poxy-border: rgba(255, 255, 255, 0.08);
   --poxy-glass: rgba(255, 255, 255, 0.04);
   --poxy-glass-border: rgba(255, 255, 255, 0.08);
   --poxy-panel-bg: rgba(10, 10, 15, 0.85);
+  --poxy-active: #ffffff;
+  --poxy-hover: rgba(255, 255, 255, 0.05);
 }
 
 .st-nav-icon-btn#stNavSupport { position: relative; }
@@ -92,7 +92,7 @@
     transition: opacity 200ms ease-out;
   }
   .poxy-support-drawer {
-    width: 580px;
+    width: 680px;
     max-width: calc(100vw - 32px);
     height: auto;
     max-height: 80vh;
@@ -114,13 +114,13 @@
 .poxy-support-drawer ::-webkit-scrollbar { width: 4px; height: 4px; }
 .poxy-support-drawer ::-webkit-scrollbar-track { background: transparent; }
 .poxy-support-drawer ::-webkit-scrollbar-thumb {
-  background: var(--poxy-accent-2);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
 }
-.poxy-support-drawer ::-webkit-scrollbar-thumb:hover { background: var(--poxy-accent); }
+.poxy-support-drawer ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
 .poxy-support-drawer {
   scrollbar-width: thin;
-  scrollbar-color: var(--poxy-accent-2) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 /* ── Header ── */
@@ -141,7 +141,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--poxy-text);
+  color: var(--poxy-active);
 }
 .poxy-support-close {
   width: 34px;
@@ -155,12 +155,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 150ms, color 150ms, box-shadow 150ms;
+  transition: border-color 150ms, color 150ms, background 150ms;
 }
 .poxy-support-close:hover {
-  border-color: var(--poxy-accent);
-  color: var(--poxy-text);
-  box-shadow: 0 0 16px rgba(192, 132, 252, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--poxy-active);
+  background: var(--poxy-hover);
 }
 
 /* ── Tabs ── */
@@ -188,10 +188,10 @@
   transition: color 150ms ease-out, border-color 150ms ease-out;
   margin-bottom: -1px;
 }
-.poxy-support-tab:hover { color: var(--poxy-text); }
+.poxy-support-tab:hover { color: var(--poxy-active); }
 .poxy-support-tab.active {
-  color: var(--poxy-text);
-  border-bottom-color: var(--poxy-accent);
+  color: var(--poxy-active);
+  border-bottom-color: rgba(255, 255, 255, 0.6);
 }
 
 /* ── Body ── */
@@ -225,6 +225,10 @@
   -webkit-overflow-scrolling: touch;
   opacity: 1;
 }
+.poxy-support-panel[data-support-panel="faq"],
+.poxy-support-panel[data-support-panel="new"] {
+  padding: 20px 24px 24px;
+}
 .poxy-support-panel.is-visible,
 .support-tab-active {
   display: block;
@@ -243,12 +247,12 @@
   font-size: 13px;
   outline: none;
   margin-bottom: 12px;
-  transition: border-color 150ms, box-shadow 150ms;
+  transition: border-color 150ms, background 150ms;
 }
 .poxy-support-search::placeholder { color: var(--poxy-text-muted); }
 .poxy-support-search:focus {
-  border-color: var(--poxy-accent);
-  box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--poxy-hover);
 }
 
 .poxy-support-cats {
@@ -260,9 +264,9 @@
 .poxy-support-cat {
   padding: 5px 11px;
   border-radius: 999px;
-  border: 1px solid var(--poxy-accent);
+  border: 1px solid var(--poxy-active);
   background: var(--poxy-glass);
-  color: var(--poxy-text-muted);
+  color: var(--poxy-active);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -270,11 +274,11 @@
   cursor: pointer;
   transition: border-color 150ms, color 150ms, background 150ms;
 }
-.poxy-support-cat:hover { background: rgba(255, 255, 255, 0.03); }
+.poxy-support-cat:hover { background: var(--poxy-hover); }
 .poxy-support-cat.active {
-  border-color: var(--poxy-accent);
-  color: var(--poxy-text);
-  background: rgba(192, 132, 252, 0.1);
+  border-color: var(--poxy-active);
+  color: var(--poxy-active);
+  background: var(--poxy-hover);
 }
 
 .poxy-support-faq-item {
@@ -285,10 +289,10 @@
   background: var(--poxy-glass);
   transition: border-color 150ms, background 150ms;
 }
-.poxy-support-faq-item:hover { background: rgba(255, 255, 255, 0.03); }
+.poxy-support-faq-item:hover { background: var(--poxy-hover); }
 .poxy-support-faq-item.open {
-  border-color: rgba(192, 132, 252, 0.35);
-  background: rgba(192, 132, 252, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: var(--poxy-hover);
 }
 
 .poxy-support-faq-q {
@@ -297,7 +301,7 @@
   padding: 13px 14px;
   border: none;
   background: transparent;
-  color: var(--poxy-text);
+  color: var(--poxy-active);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -307,7 +311,7 @@
   gap: 10px;
 }
 .poxy-support-faq-q span.ico {
-  color: var(--poxy-accent);
+  color: rgba(255, 255, 255, 0.4);
   font-size: 12px;
   flex-shrink: 0;
   transition: transform 200ms ease-out;
@@ -333,16 +337,16 @@
   background: var(--poxy-glass);
   margin-bottom: 8px;
   cursor: pointer;
-  transition: border-color 150ms, background 150ms, box-shadow 150ms;
+  transition: border-color 150ms, background 150ms;
 }
 .poxy-support-ticket:hover {
-  border-color: rgba(192, 132, 252, 0.35);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: var(--poxy-hover);
 }
 .poxy-support-ticket-subj {
   font-size: 13px;
   font-weight: 600;
-  color: var(--poxy-text);
+  color: var(--poxy-active);
   margin-bottom: 6px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -366,14 +370,14 @@
   text-transform: uppercase;
 }
 .poxy-support-status.open {
-  background: rgba(192, 132, 252, 0.12);
-  color: var(--poxy-accent);
-  border: 1px solid rgba(192, 132, 252, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--poxy-active);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 .poxy-support-status.in_progress {
-  background: rgba(192, 132, 252, 0.08);
-  color: var(--poxy-accent);
-  border: 1px solid rgba(192, 132, 252, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--poxy-active);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .poxy-support-status.closed {
   background: var(--poxy-glass);
@@ -403,13 +407,13 @@
   font-size: 13px;
   font-family: inherit;
   outline: none;
-  transition: border-color 150ms, box-shadow 150ms;
+  transition: border-color 150ms, background 150ms;
 }
 .poxy-support-textarea { min-height: 100px; resize: vertical; }
 .poxy-support-input:focus,
 .poxy-support-textarea:focus {
-  border-color: var(--poxy-accent);
-  box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--poxy-hover);
 }
 
 .poxy-support-attach-row {
@@ -430,11 +434,12 @@
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 150ms, color 150ms;
+  transition: border-color 150ms, color 150ms, background 150ms;
 }
 .poxy-support-attach-btn:hover {
-  border-color: var(--poxy-accent);
-  color: var(--poxy-text);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--poxy-active);
+  background: var(--poxy-hover);
 }
 .poxy-support-attach-preview {
   display: none;
@@ -475,21 +480,22 @@
   padding: 13px;
   border: none;
   border-radius: 12px;
-  background: var(--poxy-accent);
-  color: #fff;
+  background: #ffffff;
+  color: #000000;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 150ms, opacity 150ms;
+  transition: transform 150ms, opacity 150ms, background 150ms;
 }
 .poxy-support-submit:hover:not(:disabled) {
   transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.92);
 }
 .poxy-support-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Chat view ── */
+/* ── Chat view (MY TICKETS — unchanged sizing) ── */
 .poxy-support-chat {
   flex: 1;
   min-height: 0;
@@ -521,17 +527,18 @@
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 10px;
-  transition: border-color 150ms, color 150ms;
+  transition: border-color 150ms, color 150ms, background 150ms;
 }
 .poxy-support-back:hover {
-  border-color: var(--poxy-accent);
-  color: var(--poxy-text);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--poxy-active);
+  background: var(--poxy-hover);
 }
 .poxy-support-chat-info { flex: 1; min-width: 0; }
 .poxy-support-chat-subj {
   font-size: 12px;
   font-weight: 700;
-  color: var(--poxy-text);
+  color: var(--poxy-active);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -579,22 +586,22 @@
 /* Staff — left, dark card */
 .poxy-support-msg.staff .poxy-support-bubble {
   background: rgba(20, 20, 28, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--poxy-border);
   color: #fff;
 }
 
-/* Player — right, soft tint */
+/* Player — right, subtle white tint */
 .poxy-support-msg.player .poxy-support-bubble {
-  background: rgba(192, 132, 252, 0.15);
-  border: 1px solid rgba(192, 132, 252, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #f1f5f9;
 }
 
 /* Auto — centered, no border */
 .poxy-support-msg.auto .poxy-support-bubble {
-  background: rgba(168, 85, 247, 0.08);
+  background: rgba(255, 255, 255, 0.04);
   border: none;
-  color: var(--poxy-accent-2);
+  color: var(--poxy-text-muted);
   font-style: italic;
   font-size: 12px;
   text-align: center;
@@ -642,11 +649,11 @@
   outline: none;
   resize: none;
   max-height: 80px;
-  transition: border-color 150ms, box-shadow 150ms;
+  transition: border-color 150ms, background 150ms;
 }
 .poxy-support-compose-input:focus {
-  border-color: var(--poxy-accent);
-  box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--poxy-hover);
 }
 
 .poxy-support-send {
@@ -654,17 +661,18 @@
   padding: 11px 16px;
   border: none;
   border-radius: 12px;
-  background: var(--poxy-accent);
-  color: #fff;
+  background: #ffffff;
+  color: #000000;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 150ms, opacity 150ms;
+  transition: transform 150ms, opacity 150ms, background 150ms;
 }
 .poxy-support-send:hover:not(:disabled) {
   transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.92);
 }
 .poxy-support-send:disabled { opacity: 0.45; cursor: not-allowed; }
 
