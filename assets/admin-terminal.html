@@ -238,12 +238,19 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mcu-search-result-tag{background:var(--bg2);border-radius:4px;color:var(--amber);flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 6px;text-transform:uppercase}
 .mcu-search-foot{border-top:1px solid var(--border);color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:12px 16px;padding:10px 16px}
 /* ── SUPPORT TICKETS (Session C) ── */
-.stkt-layout{display:grid;grid-template-columns:minmax(220px,0.68fr) minmax(480px,1.75fr);gap:14px;margin-bottom:16px;min-height:540px}
-@media(max-width:1200px){.stkt-layout{grid-template-columns:minmax(200px,0.75fr) minmax(360px,1.4fr)}}
+#tab-stkt.tab-pane{max-width:none;width:100%}
+.stkt-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:14px;margin-bottom:14px;min-height:0;width:100%}
 @media(max-width:900px){.stkt-layout{grid-template-columns:1fr}}
-.stkt-queue-card,.stkt-chat-card{display:flex;flex-direction:column;min-height:540px}
+.stkt-queue-card,.stkt-chat-card{display:flex;flex-direction:column;min-height:400px;min-width:0;margin-bottom:0}
 .stkt-queue-card .tbl-wrap,.stkt-chat-msgs{flex:1;min-height:0;overflow:auto}
-#stktChatActive{display:flex;flex-direction:column;flex:1;min-height:0}
+#stktChatActive{display:flex;flex-direction:column;flex:1;min-height:0;width:100%}
+.stkt-bottom{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,1fr);gap:14px;align-items:start;width:100%}
+@media(max-width:1000px){.stkt-bottom{grid-template-columns:1fr}}
+.stkt-bottom .card{margin-bottom:0;min-width:0;position:relative;z-index:1}
+.stkt-mgr-list{max-height:300px;overflow-y:auto;padding-right:4px}
+.stkt-reply-form{display:none;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border2)}
+.stkt-reply-form.visible{display:flex}
+.stkt-reply-form-actions{display:flex;gap:8px;flex-wrap:wrap}
 .stkt-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .stkt-filter-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
 .stkt-filter-btn.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.12)}
@@ -253,8 +260,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-chat-title{font-size:14px;font-weight:700;color:var(--adm-text)}
 .stkt-chat-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .stkt-chat-actions{display:flex;gap:6px;flex-wrap:wrap}
-.stkt-chat-msgs{display:flex;flex-direction:column;gap:10px;padding:10px 6px;max-height:min(64vh,620px);flex:1;min-height:280px}
-.stkt-msg{max-width:78%;animation:stktMsgIn .25s ease-out}
+.stkt-chat-msgs{display:flex;flex-direction:column;gap:10px;padding:10px 8px;max-height:min(48vh,440px);flex:1;min-height:180px}
+.stkt-msg{max-width:72%;animation:stktMsgIn .25s ease-out}
 @keyframes stktMsgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .stkt-msg.player{align-self:flex-start}
 .stkt-msg.staff{align-self:flex-end}
@@ -1335,30 +1342,32 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         </div>
       </div>
 
-      <div class="grid2">
+      <div class="stkt-bottom">
         <!-- Quick replies manager -->
-        <div class="card">
+        <div class="card stkt-replies-card">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
             <span>Quick replies manager</span>
             <button class="btn btn-ghost btn-sm" onclick="stktShowAddReply()">+ Add</button>
           </div>
           <div id="stktReplyMgrList" class="stkt-mgr-list"><p style="color:var(--muted);font-size:12px">Loading…</p></div>
-          <div id="stktReplyForm" class="roles-add-row" style="display:none;margin-top:12px">
-            <div class="f-row" style="flex:1">
+          <div id="stktReplyForm" class="stkt-reply-form">
+            <div class="f-row">
               <label class="f-label">Title</label>
               <input id="stktReplyTitle" class="f-input" type="text" placeholder="Internal label"/>
             </div>
-            <div class="f-row" style="flex:2">
+            <div class="f-row">
               <label class="f-label">Body</label>
-              <textarea id="stktReplyBody" class="f-textarea" style="min-height:60px" placeholder="Paste text…"></textarea>
+              <textarea id="stktReplyBody" class="f-textarea" style="min-height:72px" placeholder="Paste text…"></textarea>
             </div>
-            <button class="btn btn-amber btn-sm" onclick="stktSaveReply()">Save</button>
-            <button class="btn btn-ghost btn-sm" onclick="stktHideReplyForm()">Cancel</button>
+            <div class="stkt-reply-form-actions">
+              <button class="btn btn-amber btn-sm" onclick="stktSaveReply()">Save</button>
+              <button class="btn btn-ghost btn-sm" onclick="stktHideReplyForm()">Cancel</button>
+            </div>
           </div>
         </div>
 
         <!-- Auto messages config -->
-        <div class="card">
+        <div class="card stkt-auto-card">
           <div class="card-title">Auto messages config</div>
           <div id="stktAutoList"></div>
           <button class="btn btn-amber btn-sm" style="margin-top:12px" onclick="stktSaveAutoMessages()">Save changes</button>
@@ -5913,15 +5922,20 @@ async function stktLoadQuickRepliesMgr(){
   }
 }
 
-function stktShowAddReply(){ _stktEditingReplyId = null; document.getElementById('stktReplyTitle').value = ''; document.getElementById('stktReplyBody').value = ''; document.getElementById('stktReplyForm').style.display = 'flex'; }
-function stktHideReplyForm(){ document.getElementById('stktReplyForm').style.display = 'none'; }
+function stktShowAddReply(){
+  _stktEditingReplyId = null;
+  document.getElementById('stktReplyTitle').value = '';
+  document.getElementById('stktReplyBody').value = '';
+  document.getElementById('stktReplyForm')?.classList.add('visible');
+}
+function stktHideReplyForm(){ document.getElementById('stktReplyForm')?.classList.remove('visible'); }
 function stktEditReply(id){
   const r = _stktQuickReplies.find(x => x.id === id);
   if(!r) return;
   _stktEditingReplyId = id;
   document.getElementById('stktReplyTitle').value = r.title;
   document.getElementById('stktReplyBody').value = r.body;
-  document.getElementById('stktReplyForm').style.display = 'flex';
+  document.getElementById('stktReplyForm')?.classList.add('visible');
 }
 
 async function stktSaveReply(){
