@@ -340,6 +340,48 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .hlth-error-msg{color:var(--red);line-height:1.45}
 .hlth-ok-msg{align-items:center;color:var(--green);display:flex;font-size:13px;font-weight:600;gap:8px;padding:8px 0}
 @media(max-width:900px){.hlth-perf-grid{grid-template-columns:1fr}.hlth-status-row{grid-template-columns:1fr;gap:4px}.hlth-status-meta{text-align:left}}
+/* ── MARKETING (Session 7) ── */
+#tab-campaigns.tab-pane,#tab-calendar.tab-pane{max-width:none;padding:16px 20px;width:100%}
+.mkt-head{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:14px}
+.mkt-head h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0}
+.mkt-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.mkt-filter-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;letter-spacing:.04em;padding:6px 12px;text-transform:uppercase;transition:border-color .15s,color .15s,background .15s}
+.mkt-filter-btn:hover{border-color:var(--amber);color:var(--adm-text)}
+.mkt-filter-btn.active{background:rgba(245,158,11,.12);border-color:var(--amber);color:var(--amber)}
+.mkt-camp-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.mkt-camp-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:8px;padding:14px 16px;transition:border-color .15s}
+.mkt-camp-card:hover{border-color:rgba(245,158,11,.35)}
+.mkt-camp-card-head{align-items:flex-start;display:flex;gap:8px;justify-content:space-between}
+.mkt-camp-name{font-size:15px;font-weight:700;line-height:1.3;margin:0}
+.mkt-status-badge{border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.05em;padding:2px 8px;text-transform:uppercase;white-space:nowrap}
+.mkt-status-badge.draft{background:rgba(148,163,184,.15);color:var(--muted)}
+.mkt-status-badge.active{background:rgba(34,197,94,.15);color:var(--green)}
+.mkt-status-badge.paused{background:rgba(245,158,11,.15);color:var(--amber)}
+.mkt-status-badge.completed{background:rgba(129,140,248,.15);color:var(--cyan)}
+.mkt-camp-platforms{display:flex;flex-wrap:wrap;font-size:14px;gap:6px}
+.mkt-camp-meta{color:var(--muted);display:flex;flex-direction:column;font-size:11px;gap:4px;line-height:1.45}
+.mkt-camp-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.mkt-create-form{display:none;flex-direction:column;gap:10px;margin-bottom:16px}
+.mkt-create-form.open{display:flex}
+.mkt-platform-chks{display:flex;flex-wrap:wrap;gap:10px 14px}
+.mkt-platform-chk{align-items:center;display:inline-flex;font-size:12px;gap:6px}
+.mkt-platform-chk input{accent-color:var(--amber)}
+.mkt-cal-nav{align-items:center;display:flex;gap:12px;justify-content:center;margin-bottom:14px}
+.mkt-cal-month{font-size:16px;font-weight:700;min-width:160px;text-align:center}
+.mkt-cal-grid{display:grid;gap:6px;grid-template-columns:repeat(7,minmax(0,1fr))}
+.mkt-cal-dow{color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.06em;padding:6px 4px;text-align:center;text-transform:uppercase}
+.mkt-cal-day{background:var(--bg1);border:1px solid var(--border2);border-radius:8px;display:flex;flex-direction:column;min-height:88px;overflow:hidden;padding:6px}
+.mkt-cal-day.pad{background:transparent;border-color:transparent;min-height:0;pointer-events:none}
+.mkt-cal-day.today{border-color:rgba(245,158,11,.45);box-shadow:inset 0 0 0 1px rgba(245,158,11,.15)}
+.mkt-cal-day-num{color:var(--muted);font-size:10px;font-weight:700;margin-bottom:4px}
+.mkt-cal-day.today .mkt-cal-day-num{color:var(--amber)}
+.mkt-cal-posts{display:flex;flex:1;flex-direction:column;gap:4px;min-height:0;overflow-y:auto}
+.mkt-cal-post{align-items:flex-start;background:var(--bg2);border:1px solid var(--border);border-radius:6px;cursor:pointer;display:flex;font-size:10px;gap:4px;line-height:1.3;padding:4px 6px;transition:border-color .15s}
+.mkt-cal-post:hover{border-color:var(--amber)}
+.mkt-cal-post-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mkt-view-row{border-bottom:1px solid var(--border2);font-size:13px;padding:8px 0}
+.mkt-view-row:last-child{border-bottom:none}
+.mkt-view-lbl{color:var(--muted);display:block;font-size:10px;font-weight:700;letter-spacing:.04em;margin-bottom:3px;text-transform:uppercase}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -1255,8 +1297,53 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       </div>
     </div>
     <div id="tab-changelog" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>Changelog</strong> — release notes ship in Session 11.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-campaigns" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🚀</div><p><strong>Campaigns</strong> — marketing module ships in Session 7.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-calendar" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📅</div><p><strong>Content Calendar</strong> — ships in Session 7.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-campaigns" class="tab-pane" data-poxy-module="campaigns">
+      <div class="mkt-head">
+        <h2>Campaigns</h2>
+        <button type="button" class="btn btn-amber btn-sm" onclick="mktCampToggleCreate()">+ New Campaign</button>
+      </div>
+      <div class="mkt-filters" id="mktCampFilters">
+        <button type="button" class="mkt-filter-btn active" data-filter="all" onclick="mktCampSetFilter('all')">All</button>
+        <button type="button" class="mkt-filter-btn" data-filter="draft" onclick="mktCampSetFilter('draft')">Draft</button>
+        <button type="button" class="mkt-filter-btn" data-filter="active" onclick="mktCampSetFilter('active')">Active</button>
+        <button type="button" class="mkt-filter-btn" data-filter="paused" onclick="mktCampSetFilter('paused')">Paused</button>
+        <button type="button" class="mkt-filter-btn" data-filter="completed" onclick="mktCampSetFilter('completed')">Completed</button>
+      </div>
+      <div class="card mkt-create-form" id="mktCampCreateForm">
+        <div class="card-title">New campaign</div>
+        <div class="f-row"><label class="f-label">Name</label><input id="mktNewName" class="f-input" type="text" placeholder="Campaign name"/></div>
+        <div class="f-row"><label class="f-label">Description</label><textarea id="mktNewDesc" class="f-textarea" rows="2"></textarea></div>
+        <div class="grid2">
+          <div class="f-row"><label class="f-label">Status</label>
+            <select id="mktNewStatus" class="f-select"><option value="draft" selected>Draft</option><option value="active">Active</option><option value="paused">Paused</option><option value="completed">Completed</option></select>
+          </div>
+          <div class="f-row"><label class="f-label">Budget PC</label><input id="mktNewBudget" class="f-input" type="number" min="0" value="0"/></div>
+        </div>
+        <div class="f-row"><label class="f-label">Platforms</label>
+          <div class="mkt-platform-chks" id="mktNewPlatforms"></div>
+        </div>
+        <div class="grid2">
+          <div class="f-row"><label class="f-label">Start date</label><input id="mktNewStart" class="f-input" type="date"/></div>
+          <div class="f-row"><label class="f-label">End date</label><input id="mktNewEnd" class="f-input" type="date"/></div>
+        </div>
+        <div class="f-row"><label class="f-label">Goal</label><input id="mktNewGoal" class="f-input" type="text" placeholder="Campaign goal"/></div>
+        <div class="f-row"><label class="f-label">Result notes</label><textarea id="mktNewResult" class="f-textarea" rows="2"></textarea></div>
+        <button type="button" class="btn btn-amber btn-sm" onclick="mktCampCreate()">Create</button>
+      </div>
+      <div class="mkt-camp-grid" id="mktCampGrid"><p class="os-dash-empty">Loading…</p></div>
+    </div>
+    <div id="tab-calendar" class="tab-pane" data-poxy-module="calendar">
+      <div class="mkt-head">
+        <h2>Content Calendar</h2>
+        <button type="button" class="btn btn-amber btn-sm" onclick="mktCalShowSchedule()">+ Schedule Post</button>
+      </div>
+      <div class="mkt-cal-nav">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="mktCalPrev()">‹ prev</button>
+        <span class="mkt-cal-month" id="mktCalMonthLabel">—</span>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="mktCalNext()">next ›</button>
+      </div>
+      <div class="mkt-cal-grid" id="mktCalGrid"><p class="os-dash-empty">Loading…</p></div>
+    </div>
     <div id="tab-mkt-analytics" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📈</div><p><strong>Analytics</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-assets" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🎨</div><p><strong>Creative Assets</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-influencers" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">👥</div><p><strong>Influencers</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
@@ -2694,6 +2781,69 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       <span>Enter open</span>
       <span>Ctrl+K toggle</span>
       <span>Ctrl+1–7 modules</span>
+    </div>
+  </div>
+</div>
+
+<!-- MARKETING MODALS (Session 7) -->
+<div id="mktCampViewModal" class="upd-overlay hidden" onclick="if(event.target===this)mktCampCloseView()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" style="margin-bottom:12px">Campaign</div>
+    <div id="mktCampViewBody"><p class="os-dash-empty">Loading…</p></div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="mktCampCloseView()">Close</button>
+      <button type="button" class="btn btn-amber btn-sm" id="mktCampViewEditBtn" onclick="mktCampEditFromView()">Edit</button>
+    </div>
+  </div>
+</div>
+<div id="mktCampEditModal" class="upd-overlay hidden" onclick="if(event.target===this)mktCampCloseEdit()">
+  <div class="upd-modal upd-modal-wide card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" style="margin-bottom:12px">Edit campaign</div>
+    <input type="hidden" id="mktEditId"/>
+    <div class="f-row"><label class="f-label">Name</label><input id="mktEditName" class="f-input" type="text"/></div>
+    <div class="f-row"><label class="f-label">Description</label><textarea id="mktEditDesc" class="f-textarea" rows="2"></textarea></div>
+    <div class="grid2">
+      <div class="f-row"><label class="f-label">Status</label>
+        <select id="mktEditStatus" class="f-select"><option value="draft">Draft</option><option value="active">Active</option><option value="paused">Paused</option><option value="completed">Completed</option></select>
+      </div>
+      <div class="f-row"><label class="f-label">Budget PC</label><input id="mktEditBudget" class="f-input" type="number" min="0"/></div>
+    </div>
+    <div class="f-row"><label class="f-label">Platforms</label><div class="mkt-platform-chks" id="mktEditPlatforms"></div></div>
+    <div class="grid2">
+      <div class="f-row"><label class="f-label">Start date</label><input id="mktEditStart" class="f-input" type="date"/></div>
+      <div class="f-row"><label class="f-label">End date</label><input id="mktEditEnd" class="f-input" type="date"/></div>
+    </div>
+    <div class="f-row"><label class="f-label">Goal</label><input id="mktEditGoal" class="f-input" type="text"/></div>
+    <div class="f-row"><label class="f-label">Result notes</label><textarea id="mktEditResult" class="f-textarea" rows="2"></textarea></div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="mktCampCloseEdit()">Cancel</button>
+      <button type="button" class="btn btn-amber btn-sm" onclick="mktCampSaveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+<div id="mktCalPostModal" class="upd-overlay hidden" onclick="if(event.target===this)mktCalClosePost()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" id="mktCalPostTitle" style="margin-bottom:12px">Schedule post</div>
+    <input type="hidden" id="mktCalPostId"/>
+    <div class="f-row"><label class="f-label">Title</label><input id="mktCalPostName" class="f-input" type="text" placeholder="Post title"/></div>
+    <div class="f-row"><label class="f-label">Body</label><textarea id="mktCalPostBody" class="f-textarea" rows="4"></textarea></div>
+    <div class="grid2">
+      <div class="f-row"><label class="f-label">Platform</label>
+        <select id="mktCalPostPlatform" class="f-select"></select>
+      </div>
+      <div class="f-row"><label class="f-label">Status</label>
+        <select id="mktCalPostStatus" class="f-select"><option value="draft">Draft</option><option value="scheduled" selected>Scheduled</option></select>
+      </div>
+    </div>
+    <div class="f-row"><label class="f-label">Scheduled at</label><input id="mktCalPostAt" class="f-input" type="datetime-local"/></div>
+    <div class="f-row"><label class="f-label">Asset URL</label><input id="mktCalPostAsset" class="f-input" type="url" placeholder="https://…"/></div>
+    <div class="f-row"><label class="f-label">Campaign</label>
+      <select id="mktCalPostCampaign" class="f-select"><option value="">— None —</option></select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="mktCalClosePost()">Cancel</button>
+      <button type="button" class="btn btn-amber btn-sm" onclick="mktCalSavePost()">Save</button>
+      <button type="button" class="btn btn-ghost btn-sm hidden" id="mktCalPostDeleteBtn" style="color:var(--red);margin-left:auto" onclick="mktCalDeletePost()">Delete</button>
     </div>
   </div>
 </div>
@@ -5346,6 +5496,470 @@ function hlthTabLeave(){
 }
 
 // ═══════════════════════════════════════════════════════════════
+// MARKETING — CAMPAIGNS + CALENDAR (Session 7)
+// ═══════════════════════════════════════════════════════════════
+
+const MKT_PLATFORMS = [
+  { id: 'tiktok', icon: '🎵', label: 'TikTok' },
+  { id: 'instagram', icon: '📷', label: 'Instagram' },
+  { id: 'twitter', icon: '𝕏', label: 'Twitter' },
+  { id: 'discord', icon: '💬', label: 'Discord' },
+  { id: 'telegram', icon: '✈️', label: 'Telegram' },
+];
+
+let _mktCampFilter = 'all';
+let _mktCampaigns = [];
+let _mktCampViewId = null;
+let _mktCalMonth = new Date();
+let _mktCalPosts = [];
+
+function mktPlatformIcon(id){
+  const p = MKT_PLATFORMS.find(x => x.id === id);
+  return p ? p.icon : '📱';
+}
+
+function mktPlatformLabel(id){
+  const p = MKT_PLATFORMS.find(x => x.id === id);
+  return p ? p.label : id;
+}
+
+function mktStatusBadge(status){
+  const s = (status || 'draft').toLowerCase();
+  return '<span class="mkt-status-badge ' + esc(s) + '">' + esc(s) + '</span>';
+}
+
+function mktPlatformIcons(platforms){
+  const arr = Array.isArray(platforms) ? platforms : [];
+  if(!arr.length) return '<span style="color:var(--muted);font-size:11px">No platforms</span>';
+  return '<div class="mkt-camp-platforms">' + arr.map(p =>
+    '<span title="' + esc(mktPlatformLabel(p)) + '">' + mktPlatformIcon(p) + '</span>'
+  ).join('') + '</div>';
+}
+
+function mktRenderPlatformChecks(containerId, selected){
+  const box = document.getElementById(containerId);
+  if(!box) return;
+  const sel = new Set(selected || []);
+  box.innerHTML = MKT_PLATFORMS.map(p =>
+    '<label class="mkt-platform-chk"><input type="checkbox" value="' + p.id + '"' + (sel.has(p.id) ? ' checked' : '') + '/> ' + p.icon + ' ' + esc(p.label) + '</label>'
+  ).join('');
+}
+
+function mktReadPlatformChecks(containerId){
+  const box = document.getElementById(containerId);
+  if(!box) return [];
+  return [...box.querySelectorAll('input[type=checkbox]:checked')].map(el => el.value);
+}
+
+function mktCampSetFilter(f){
+  _mktCampFilter = f;
+  document.querySelectorAll('#mktCampFilters .mkt-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === f);
+  });
+  mktCampRender();
+}
+
+function mktCampToggleCreate(){
+  document.getElementById('mktCampCreateForm')?.classList.toggle('open');
+}
+
+async function mktCampLoad(){
+  const { data, error } = await sb.from('mkt_campaigns').select('*').order('created_at', { ascending: false });
+  if(error) throw error;
+  _mktCampaigns = data || [];
+}
+
+function mktCampFiltered(){
+  if(_mktCampFilter === 'all') return _mktCampaigns;
+  return _mktCampaigns.filter(c => (c.status || 'draft') === _mktCampFilter);
+}
+
+function mktCampRender(){
+  const box = document.getElementById('mktCampGrid');
+  if(!box) return;
+  const list = mktCampFiltered();
+  if(!list.length){
+    box.innerHTML = '<p class="os-dash-empty">No campaigns</p>';
+    return;
+  }
+  box.innerHTML = list.map(c => {
+    const dates = [c.start_date, c.end_date].filter(Boolean).map(d => fmtDate(d)).join(' → ') || '—';
+    const pauseLabel = c.status === 'active' ? 'Pause' : (c.status === 'paused' ? 'Resume' : '');
+    const pauseBtn = pauseLabel
+      ? `<button type="button" class="btn btn-ghost btn-sm" onclick="mktCampTogglePause('${c.id}')">${pauseLabel}</button>`
+      : '';
+    return `<div class="mkt-camp-card">
+      <div class="mkt-camp-card-head">
+        <h3 class="mkt-camp-name">${esc(c.name || 'Untitled')}</h3>
+        ${mktStatusBadge(c.status)}
+      </div>
+      ${mktPlatformIcons(c.platform)}
+      <div class="mkt-camp-meta">
+        <span>📅 ${esc(dates)}</span>
+        <span>💰 ${Number(c.budget_pc || 0)} PC</span>
+        <span>🎯 ${esc(c.goal || '—')}</span>
+      </div>
+      <div class="mkt-camp-actions">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="mktCampView('${c.id}')">View</button>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="mktCampEdit('${c.id}')">Edit</button>
+        ${pauseBtn}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function mktCampTabEnter(){
+  try{
+    mktRenderPlatformChecks('mktNewPlatforms', []);
+    await mktCampLoad();
+    mktCampRender();
+    mktCalFillCampaignSelect('mktCalPostCampaign');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktCampCreate(){
+  const name = (document.getElementById('mktNewName')?.value || '').trim();
+  if(!name){ toast('ENTER CAMPAIGN NAME', 'err'); return; }
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const { data, error } = await sb.from('mkt_campaigns').insert({
+      name,
+      description: (document.getElementById('mktNewDesc')?.value || '').trim() || null,
+      status: document.getElementById('mktNewStatus')?.value || 'draft',
+      platform: mktReadPlatformChecks('mktNewPlatforms'),
+      start_date: document.getElementById('mktNewStart')?.value || null,
+      end_date: document.getElementById('mktNewEnd')?.value || null,
+      goal: (document.getElementById('mktNewGoal')?.value || '').trim() || null,
+      budget_pc: parseInt(document.getElementById('mktNewBudget')?.value, 10) || 0,
+      result_notes: (document.getElementById('mktNewResult')?.value || '').trim() || null,
+      created_by: user?.id || null,
+    }).select().single();
+    if(error) throw error;
+    _mktCampaigns.unshift(data);
+    mktCampRender();
+    mktCalFillCampaignSelect('mktCalPostCampaign');
+    document.getElementById('mktCampCreateForm')?.classList.remove('open');
+    ['mktNewName','mktNewDesc','mktNewGoal','mktNewResult','mktNewStart','mktNewEnd'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+    const bud = document.getElementById('mktNewBudget'); if(bud) bud.value = '0';
+    mktRenderPlatformChecks('mktNewPlatforms', []);
+    toast('Campaign created', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function mktCampView(id){
+  const c = _mktCampaigns.find(x => x.id === id);
+  if(!c) return;
+  _mktCampViewId = id;
+  const body = document.getElementById('mktCampViewBody');
+  if(body){
+    body.innerHTML =
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Name</span>' + esc(c.name) + '</div>' +
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Status</span>' + mktStatusBadge(c.status) + '</div>' +
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Platforms</span>' + mktPlatformIcons(c.platform) + '</div>' +
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Dates</span>' + esc([c.start_date, c.end_date].filter(Boolean).map(d => fmtDate(d)).join(' → ') || '—') + '</div>' +
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Budget PC</span>' + Number(c.budget_pc || 0) + ' PC</div>' +
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Goal</span>' + esc(c.goal || '—') + '</div>' +
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Description</span>' + esc(c.description || '—').replace(/\n/g, '<br>') + '</div>' +
+      '<div class="mkt-view-row"><span class="mkt-view-lbl">Result notes</span>' + esc(c.result_notes || '—').replace(/\n/g, '<br>') + '</div>';
+  }
+  document.getElementById('mktCampViewModal')?.classList.remove('hidden');
+}
+
+function mktCampCloseView(){
+  document.getElementById('mktCampViewModal')?.classList.add('hidden');
+  _mktCampViewId = null;
+}
+
+function mktCampEditFromView(){
+  const id = _mktCampViewId;
+  mktCampCloseView();
+  if(id) mktCampEdit(id);
+}
+
+function mktCampEdit(id){
+  const c = _mktCampaigns.find(x => x.id === id);
+  if(!c) return;
+  document.getElementById('mktEditId').value = c.id;
+  document.getElementById('mktEditName').value = c.name || '';
+  document.getElementById('mktEditDesc').value = c.description || '';
+  document.getElementById('mktEditStatus').value = c.status || 'draft';
+  document.getElementById('mktEditBudget').value = c.budget_pc || 0;
+  document.getElementById('mktEditStart').value = c.start_date || '';
+  document.getElementById('mktEditEnd').value = c.end_date || '';
+  document.getElementById('mktEditGoal').value = c.goal || '';
+  document.getElementById('mktEditResult').value = c.result_notes || '';
+  mktRenderPlatformChecks('mktEditPlatforms', c.platform || []);
+  document.getElementById('mktCampEditModal')?.classList.remove('hidden');
+}
+
+function mktCampCloseEdit(){
+  document.getElementById('mktCampEditModal')?.classList.add('hidden');
+}
+
+async function mktCampSaveEdit(){
+  const id = document.getElementById('mktEditId')?.value;
+  const name = (document.getElementById('mktEditName')?.value || '').trim();
+  if(!id || !name){ toast('ENTER CAMPAIGN NAME', 'err'); return; }
+  try{
+    const row = {
+      name,
+      description: (document.getElementById('mktEditDesc')?.value || '').trim() || null,
+      status: document.getElementById('mktEditStatus')?.value || 'draft',
+      platform: mktReadPlatformChecks('mktEditPlatforms'),
+      start_date: document.getElementById('mktEditStart')?.value || null,
+      end_date: document.getElementById('mktEditEnd')?.value || null,
+      goal: (document.getElementById('mktEditGoal')?.value || '').trim() || null,
+      budget_pc: parseInt(document.getElementById('mktEditBudget')?.value, 10) || 0,
+      result_notes: (document.getElementById('mktEditResult')?.value || '').trim() || null,
+    };
+    const { error } = await sb.from('mkt_campaigns').update(row).eq('id', id);
+    if(error) throw error;
+    const c = _mktCampaigns.find(x => x.id === id);
+    if(c) Object.assign(c, row);
+    mktCampRender();
+    mktCalFillCampaignSelect('mktCalPostCampaign');
+    mktCampCloseEdit();
+    toast('Campaign saved', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktCampTogglePause(id){
+  const c = _mktCampaigns.find(x => x.id === id);
+  if(!c) return;
+  const next = c.status === 'active' ? 'paused' : (c.status === 'paused' ? 'active' : null);
+  if(!next){ toast('Only active/paused campaigns can toggle', 'err'); return; }
+  try{
+    const { error } = await sb.from('mkt_campaigns').update({ status: next }).eq('id', id);
+    if(error) throw error;
+    c.status = next;
+    mktCampRender();
+    toast(next === 'paused' ? 'Campaign paused' : 'Campaign resumed', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function mktCalDateKey(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
+function mktCalToLocalInput(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return '';
+  const off = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - off * 60000);
+  return local.toISOString().slice(0, 16);
+}
+
+function mktCalFillPlatformSelect(){
+  const sel = document.getElementById('mktCalPostPlatform');
+  if(!sel) return;
+  sel.innerHTML = MKT_PLATFORMS.map(p =>
+    '<option value="' + p.id + '">' + p.icon + ' ' + esc(p.label) + '</option>'
+  ).join('');
+}
+
+function mktCalFillCampaignSelect(selectId){
+  const sel = document.getElementById(selectId);
+  if(!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— None —</option>' + _mktCampaigns.map(c =>
+    '<option value="' + c.id + '">' + esc(c.name) + '</option>'
+  ).join('');
+  if(cur) sel.value = cur;
+}
+
+async function mktCalLoad(){
+  const { data, error } = await sb.from('mkt_content_calendar').select('*').order('scheduled_at', { ascending: true });
+  if(error) throw error;
+  _mktCalPosts = data || [];
+}
+
+function mktCalPostsByDay(){
+  const map = {};
+  (_mktCalPosts || []).forEach(p => {
+    if(!p.scheduled_at) return;
+    const key = mktCalDateKey(new Date(p.scheduled_at));
+    if(!map[key]) map[key] = [];
+    map[key].push(p);
+  });
+  Object.keys(map).forEach(k => map[k].sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at)));
+  return map;
+}
+
+function mktCalRender(){
+  const grid = document.getElementById('mktCalGrid');
+  const label = document.getElementById('mktCalMonthLabel');
+  if(!grid) return;
+  const y = _mktCalMonth.getFullYear();
+  const m = _mktCalMonth.getMonth();
+  if(label) label.textContent = _mktCalMonth.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  const todayKey = mktCalDateKey(new Date());
+  const byDay = mktCalPostsByDay();
+  const dows = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = dows.map(d => '<div class="mkt-cal-dow">' + d + '</div>').join('');
+  const first = new Date(y, m, 1);
+  const startPad = first.getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  for(let i = 0; i < startPad; i++) html += '<div class="mkt-cal-day pad"></div>';
+  for(let day = 1; day <= daysInMonth; day++){
+    const date = new Date(y, m, day);
+    const key = mktCalDateKey(date);
+    const posts = byDay[key] || [];
+    const todayCls = key === todayKey ? ' today' : '';
+    const postHtml = posts.map(p =>
+      `<div class="mkt-cal-post" onclick="mktCalOpenPost('${p.id}')" title="${esc(p.title || '')}">
+        <span>${mktPlatformIcon(p.platform)}</span>
+        <span class="mkt-cal-post-title">${esc(p.title || 'Post')}</span>
+      </div>`
+    ).join('');
+    html += `<div class="mkt-cal-day${todayCls}">
+      <div class="mkt-cal-day-num">${day}</div>
+      <div class="mkt-cal-posts">${postHtml}</div>
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function mktCalPrev(){
+  _mktCalMonth = new Date(_mktCalMonth.getFullYear(), _mktCalMonth.getMonth() - 1, 1);
+  mktCalRender();
+}
+
+function mktCalNext(){
+  _mktCalMonth = new Date(_mktCalMonth.getFullYear(), _mktCalMonth.getMonth() + 1, 1);
+  mktCalRender();
+}
+
+function mktCalShowSchedule(prefillDate){
+  mktCalFillPlatformSelect();
+  mktCalFillCampaignSelect('mktCalPostCampaign');
+  document.getElementById('mktCalPostId').value = '';
+  document.getElementById('mktCalPostName').value = '';
+  document.getElementById('mktCalPostBody').value = '';
+  document.getElementById('mktCalPostPlatform').value = MKT_PLATFORMS[0]?.id || 'tiktok';
+  document.getElementById('mktCalPostStatus').value = 'scheduled';
+  document.getElementById('mktCalPostAsset').value = '';
+  document.getElementById('mktCalPostCampaign').value = '';
+  const at = document.getElementById('mktCalPostAt');
+  if(at){
+    if(prefillDate instanceof Date){
+      const d = new Date(prefillDate);
+      d.setHours(12, 0, 0, 0);
+      at.value = mktCalToLocalInput(d.toISOString());
+    }else{
+      const d = new Date();
+      d.setMinutes(0, 0, 0);
+      d.setHours(d.getHours() + 1);
+      at.value = mktCalToLocalInput(d.toISOString());
+    }
+  }
+  document.getElementById('mktCalPostTitle').textContent = 'Schedule post';
+  document.getElementById('mktCalPostDeleteBtn')?.classList.add('hidden');
+  document.getElementById('mktCalPostModal')?.classList.remove('hidden');
+}
+
+function mktCalOpenPost(id){
+  const p = _mktCalPosts.find(x => x.id === id);
+  if(!p) return;
+  mktCalFillPlatformSelect();
+  mktCalFillCampaignSelect('mktCalPostCampaign');
+  document.getElementById('mktCalPostId').value = p.id;
+  document.getElementById('mktCalPostName').value = p.title || '';
+  document.getElementById('mktCalPostBody').value = p.body || '';
+  document.getElementById('mktCalPostPlatform').value = p.platform || MKT_PLATFORMS[0]?.id;
+  document.getElementById('mktCalPostStatus').value = p.status || 'draft';
+  document.getElementById('mktCalPostAt').value = mktCalToLocalInput(p.scheduled_at);
+  document.getElementById('mktCalPostAsset').value = p.asset_url || '';
+  document.getElementById('mktCalPostCampaign').value = p.campaign_id || '';
+  document.getElementById('mktCalPostTitle').textContent = 'Edit post';
+  document.getElementById('mktCalPostDeleteBtn')?.classList.remove('hidden');
+  document.getElementById('mktCalPostModal')?.classList.remove('hidden');
+}
+
+function mktCalClosePost(){
+  document.getElementById('mktCalPostModal')?.classList.add('hidden');
+}
+
+async function mktCalSavePost(){
+  const title = (document.getElementById('mktCalPostName')?.value || '').trim();
+  if(!title){ toast('ENTER POST TITLE', 'err'); return; }
+  const scheduledLocal = document.getElementById('mktCalPostAt')?.value;
+  const scheduled_at = scheduledLocal ? new Date(scheduledLocal).toISOString() : null;
+  const id = document.getElementById('mktCalPostId')?.value;
+  const row = {
+    title,
+    body: (document.getElementById('mktCalPostBody')?.value || '').trim() || null,
+    platform: document.getElementById('mktCalPostPlatform')?.value || 'tiktok',
+    status: document.getElementById('mktCalPostStatus')?.value || 'draft',
+    scheduled_at,
+    asset_url: (document.getElementById('mktCalPostAsset')?.value || '').trim() || null,
+    campaign_id: (document.getElementById('mktCalPostCampaign')?.value || '') || null,
+  };
+  if(!row.campaign_id) row.campaign_id = null;
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    if(id){
+      const { error } = await sb.from('mkt_content_calendar').update(row).eq('id', id);
+      if(error) throw error;
+      const p = _mktCalPosts.find(x => x.id === id);
+      if(p) Object.assign(p, row);
+    }else{
+      row.created_by = user?.id || null;
+      const { data, error } = await sb.from('mkt_content_calendar').insert(row).select().single();
+      if(error) throw error;
+      _mktCalPosts.push(data);
+    }
+    if(scheduled_at){
+      _mktCalMonth = new Date(new Date(scheduled_at).getFullYear(), new Date(scheduled_at).getMonth(), 1);
+    }
+    mktCalRender();
+    mktCalClosePost();
+    toast('Post saved', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktCalDeletePost(){
+  const id = document.getElementById('mktCalPostId')?.value;
+  if(!id || !confirm('Delete this scheduled post?')) return;
+  try{
+    const { error } = await sb.from('mkt_content_calendar').delete().eq('id', id);
+    if(error) throw error;
+    _mktCalPosts = _mktCalPosts.filter(p => p.id !== id);
+    mktCalRender();
+    mktCalClosePost();
+    toast('Post deleted', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktCalTabEnter(){
+  try{
+    if(!_mktCampaigns.length) await mktCampLoad();
+    await mktCalLoad();
+    mktCalFillPlatformSelect();
+    mktCalRender();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -5368,6 +5982,8 @@ function switchTab(id){
   else                 { ntsTabLeave(); }
   if(id==='syshealth') { hlthTabEnter(); }
   else                 { hlthTabLeave(); }
+  if(id==='campaigns') { mktCampTabEnter(); }
+  if(id==='calendar')  { mktCalTabEnter(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
