@@ -255,6 +255,12 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .msg-attach-preview{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;font-size:11px;margin-bottom:8px;padding:8px 10px;width:100%}
 .msg-inline-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:11px;margin-top:6px;padding:8px 10px}
 .msg-inline-card strong{display:block;font-size:12px;margin-bottom:2px}
+.msg-inline-img{max-width:100%;border-radius:8px;cursor:pointer;display:block;margin-top:6px}
+.msg-ticket-link{cursor:pointer;transition:border-color .15s,background .15s}
+.msg-ticket-link:hover{border-color:rgba(245,158,11,.45);background:rgba(245,158,11,.06)}
+.msg-ticket-link-label{display:block;margin-top:2px}
+.msg-ticket-link-hint{color:var(--amber);font-size:10px;margin-top:4px}
+.msg-attach-preview img{max-height:80px;border-radius:6px;display:block;margin-bottom:6px}
 .msg-empty-chat{align-items:center;color:var(--muted);display:flex;flex:1;flex-direction:column;font-size:13px;gap:8px;justify-content:center;padding:32px;text-align:center}
 #msgChatActive{display:flex;flex:1;flex-direction:column;min-height:0}
 #msgChatActive.hidden,#msgChatEmpty.hidden{display:none!important}
@@ -513,6 +519,11 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-bubble img,.stkt-auto-text img{max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;display:block}
 .stkt-msg-time{font-size:9px;color:var(--muted);margin-top:3px;padding:0 4px}
 .stkt-msg.player .stkt-msg-time{text-align:right}
+.stkt-msg.msg-can-delete{position:relative}
+.msg-del-btn{align-items:center;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--muted);cursor:pointer;display:flex;font-size:11px;height:22px;justify-content:center;opacity:0;padding:0;position:absolute;right:0;top:0;transition:opacity .15s,color .15s,border-color .15s;width:22px;z-index:1}
+.stkt-msg.msg-can-delete:hover .msg-del-btn{opacity:1}
+.msg-del-btn:hover{border-color:rgba(239,68,68,.45);color:var(--red)}
+.stkt-msg.player.msg-can-delete .msg-del-btn{left:0;right:auto}
 .stkt-compose{padding:10px 10px 8px;border-top:1px solid var(--border2);background:var(--bg1);flex-shrink:0;position:sticky;bottom:0;z-index:2}
 .stkt-compose-row{display:flex;align-items:flex-end;gap:8px}
 .stkt-compose-input{flex:1;min-width:0}
@@ -1052,10 +1063,12 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
               <div class="msg-attach-wrap">
                 <button type="button" class="btn btn-ghost btn-sm" onclick="msgToggleAttachMenu(event)" title="Attach">📎</button>
                 <div class="msg-attach-menu" id="msgAttachMenu">
+                  <div class="msg-attach-opt" onclick="msgAttachPick('image')">🖼 Attach image</div>
                   <div class="msg-attach-opt" onclick="msgAttachPick('ticket')">🎫 Attach ticket</div>
                   <div class="msg-attach-opt" onclick="msgAttachPick('asset')">📦 Attach asset</div>
                   <div class="msg-attach-opt" onclick="msgAttachPick('round')">🎲 Attach RNG round</div>
                 </div>
+                <input type="file" id="msgAttachFile" accept="image/jpeg,image/png,image/webp" hidden onchange="msgOnAttachFile()"/>
               </div>
               <div style="flex:1;min-width:0">
                 <div class="msg-attach-preview hidden" id="msgAttachPreview"></div>
@@ -3992,6 +4005,7 @@ let _msgRealtimeCh = null;
 let _msgPendingAttach = null;
 let _msgSearchKind = null;
 let _msgPendingOpenChannel = null;
+let _msgIsSuperadmin = false;
 
 function msgDmChannelName(id1, id2){
   const [a, b] = [id1, id2].sort();
@@ -4114,20 +4128,60 @@ function msgStartRealtime(channelId){
       event: 'INSERT', schema: 'public', table: 'os_messages',
       filter: 'channel_id=eq.' + channelId,
     }, payload => {
+      const box = document.getElementById('msgChatMsgs');
+      box?.querySelector('.os-dash-empty')?.remove();
       msgAppendMessage(payload.new, true);
       if(payload.new.sender_id !== _msgCurrentUserId) msgMarkChannelRead(channelId);
+    })
+    .on('postgres_changes', {
+      event: 'DELETE', schema: 'public', table: 'os_messages',
+      filter: 'channel_id=eq.' + channelId,
+    }, payload => {
+      const id = payload.old?.id;
+      if(id) document.querySelector('#msgChatMsgs [data-msg-id="' + id + '"]')?.remove();
+      msgAfterMessageRemoved();
     })
     .subscribe();
 }
 
 function msgRenderAttachment(m){
-  if(!m.attachment_type || !m.attachment_ref) return '';
   const t = m.attachment_type;
+  if(!t) return '';
+  if(t === 'image' && m.attachment_url){
+    return `<img src="${esc(m.attachment_url)}" alt="Attachment" loading="lazy" class="msg-inline-img" onclick="window.open(this.src,'_blank')"/>`;
+  }
+  if(t === 'ticket' && m.attachment_ref){
+    const subj = (m.attachment_url || '').replace(/^🎫\s*/, '') || (String(m.attachment_ref).slice(0, 8) + '…');
+    return `<div class="msg-inline-card msg-ticket-link" role="button" tabindex="0" onclick="msgOpenTicketChat('${m.attachment_ref}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();msgOpenTicketChat('${m.attachment_ref}')}"><strong>🎫 Support ticket</strong><span class="msg-ticket-link-label">${esc(subj)}</span><span class="msg-ticket-link-hint">Open ticket →</span></div>`;
+  }
+  if(!m.attachment_ref) return '';
   const ref = String(m.attachment_ref).slice(0, 8) + '…';
-  if(t === 'ticket') return `<div class="msg-inline-card"><strong>🎫 Support ticket</strong>${esc(ref)}</div>`;
   if(t === 'asset') return `<div class="msg-inline-card"><strong>📦 Asset</strong>${esc(m.attachment_url || ref)}</div>`;
   if(t === 'round' || t === 'rng') return `<div class="msg-inline-card"><strong>🎲 RNG round</strong>${esc(ref)}</div>`;
   return `<div class="msg-inline-card">${esc(t)} · ${esc(ref)}</div>`;
+}
+
+async function msgOpenTicketChat(ticketId){
+  if(!ticketId) return;
+  switchTab('stkt');
+  await stktOpenTicketFromRef(ticketId);
+}
+
+async function stktOpenTicketFromRef(ticketId){
+  if(!ticketId) return;
+  try{
+    await stktLoadQueue();
+    let t = _stktTickets.find(x => x.id === ticketId);
+    if(!t){
+      const { data, error } = await sb.from('support_tickets').select('*').eq('id', ticketId).maybeSingle();
+      if(error) throw error;
+      if(data){ _stktTickets.unshift(data); t = data; }
+    }
+    if(t) await stktOpenTicket(ticketId);
+    else toast('Ticket not found', 'err');
+  }catch(err){
+    toast(err.message || 'Could not open ticket', 'err');
+  }
 }
 
 function msgRenderMessageEl(m){
@@ -4139,13 +4193,40 @@ function msgRenderMessageEl(m){
     return `<div class="stkt-msg auto" data-msg-id="${m.id}"><div class="stkt-auto-text">${esc(m.body || '')}</div><div class="stkt-msg-time">${esc(time)}</div></div>`;
   }
   const cls = isMine ? 'player' : 'staff';
+  const canDelete = _msgIsSuperadmin;
+  const extraCls = canDelete ? ' msg-can-delete' : '';
+  const delBtn = canDelete
+    ? `<button type="button" class="msg-del-btn" onclick="msgDeleteMessage('${m.id}')" title="Delete message" aria-label="Delete message">✕</button>`
+    : '';
   const head = isMine ? '' : `<span style="font-size:10px;color:var(--muted);margin-bottom:2px">${esc(who)}</span>`;
-  return `<div class="stkt-msg ${cls}" data-msg-id="${m.id}">${head}<div class="stkt-bubble">${esc(m.body || '')}${msgRenderAttachment(m)}</div><div class="stkt-msg-time">${esc(time)}</div></div>`;
+  return `<div class="stkt-msg ${cls}${extraCls}" data-msg-id="${m.id}">${delBtn}${head}<div class="stkt-bubble">${esc(m.body || '')}${msgRenderAttachment(m)}</div><div class="stkt-msg-time">${esc(time)}</div></div>`;
+}
+
+function msgAfterMessageRemoved(){
+  const box = document.getElementById('msgChatMsgs');
+  if(box && !box.querySelector('[data-msg-id]')){
+    box.innerHTML = '<p class="os-dash-empty">No messages yet — say hello!</p>';
+  }
+}
+
+async function msgDeleteMessage(msgId){
+  if(!_msgIsSuperadmin || !msgId) return;
+  if(!confirm('Delete this message?')) return;
+  try{
+    const { error } = await sb.rpc('delete_os_message', { p_message_id: msgId });
+    if(error) throw error;
+    document.querySelector('#msgChatMsgs [data-msg-id="' + msgId + '"]')?.remove();
+    msgAfterMessageRemoved();
+    toast('Message deleted', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
 }
 
 function msgAppendMessage(m, scroll){
   const box = document.getElementById('msgChatMsgs');
   if(!box || box.querySelector('[data-msg-id="' + m.id + '"]')) return;
+  box.querySelector('.os-dash-empty')?.remove();
   if(m.sender_id && !_msgProfMap[m.sender_id]){
     sb.from('profiles').select('username').eq('id', m.sender_id).maybeSingle().then(({ data }) => {
       if(data) _msgProfMap[m.sender_id] = data.username;
@@ -4195,6 +4276,8 @@ async function msgTabEnter(){
   try{
     const { data: { user } } = await sb.auth.getUser();
     _msgCurrentUserId = user?.id || null;
+    const { data: role } = await sb.rpc('get_admin_role');
+    _msgIsSuperadmin = osIsSuperadmin(role);
     await msgLoadTeam();
     await msgEnsureMemberships();
     await msgLoadChannels();
@@ -4228,6 +4311,11 @@ function msgToggleAttachMenu(e){
 document.addEventListener('click', () => document.getElementById('msgAttachMenu')?.classList.remove('open'));
 
 function msgAttachPick(kind){
+  if(kind === 'image'){
+    document.getElementById('msgAttachMenu')?.classList.remove('open');
+    document.getElementById('msgAttachFile')?.click();
+    return;
+  }
   _msgSearchKind = kind;
   document.getElementById('msgAttachMenu')?.classList.remove('open');
   const titles = { ticket: 'Attach ticket', asset: 'Attach asset (serial)', round: 'Attach RNG round' };
@@ -4288,6 +4376,7 @@ function msgSetAttachFromEl(el){
 }
 
 function msgSetAttach(type, ref, label){
+  msgClearAttach();
   _msgPendingAttach = { type, ref, label: label || (type + ' ' + String(ref).slice(0, 8)) };
   const prev = document.getElementById('msgAttachPreview');
   if(prev){
@@ -4298,9 +4387,46 @@ function msgSetAttach(type, ref, label){
 }
 
 function msgClearAttach(){
+  if(_msgPendingAttach?.previewUrl) URL.revokeObjectURL(_msgPendingAttach.previewUrl);
   _msgPendingAttach = null;
   const prev = document.getElementById('msgAttachPreview');
   if(prev){ prev.classList.add('hidden'); prev.innerHTML = ''; }
+  const inp = document.getElementById('msgAttachFile');
+  if(inp) inp.value = '';
+}
+
+async function msgOnAttachFile(){
+  const inp = document.getElementById('msgAttachFile');
+  const file = inp?.files?.[0];
+  if(inp) inp.value = '';
+  if(!file) return;
+  if(!STKT_IMG_TYPES.includes(file.type)){ toast('ONLY JPEG, PNG, WEBP', 'err'); return; }
+  if(file.size > STKT_MAX_BYTES){ toast('MAX 2MB BEFORE COMPRESS', 'err'); return; }
+  try{
+    const compressed = await stktCompressImage(file);
+    msgClearAttach();
+    const previewUrl = URL.createObjectURL(compressed);
+    _msgPendingAttach = { type: 'image', file: compressed, previewUrl, name: compressed.name, size: compressed.size };
+    const prev = document.getElementById('msgAttachPreview');
+    if(prev){
+      prev.classList.remove('hidden');
+      prev.innerHTML = '<img src="' + previewUrl + '" alt="Preview"/>' +
+        esc(compressed.name) + ' · ' + stktFmtBytes(compressed.size) +
+        ' <button type="button" class="btn btn-ghost btn-sm" onclick="msgClearAttach()">×</button>';
+    }
+  }catch(e){
+    toast(e.message || 'Image error', 'err');
+  }
+}
+
+async function msgUploadImage(file){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) throw new Error('Not authenticated');
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const path = 'messenger/' + user.id + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+  const { error } = await sb.storage.from('support-attachments').upload(path, file, { contentType: file.type });
+  if(error) throw error;
+  return sb.storage.from('support-attachments').getPublicUrl(path).data.publicUrl;
 }
 
 async function msgSend(){
@@ -4318,8 +4444,13 @@ async function msgSend(){
     };
     if(_msgPendingAttach){
       row.attachment_type = _msgPendingAttach.type === 'round' ? 'round' : _msgPendingAttach.type;
-      row.attachment_ref = _msgPendingAttach.ref;
-      row.attachment_url = _msgPendingAttach.label;
+      if(_msgPendingAttach.type === 'image'){
+        row.attachment_url = await msgUploadImage(_msgPendingAttach.file);
+        row.attachment_ref = null;
+      }else{
+        row.attachment_ref = _msgPendingAttach.ref;
+        row.attachment_url = _msgPendingAttach.label;
+      }
     }
     const { error } = await sb.from('os_messages').insert(row);
     if(error) throw error;
