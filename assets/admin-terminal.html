@@ -607,8 +607,6 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .badge-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
 .badge-cyan{background:rgba(99,102,241,0.12);color:var(--cyan)}
 /* ── OVERLAYS ── */
-#poxyMaintOverlay{display:none;position:fixed;inset:0;background:#1e1f22;z-index:99999;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-family:var(--font)}
-#poxyMaintOverlay.active{display:flex}
 #poxyBroadcastBanner{display:none;position:fixed;top:0;left:0;right:0;background:var(--red);color:#fff;font-family:var(--font);font-size:12px;font-weight:600;letter-spacing:.06em;text-align:center;padding:8px;z-index:99998;text-transform:uppercase}
 #poxyBroadcastBanner.active{display:block}
 /* ── MISC ── */
@@ -987,15 +985,6 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
      BROADCAST BANNER — rendered globally
      ═══════════════════════════════════════════════════════ -->
 <div id="poxyBroadcastBanner"></div>
-
-<!-- ═══════════════════════════════════════════════════════
-     MAINTENANCE OVERLAY — replaces public UI
-     ═══════════════════════════════════════════════════════ -->
-<div id="poxyMaintOverlay">
-  <div style="font-size:11px;letter-spacing:.4em;color:var(--amber);text-transform:uppercase">⚠ POXY WORLD</div>
-  <div style="font-size:24px;font-weight:700;letter-spacing:.1em;color:#fff;text-transform:uppercase">MAINTENANCE</div>
-  <div id="maintMsg" style="font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase">System temporarily offline. Uplink restoring.</div>
-</div>
 
 <!-- ═══════════════════════════════════════════════════════
      AUTH GATE
@@ -1704,13 +1693,13 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
                 <input type="checkbox" id="maintToggle" onchange="toggleMaintenance()"/>
                 <span class="toggle-slider"></span>
               </label>
-              <span class="toggle-label">FORCE MAINTENANCE BLOCK SCREEN</span>
+              <span class="toggle-label">BLOCK PUBLIC SITE (MCU STAYS ACCESSIBLE)</span>
             </div>
             <div class="f-row">
               <label class="f-label">MAINTENANCE MESSAGE</label>
               <input id="maintMsg2" class="f-input" type="text" value="System temporarily offline. Uplink restoring."/>
             </div>
-            <div style="font-size:8px;color:var(--muted)">PERSISTS IN LOCALSTORAGE ACROSS SESSIONS</div>
+            <div style="font-size:8px;color:var(--muted)">APPLIES TO POXY.WORLD ONLY — STORED IN LOCALSTORAGE ON THIS BROWSER</div>
           </div>
         </div>
       </div>
@@ -7751,33 +7740,30 @@ function restoreBroadcast(){
   }
 }
 
-// MAINTENANCE
+// MAINTENANCE — public site only (index.html reads localStorage; MCU is never blocked)
 function toggleMaintenance(){
   const on = document.getElementById('maintToggle').checked;
   const msg = document.getElementById('maintMsg2').value || 'System temporarily offline.';
   if(on){
     localStorage.setItem('poxy_maintenance','1');
     localStorage.setItem('poxy_maintenance_msg', msg);
-    document.getElementById('maintMsg').textContent = msg;
-    document.getElementById('poxyMaintOverlay').classList.add('active');
-    streamLine('ADMIN', 'MAINTENANCE MODE ACTIVATED');
-    toast('MAINTENANCE MODE ON');
+    streamLine('ADMIN', 'MAINTENANCE MODE ACTIVATED (public site)');
+    toast('MAINTENANCE ON — public site blocked');
   } else {
     localStorage.removeItem('poxy_maintenance');
-    document.getElementById('poxyMaintOverlay').classList.remove('active');
+    localStorage.removeItem('poxy_maintenance_msg');
     streamLine('ADMIN', 'MAINTENANCE MODE DEACTIVATED');
     toast('MAINTENANCE MODE OFF');
   }
 }
 
 function restoreMaintenance(){
-  if(localStorage.getItem('poxy_maintenance')==='1'){
-    document.getElementById('maintToggle').checked = true;
-    const msg = localStorage.getItem('poxy_maintenance_msg')||'System temporarily offline.';
-    document.getElementById('maintMsg2').value = msg;
-    document.getElementById('maintMsg').textContent = msg;
-    document.getElementById('poxyMaintOverlay').classList.add('active');
-  }
+  const on = localStorage.getItem('poxy_maintenance')==='1';
+  const toggle = document.getElementById('maintToggle');
+  if(toggle) toggle.checked = on;
+  const msg = localStorage.getItem('poxy_maintenance_msg')||'System temporarily offline.';
+  const input = document.getElementById('maintMsg2');
+  if(input) input.value = msg;
 }
 
 // ═══════════════════════════════════════════════════════════════
