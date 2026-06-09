@@ -238,10 +238,12 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mcu-search-result-tag{background:var(--bg2);border-radius:4px;color:var(--amber);flex-shrink:0;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 6px;text-transform:uppercase}
 .mcu-search-foot{border-top:1px solid var(--border);color:var(--muted);display:flex;flex-wrap:wrap;font-size:11px;gap:12px 16px;padding:10px 16px}
 /* ── SUPPORT TICKETS (Session C) ── */
-.stkt-layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.2fr);gap:12px;margin-bottom:16px;min-height:420px}
-@media(max-width:1100px){.stkt-layout{grid-template-columns:1fr}}
-.stkt-queue-card,.stkt-chat-card{display:flex;flex-direction:column;min-height:420px}
+.stkt-layout{display:grid;grid-template-columns:minmax(220px,0.68fr) minmax(480px,1.75fr);gap:14px;margin-bottom:16px;min-height:540px}
+@media(max-width:1200px){.stkt-layout{grid-template-columns:minmax(200px,0.75fr) minmax(360px,1.4fr)}}
+@media(max-width:900px){.stkt-layout{grid-template-columns:1fr}}
+.stkt-queue-card,.stkt-chat-card{display:flex;flex-direction:column;min-height:540px}
 .stkt-queue-card .tbl-wrap,.stkt-chat-msgs{flex:1;min-height:0;overflow:auto}
+#stktChatActive{display:flex;flex-direction:column;flex:1;min-height:0}
 .stkt-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .stkt-filter-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
 .stkt-filter-btn.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.12)}
@@ -251,8 +253,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-chat-title{font-size:14px;font-weight:700;color:var(--adm-text)}
 .stkt-chat-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .stkt-chat-actions{display:flex;gap:6px;flex-wrap:wrap}
-.stkt-chat-msgs{display:flex;flex-direction:column;gap:10px;padding:8px 4px;max-height:min(52vh,480px)}
-.stkt-msg{max-width:88%;animation:stktMsgIn .25s ease-out}
+.stkt-chat-msgs{display:flex;flex-direction:column;gap:10px;padding:10px 6px;max-height:min(64vh,620px);flex:1;min-height:280px}
+.stkt-msg{max-width:78%;animation:stktMsgIn .25s ease-out}
 @keyframes stktMsgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .stkt-msg.player{align-self:flex-start}
 .stkt-msg.staff{align-self:flex-end}
@@ -264,13 +266,13 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-bubble img{max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;display:block}
 .stkt-msg-time{font-size:9px;color:var(--muted);margin-top:3px;padding:0 4px}
 .stkt-msg.staff .stkt-msg-time{text-align:right}
-.stkt-quick-panel{margin-top:10px;border-top:1px solid var(--border2);padding-top:10px}
+.stkt-quick-panel{margin-top:8px;border-top:1px solid var(--border2);padding-top:8px;flex-shrink:0}
 .stkt-quick-toggle{width:100%;text-align:left;background:transparent;border:none;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:4px 0}
-.stkt-quick-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.stkt-quick-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:6px;margin-top:8px;max-height:132px;overflow-y:auto;padding-right:4px}
 .stkt-quick-list[hidden]{display:none!important}
-.stkt-quick-chip{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--adm-text);font-size:11px;cursor:pointer}
-.stkt-quick-chip:hover{border-color:var(--amber);color:var(--amber)}
-.stkt-compose{margin-top:10px;padding-top:10px;border-top:1px solid var(--border2)}
+.stkt-quick-chip{padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--adm-text);font-size:10px;font-weight:600;line-height:1.35;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.stkt-quick-chip:hover{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.08)}
+.stkt-compose{margin-top:10px;padding-top:10px;border-top:1px solid var(--border2);flex-shrink:0}
 .stkt-compose-row{display:flex;align-items:flex-end;gap:8px}
 .stkt-compose-input{flex:1;min-width:0}
 .stkt-attach-preview{display:none;margin-bottom:8px;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--bg2);font-size:11px;color:var(--muted)}
@@ -1311,8 +1313,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
             </div>
             <div class="stkt-chat-msgs" id="stktChatMsgs"></div>
             <div class="stkt-quick-panel">
-              <button type="button" class="stkt-quick-toggle" onclick="stktToggleQuickReplies()">▸ Quick replies</button>
-              <div class="stkt-quick-list" id="stktQuickChips" hidden></div>
+              <button type="button" class="stkt-quick-toggle" id="stktQuickToggle" onclick="stktToggleQuickReplies()">▾ Quick replies</button>
+              <div class="stkt-quick-list" id="stktQuickChips"></div>
             </div>
             <div class="stkt-compose" id="stktCompose">
               <div class="stkt-attach-preview" id="stktAttachPreview">
@@ -5712,6 +5714,7 @@ async function stktOpenTicket(ticketId){
 
   await stktLoadMessages(ticketId);
   stktRenderQuickChips();
+  stktExpandQuickReplies(true);
   stktStartChatStream(ticketId);
 }
 
@@ -5816,9 +5819,16 @@ async function stktSendReply(){
   if(btn) btn.disabled = false;
 }
 
+function stktExpandQuickReplies(expanded){
+  const el = document.getElementById('stktQuickChips');
+  const btn = document.getElementById('stktQuickToggle');
+  if(el) el.hidden = !expanded;
+  if(btn) btn.textContent = (expanded ? '▾' : '▸') + ' Quick replies' + (_stktQuickReplies.length ? ' (' + _stktQuickReplies.length + ')' : '');
+}
+
 function stktToggleQuickReplies(){
   const el = document.getElementById('stktQuickChips');
-  if(el) el.hidden = !el.hidden;
+  stktExpandQuickReplies(!!(el && el.hidden));
 }
 
 function stktRenderQuickChips(){
@@ -5826,11 +5836,14 @@ function stktRenderQuickChips(){
   if(!el) return;
   if(!_stktQuickReplies.length){
     el.innerHTML = '<span style="font-size:11px;color:var(--muted)">No quick replies</span>';
+    stktExpandQuickReplies(false);
     return;
   }
   el.innerHTML = _stktQuickReplies.map((r, i) =>
-    '<button type="button" class="stkt-quick-chip" onclick="stktInsertQuickReplyIdx(' + i + ')">' + esc(r.title) + '</button>'
+    '<button type="button" class="stkt-quick-chip" title="' + esc(r.body) + '" onclick="stktInsertQuickReplyIdx(' + i + ')">' + esc(r.title) + '</button>'
   ).join('');
+  const btn = document.getElementById('stktQuickToggle');
+  if(btn && !el.hidden) btn.textContent = '▾ Quick replies (' + _stktQuickReplies.length + ')';
 }
 
 function stktInsertQuickReplyIdx(i){
