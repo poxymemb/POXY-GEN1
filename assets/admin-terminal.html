@@ -250,11 +250,12 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-main:not(.stkt-has-ticket) .stkt-col-chat{max-width:none;flex:1 1 auto}
 .stkt-main.stkt-has-ticket .stkt-col-chat{max-width:600px}
 @media(max-width:960px){.stkt-main{flex-direction:column;height:auto;min-height:0}}
-.stkt-col-queue,.stkt-col-chat,.stkt-col-side{display:flex;flex-direction:column;min-height:0;height:100%;margin-bottom:0;overflow-y:auto;overflow-x:hidden}
+.stkt-col-queue,.stkt-col-side{display:flex;flex-direction:column;min-height:0;height:100%;margin-bottom:0;overflow-y:auto;overflow-x:hidden}
 .stkt-col-queue{flex:0 0 280px;width:280px;max-width:280px}
-.stkt-col-chat{flex:1 1 auto;min-width:0}
+.stkt-col-chat{display:flex;flex-direction:column;flex:1 1 auto;min-width:0;min-height:0;height:100%;margin-bottom:0;overflow:hidden}
 .stkt-col-side{flex:0 0 340px;width:340px;max-width:340px;margin-left:auto}
 @media(max-width:960px){.stkt-col-queue,.stkt-col-chat,.stkt-col-side{flex:1 1 auto;width:100%;max-width:none;height:auto;max-height:50vh;margin-left:0}}
+@media(max-width:960px){.stkt-col-chat{overflow:hidden}}
 .stkt-col-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-shrink:0}
 .stkt-col-title{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
 .stkt-filters{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;flex-shrink:0}
@@ -279,8 +280,8 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-chat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:13px;padding:32px 20px;text-align:center;min-height:200px}
 .stkt-side-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;text-align:center;min-height:200px;color:var(--muted);font-size:12px;opacity:.55;letter-spacing:.02em}
 .stkt-chat-empty-icon{font-size:32px;opacity:.35;line-height:1}
-#stktChatActive{display:flex;flex-direction:column;flex:1;min-height:0;width:100%}
-.stkt-chat-msgs{display:flex;flex-direction:column;gap:8px;padding:10px 12px;min-height:120px;justify-content:flex-start;align-content:flex-start;flex:1 1 auto}
+#stktChatActive{display:flex;flex-direction:column;flex:1;min-height:0;width:100%;overflow:hidden}
+.stkt-chat-msgs{display:flex;flex-direction:column;gap:8px;padding:10px 12px;min-height:0;justify-content:flex-start;align-content:flex-start;flex:1 1 auto;overflow-y:auto;overflow-x:hidden}
 .stkt-msg{max-width:85%;animation:stktMsgIn .25s ease-out;display:flex;flex-direction:column;flex-shrink:0}
 @keyframes stktMsgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .stkt-msg.player{align-self:flex-end;align-items:flex-end}
@@ -293,7 +294,7 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-bubble img,.stkt-auto-text img{max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;display:block}
 .stkt-msg-time{font-size:9px;color:var(--muted);margin-top:3px;padding:0 4px}
 .stkt-msg.player .stkt-msg-time{text-align:right}
-.stkt-compose{padding:10px 10px 8px;border-top:1px solid var(--border2);background:var(--bg1);flex-shrink:0}
+.stkt-compose{padding:10px 10px 8px;border-top:1px solid var(--border2);background:var(--bg1);flex-shrink:0;position:sticky;bottom:0;z-index:2}
 .stkt-compose-row{display:flex;align-items:flex-end;gap:8px}
 .stkt-compose-input{flex:1;min-width:0}
 .stkt-attach-preview{display:none;margin-bottom:8px;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--bg2);font-size:11px;color:var(--muted)}
