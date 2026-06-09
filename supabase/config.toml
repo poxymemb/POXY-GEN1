@@ -40,3 +40,7 @@ verify_jwt = false
 # public_verify is the unauthenticated transparency endpoint — no JWT required.
 [functions.public_verify]
 verify_jwt = false
+
+# notify_telegram — invoked from Postgres via pg_net (x-internal-secret header).
+[functions.notify_telegram]
+verify_jwt = false
