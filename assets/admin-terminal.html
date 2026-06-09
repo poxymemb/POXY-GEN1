@@ -340,6 +340,43 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .hlth-error-msg{color:var(--red);line-height:1.45}
 .hlth-ok-msg{align-items:center;color:var(--green);display:flex;font-size:13px;font-weight:600;gap:8px;padding:8px 0}
 @media(max-width:900px){.hlth-perf-grid{grid-template-columns:1fr}.hlth-status-row{grid-template-columns:1fr;gap:4px}.hlth-status-meta{text-align:left}}
+/* ── SUPPORT DASHBOARD (Session 10) ── */
+#tab-supportdash.tab-pane{max-width:none;padding:16px 20px;width:100%}
+.sdash-wrap{display:flex;flex-direction:column;gap:0}
+.sdash-overview-stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin-bottom:12px}
+.sdash-csat-row{align-items:center;color:var(--muted);display:flex;flex-wrap:wrap;font-size:13px;gap:16px 24px}
+.sdash-csat-row strong{color:var(--adm-text);font-weight:700}
+.sdash-card-head{align-items:center;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-bottom:12px}
+.sdash-period-filters{margin-bottom:0}
+.sdash-chart-wrap{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;height:180px;padding:8px}
+.sdash-chart-wrap svg{display:block;height:100%;width:100%}
+.sdash-chart-legend{display:flex;flex-wrap:wrap;font-size:11px;gap:14px;margin-top:10px}
+.sdash-legend-item{align-items:center;color:var(--muted);display:inline-flex;gap:6px}
+.sdash-legend-swatch{border-radius:2px;height:10px;width:14px}
+.sdash-legend-swatch.opened{background:rgba(245,158,11,.8)}
+.sdash-legend-swatch.closed{background:rgba(34,197,94,.75)}
+.sdash-chart-meta{color:var(--muted);font-size:11px;margin-top:8px}
+.sdash-heatmap-sub{color:var(--muted);font-size:11px;margin:-6px 0 12px}
+.sdash-heatmap-grid{display:grid;gap:6px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.sdash-heat-cell{align-items:center;border:1px solid var(--border2);border-radius:6px;cursor:default;display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:6px 4px;transition:transform .15s,border-color .15s}
+.sdash-heat-cell:hover{border-color:var(--amber);transform:translateY(-1px)}
+.sdash-heat-hour{color:var(--adm-text);font-family:var(--font-mono);font-size:10px;font-weight:600}
+.sdash-bar-row{align-items:center;display:grid;gap:10px;grid-template-columns:88px 1fr 64px;margin-bottom:8px}
+.sdash-bar-row:last-child{margin-bottom:0}
+.sdash-bar-label{color:var(--muted);font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;text-transform:lowercase;white-space:nowrap}
+.sdash-bar-track{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;height:10px;overflow:hidden}
+.sdash-bar-fill{background:linear-gradient(90deg,rgba(245,158,11,.45),var(--amber));border-radius:6px;height:100%;min-width:2px}
+.sdash-bar-fill.csat{background:linear-gradient(90deg,rgba(129,140,248,.45),var(--cyan))}
+.sdash-bar-val{font-family:var(--font-mono);font-size:10px;text-align:right;white-space:nowrap}
+.sdash-csat-row-item{align-items:center;display:grid;gap:10px;grid-template-columns:36px 1fr 72px;margin-bottom:8px}
+.sdash-csat-row-item:last-child{margin-bottom:0}
+.sdash-csat-stars{color:var(--amber);font-size:11px;font-weight:700}
+.sdash-csat-n{color:var(--muted)}
+.sdash-staff-row{cursor:pointer}
+.sdash-staff-cell{align-items:center;display:flex;gap:8px}
+.sdash-staff-cell .roles-staff-avatar{border-radius:50%;font-size:13px;height:28px;width:28px}
+.sdash-staff-cell .roles-staff-avatar--emoji{font-size:14px}
+@media(max-width:700px){.sdash-heatmap-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
 /* ── MARKETING (Session 7) ── */
 #tab-campaigns.tab-pane,#tab-calendar.tab-pane{max-width:none;padding:16px 20px;width:100%}
 .mkt-head{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:14px}
@@ -1304,7 +1341,59 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       <div class="upd-section-title" id="updAllLabel">All updates</div>
       <div class="upd-list" id="updList"><p class="os-dash-empty">Loading…</p></div>
     </div>
-    <div id="tab-supportdash" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📊</div><p><strong>Support Dashboard</strong> — metrics &amp; heatmap ship in Session 10.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-supportdash" class="tab-pane" data-poxy-module="support-dashboard">
+      <div class="sdash-wrap">
+        <div class="card">
+          <div class="card-title">Today's overview</div>
+          <div class="sdash-overview-stats" id="sdashOverviewStats">
+            <p class="os-dash-empty">Loading…</p>
+          </div>
+          <div class="sdash-csat-row" id="sdashCsatRow">—</div>
+        </div>
+        <div class="card">
+          <div class="sdash-card-head">
+            <div class="card-title" style="margin:0">Ticket volume</div>
+            <div class="mkt-filters sdash-period-filters" id="sdashPeriodFilters">
+              <button type="button" class="mkt-filter-btn" data-days="7" onclick="sdashSetPeriod(7)">7d</button>
+              <button type="button" class="mkt-filter-btn active" data-days="14" onclick="sdashSetPeriod(14)">14d</button>
+              <button type="button" class="mkt-filter-btn" data-days="30" onclick="sdashSetPeriod(30)">30d</button>
+            </div>
+          </div>
+          <div class="sdash-chart-wrap">
+            <svg id="sdashVolumeChart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="sdash-chart-legend">
+            <span class="sdash-legend-item"><span class="sdash-legend-swatch opened"></span>Opened</span>
+            <span class="sdash-legend-item"><span class="sdash-legend-swatch closed"></span>Closed</span>
+          </div>
+          <div class="sdash-chart-meta" id="sdashVolumeMeta">—</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Heatmap — busiest hours</div>
+          <p class="sdash-heatmap-sub">Ticket opens by hour (last 30 days)</p>
+          <div class="sdash-heatmap" id="sdashHeatmap"><p class="os-dash-empty">Loading…</p></div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-title">Top tags</div>
+            <div id="sdashTopTags"><p class="os-dash-empty">Loading…</p></div>
+          </div>
+          <div class="card">
+            <div class="card-title">CSAT distribution</div>
+            <div id="sdashCsatDist"><p class="os-dash-empty">Loading…</p></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Staff performance</div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>#</th><th>Staff</th><th>Closed</th><th>CSAT</th><th>Avg reply</th><th></th></tr></thead>
+              <tbody id="sdashStaffBody"><tr><td colspan="6" class="os-dash-empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="tab-handbook" class="tab-pane" data-poxy-module="handbook">
       <div class="handbook-layout">
         <nav class="handbook-nav" id="hbNav" aria-label="Handbook sections"></nav>
@@ -6864,6 +6953,189 @@ function hbTabEnter(){
 
 
 // ═══════════════════════════════════════════════════════════════
+// SUPPORT DASHBOARD (Session 10)
+// ═══════════════════════════════════════════════════════════════
+let _sdashDays = 14;
+let _sdashData = null;
+
+function sdashFmtDate(iso){
+  if(!iso) return '—';
+  const d = new Date(iso + 'T00:00:00');
+  if(isNaN(d.getTime())) return iso;
+  return (d.getMonth() + 1) + '/' + d.getDate();
+}
+
+async function sdashLoad(){
+  const { data, error } = await sb.rpc('get_support_dashboard', { p_days: _sdashDays });
+  if(error) throw error;
+  _sdashData = data || {};
+  sdashRenderAll();
+}
+
+function sdashSetPeriod(days){
+  _sdashDays = days;
+  document.querySelectorAll('#sdashPeriodFilters .mkt-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.days, 10) === days);
+  });
+  sdashTabEnter(true);
+}
+
+function sdashRenderOverview(){
+  const box = document.getElementById('sdashOverviewStats');
+  const csatRow = document.getElementById('sdashCsatRow');
+  if(!box) return;
+  const t = (_sdashData && _sdashData.today) || {};
+  const sla = Number(t.sla_breach || 0);
+  box.innerHTML =
+    '<div class="os-dash-stat"><span class="os-dash-stat-val">' + Number(t.opened || 0) + '</span><span class="os-dash-stat-lbl">Opened today</span></div>' +
+    '<div class="os-dash-stat"><span class="os-dash-stat-val" style="color:var(--green)">' + Number(t.closed || 0) + '</span><span class="os-dash-stat-lbl">Closed today</span></div>' +
+    '<div class="os-dash-stat"><span class="os-dash-stat-val">' + Number(t.in_progress || 0) + '</span><span class="os-dash-stat-lbl">In progress</span></div>' +
+    '<div class="os-dash-stat' + (sla ? ' warn' : '') + '"><span class="os-dash-stat-val">' + sla + '</span><span class="os-dash-stat-lbl">SLA breach ⚠️</span></div>';
+  const cs = (_sdashData && _sdashData.csat) || {};
+  if(csatRow){
+    const wk = Number(cs.week_avg || 0);
+    const mo = Number(cs.month_avg || 0);
+    csatRow.innerHTML =
+      '<span>Avg CSAT week: <strong>' + (wk ? wk.toFixed(1) + '★' : '—') + '</strong></span>' +
+      '<span>Avg CSAT month: <strong>' + (mo ? mo.toFixed(1) + '★' : '—') + '</strong></span>';
+  }
+}
+
+function sdashRenderVolumeChart(){
+  const svg = document.getElementById('sdashVolumeChart');
+  const meta = document.getElementById('sdashVolumeMeta');
+  if(!svg) return;
+  const vol = (_sdashData && _sdashData.volume) || [];
+  if(!vol.length){
+    svg.innerHTML = '';
+    if(meta) meta.textContent = 'No volume data';
+    return;
+  }
+  const W = 600, H = 160, padX = 24, padY = 20, chartH = H - padY - 28;
+  const n = vol.length;
+  const groupW = (W - padX * 2) / n;
+  const barW = Math.max(3, (groupW - 4) / 2);
+  const opened = vol.map(d => Number(d.opened || 0));
+  const closed = vol.map(d => Number(d.closed || 0));
+  const max = Math.max(...opened, ...closed, 1);
+  let bars = '';
+  let ticks = '';
+  vol.forEach((d, i) => {
+    const ox = opened[i];
+    const cx = closed[i];
+    const gx = padX + i * groupW;
+    const oh = Math.round((ox / max) * chartH);
+    const ch = Math.round((cx / max) * chartH);
+    bars += '<rect x="' + (gx + 1).toFixed(1) + '" y="' + (H - padY - oh) + '" width="' + barW.toFixed(1) + '" height="' + oh + '" fill="rgba(245,158,11,0.8)" rx="2"/>';
+    bars += '<rect x="' + (gx + 1 + barW + 2).toFixed(1) + '" y="' + (H - padY - ch) + '" width="' + barW.toFixed(1) + '" height="' + ch + '" fill="rgba(34,197,94,0.75)" rx="2"/>';
+    if(i % Math.ceil(n / 8) === 0 || i === n - 1){
+      const tx = (gx + groupW / 2).toFixed(1);
+      ticks += '<text x="' + tx + '" y="' + (H - 4) + '" text-anchor="middle" font-size="8" fill="var(--muted)" font-family="var(--font-mono)">' + sdashFmtDate(d.date) + '</text>';
+    }
+  });
+  svg.innerHTML = bars + ticks;
+  const totO = opened.reduce((a, b) => a + b, 0);
+  const totC = closed.reduce((a, b) => a + b, 0);
+  if(meta) meta.textContent = totO + ' opened · ' + totC + ' closed in last ' + _sdashDays + 'd';
+}
+
+function sdashHeatColor(count, max){
+  const t = max > 0 ? count / max : 0;
+  return 'rgba(245,158,11,' + (0.08 + t * 0.92).toFixed(2) + ')';
+}
+
+function sdashRenderHeatmap(){
+  const box = document.getElementById('sdashHeatmap');
+  if(!box) return;
+  const rows = (_sdashData && _sdashData.heatmap) || [];
+  if(!rows.length){
+    box.innerHTML = '<p class="os-dash-empty">No data</p>';
+    return;
+  }
+  const counts = rows.map(r => Number(r.count || 0));
+  const max = Math.max(...counts, 1);
+  box.innerHTML = '<div class="sdash-heatmap-grid">' + rows.map(r => {
+    const h = Number(r.hour);
+    const c = Number(r.count || 0);
+    return '<div class="sdash-heat-cell" style="background:' + sdashHeatColor(c, max) + '" title="' + c + ' tickets at ' + h + 'h"><span class="sdash-heat-hour">' + h + '</span></div>';
+  }).join('') + '</div>';
+}
+
+function sdashRenderTopTags(){
+  const box = document.getElementById('sdashTopTags');
+  if(!box) return;
+  const tags = (_sdashData && _sdashData.top_tags) || [];
+  if(!tags.length){
+    box.innerHTML = '<p class="os-dash-empty">No tagged tickets</p>';
+    return;
+  }
+  const max = Math.max(...tags.map(t => Number(t.count || 0)), 1);
+  box.innerHTML = tags.map(t => {
+    const c = Number(t.count || 0);
+    const pct = Math.round((c / max) * 100);
+    return '<div class="sdash-bar-row"><span class="sdash-bar-label">' + esc(t.tag || '—') + '</span><div class="sdash-bar-track"><div class="sdash-bar-fill" style="width:' + pct + '%"></div></div><span class="sdash-bar-val">' + c + '</span></div>';
+  }).join('');
+}
+
+function sdashRenderCsatDist(){
+  const box = document.getElementById('sdashCsatDist');
+  if(!box) return;
+  const rows = (_sdashData && _sdashData.csat_distribution) || [];
+  const ratings = [5, 4, 3, 2, 1];
+  const map = {};
+  rows.forEach(r => { map[Number(r.rating)] = r; });
+  box.innerHTML = ratings.map(r => {
+    const item = map[r] || { count: 0, pct: 0 };
+    const pct = Number(item.pct || 0);
+    return '<div class="sdash-csat-row-item"><span class="sdash-csat-stars">★' + r + '</span><div class="sdash-bar-track"><div class="sdash-bar-fill csat" style="width:' + pct + '%"></div></div><span class="sdash-bar-val">' + pct + '% <span class="sdash-csat-n">(' + Number(item.count || 0) + ')</span></span></div>';
+  }).join('');
+}
+
+function sdashRenderStaff(){
+  const body = document.getElementById('sdashStaffBody');
+  if(!body) return;
+  const staff = (_sdashData && _sdashData.staff) || [];
+  const medals = ['🏆', '🥈', '🥉'];
+  if(!staff.length){
+    body.innerHTML = '<tr><td colspan="6" class="os-dash-empty">No staff data</td></tr>';
+    return;
+  }
+  body.innerHTML = staff.map((s, i) =>
+    '<tr class="sdash-staff-row" onclick="rolesOpenStaffProfile(\'' + s.profile_id + '\')" title="View staff profile">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td><div class="sdash-staff-cell">' + rolesStaffAvatarHtml(s.avatar_url, s.username) + '<span>@' + esc(s.username || 'staff') + '</span></div></td>' +
+      '<td>' + Number(s.tickets_closed || 0) + '</td>' +
+      '<td>' + (Number(s.avg_csat) ? Number(s.avg_csat).toFixed(1) + '★' : '—') + '</td>' +
+      '<td>' + (s.avg_response_minutes ? Number(s.avg_response_minutes) + ' min' : '—') + '</td>' +
+      '<td>' + (medals[i] || '') + '</td>' +
+    '</tr>'
+  ).join('');
+}
+
+function sdashRenderAll(){
+  if(!_sdashData) return;
+  sdashRenderOverview();
+  sdashRenderVolumeChart();
+  sdashRenderHeatmap();
+  sdashRenderTopTags();
+  sdashRenderCsatDist();
+  sdashRenderStaff();
+}
+
+async function sdashTabEnter(silent){
+  const overview = document.getElementById('sdashOverviewStats');
+  if(overview && !_sdashData && !silent) overview.innerHTML = '<p class="os-dash-empty">Loading…</p>';
+  try{
+    await sdashLoad();
+  }catch(err){
+    const msg = esc(err.message || 'Failed to load dashboard');
+    if(overview) overview.innerHTML = '<p class="os-dash-empty" style="color:var(--red)">' + msg + '</p>';
+    toast('Support dashboard: ' + (err.message || 'error'), 'err');
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -6892,6 +7164,7 @@ function switchTab(id){
   if(id==='assets')    { mktAstTabEnter(); }
   if(id==='influencers'){ mktInfTabEnter(); }
   if(id==='handbook')  { hbTabEnter(); }
+  if(id==='supportdash') { sdashTabEnter(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
