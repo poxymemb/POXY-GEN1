@@ -181,6 +181,49 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .upd-urgent-modal{text-align:center}
 .upd-urgent-modal h3{font-size:18px;font-weight:700;margin:0 0 8px}
 .upd-urgent-modal p{color:var(--muted);font-size:13px;margin:0 0 18px}
+/* ── TASK MANAGER (Session 3) ── */
+.tsk-head{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:14px}
+.tsk-head h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0}
+.tsk-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.tsk-filter-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:11px;font-weight:600;letter-spacing:.04em;padding:6px 12px;text-transform:uppercase;transition:border-color .15s,color .15s,background .15s}
+.tsk-filter-btn:hover{border-color:var(--amber);color:var(--adm-text)}
+.tsk-filter-btn.active{background:rgba(245,158,11,.12);border-color:var(--amber);color:var(--amber)}
+.tsk-filter-select{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--adm-text);font-family:var(--font);font-size:11px;font-weight:600;padding:6px 10px}
+.tsk-kanban{display:grid;gap:12px;grid-template-columns:repeat(4,minmax(0,1fr));min-height:420px}
+@media(max-width:1100px){.tsk-kanban{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.tsk-kanban{grid-template-columns:1fr}}
+.tsk-col{background:var(--bg1);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;min-height:200px}
+.tsk-col-head{align-items:center;border-bottom:1px solid var(--border2);display:flex;font-size:10px;font-weight:700;justify-content:space-between;letter-spacing:.08em;padding:10px 12px;text-transform:uppercase}
+.tsk-col-count{background:var(--bg2);border-radius:8px;color:var(--muted);font-size:10px;padding:2px 8px}
+.tsk-col-body{display:flex;flex:1;flex-direction:column;gap:8px;min-height:80px;padding:8px}
+.tsk-col-body.drag-over{background:rgba(245,158,11,.06);outline:1px dashed rgba(245,158,11,.35)}
+.task-card{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;cursor:pointer;padding:10px 12px;transition:border-color .15s,transform .15s}
+.task-card:hover{border-color:var(--amber)}
+.task-card.dragging{opacity:.55}
+.task-card.priority-urgent,.task-card.priority-high{border-left:3px solid var(--red)}
+.task-card.priority-normal{border-left:3px solid var(--amber)}
+.task-card.priority-low{border-left:3px solid var(--green)}
+.task-priority{font-size:10px;font-weight:700;letter-spacing:.04em;margin-bottom:4px;text-transform:uppercase}
+.task-dept-badge{color:var(--muted);display:inline-block;font-size:9px;font-weight:700;letter-spacing:.05em;margin-bottom:6px;text-transform:uppercase}
+.task-title{font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px}
+.task-meta{color:var(--muted);display:flex;flex-wrap:wrap;font-size:10px;gap:8px;justify-content:space-between;margin-bottom:4px}
+.task-progress{color:var(--muted);font-size:10px}
+.tsk-my-summary{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.tsk-my-pill{background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;padding:8px 14px}
+.tsk-my-group{margin-bottom:18px}
+.tsk-my-group-title{color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase}
+.tsk-my-row{align-items:center;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;cursor:pointer;display:flex;gap:10px;padding:10px 12px;transition:border-color .15s}
+.tsk-my-row:hover{border-color:var(--amber)}
+.tsk-my-row-main{flex:1;min-width:0}
+.tsk-my-row-title{font-size:13px;font-weight:600}
+.tsk-my-row-sub{color:var(--muted);font-size:11px;margin-top:2px}
+.tsk-sub-row{align-items:center;display:flex;gap:8px;padding:4px 0}
+.tsk-sub-row input[type=checkbox]{accent-color:var(--amber);flex-shrink:0}
+.tsk-comment{border-bottom:1px solid var(--border2);font-size:12px;padding:8px 0}
+.tsk-comment:last-child{border-bottom:none}
+.tsk-comment-meta{color:var(--muted);font-size:10px;margin-bottom:3px}
+.tsk-create-form{display:none;flex-direction:column;gap:10px;margin-bottom:16px}
+.tsk-create-form.open{display:flex}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -774,6 +817,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         <button type="button" class="nav-btn sidebar-item" onclick="switchTab('roles')" data-tab="roles" data-dept="command">
           <span class="ic">👑</span>Admin roles
         </button>
+        <button type="button" class="nav-btn sidebar-item" onclick="switchTab('tasks')" data-tab="tasks" data-dept="command">
+          <span class="ic">📋</span>Task manager
+        </button>
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -879,7 +925,71 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
     </div>
 
     <!-- OS stubs — filled in later sessions (updates: Session 2 — live) -->
-    <div id="tab-mytasks" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📋</div><p><strong>My Tasks</strong> — task list view ships in Session 3.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-mytasks" class="tab-pane" data-poxy-module="my-tasks">
+      <div class="tsk-head">
+        <h2>My Tasks</h2>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button>
+      </div>
+      <div class="tsk-my-summary" id="tskMySummary"></div>
+      <div class="tsk-my-group">
+        <div class="tsk-my-group-title">Today</div>
+        <div id="tskMyToday"><p class="os-dash-empty">Loading…</p></div>
+      </div>
+      <div class="tsk-my-group">
+        <div class="tsk-my-group-title">This week</div>
+        <div id="tskMyWeek"><p class="os-dash-empty">—</p></div>
+      </div>
+      <div class="tsk-my-group">
+        <div class="tsk-my-group-title">Later</div>
+        <div id="tskMyLater"><p class="os-dash-empty">—</p></div>
+      </div>
+    </div>
+    <div id="tab-tasks" class="tab-pane" data-poxy-module="task-kanban">
+      <div class="tsk-head">
+        <h2>Task Manager</h2>
+        <button type="button" class="btn btn-amber btn-sm" onclick="tskToggleCreate()">+ Add task</button>
+      </div>
+      <div class="tsk-filters" id="tskKanbanFilters">
+        <span style="color:var(--muted);font-size:11px;align-self:center">Dept:</span>
+        <button type="button" class="tsk-filter-btn active" data-f="dept" data-v="all" onclick="tskSetKanbanFilter('dept','all')">All</button>
+        <button type="button" class="tsk-filter-btn" data-f="dept" data-v="support" onclick="tskSetKanbanFilter('dept','support')">Support</button>
+        <button type="button" class="tsk-filter-btn" data-f="dept" data-v="tech" onclick="tskSetKanbanFilter('dept','tech')">Tech</button>
+        <button type="button" class="tsk-filter-btn" data-f="dept" data-v="marketing" onclick="tskSetKanbanFilter('dept','marketing')">Marketing</button>
+        <span style="color:var(--muted);font-size:11px;align-self:center;margin-left:8px">Priority:</span>
+        <button type="button" class="tsk-filter-btn active" data-f="pri" data-v="all" onclick="tskSetKanbanFilter('pri','all')">All</button>
+        <button type="button" class="tsk-filter-btn" data-f="pri" data-v="urgent" onclick="tskSetKanbanFilter('pri','urgent')">Urgent</button>
+        <button type="button" class="tsk-filter-btn" data-f="pri" data-v="high" onclick="tskSetKanbanFilter('pri','high')">High</button>
+        <button type="button" class="tsk-filter-btn" data-f="pri" data-v="normal" onclick="tskSetKanbanFilter('pri','normal')">Normal</button>
+        <button type="button" class="tsk-filter-btn" data-f="pri" data-v="low" onclick="tskSetKanbanFilter('pri','low')">Low</button>
+        <select class="tsk-filter-select" id="tskFilterAssignee" onchange="tskSetKanbanFilter('assignee', this.value)">
+          <option value="all">All assignees</option>
+        </select>
+      </div>
+      <div class="card tsk-create-form" id="tskCreateForm">
+        <div class="card-title">New task</div>
+        <div class="f-row"><label class="f-label">Title</label><input id="tskNewTitle" class="f-input" type="text" placeholder="Task title"/></div>
+        <div class="f-row"><label class="f-label">Description</label><textarea id="tskNewDesc" class="f-textarea" rows="3"></textarea></div>
+        <div class="grid3">
+          <div class="f-row"><label class="f-label">Priority</label>
+            <select id="tskNewPri" class="f-select"><option value="low">Low</option><option value="normal" selected>Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select>
+          </div>
+          <div class="f-row"><label class="f-label">Department</label>
+            <select id="tskNewDept" class="f-select"><option value="support">Support</option><option value="tech">Tech</option><option value="marketing">Marketing</option><option value="all">All</option></select>
+          </div>
+          <div class="f-row"><label class="f-label">Due date</label><input id="tskNewDue" class="f-input" type="date"/></div>
+        </div>
+        <div class="f-row"><label class="f-label">Assign to</label>
+          <select id="tskNewAssign" class="f-select"><option value="">Unassigned</option></select>
+        </div>
+        <button type="button" class="btn btn-amber btn-sm" onclick="tskCreateTask()">Create task</button>
+      </div>
+      <div class="tsk-kanban" id="tskKanban">
+        <div class="tsk-col" data-status="todo"><div class="tsk-col-head">Todo <span class="tsk-col-count" id="tskCntTodo">0</span></div><div class="tsk-col-body" id="tskColTodo" data-status="todo" ondragover="tskDragOver(event)" ondragleave="tskDragLeave(event)" ondrop="tskDrop(event,'todo')"></div></div>
+        <div class="tsk-col" data-status="in_progress"><div class="tsk-col-head">In progress <span class="tsk-col-count" id="tskCntProg">0</span></div><div class="tsk-col-body" id="tskColProg" data-status="in_progress" ondragover="tskDragOver(event)" ondragleave="tskDragLeave(event)" ondrop="tskDrop(event,'in_progress')"></div></div>
+        <div class="tsk-col" data-status="review"><div class="tsk-col-head">Review <span class="tsk-col-count" id="tskCntReview">0</span></div><div class="tsk-col-body" id="tskColReview" data-status="review" ondragover="tskDragOver(event)" ondragleave="tskDragLeave(event)" ondrop="tskDrop(event,'review')"></div></div>
+        <div class="tsk-col" data-status="done"><div class="tsk-col-head">Done <span class="tsk-col-count" id="tskCntDone">0</span></div><div class="tsk-col-body" id="tskColDone" data-status="done" ondragover="tskDragOver(event)" ondragleave="tskDragLeave(event)" ondrop="tskDrop(event,'done')"></div></div>
+      </div>
+    </div>
     <div id="tab-messenger" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">💬</div><p><strong>Messages</strong> — internal messenger ships in Session 4.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-notes" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📝</div><p><strong>Notes</strong> — personal notes editor ships in Session 5.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
     <div id="tab-updates" class="tab-pane" data-poxy-module="updates-center">
@@ -2291,6 +2401,13 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
   </div>
 </div>
 
+<!-- TASK DETAIL MODAL (Session 3) -->
+<div id="tskDetailModal" class="upd-overlay hidden" onclick="if(event.target===this)tskCloseDetail()">
+  <div class="upd-modal upd-modal-wide card" role="dialog" onclick="event.stopPropagation()">
+    <div id="tskDetailBody"><p class="os-dash-empty">Loading…</p></div>
+  </div>
+</div>
+
 <!-- STAFF PROFILE MODAL (Session D) -->
 <div id="rolesStaffModal" class="roles-staff-overlay hidden" onclick="if(event.target===this)rolesCloseStaffProfile()">
   <div class="roles-staff-card card" role="dialog" aria-labelledby="rolesStaffModalTitle" onclick="event.stopPropagation()">
@@ -2494,6 +2611,7 @@ const MCU_THEME_KEY = 'poxy-mcu-theme';
 const MCU_PAGES = {
   'os-dash':       { title: 'Dashboard',          sub: 'Personal operations hub' },
   mytasks:         { title: 'My Tasks',           sub: 'Tasks assigned to you' },
+  tasks:           { title: 'Task Manager',       sub: 'Kanban board — all departments' },
   messenger:       { title: 'Messages',           sub: 'Internal team messenger' },
   notes:           { title: 'Notes',              sub: 'Private staff notes' },
   updates:         { title: 'Updates',            sub: 'MCU announcements and policies' },
@@ -2764,7 +2882,7 @@ async function osDashLoad(){
         tasksList.innerHTML = tasks.map(t => {
           const pri = (t.priority || 'normal').toLowerCase();
           const priIcon = pri === 'urgent' || pri === 'high' ? '🔴' : pri === 'low' ? '🟢' : '🟡';
-          return `<div class="os-dash-row" onclick="switchTab('mytasks')" title="Open in My Tasks">
+          return `<div class="os-dash-row" onclick="tskOpenDetail('${t.id}')" title="Open task">
             <span class="os-dash-pri ${pri}">${priIcon}</span>
             <div class="os-dash-row-main">
               <div class="os-dash-row-title">${esc(t.title)}</div>
@@ -3223,6 +3341,517 @@ function updGoToUpdates(){
   switchTab('updates');
 }
 
+// ═══════════════════════════════════════════════════════════════
+// TASK MANAGER (Session 3)
+// ═══════════════════════════════════════════════════════════════
+
+const TSK_STATUSES = ['todo', 'in_progress', 'review', 'done'];
+const TSK_COL_IDS = { todo: 'tskColTodo', in_progress: 'tskColProg', review: 'tskColReview', done: 'tskColDone' };
+const TSK_CNT_IDS = { todo: 'tskCntTodo', in_progress: 'tskCntProg', review: 'tskCntReview', done: 'tskCntDone' };
+
+let _tskList = [];
+let _tskTeam = [];
+let _tskProfMap = {};
+let _tskCurrentUserId = null;
+let _tskActiveId = null;
+let _tskRealtimeCh = null;
+let _tskFilterDept = 'all';
+let _tskFilterPri = 'all';
+let _tskFilterAssignee = 'all';
+let _tskDragId = null;
+
+function tskPriorityLabel(p){
+  const m = { urgent: '🔴 URGENT', high: '🔴 HIGH', normal: '🟡 NORMAL', low: '🟢 LOW' };
+  return m[(p || 'normal').toLowerCase()] || m.normal;
+}
+
+function tskDeptLabel(d){
+  if(!d || d === 'all') return 'All depts';
+  return d.charAt(0).toUpperCase() + d.slice(1);
+}
+
+function tskUsername(id){
+  if(!id) return 'Unassigned';
+  return _tskProfMap[id] ? '@' + _tskProfMap[id] : 'staff';
+}
+
+async function tskLoadTeam(){
+  try{
+    const { data, error } = await sb.rpc('get_team_members');
+    if(error) throw error;
+    _tskTeam = data || [];
+    const ids = _tskTeam.map(m => m.profile_id).filter(Boolean);
+    if(ids.length){
+      const { data: profs } = await sb.from('profiles').select('id, username').in('id', ids);
+      (profs || []).forEach(p => { _tskProfMap[p.id] = p.username; });
+    }
+    tskFillAssigneeSelects();
+  }catch(err){
+    console.warn('[TSK] tskLoadTeam:', err.message);
+  }
+}
+
+function tskFillAssigneeSelects(){
+  const opts = '<option value="">Unassigned</option>' +
+    _tskTeam.filter(m => m.profile_id).map(m => {
+      const un = _tskProfMap[m.profile_id] || (m.email || '').split('@')[0];
+      return `<option value="${m.profile_id}">@${esc(un)}</option>`;
+    }).join('');
+  ['tskNewAssign', 'tskFilterAssignee'].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    const cur = el.value;
+    if(id === 'tskFilterAssignee'){
+      el.innerHTML = '<option value="all">All assignees</option>' + _tskTeam.filter(m => m.profile_id).map(m => {
+        const un = _tskProfMap[m.profile_id] || (m.email || '').split('@')[0];
+        return `<option value="${m.profile_id}">@${esc(un)}</option>`;
+      }).join('');
+      el.value = cur || 'all';
+    }else{
+      el.innerHTML = opts;
+    }
+  });
+}
+
+async function tskFetchTasks(whereMine){
+  let q = sb.from('os_tasks').select(`
+    *,
+    os_task_subtasks(id, title, completed, sort_order),
+    os_task_comments(id)
+  `).order('updated_at', { ascending: false });
+  if(whereMine && _tskCurrentUserId){
+    q = q.eq('assigned_to', _tskCurrentUserId);
+  }
+  const { data, error } = await q;
+  if(error) throw error;
+  const tasks = data || [];
+  const ids = new Set();
+  tasks.forEach(t => {
+    if(t.created_by) ids.add(t.created_by);
+    if(t.assigned_to) ids.add(t.assigned_to);
+  });
+  const missing = [...ids].filter(id => !_tskProfMap[id]);
+  if(missing.length){
+    const { data: profs } = await sb.from('profiles').select('id, username').in('id', missing);
+    (profs || []).forEach(p => { _tskProfMap[p.id] = p.username; });
+  }
+  return tasks;
+}
+
+function tskFilterKanban(list){
+  return list.filter(t => {
+    if(_tskFilterDept !== 'all' && t.department !== _tskFilterDept) return false;
+    if(_tskFilterPri !== 'all' && t.priority !== _tskFilterPri) return false;
+    if(_tskFilterAssignee !== 'all' && t.assigned_to !== _tskFilterAssignee) return false;
+    return true;
+  });
+}
+
+function tskRenderCard(t){
+  const subs = t.os_task_subtasks || [];
+  const doneSubs = subs.filter(s => s.completed).length;
+  const comments = (t.os_task_comments || []).length;
+  const pri = (t.priority || 'normal').toLowerCase();
+  return (
+    `<div class="task-card priority-${pri}" draggable="true" data-task-id="${t.id}" ` +
+      `ondragstart="tskDragStart(event,'${t.id}')" onclick="tskOpenDetail('${t.id}')">` +
+      `<div class="task-priority">${tskPriorityLabel(pri)}</div>` +
+      `<div class="task-dept-badge">${esc(tskDeptLabel(t.department))}</div>` +
+      `<div class="task-title">${esc(t.title)}</div>` +
+      `<div class="task-meta"><span>Due: ${esc(osFmtDue(t.due_date))}</span><span>${esc(tskUsername(t.assigned_to))}</span></div>` +
+      `<div class="task-progress">☑ ${doneSubs}/${subs.length} subtasks · 💬 ${comments}</div>` +
+    `</div>`
+  );
+}
+
+function tskRenderKanban(){
+  const filtered = tskFilterKanban(_tskList);
+  TSK_STATUSES.forEach(st => {
+    const col = document.getElementById(TSK_COL_IDS[st]);
+    const cnt = document.getElementById(TSK_CNT_IDS[st]);
+    const items = filtered.filter(t => t.status === st);
+    if(cnt) cnt.textContent = String(items.length);
+    if(col) col.innerHTML = items.length ? items.map(tskRenderCard).join('') : '<p class="os-dash-empty" style="padding:8px;font-size:11px">Empty</p>';
+  });
+}
+
+function tskSetKanbanFilter(type, val){
+  if(type === 'dept') _tskFilterDept = val;
+  else if(type === 'pri') _tskFilterPri = val;
+  else if(type === 'assignee') _tskFilterAssignee = val;
+  document.querySelectorAll('.tsk-filter-btn').forEach(btn => {
+    if(btn.dataset.f === type) btn.classList.toggle('active', btn.dataset.v === val);
+  });
+  tskRenderKanban();
+}
+
+function tskToggleCreate(){
+  document.getElementById('tskCreateForm')?.classList.toggle('open');
+}
+
+async function tskKanbanEnter(){
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    _tskCurrentUserId = user?.id || null;
+    await tskLoadTeam();
+    _tskList = await tskFetchTasks(false);
+    tskRenderKanban();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function tskMyRow(t){
+  const pri = (t.priority || 'normal').toLowerCase();
+  return (
+    `<div class="tsk-my-row" onclick="tskOpenDetail('${t.id}')">` +
+      `<span class="os-dash-pri ${pri}">${tskPriorityLabel(pri).split(' ')[0]}</span>` +
+      `<div class="tsk-my-row-main">` +
+        `<div class="tsk-my-row-title">${esc(t.title)}</div>` +
+        `<div class="tsk-my-row-sub">${esc(tskDeptLabel(t.department))} · Due: ${esc(osFmtDue(t.due_date))} · ${esc(t.status || 'todo')}</div>` +
+      `</div>` +
+      `<button type="button" class="btn btn-ghost btn-sm" onclick="event.stopPropagation();tskOpenDetail('${t.id}')">Open</button>` +
+    `</div>`
+  );
+}
+
+function tskGroupMyTasks(tasks){
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const weekEnd = new Date(today);
+  weekEnd.setDate(weekEnd.getDate() + 7);
+  const todayG = [], weekG = [], laterG = [];
+  tasks.forEach(t => {
+    if(!t.due_date){ laterG.push(t); return; }
+    const d = new Date(t.due_date + 'T12:00:00');
+    d.setHours(0, 0, 0, 0);
+    if(d <= today) todayG.push(t);
+    else if(d < weekEnd) weekG.push(t);
+    else laterG.push(t);
+  });
+  return { todayG, weekG, laterG };
+}
+
+async function tskMyTasksEnter(){
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    _tskCurrentUserId = user?.id || null;
+    await tskLoadTeam();
+    const mine = await tskFetchTasks(true);
+    _tskList = mine;
+    const open = mine.filter(t => t.status !== 'done');
+    const doneToday = mine.filter(t => {
+      if(t.status !== 'done') return false;
+      const u = t.updated_at ? new Date(t.updated_at) : null;
+      if(!u) return false;
+      const n = new Date();
+      return u.toDateString() === n.toDateString();
+    });
+    const sum = document.getElementById('tskMySummary');
+    if(sum){
+      sum.innerHTML = [
+        { l: 'Todo', v: open.filter(t => t.status === 'todo').length },
+        { l: 'In progress', v: open.filter(t => t.status === 'in_progress' || t.status === 'review').length },
+        { l: 'Done today', v: doneToday.length },
+      ].map(s => `<span class="tsk-my-pill">${s.l}: <strong>${s.v}</strong></span>`).join('');
+    }
+    const { todayG, weekG, laterG } = tskGroupMyTasks(open);
+    const set = (id, arr) => {
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.innerHTML = arr.length ? arr.map(tskMyRow).join('') : '<p class="os-dash-empty">Nothing here</p>';
+    };
+    set('tskMyToday', todayG);
+    set('tskMyWeek', weekG);
+    set('tskMyLater', laterG);
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function tskCreateTask(){
+  const title = document.getElementById('tskNewTitle')?.value?.trim();
+  const description = document.getElementById('tskNewDesc')?.value?.trim() || null;
+  const priority = document.getElementById('tskNewPri')?.value || 'normal';
+  const department = document.getElementById('tskNewDept')?.value || 'support';
+  const due_date = document.getElementById('tskNewDue')?.value || null;
+  const assigned_to = document.getElementById('tskNewAssign')?.value || null;
+  if(!title){ toast('TITLE REQUIRED', 'err'); return; }
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('os_tasks').insert({
+      title, description, priority, department, due_date,
+      assigned_to: assigned_to || null,
+      created_by: user?.id || null,
+      status: 'todo',
+    });
+    if(error) throw error;
+    toast('TASK CREATED');
+    document.getElementById('tskNewTitle').value = '';
+    document.getElementById('tskNewDesc').value = '';
+    document.getElementById('tskCreateForm')?.classList.remove('open');
+    await tskKanbanEnter();
+    refreshUnreadCounts();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function tskDragStart(e, id){
+  _tskDragId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.target.classList.add('dragging');
+}
+
+function tskDragOver(e){
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function tskDragLeave(e){
+  e.currentTarget.classList.remove('drag-over');
+}
+
+async function tskDrop(e, status){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  document.querySelectorAll('.task-card.dragging').forEach(el => el.classList.remove('dragging'));
+  const id = _tskDragId;
+  _tskDragId = null;
+  if(!id) return;
+  try{
+    const { error } = await sb.from('os_tasks').update({ status, updated_at: new Date().toISOString() }).eq('id', id);
+    if(error) throw error;
+    const t = _tskList.find(x => x.id === id);
+    if(t) t.status = status;
+    tskRenderKanban();
+    refreshUnreadCounts();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function tskStopRealtime(){
+  if(_tskRealtimeCh){ sb.removeChannel(_tskRealtimeCh); _tskRealtimeCh = null; }
+}
+
+function tskStartRealtime(taskId){
+  tskStopRealtime();
+  _tskRealtimeCh = sb.channel('tsk-comments-' + taskId)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'os_task_comments',
+      filter: 'task_id=eq.' + taskId,
+    }, payload => {
+      const t = _tskList.find(x => x.id === taskId);
+      if(t){
+        t.os_task_comments = t.os_task_comments || [];
+        t.os_task_comments.push({ id: payload.new.id });
+      }
+      if(_tskActiveId === taskId) tskRenderDetailBody(t);
+    })
+    .subscribe();
+}
+
+async function tskLoadTaskFull(id){
+  const { data, error } = await sb.from('os_tasks').select(`
+    *,
+    os_task_subtasks(id, title, completed, sort_order, completed_by, completed_at),
+    os_task_comments(id, body, author_id, created_at)
+  `).eq('id', id).maybeSingle();
+  if(error) throw error;
+  if(!data) throw new Error('Task not found');
+  const idx = _tskList.findIndex(t => t.id === id);
+  if(idx >= 0) _tskList[idx] = data;
+  else _tskList.push(data);
+  const authorIds = [...new Set((data.os_task_comments || []).map(c => c.author_id).filter(Boolean))];
+  const missing = authorIds.filter(uid => !_tskProfMap[uid]);
+  if(missing.length){
+    const { data: profs } = await sb.from('profiles').select('id, username').in('id', missing);
+    (profs || []).forEach(p => { _tskProfMap[p.id] = p.username; });
+  }
+  return data;
+}
+
+function tskRenderDetailBody(t){
+  if(!t) return;
+  const body = document.getElementById('tskDetailBody');
+  if(!body) return;
+  const subs = (t.os_task_subtasks || []).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  const comments = (t.os_task_comments || []).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  const assignOpts = '<option value="">Unassigned</option>' + _tskTeam.filter(m => m.profile_id).map(m => {
+    const un = _tskProfMap[m.profile_id] || (m.email || '').split('@')[0];
+    const sel = t.assigned_to === m.profile_id ? ' selected' : '';
+    return `<option value="${m.profile_id}"${sel}>@${esc(un)}</option>`;
+  }).join('');
+  body.innerHTML = (
+    `<div class="upd-detail-meta">` +
+      `<span class="update-type-badge general">${tskPriorityLabel(t.priority)}</span>` +
+      `<span>${esc(tskDeptLabel(t.department))}</span>` +
+    `</div>` +
+    `<div class="f-row"><label class="f-label">Title</label><input id="tskDetTitle" class="f-input" type="text" value="${esc(t.title)}"/></div>` +
+    `<div class="grid3">` +
+      `<div class="f-row"><label class="f-label">Priority</label><select id="tskDetPri" class="f-select">` +
+        ['low','normal','high','urgent'].map(p => `<option value="${p}"${t.priority===p?' selected':''}>${p}</option>`).join('') +
+      `</select></div>` +
+      `<div class="f-row"><label class="f-label">Department</label><select id="tskDetDept" class="f-select">` +
+        ['support','tech','marketing','all'].map(d => `<option value="${d}"${t.department===d?' selected':''}>${d}</option>`).join('') +
+      `</select></div>` +
+      `<div class="f-row"><label class="f-label">Status</label><select id="tskDetStatus" class="f-select">` +
+        TSK_STATUSES.map(s => `<option value="${s}"${t.status===s?' selected':''}>${s.replace('_',' ')}</option>`).join('') +
+      `</select></div>` +
+    `</div>` +
+    `<div class="grid2">` +
+      `<div class="f-row"><label class="f-label">Assign to</label><select id="tskDetAssign" class="f-select">${assignOpts}</select></div>` +
+      `<div class="f-row"><label class="f-label">Due date</label><input id="tskDetDue" class="f-input" type="date" value="${t.due_date || ''}"/></div>` +
+    `</div>` +
+    `<div class="f-row"><label class="f-label">Description</label><textarea id="tskDetDesc" class="f-textarea" rows="4">${esc(t.description || '')}</textarea></div>` +
+    `<div class="card-title" style="margin-top:12px">Subtasks</div>` +
+    `<div id="tskDetSubs">` + subs.map(s =>
+      `<label class="tsk-sub-row"><input type="checkbox" ${s.completed?'checked':''} onchange="tskToggleSubtask('${t.id}','${s.id}',this.checked)"/><span>${esc(s.title)}</span></label>`
+    ).join('') + `</div>` +
+    `<div class="row-flex" style="margin:8px 0"><input id="tskNewSubTitle" class="f-input" type="text" placeholder="New subtask…" style="flex:1"/><button type="button" class="btn btn-ghost btn-sm" onclick="tskAddSubtask('${t.id}')">+ Add subtask</button></div>` +
+    `<div class="card-title">Comments</div>` +
+    `<div id="tskDetComments">` + (comments.length ? comments.map(c =>
+      `<div class="tsk-comment"><div class="tsk-comment-meta">${esc(tskUsername(c.author_id))} · ${esc(osFmtRelative(c.created_at))}</div><div>${esc(c.body)}</div></div>`
+    ).join('') : '<p class="os-dash-empty">No comments yet</p>') + `</div>` +
+    `<div class="row-flex" style="margin-top:8px"><input id="tskNewComment" class="f-input" type="text" placeholder="Write a comment…" style="flex:1" onkeydown="if(event.key==='Enter')tskAddComment('${t.id}')"/><button type="button" class="btn btn-ghost btn-sm" onclick="tskAddComment('${t.id}')">Send</button></div>` +
+    `<div class="row-flex" style="margin-top:16px">` +
+      `<button type="button" class="btn btn-amber btn-sm" onclick="tskSaveDetail('${t.id}')">Save</button>` +
+      `<button type="button" class="btn btn-green btn-sm" onclick="tskMarkDone('${t.id}')">Mark done</button>` +
+      `<button type="button" class="btn btn-red btn-sm" onclick="tskDeleteTask('${t.id}')">Delete</button>` +
+      `<button type="button" class="btn btn-ghost btn-sm" onclick="tskCloseDetail()">Close</button>` +
+    `</div>` +
+    `<p style="color:var(--muted);font-size:10px;margin-top:8px">Created by ${esc(tskUsername(t.created_by))}</p>`
+  );
+}
+
+async function tskOpenDetail(id){
+  _tskActiveId = id;
+  document.getElementById('tskDetailModal')?.classList.remove('hidden');
+  const body = document.getElementById('tskDetailBody');
+  if(body) body.innerHTML = '<p class="os-dash-empty">Loading…</p>';
+  try{
+    const t = await tskLoadTaskFull(id);
+    tskRenderDetailBody(t);
+    tskStartRealtime(id);
+  }catch(err){
+    if(body) body.innerHTML = '<p style="color:var(--red)">' + esc(err.message) + '</p>';
+  }
+}
+
+function tskCloseDetail(){
+  tskStopRealtime();
+  _tskActiveId = null;
+  document.getElementById('tskDetailModal')?.classList.add('hidden');
+}
+
+async function tskSaveDetail(id){
+  try{
+    const row = {
+      title: document.getElementById('tskDetTitle')?.value?.trim(),
+      description: document.getElementById('tskDetDesc')?.value?.trim() || null,
+      priority: document.getElementById('tskDetPri')?.value,
+      department: document.getElementById('tskDetDept')?.value,
+      status: document.getElementById('tskDetStatus')?.value,
+      assigned_to: document.getElementById('tskDetAssign')?.value || null,
+      due_date: document.getElementById('tskDetDue')?.value || null,
+      updated_at: new Date().toISOString(),
+    };
+    if(!row.title){ toast('TITLE REQUIRED', 'err'); return; }
+    const { error } = await sb.from('os_tasks').update(row).eq('id', id);
+    if(error) throw error;
+    toast('TASK SAVED');
+    const t = await tskLoadTaskFull(id);
+    tskRenderDetailBody(t);
+    if(document.getElementById('tab-tasks')?.classList.contains('active')) tskRenderKanban();
+    if(document.getElementById('tab-mytasks')?.classList.contains('active')) tskMyTasksEnter();
+    refreshUnreadCounts();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function tskMarkDone(id){
+  try{
+    const { error } = await sb.from('os_tasks').update({ status: 'done', updated_at: new Date().toISOString() }).eq('id', id);
+    if(error) throw error;
+    toast('TASK DONE');
+    tskCloseDetail();
+    if(document.getElementById('tab-tasks')?.classList.contains('active')) await tskKanbanEnter();
+    if(document.getElementById('tab-mytasks')?.classList.contains('active')) await tskMyTasksEnter();
+    refreshUnreadCounts();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function tskDeleteTask(id){
+  if(!confirm('Delete this task and all subtasks/comments?')) return;
+  try{
+    const { error } = await sb.from('os_tasks').delete().eq('id', id);
+    if(error) throw error;
+    toast('TASK DELETED');
+    _tskList = _tskList.filter(t => t.id !== id);
+    tskCloseDetail();
+    if(document.getElementById('tab-tasks')?.classList.contains('active')) tskRenderKanban();
+    if(document.getElementById('tab-mytasks')?.classList.contains('active')) tskMyTasksEnter();
+    refreshUnreadCounts();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function tskToggleSubtask(taskId, subId, checked){
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('os_task_subtasks').update({
+      completed: !!checked,
+      completed_by: checked ? user?.id : null,
+      completed_at: checked ? new Date().toISOString() : null,
+    }).eq('id', subId);
+    if(error) throw error;
+    const t = await tskLoadTaskFull(taskId);
+    tskRenderDetailBody(t);
+    if(document.getElementById('tab-tasks')?.classList.contains('active')) tskRenderKanban();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function tskAddSubtask(taskId){
+  const title = document.getElementById('tskNewSubTitle')?.value?.trim();
+  if(!title){ toast('SUBTASK TITLE REQUIRED', 'err'); return; }
+  try{
+    const t = _tskList.find(x => x.id === taskId);
+    const sort_order = (t?.os_task_subtasks?.length || 0);
+    const { error } = await sb.from('os_task_subtasks').insert({ task_id: taskId, title, sort_order });
+    if(error) throw error;
+    document.getElementById('tskNewSubTitle').value = '';
+    const full = await tskLoadTaskFull(taskId);
+    tskRenderDetailBody(full);
+    if(document.getElementById('tab-tasks')?.classList.contains('active')) tskRenderKanban();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function tskAddComment(taskId){
+  const body = document.getElementById('tskNewComment')?.value?.trim();
+  if(!body) return;
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('os_task_comments').insert({
+      task_id: taskId, author_id: user?.id, body,
+    });
+    if(error) throw error;
+    document.getElementById('tskNewComment').value = '';
+    const t = await tskLoadTaskFull(taskId);
+    tskRenderDetailBody(t);
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
 function syncThemeToggleUI(){
   const theme = document.documentElement.getAttribute('data-theme') || 'dark';
   const isDark = theme !== 'light';
@@ -3269,6 +3898,9 @@ function switchTab(id){
   setMcuHeader(id);
   if(id==='os-dash')   { osDashLoad(); }
   if(id==='updates')   { updTabEnter(); }
+  if(id==='tasks')     { tskKanbanEnter(); }
+  if(id==='mytasks')   { tskMyTasksEnter(); }
+  else if(id !== 'tasks' && id !== 'mytasks') { tskCloseDetail(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
@@ -6621,6 +7253,12 @@ function mcuOnKeydown(e){
     if(updPubOpen){
       e.preventDefault();
       updClosePublish();
+      return;
+    }
+    const tskDetOpen = !document.getElementById('tskDetailModal')?.classList.contains('hidden');
+    if(tskDetOpen){
+      e.preventDefault();
+      tskCloseDetail();
       return;
     }
     const updUrgentOpen = !document.getElementById('updUrgentModal')?.classList.contains('hidden');
