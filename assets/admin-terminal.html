@@ -705,7 +705,7 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-filter-btn{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
 .stkt-filter-btn.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.12)}
 .stkt-queue-list{display:flex;flex-direction:column;gap:4px;padding-right:2px;flex:1 1 auto}
-.stkt-queue-item{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:transparent;cursor:pointer;transition:background .15s,border-color .15s}
+.stkt-queue-item{display:flex;align-items:flex-start;gap:6px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:transparent;cursor:pointer;transition:background .15s,border-color .15s}
 .stkt-queue-item:hover{background:var(--dim)}
 .stkt-queue-item.active{background:rgba(217,70,239,0.08);border-color:rgba(217,70,239,0.25)}
 .stkt-queue-avatar{flex-shrink:0;width:32px;height:32px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--adm-text)}
@@ -790,6 +790,35 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .stkt-mgr-row-sub{font-size:11px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stkt-stream-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px}
 .stkt-stream-dot.live{background:var(--green);animation:pulse 2s infinite}
+.stkt-tag-filters{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;flex-shrink:0}
+.stkt-tag-filter-btn{padding:3px 7px;border-radius:5px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.stkt-tag-filter-btn.active,.stkt-tag-filter-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.stkt-bulk-bar{align-items:center;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:8px;display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;padding:8px 10px;flex-shrink:0}
+.stkt-bulk-bar.visible{display:flex}
+.stkt-bulk-count{color:var(--adm-text);font-size:11px;font-weight:600;margin-right:4px}
+.stkt-queue-chk{accent-color:var(--amber);cursor:pointer;flex-shrink:0;margin-top:4px}
+.stkt-queue-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.stkt-tag-pill{background:var(--bg2);border:1px solid var(--border2);border-radius:4px;color:var(--muted);cursor:pointer;font-size:8px;font-weight:700;letter-spacing:.04em;padding:1px 5px;text-transform:lowercase}
+.stkt-tag-pill:hover{border-color:var(--cyan);color:var(--cyan)}
+.stkt-search-snippet{color:var(--muted);font-size:10px;line-height:1.35;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stkt-chat-head-main{align-items:center;display:flex;flex:1;flex-wrap:wrap;gap:6px 10px;min-width:0}
+.stkt-chat-head-tags{align-items:center;display:flex;flex-basis:100%;flex-wrap:wrap;gap:6px;margin-top:4px;width:100%}
+.stkt-chat-head-tags .stkt-tag-pill{cursor:default;font-size:9px;padding:2px 7px}
+.stkt-tag-pill .stkt-tag-rm{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:11px;line-height:1;margin-left:4px;padding:0}
+.stkt-tag-pill .stkt-tag-rm:hover{color:var(--red)}
+.stkt-tag-add{align-items:center;background:var(--bg2);border:1px dashed var(--border);border-radius:6px;color:var(--muted);cursor:pointer;display:inline-flex;font-size:10px;font-weight:600;gap:4px;padding:3px 8px}
+.stkt-tag-add-menu{background:var(--bg1);border:1px solid var(--border);border-radius:8px;box-shadow:var(--adm-shadow);display:none;flex-direction:column;gap:2px;left:0;max-height:180px;overflow-y:auto;padding:4px;position:absolute;top:calc(100% + 4px);z-index:20;min-width:120px}
+.stkt-tag-add-menu.open{display:flex}
+.stkt-tag-add-wrap{position:relative}
+.stkt-tag-opt{background:transparent;border:none;border-radius:4px;color:var(--adm-text);cursor:pointer;font-size:11px;padding:6px 8px;text-align:left}
+.stkt-tag-opt:hover{background:var(--dim)}
+.stkt-snapshot{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;margin:0 0 12px;padding:10px 12px;flex-shrink:0}
+.stkt-snapshot-title{color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.06em;margin-bottom:8px;text-transform:uppercase}
+.stkt-snapshot-row{color:var(--adm-text);font-size:11px;line-height:1.55;margin-bottom:4px}
+.stkt-snapshot-row:last-child{margin-bottom:0}
+.stkt-snapshot-muted{color:var(--muted)}
+.stkt-escalate-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;display:none;flex-direction:column;gap:8px;margin-top:8px;padding:10px}
+.stkt-escalate-panel.open{display:flex}
 /* ── RNG AUDIT ── */
 .rng-report{background:var(--adm-log-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-family:var(--font-mono);font-size:11px}
 .rng-report-hdr{background:var(--dim);border-bottom:1px solid var(--border);padding:12px 16px;text-align:center}
@@ -2336,8 +2365,26 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
             <button type="button" class="stkt-filter-btn" data-stkt-filter="in_progress" onclick="stktSetFilter('in_progress',this)">Progress</button>
             <button type="button" class="stkt-filter-btn" data-stkt-filter="closed" onclick="stktSetFilter('closed',this)">Closed</button>
           </div>
+          <div class="stkt-tag-filters" id="stktTagFilters">
+            <button type="button" class="stkt-tag-filter-btn active" data-stkt-tag="" onclick="stktSetTagFilter('',this)">All tags</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="bug" onclick="stktSetTagFilter('bug',this)">bug</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="economy" onclick="stktSetTagFilter('economy',this)">economy</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="marketplace" onclick="stktSetTagFilter('marketplace',this)">marketplace</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="rng" onclick="stktSetTagFilter('rng',this)">rng</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="account" onclick="stktSetTagFilter('account',this)">account</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="abuse" onclick="stktSetTagFilter('abuse',this)">abuse</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="urgent" onclick="stktSetTagFilter('urgent',this)">urgent</button>
+            <button type="button" class="stkt-tag-filter-btn" data-stkt-tag="vip" onclick="stktSetTagFilter('vip',this)">vip</button>
+          </div>
           <div class="f-row" style="margin-bottom:8px;flex-shrink:0">
-            <input id="stktSearch" class="f-input" type="search" placeholder="Search…" oninput="stktRenderQueue()"/>
+            <input id="stktSearch" class="f-input" type="search" placeholder="🔍 Search all tickets — subject, message content, username…" oninput="stktOnSearchInput()"/>
+          </div>
+          <div class="stkt-bulk-bar" id="stktBulkBar">
+            <span class="stkt-bulk-count" id="stktBulkCount">Selected: 0</span>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkCloseAll()">Close all</button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkAssignMe()">Assign to me</button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkMarkAbuse()">Mark abuse</button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="stktBulkClear()">Clear</button>
           </div>
           <div id="stktQueueList" class="stkt-queue-list">
             <p style="color:var(--muted);font-size:12px;padding:12px;text-align:center">Loading…</p>
@@ -2349,9 +2396,13 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
           <div id="stktChatEmpty"></div>
           <div id="stktChatActive" hidden>
             <div class="stkt-chat-head" id="stktChatHead">
-              <span class="stkt-chat-head-user" id="stktChatHeadUser">@player</span>
-              <span class="stkt-chat-head-subj" id="stktChatHeadSubj">Ticket</span>
-              <span class="stkt-chat-head-presence" id="stktChatPresence"><span class="stkt-presence-dot offline"></span> Offline</span>
+              <div class="stkt-chat-head-main">
+                <span class="stkt-chat-head-user" id="stktChatHeadUser">@player</span>
+                <span class="stkt-chat-head-subj" id="stktChatHeadSubj">Ticket</span>
+                <span id="stktChatHeadStatus"></span>
+                <span class="stkt-chat-head-presence" id="stktChatPresence"><span class="stkt-presence-dot offline"></span> Offline</span>
+              </div>
+              <div class="stkt-chat-head-tags" id="stktChatHeadTags"></div>
             </div>
             <div class="stkt-chat-msgs" id="stktChatMsgs"></div>
             <div class="stkt-compose" id="stktCompose">
@@ -2383,9 +2434,19 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
               <div class="stkt-side-info-row"><span class="lbl">Created</span><span class="val" id="stktSideCreated">—</span></div>
               <div class="stkt-side-info-row"><span class="lbl">Assigned</span><span class="val" id="stktSideAssigned">—</span></div>
             </div>
+            <div class="stkt-snapshot" id="stktSnapshot">
+              <div class="stkt-snapshot-title">Player snapshot</div>
+              <div id="stktSnapshotBody"><span class="stkt-snapshot-muted">Loading…</span></div>
+            </div>
             <div class="stkt-side-actions">
               <button class="btn btn-ghost btn-sm" onclick="stktAssignMe()">Assign to me</button>
               <button class="btn btn-ghost btn-sm" onclick="stktMarkInProgress()">In progress</button>
+              <button class="btn btn-ghost btn-sm" onclick="stktToggleEscalate()">Escalate ↑</button>
+              <div class="stkt-escalate-panel" id="stktEscalatePanel">
+                <select id="stktEscalateStaff" class="f-select"></select>
+                <textarea id="stktEscalateReason" class="f-textarea" rows="2" placeholder="Escalation reason…"></textarea>
+                <button type="button" class="btn btn-amber btn-sm" onclick="stktEscalateTicket()">Escalate</button>
+              </div>
               <button class="btn btn-red btn-sm" onclick="stktCloseTicket()">Close ticket</button>
             </div>
             <div class="stkt-side-quick">
@@ -11088,6 +11149,13 @@ let _stktEditingReplyId = null;
 let _stktEditingFaqId = null;
 let _stktAttach = null;
 let _stktSeenKey = 'poxy-mcu-stkt-seen';
+const STKT_ALL_TAGS = ['bug', 'economy', 'marketplace', 'rng', 'account', 'abuse', 'urgent', 'vip'];
+let _stktTagFilter = '';
+let _stktTicketTags = {};
+let _stktSelected = new Set();
+let _stktSearchResults = null;
+let _stktSearchTimer = null;
+let _stktEscalateStaff = [];
 
 function _stktSeenMap(){
   try{ return JSON.parse(localStorage.getItem(_stktSeenKey) || '{}'); }catch(e){ return {}; }
@@ -11173,8 +11241,284 @@ function stktUpdateChatHead(t){
   const un = _stktProfiles[t.user_id]?.username || 'player';
   const userEl = document.getElementById('stktChatHeadUser');
   const subjEl = document.getElementById('stktChatHeadSubj');
+  const statusEl = document.getElementById('stktChatHeadStatus');
   if(userEl) userEl.textContent = '@' + un;
-  if(subjEl) subjEl.textContent = t.subject || 'Ticket';
+  if(subjEl) subjEl.textContent = '"' + (t.subject || 'Ticket') + '"';
+  if(statusEl) statusEl.innerHTML = stktStatusBadge(t.status);
+  stktRenderChatHeadTags(t.id);
+}
+
+function stktRenderChatHeadTags(ticketId){
+  const box = document.getElementById('stktChatHeadTags');
+  if(!box) return;
+  if(!ticketId){
+    box.innerHTML = '';
+    return;
+  }
+  const tags = _stktTicketTags[ticketId] || [];
+  const chips = tags.map(tag =>
+    '<span class="stkt-tag-pill">' + esc(tag) +
+      '<button type="button" class="stkt-tag-rm" onclick="event.stopPropagation();stktRemoveTag(\'' + esc(tag) + '\')" title="Remove tag">×</button></span>'
+  ).join('');
+  const available = STKT_ALL_TAGS.filter(t => !tags.includes(t));
+  const menuOpts = available.map(t =>
+    '<button type="button" class="stkt-tag-opt" onclick="stktAddTag(\'' + t + '\')">' + esc(t) + '</button>'
+  ).join('');
+  box.innerHTML =
+    '<span style="font-size:10px;color:var(--muted);font-weight:600">Tags:</span>' +
+    chips +
+    (available.length
+      ? '<span class="stkt-tag-add-wrap"><button type="button" class="stkt-tag-add" onclick="event.stopPropagation();stktToggleTagMenu()">+ add tag</button><div class="stkt-tag-add-menu" id="stktTagAddMenu">' + menuOpts + '</div></span>'
+      : '');
+}
+
+function stktToggleTagMenu(){
+  document.getElementById('stktTagAddMenu')?.classList.toggle('open');
+}
+
+async function stktAddTag(tag){
+  if(!_stktActiveId || !tag) return;
+  document.getElementById('stktTagAddMenu')?.classList.remove('open');
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('support_ticket_tags').insert({
+      ticket_id: _stktActiveId, tag, added_by: user?.id || null,
+    });
+    if(error){
+      if(/duplicate|unique/i.test(error.message)) return;
+      throw error;
+    }
+    if(!_stktTicketTags[_stktActiveId]) _stktTicketTags[_stktActiveId] = [];
+    if(!_stktTicketTags[_stktActiveId].includes(tag)) _stktTicketTags[_stktActiveId].push(tag);
+    stktRenderChatHeadTags(_stktActiveId);
+    stktRenderQueue();
+    toast('Tag added', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function stktRemoveTag(tag){
+  if(!_stktActiveId || !tag) return;
+  try{
+    const { error } = await sb.from('support_ticket_tags').delete()
+      .eq('ticket_id', _stktActiveId).eq('tag', tag);
+    if(error) throw error;
+    _stktTicketTags[_stktActiveId] = (_stktTicketTags[_stktActiveId] || []).filter(t => t !== tag);
+    stktRenderChatHeadTags(_stktActiveId);
+    stktRenderQueue();
+    toast('Tag removed', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function stktSetTagFilter(tag, btn){
+  _stktTagFilter = tag || '';
+  document.querySelectorAll('.stkt-tag-filter-btn').forEach(b => {
+    b.classList.toggle('active', (b.dataset.stktTag || '') === _stktTagFilter);
+  });
+  if(btn) btn.classList.add('active');
+  stktRenderQueue();
+}
+
+function stktOnSearchInput(){
+  clearTimeout(_stktSearchTimer);
+  const q = (document.getElementById('stktSearch')?.value || '').trim();
+  if(q.length < 2){
+    _stktSearchResults = null;
+    stktRenderQueue();
+    return;
+  }
+  _stktSearchTimer = setTimeout(() => stktRunSearch(q), 350);
+}
+
+async function stktRunSearch(q){
+  const query = (q || document.getElementById('stktSearch')?.value || '').trim();
+  if(query.length < 2){
+    _stktSearchResults = null;
+    stktRenderQueue();
+    return;
+  }
+  try{
+    const { data, error } = await sb.rpc('search_tickets', { p_query: query });
+    if(error) throw error;
+    _stktSearchResults = data || [];
+    const ids = new Set((_stktSearchResults || []).map(r => r.user_id).filter(Boolean));
+    const missing = [...ids].filter(id => !_stktProfiles[id]);
+    if(missing.length){
+      const { data: profs } = await sb.from('profiles').select('id,username').in('id', missing);
+      (profs || []).forEach(p => { _stktProfiles[p.id] = p; });
+    }
+    stktRenderQueue();
+  }catch(err){
+    toast('Search: ' + err.message, 'err');
+  }
+}
+
+async function stktLoadTicketTags(){
+  _stktTicketTags = {};
+  try{
+    const { data, error } = await sb.from('support_ticket_tags').select('ticket_id, tag');
+    if(error) throw error;
+    (data || []).forEach(row => {
+      if(!_stktTicketTags[row.ticket_id]) _stktTicketTags[row.ticket_id] = [];
+      _stktTicketTags[row.ticket_id].push(row.tag);
+    });
+  }catch(e){
+    console.warn('[STKT] stktLoadTicketTags:', e.message);
+  }
+}
+
+async function stktLoadPlayerSnapshot(userId){
+  const box = document.getElementById('stktSnapshotBody');
+  if(!box) return;
+  if(!userId){
+    box.innerHTML = '<span class="stkt-snapshot-muted">—</span>';
+    return;
+  }
+  box.innerHTML = '<span class="stkt-snapshot-muted">Loading…</span>';
+  try{
+    const { data, error } = await sb.rpc('get_ticket_player_snapshot', { p_user_id: userId });
+    if(error) throw error;
+    const s = data || {};
+    const drops = (s.last_drops || []).join(', ') || '—';
+    const member = s.member_since ? fmtDate(s.member_since) : '—';
+    const rank = s.rank ? '#' + s.rank : '—';
+    box.innerHTML =
+      '<div class="stkt-snapshot-row">Balance: <strong>' + Number(s.balance || 0).toFixed(1) + ' PC</strong> · Assets: <strong>' + Number(s.assets_count || 0) + '</strong></div>' +
+      '<div class="stkt-snapshot-row">Rank: <strong>' + esc(String(rank)) + '</strong> · Member: <strong>' + esc(member) + '</strong></div>' +
+      '<div class="stkt-snapshot-row">Last 3 drops: <strong>' + esc(drops) + '</strong></div>' +
+      '<div class="stkt-snapshot-row">Compensations: <strong>' + Number(s.compensations_count || 0) + '</strong> (total: <strong>' + Number(s.compensations_total_pc || 0) + ' PC</strong>)</div>' +
+      '<button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%" onclick="stktOpenDossierFromTicket()">Full Dossier →</button>';
+  }catch(err){
+    box.innerHTML = '<span class="stkt-snapshot-muted" style="color:var(--red)">' + esc(err.message) + '</span>';
+  }
+}
+
+function stktOpenDossierFromTicket(){
+  if(!_stktActiveTicket?.user_id) return;
+  const un = _stktProfiles[_stktActiveTicket.user_id]?.username;
+  if(!un) return;
+  const el = document.getElementById('dossierQuery');
+  if(el) el.value = '@' + un;
+  switchTab('dossier');
+  loadDossier();
+}
+
+async function stktLoadEscalateStaff(){
+  try{
+    const { data, error } = await sb.rpc('get_team_members');
+    if(error) throw error;
+    _stktEscalateStaff = (data || []).filter(m =>
+      m.profile_id && ['superadmin', 'mod'].includes((m.role || '').toLowerCase())
+    );
+    const sel = document.getElementById('stktEscalateStaff');
+    if(sel){
+      sel.innerHTML = '<option value="">Select staff…</option>' +
+        _stktEscalateStaff.map(m => {
+          const un = (m.email || '').split('@')[0];
+          return '<option value="' + m.profile_id + '">@' + esc(un) + ' (' + esc(m.role) + ')</option>';
+        }).join('');
+    }
+  }catch(e){
+    console.warn('[STKT] stktLoadEscalateStaff:', e.message);
+  }
+}
+
+function stktToggleEscalate(){
+  document.getElementById('stktEscalatePanel')?.classList.toggle('open');
+}
+
+async function stktEscalateTicket(){
+  if(!_stktActiveId) return;
+  const assignTo = document.getElementById('stktEscalateStaff')?.value;
+  const reason = (document.getElementById('stktEscalateReason')?.value || '').trim();
+  if(!assignTo){ toast('SELECT STAFF MEMBER', 'err'); return; }
+  if(!reason){ toast('ESCALATION REASON REQUIRED', 'err'); return; }
+  try{
+    const { error } = await sb.rpc('escalate_ticket', {
+      p_ticket_id: _stktActiveId,
+      p_assign_to: assignTo,
+      p_reason: reason,
+    });
+    if(error) throw error;
+    document.getElementById('stktEscalateReason').value = '';
+    document.getElementById('stktEscalatePanel')?.classList.remove('open');
+    toast('Ticket escalated', 'ok');
+    await stktLoadQueue();
+    await stktLoadMessages(_stktActiveId);
+    const t = _stktTickets.find(x => x.id === _stktActiveId);
+    if(t) stktOpenTicket(_stktActiveId);
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+function stktToggleSelect(ticketId, checked){
+  if(checked) _stktSelected.add(ticketId);
+  else _stktSelected.delete(ticketId);
+  stktUpdateBulkBar();
+}
+
+function stktUpdateBulkBar(){
+  const bar = document.getElementById('stktBulkBar');
+  const count = document.getElementById('stktBulkCount');
+  const n = _stktSelected.size;
+  if(bar) bar.classList.toggle('visible', n > 0);
+  if(count) count.textContent = 'Selected: ' + n;
+}
+
+function stktBulkClear(){
+  _stktSelected.clear();
+  stktUpdateBulkBar();
+  stktRenderQueue();
+}
+
+async function stktBulkCloseAll(){
+  const ids = [..._stktSelected];
+  if(!ids.length) return;
+  if(!confirm('Close ' + ids.length + ' ticket(s)?')) return;
+  let ok = 0;
+  for(const id of ids){
+    const { error } = await sb.rpc('close_support_ticket', { p_ticket_id: id });
+    if(!error) ok++;
+  }
+  toast(ok + ' ticket(s) closed', ok ? 'ok' : 'err');
+  _stktSelected.clear();
+  stktUpdateBulkBar();
+  await stktLoadQueue();
+}
+
+async function stktBulkAssignMe(){
+  const ids = [..._stktSelected];
+  if(!ids.length) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) return;
+  const { error } = await sb.from('support_tickets').update({
+    assigned_to: user.id, status: 'in_progress', updated_at: new Date().toISOString(),
+  }).in('id', ids);
+  if(error){ toast(error.message, 'err'); return; }
+  toast('Assigned ' + ids.length + ' ticket(s)', 'ok');
+  _stktSelected.clear();
+  stktUpdateBulkBar();
+  await stktLoadQueue();
+}
+
+async function stktBulkMarkAbuse(){
+  const ids = [..._stktSelected];
+  if(!ids.length) return;
+  const reason = prompt('Abuse reason for ' + ids.length + ' ticket(s):');
+  if(!reason || !reason.trim()) return;
+  let ok = 0;
+  for(const id of ids){
+    const { error } = await sb.rpc('mark_ticket_abuse', { p_ticket_id: id, p_reason: reason.trim() });
+    if(!error) ok++;
+  }
+  toast(ok + ' marked as abuse', ok ? 'ok' : 'err');
+  _stktSelected.clear();
+  stktUpdateBulkBar();
+  await stktLoadQueue();
 }
 
 function stktUpdatePresenceIndicator(isOnline, lastSeen){
@@ -11241,6 +11585,8 @@ function stktUpdateSidePanel(t){
   if(!t){
     if(empty) empty.hidden = false;
     if(active) active.hidden = true;
+    stktLoadPlayerSnapshot(null);
+    stktRenderChatHeadTags(null);
     stktSyncLayout();
     return;
   }
@@ -11304,6 +11650,7 @@ async function stktUploadImage(file){
 
 function stktTabEnter(){
   stktSyncLayout();
+  stktLoadEscalateStaff();
   stktLoadQueue();
   stktLoadQuickRepliesMgr();
   stktLoadAutoMessages();
@@ -11321,6 +11668,9 @@ function stktTabLeave(){
 
 function stktSetFilter(f, btn){
   _stktFilter = f;
+  _stktSearchResults = null;
+  const search = document.getElementById('stktSearch');
+  if(search) search.value = '';
   document.querySelectorAll('.stkt-filter-btn').forEach(b => b.classList.toggle('active', b === btn));
   stktRenderQueue();
 }
@@ -11386,6 +11736,7 @@ async function stktLoadQueue(){
       _stktProfiles = {};
       (profs || []).forEach(p => { _stktProfiles[p.id] = p; });
     }
+    await stktLoadTicketTags();
     await stktRefreshUnreadCounts();
     await stktRefreshSlaMap();
     stktRenderQueue();
@@ -11408,15 +11759,45 @@ async function stktRefreshUnreadCounts(){
 
 function stktRenderQueue(){
   const list = document.getElementById('stktQueueList');
-  const q = (document.getElementById('stktSearch')?.value || '').trim().toLowerCase();
   if(!list) return;
+
+  if(_stktSearchResults){
+    const hits = _stktSearchResults;
+    if(!hits.length){
+      list.innerHTML = '<p style="color:var(--muted);font-size:12px;padding:16px;text-align:center">No search results</p>';
+      return;
+    }
+    list.innerHTML = hits.map(r => {
+      const t = _stktTickets.find(x => x.id === r.id) || r;
+      const un = r.username || _stktProfiles[r.user_id]?.username || 'player';
+      const active = r.id === _stktActiveId ? ' active' : '';
+      const checked = _stktSelected.has(r.id) ? ' checked' : '';
+      const tags = (_stktTicketTags[r.id] || []).map(tag =>
+        '<span class="stkt-tag-pill" onclick="event.stopPropagation();stktSetTagFilter(\'' + tag + '\',null)">' + esc(tag) + '</span>'
+      ).join('');
+      return '<button type="button" class="stkt-queue-item' + active + '" onclick="stktOpenTicket(\'' + r.id + '\')">' +
+        '<input type="checkbox" class="stkt-queue-chk"' + checked + ' onclick="event.stopPropagation();stktToggleSelect(\'' + r.id + '\', this.checked)"/>' +
+        '<div class="stkt-queue-avatar">' + esc(stktInitial(un)) + '</div>' +
+        '<div class="stkt-queue-body">' +
+          '<div class="stkt-queue-top">' +
+            '<span class="stkt-queue-user">@' + esc(un) + '</span>' +
+            '<span class="stkt-queue-meta">' + (t.status ? stktStatusDot(t.status) : '') +
+              '<span class="stkt-queue-time">' + esc(stktTimeAgo(r.updated_at || t.updated_at)) + '</span>' +
+            '</span>' +
+          '</div>' +
+          '<div class="stkt-queue-subj" title="' + esc(r.subject || t.subject) + '">' + esc(r.subject || t.subject || '—') + '</div>' +
+          (r.snippet ? '<div class="stkt-search-snippet" title="' + esc(r.snippet) + '">' + esc(r.snippet) + '</div>' : '') +
+          (tags ? '<div class="stkt-queue-tags">' + tags + '</div>' : '') +
+        '</div></button>';
+    }).join('');
+    stktUpdateBulkBar();
+    return;
+  }
+
   let rows = _stktTickets.slice();
   if(_stktFilter !== 'all') rows = rows.filter(t => t.status === _stktFilter);
-  if(q){
-    rows = rows.filter(t => {
-      const un = (_stktProfiles[t.user_id]?.username || '').toLowerCase();
-      return un.includes(q) || (t.subject || '').toLowerCase().includes(q);
-    });
+  if(_stktTagFilter){
+    rows = rows.filter(t => (_stktTicketTags[t.id] || []).includes(_stktTagFilter));
   }
   if(!rows.length){
     list.innerHTML = '<p style="color:var(--muted);font-size:12px;padding:16px;text-align:center">No tickets</p>';
@@ -11426,7 +11807,12 @@ function stktRenderQueue(){
     const un = _stktProfiles[t.user_id]?.username || 'player';
     const unread = _stktUnread[t.id] || 0;
     const active = t.id === _stktActiveId ? ' active' : '';
+    const checked = _stktSelected.has(t.id) ? ' checked' : '';
+    const tags = (_stktTicketTags[t.id] || []).map(tag =>
+      '<span class="stkt-tag-pill" onclick="event.stopPropagation();stktSetTagFilter(\'' + tag + '\',null)">' + esc(tag) + '</span>'
+    ).join('');
     return '<button type="button" class="stkt-queue-item' + active + '" onclick="stktOpenTicket(\'' + t.id + '\')">' +
+      '<input type="checkbox" class="stkt-queue-chk"' + checked + ' onclick="event.stopPropagation();stktToggleSelect(\'' + t.id + '\', this.checked)"/>' +
       '<div class="stkt-queue-avatar">' + esc(stktInitial(un)) + '</div>' +
       '<div class="stkt-queue-body">' +
         '<div class="stkt-queue-top">' +
@@ -11437,8 +11823,10 @@ function stktRenderQueue(){
           '</span>' +
         '</div>' +
         '<div class="stkt-queue-subj" title="' + esc(t.subject) + '">' + esc(t.subject || '—') + '</div>' +
+        (tags ? '<div class="stkt-queue-tags">' + tags + '</div>' : '') +
       '</div></button>';
   }).join('');
+  stktUpdateBulkBar();
 }
 
 async function stktOpenTicket(ticketId){
@@ -11456,6 +11844,7 @@ async function stktOpenTicket(ticketId){
   document.getElementById('stktChatActive').hidden = false;
   stktUpdateSidePanel(t);
   stktUpdateChatHead(t);
+  document.getElementById('stktEscalatePanel')?.classList.remove('open');
   const compose = document.getElementById('stktCompose');
   if(compose) compose.style.display = t.status === 'closed' ? 'none' : '';
 
@@ -11463,7 +11852,10 @@ async function stktOpenTicket(ticketId){
   stktClearAttach();
   document.getElementById('stktReplyInput').value = '';
 
-  await stktLoadMessages(ticketId);
+  await Promise.all([
+    stktLoadMessages(ticketId),
+    stktLoadPlayerSnapshot(t.user_id),
+  ]);
   stktRenderQuickChips();
   stktStartChatStream(ticketId);
   await stktStartPresenceStream(t.user_id);
