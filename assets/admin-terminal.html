@@ -358,6 +358,9 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mkt-status-badge.active{background:rgba(34,197,94,.15);color:var(--green)}
 .mkt-status-badge.paused{background:rgba(245,158,11,.15);color:var(--amber)}
 .mkt-status-badge.completed{background:rgba(129,140,248,.15);color:var(--cyan)}
+.mkt-status-badge.prospect{background:rgba(148,163,184,.15);color:var(--muted)}
+.mkt-status-badge.contacted{background:rgba(129,140,248,.15);color:var(--cyan)}
+.mkt-status-badge.negotiating{background:rgba(245,158,11,.15);color:var(--amber)}
 .mkt-camp-platforms{display:flex;flex-wrap:wrap;font-size:14px;gap:6px}
 .mkt-camp-meta{color:var(--muted);display:flex;flex-direction:column;font-size:11px;gap:4px;line-height:1.45}
 .mkt-camp-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
@@ -405,6 +408,25 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mkt-ast-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .mkt-inf-table-wrap{overflow-x:auto}
 .mkt-inf-row{cursor:pointer}
+/* ── HANDBOOK (Session 9) ── */
+#tab-handbook.tab-pane{max-width:none;padding:0;width:100%}
+.handbook-layout{display:flex;height:calc(100vh - 130px);min-height:400px;border:1px solid var(--border);border-radius:10px;margin:16px 20px;overflow:hidden;background:var(--bg1)}
+.handbook-nav{width:220px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;padding:8px 0}
+.handbook-nav-item{padding:10px 16px;cursor:pointer;font-size:13px;border-left:3px solid transparent;transition:background .15s,color .15s,border-color .15s;line-height:1.35}
+.handbook-nav-item:hover{background:var(--dim)}
+.handbook-nav-item.active{border-left-color:var(--amber);background:var(--bg2);color:var(--amber);font-weight:600}
+.handbook-content{flex:1;overflow-y:auto;padding:24px 32px;max-width:760px}
+.handbook-content h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0 0 14px}
+.handbook-content h3{font-size:15px;font-weight:700;margin:18px 0 8px}
+.handbook-content p,.handbook-content li{font-size:13px;line-height:1.6;margin-bottom:8px}
+.handbook-content ul,.handbook-content ol{margin:8px 0 12px 20px}
+.hb-good{background:rgba(35,165,90,0.08);border-left:3px solid #23a55a;padding:12px 16px;margin:12px 0;border-radius:0 6px 6px 0}
+.hb-bad{background:rgba(242,63,67,0.08);border-left:3px solid #f23f43;padding:12px 16px;margin:12px 0;border-radius:0 6px 6px 0}
+.hb-danger{background:rgba(242,63,67,0.06);border:1px solid rgba(242,63,67,0.2);padding:16px;border-radius:8px;margin:12px 0}
+.hb-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.hb-table th{background:var(--bg2);padding:8px 12px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.hb-table td{padding:8px 12px;border-top:1px solid var(--border);vertical-align:top}
+@media(max-width:768px){.handbook-layout{flex-direction:column;height:auto;margin:12px}.handbook-nav{width:100%;border-right:none;border-bottom:1px solid var(--border);max-height:180px}}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -1283,7 +1305,12 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       <div class="upd-list" id="updList"><p class="os-dash-empty">Loading…</p></div>
     </div>
     <div id="tab-supportdash" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📊</div><p><strong>Support Dashboard</strong> — metrics &amp; heatmap ship in Session 10.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-handbook" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📖</div><p><strong>Handbook</strong> — staff guide ships in Session 9.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-handbook" class="tab-pane" data-poxy-module="handbook">
+      <div class="handbook-layout">
+        <nav class="handbook-nav" id="hbNav" aria-label="Handbook sections"></nav>
+        <div class="handbook-content" id="hbContent"><p class="os-dash-empty">Loading handbook…</p></div>
+      </div>
+    </div>
     <div id="tab-syshealth" class="tab-pane" data-poxy-module="sys-health">
       <div class="hlth-wrap">
         <div class="card">
@@ -6607,6 +6634,236 @@ async function mktInfTabEnter(){
 }
 
 // ═══════════════════════════════════════════════════════════════
+// STAFF HANDBOOK (Session 9)
+// ═══════════════════════════════════════════════════════════════
+
+const HANDBOOK_SECTIONS = [
+  { id: 'intro', title: '1. Введение и ценности', content: `
+<h2>POXY MCU Staff Handbook</h2>
+<p><strong>POXY WORLD</strong> is a crypto-verified gacha collectibles ecosystem. The <strong>MCU</strong> (Mission Control Unit), now <strong>POXY OS</strong>, is the internal operations platform for staff — not a public-facing product.</p>
+<h3>Core values</h3>
+<ol>
+<li><strong>Integrity</strong> — ledger events are append-only; never alter hashes, RNG outcomes, or audit trails.</li>
+<li><strong>Player-first fairness</strong> — treat every ticket as if the player is watching the thread.</li>
+<li><strong>Confidentiality</strong> — player data stays inside MCU; no screenshots in public channels.</li>
+<li><strong>Calm precision</strong> — short, factual replies beat emotional debates.</li>
+<li><strong>Escalate early</strong> — when in doubt, loop in mod or superadmin before acting.</li>
+</ol>
+<div class="hb-good"><strong>What MCU is:</strong> Support queue, dossier, economy oversight, alerts, RNG audit, internal messenger, and command tools — one staff session, role-gated sidebar.</div>
+` },
+  { id: 'roles', title: '2. Роли и права', content: `
+<h2>Roles &amp; permissions</h2>
+<table class="hb-table"><thead><tr><th>Role</th><th>Departments</th><th>Typical duties</th></tr></thead><tbody>
+<tr><td><strong>Superadmin</strong></td><td>All</td><td>Roles, CMS, compensations, escalations, asset approvals, policy updates</td></tr>
+<tr><td><strong>Mod</strong></td><td>Support + Tech + Shared</td><td>Tickets, disputes, alerts, RNG audit, higher compensation limits</td></tr>
+<tr><td><strong>Support</strong></td><td>Support + Shared</td><td>Ticket queue, dossier, handbook, disputes (read), player comms</td></tr>
+<tr><td><strong>Marketing</strong></td><td>Marketing + Shared</td><td>Campaigns, calendar, analytics, creative assets</td></tr>
+<tr><td><strong>Dev</strong></td><td>Tech + Shared</td><td>Telemetry, economy, sys health, audit log</td></tr>
+</tbody></table>
+<h3>Permission matrix (summary)</h3>
+<table class="hb-table"><thead><tr><th>Action</th><th>Support</th><th>Mod</th><th>Superadmin</th></tr></thead><tbody>
+<tr><td>Reply to tickets</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>Issue PC compensation</td><td>Limited</td><td>Medium</td><td>Full</td></tr>
+<tr><td>Ban / freeze account</td><td>—</td><td>Escalate</td><td>✓</td></tr>
+<tr><td>Approve marketing assets</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr><td>Publish MCU updates</td><td>—</td><td>✓</td><td>✓</td></tr>
+<tr><td>View audit log</td><td>—</td><td>✓</td><td>✓</td></tr>
+</tbody></table>
+<div class="hb-danger"><strong>Never share credentials or player PII</strong> with other staff via personal messengers. Use MCU messenger or ticket internal notes only. Transferring dossier exports outside POXY is grounds for immediate access revocation.</div>
+` },
+  { id: 'tickets', title: '3. Работа с тикетами', content: `
+<h2>Support tickets workflow</h2>
+<h3>SLA — first staff response to player message</h3>
+<table class="hb-table"><thead><tr><th>Level</th><th>Wait time</th><th>Indicator</th><th>Action</th></tr></thead><tbody>
+<tr><td>OK</td><td>&lt; 1 hour</td><td>Green</td><td>Normal queue</td></tr>
+<tr><td>Warning</td><td>1 – 4 hours</td><td>Yellow</td><td>Prioritize reply</td></tr>
+<tr><td>Breach</td><td>&gt; 4 hours</td><td>Red (pulse)</td><td>Reply immediately or escalate</td></tr>
+</tbody></table>
+<h3>8-step process</h3>
+<ol>
+<li>Open queue → filter Open / In progress</li>
+<li>Assign ticket to yourself (auto → In progress)</li>
+<li>Read full thread + check Player Snapshot / Dossier</li>
+<li>Verify claim against ledger, RNG, or inventory</li>
+<li>Reply with clear outcome — use quick replies when appropriate</li>
+<li>Document compensation or escalation in ticket + audit trail</li>
+<li>Resolve or escalate — never leave ambiguous open threads</li>
+<li>Close ticket → CSAT may follow; stats update on close</li>
+</ol>
+<div class="hb-good"><strong>Good tone:</strong> "Hi @player — I checked your drop log. Round #abc completed at 14:02 UTC with an EPIC reveal. Everything matches the commit-reveal record. Let me know if you still see a UI issue."</div>
+<div class="hb-bad"><strong>Bad tone:</strong> "lol that’s not a bug", "you should have read the FAQ", blaming the player for latency.</div>
+<h3>When to escalate</h3>
+<ul>
+<li>Suspected RNG manipulation, economy exploit, or duplicate mint</li>
+<li>Compensation above your role limit</li>
+<li>Abuse, threats, or chargeback risk</li>
+<li>Any request involving account takeover or credential reset edge cases</li>
+</ul>
+` },
+  { id: 'compensation', title: '4. Политика компенсаций', content: `
+<h2>Compensation policy</h2>
+<h3>When to compensate</h3>
+<ul>
+<li>Verified server-side bug (failed open, lost PC, wrong tier after proven RNG reveal)</li>
+<li>Documented downtime affecting a paid action during the incident window</li>
+<li>Superadmin-approved goodwill gesture for VIP / launch partners</li>
+</ul>
+<h3>When NOT to compensate</h3>
+<ul>
+<li>Bad gacha luck — RNG outcomes are provably fair and final</li>
+<li>User error (wrong wallet, sold asset, ignored cooldown)</li>
+<li>Marketplace OTC disputes without ledger proof</li>
+<li>Repeated claims from same account without new evidence</li>
+</ul>
+<h3>Limits by role (PC)</h3>
+<table class="hb-table"><thead><tr><th>Role</th><th>Per incident</th><th>Per player / month</th></tr></thead><tbody>
+<tr><td>Support</td><td>50 PC</td><td>100 PC</td></tr>
+<tr><td>Mod</td><td>200 PC</td><td>500 PC</td></tr>
+<tr><td>Superadmin</td><td>No hard cap</td><td>Document in audit log</td></tr>
+</tbody></table>
+<h3>Documentation</h3>
+<p>Every compensation must include: ticket ID, player ID, amount, reason code, and link to evidence (ledger event, RNG round, or dispute ID). Use <strong>Disputes → Execute compensation</strong> or ticket notes — never manual balance edits without audit entry.</p>
+` },
+  { id: 'violators', title: '5. Нарушители', content: `
+<h2>Violators &amp; enforcement</h2>
+<table class="hb-table"><thead><tr><th>Violation</th><th>First offense</th><th>Repeat</th></tr></thead><tbody>
+<tr><td>Spam / harassment in tickets</td><td>Warning + close</td><td>24h messaging mute</td></tr>
+<tr><td>OTC scam / phishing</td><td>Freeze OTC 24h</td><td>Permanent OTC ban</td></tr>
+<tr><td>Multi-account abuse</td><td>Flag + review</td><td>Ban secondary accounts</td></tr>
+<tr><td>Exploit / economy manipulation</td><td>Freeze + escalate</td><td>Account ban + clawback</td></tr>
+<tr><td>Chargeback fraud</td><td>Immediate freeze</td><td>Permanent ban</td></tr>
+</tbody></table>
+<h3>Ban procedure</h3>
+<ol>
+<li>Confirm evidence in dossier + audit log</li>
+<li>Superadmin or mod executes via Account Ops</li>
+<li>Post internal note with ticket / dispute reference</li>
+<li>Do not discuss ban reason in public channels</li>
+</ol>
+<h3>Freeze procedure</h3>
+<p>OTC air-gap: new login triggers 24h OTC freeze by design — do not bypass. Economy freezes require tech/mod approval and timestamped reason in audit log.</p>
+` },
+  { id: 'forbidden', title: '6. Запрещённые действия', content: `
+<div class="hb-danger"><strong>Strictly forbidden for all staff</strong>
+<ul style="margin:8px 0 0 18px">
+<li>Sharing player emails, balances, or inventory outside MCU</li>
+<li>Editing or deleting <code>ledger_events</code> or RNG commits</li>
+<li>Personal compensation from staff accounts</li>
+<li>Promising outcomes we cannot verify on-chain / in ledger</li>
+<li>Using admin tools on friends or alt accounts without disclosure</li>
+<li>Exporting audit logs or dossiers to personal devices</li>
+</ul></div>
+<table class="hb-table"><thead><tr><th>Action</th><th>Consequence</th></tr></thead><tbody>
+<tr><td>PII leak</td><td>Immediate access revoke + review</td></tr>
+<tr><td>Ledger tampering attempt</td><td>Termination + legal review</td></tr>
+<tr><td>Unauthorized compensation</td><td>Clawback + disciplinary</td></tr>
+<tr><td>Social engineering players</td><td>Permanent ban from staff</td></tr>
+</tbody></table>
+` },
+  { id: 'confidential', title: '7. Конфиденциальность', content: `
+<h2>Data confidentiality</h2>
+<h3>Never do</h3>
+<ul>
+<li>Screenshot dossier, ticket threads, or economy reports to Discord/Telegram</li>
+<li>Store player data in personal notes apps</li>
+<li>Use production data in public test streams</li>
+<li>Share admin_emails list or Supabase keys</li>
+</ul>
+<h3>On departure</h3>
+<ol>
+<li>Access revoked same day — admin removes email from <code>admin_emails</code></li>
+<li>Return any hardware 2FA devices</li>
+<li>Delete local MCU exports and cached CSVs</li>
+<li>Confirm no pending tickets assigned to your account</li>
+</ol>
+<div class="hb-good">Use MCU <strong>Notes</strong> for personal work notes — RLS keeps them private to your staff ID.</div>
+` },
+  { id: 'emergency', title: '8. Экстренные ситуации', content: `
+<h2>Emergency protocols</h2>
+<h3>1 — Mass bug (opens fail, wrong tier wave)</h3>
+<ol>
+<li>Pause CMS maintenance banner + post urgent MCU update</li>
+<li>Notify superadmin + dev in <strong>#urgent</strong> messenger</li>
+<li>Do not mass-compensate until root cause is logged</li>
+<li>Track affected round IDs in shared doc / task</li>
+</ol>
+<h3>2 — Suspected account / infra breach</h3>
+<ol>
+<li>Rotate staff sessions — sign out all terminals</li>
+<li>Superadmin reviews audit log + admin actions stream</li>
+<li>Freeze suspicious accounts via Account Ops</li>
+<li>Preserve logs — no destructive SQL</li>
+</ol>
+<h3>3 — Data leak</h3>
+<ol>
+<li>Contain — revoke leaked tokens/keys immediately</li>
+<li>Document scope: what data, which players, when</li>
+<li>Superadmin coordinates player notification if required</li>
+<li>Post-mortem in Updates Center (policy type)</li>
+</ol>
+` },
+  { id: 'modules', title: '9. Модули MCU — гид', content: `
+<h2>MCU / POXY OS modules</h2>
+<table class="hb-table"><thead><tr><th>Module</th><th>Tab</th><th>Dept</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Dashboard</td><td>os-dash</td><td>Shared</td><td>Personal ops hub, today stats</td></tr>
+<tr><td>My Tasks</td><td>mytasks</td><td>Shared</td><td>Assigned tasks</td></tr>
+<tr><td>Messages</td><td>messenger</td><td>Shared</td><td>Internal channels &amp; DM</td></tr>
+<tr><td>Notes</td><td>notes</td><td>Shared</td><td>Private staff notes</td></tr>
+<tr><td>Updates</td><td>updates</td><td>Shared</td><td>Policies &amp; announcements</td></tr>
+<tr><td>Support Tickets</td><td>stkt</td><td>Support</td><td>Player ticket queue &amp; chat</td></tr>
+<tr><td>Player Dossier</td><td>dossier</td><td>Support</td><td>Full player profile</td></tr>
+<tr><td>Disputes</td><td>disputes</td><td>Support</td><td>Incidents &amp; compensation</td></tr>
+<tr><td>RNG Audit</td><td>rng</td><td>Support</td><td>Provably fair verification</td></tr>
+<tr><td>Telemetry</td><td>telem</td><td>Tech</td><td>Live counters</td></tr>
+<tr><td>Economy</td><td>economy</td><td>Tech</td><td>Supply &amp; mint/burn</td></tr>
+<tr><td>Alerts</td><td>alerts</td><td>Tech</td><td>Suspicious activity</td></tr>
+<tr><td>Audit Log</td><td>auditlog</td><td>Tech</td><td>Admin action stream</td></tr>
+<tr><td>Sys Health</td><td>syshealth</td><td>Tech</td><td>Infra monitoring</td></tr>
+<tr><td>Campaigns</td><td>campaigns</td><td>Marketing</td><td>Marketing campaigns</td></tr>
+<tr><td>Content Calendar</td><td>calendar</td><td>Marketing</td><td>Scheduled posts</td></tr>
+<tr><td>Admin Roles</td><td>roles</td><td>Command</td><td>Staff access control</td></tr>
+<tr><td>Task Manager</td><td>tasks</td><td>Command</td><td>Kanban all depts</td></tr>
+</tbody></table>
+<h3>Keyboard shortcuts</h3>
+<table class="hb-table"><thead><tr><th>Shortcut</th><th>Action</th></tr></thead><tbody>
+<tr><td><kbd>Ctrl+K</kbd></td><td>Universal search (profiles, assets, rounds)</td></tr>
+<tr><td><kbd>Escape</kbd></td><td>Close top modal / search overlay</td></tr>
+<tr><td><kbd>Ctrl+1</kbd></td><td>CMS</td></tr>
+<tr><td><kbd>Ctrl+2</kbd></td><td>User Matrix</td></tr>
+<tr><td><kbd>Ctrl+3</kbd></td><td>HW Simulator</td></tr>
+<tr><td><kbd>Ctrl+4</kbd></td><td>Telemetry</td></tr>
+<tr><td><kbd>Ctrl+5</kbd></td><td>Support Ops</td></tr>
+<tr><td><kbd>Ctrl+6</kbd></td><td>Account Ops</td></tr>
+<tr><td><kbd>Ctrl+7</kbd></td><td>Economy</td></tr>
+</tbody></table>
+` }
+];
+
+let _hbActiveSection = 'intro';
+
+function hbRenderNav(){
+  const nav = document.getElementById('hbNav');
+  if(!nav) return;
+  nav.innerHTML = HANDBOOK_SECTIONS.map(s =>
+    '<div class="handbook-nav-item' + (s.id === _hbActiveSection ? ' active' : '') + '" onclick="hbSelectSection(\'' + s.id + '\')">' + esc(s.title) + '</div>'
+  ).join('');
+}
+
+function hbSelectSection(id){
+  const sec = HANDBOOK_SECTIONS.find(s => s.id === id);
+  if(!sec) return;
+  _hbActiveSection = id;
+  hbRenderNav();
+  const box = document.getElementById('hbContent');
+  if(box) box.innerHTML = sec.content;
+}
+
+function hbTabEnter(){
+  hbSelectSection(_hbActiveSection || 'intro');
+}
+
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -6634,6 +6891,7 @@ function switchTab(id){
   if(id==='mkt-analytics') { mktAnTabEnter(); }
   if(id==='assets')    { mktAstTabEnter(); }
   if(id==='influencers'){ mktInfTabEnter(); }
+  if(id==='handbook')  { hbTabEnter(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
