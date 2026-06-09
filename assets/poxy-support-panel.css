@@ -207,24 +207,28 @@
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .poxy-support-panel {
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: none;
+  position: relative;
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  height: 100%;
   overflow-y: auto;
   padding: 14px 16px 18px;
   -webkit-overflow-scrolling: touch;
-  opacity: 0;
-  transition: opacity 150ms ease;
-  pointer-events: none;
-}
-.poxy-support-panel.is-visible {
   opacity: 1;
-  pointer-events: auto;
+}
+.poxy-support-panel.is-visible,
+.support-tab-active {
+  display: block;
+  animation: fadeIn 150ms ease;
 }
 .poxy-support-panel[hidden] { display: none !important; }
 
