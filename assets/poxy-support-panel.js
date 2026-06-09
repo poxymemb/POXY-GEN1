@@ -244,10 +244,12 @@
   }
 
   function enterChatView() {
+    const drawer = document.querySelector('.poxy-support-drawer');
     const body = document.querySelector('.poxy-support-body');
     const tabs = $('supportMainTabs');
     const panels = $('supportPanelsWrap');
     const chat = $('supportChatView');
+    if (drawer) drawer.classList.add('is-chat-active');
     if (body) body.classList.add('is-chat-active');
     if (tabs) tabs.hidden = true;
     document.querySelectorAll('.poxy-support-panel').forEach(function (p) {
@@ -266,10 +268,12 @@
   }
 
   function leaveChatView() {
+    const drawer = document.querySelector('.poxy-support-drawer');
     const body = document.querySelector('.poxy-support-body');
     const chat = $('supportChatView');
     const tabs = $('supportMainTabs');
     const panels = $('supportPanelsWrap');
+    if (drawer) drawer.classList.remove('is-chat-active');
     if (body) body.classList.remove('is-chat-active');
     if (chat) {
       chat.classList.remove('is-visible', 'is-active-view');

@@ -215,12 +215,21 @@
   flex-direction: column;
   background: transparent;
 }
-/* Tickets list and chat are mutually exclusive views */
-.poxy-support-body.is-chat-active #supportPanelsWrap,
-.poxy-support-body.is-chat-active #supportMainTabs {
+/* [hidden] must win over display:flex on tabs/panels */
+.poxy-support-tabs[hidden],
+#supportMainTabs[hidden],
+#supportPanelsWrap[hidden] {
   display: none !important;
 }
-.poxy-support-body.is-chat-active {
+/* Chat mode — tabs are OUTSIDE .poxy-support-body (sibling), hide via drawer class */
+.poxy-support-drawer.is-chat-active .poxy-support-tabs,
+.poxy-support-drawer.is-chat-active #supportMainTabs,
+.poxy-support-drawer.is-chat-active #supportPanelsWrap,
+.poxy-support-body.is-chat-active #supportPanelsWrap {
+  display: none !important;
+}
+.poxy-support-body.is-chat-active,
+.poxy-support-drawer.is-chat-active .poxy-support-body {
   flex: 1 1 0%;
   min-height: 0;
   overflow: hidden;
@@ -536,15 +545,33 @@
   transition: opacity 120ms ease;
   background: transparent;
 }
+.poxy-support-drawer.is-chat-active #supportChatView.is-active-view,
 .poxy-support-body.is-chat-active #supportChatView,
 .poxy-support-chat.is-active-view,
 #supportChatView.is-active-view {
-  display: flex !important;
-  flex-direction: column;
+  display: grid !important;
+  grid-template-rows: auto 1fr auto;
   flex: 1 1 0%;
   min-height: 0;
   max-height: 100%;
   overflow: hidden;
+}
+.poxy-support-drawer.is-chat-active .poxy-support-chat-head {
+  grid-row: 1;
+}
+.poxy-support-drawer.is-chat-active .poxy-support-messages,
+.poxy-support-drawer.is-chat-active #supportChatMessages {
+  grid-row: 2;
+  min-height: 0;
+  overflow-y: auto;
+}
+.poxy-support-drawer.is-chat-active .poxy-support-compose,
+.poxy-support-drawer.is-chat-active #supportChatCompose {
+  grid-row: 3;
+  display: flex !important;
+  flex-direction: column;
+  visibility: visible;
+  min-height: 52px;
 }
 .poxy-support-chat.is-visible,
 #supportChatView.is-visible { opacity: 1; }
