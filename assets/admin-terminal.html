@@ -497,6 +497,17 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .hb-table th{background:var(--bg2);padding:8px 12px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .hb-table td{padding:8px 12px;border-top:1px solid var(--border);vertical-align:top}
 @media(max-width:768px){.handbook-layout{flex-direction:column;height:auto;margin:12px}.handbook-nav{width:100%;border-right:none;border-bottom:1px solid var(--border);max-height:180px}}
+.shift-status-bar{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:8px;display:flex;gap:8px;margin:0 8px 8px;padding:8px 10px}
+.shift-status-bar select{background:var(--bg1);border:1px solid var(--border);border-radius:6px;color:var(--adm-text);flex:1;font-family:var(--font);font-size:11px;font-weight:500;min-width:0;padding:5px 8px}
+.shift-status-bar select:focus{border-color:var(--amber);outline:none}
+.header-staff-online{align-items:center;display:inline-flex;gap:4px;margin-right:4px}
+.header-staff-avatar{align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:50%;display:inline-flex;flex-shrink:0;height:24px;justify-content:center;overflow:hidden;position:relative;width:24px}
+.header-staff-avatar img{height:100%;object-fit:cover;width:100%}
+.header-staff-avatar .header-staff-glyph{color:var(--adm-text);font-size:10px;font-weight:700}
+.header-staff-avatar .status-dot{bottom:-1px;position:absolute;right:-1px}
+.stkt-quick-cats{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.stkt-quick-cat-btn{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:8px;font-weight:700;letter-spacing:.04em;padding:4px 7px;text-transform:uppercase}
+.stkt-quick-cat-btn.active,.stkt-quick-cat-btn:hover{border-color:var(--amber);color:var(--amber)}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -1129,6 +1140,15 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
         </button>
       </div>
     </nav>
+    <div class="shift-status-bar">
+      <span class="status-dot online" id="my-status-dot"></span>
+      <select id="shift-status-select" onchange="osSidebarShiftChange(this.value)" aria-label="Shift status">
+        <option value="online">● Online</option>
+        <option value="away">🟡 Away</option>
+        <option value="busy">🔴 Busy</option>
+        <option value="offline">⚫ Offline</option>
+      </select>
+    </div>
     <div class="sidebar-footer">
       <div><span class="uplink-dot"></span><span class="uplink-txt">Uplink active</span></div>
       <div class="sidebar-user" id="sidebarUser"></div>
@@ -1174,6 +1194,7 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
             <div class="shift-status-opt" onclick="osSetShiftStatus('offline')"><span class="status-dot offline"></span>Offline</div>
           </div>
         </div>
+        <div class="header-staff-online" id="headerStaffOnline" title="Online staff"></div>
         <span class="header-session"><span class="uplink-dot"></span>Staff session</span>
       </div>
     </header>
@@ -2451,6 +2472,14 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
             </div>
             <div class="stkt-side-quick">
               <div class="stkt-side-quick-title">Quick replies</div>
+              <div class="stkt-quick-cats" id="stktQuickCats">
+                <button type="button" class="stkt-quick-cat-btn active" data-qr-cat="" onclick="stktSetQrCategory('',this)">All</button>
+                <button type="button" class="stkt-quick-cat-btn" data-qr-cat="technical" onclick="stktSetQrCategory('technical',this)">Technical</button>
+                <button type="button" class="stkt-quick-cat-btn" data-qr-cat="economy" onclick="stktSetQrCategory('economy',this)">Economy</button>
+                <button type="button" class="stkt-quick-cat-btn" data-qr-cat="marketplace" onclick="stktSetQrCategory('marketplace',this)">Marketplace</button>
+                <button type="button" class="stkt-quick-cat-btn" data-qr-cat="general" onclick="stktSetQrCategory('general',this)">General</button>
+                <button type="button" class="stkt-quick-cat-btn" data-qr-cat="refusals" onclick="stktSetQrCategory('refusals',this)">Refusals</button>
+              </div>
               <div class="stkt-quick-list" id="stktQuickChips"></div>
             </div>
           </div>
@@ -2468,6 +2497,16 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
             <div class="f-row">
               <label class="f-label">Title</label>
               <input id="stktReplyTitle" class="f-input" type="text" placeholder="Internal label"/>
+            </div>
+            <div class="f-row">
+              <label class="f-label">Category</label>
+              <select id="stktReplyCategory" class="f-select">
+                <option value="technical">Technical</option>
+                <option value="economy">Economy</option>
+                <option value="marketplace">Marketplace</option>
+                <option value="general" selected>General</option>
+                <option value="refusals">Refusals</option>
+              </select>
             </div>
             <div class="f-row">
               <label class="f-label">Body</label>
@@ -3504,6 +3543,7 @@ const OS_DEPT_LABELS = {
 
 let _osStaffRole = 'support';
 let _osUnreadTimer = null;
+let _osStaffOnlineTimer = null;
 let _osShiftStatus = 'online';
 
 function osNormalizeRole(role){
@@ -3608,32 +3648,106 @@ function osToggleShiftMenu(e){
   document.getElementById('shift-status-menu')?.classList.toggle('open');
 }
 
-function osSetShiftStatus(status){
-  _osShiftStatus = status;
+function osApplyShiftStatusUi(status){
   const labels = { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' };
   const dot = document.getElementById('shift-dot');
   const label = document.getElementById('shift-label');
   const dashDot = document.getElementById('osDashPresenceDot');
   const dashLabel = document.getElementById('osDashPresenceLabel');
+  const sideDot = document.getElementById('my-status-dot');
+  const sideSel = document.getElementById('shift-status-select');
   if(dot){ dot.className = 'status-dot ' + status; }
   if(label) label.textContent = labels[status] || 'Online';
   if(dashDot){ dashDot.className = 'status-dot ' + status; }
   if(dashLabel) dashLabel.textContent = labels[status] || 'Online';
-  document.getElementById('shift-status-menu')?.classList.remove('open');
-  try{ localStorage.setItem('poxy-os-shift', status); }catch(e){}
-  sb.rpc('update_presence', { p_online: status !== 'offline' }).catch(err => {
-    console.warn('[POXY OS] update_presence:', err.message);
-  });
+  if(sideDot){ sideDot.className = 'status-dot ' + status; }
+  if(sideSel) sideSel.value = status;
 }
 
-function osInitShiftStatus(){
+function osSetShiftStatus(status, skipPersist){
+  if(!['online','away','busy','offline'].includes(status)) return;
+  _osShiftStatus = status;
+  osApplyShiftStatusUi(status);
+  document.getElementById('shift-status-menu')?.classList.remove('open');
+  if(!skipPersist){
+    try{ localStorage.setItem('poxy-os-shift', status); }catch(e){}
+    sb.rpc('upsert_staff_shift', { p_status: status }).catch(err => {
+      console.warn('[POXY OS] upsert_staff_shift:', err.message);
+    });
+    sb.rpc('update_presence', { p_online: status !== 'offline' }).catch(err => {
+      console.warn('[POXY OS] update_presence:', err.message);
+    });
+    osLoadOnlineStaff();
+  }
+}
+
+function osSidebarShiftChange(status){
+  osSetShiftStatus(status);
+}
+
+async function osLoadShiftFromDb(){
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    if(!user) return;
+    const { data } = await sb.from('staff_shifts').select('status').eq('staff_id', user.id).maybeSingle();
+    if(data?.status && ['online','away','busy','offline'].includes(data.status)){
+      osSetShiftStatus(data.status, true);
+      try{ localStorage.setItem('poxy-os-shift', data.status); }catch(e){}
+      sb.rpc('update_presence', { p_online: data.status !== 'offline' }).catch(() => {});
+      return;
+    }
+  }catch(e){
+    console.warn('[POXY OS] osLoadShiftFromDb:', e.message);
+  }
   try{
     const saved = localStorage.getItem('poxy-os-shift');
     if(saved && ['online','away','busy','offline'].includes(saved)) osSetShiftStatus(saved);
   }catch(e){}
+}
+
+function osInitShiftStatus(){
+  osLoadShiftFromDb();
   document.addEventListener('click', () => {
     document.getElementById('shift-status-menu')?.classList.remove('open');
   });
+}
+
+function osRenderOnlineStaff(list){
+  const box = document.getElementById('headerStaffOnline');
+  if(!box) return;
+  const rows = (list || []).slice(0, 8);
+  if(!rows.length){
+    box.innerHTML = '';
+    box.title = 'No staff online';
+    return;
+  }
+  box.title = rows.length + ' staff online/away/busy';
+  box.innerHTML = rows.map(s => {
+    const st = s.status || 'online';
+    const un = s.username || 'staff';
+    const av = (s.avatar_url || '').trim();
+    const inner = (av.startsWith('http://') || av.startsWith('https://'))
+      ? '<img src="' + esc(av) + '" alt=""/>'
+      : '<span class="header-staff-glyph">' + esc((un[0] || '?').toUpperCase()) + '</span>';
+    return '<span class="header-staff-avatar" title="@' + esc(un) + ' · ' + esc(st) + '">' + inner +
+      '<span class="status-dot ' + esc(st) + '"></span></span>';
+  }).join('');
+}
+
+async function osLoadOnlineStaff(){
+  try{
+    const { data, error } = await sb.rpc('get_online_staff');
+    if(error) throw error;
+    osRenderOnlineStaff(data || []);
+  }catch(err){
+    console.warn('[POXY OS] osLoadOnlineStaff:', err.message);
+  }
+}
+
+function osStartStaffOnlinePoll(){
+  if(_osStaffOnlineTimer) clearInterval(_osStaffOnlineTimer);
+  osLoadOnlineStaff();
+  _osStaffOnlineTimer = setInterval(osLoadOnlineStaff, 60000);
 }
 
 function osInitChrome(){
@@ -3642,6 +3756,7 @@ function osInitChrome(){
   if(_osUnreadTimer) clearInterval(_osUnreadTimer);
   _osUnreadTimer = setInterval(refreshUnreadCounts, 30000);
   osInitShiftStatus();
+  osStartStaffOnlinePoll();
   osDashLoad();
   updEnsureTabDom();
   updCheckUrgentReminder();
@@ -10890,6 +11005,8 @@ function mcuOnKeydown(e){
       updSnoozeUrgent();
       return;
     }
+    const chlogOpen = !document.getElementById('chlogFormModal')?.classList.contains('hidden');
+    if(chlogOpen){ e.preventDefault(); chlogCloseForm(); return; }
     if(overlayOpen){
       e.preventDefault();
       mcuCloseSearch();
@@ -11145,6 +11262,7 @@ let _stktPresenceChannel = null;
 let _stktSlaMap = {};
 let _stktSlaTick = null;
 let _stktQuickReplies = [];
+let _stktQrCatFilter = '';
 let _stktEditingReplyId = null;
 let _stktEditingFaqId = null;
 let _stktAttach = null;
@@ -11966,23 +12084,43 @@ async function stktSendReply(){
   if(btn) btn.disabled = false;
 }
 
+function stktFilteredQuickReplies(){
+  if(!_stktQrCatFilter) return _stktQuickReplies;
+  return _stktQuickReplies.filter(r => (r.category || 'general') === _stktQrCatFilter);
+}
+
+function stktSetQrCategory(cat, btn){
+  _stktQrCatFilter = cat || '';
+  document.querySelectorAll('.stkt-quick-cat-btn').forEach(b => {
+    b.classList.toggle('active', (b.dataset.qrCat || '') === _stktQrCatFilter);
+  });
+  if(btn) btn.classList.add('active');
+  stktRenderQuickChips();
+}
+
+function stktQrCatLabel(cat){
+  const map = { technical: 'Technical', economy: 'Economy', marketplace: 'Marketplace', general: 'General', refusals: 'Refusals' };
+  return map[cat] || 'General';
+}
+
 function stktRenderQuickChips(){
   const el = document.getElementById('stktQuickChips');
   if(!el) return;
-  if(!_stktQuickReplies.length){
-    el.innerHTML = '<span style="font-size:11px;color:var(--muted)">No quick replies</span>';
+  const rows = stktFilteredQuickReplies();
+  if(!rows.length){
+    el.innerHTML = '<span style="font-size:11px;color:var(--muted)">No quick replies in this category</span>';
     return;
   }
-  el.innerHTML = _stktQuickReplies.map((r, i) => {
+  el.innerHTML = rows.map(r => {
     const preview = (r.body || '').slice(0, 72) + ((r.body || '').length > 72 ? '…' : '');
-    return '<button type="button" class="stkt-quick-chip" onclick="stktInsertQuickReplyIdx(' + i + ')">' +
+    return '<button type="button" class="stkt-quick-chip" onclick="stktInsertQuickReply(\'' + r.id + '\')">' +
       '<span class="stkt-quick-chip-title">' + esc(r.title) + '</span>' +
       '<span class="stkt-quick-chip-preview">' + esc(preview) + '</span></button>';
   }).join('');
 }
 
-function stktInsertQuickReplyIdx(i){
-  const r = _stktQuickReplies[i];
+function stktInsertQuickReply(id){
+  const r = _stktQuickReplies.find(x => x.id === id);
   const inp = document.getElementById('stktReplyInput');
   if(inp && r){ inp.value = r.body || ''; inp.focus(); }
 }
@@ -12034,7 +12172,7 @@ async function stktLoadQuickRepliesMgr(){
     list.innerHTML = _stktQuickReplies.map(r => `
       <div class="stkt-mgr-row">
         <div class="stkt-mgr-row-main">
-          <div class="stkt-mgr-row-title">${esc(r.title)}</div>
+          <div class="stkt-mgr-row-title">${esc(r.title)} <span class="tag">${esc(stktQrCatLabel(r.category || 'general'))}</span></div>
           <div class="stkt-mgr-row-sub">${esc(r.body)}</div>
         </div>
         <div class="row-flex" style="gap:4px;flex-shrink:0">
@@ -12052,6 +12190,7 @@ function stktShowAddReply(){
   _stktEditingReplyId = null;
   document.getElementById('stktReplyTitle').value = '';
   document.getElementById('stktReplyBody').value = '';
+  document.getElementById('stktReplyCategory').value = 'general';
   document.getElementById('stktReplyForm')?.classList.add('visible');
 }
 function stktHideReplyForm(){ document.getElementById('stktReplyForm')?.classList.remove('visible'); }
@@ -12061,20 +12200,22 @@ function stktEditReply(id){
   _stktEditingReplyId = id;
   document.getElementById('stktReplyTitle').value = r.title;
   document.getElementById('stktReplyBody').value = r.body;
+  document.getElementById('stktReplyCategory').value = r.category || 'general';
   document.getElementById('stktReplyForm')?.classList.add('visible');
 }
 
 async function stktSaveReply(){
   const title = document.getElementById('stktReplyTitle')?.value?.trim();
   const body = document.getElementById('stktReplyBody')?.value?.trim();
+  const category = document.getElementById('stktReplyCategory')?.value || 'general';
   if(!title || !body){ toast('TITLE AND BODY REQUIRED', 'err'); return; }
   const { data: { user } } = await sb.auth.getUser();
   try{
     if(_stktEditingReplyId){
-      const { error } = await sb.from('support_quick_replies').update({ title, body }).eq('id', _stktEditingReplyId);
+      const { error } = await sb.from('support_quick_replies').update({ title, body, category }).eq('id', _stktEditingReplyId);
       if(error) throw error;
     }else{
-      const { error } = await sb.from('support_quick_replies').insert({ title, body, created_by: user?.id || null });
+      const { error } = await sb.from('support_quick_replies').insert({ title, body, category, created_by: user?.id || null });
       if(error) throw error;
     }
     stktHideReplyForm();
