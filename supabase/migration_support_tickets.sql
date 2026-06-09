@@ -153,8 +153,8 @@ ALTER TABLE public.support_quick_replies  ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.support_faq            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.support_auto_messages  ENABLE ROW LEVEL SECURITY;
 
--- Staff gate: admin_emails + profiles join (project RLS standard)
--- NOTE: profiles.email must match admin_emails for staff policies to apply.
+-- Staff gate: admin_emails + auth.users email join
+-- NOTE: profiles.email is often NULL — use auth.users.email (see migration_support_rls_fix.sql)
 
 DROP POLICY IF EXISTS "user_own_tickets"   ON public.support_tickets;
 DROP POLICY IF EXISTS "staff_all_tickets" ON public.support_tickets;
@@ -178,16 +178,16 @@ CREATE POLICY "staff_all_tickets" ON public.support_tickets
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   );
 
@@ -219,16 +219,16 @@ CREATE POLICY "staff_all_messages" ON public.ticket_messages
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   );
 
@@ -244,16 +244,16 @@ CREATE POLICY "faq_staff_manage" ON public.support_faq
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   );
 
@@ -264,16 +264,16 @@ CREATE POLICY "quick_replies_staff" ON public.support_quick_replies
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   );
 
@@ -284,16 +284,16 @@ CREATE POLICY "auto_messages_staff" ON public.support_auto_messages
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1
       FROM public.admin_emails ae
-      JOIN public.profiles p ON p.email = ae.email
-      WHERE p.id = auth.uid()
+      INNER JOIN auth.users u ON lower(u.email) = lower(ae.email)
+      WHERE u.id = auth.uid()
     )
   );
 
