@@ -154,7 +154,8 @@ ALTER TABLE public.support_faq            ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.support_auto_messages  ENABLE ROW LEVEL SECURITY;
 
 -- Staff gate: admin_emails + profiles join (case-insensitive email)
--- NOTE: profiles.email must be synced from auth.users (see migration_support_rls_fix_v2.sql)
+-- NOTE: profiles.email synced from auth.users (migration_support_rls_fix_v2.sql)
+-- NOTE: admin_emails needs staff_read_own_admin_email policy (migration_support_rls_fix_v3.sql)
 
 DROP POLICY IF EXISTS "user_own_tickets"   ON public.support_tickets;
 DROP POLICY IF EXISTS "staff_all_tickets" ON public.support_tickets;
