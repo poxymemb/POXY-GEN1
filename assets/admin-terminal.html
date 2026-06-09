@@ -382,6 +382,29 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
 .mkt-view-row{border-bottom:1px solid var(--border2);font-size:13px;padding:8px 0}
 .mkt-view-row:last-child{border-bottom:none}
 .mkt-view-lbl{color:var(--muted);display:block;font-size:10px;font-weight:700;letter-spacing:.04em;margin-bottom:3px;text-transform:uppercase}
+/* ── MARKETING Session 8 ── */
+#tab-mkt-analytics.tab-pane,#tab-assets.tab-pane,#tab-influencers.tab-pane{max-width:none;padding:16px 20px;width:100%}
+.mkt-an-chart-wrap{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;height:180px;margin-bottom:12px;padding:8px}
+.mkt-an-chart-wrap svg{display:block;height:100%;width:100%}
+.mkt-an-chart-meta{color:var(--muted);font-size:11px;margin-top:6px}
+.mkt-an-bar-row{align-items:center;display:grid;gap:10px;grid-template-columns:100px 1fr 56px;margin-bottom:8px}
+.mkt-an-bar-row:last-child{margin-bottom:0}
+.mkt-an-bar-label{color:var(--muted);font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mkt-an-bar-track{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;height:10px;overflow:hidden}
+.mkt-an-bar-fill{background:linear-gradient(90deg,rgba(129,140,248,.5),var(--cyan));border-radius:6px;height:100%;min-width:2px}
+.mkt-an-bar-val{font-family:var(--font-mono);font-size:10px;text-align:right}
+.mkt-ast-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.mkt-ast-card{background:var(--bg1);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;overflow:hidden;transition:border-color .15s}
+.mkt-ast-card:hover{border-color:rgba(245,158,11,.35)}
+.mkt-ast-preview{align-items:center;background:var(--bg2);display:flex;height:120px;justify-content:center;overflow:hidden}
+.mkt-ast-preview img{height:100%;object-fit:cover;width:100%}
+.mkt-ast-preview .mkt-ast-vid{font-size:32px;opacity:.45}
+.mkt-ast-body{padding:10px 12px}
+.mkt-ast-name{font-size:13px;font-weight:700;line-height:1.3;margin:0 0 4px}
+.mkt-ast-meta{color:var(--muted);display:flex;flex-wrap:wrap;font-size:10px;gap:6px}
+.mkt-ast-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mkt-inf-table-wrap{overflow-x:auto}
+.mkt-inf-row{cursor:pointer}
 .sidebar-footer{padding:12px 14px;border-top:1px solid var(--border)}
 .uplink-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;margin-right:6px;vertical-align:middle}
 .uplink-txt{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -1344,9 +1367,74 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       </div>
       <div class="mkt-cal-grid" id="mktCalGrid"><p class="os-dash-empty">Loading…</p></div>
     </div>
-    <div id="tab-mkt-analytics" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">📈</div><p><strong>Analytics</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-assets" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">🎨</div><p><strong>Creative Assets</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
-    <div id="tab-influencers" class="tab-pane"><div class="os-stub-wrap"><div style="font-size:36px;opacity:.4">👥</div><p><strong>Influencers</strong> — ships in Session 8.</p><button type="button" class="btn btn-ghost btn-sm" onclick="switchTab('os-dash')">← Dashboard</button></div></div>
+    <div id="tab-mkt-analytics" class="tab-pane" data-poxy-module="mkt-analytics">
+      <div class="mkt-head">
+        <h2>Marketing Analytics</h2>
+        <button type="button" class="btn btn-amber btn-sm" onclick="mktAnShowAdd()">+ Add manual data point</button>
+      </div>
+      <div class="mkt-filters" id="mktAnPeriodFilters">
+        <button type="button" class="mkt-filter-btn active" data-period="7" onclick="mktAnSetPeriod(7)">7d</button>
+        <button type="button" class="mkt-filter-btn" data-period="30" onclick="mktAnSetPeriod(30)">30d</button>
+        <button type="button" class="mkt-filter-btn" data-period="90" onclick="mktAnSetPeriod(90)">90d</button>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title">Registrations by day</div>
+          <div class="mkt-an-chart-wrap"><svg id="mktAnRegChart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg></div>
+          <div class="mkt-an-chart-meta" id="mktAnRegMeta">—</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Traffic sources</div>
+          <div id="mktAnTrafficBars"><p class="os-dash-empty">No traffic data</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Promo codes</div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Code</th><th>Uses</th><th>PC spent</th><th>Conversion</th></tr></thead>
+            <tbody id="mktAnPromoBody"><tr><td colspan="4" class="os-dash-empty">No promo codes</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="tab-assets" class="tab-pane" data-poxy-module="assets">
+      <div class="mkt-head">
+        <h2>Creative Assets</h2>
+        <button type="button" class="btn btn-amber btn-sm" onclick="mktAstShowUpload()">+ Upload asset</button>
+      </div>
+      <div class="mkt-filters" id="mktAstFilters">
+        <button type="button" class="mkt-filter-btn active" data-type="all" onclick="mktAstSetFilter('all')">All</button>
+        <button type="button" class="mkt-filter-btn" data-type="banner" onclick="mktAstSetFilter('banner')">Banner</button>
+        <button type="button" class="mkt-filter-btn" data-type="template" onclick="mktAstSetFilter('template')">Template</button>
+        <button type="button" class="mkt-filter-btn" data-type="logo" onclick="mktAstSetFilter('logo')">Logo</button>
+        <button type="button" class="mkt-filter-btn" data-type="video" onclick="mktAstSetFilter('video')">Video</button>
+      </div>
+      <div class="f-row" style="max-width:320px;margin-bottom:14px">
+        <input id="mktAstSearch" class="f-input" type="search" placeholder="🔍 Search name or tags…" oninput="mktAstRender()"/>
+      </div>
+      <div class="mkt-ast-grid" id="mktAstGrid"><p class="os-dash-empty">Loading…</p></div>
+    </div>
+    <div id="tab-influencers" class="tab-pane" data-poxy-module="influencers">
+      <div class="mkt-head">
+        <h2>Influencer Tracker</h2>
+        <button type="button" class="btn btn-amber btn-sm" onclick="mktInfShowAdd()">+ Add Influencer</button>
+      </div>
+      <div class="mkt-filters" id="mktInfFilters">
+        <button type="button" class="mkt-filter-btn active" data-status="all" onclick="mktInfSetFilter('all')">All</button>
+        <button type="button" class="mkt-filter-btn" data-status="prospect" onclick="mktInfSetFilter('prospect')">Prospect</button>
+        <button type="button" class="mkt-filter-btn" data-status="contacted" onclick="mktInfSetFilter('contacted')">Contacted</button>
+        <button type="button" class="mkt-filter-btn" data-status="negotiating" onclick="mktInfSetFilter('negotiating')">Negotiating</button>
+        <button type="button" class="mkt-filter-btn" data-status="active" onclick="mktInfSetFilter('active')">Active</button>
+        <button type="button" class="mkt-filter-btn" data-status="completed" onclick="mktInfSetFilter('completed')">Completed</button>
+      </div>
+      <div class="card mkt-inf-table-wrap">
+        <table class="tbl">
+          <thead><tr><th>Name</th><th>Platform</th><th>Followers</th><th>Status</th><th>Result</th></tr></thead>
+          <tbody id="mktInfBody"><tr><td colspan="5" class="os-dash-empty">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
 
     <!-- ══════════════════════════════════════════════════════
          TAB 1: SYSTEM CONTENT & CMS
@@ -2844,6 +2932,91 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
       <button type="button" class="btn btn-ghost btn-sm" onclick="mktCalClosePost()">Cancel</button>
       <button type="button" class="btn btn-amber btn-sm" onclick="mktCalSavePost()">Save</button>
       <button type="button" class="btn btn-ghost btn-sm hidden" id="mktCalPostDeleteBtn" style="color:var(--red);margin-left:auto" onclick="mktCalDeletePost()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- MARKETING MODALS (Session 8) -->
+<div id="mktAnDataModal" class="upd-overlay hidden" onclick="if(event.target===this)mktAnCloseAdd()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" style="margin-bottom:12px">Add manual data point</div>
+    <div class="f-row"><label class="f-label">Type</label>
+      <select id="mktAnDataType" class="f-select" onchange="mktAnToggleDataFields()">
+        <option value="registration">Registration (daily)</option>
+        <option value="traffic">Traffic source</option>
+        <option value="promo">Promo code</option>
+      </select>
+    </div>
+    <div id="mktAnFieldsReg">
+      <div class="f-row"><label class="f-label">Date</label><input id="mktAnRegDate" class="f-input" type="date"/></div>
+      <div class="f-row"><label class="f-label">Registrations</label><input id="mktAnRegCount" class="f-input" type="number" min="0" value="0"/></div>
+    </div>
+    <div id="mktAnFieldsTraffic" class="hidden">
+      <div class="f-row"><label class="f-label">Source</label><input id="mktAnTrafficSource" class="f-input" type="text" placeholder="TikTok, Discord…"/></div>
+      <div class="f-row"><label class="f-label">Visits</label><input id="mktAnTrafficVisits" class="f-input" type="number" min="0" value="0"/></div>
+    </div>
+    <div id="mktAnFieldsPromo" class="hidden">
+      <div class="f-row"><label class="f-label">Code</label><input id="mktAnPromoCode" class="f-input" type="text" placeholder="POXY10"/></div>
+      <div class="grid2">
+        <div class="f-row"><label class="f-label">Uses</label><input id="mktAnPromoUses" class="f-input" type="number" min="0" value="0"/></div>
+        <div class="f-row"><label class="f-label">PC spent</label><input id="mktAnPromoPc" class="f-input" type="number" min="0" value="0"/></div>
+      </div>
+      <div class="f-row"><label class="f-label">Conversion %</label><input id="mktAnPromoConv" class="f-input" type="number" min="0" max="100" step="0.1" value="0"/></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="mktAnCloseAdd()">Cancel</button>
+      <button type="button" class="btn btn-amber btn-sm" onclick="mktAnSaveDataPoint()">Add</button>
+    </div>
+  </div>
+</div>
+<div id="mktAstUploadModal" class="upd-overlay hidden" onclick="if(event.target===this)mktAstCloseUpload()">
+  <div class="upd-modal card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" style="margin-bottom:12px">Upload creative asset</div>
+    <div class="f-row"><label class="f-label">Name</label><input id="mktAstName" class="f-input" type="text" placeholder="Asset name"/></div>
+    <div class="grid2">
+      <div class="f-row"><label class="f-label">Type</label>
+        <select id="mktAstType" class="f-select"><option value="banner">Banner</option><option value="template">Template</option><option value="logo">Logo</option><option value="video">Video</option></select>
+      </div>
+      <div class="f-row"><label class="f-label">Version</label><input id="mktAstVersion" class="f-input" type="text" value="1.0"/></div>
+    </div>
+    <div class="f-row"><label class="f-label">Tags (comma-separated)</label><input id="mktAstTags" class="f-input" type="text" placeholder="launch, social"/></div>
+    <div class="f-row"><label class="f-label">File</label><input id="mktAstFile" class="f-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"/></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="mktAstCloseUpload()">Cancel</button>
+      <button type="button" class="btn btn-amber btn-sm" id="mktAstUploadBtn" onclick="mktAstUpload()">Upload</button>
+    </div>
+  </div>
+</div>
+<div id="mktInfModal" class="upd-overlay hidden" onclick="if(event.target===this)mktInfCloseModal()">
+  <div class="upd-modal upd-modal-wide card" role="dialog" onclick="event.stopPropagation()">
+    <div class="card-title" id="mktInfModalTitle" style="margin-bottom:12px">Add influencer</div>
+    <input type="hidden" id="mktInfId"/>
+    <div class="grid2">
+      <div class="f-row"><label class="f-label">Name</label><input id="mktInfName" class="f-input" type="text"/></div>
+      <div class="f-row"><label class="f-label">Platform</label>
+        <select id="mktInfPlatform" class="f-select"></select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="f-row"><label class="f-label">Handle</label><input id="mktInfHandle" class="f-input" type="text" placeholder="@username"/></div>
+      <div class="f-row"><label class="f-label">Followers</label><input id="mktInfFollowers" class="f-input" type="number" min="0"/></div>
+    </div>
+    <div class="grid2">
+      <div class="f-row"><label class="f-label">Status</label>
+        <select id="mktInfStatus" class="f-select">
+          <option value="prospect">Prospect</option><option value="contacted">Contacted</option>
+          <option value="negotiating">Negotiating</option><option value="active">Active</option><option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="f-row"><label class="f-label">Niche</label><input id="mktInfNiche" class="f-input" type="text"/></div>
+    </div>
+    <div class="f-row"><label class="f-label">Notes</label><textarea id="mktInfNotes" class="f-textarea" rows="2"></textarea></div>
+    <div class="f-row"><label class="f-label">Deal terms</label><textarea id="mktInfDeal" class="f-textarea" rows="2"></textarea></div>
+    <div class="f-row"><label class="f-label">Result notes</label><textarea id="mktInfResult" class="f-textarea" rows="2"></textarea></div>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="mktInfCloseModal()">Cancel</button>
+      <button type="button" class="btn btn-amber btn-sm" onclick="mktInfSave()">Save</button>
+      <button type="button" class="btn btn-ghost btn-sm hidden" id="mktInfDeleteBtn" style="color:var(--red);margin-left:auto" onclick="mktInfDelete()">Delete</button>
     </div>
   </div>
 </div>
@@ -5960,6 +6133,480 @@ async function mktCalTabEnter(){
 }
 
 // ═══════════════════════════════════════════════════════════════
+// MARKETING — ANALYTICS + ASSETS + INFLUENCERS (Session 8)
+// ═══════════════════════════════════════════════════════════════
+
+const MKT_AN_STORAGE_KEY = 'poxy-mcu-mkt-analytics';
+const MKT_AST_IMG_TYPES = ['image/jpeg','image/png','image/webp','image/gif'];
+const MKT_AST_VID_TYPES = ['video/mp4','video/webm'];
+
+let _mktAnPeriod = 7;
+let _mktAnData = { registrations: [], traffic: [], promos: [] };
+let _mktAstFilter = 'all';
+let _mktAssets = [];
+let _mktAstIsSuperadmin = false;
+let _mktInfFilter = 'all';
+let _mktInfluencers = [];
+
+function mktAnLoadStore(){
+  try{
+    const raw = localStorage.getItem(MKT_AN_STORAGE_KEY);
+    if(raw){
+      const p = JSON.parse(raw);
+      _mktAnData = {
+        registrations: p.registrations || [],
+        traffic: p.traffic || [],
+        promos: p.promos || [],
+      };
+    }
+  }catch(e){
+    _mktAnData = { registrations: [], traffic: [], promos: [] };
+  }
+}
+
+function mktAnSaveStore(){
+  try{ localStorage.setItem(MKT_AN_STORAGE_KEY, JSON.stringify(_mktAnData)); }catch(e){}
+}
+
+function mktAnSetPeriod(days){
+  _mktAnPeriod = days;
+  document.querySelectorAll('#mktAnPeriodFilters .mkt-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.period, 10) === days);
+  });
+  mktAnRenderAll();
+}
+
+function mktAnDaySlots(period){
+  const slots = [];
+  const end = new Date();
+  end.setHours(0, 0, 0, 0);
+  for(let i = period - 1; i >= 0; i--){
+    const d = new Date(end);
+    d.setDate(d.getDate() - i);
+    slots.push(mktCalDateKey(d));
+  }
+  return slots;
+}
+
+function mktAnRenderRegChart(){
+  const svg = document.getElementById('mktAnRegChart');
+  const meta = document.getElementById('mktAnRegMeta');
+  if(!svg) return;
+  const slots = mktAnDaySlots(_mktAnPeriod);
+  const map = {};
+  (_mktAnData.registrations || []).forEach(r => { if(r.date) map[r.date] = (map[r.date] || 0) + Number(r.count || 0); });
+  const vals = slots.map(k => map[k] || 0);
+  const max = Math.max(...vals, 1);
+  const w = 600, h = 160, padX = 20, padY = 16, chartH = h - padY - 24;
+  const barW = Math.max(4, (w - padX * 2) / slots.length - 2);
+  let bars = '';
+  slots.forEach((k, i) => {
+    const v = vals[i];
+    const bh = Math.round((v / max) * chartH);
+    const x = padX + i * ((w - padX * 2) / slots.length);
+    const y = h - padY - bh;
+    bars += `<rect x="${x.toFixed(1)}" y="${y}" width="${barW.toFixed(1)}" height="${bh}" fill="rgba(245,158,11,0.75)" rx="2"/>`;
+  });
+  svg.innerHTML = bars;
+  const total = vals.reduce((a, b) => a + b, 0);
+  if(meta) meta.textContent = total + ' registrations in last ' + _mktAnPeriod + 'd (manual data)';
+}
+
+function mktAnRenderTraffic(){
+  const box = document.getElementById('mktAnTrafficBars');
+  if(!box) return;
+  const rows = (_mktAnData.traffic || []).slice().sort((a, b) => Number(b.visits || 0) - Number(a.visits || 0));
+  if(!rows.length){ box.innerHTML = '<p class="os-dash-empty">No traffic data</p>'; return; }
+  const max = Math.max(...rows.map(r => Number(r.visits || 0)), 1);
+  box.innerHTML = rows.map(r => {
+    const v = Number(r.visits || 0);
+    const pct = Math.round((v / max) * 100);
+    return `<div class="mkt-an-bar-row">
+      <span class="mkt-an-bar-label">${esc(r.source || '—')}</span>
+      <div class="mkt-an-bar-track"><div class="mkt-an-bar-fill" style="width:${pct}%"></div></div>
+      <span class="mkt-an-bar-val">${v}</span>
+    </div>`;
+  }).join('');
+}
+
+function mktAnRenderPromos(){
+  const body = document.getElementById('mktAnPromoBody');
+  if(!body) return;
+  const rows = _mktAnData.promos || [];
+  if(!rows.length){
+    body.innerHTML = '<tr><td colspan="4" class="os-dash-empty">No promo codes</td></tr>';
+    return;
+  }
+  body.innerHTML = rows.map(p =>
+    `<tr><td class="mono">${esc(p.code || '—')}</td><td>${Number(p.uses || 0)}</td><td>${Number(p.pc_spent || 0)} PC</td><td>${Number(p.conversion || 0).toFixed(1)}%</td></tr>`
+  ).join('');
+}
+
+function mktAnRenderAll(){
+  mktAnRenderRegChart();
+  mktAnRenderTraffic();
+  mktAnRenderPromos();
+}
+
+function mktAnShowAdd(){
+  const d = document.getElementById('mktAnRegDate');
+  if(d) d.value = mktCalDateKey(new Date());
+  document.getElementById('mktAnDataType').value = 'registration';
+  mktAnToggleDataFields();
+  document.getElementById('mktAnDataModal')?.classList.remove('hidden');
+}
+
+function mktAnCloseAdd(){
+  document.getElementById('mktAnDataModal')?.classList.add('hidden');
+}
+
+function mktAnToggleDataFields(){
+  const t = document.getElementById('mktAnDataType')?.value || 'registration';
+  document.getElementById('mktAnFieldsReg')?.classList.toggle('hidden', t !== 'registration');
+  document.getElementById('mktAnFieldsTraffic')?.classList.toggle('hidden', t !== 'traffic');
+  document.getElementById('mktAnFieldsPromo')?.classList.toggle('hidden', t !== 'promo');
+}
+
+function mktAnSaveDataPoint(){
+  const t = document.getElementById('mktAnDataType')?.value;
+  if(t === 'registration'){
+    const date = document.getElementById('mktAnRegDate')?.value;
+    const count = parseInt(document.getElementById('mktAnRegCount')?.value, 10) || 0;
+    if(!date){ toast('SELECT DATE', 'err'); return; }
+    const ex = _mktAnData.registrations.find(r => r.date === date);
+    if(ex) ex.count = (Number(ex.count) || 0) + count;
+    else _mktAnData.registrations.push({ date, count });
+  }else if(t === 'traffic'){
+    const source = (document.getElementById('mktAnTrafficSource')?.value || '').trim();
+    const visits = parseInt(document.getElementById('mktAnTrafficVisits')?.value, 10) || 0;
+    if(!source){ toast('ENTER SOURCE', 'err'); return; }
+    const ex = _mktAnData.traffic.find(r => r.source.toLowerCase() === source.toLowerCase());
+    if(ex) ex.visits = (Number(ex.visits) || 0) + visits;
+    else _mktAnData.traffic.push({ source, visits });
+  }else if(t === 'promo'){
+    const code = (document.getElementById('mktAnPromoCode')?.value || '').trim().toUpperCase();
+    if(!code){ toast('ENTER PROMO CODE', 'err'); return; }
+    _mktAnData.promos.push({
+      code,
+      uses: parseInt(document.getElementById('mktAnPromoUses')?.value, 10) || 0,
+      pc_spent: parseInt(document.getElementById('mktAnPromoPc')?.value, 10) || 0,
+      conversion: parseFloat(document.getElementById('mktAnPromoConv')?.value) || 0,
+    });
+  }
+  mktAnSaveStore();
+  mktAnRenderAll();
+  mktAnCloseAdd();
+  toast('Data point added', 'ok');
+}
+
+function mktAnTabEnter(){
+  mktAnLoadStore();
+  mktAnRenderAll();
+}
+
+async function mktAstLoad(){
+  const { data, error } = await sb.from('mkt_assets').select('*').order('created_at', { ascending: false });
+  if(error) throw error;
+  _mktAssets = data || [];
+}
+
+function mktAstSetFilter(type){
+  _mktAstFilter = type;
+  document.querySelectorAll('#mktAstFilters .mkt-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === type);
+  });
+  mktAstRender();
+}
+
+function mktAstFiltered(){
+  const q = (document.getElementById('mktAstSearch')?.value || '').trim().toLowerCase();
+  return _mktAssets.filter(a => {
+    if(_mktAstFilter !== 'all' && (a.type || '').toLowerCase() !== _mktAstFilter) return false;
+    if(!q) return true;
+    const tags = (a.tags || []).join(' ').toLowerCase();
+    return (a.name || '').toLowerCase().includes(q) || tags.includes(q);
+  });
+}
+
+function mktAstPreviewHtml(a){
+  const isVid = (a.type || '').toLowerCase() === 'video' || /\.(mp4|webm)(\?|$)/i.test(a.url || '');
+  if(isVid) return '<span class="mkt-ast-vid">🎬</span>';
+  if(a.url) return '<img src="' + esc(a.url) + '" alt="" loading="lazy"/>';
+  return '<span class="mkt-ast-vid">📁</span>';
+}
+
+function mktAstRender(){
+  const box = document.getElementById('mktAstGrid');
+  if(!box) return;
+  const list = mktAstFiltered();
+  if(!list.length){
+    box.innerHTML = '<p class="os-dash-empty">No assets</p>';
+    return;
+  }
+  box.innerHTML = list.map(a => {
+    const status = a.approved ? '✅ Approved' : '⏳ Pending';
+    const approveBtn = _mktAstIsSuperadmin && !a.approved
+      ? `<button type="button" class="btn btn-amber btn-sm" onclick="mktAstApprove('${a.id}')">Approve</button>`
+      : '';
+    return `<div class="mkt-ast-card">
+      <div class="mkt-ast-preview">${mktAstPreviewHtml(a)}</div>
+      <div class="mkt-ast-body">
+        <h3 class="mkt-ast-name">${esc(a.name || 'Untitled')}</h3>
+        <div class="mkt-ast-meta"><span>${esc((a.type || '').toUpperCase())}</span><span>v${esc(a.version || '1.0')}</span><span>${status}</span></div>
+        <div class="mkt-ast-actions">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="mktAstOpenUrl('${a.id}')">Open</button>
+          ${approveBtn}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function mktAstShowUpload(){
+  document.getElementById('mktAstName').value = '';
+  document.getElementById('mktAstType').value = 'banner';
+  document.getElementById('mktAstVersion').value = '1.0';
+  document.getElementById('mktAstTags').value = '';
+  document.getElementById('mktAstFile').value = '';
+  document.getElementById('mktAstUploadModal')?.classList.remove('hidden');
+}
+
+function mktAstCloseUpload(){
+  document.getElementById('mktAstUploadModal')?.classList.add('hidden');
+}
+
+async function mktAstUploadFile(file){
+  const { data: { user } } = await sb.auth.getUser();
+  if(!user) throw new Error('Not authenticated');
+  const ext = (file.name.split('.').pop() || 'bin').toLowerCase();
+  const path = user.id + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+  const { error } = await sb.storage.from('marketing-assets').upload(path, file, { contentType: file.type });
+  if(error) throw error;
+  return sb.storage.from('marketing-assets').getPublicUrl(path).data.publicUrl;
+}
+
+async function mktAstUpload(){
+  const name = (document.getElementById('mktAstName')?.value || '').trim();
+  const file = document.getElementById('mktAstFile')?.files?.[0];
+  if(!name){ toast('ENTER ASSET NAME', 'err'); return; }
+  if(!file){ toast('SELECT FILE', 'err'); return; }
+  const ok = MKT_AST_IMG_TYPES.includes(file.type) || MKT_AST_VID_TYPES.includes(file.type);
+  if(!ok){ toast('UNSUPPORTED FILE TYPE', 'err'); return; }
+  const btn = document.getElementById('mktAstUploadBtn');
+  if(btn) btn.disabled = true;
+  try{
+    const url = await mktAstUploadFile(file);
+    const tagsRaw = (document.getElementById('mktAstTags')?.value || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+    const { data: { user } } = await sb.auth.getUser();
+    const { data, error } = await sb.from('mkt_assets').insert({
+      name,
+      type: document.getElementById('mktAstType')?.value || 'banner',
+      url,
+      tags: tagsRaw,
+      version: (document.getElementById('mktAstVersion')?.value || '1.0').trim(),
+      approved: false,
+      uploaded_by: user?.id || null,
+    }).select().single();
+    if(error) throw error;
+    _mktAssets.unshift(data);
+    mktAstRender();
+    mktAstCloseUpload();
+    toast('Asset uploaded', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }finally{
+    if(btn) btn.disabled = false;
+  }
+}
+
+function mktAstOpenUrl(id){
+  const a = _mktAssets.find(x => x.id === id);
+  if(a?.url) window.open(a.url, '_blank');
+}
+
+async function mktAstApprove(id){
+  if(!_mktAstIsSuperadmin) return;
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('mkt_assets').update({
+      approved: true,
+      approved_by: user?.id || null,
+    }).eq('id', id);
+    if(error) throw error;
+    const a = _mktAssets.find(x => x.id === id);
+    if(a){ a.approved = true; a.approved_by = user?.id; }
+    mktAstRender();
+    toast('Asset approved', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktAstTabEnter(){
+  try{
+    const { data: role } = await sb.rpc('get_admin_role');
+    _mktAstIsSuperadmin = osIsSuperadmin(role);
+    await mktAstLoad();
+    mktAstRender();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktInfLoad(){
+  const { data, error } = await sb.from('mkt_influencers').select('*').order('created_at', { ascending: false });
+  if(error) throw error;
+  _mktInfluencers = data || [];
+}
+
+function mktInfSetFilter(status){
+  _mktInfFilter = status;
+  document.querySelectorAll('#mktInfFilters .mkt-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.status === status);
+  });
+  mktInfRender();
+}
+
+function mktInfFiltered(){
+  if(_mktInfFilter === 'all') return _mktInfluencers;
+  return _mktInfluencers.filter(i => (i.status || 'prospect') === _mktInfFilter);
+}
+
+function mktInfStatusBadge(status){
+  const s = (status || 'prospect').toLowerCase();
+  return '<span class="mkt-status-badge ' + esc(s) + '">' + esc(s) + '</span>';
+}
+
+function mktInfFillPlatformSelect(){
+  const sel = document.getElementById('mktInfPlatform');
+  if(!sel) return;
+  sel.innerHTML = MKT_PLATFORMS.map(p =>
+    '<option value="' + p.id + '">' + p.icon + ' ' + esc(p.label) + '</option>'
+  ).join('');
+}
+
+function mktInfRender(){
+  const body = document.getElementById('mktInfBody');
+  if(!body) return;
+  const list = mktInfFiltered();
+  if(!list.length){
+    body.innerHTML = '<tr><td colspan="5" class="os-dash-empty">No influencers</td></tr>';
+    return;
+  }
+  body.innerHTML = list.map(i => {
+    const result = (i.result_notes || '—').slice(0, 80) + ((i.result_notes || '').length > 80 ? '…' : '');
+    return `<tr class="mkt-inf-row" onclick="mktInfEdit('${i.id}')">
+      <td><strong>${esc(i.name || '—')}</strong>${i.handle ? '<br><span style="color:var(--muted);font-size:11px">' + esc(i.handle) + '</span>' : ''}</td>
+      <td>${esc(mktPlatformLabel(i.platform))}</td>
+      <td>${i.followers_count != null ? Number(i.followers_count).toLocaleString() : '—'}</td>
+      <td>${mktInfStatusBadge(i.status)}</td>
+      <td style="color:var(--muted);font-size:11px">${esc(result)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function mktInfShowAdd(){
+  mktInfFillPlatformSelect();
+  document.getElementById('mktInfId').value = '';
+  document.getElementById('mktInfName').value = '';
+  document.getElementById('mktInfPlatform').value = MKT_PLATFORMS[0]?.id || 'tiktok';
+  document.getElementById('mktInfHandle').value = '';
+  document.getElementById('mktInfFollowers').value = '';
+  document.getElementById('mktInfStatus').value = 'prospect';
+  document.getElementById('mktInfNiche').value = '';
+  document.getElementById('mktInfNotes').value = '';
+  document.getElementById('mktInfDeal').value = '';
+  document.getElementById('mktInfResult').value = '';
+  document.getElementById('mktInfModalTitle').textContent = 'Add influencer';
+  document.getElementById('mktInfDeleteBtn')?.classList.add('hidden');
+  document.getElementById('mktInfModal')?.classList.remove('hidden');
+}
+
+function mktInfEdit(id){
+  const i = _mktInfluencers.find(x => x.id === id);
+  if(!i) return;
+  mktInfFillPlatformSelect();
+  document.getElementById('mktInfId').value = i.id;
+  document.getElementById('mktInfName').value = i.name || '';
+  document.getElementById('mktInfPlatform').value = i.platform || 'tiktok';
+  document.getElementById('mktInfHandle').value = i.handle || '';
+  document.getElementById('mktInfFollowers').value = i.followers_count != null ? i.followers_count : '';
+  document.getElementById('mktInfStatus').value = i.status || 'prospect';
+  document.getElementById('mktInfNiche').value = i.niche || '';
+  document.getElementById('mktInfNotes').value = i.notes || '';
+  document.getElementById('mktInfDeal').value = i.deal_terms || '';
+  document.getElementById('mktInfResult').value = i.result_notes || '';
+  document.getElementById('mktInfModalTitle').textContent = 'Edit influencer';
+  document.getElementById('mktInfDeleteBtn')?.classList.remove('hidden');
+  document.getElementById('mktInfModal')?.classList.remove('hidden');
+}
+
+function mktInfCloseModal(){
+  document.getElementById('mktInfModal')?.classList.add('hidden');
+}
+
+async function mktInfSave(){
+  const name = (document.getElementById('mktInfName')?.value || '').trim();
+  if(!name){ toast('ENTER NAME', 'err'); return; }
+  const id = document.getElementById('mktInfId')?.value;
+  const followers = document.getElementById('mktInfFollowers')?.value;
+  const row = {
+    name,
+    platform: document.getElementById('mktInfPlatform')?.value || 'tiktok',
+    handle: (document.getElementById('mktInfHandle')?.value || '').trim() || null,
+    followers_count: followers === '' ? null : parseInt(followers, 10),
+    status: document.getElementById('mktInfStatus')?.value || 'prospect',
+    niche: (document.getElementById('mktInfNiche')?.value || '').trim() || null,
+    notes: (document.getElementById('mktInfNotes')?.value || '').trim() || null,
+    deal_terms: (document.getElementById('mktInfDeal')?.value || '').trim() || null,
+    result_notes: (document.getElementById('mktInfResult')?.value || '').trim() || null,
+  };
+  try{
+    const { data: { user } } = await sb.auth.getUser();
+    if(id){
+      const { error } = await sb.from('mkt_influencers').update(row).eq('id', id);
+      if(error) throw error;
+      const i = _mktInfluencers.find(x => x.id === id);
+      if(i) Object.assign(i, row);
+    }else{
+      row.created_by = user?.id || null;
+      const { data, error } = await sb.from('mkt_influencers').insert(row).select().single();
+      if(error) throw error;
+      _mktInfluencers.unshift(data);
+    }
+    mktInfRender();
+    mktInfCloseModal();
+    toast('Influencer saved', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktInfDelete(){
+  const id = document.getElementById('mktInfId')?.value;
+  if(!id || !confirm('Delete this influencer record?')) return;
+  try{
+    const { error } = await sb.from('mkt_influencers').delete().eq('id', id);
+    if(error) throw error;
+    _mktInfluencers = _mktInfluencers.filter(i => i.id !== id);
+    mktInfRender();
+    mktInfCloseModal();
+    toast('Influencer deleted', 'ok');
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+async function mktInfTabEnter(){
+  try{
+    await mktInfLoad();
+    mktInfRender();
+  }catch(err){
+    toast(err.message, 'err');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TAB SWITCHER
 // ═══════════════════════════════════════════════════════════════
 function switchTab(id){
@@ -5984,6 +6631,9 @@ function switchTab(id){
   else                 { hlthTabLeave(); }
   if(id==='campaigns') { mktCampTabEnter(); }
   if(id==='calendar')  { mktCalTabEnter(); }
+  if(id==='mkt-analytics') { mktAnTabEnter(); }
+  if(id==='assets')    { mktAstTabEnter(); }
+  if(id==='influencers'){ mktInfTabEnter(); }
   if(id==='telem')     { loadTelemetryCounters(); }
   if(id==='users')     { loadCounters(); loadUsersTable(); }
   if(id==='auditlog')  { auditLogRefresh(); auditLogStartRealtime(); }
