@@ -4,10 +4,10 @@
 --
 -- Setup (once, after deploy):
 --   1. supabase secrets set TELEGRAM_BOT_TOKEN=... TELEGRAM_CHAT_ID=... POXY_NOTIFY_SECRET=...
---   2. In SQL Editor (same secret as POXY_NOTIFY_SECRET):
---        ALTER DATABASE postgres SET app.poxy_notify_secret = '<POXY_NOTIFY_SECRET>';
---      Or per-session for testing:
---        SELECT set_config('app.poxy_notify_secret', '<POXY_NOTIFY_SECRET>', false);
+--   2. SQL Editor (same value as POXY_NOTIFY_SECRET) — see migration_telegram_notify_secret.sql:
+--        INSERT INTO public.poxy_notify_config (id, notify_secret)
+--        VALUES (1, 'your-secret-here')
+--        ON CONFLICT (id) DO UPDATE SET notify_secret = EXCLUDED.notify_secret;
 -- ══════════════════════════════════════════════════════════════
 
 CREATE EXTENSION IF NOT EXISTS pg_net;
