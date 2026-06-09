@@ -1,22 +1,30 @@
-/* POXY Support Panel — site palette · pink accent */
+/* POXY Support Panel — glassmorphism · bottom sheet mobile · modal desktop */
 
 :root {
   --poxy-bg: #0a0a0a;
-  --poxy-surface: #111111;
-  --poxy-surface-2: #1a1a1a;
-  --poxy-accent: #d946ef;
-  --poxy-text: #ffffff;
-  --poxy-text-secondary: #888888;
-  --poxy-border: #222222;
+  --poxy-surface: #0f0f17;
+  --poxy-surface-2: #13131f;
+  --poxy-accent: #e879f9;
+  --poxy-accent-2: #a855f7;
+  --poxy-gradient: linear-gradient(135deg, #e879f9, #a855f7);
+  --poxy-text: #f1f5f9;
+  --poxy-text-muted: rgba(255, 255, 255, 0.4);
+  --poxy-border: rgba(255, 255, 255, 0.06);
+  --poxy-glass: rgba(255, 255, 255, 0.04);
+  --poxy-glass-border: rgba(255, 255, 255, 0.08);
+  --poxy-panel-bg: rgba(10, 10, 15, 0.85);
 }
 
 .st-nav-icon-btn#stNavSupport { position: relative; }
 
-/* ── Overlay & drawer ── */
+/* ── Overlay ── */
 .poxy-support-overlay {
   position: fixed;
   inset: 0;
   z-index: 11600;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   pointer-events: none;
 }
 .poxy-support-overlay.is-open { pointer-events: auto; }
@@ -26,29 +34,95 @@
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
-  transition: opacity 0.4s ease-out;
+  transition: opacity 300ms ease-out;
 }
 .poxy-support-overlay.is-open .poxy-support-backdrop { opacity: 1; }
 
+/* ── Panel shell ── */
 .poxy-support-drawer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 420px;
-  max-width: 100vw;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 85vh;
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
-  background: var(--poxy-bg);
-  border-left: 1px solid var(--poxy-border);
-  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.5);
-  transform: translateX(100%);
-  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
+  background: var(--poxy-panel-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--poxy-glass-border);
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.45);
+  transform: translateY(100%);
+  opacity: 1;
+  transition: transform 300ms ease-out;
   overflow: hidden;
+  will-change: transform;
 }
-.poxy-support-overlay.is-open .poxy-support-drawer { transform: translateX(0); }
+.poxy-support-overlay.is-open .poxy-support-drawer { transform: translateY(0); }
+.poxy-support-drawer.is-dragging { transition: none; }
+
+/* Drag handle — mobile only */
+.poxy-support-drag-handle {
+  display: none;
+  flex-shrink: 0;
+  width: 40px;
+  height: 4px;
+  margin: 10px auto 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: grab;
+  touch-action: none;
+}
+.poxy-support-drag-handle:active { cursor: grabbing; }
+
+/* ── Desktop: centered modal ── */
+@media (min-width: 769px) {
+  .poxy-support-overlay {
+    align-items: center;
+    padding: 24px 16px;
+  }
+  .poxy-support-backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: opacity 200ms ease-out;
+  }
+  .poxy-support-drawer {
+    width: 580px;
+    max-width: calc(100vw - 32px);
+    height: auto;
+    max-height: 80vh;
+    border-radius: 16px;
+    border-bottom: 1px solid var(--poxy-glass-border);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 200ms ease-out, opacity 200ms ease-out;
+  }
+  .poxy-support-overlay.is-open .poxy-support-drawer {
+    transform: scale(1);
+    opacity: 1;
+  }
+  .poxy-support-drag-handle { display: none !important; }
+}
+
+/* ── Scrollbars (panel scope) ── */
+.poxy-support-drawer ::-webkit-scrollbar { width: 4px; height: 4px; }
+.poxy-support-drawer ::-webkit-scrollbar-track { background: transparent; }
+.poxy-support-drawer ::-webkit-scrollbar-thumb {
+  background: var(--poxy-accent-2);
+  border-radius: 4px;
+}
+.poxy-support-drawer ::-webkit-scrollbar-thumb:hover { background: var(--poxy-accent); }
+.poxy-support-drawer {
+  scrollbar-width: thin;
+  scrollbar-color: var(--poxy-accent-2) transparent;
+}
 
 /* ── Header ── */
 .poxy-support-head {
@@ -56,71 +130,48 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 18px 16px 14px;
+  padding: 14px 18px 12px;
   border-bottom: 1px solid var(--poxy-border);
   flex-shrink: 0;
-  background: var(--poxy-bg);
+  background: transparent;
 }
 .poxy-support-head h2 {
   margin: 0;
-  font-family: 'Plus Jakarta Sans', 'Hanken Grotesk', Inter, sans-serif;
-  font-size: 15px;
+  font-family: 'Plus Jakarta Sans', 'Hanken Grotesk', sans-serif;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--poxy-text);
-  position: relative;
-  padding-bottom: 6px;
-}
-.poxy-support-head h2::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--poxy-accent);
-  border-radius: 50%;
-  margin-right: 8px;
-  vertical-align: middle;
-  position: relative;
-  top: -1px;
-}
-.poxy-support-head h2::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 28px;
-  height: 2px;
-  background: var(--poxy-accent);
-  border-radius: 1px;
 }
 .poxy-support-close {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
-  color: var(--poxy-text-secondary);
-  font-size: 18px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
+  color: var(--poxy-text-muted);
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 150ms, color 150ms, box-shadow 150ms;
 }
 .poxy-support-close:hover {
   border-color: var(--poxy-accent);
   color: var(--poxy-text);
+  box-shadow: 0 0 16px rgba(232, 121, 249, 0.25);
 }
 
 /* ── Tabs ── */
 .poxy-support-tabs {
   display: flex;
   gap: 0;
-  padding: 0 12px;
+  padding: 0 14px;
   border-bottom: 1px solid var(--poxy-border);
   flex-shrink: 0;
-  background: var(--poxy-bg);
+  background: transparent;
 }
 .poxy-support-tab {
   flex: 1;
@@ -129,13 +180,13 @@
   border-bottom: 2px solid transparent;
   border-radius: 0;
   background: transparent;
-  color: var(--poxy-text-secondary);
+  color: var(--poxy-text-muted);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: color 0.15s ease-out, border-color 0.15s ease-out;
+  transition: color 150ms ease-out, border-color 150ms ease-out;
   margin-bottom: -1px;
 }
 .poxy-support-tab:hover { color: var(--poxy-text); }
@@ -144,20 +195,27 @@
   border-bottom-color: var(--poxy-accent);
 }
 
-/* ── Body & tab panels (150ms fade) ── */
+/* ── Body ── */
 .poxy-support-body {
   flex: 1;
   min-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: var(--poxy-bg);
+  background: transparent;
+}
+#supportPanelsWrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .poxy-support-panel {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 12px 14px 16px;
+  padding: 14px 16px 18px;
   -webkit-overflow-scrolling: touch;
   opacity: 0;
   transition: opacity 150ms ease-out;
@@ -172,18 +230,21 @@
 /* ── FAQ ── */
 .poxy-support-search {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
   color: var(--poxy-text);
   font-size: 13px;
   outline: none;
-  margin-bottom: 10px;
-  transition: border-color 0.15s;
+  margin-bottom: 12px;
+  transition: border-color 150ms, box-shadow 150ms;
 }
-.poxy-support-search::placeholder { color: var(--poxy-text-secondary); }
-.poxy-support-search:focus { border-color: var(--poxy-accent); }
+.poxy-support-search::placeholder { color: var(--poxy-text-muted); }
+.poxy-support-search:focus {
+  border-color: var(--poxy-accent);
+  box-shadow: 0 0 0 2px rgba(232, 121, 249, 0.15);
+}
 
 .poxy-support-cats {
   display: flex;
@@ -192,38 +253,43 @@
   margin-bottom: 12px;
 }
 .poxy-support-cat {
-  padding: 5px 10px;
+  padding: 5px 11px;
   border-radius: 999px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
-  color: var(--poxy-text-secondary);
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
+  color: var(--poxy-text-muted);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: border-color 150ms, color 150ms, background 150ms;
 }
+.poxy-support-cat:hover { background: rgba(255, 255, 255, 0.03); }
 .poxy-support-cat.active {
   border-color: var(--poxy-accent);
   color: var(--poxy-text);
-  background: rgba(217, 70, 239, 0.1);
+  background: rgba(232, 121, 249, 0.1);
 }
 
 .poxy-support-faq-item {
-  border: 1px solid var(--poxy-border);
-  border-radius: 8px;
+  border: 1px solid var(--poxy-glass-border);
+  border-radius: 12px;
   margin-bottom: 8px;
   overflow: hidden;
-  background: var(--poxy-surface);
-  transition: border-color 0.15s;
+  background: var(--poxy-glass);
+  transition: border-color 150ms, background 150ms;
 }
-.poxy-support-faq-item.open { border-color: var(--poxy-accent); }
+.poxy-support-faq-item:hover { background: rgba(255, 255, 255, 0.03); }
+.poxy-support-faq-item.open {
+  border-color: rgba(232, 121, 249, 0.35);
+  background: rgba(232, 121, 249, 0.06);
+}
 
 .poxy-support-faq-q {
   width: 100%;
   text-align: left;
-  padding: 12px 14px;
+  padding: 13px 14px;
   border: none;
   background: transparent;
   color: var(--poxy-text);
@@ -239,14 +305,14 @@
   color: var(--poxy-accent);
   font-size: 12px;
   flex-shrink: 0;
-  transition: transform 0.2s ease-out;
+  transition: transform 200ms ease-out;
 }
 .poxy-support-faq-a {
   display: none;
-  padding: 0 14px 12px;
+  padding: 0 14px 13px;
   font-size: 12px;
   line-height: 1.55;
-  color: var(--poxy-text-secondary);
+  color: var(--poxy-text-muted);
 }
 .poxy-support-faq-item.open .poxy-support-faq-a { display: block; }
 .poxy-support-faq-item.open .poxy-support-faq-q span.ico { transform: rotate(180deg); }
@@ -256,17 +322,17 @@
   display: block;
   width: 100%;
   text-align: left;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
   margin-bottom: 8px;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 150ms, background 150ms, box-shadow 150ms;
 }
 .poxy-support-ticket:hover {
-  border-color: var(--poxy-accent);
-  background: var(--poxy-surface-2);
+  border-color: rgba(232, 121, 249, 0.35);
+  background: rgba(255, 255, 255, 0.03);
 }
 .poxy-support-ticket-subj {
   font-size: 13px;
@@ -283,60 +349,63 @@
   justify-content: space-between;
   gap: 8px;
   font-size: 10px;
-  color: var(--poxy-text-secondary);
+  color: var(--poxy-text-muted);
 }
 .poxy-support-status {
   display: inline-block;
   padding: 2px 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .poxy-support-status.open {
-  background: rgba(217, 70, 239, 0.15);
+  background: rgba(232, 121, 249, 0.12);
   color: var(--poxy-accent);
-  border: 1px solid rgba(217, 70, 239, 0.3);
+  border: 1px solid rgba(232, 121, 249, 0.3);
 }
 .poxy-support-status.in_progress {
-  background: rgba(217, 70, 239, 0.1);
-  color: var(--poxy-text);
-  border: 1px solid var(--poxy-border);
+  background: rgba(168, 85, 247, 0.1);
+  color: var(--poxy-accent-2);
+  border: 1px solid rgba(168, 85, 247, 0.25);
 }
 .poxy-support-status.closed {
-  background: var(--poxy-surface-2);
-  color: var(--poxy-text-secondary);
-  border: 1px solid var(--poxy-border);
+  background: var(--poxy-glass);
+  color: var(--poxy-text-muted);
+  border: 1px solid var(--poxy-glass-border);
 }
 
 /* ── Forms ── */
-.poxy-support-field { margin-bottom: 12px; }
+.poxy-support-field { margin-bottom: 14px; }
 .poxy-support-label {
   display: block;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--poxy-text-secondary);
+  color: var(--poxy-text-muted);
   margin-bottom: 6px;
 }
 .poxy-support-input,
 .poxy-support-textarea {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
   color: var(--poxy-text);
   font-size: 13px;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 150ms, box-shadow 150ms;
 }
 .poxy-support-textarea { min-height: 100px; resize: vertical; }
 .poxy-support-input:focus,
-.poxy-support-textarea:focus { border-color: var(--poxy-accent); }
+.poxy-support-textarea:focus {
+  border-color: var(--poxy-accent);
+  box-shadow: 0 0 0 2px rgba(232, 121, 249, 0.15);
+}
 
 .poxy-support-attach-row {
   display: flex;
@@ -349,14 +418,14 @@
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
-  color: var(--poxy-text-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
+  color: var(--poxy-text-muted);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 150ms, color 150ms;
 }
 .poxy-support-attach-btn:hover {
   border-color: var(--poxy-accent);
@@ -366,15 +435,15 @@
   display: none;
   margin-top: 10px;
   padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
+  border-radius: 12px;
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
 }
 .poxy-support-attach-preview.visible { display: block; }
 .poxy-support-attach-preview img {
   max-width: 100%;
   max-height: 140px;
-  border-radius: 6px;
+  border-radius: 8px;
   display: block;
   margin-bottom: 8px;
   object-fit: contain;
@@ -385,7 +454,7 @@
   justify-content: space-between;
   gap: 8px;
   font-size: 11px;
-  color: var(--poxy-text-secondary);
+  color: var(--poxy-text-muted);
 }
 .poxy-support-attach-remove {
   border: none;
@@ -398,30 +467,34 @@
 .poxy-support-submit {
   width: 100%;
   margin-top: 8px;
-  padding: 12px;
+  padding: 13px;
   border: none;
-  border-radius: 8px;
-  background: var(--poxy-accent);
-  color: var(--poxy-text);
+  border-radius: 12px;
+  background: var(--poxy-gradient);
+  color: #fff;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: opacity 0.15s, transform 0.15s;
+  transition: transform 150ms, box-shadow 150ms, opacity 150ms;
 }
-.poxy-support-submit:hover:not(:disabled) { transform: translateY(-1px); }
+.poxy-support-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(232, 121, 249, 0.4);
+}
 .poxy-support-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Chat view (fade 150ms) ── */
+/* ── Chat view ── */
 .poxy-support-chat {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   opacity: 0;
   transition: opacity 150ms ease-out;
-  background: var(--poxy-bg);
+  background: transparent;
 }
 .poxy-support-chat.is-visible { opacity: 1; }
 .poxy-support-chat[hidden] { display: none !important; }
@@ -430,21 +503,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--poxy-border);
   flex-shrink: 0;
-  background: var(--poxy-bg);
+  background: transparent;
 }
 .poxy-support-back {
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
-  color: var(--poxy-text-secondary);
+  border: 1px solid var(--poxy-glass-border);
+  background: var(--poxy-glass);
+  color: var(--poxy-text-muted);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   padding: 6px 10px;
-  border-radius: 8px;
-  transition: border-color 0.15s, color 0.15s;
+  border-radius: 10px;
+  transition: border-color 150ms, color 150ms;
 }
 .poxy-support-back:hover {
   border-color: var(--poxy-accent);
@@ -460,98 +533,93 @@
   white-space: nowrap;
 }
 
-/* ── Messages area ── */
+/* ── Messages ── */
 .poxy-support-messages {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 14px 12px;
+  overflow-x: hidden;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   -webkit-overflow-scrolling: touch;
-  background: var(--poxy-bg);
 }
 
-/* ── Chat bubbles ── */
 .poxy-support-msg {
-  max-width: 86%;
+  max-width: 85%;
   display: flex;
   flex-direction: column;
 }
 .poxy-support-msg--static { animation: none; }
 .poxy-support-msg--enter {
-  animation: poxySupportMsgIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: poxySupportMsgIn 200ms ease-out forwards;
 }
 @keyframes poxySupportMsgIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .poxy-support-msg.player { align-self: flex-end; align-items: flex-end; }
 .poxy-support-msg.staff { align-self: flex-start; align-items: flex-start; }
-.poxy-support-msg.auto { align-self: center; align-items: center; max-width: 94%; }
+.poxy-support-msg.auto { align-self: center; align-items: center; max-width: 90%; }
 
 .poxy-support-bubble {
-  position: relative;
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
   font-size: 13px;
   line-height: 1.5;
   word-break: break-word;
 }
 
-/* Player — right, pink tint */
-.poxy-support-msg.player .poxy-support-bubble {
-  background: rgba(217, 70, 239, 0.15);
-  border: 1px solid var(--poxy-accent);
-  color: var(--poxy-text);
-  border-bottom-right-radius: 4px;
-}
-
-/* Staff — left, dark surface */
+/* Staff — left, dark card */
 .poxy-support-msg.staff .poxy-support-bubble {
-  background: var(--poxy-surface-2);
-  border: 1px solid var(--poxy-border);
-  color: var(--poxy-text);
-  border-bottom-left-radius: 4px;
+  background: rgba(20, 20, 28, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff;
 }
 
-/* Auto — centered, muted */
+/* Player — right, gradient */
+.poxy-support-msg.player .poxy-support-bubble {
+  background: var(--poxy-gradient);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(232, 121, 249, 0.3);
+}
+
+/* Auto — centered, no border */
 .poxy-support-msg.auto .poxy-support-bubble {
-  background: var(--poxy-surface);
-  border: 1px solid var(--poxy-border);
-  color: var(--poxy-text-secondary);
+  background: rgba(168, 85, 247, 0.08);
+  border: none;
+  color: var(--poxy-accent-2);
   font-style: italic;
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 10px 16px;
 }
 
 .poxy-support-msg img {
   max-width: 100%;
-  border-radius: 8px;
-  margin-top: 6px;
+  border-radius: 10px;
+  margin-top: 8px;
   display: block;
   cursor: pointer;
-  border: 1px solid var(--poxy-border);
 }
 .poxy-support-msg-time {
   font-size: 9px;
-  color: var(--poxy-text-secondary);
+  color: var(--poxy-text-muted);
   margin-top: 4px;
   padding: 0 4px;
   letter-spacing: 0.03em;
 }
 .poxy-support-msg.player .poxy-support-msg-time { text-align: right; }
 
-/* ── Compose ── */
+/* ── Compose — pinned bottom ── */
 .poxy-support-compose {
   flex-shrink: 0;
-  padding: 10px 12px 14px;
+  padding: 12px 14px 16px;
   border-top: 1px solid var(--poxy-border);
-  background: var(--poxy-bg);
+  background: var(--poxy-glass);
 }
 .poxy-support-compose.closed { display: none; }
 .poxy-support-compose-row {
@@ -562,40 +630,46 @@
 .poxy-support-compose-input {
   flex: 1;
   min-width: 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--poxy-border);
-  background: var(--poxy-surface);
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--poxy-glass-border);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--poxy-text);
   font-size: 13px;
   outline: none;
   resize: none;
   max-height: 80px;
-  transition: border-color 0.15s;
+  transition: border-color 150ms, box-shadow 150ms;
 }
-.poxy-support-compose-input:focus { border-color: var(--poxy-accent); }
+.poxy-support-compose-input:focus {
+  border-color: var(--poxy-accent);
+  box-shadow: 0 0 0 2px rgba(232, 121, 249, 0.12);
+}
 
 .poxy-support-send {
   flex-shrink: 0;
-  padding: 10px 14px;
+  padding: 11px 16px;
   border: none;
-  border-radius: 8px;
-  background: var(--poxy-accent);
-  color: var(--poxy-text);
+  border-radius: 12px;
+  background: var(--poxy-gradient);
+  color: #fff;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.15s, opacity 0.15s;
+  transition: transform 150ms, box-shadow 150ms, opacity 150ms;
 }
-.poxy-support-send:hover:not(:disabled) { transform: translateY(-1px); }
+.poxy-support-send:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(232, 121, 249, 0.4);
+}
 .poxy-support-send:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .poxy-support-empty {
   text-align: center;
-  padding: 28px 16px;
-  color: var(--poxy-text-secondary);
+  padding: 32px 16px;
+  color: var(--poxy-text-muted);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -605,6 +679,6 @@
   margin-top: 8px;
 }
 
-@media (max-width: 480px) {
-  .poxy-support-drawer { width: 100%; }
+@media (max-width: 768px) {
+  .poxy-support-drag-handle { display: block; }
 }

@@ -155,9 +155,25 @@
     return data.publicUrl;
   }
 
+  function isMobileSheet() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  function closeAnimMs() {
+    return isMobileSheet() ? 320 : 220;
+  }
+
+  function resetDrawerTransform() {
+    const drawer = document.querySelector('.poxy-support-drawer');
+    if (!drawer) return;
+    drawer.classList.remove('is-dragging');
+    drawer.style.transform = '';
+  }
+
   function openOverlay() {
     const ov = $('supportHubOverlay');
     if (!ov) return;
+    resetDrawerTransform();
     ov.hidden = false;
     ov.setAttribute('aria-hidden', 'false');
     requestAnimationFrame(function () { ov.classList.add('is-open'); });
@@ -166,13 +182,14 @@
   function closeSupportPanel() {
     const ov = $('supportHubOverlay');
     if (!ov) return;
+    resetDrawerTransform();
     ov.classList.remove('is-open');
     ov.setAttribute('aria-hidden', 'true');
     setTimeout(function () {
       ov.hidden = true;
       leaveChatView();
       unsubscribeRealtime();
-    }, 400);
+    }, closeAnimMs());
   }
 
   global.openSupportPanel = function openSupportPanel() {
@@ -539,8 +556,58 @@
     }).join('');
   }
 
+  function ensureDragHandle() {
+    const drawer = document.querySelector('.poxy-support-drawer');
+    if (!drawer || drawer.querySelector('.poxy-support-drag-handle')) return;
+    const handle = document.createElement('div');
+    handle.className = 'poxy-support-drag-handle';
+    handle.setAttribute('aria-hidden', 'true');
+    drawer.insertBefore(handle, drawer.firstChild);
+  }
+
+  function initSwipeToClose() {
+    const handle = document.querySelector('.poxy-support-drag-handle');
+    const drawer = document.querySelector('.poxy-support-drawer');
+    if (!handle || !drawer) return;
+
+    let startY = 0;
+    let dragging = false;
+
+    handle.addEventListener('touchstart', function (e) {
+      if (!isMobileSheet()) return;
+      startY = e.touches[0].clientY;
+      dragging = true;
+      drawer.classList.add('is-dragging');
+    }, { passive: true });
+
+    handle.addEventListener('touchmove', function (e) {
+      if (!dragging || !isMobileSheet()) return;
+      const dy = e.touches[0].clientY - startY;
+      if (dy > 0) drawer.style.transform = 'translateY(' + dy + 'px)';
+    }, { passive: true });
+
+    function endSwipe(clientY) {
+      if (!dragging) return;
+      dragging = false;
+      drawer.classList.remove('is-dragging');
+      const dy = clientY - startY;
+      drawer.style.transform = '';
+      if (dy > 80 && isMobileSheet()) closeSupportPanel();
+    }
+
+    handle.addEventListener('touchend', function (e) {
+      endSwipe(e.changedTouches[0].clientY);
+    }, { passive: true });
+
+    handle.addEventListener('touchcancel', function (e) {
+      endSwipe(e.changedTouches[0]?.clientY ?? startY);
+    }, { passive: true });
+  }
+
   function init() {
     if (!$('supportHubOverlay')) return;
+    ensureDragHandle();
+    initSwipeToClose();
     renderFaqCats();
     const client = sb();
     if (client?.auth) {
