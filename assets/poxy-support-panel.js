@@ -228,6 +228,21 @@
     if (tab === 'tickets') loadTickets();
   };
 
+  function setChatComposeState(closed) {
+    const compose = $('supportChatCompose');
+    const input = $('supportChatInput');
+    const sendBtn = $('supportChatSend');
+    if (compose) {
+      compose.classList.remove('closed');
+      compose.classList.toggle('is-disabled', !!closed);
+    }
+    if (input) {
+      input.disabled = !!closed;
+      input.placeholder = closed ? 'This ticket is closed' : 'Type a message…';
+    }
+    if (sendBtn) sendBtn.disabled = !!closed;
+  }
+
   function enterChatView() {
     const body = document.querySelector('.poxy-support-body');
     const tabs = $('supportMainTabs');
@@ -262,6 +277,7 @@
     }
     if (tabs) tabs.hidden = false;
     if (panels) panels.hidden = false;
+    setChatComposeState(false);
     activeTicket = null;
     renderedMsgIds.clear();
     unsubscribeRealtime();
@@ -383,9 +399,7 @@
       badge.textContent = (t.status || 'open').replace('_', ' ');
       badge.className = 'poxy-support-status ' + (t.status || 'open');
     }
-    const closed = t.status === 'closed';
-    const compose = $('supportChatCompose');
-    if (compose) compose.classList.toggle('closed', closed);
+    setChatComposeState(t.status === 'closed');
     $('supportChatMessages').innerHTML = '<p class="poxy-support-empty">Loading messages…</p>';
     clearAttachment('chat');
     await loadChatMessages(ticketId);
