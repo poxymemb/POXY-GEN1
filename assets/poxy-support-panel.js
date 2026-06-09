@@ -133,11 +133,13 @@
       wrap.classList.remove('visible');
       if (img) img.removeAttribute('src');
       if (meta) meta.textContent = '';
+      if (slot === 'chat') requestAnimationFrame(relayoutSupportChat);
       return;
     }
     wrap.classList.add('visible');
     if (img) img.src = a.previewUrl;
     if (meta) meta.textContent = a.name + ' · ' + fmtBytes(a.size);
+    if (slot === 'chat') requestAnimationFrame(relayoutSupportChat);
   }
 
   async function uploadSupportImage(file) {
@@ -228,6 +230,16 @@
     if (tab === 'tickets') loadTickets();
   };
 
+  function relayoutSupportChat() {
+    const compose = $('supportChatCompose');
+    const msgs = $('supportChatMessages');
+    const drawer = document.querySelector('.poxy-support-drawer');
+    if (!compose || !msgs || !drawer || !drawer.classList.contains('is-chat-active')) return;
+    const h = Math.max(compose.offsetHeight || 0, 64);
+    msgs.style.paddingBottom = (h + 8) + 'px';
+    drawer.style.setProperty('--support-compose-h', h + 'px');
+  }
+
   function setChatComposeState(closed) {
     const compose = $('supportChatCompose');
     const input = $('supportChatInput');
@@ -273,6 +285,10 @@
       compose.classList.remove('closed');
       compose.style.display = 'flex';
     }
+    requestAnimationFrame(function () {
+      relayoutSupportChat();
+      requestAnimationFrame(relayoutSupportChat);
+    });
   }
 
   function leaveChatView() {
@@ -289,6 +305,8 @@
     }
     if (tabs) tabs.hidden = false;
     if (panels) panels.hidden = false;
+    const msgs = $('supportChatMessages');
+    if (msgs) msgs.style.paddingBottom = '';
     setChatComposeState(false);
     activeTicket = null;
     renderedMsgIds.clear();
@@ -430,6 +448,7 @@
       if (box) box.innerHTML = '';
       (data || []).forEach(function (m) { appendMessage(m, false); });
       scrollChatBottom();
+      relayoutSupportChat();
     } catch (e) {
       if (box) box.innerHTML = '<p class="poxy-support-empty" style="color:#f87171">' + esc(e.message) + '</p>';
     }
@@ -659,6 +678,7 @@
         closeSupportPanel();
       }
     });
+    window.addEventListener('resize', relayoutSupportChat);
     setTimeout(refreshTicketBadge, 1500);
   }
 

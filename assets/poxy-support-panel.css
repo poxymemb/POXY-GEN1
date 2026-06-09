@@ -561,6 +561,8 @@
   opacity: 1;
   max-height: none;
   height: auto;
+  /* anchor for absolutely positioned compose bar */
+  isolation: isolate;
 }
 .poxy-support-drawer.is-chat-active .poxy-support-chat-head {
   flex: 0 0 auto;
@@ -571,18 +573,32 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-bottom: var(--support-compose-h, 80px);
 }
 .poxy-support-drawer.is-chat-active .poxy-support-compose,
 .poxy-support-drawer.is-chat-active #supportChatCompose {
-  flex: 0 0 auto;
-  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex: none;
   display: flex !important;
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
   visibility: visible;
   min-height: 56px;
-  z-index: 2;
+  z-index: 10;
+  background: rgba(44, 44, 48, 0.98);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+}
+.poxy-support-drawer.is-chat-active .poxy-support-compose-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 10px 14px;
 }
 .poxy-support-chat.is-visible,
 #supportChatView.is-visible { opacity: 1; }
