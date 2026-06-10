@@ -2705,6 +2705,9 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
           <button type="button" class="poxy-store-nav-btn" id="storeNavBundles" data-store-cat="bundles" onclick="switchStoreCategory('bundles')">
             <span class="material-symbols-outlined" aria-hidden="true">package_2</span> Bundles
           </button>
+          <button type="button" class="poxy-store-nav-btn" id="storeNavXpShop" data-store-cat="xpshop" onclick="switchStoreCategory('xpshop')">
+            <span class="material-symbols-outlined" aria-hidden="true">military_tech</span> XP Shop
+          </button>
         </aside>
         <div class="poxy-store-main">
           <section class="poxy-store-bento">
@@ -5038,6 +5041,17 @@ const GEN1_MODELS = [
 
 const APPRAISER_BASE_PC = {common:1.5,uncommon:4,rare:15,epic:65,legendary:420,mythic:2800};
 const APPRAISER_CHAR_WEIGHTS = {ash:1.0,stone:1.05,verdant:1.1,pulse:1.15,azure:1.2,void:1.3,solar:1.5,eclipse:2.0};
+const XP_SHOP_ITEMS = [
+  {id:'xp_free_standard', name:'Free Standard Case', desc:'Case wallet token · 1× per day', cost:500, icon:'📦', cosmeticKey:null},
+  {id:'xp_free_vip', name:'Free VIP Case', desc:'Case wallet token · 1× per week', cost:5000, icon:'💠', cosmeticKey:null},
+  {id:'xp_badge_elite', name:'Elite Badge', desc:'Profile badge overlay', cost:500, icon:'🏅', cosmeticKey:'badge_elite'},
+  {id:'xp_gradient_bg', name:'Gradient Profile BG', desc:'Premium profile background', cost:1000, icon:'🎨', cosmeticKey:'gradient_bg'},
+  {id:'xp_animated_bg', name:'Animated Profile BG', desc:'Motion profile background', cost:5000, icon:'✨', cosmeticKey:'animated_bg'},
+  {id:'xp_nick_color', name:'Nickname Colour', desc:'Custom display name tint', cost:2000, icon:'🖊', cosmeticKey:'nick_color'},
+  {id:'xp_case_sound', name:'Case Open Sound', desc:'Custom reveal audio', cost:3000, icon:'🔊', cosmeticKey:'case_sound'},
+  {id:'xp_username_title', name:'Username Title', desc:'Elite title under handle', cost:2500, icon:'👑', cosmeticKey:'username_title'},
+  {id:'xp_holo_frame', name:'Holo Dragon Frame', desc:'Holographic display frame', cost:10000, icon:'🐉', cosmeticKey:'holo_frame'}
+];
 const CUSTOMIZATION_ITEMS = [
   {id:'theme_cyberpunk', type:'theme', name:'Cyberpunk Carbon', desc:'Dark carbon interface overlay', cost:50, previewBg:'#0d0d10', themeVal:'cyberpunk'},
   {id:'theme_mayfair',   type:'theme', name:'Mayfair Velvet',   desc:'Luxury deep burgundy aesthetic', cost:75, previewBg:'#1a0a14', themeVal:'mayfair'},
@@ -5228,7 +5242,7 @@ function renderFrameSelector(){
 // ── STATE (PHASE 1 — synchronized in real-time UI) ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null, currentPoxyId=null;
 let currentRoundId=null, currentClientSeed=null; // Phase 3: provably fair proof
-let mythicCount=0, hasMythic=false, busy=false, selectedCaseType='standard';
+let mythicCount=0, hasMythic=false, busy=false, selectedCaseType='standard', _skipPerkClaim=false;
 let spinAnim=null, particleLoop=null, particles=[];
 let selectedAvatar=AVATARS[0], marketTab='buy';
 let pendingListItem=null, pendingBuyItem=null;
@@ -5337,6 +5351,7 @@ async function loadPlayerEconomy(){
     updateOpenButtonPrice();
     renderProfileStreakWidget();
     updateBalanceBadge(getPxBalance());
+    if(!_skipPerkClaim)claimLevelPerksQuiet();
     return data;
   }catch(e){
     console.error('loadPlayerEconomy:',e);
@@ -5465,6 +5480,19 @@ function getSelectedCasePrice(opts){
   if(caseType==='standard')return dopamine?DOPAMINE_CASE_PRICE:STANDARD_CASE_PRICE;
   const prem=PREMIUM_CASES.find(c=>c.id===caseType);
   return prem?prem.price:STANDARD_CASE_PRICE;
+}
+async function claimLevelPerksQuiet(){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_level_perks');
+    if(error)throw error;
+    if(data?.ok&&Array.isArray(data.granted)&&data.granted.length){
+      showToast('Level '+data.level+' perk: '+data.granted.join(' · '));
+      _skipPerkClaim=true;
+      await loadPlayerEconomy();
+      _skipPerkClaim=false;
+    }
+  }catch(e){console.warn('claim_level_perks:',e);}
 }
 function updateOpenButtonPrice(){
   const priceEl=$('btnOpenPrice');
@@ -11467,6 +11495,7 @@ window.respondTradeOffer=async function(offerId,accept){
         showToast('Trade completed but crypto anchoring failed: '+(cryptoErr?.message||'unknown'));
       }
       loadCollection().catch(e=>console.warn('loadCollection after trade',e));
+      await loadPlayerEconomy();
     }else{
       showToast('Trade declined.');
     }
@@ -12591,7 +12620,9 @@ $('modalOk').addEventListener('click',async function(){
     if(!isUuid(poxyId))throw new Error('poxy id not UUID — refresh page');
     const{error}=await sb.from('marketplace').insert({poxy_id:poxyId,seller_id:currentUser.id,price});
     if(error)throw error;
-    showToast('Listed!');closeModal();bumpQuest('list_1_market',1);if(pendingListItem&&pendingListItem.fromHunt)resetAll();
+    showToast('Listed! +5 XP');closeModal();bumpQuest('list_1_market',1);
+    await loadPlayerEconomy();
+    if(pendingListItem&&pendingListItem.fromHunt)resetAll();
   }catch(e){logAndToast('list-market',e);}
   btn.disabled=false;
 });
@@ -14890,7 +14921,8 @@ const STORE_CAT_META={
   themes:{title:'Premium caches',sub:'Acquire exclusive interface themes.',type:'theme'},
   gradients:{title:'Signal gradients',sub:'Animated username overlays for your profile.',type:'gradient'},
   boosters:{title:'Active uplinks',sub:'Power-up modules — coming soon.',type:null},
-  bundles:{title:'Asset bundles',sub:'Curated packs — coming soon.',type:null}
+  bundles:{title:'Asset bundles',sub:'Curated packs — coming soon.',type:null},
+  xpshop:{title:'XP Shop',sub:'Spend XP balance on cosmetics and free case tokens.',type:'xpshop'}
 };
 window.switchStoreCategory=function(cat){
   storeCategory=cat||'themes';
@@ -14926,10 +14958,14 @@ function renderStorePreview(){
 function renderStoreTerminal(){
   const bal=$('storeBalanceDisplay'),dust=$('storeDustDisplay'),col=$('storeColDisplay');
   const pcBal=getPxBalance();
+  const xpBal=playerEconomy?.xp_balance??currentProfile?.xp_balance??0;
   const n=colData?.length||0;
   if(bal){
     const pxTxt=formatPX(pcBal);
     bal.innerHTML=pxTxt.replace(/\s*PX\s*$/i,'')+' <span>PX</span>';
+    if(storeCategory==='xpshop'){
+      bal.innerHTML=Number(xpBal).toLocaleString()+' <span>XP</span>';
+    }
   }
   if(col)col.textContent=n+' item'+(n===1?'':'s');
 }
@@ -14938,6 +14974,10 @@ function renderStoreGrid(){
   if(!currentUser){grid.innerHTML='<div class="poxy-store-signin">Sign in to access the store.</div>';return;}
   if(!currentProfile){grid.innerHTML='<div class="poxy-store-signin">Loading profile…</div>';return;}
   const meta=STORE_CAT_META[storeCategory]||STORE_CAT_META.themes;
+  if(storeCategory==='xpshop'){
+    renderXpShopGrid(grid);
+    return;
+  }
   if(!meta.type){
     grid.innerHTML='<div class="poxy-store-empty">This category opens in a future terminal update. Check back soon.</div>';
     return;
@@ -14992,6 +15032,74 @@ function renderStoreGrid(){
     grid.appendChild(card);
   });
 }
+function renderXpShopGrid(grid){
+  const xpBal=playerEconomy?.xp_balance??currentProfile?.xp_balance??0;
+  const cosmetics=playerEconomy?.xp_cosmetics||{};
+  const shop=playerEconomy?.xp_shop||{};
+  grid.innerHTML='';
+  XP_SHOP_ITEMS.forEach(item=>{
+    const owned=item.cosmeticKey&&!!cosmetics[item.cosmeticKey];
+    let cooldown=false;
+    if(item.id==='xp_free_standard')cooldown=shop.free_standard_ready===false;
+    if(item.id==='xp_free_vip')cooldown=shop.free_vip_ready===false;
+    const card=document.createElement('article');
+    card.className='poxy-store-obsidian poxy-store-card'+(owned?' equipped':'');
+    const visual=document.createElement('div');
+    visual.className='poxy-store-card-visual';
+    visual.style.background='linear-gradient(135deg,rgba(0,245,160,0.12),rgba(124,58,237,0.18))';
+    visual.style.display='flex';visual.style.alignItems='center';visual.style.justifyContent='center';
+    visual.style.fontSize='28px';
+    visual.textContent=item.icon;
+    const h4=document.createElement('h4');
+    h4.textContent=item.name;
+    const desc=document.createElement('p');
+    desc.className='poxy-store-card-desc';
+    desc.style.cssText='font-size:10px;color:rgba(255,255,255,0.45);margin:4px 0 0';
+    desc.textContent=item.desc;
+    const foot=document.createElement('div');
+    foot.className='poxy-store-card-foot';
+    const price=document.createElement('span');
+    price.className='poxy-store-card-price'+(xpBal<item.cost?' muted':'');
+    price.textContent=item.cost.toLocaleString()+' XP';
+    if(owned){
+      const status=document.createElement('span');
+      status.className='poxy-store-card-status';
+      status.textContent='Owned';
+      foot.appendChild(price);foot.appendChild(status);
+    }else if(cooldown){
+      const status=document.createElement('span');
+      status.className='poxy-store-card-status';
+      status.textContent='Cooldown';
+      foot.appendChild(price);foot.appendChild(status);
+    }else{
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.className='poxy-store-card-acquire';
+      btn.textContent='Redeem';
+      btn.onclick=function(e){e.stopPropagation();purchaseXpShopItem(item.id);};
+      foot.appendChild(price);foot.appendChild(btn);
+    }
+    card.appendChild(visual);card.appendChild(h4);card.appendChild(desc);card.appendChild(foot);
+    grid.appendChild(card);
+  });
+}
+window.purchaseXpShopItem=async function(itemId){
+  const item=XP_SHOP_ITEMS.find(x=>x.id===itemId);
+  if(!item||!currentUser)return;
+  const bal=playerEconomy?.xp_balance??currentProfile?.xp_balance??0;
+  if(bal<item.cost){showToast('Need '+item.cost.toLocaleString()+' XP');return;}
+  try{
+    const{data,error}=await sb.rpc('purchase_xp_shop_item',{p_item_id:itemId});
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Redeem failed');
+    if(data.xp_balance!=null&&currentProfile)currentProfile.xp_balance=data.xp_balance;
+    await loadPlayerEconomy();
+    showToast(item.name+' redeemed!');
+    renderStoreGrid();
+    renderCaseWallet();
+    renderXpHud();
+  }catch(e){logAndToast('xp-shop',e);}
+};
 function renderStorePage(){
   if(!currentUser){
     const grid=$('storeGrid');if(grid)grid.innerHTML='<div class="poxy-store-signin">Sign in to access the store.</div>';
