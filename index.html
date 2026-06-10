@@ -5489,8 +5489,7 @@ async function claimLevelPerksQuiet(){
     if(data?.ok&&Array.isArray(data.granted)&&data.granted.length){
       showToast('Level '+data.level+' perk: '+data.granted.join(' · '));
       _skipPerkClaim=true;
-      await loadPlayerEconomy();
-      _skipPerkClaim=false;
+      try{await loadPlayerEconomy();}finally{_skipPerkClaim=false;}
     }
   }catch(e){console.warn('claim_level_perks:',e);}
 }
@@ -14933,6 +14932,7 @@ window.switchStoreCategory=function(cat){
   const t=$('storeGridTitle');if(t)t.textContent=meta.title;
   const s=$('storeGridSub');if(s)s.textContent=meta.sub;
   renderStoreGrid();
+  renderStoreTerminal();
 };
 function renderStorePreview(){
   const stage=$('storePreviewStage'),nameEl=$('storePreviewName'),handleEl=$('storePreviewHandle'),avEl=$('storePreviewAvatar');
