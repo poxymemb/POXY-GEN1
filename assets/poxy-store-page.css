@@ -383,6 +383,39 @@
 }
 .poxy-store-grid-header p{font-size:15px;color:#9d8b9b;margin:8px 0 0}
 
+#stPanelStore{
+  padding:24px 20px calc(80px + env(safe-area-inset-bottom, 0px));
+  box-sizing:border-box;
+}
+@media(min-width:900px){
+  #stPanelStore{padding:28px 24px calc(96px + env(safe-area-inset-bottom, 0px))}
+}
+
+.poxy-store-layout--pass .poxy-store-bento,
+.poxy-store-layout--pass .poxy-store-uplinks{display:none}
+.poxy-store-layout--pass .poxy-store-sidenav{min-height:auto}
+
+.poxy-store-grid--pass{
+  display:block!important;
+  grid-template-columns:1fr!important;
+}
+.poxy-store-grid--pass .poxy-pass-panel{width:100%;max-width:100%}
+
+.poxy-pass-scroll{
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  max-height:calc(100dvh - var(--st-nav-h, 92px) - 220px);
+  min-height:200px;
+  padding-right:4px;
+  margin-top:4px;
+}
+@media(min-width:768px){
+  .poxy-pass-scroll{max-height:calc(100dvh - var(--st-nav-h, 92px) - 200px)}
+}
+
 .poxy-store-grid{
   display:grid;
   grid-template-columns:1fr;

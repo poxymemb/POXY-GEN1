@@ -15107,6 +15107,10 @@ const STORE_CAT_META={
 };
 window.switchStoreCategory=function(cat){
   storeCategory=cat||'themes';
+  const layout=$('storePage');
+  const gridEl=$('storeGrid');
+  if(layout)layout.classList.toggle('poxy-store-layout--pass',storeCategory==='poxypass');
+  if(gridEl)gridEl.classList.toggle('poxy-store-grid--pass',storeCategory==='poxypass');
   document.querySelectorAll('.poxy-store-nav-btn').forEach(b=>{
     b.classList.toggle('active',b.dataset.storeCat===storeCategory);
   });
@@ -15347,7 +15351,10 @@ function renderPoxyPassGrid(grid){
     });
     tracks.appendChild(freeCol);
     tracks.appendChild(premCol);
-    panel.appendChild(tracks);
+    const scroll=document.createElement('div');
+    scroll.className='poxy-pass-scroll';
+    scroll.appendChild(tracks);
+    panel.appendChild(scroll);
     grid.innerHTML='';
     grid.appendChild(panel);
     renderStoreTerminal();
