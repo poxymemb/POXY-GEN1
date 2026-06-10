@@ -243,6 +243,19 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .st-pity-bar{margin-bottom:10px;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);font-size:10px;color:rgba(255,255,255,0.55)}
 .st-pity-bar-row{display:flex;justify-content:space-between;gap:8px;margin-top:4px;font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.45)}
 .st-pity-bar-row strong{color:#e879f9;font-weight:700}
+.st-vip-pity-bar{margin-bottom:10px;padding:8px 12px;border-radius:12px;border:1px solid rgba(124,58,237,0.2);background:rgba(124,58,237,0.06);font-size:10px;color:rgba(255,255,255,0.55)}
+.st-case-wallet{margin-bottom:10px;padding:8px 12px;border-radius:12px;border:1px solid rgba(0,245,160,0.2);background:rgba(0,245,160,0.05);font-size:10px;color:rgba(255,255,255,0.55)}
+.st-case-wallet-label{display:block;font-size:9px;font-weight:800;letter-spacing:0.1em;color:var(--poxy-mint,#00f5a0);margin-bottom:6px}
+.st-case-wallet-chips{display:flex;flex-wrap:wrap;gap:6px}
+.st-case-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.75)}
+.st-case-chip-open{padding:2px 8px;border-radius:999px;border:1px solid rgba(0,245,160,0.45);background:rgba(0,245,160,0.12);color:#00f5a0;font-size:8px;font-weight:800;letter-spacing:0.06em;cursor:pointer;font-family:inherit}
+.st-premium-tray{margin-bottom:10px}
+.st-premium-tray-label{font-size:9px;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-bottom:6px}
+.st-premium-tray-row{display:flex;flex-wrap:wrap;gap:6px}
+.st-case-pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.65);font-size:9px;font-weight:700;cursor:pointer;font-family:var(--font-mono);transition:border-color 0.2s,background 0.2s}
+.st-case-pill:hover{border-color:rgba(232,121,249,0.4)}
+.st-case-pill.active{border-color:#e879f9;background:rgba(232,121,249,0.15);color:#fff}
+.st-case-pill.sold-out{opacity:0.45;cursor:not-allowed;text-decoration:line-through}
 .tum-path-a{width:100%;margin-bottom:16px;padding:14px 16px;border-radius:14px;border:1px solid rgba(0,245,160,0.35);background:rgba(0,245,160,0.08);color:#00f5a0;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94)}
 .tum-path-a:hover{transform:translateY(-2px)}
 .tum-px-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
@@ -1757,6 +1770,18 @@ body.dark-club .club-sub{color:#888}
                 <span>Leg pity <strong id="stPityLeg">80/80</strong></span>
               </div>
             </div>
+            <div class="st-vip-pity-bar" id="stVipPityBar" aria-live="polite">
+              <div>PITY TRACKER · VIP case</div>
+              <div class="st-pity-bar-row">
+                <span>Epic+ <strong id="stVipPityEpic">15/15</strong></span>
+                <span>Mythic <strong id="stVipPityMythic">50/50</strong></span>
+              </div>
+            </div>
+            <div class="st-case-wallet" id="stCaseWallet" hidden>
+              <span class="st-case-wallet-label">CASE WALLET · FREE OPENS</span>
+              <div class="st-case-wallet-chips" id="stCaseWalletChips"></div>
+            </div>
+            <div class="st-premium-tray" id="stPremiumTray"></div>
             <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> <span data-i18n="dash.openBox">OPEN BOX</span> <span class="st-open-price" id="btnOpenPrice">50 PX</span></button>
             <div class="post-btns" id="postBtns">
               <button type="button" class="btn-add" id="btnAdd" data-i18n="dash.addToCollection">ADD TO COLLECTION</button>
@@ -4960,7 +4985,16 @@ window.PoxyTrustBridge = {
 const POXY_BETA_HIDE_LUMINA=true; // set false when Lumina OS is ready for release
 const STANDARD_CASE_PRICE = 50;
 const VIP_CASE_PRICE = 150;
+const GENESIS_CASE_PRICE = 300;
+const MYTHIC_CASE_PRICE = 500;
+const LEGEND_CASE_PRICE = 1500;
 const STANDARD_CASE_GBP = 2.50;
+const PREMIUM_CASES = [
+  {id:'vip',     label:'VIP Case',     price:VIP_CASE_PRICE,     icon:'💠', gbp:'7.50'},
+  {id:'genesis', label:'Genesis Case', price:GENESIS_CASE_PRICE, icon:'🔮', gbp:'15.00'},
+  {id:'mythic',  label:'Mythic Case',  price:MYTHIC_CASE_PRICE,  icon:'💎', gbp:'25.00'},
+  {id:'legend',  label:'Legend Case',  price:LEGEND_CASE_PRICE,  icon:'🌟', gbp:'75.00'}
+];
 const DOPAMINE_CASE_PRICE = 25;
 const DOPAMINE_OFFER_LS = 'poxy_dopamine_offer';
 const DOPAMINE_TIMER_MS = 10 * 60 * 1000;
@@ -5194,7 +5228,7 @@ function renderFrameSelector(){
 // ── STATE (PHASE 1 — synchronized in real-time UI) ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null, currentPoxyId=null;
 let currentRoundId=null, currentClientSeed=null; // Phase 3: provably fair proof
-let mythicCount=0, hasMythic=false, busy=false;
+let mythicCount=0, hasMythic=false, busy=false, selectedCaseType='standard';
 let spinAnim=null, particleLoop=null, particles=[];
 let selectedAvatar=AVATARS[0], marketTab='buy';
 let pendingListItem=null, pendingBuyItem=null;
@@ -5297,6 +5331,10 @@ async function loadPlayerEconomy(){
     }
     renderXpHud();
     renderPityBar();
+    renderVipPityBar();
+    renderCaseWallet();
+    renderPremiumTray();
+    updateOpenButtonPrice();
     renderProfileStreakWidget();
     updateBalanceBadge(getPxBalance());
     return data;
@@ -5304,6 +5342,9 @@ async function loadPlayerEconomy(){
     console.error('loadPlayerEconomy:',e);
     renderXpHud();
     renderPityBar();
+    renderVipPityBar();
+    renderCaseWallet();
+    renderPremiumTray();
     return null;
   }
 }
@@ -5345,6 +5386,100 @@ function renderPityBar(){
   opens.textContent=String(pity.standard_opens||0);
   if(epic)epic.textContent=epicLeft+'/'+epicAt;
   if(leg)leg.textContent=legLeft+'/'+legAt;
+}
+function renderVipPityBar(){
+  const pity=playerEconomy?.pity;
+  const epic=$('stVipPityEpic');
+  const myth=$('stVipPityMythic');
+  if(!epic||!myth)return;
+  const epicAt=pity?.vip_epic_hard_at||15;
+  const mythAt=pity?.vip_mythic_hard_at||50;
+  const epicLeft=pity?.vip_epic_until!=null?pity.vip_epic_until:Math.max(0,epicAt-(pity?.vip_epic||0));
+  const mythLeft=pity?.vip_mythic_until!=null?pity.vip_mythic_until:Math.max(0,mythAt-(pity?.vip_mythic||0));
+  epic.textContent=epicLeft+'/'+epicAt;
+  myth.textContent=mythLeft+'/'+mythAt;
+}
+const CASE_TOKEN_META=[
+  {key:'standard',label:'Standard',icon:'📦'},
+  {key:'vip',label:'VIP',icon:'💠'},
+  {key:'genesis',label:'Genesis',icon:'🔮'},
+  {key:'mythic',label:'Mythic',icon:'💎'},
+  {key:'legend',label:'Legend',icon:'🌟'}
+];
+function renderCaseWallet(){
+  const wrap=$('stCaseWallet');
+  const chips=$('stCaseWalletChips');
+  if(!wrap||!chips)return;
+  if(!currentUser){wrap.hidden=true;chips.innerHTML='';return;}
+  const tokens=playerEconomy?.case_tokens||{};
+  const items=CASE_TOKEN_META.filter(t=>(tokens[t.key]||0)>0);
+  if(!items.length){wrap.hidden=true;chips.innerHTML='';return;}
+  wrap.hidden=false;
+  chips.innerHTML=items.map(t=>{
+    const n=tokens[t.key]||0;
+    return '<span class="st-case-chip"><span>'+t.icon+' '+t.label+' ×'+n+'</span>'
+      +'<button type="button" class="st-case-chip-open" data-token-case="'+t.key+'">FREE OPEN</button></span>';
+  }).join('');
+  chips.querySelectorAll('[data-token-case]').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      if(busy)return;
+      const caseType=btn.dataset.tokenCase;
+      selectedCaseType=caseType;
+      renderPremiumTray();
+      updateOpenButtonPrice();
+      const ok=await runCaseOpen({caseType,useToken:true});
+      if(ok)triggerDopamineOffer('case_token');
+    });
+  });
+}
+function renderPremiumTray(){
+  const tray=$('stPremiumTray');
+  if(!tray)return;
+  if(!currentUser){tray.innerHTML='';return;}
+  const legMonthly=playerEconomy?.legend_monthly;
+  const legCap=legMonthly?.cap||100;
+  const legOpens=legMonthly?.opens||0;
+  let html='<div class="st-premium-tray-label">SELECT CASE</div><div class="st-premium-tray-row">';
+  html+='<button type="button" class="st-case-pill'+(selectedCaseType==='standard'?' active':'')+'" data-case="standard">📦 Standard · '+STANDARD_CASE_PRICE+' PX</button>';
+  PREMIUM_CASES.forEach(c=>{
+    const soldOut=c.id==='legend'&&legOpens>=legCap;
+    html+='<button type="button" class="st-case-pill'+(selectedCaseType===c.id?' active':'')+(soldOut?' sold-out':'')+'" data-case="'+c.id+'"'+(soldOut?' disabled':'')+'>'
+      +c.icon+' '+c.label+' · '+c.price+' PX'+(soldOut?' · SOLD OUT':'')+'</button>';
+  });
+  html+='</div>';
+  tray.innerHTML=html;
+  tray.querySelectorAll('[data-case]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(btn.disabled)return;
+      selectedCaseType=btn.dataset.case;
+      renderPremiumTray();
+      updateOpenButtonPrice();
+    });
+  });
+}
+function getSelectedCasePrice(opts){
+  const caseType=opts?.caseType||selectedCaseType;
+  const useToken=!!opts?.useToken;
+  const dopamine=!!opts?.dopamine;
+  if(useToken)return 0;
+  if(caseType==='standard')return dopamine?DOPAMINE_CASE_PRICE:STANDARD_CASE_PRICE;
+  const prem=PREMIUM_CASES.find(c=>c.id===caseType);
+  return prem?prem.price:STANDARD_CASE_PRICE;
+}
+function updateOpenButtonPrice(){
+  const priceEl=$('btnOpenPrice');
+  if(!priceEl)return;
+  const price=getSelectedCasePrice({caseType:selectedCaseType});
+  priceEl.textContent=formatPX(price).replace(' PX','')+' PX';
+  const prem=PREMIUM_CASES.find(c=>c.id===selectedCaseType);
+  const btn=$('btnOpen');
+  if(btn&&prem){
+    const span=btn.querySelector('[data-i18n="dash.openBox"]');
+    if(span)span.textContent='OPEN '+prem.label.toUpperCase();
+  }else if(btn){
+    const span=btn.querySelector('[data-i18n="dash.openBox"]');
+    if(span)span.textContent='OPEN BOX';
+  }
 }
 async function claimDailyLoginOnce(){
   if(!currentUser)return null;
@@ -5489,7 +5624,7 @@ window.claimDopamineOffer=async function(){
   closeDopamineOfferModal(false);
   showStitchTab('dashboard');
   showToast('Flash deal — opening standard case at 25 PX!');
-  await runStandardCaseOpen({dopamine:true});
+  await runCaseOpen({caseType:'standard',dopamine:true});
 };
 function pxFromCustomGbp(gbp){
   const tier=PX_CUSTOM_TIERS.find(t=>gbp>=t.minGbp&&gbp<=t.maxGbp)||PX_CUSTOM_TIERS[PX_CUSTOM_TIERS.length-1];
@@ -8809,8 +8944,7 @@ function updatePsdMemberBadge(){
   if(role)role.textContent=isClubMember()?'ELITE MEMBER':'POXY MEMBER';
 }
 function refreshStitchDashboardChrome(){
-  const price=$('btnOpenPrice');
-  if(price)price.textContent=formatPX(STANDARD_CASE_PRICE).replace(' PX','')+' PX';
+  updateOpenButtonPrice();
   updatePsdMemberBadge();
   renderDashColPreview();
   refreshDashHeroMetrics();
@@ -9745,15 +9879,20 @@ function resetAll(){
   const huntProofBtn=$('btnHuntProof');if(huntProofBtn)huntProofBtn.hidden=true;
   busy=false;currentTier=null;currentSerial=null;currentPoxyId=null;currentRoundId=null;currentClientSeed=null;clearBg();
 }
-async function runStandardCaseOpen(opts){
-  const dopamine=!!opts?.dopamine;
-  const price=dopamine?DOPAMINE_CASE_PRICE:STANDARD_CASE_PRICE;
-  const rpcName=dopamine?'open_dopamine_standard_case_v3':'open_standard_case_v3';
+async function runCaseOpen(opts){
+  const caseType=opts?.caseType||selectedCaseType||'standard';
+  const dopamine=!!opts?.dopamine&&caseType==='standard';
+  const useToken=!!opts?.useToken;
+  const price=getSelectedCasePrice({caseType,dopamine,useToken});
   if(busy||!currentUser)return false;
-  const bal=getPxBalance();
-  if(bal<price){
+  if(!useToken&&getPxBalance()<price){
     showToast('Insufficient PX. Add funds via Treasury.');
     openTopUpModal();
+    return false;
+  }
+  const legMonthly=playerEconomy?.legend_monthly;
+  if(caseType==='legend'&&!useToken&&legMonthly&&(legMonthly.opens||0)>=(legMonthly.cap||100)){
+    showToast('Legend cases sold out this month (100 max).');
     return false;
   }
   busy=true;$('btnOpen').disabled=true;
@@ -9770,7 +9909,16 @@ async function runStandardCaseOpen(opts){
       body:{round_id,client_seed,nonce:0}
     });
     if(revealErr||!revealData?.ok)throw new Error(edgeFnError(revealErr,revealData,'RNG reveal failed'));
-    const{data:rpcResult,error:rpcErr}=await sb.rpc(rpcName,{p_round_id:round_id});
+    let rpcResult,rpcErr;
+    if(caseType==='standard'){
+      const rpcName=dopamine?'open_dopamine_standard_case_v3':'open_standard_case_v3';
+      const rpcArgs=dopamine?{p_round_id:round_id}:{p_round_id:round_id,p_use_token:useToken};
+      ({data:rpcResult,error:rpcErr}=await sb.rpc(rpcName,rpcArgs));
+    }else{
+      ({data:rpcResult,error:rpcErr}=await sb.rpc('open_premium_case_v3',{
+        p_round_id:round_id,p_case_type:caseType,p_use_token:useToken
+      }));
+    }
     if(rpcErr)throw rpcErr;
     if(rpcResult?.ok===false)throw new Error(rpcResult.error||'Case open failed');
     currentRoundId=round_id;
@@ -9784,7 +9932,8 @@ async function runStandardCaseOpen(opts){
     await loadPlayerEconomy();
     pendingSpinTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
     runRouletteCarousel(pendingSpinTier);
-    cryptoMint(rpcResult.poxy_id,rpcResult.tier,'standard',{
+    const mintOrigin=rpcResult.case_type||caseType||'standard';
+    cryptoMint(rpcResult.poxy_id,rpcResult.tier,mintOrigin,{
       serial:rpcResult.serial,
       resultHash:revealData?.result||rpcResult.result_hash
     }).catch(()=>{});
@@ -9797,9 +9946,12 @@ async function runStandardCaseOpen(opts){
     return false;
   }
 }
+async function runStandardCaseOpen(opts){
+  return runCaseOpen({caseType:'standard',dopamine:!!opts?.dopamine});
+}
 $('btnOpen').addEventListener('click',async function(){
   if(busy||!currentUser)return;
-  await runStandardCaseOpen({dopamine:false});
+  await runCaseOpen({caseType:selectedCaseType,dopamine:false});
 });
 const stWinAdd=$('stWinAdd');
 const stWinDiscard=$('stWinDiscard');
