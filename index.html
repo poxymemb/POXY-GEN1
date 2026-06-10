@@ -6929,6 +6929,14 @@ async function renderDnaTraits(item){
     grid.appendChild(tag);
     i++;
   });
+
+  if(_avmCurrentItem === item){
+    _renderRelicScore(item);
+    const dnaTab = document.querySelector('[data-avm-tab="dna"]');
+    if(dnaTab && dnaTab.classList.contains('active')) _animateRelicScore();
+    const dnaHashTab = $('avmDnaHashTab');
+    if(dnaHashTab && dnaHash) dnaHashTab.textContent = 'DNA ' + String(dnaHash).slice(0, 10).toUpperCase();
+  }
 }
 
 window.closeAssetViewerModal = function() {
@@ -7424,6 +7432,22 @@ window.closeSpm=function(){
 const RELIC_RARITY_WEIGHT = {
   common: 10, uncommon: 25, rare: 50, epic: 100, legendary: 200, mythic: 500
 };
+const RELIC_DNA_TRAIT_WEIGHT = {
+  common: 2, uncommon: 6, rare: 12, epic: 25, legendary: 45, mythic: 75
+};
+
+function _relicDnaBonus(traits) {
+  if(!traits || typeof traits !== 'object') return 0;
+  let sum = 0;
+  DNA_CATEGORY_ORDER.forEach(cat => {
+    const t = traits[cat];
+    if(!t) return;
+    sum += RELIC_DNA_TRAIT_WEIGHT[t.tier] || 0;
+    const pop = Number(t.pop || 0);
+    if(pop > 0 && pop <= 20) sum += Math.min(25, Math.ceil(400 / pop));
+  });
+  return sum;
+}
 
 function _renderRelicScore(item) {
   const numEl       = $('avmRelicNumber');
@@ -7436,9 +7460,11 @@ function _renderRelicScore(item) {
   const ageMs     = Math.max(0, now - createdAt);
   const ageDays   = ageMs / 86400000;
 
-  const age_score      = Math.floor(ageDays * 0.5);
-  const prov_score     = (Number(item.provenance_count) || 0) * 10;
-  const rarity_score   = RELIC_RARITY_WEIGHT[item.poxy_tier] || 10;
+  const age_score       = Math.floor(ageDays * 0.5);
+  const prov_score      = (Number(item.provenance_count) || 0) * 10;
+  const base_rarity   = RELIC_RARITY_WEIGHT[item.poxy_tier] || 10;
+  const dna_bonus     = _relicDnaBonus(item.traits);
+  const rarity_score  = base_rarity + dna_bonus;
   const transfer_score = (Number(item.transfer_count) || 0) * 5;
   const total          = age_score + prov_score + rarity_score + transfer_score;
 
@@ -7448,12 +7474,14 @@ function _renderRelicScore(item) {
   if(barEl) barEl.style.width = '0%';
 
   if(breakdown){
-    breakdown.innerHTML = [
+    const rows = [
       ['Age',        age_score],
       ['Provenance', prov_score],
       ['Rarity',     rarity_score],
-      ['Transfers',  transfer_score],
-    ].map(([k,v]) =>
+    ];
+    if(dna_bonus > 0) rows.push(['DNA traits', dna_bonus]);
+    rows.push(['Transfers', transfer_score]);
+    breakdown.innerHTML = rows.map(([k,v]) =>
       '<div class="avm-relic-row">'
       + '<span class="avm-relic-key">' + k + '</span>'
       + '<span class="avm-relic-val">+' + v + '</span>'
