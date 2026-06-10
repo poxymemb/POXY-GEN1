@@ -1686,21 +1686,6 @@ html,body{height:100%;background:var(--bg);color:var(--adm-text);font-family:var
             <div style="margin-top:10px;font-size:8px;color:var(--muted)">STATUS: <span id="broadcastStatus" class="badge badge-red">INACTIVE</span></div>
           </div>
 
-          <div class="card">
-            <div class="card-title">⬡ MAINTENANCE MODE</div>
-            <div class="toggle-wrap" style="margin-bottom:10px">
-              <label class="toggle" title="Toggle maintenance mode">
-                <input type="checkbox" id="maintToggle" onchange="toggleMaintenance()"/>
-                <span class="toggle-slider"></span>
-              </label>
-              <span class="toggle-label">BLOCK PUBLIC SITE (MCU STAYS ACCESSIBLE)</span>
-            </div>
-            <div class="f-row">
-              <label class="f-label">MAINTENANCE MESSAGE</label>
-              <input id="maintMsg2" class="f-input" type="text" value="System temporarily offline. Uplink restoring."/>
-            </div>
-            <div style="font-size:8px;color:var(--muted)">APPLIES TO POXY.WORLD ONLY — STORED IN LOCALSTORAGE ON THIS BROWSER</div>
-          </div>
         </div>
       </div>
 
@@ -3455,7 +3440,6 @@ function initAll(){
   // CMS
   loadNewsPosts();
   restoreBroadcast();
-  restoreMaintenance();
   // Users
   loadCounters();
   loadUsersTable();
@@ -7740,32 +7724,6 @@ function restoreBroadcast(){
   }
 }
 
-// MAINTENANCE — public site only (index.html reads localStorage; MCU is never blocked)
-function toggleMaintenance(){
-  const on = document.getElementById('maintToggle').checked;
-  const msg = document.getElementById('maintMsg2').value || 'System temporarily offline.';
-  if(on){
-    localStorage.setItem('poxy_maintenance','1');
-    localStorage.setItem('poxy_maintenance_msg', msg);
-    streamLine('ADMIN', 'MAINTENANCE MODE ACTIVATED (public site)');
-    toast('MAINTENANCE ON — public site blocked');
-  } else {
-    localStorage.removeItem('poxy_maintenance');
-    localStorage.removeItem('poxy_maintenance_msg');
-    streamLine('ADMIN', 'MAINTENANCE MODE DEACTIVATED');
-    toast('MAINTENANCE MODE OFF');
-  }
-}
-
-function restoreMaintenance(){
-  const on = localStorage.getItem('poxy_maintenance')==='1';
-  const toggle = document.getElementById('maintToggle');
-  if(toggle) toggle.checked = on;
-  const msg = localStorage.getItem('poxy_maintenance_msg')||'System temporarily offline.';
-  const input = document.getElementById('maintMsg2');
-  if(input) input.value = msg;
-}
-
 // ═══════════════════════════════════════════════════════════════
 // TAB 2 — USER MATRIX & ASSET OPS
 // ═══════════════════════════════════════════════════════════════
@@ -8011,7 +7969,6 @@ function refreshSimFlags(){
     {key:'poxy_lag_ms',        val:localStorage.getItem('poxy_lag_ms')||'—',         src:'LOCALSTORAGE'},
     {key:'poxy_time_override', val:localStorage.getItem('poxy_time_override')||'—',  src:'LOCALSTORAGE'},
     {key:'POXY_PERF_MODE',     val:window.POXY_PERF_MODE||'—',                      src:'WINDOW'},
-    {key:'poxy_maintenance',   val:localStorage.getItem('poxy_maintenance')||'—',    src:'LOCALSTORAGE'},
     {key:'poxy_broadcast',     val:localStorage.getItem('poxy_broadcast')||'—',      src:'LOCALSTORAGE'},
   ];
   const tbody = document.getElementById('simFlagsTbl');
