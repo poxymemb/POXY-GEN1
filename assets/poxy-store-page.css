@@ -392,8 +392,11 @@
 }
 
 .poxy-store-layout--pass .poxy-store-bento,
-.poxy-store-layout--pass .poxy-store-uplinks{display:none}
-.poxy-store-layout--pass .poxy-store-sidenav{min-height:auto}
+.poxy-store-layout--pass .poxy-store-uplinks,
+.poxy-store-layout--vip .poxy-store-bento,
+.poxy-store-layout--vip .poxy-store-uplinks{display:none}
+.poxy-store-layout--pass .poxy-store-sidenav,
+.poxy-store-layout--vip .poxy-store-sidenav{min-height:auto}
 
 .poxy-store-grid--pass{
   display:block!important;

@@ -299,6 +299,24 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .poxy-pass-claim.is-ready{border-color:rgba(0,245,160,0.4);background:rgba(0,245,160,0.1);color:#00f5a0;cursor:pointer}
 .poxy-pass-claim.is-claimed{opacity:0.5}
 .poxy-pass-claim.is-locked{opacity:0.35}
+.st-economy-event{padding:10px 14px;border-radius:12px;border:1px solid rgba(0,245,160,0.22);background:linear-gradient(135deg,rgba(0,245,160,0.06),rgba(124,58,237,0.08));margin-bottom:12px;font-size:10px}
+.st-economy-event[hidden]{display:none!important}
+.st-economy-event-label{font-weight:800;letter-spacing:0.08em;color:#00f5a0;text-transform:uppercase}
+.st-economy-event-sub{color:rgba(255,255,255,0.55);margin-top:4px;line-height:1.4}
+.poxy-vip-panel{display:flex;flex-direction:column;gap:14px}
+.poxy-vip-hero{padding:16px;border-radius:16px;border:1px solid rgba(245,158,11,0.3);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(0,245,160,0.05))}
+.poxy-vip-hero h3{margin:0 0 6px;font-size:16px;color:#fff}
+.poxy-vip-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:rgba(255,255,255,0.5)}
+.poxy-vip-meta strong{color:#f59e0b}
+.poxy-vip-perks{display:grid;gap:6px;font-size:10px;color:rgba(255,255,255,0.55)}
+.poxy-vip-perk{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.poxy-vip-actions{display:flex;flex-wrap:wrap;gap:8px}
+.poxy-vip-btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.1);color:#f59e0b;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
+.poxy-vip-btn.is-ready{border-color:rgba(0,245,160,0.4);background:rgba(0,245,160,0.1);color:#00f5a0}
+.poxy-vip-btn.is-done{opacity:0.45;cursor:default}
+.poxy-vip-btn.is-active{border-color:rgba(0,245,160,0.35);background:rgba(0,245,160,0.08);color:#00f5a0;cursor:default}
+.poxy-store-layout--vip .poxy-store-bento,.poxy-store-layout--vip .poxy-store-uplinks{display:none}
+.poxy-store-grid--vip{display:block!important;grid-template-columns:1fr!important}
 .poxy-streak-panel{padding:16px}
 .poxy-streak-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .poxy-streak-days{font-size:22px;font-weight:800;color:#fff;font-family:var(--font-display)}
@@ -1818,6 +1836,7 @@ body.dark-club .club-sub{color:#888}
               <span class="st-case-wallet-label">CASE WALLET · FREE OPENS</span>
               <div class="st-case-wallet-chips" id="stCaseWalletChips"></div>
             </div>
+            <div class="st-economy-event" id="stEconomyEvent" hidden aria-live="polite"></div>
             <div class="st-premium-tray" id="stPremiumTray"></div>
             <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> <span data-i18n="dash.openBox">OPEN BOX</span> <span class="st-open-price" id="btnOpenPrice">50 PX</span></button>
             <div class="post-btns" id="postBtns">
@@ -2747,6 +2766,9 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
           </button>
           <button type="button" class="poxy-store-nav-btn" id="storeNavPass" data-store-cat="poxypass" onclick="switchStoreCategory('poxypass')">
             <span class="material-symbols-outlined" aria-hidden="true">confirmation_number</span> POXY PASS
+          </button>
+          <button type="button" class="poxy-store-nav-btn" id="storeNavVip" data-store-cat="vip" onclick="switchStoreCategory('vip')">
+            <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span> VIP
           </button>
         </aside>
         <div class="poxy-store-main">
@@ -5297,6 +5319,7 @@ let pendingListItem=null, pendingBuyItem=null;
 let playerEconomy=null;
 let playerAchievements=null;
 let poxyPassStatus=null;
+let vipStatus=null;
 let referralInfo=null;
 (function captureRefFromUrl(){
   try{
@@ -5405,6 +5428,7 @@ async function loadPlayerEconomy(){
     renderVipPityBar();
     renderCaseWallet();
     renderPremiumTray();
+    renderEconomyEventBanner();
     updateOpenButtonPrice();
     renderProfileStreakWidget();
     updateBalanceBadge(getPxBalance());
@@ -5417,6 +5441,7 @@ async function loadPlayerEconomy(){
     renderVipPityBar();
     renderCaseWallet();
     renderPremiumTray();
+    renderEconomyEventBanner();
     return null;
   }
 }
@@ -5575,6 +5600,32 @@ function renderCaseWallet(){
     });
   });
 }
+function hasVipPass(){return!!(playerEconomy?.vip?.active);}
+function memberBadgeLabel(){
+  if(hasVipPass())return 'VIP PASS';
+  if(isClubMember())return 'ELITE MEMBER';
+  return 'POXY MEMBER';
+}
+function getEffectiveCasePrice(caseType,dopamine){
+  if(dopamine)return DOPAMINE_CASE_PRICE;
+  const cp=playerEconomy?.case_prices;
+  if(cp){
+    if(caseType==='standard'&&cp.standard!=null)return cp.standard;
+    if(cp[caseType]!=null)return cp[caseType];
+  }
+  if(caseType==='standard')return STANDARD_CASE_PRICE;
+  const prem=PREMIUM_CASES.find(c=>c.id===caseType);
+  return prem?prem.price:STANDARD_CASE_PRICE;
+}
+function renderEconomyEventBanner(){
+  const el=$('stEconomyEvent');
+  if(!el)return;
+  const ev=playerEconomy?.event;
+  if(!ev?.label){el.hidden=true;el.innerHTML='';return;}
+  el.hidden=false;
+  el.innerHTML='<div class="st-economy-event-label">⚡ '+escHtml(ev.label)+'</div>'
+    +'<div class="st-economy-event-sub">'+escHtml(ev.sub||'')+'</div>';
+}
 function renderPremiumTray(){
   const tray=$('stPremiumTray');
   if(!tray)return;
@@ -5582,12 +5633,14 @@ function renderPremiumTray(){
   const legMonthly=playerEconomy?.legend_monthly;
   const legCap=legMonthly?.cap||100;
   const legOpens=legMonthly?.opens||0;
+  const stdPx=getEffectiveCasePrice('standard');
   let html='<div class="st-premium-tray-label">SELECT CASE</div><div class="st-premium-tray-row">';
-  html+='<button type="button" class="st-case-pill'+(selectedCaseType==='standard'?' active':'')+'" data-case="standard">📦 Standard · '+STANDARD_CASE_PRICE+' PX</button>';
+  html+='<button type="button" class="st-case-pill'+(selectedCaseType==='standard'?' active':'')+'" data-case="standard">📦 Standard · '+stdPx+' PX</button>';
   PREMIUM_CASES.forEach(c=>{
     const soldOut=c.id==='legend'&&legOpens>=legCap;
+    const px=getEffectiveCasePrice(c.id);
     html+='<button type="button" class="st-case-pill'+(selectedCaseType===c.id?' active':'')+(soldOut?' sold-out':'')+'" data-case="'+c.id+'"'+(soldOut?' disabled':'')+'>'
-      +c.icon+' '+c.label+' · '+c.price+' PX'+(soldOut?' · SOLD OUT':'')+'</button>';
+      +c.icon+' '+c.label+' · '+px+' PX'+(soldOut?' · SOLD OUT':'')+'</button>';
   });
   html+='</div>';
   tray.innerHTML=html;
@@ -5605,9 +5658,7 @@ function getSelectedCasePrice(opts){
   const useToken=!!opts?.useToken;
   const dopamine=!!opts?.dopamine;
   if(useToken)return 0;
-  if(caseType==='standard')return dopamine?DOPAMINE_CASE_PRICE:STANDARD_CASE_PRICE;
-  const prem=PREMIUM_CASES.find(c=>c.id===caseType);
-  return prem?prem.price:STANDARD_CASE_PRICE;
+  return getEffectiveCasePrice(caseType,dopamine);
 }
 async function claimLevelPerksQuiet(){
   if(!currentUser)return;
@@ -9118,7 +9169,7 @@ function renderDashColPreview(){
 }
 function updatePsdMemberBadge(){
   const role=$('userRoleEl');
-  if(role)role.textContent=isClubMember()?'ELITE MEMBER':'POXY MEMBER';
+  if(role)role.textContent=memberBadgeLabel();
 }
 function refreshStitchDashboardChrome(){
   updateOpenButtonPrice();
@@ -9131,7 +9182,7 @@ function refreshDashHeroMetrics(){
   const uname=currentProfile.username||'Operative';
   const greetEl=$('dashGreetUsername');if(greetEl)greetEl.textContent=uname;
   const badgeEl=$('dashMemberBadge');
-  if(badgeEl)badgeEl.textContent=isClubMember()?'ELITE MEMBER':'POXY MEMBER';
+  if(badgeEl)badgeEl.textContent=memberBadgeLabel();
   const balEl=$('dashHeroBalance');
   if(balEl)balEl.textContent=formatPX(getPxBalance()).replace(' PX','');
   // Total Poxies
@@ -12848,12 +12899,15 @@ function renderTopUpPaths(){
       const div=document.createElement('button');
       div.type='button';
       div.className='tum-px-pkg'+(pkg.id===selectedPxPackageId?' selected':'');
+      const vipDisc=hasVipPass()?Math.floor(pkg.px*0.9):pkg.px;
+      const bonusTxt=hasVipPass()?' <span class="tum-px-pkg-tag">VIP −10%</span>':'';
       div.innerHTML='<span class="tum-px-pkg-badge">'+pkg.badge+'</span>'
-        +'<div class="tum-px-pkg-px">'+pkg.px+' PX</div>'
-        +'<div class="tum-px-pkg-gbp">£'+pkg.gbp.toFixed(2)+(pkg.tag?(' <span class="tum-px-pkg-tag">'+pkg.tag+'</span>'):'')+'</div>';
+        +'<div class="tum-px-pkg-px">'+vipDisc+' PX</div>'
+        +'<div class="tum-px-pkg-gbp">£'+pkg.gbp.toFixed(2)+(pkg.tag?(' <span class="tum-px-pkg-tag">'+pkg.tag+'</span>'):'')+bonusTxt+'</div>';
       div.onclick=()=>{
         selectedPxPackageId=pkg.id;
-        selectedBankAmt=pkg.px+(pkg.bonus||0);
+        const basePx=hasVipPass()?Math.floor(pkg.px*0.9):pkg.px;
+        selectedBankAmt=basePx+(pkg.bonus||0);
         document.querySelectorAll('.tum-px-pkg').forEach(x=>x.classList.remove('selected'));
         div.classList.add('selected');
       };
@@ -15103,14 +15157,21 @@ const STORE_CAT_META={
   boosters:{title:'Active uplinks',sub:'Power-up modules — coming soon.',type:null},
   bundles:{title:'Asset bundles',sub:'Curated packs — coming soon.',type:null},
   xpshop:{title:'XP Shop',sub:'Spend XP balance on cosmetics and free case tokens.',type:'xpshop'},
-  poxypass:{title:'POXY PASS',sub:'30-day season — free & premium reward tracks.',type:'poxypass'}
+  poxypass:{title:'POXY PASS',sub:'30-day season — free & premium reward tracks.',type:'poxypass'},
+  vip:{title:'VIP Membership',sub:'£4.99/mo perks — 100 PX test purchase (Stripe soon).',type:'vip'}
 };
 window.switchStoreCategory=function(cat){
   storeCategory=cat||'themes';
   const layout=$('storePage');
   const gridEl=$('storeGrid');
-  if(layout)layout.classList.toggle('poxy-store-layout--pass',storeCategory==='poxypass');
-  if(gridEl)gridEl.classList.toggle('poxy-store-grid--pass',storeCategory==='poxypass');
+  if(layout){
+    layout.classList.toggle('poxy-store-layout--pass',storeCategory==='poxypass');
+    layout.classList.toggle('poxy-store-layout--vip',storeCategory==='vip');
+  }
+  if(gridEl){
+    gridEl.classList.toggle('poxy-store-grid--pass',storeCategory==='poxypass');
+    gridEl.classList.toggle('poxy-store-grid--vip',storeCategory==='vip');
+  }
   document.querySelectorAll('.poxy-store-nav-btn').forEach(b=>{
     b.classList.toggle('active',b.dataset.storeCat===storeCategory);
   });
@@ -15153,6 +15214,8 @@ function renderStoreTerminal(){
       bal.innerHTML=Number(xpBal).toLocaleString()+' <span>XP</span>';
     }else if(storeCategory==='poxypass'&&poxyPassStatus?.ok){
       bal.innerHTML='LVL '+poxyPassStatus.pass_level+' <span>PASS</span>';
+    }else if(storeCategory==='vip'&&vipStatus?.ok){
+      bal.innerHTML=(vipStatus.active?'VIP ACTIVE':'VIP INACTIVE')+' <span>MEMBER</span>';
     }
   }
   if(col)col.textContent=n+' item'+(n===1?'':'s');
@@ -15168,6 +15231,10 @@ function renderStoreGrid(){
   }
   if(storeCategory==='poxypass'){
     renderPoxyPassGrid(grid);
+    return;
+  }
+  if(storeCategory==='vip'){
+    renderVipGrid(grid);
     return;
   }
   if(!meta.type){
@@ -15360,6 +15427,143 @@ function renderPoxyPassGrid(grid){
     renderStoreTerminal();
   });
 }
+async function loadVipStatus(){
+  if(!currentUser)return null;
+  try{
+    const{data,error}=await sb.rpc('get_vip_status');
+    if(error)throw error;
+    if(data?.ok)vipStatus=data;
+    return data;
+  }catch(e){
+    console.error('loadVipStatus:',e);
+    return null;
+  }
+}
+function renderVipGrid(grid){
+  grid.innerHTML='<div class="poxy-store-signin">Loading VIP…</div>';
+  loadVipStatus().then(st=>{
+    if(!st?.ok){grid.innerHTML='<div class="poxy-store-empty">'+(st?.error||'VIP unavailable')+'</div>';return;}
+    const panel=document.createElement('div');
+    panel.className='poxy-vip-panel';
+    const hero=document.createElement('div');
+    hero.className='poxy-vip-hero';
+    const until=st.vip_until?new Date(st.vip_until).toLocaleDateString():'—';
+    hero.innerHTML='<h3>VIP Membership</h3>'
+      +'<div class="poxy-vip-meta">'
+      +'<span>Status · <strong>'+(st.active?'ACTIVE':'INACTIVE')+'</strong></span>'
+      +(st.active?'<span>Until · <strong>'+escHtml(until)+'</strong></span>':'')
+      +'<span>Price · <strong>'+(st.price_px||100)+' PX</strong>/30d</span>'
+      +'</div>';
+    panel.appendChild(hero);
+    const perks=document.createElement('div');
+    perks.className='poxy-vip-perks';
+    (st.perks||[]).forEach(p=>{
+      const row=document.createElement('div');
+      row.className='poxy-vip-perk';
+      row.textContent=p;
+      perks.appendChild(row);
+    });
+    panel.appendChild(perks);
+    if(st.event?.label){
+      const ev=document.createElement('div');
+      ev.className='st-economy-event';
+      ev.innerHTML='<div class="st-economy-event-label">⚡ '+escHtml(st.event.label)+'</div>'
+        +'<div class="st-economy-event-sub">'+escHtml(st.event.sub||'')+'</div>';
+      panel.appendChild(ev);
+    }
+    const actions=document.createElement('div');
+    actions.className='poxy-vip-actions';
+    if(!st.active){
+      const buy=document.createElement('button');
+      buy.type='button';
+      buy.className='poxy-vip-btn';
+      buy.textContent='Activate VIP — '+(st.price_px||100)+' PX';
+      buy.onclick=()=>purchaseVipMembership();
+      actions.appendChild(buy);
+    }else{
+      const active=document.createElement('div');
+      active.className='poxy-vip-btn is-active';
+      active.textContent='VIP active';
+      actions.appendChild(active);
+      const monthly=document.createElement('button');
+      monthly.type='button';
+      monthly.className='poxy-vip-btn'+(st.monthly_bonus_ready?' is-ready':' is-done');
+      monthly.textContent=st.monthly_bonus_ready?'Claim 200 PX monthly':'Monthly bonus claimed';
+      monthly.disabled=!st.monthly_bonus_ready;
+      if(st.monthly_bonus_ready)monthly.onclick=()=>claimVipMonthlyBonus();
+      actions.appendChild(monthly);
+      const daily=document.createElement('button');
+      daily.type='button';
+      daily.className='poxy-vip-btn'+(st.daily_standard_ready?' is-ready':' is-done');
+      daily.textContent=st.daily_standard_ready?'Claim daily Standard':'Daily case claimed';
+      daily.disabled=!st.daily_standard_ready;
+      if(st.daily_standard_ready)daily.onclick=()=>claimVipDailyStandard();
+      actions.appendChild(daily);
+      const weekly=document.createElement('button');
+      weekly.type='button';
+      weekly.className='poxy-vip-btn'+(st.weekly_vip_ready?' is-ready':' is-done');
+      weekly.textContent=st.weekly_vip_ready?'Claim weekly VIP case':'Weekly VIP claimed';
+      weekly.disabled=!st.weekly_vip_ready;
+      if(st.weekly_vip_ready)weekly.onclick=()=>claimVipWeeklyCase();
+      actions.appendChild(weekly);
+    }
+    panel.appendChild(actions);
+    grid.innerHTML='';
+    grid.appendChild(panel);
+    renderStoreTerminal();
+    updatePsdMemberBadge();
+    const badgeEl=$('dashMemberBadge');
+    if(badgeEl)badgeEl.textContent=memberBadgeLabel();
+  });
+}
+window.purchaseVipMembership=async function(){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('purchase_vip_membership');
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Purchase failed');
+    if(data.px_balance!=null&&currentProfile)currentProfile.px_balance=data.px_balance;
+    updateBalanceBadge(getPxBalance());
+    await loadPlayerEconomy();
+    showToast('VIP activated — 30 days');
+    renderVipGrid($('storeGrid'));
+  }catch(e){logAndToast('vip-purchase',e);}
+};
+window.claimVipMonthlyBonus=async function(){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_vip_monthly_bonus');
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Claim failed');
+    if(data.px_balance!=null&&currentProfile)currentProfile.px_balance=data.px_balance;
+    updateBalanceBadge(getPxBalance());
+    await loadPlayerEconomy();
+    showToast('VIP monthly bonus — +200 PX');
+    renderVipGrid($('storeGrid'));
+  }catch(e){logAndToast('vip-monthly',e);}
+};
+window.claimVipDailyStandard=async function(){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_vip_daily_standard');
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Claim failed');
+    await loadPlayerEconomy();
+    showToast('VIP daily — +1 Standard case token');
+    renderVipGrid($('storeGrid'));
+  }catch(e){logAndToast('vip-daily',e);}
+};
+window.claimVipWeeklyCase=async function(){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_vip_weekly_vip_case');
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Claim failed');
+    await loadPlayerEconomy();
+    showToast('VIP weekly — +1 VIP case token');
+    renderVipGrid($('storeGrid'));
+  }catch(e){logAndToast('vip-weekly',e);}
+};
 window.claimPoxyPassReward=async function(level,track){
   if(!currentUser)return;
   try{

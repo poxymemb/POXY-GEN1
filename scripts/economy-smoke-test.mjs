@@ -35,6 +35,13 @@ const RPCS = [
   ['claim_poxy_pass_reward', { p_level: 1, p_track: 'free' }, 'auth'],
   ['purchase_poxy_pass', {}, 'auth'],
   ['dev_activate_poxy_pass', {}, 'auth'],
+  ['get_economy_event', {}, 'public'],
+  ['get_vip_status', {}, 'auth'],
+  ['purchase_vip_membership', {}, 'auth'],
+  ['claim_vip_monthly_bonus', {}, 'auth'],
+  ['claim_vip_daily_standard', {}, 'auth'],
+  ['claim_vip_weekly_vip_case', {}, 'auth'],
+  ['dev_activate_vip', {}, 'auth'],
 ];
 
 async function rpc(name, body) {
@@ -67,7 +74,8 @@ function evaluate(name, body, expect, r) {
   if (expect === 'invalid_item') return invalidItem && noConstraintBreach;
   if (expect === 'invalid_case') return invalidCase && noConstraintBreach;
   if (expect === 'min_price') return minPrice && noConstraintBreach;
-  const publicOk = expect === 'public' && r.status === 200 && (s.includes('"ok":true') || s.includes('"ok": true'));
+  const publicOk = expect === 'public' && r.status === 200
+    && (s.includes('"ok":true') || s.includes('"ok": true') || s.includes('"id":') || s.includes('"label":'));
   if (expect === 'public') return publicOk && noConstraintBreach;
   return false;
 }
