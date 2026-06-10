@@ -267,6 +267,16 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .tum-custom-row{display:flex;gap:8px;margin-bottom:10px}
 .tum-custom-row input{flex:1}
 .tum-upsell{padding:10px 12px;border-radius:10px;border:1px dashed rgba(245,158,11,0.35);background:rgba(245,158,11,0.06);font-size:10px;color:rgba(245,158,11,0.9);margin-bottom:12px}
+.tum-ref-card{margin-top:14px;padding:12px;border-radius:12px;border:1px solid rgba(0,245,160,0.2);background:rgba(0,245,160,0.04)}
+.tum-ref-eyebrow{font-size:9px;font-weight:800;letter-spacing:0.12em;color:rgba(0,245,160,0.75);margin-bottom:6px}
+.tum-ref-code{font-family:var(--font-mono);font-size:15px;font-weight:800;color:#fff;letter-spacing:0.08em}
+.tum-ref-stats{display:flex;gap:12px;margin-top:8px;font-size:10px;color:rgba(255,255,255,0.5)}
+.tum-ref-stat strong{color:#00f5a0;font-weight:700}
+.tum-ref-copy{width:100%;margin-top:10px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#e2e8f0;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94)}
+.tum-ref-copy:hover{transform:translateY(-1px);border-color:rgba(0,245,160,0.35)}
+.tum-ref-hint{font-size:9px;color:rgba(255,255,255,0.35);margin-top:8px;line-height:1.4}
+.tum-ref-leaders{margin-top:10px;font-size:9px;color:rgba(255,255,255,0.45);max-height:72px;overflow-y:auto}
+.tum-ref-leader-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
 .poxy-streak-panel{padding:16px}
 .poxy-streak-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .poxy-streak-days{font-size:22px;font-weight:800;color:#fff;font-family:var(--font-display)}
@@ -5006,6 +5016,8 @@ const MARKET_SALE_FEE_PCT = 0.05;
 const MARKET_VIP_SALE_FEE_PCT = 0.03;
 const MARKET_TRADE_FEE_MIN = 1;
 const DOPAMINE_OFFER_LS = 'poxy_dopamine_offer';
+const REF_CODE_LS = 'poxy_pending_ref_code';
+const REF_BASE_URL = 'https://poxyworld.com/?ref=';
 const DOPAMINE_TIMER_MS = 10 * 60 * 1000;
 const DOPAMINE_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 const CRAFT_INHERIT_LS = 'poxy_craft_inherit_trait';
@@ -5253,6 +5265,13 @@ let spinAnim=null, particleLoop=null, particles=[];
 let selectedAvatar=AVATARS[0], marketTab='buy';
 let pendingListItem=null, pendingBuyItem=null;
 let playerEconomy=null;
+let referralInfo=null;
+(function captureRefFromUrl(){
+  try{
+    const ref=new URLSearchParams(location.search).get('ref');
+    if(ref)localStorage.setItem(REF_CODE_LS,String(ref).trim().toUpperCase());
+  }catch(e){console.warn('captureRefFromUrl:',e);}
+})();
 let _lastXpLevel=null;
 let _dopamineTimerIv=null;
 let pendingCraftTrait=null;
@@ -5369,6 +5388,77 @@ async function loadPlayerEconomy(){
     return null;
   }
 }
+async function loadReferralInfo(){
+  if(!currentUser)return null;
+  try{
+    const{data,error}=await sb.rpc('get_my_referral_info');
+    if(error)throw error;
+    if(data?.ok)referralInfo=data;
+    return data;
+  }catch(e){
+    console.error('loadReferralInfo:',e);
+    return null;
+  }
+}
+async function applyPendingReferral(){
+  if(!currentUser)return;
+  try{
+    const code=localStorage.getItem(REF_CODE_LS);
+    if(!code)return;
+    const{data,error}=await sb.rpc('apply_referral_code',{p_ref_code:code});
+    if(error)throw error;
+    if(data?.ok){
+      localStorage.removeItem(REF_CODE_LS);
+      if(currentProfile&&data.px_balance!=null)currentProfile.px_balance=data.px_balance;
+      showToast('Referral applied! +'+data.px_reward+' PX · +'+data.xp_reward+' XP');
+      await loadPlayerEconomy();
+      await loadReferralInfo();
+    }else if(data?.error==='ALREADY_REFERRED'||String(data?.error||'').includes('own')){
+      localStorage.removeItem(REF_CODE_LS);
+    }
+  }catch(e){console.warn('applyPendingReferral:',e);}
+}
+async function renderReferralPanel(){
+  const card=$('tumReferralCard');
+  if(!card)return;
+  if(!currentUser){card.hidden=true;return;}
+  card.hidden=false;
+  if(!referralInfo)await loadReferralInfo();
+  const info=referralInfo;
+  const codeEl=$('tumRefCode');
+  const totalEl=$('tumRefTotal');
+  const monthEl=$('tumRefMonth');
+  const commEl=$('tumRefComm');
+  const hintEl=$('tumRefHint');
+  if(codeEl)codeEl.textContent=info?.ref_code||'--------';
+  if(totalEl)totalEl.textContent=String(info?.total_referrals??0);
+  if(monthEl)monthEl.textContent=String(info?.month_referrals??0);
+  if(commEl)commEl.textContent=String(info?.total_commission_px??0);
+  if(hintEl){
+    hintEl.textContent=info?.referred_by
+      ?'Joined via '+info.referred_by+' · Friends get +50 PX & 500 XP'
+      :'Friends get +50 PX & 500 XP · You earn 20% first purchase, 5% lifetime.';
+  }
+  const leadersEl=$('tumRefLeaders');
+  if(leadersEl){
+    try{
+      const{data:lb}=await sb.rpc('get_referral_leaderboard',{p_limit:5});
+      const rows=lb?.leaders||[];
+      if(rows.length){
+        leadersEl.hidden=false;
+        leadersEl.innerHTML=rows.map((r,i)=>'<div class="tum-ref-leader-row"><span>#'+(i+1)+' '+escHtml(r.username||'Operative')+'</span><span>'+r.referral_count+' refs</span></div>').join('');
+      }else{leadersEl.hidden=true;leadersEl.innerHTML='';}
+    }catch(e){leadersEl.hidden=true;}
+  }
+}
+window.copyReferralLink=function(){
+  const code=referralInfo?.ref_code||$('tumRefCode')?.textContent;
+  if(!code||code==='--------'){showToast('Referral code loading…');return;}
+  const url=REF_BASE_URL+code;
+  if(navigator.clipboard?.writeText){
+    navigator.clipboard.writeText(url).then(()=>showToast('Referral link copied!')).catch(()=>showToast(url));
+  }else{showToast(url);}
+};
 function renderXpHud(){
   const hud=$('stXpHud');
   if(!hud||!currentUser)return;
@@ -6138,6 +6228,7 @@ function bootstrapAfterLogin(){
   return (async()=>{
     try{
       await loadProfile();
+      await applyPendingReferral();
       const dailyClaim=await claimDailyLoginOnce();
       if(dailyClaim)showDailyStreakModal(dailyClaim);
       await Promise.all([checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]);
@@ -8011,6 +8102,7 @@ window.openTopUpModal=function(){
   const el=$('tumBalanceDisplay');
   if(el)el.textContent=formatPX(getPxBalance());
   renderTopUpPaths();
+  renderReferralPanel();
   // Show DEV TOPUP panel for founder accounts
   renderDevTopupPanel();
   modal.hidden=false;
@@ -16234,6 +16326,18 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
       </div>
 
       <p class="tum-note">Poxy PX funds cases, marketplace trades, and premium terminal unlocks. Standard case costs 50 PX (£2.50).</p>
+      <div id="tumReferralCard" class="tum-ref-card" hidden>
+        <div class="tum-ref-eyebrow">REFERRAL PROTOCOL</div>
+        <div class="tum-ref-code" id="tumRefCode">--------</div>
+        <div class="tum-ref-stats">
+          <span class="tum-ref-stat">Refs <strong id="tumRefTotal">0</strong></span>
+          <span class="tum-ref-stat">Month <strong id="tumRefMonth">0</strong></span>
+          <span class="tum-ref-stat">Earned <strong id="tumRefComm">0</strong> PX</span>
+        </div>
+        <button type="button" class="tum-ref-copy" id="tumRefCopyBtn" onclick="copyReferralLink()">Copy referral link</button>
+        <p class="tum-ref-hint" id="tumRefHint">Friends get +50 PX &amp; 500 XP · You earn 20% first purchase, 5% lifetime.</p>
+        <div class="tum-ref-leaders" id="tumRefLeaders" hidden></div>
+      </div>
       <div id="tumDevTopupSlot" hidden></div>
     </div>
 

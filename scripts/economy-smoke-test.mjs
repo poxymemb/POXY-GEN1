@@ -25,6 +25,10 @@ const RPCS = [
   ['craft_upgrade', { p_user_id: FAKE_BUYER, p_poxy_ids: [], p_inherit_trait: null }, 'auth'],
   ['burn_poxy_pc', { p_poxy_id: FAKE_LISTING, p_user_id: FAKE_BUYER }, 'auth'],
   ['dev_topup', { p_amount: 50 }, 'auth'],
+  ['apply_referral_code', { p_ref_code: 'FAKECODE' }, 'auth'],
+  ['get_my_referral_info', {}, 'auth'],
+  ['get_referral_leaderboard', { p_limit: 5 }, 'public'],
+  ['topup_balance', { p_user_id: FAKE_BUYER, p_amount: 50 }, 'auth'],
 ];
 
 async function rpc(name, body) {
@@ -57,6 +61,8 @@ function evaluate(name, body, expect, r) {
   if (expect === 'invalid_item') return invalidItem && noConstraintBreach;
   if (expect === 'invalid_case') return invalidCase && noConstraintBreach;
   if (expect === 'min_price') return minPrice && noConstraintBreach;
+  const publicOk = expect === 'public' && r.status === 200 && (s.includes('"ok":true') || s.includes('"ok": true'));
+  if (expect === 'public') return publicOk && noConstraintBreach;
   return false;
 }
 
