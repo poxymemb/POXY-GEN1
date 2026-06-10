@@ -31,6 +31,10 @@ const RPCS = [
   ['topup_balance', { p_user_id: FAKE_BUYER, p_amount: 50 }, 'auth'],
   ['get_player_achievements', {}, 'auth'],
   ['evaluate_player_achievements', { p_user_id: FAKE_BUYER }, 'auth'],
+  ['get_poxy_pass_status', {}, 'auth'],
+  ['claim_poxy_pass_reward', { p_level: 1, p_track: 'free' }, 'auth'],
+  ['purchase_poxy_pass', {}, 'auth'],
+  ['dev_activate_poxy_pass', {}, 'auth'],
 ];
 
 async function rpc(name, body) {

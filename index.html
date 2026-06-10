@@ -277,6 +277,28 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .tum-ref-hint{font-size:9px;color:rgba(255,255,255,0.35);margin-top:8px;line-height:1.4}
 .tum-ref-leaders{margin-top:10px;font-size:9px;color:rgba(255,255,255,0.45);max-height:72px;overflow-y:auto}
 .tum-ref-leader-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.poxy-pass-panel{display:flex;flex-direction:column;gap:14px}
+.poxy-pass-hero{padding:16px;border-radius:16px;border:1px solid rgba(0,245,160,0.22);background:linear-gradient(135deg,rgba(0,245,160,0.06),rgba(124,58,237,0.1))}
+.poxy-pass-hero h3{margin:0 0 6px;font-size:16px;color:#fff}
+.poxy-pass-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:rgba(255,255,255,0.5)}
+.poxy-pass-meta strong{color:#00f5a0}
+.poxy-pass-bar{height:6px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-top:10px}
+.poxy-pass-bar-fill{height:100%;background:linear-gradient(90deg,#00f5a0,#7c3aed);border-radius:999px;transition:width 0.4s ease}
+.poxy-pass-buy{align-self:flex-start;padding:10px 14px;border-radius:10px;border:1px solid rgba(245,158,11,0.4);background:rgba(245,158,11,0.1);color:#f59e0b;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit}
+.poxy-pass-buy.is-active{border-color:rgba(0,245,160,0.35);background:rgba(0,245,160,0.08);color:#00f5a0;cursor:default}
+.poxy-pass-tracks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:520px){.poxy-pass-tracks{grid-template-columns:1fr}}
+.poxy-pass-track{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.poxy-pass-track--prem{border-color:rgba(245,158,11,0.25)}
+.poxy-pass-track-title{font-size:9px;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.45);margin-bottom:8px}
+.poxy-pass-tier{display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:10px}
+.poxy-pass-tier:last-child{border-bottom:none}
+.poxy-pass-lvl{font-family:var(--font-mono);font-weight:800;color:#fff}
+.poxy-pass-reward{color:rgba(255,255,255,0.55);line-height:1.3}
+.poxy-pass-claim{padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.4);font-size:9px;font-weight:700;cursor:default;font-family:inherit}
+.poxy-pass-claim.is-ready{border-color:rgba(0,245,160,0.4);background:rgba(0,245,160,0.1);color:#00f5a0;cursor:pointer}
+.poxy-pass-claim.is-claimed{opacity:0.5}
+.poxy-pass-claim.is-locked{opacity:0.35}
 .poxy-streak-panel{padding:16px}
 .poxy-streak-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .poxy-streak-days{font-size:22px;font-weight:800;color:#fff;font-family:var(--font-display)}
@@ -2722,6 +2744,9 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
           </button>
           <button type="button" class="poxy-store-nav-btn" id="storeNavXpShop" data-store-cat="xpshop" onclick="switchStoreCategory('xpshop')">
             <span class="material-symbols-outlined" aria-hidden="true">military_tech</span> XP Shop
+          </button>
+          <button type="button" class="poxy-store-nav-btn" id="storeNavPass" data-store-cat="poxypass" onclick="switchStoreCategory('poxypass')">
+            <span class="material-symbols-outlined" aria-hidden="true">confirmation_number</span> POXY PASS
           </button>
         </aside>
         <div class="poxy-store-main">
@@ -5271,6 +5296,7 @@ let selectedAvatar=AVATARS[0], marketTab='buy';
 let pendingListItem=null, pendingBuyItem=null;
 let playerEconomy=null;
 let playerAchievements=null;
+let poxyPassStatus=null;
 let referralInfo=null;
 (function captureRefFromUrl(){
   try{
@@ -15076,7 +15102,8 @@ const STORE_CAT_META={
   gradients:{title:'Signal gradients',sub:'Animated username overlays for your profile.',type:'gradient'},
   boosters:{title:'Active uplinks',sub:'Power-up modules — coming soon.',type:null},
   bundles:{title:'Asset bundles',sub:'Curated packs — coming soon.',type:null},
-  xpshop:{title:'XP Shop',sub:'Spend XP balance on cosmetics and free case tokens.',type:'xpshop'}
+  xpshop:{title:'XP Shop',sub:'Spend XP balance on cosmetics and free case tokens.',type:'xpshop'},
+  poxypass:{title:'POXY PASS',sub:'30-day season — free & premium reward tracks.',type:'poxypass'}
 };
 window.switchStoreCategory=function(cat){
   storeCategory=cat||'themes';
@@ -15120,6 +15147,8 @@ function renderStoreTerminal(){
     bal.innerHTML=pxTxt.replace(/\s*PX\s*$/i,'')+' <span>PX</span>';
     if(storeCategory==='xpshop'){
       bal.innerHTML=Number(xpBal).toLocaleString()+' <span>XP</span>';
+    }else if(storeCategory==='poxypass'&&poxyPassStatus?.ok){
+      bal.innerHTML='LVL '+poxyPassStatus.pass_level+' <span>PASS</span>';
     }
   }
   if(col)col.textContent=n+' item'+(n===1?'':'s');
@@ -15131,6 +15160,10 @@ function renderStoreGrid(){
   const meta=STORE_CAT_META[storeCategory]||STORE_CAT_META.themes;
   if(storeCategory==='xpshop'){
     renderXpShopGrid(grid);
+    return;
+  }
+  if(storeCategory==='poxypass'){
+    renderPoxyPassGrid(grid);
     return;
   }
   if(!meta.type){
@@ -15238,6 +15271,118 @@ function renderXpShopGrid(grid){
     grid.appendChild(card);
   });
 }
+async function loadPoxyPassStatus(){
+  if(!currentUser)return null;
+  try{
+    const{data,error}=await sb.rpc('get_poxy_pass_status');
+    if(error)throw error;
+    if(data?.ok)poxyPassStatus=data;
+    return data;
+  }catch(e){
+    console.error('loadPoxyPassStatus:',e);
+    return null;
+  }
+}
+function renderPoxyPassGrid(grid){
+  grid.innerHTML='<div class="poxy-store-signin">Loading POXY PASS…</div>';
+  loadPoxyPassStatus().then(st=>{
+    if(!st?.ok){grid.innerHTML='<div class="poxy-store-empty">'+(st?.error||'Pass unavailable')+'</div>';return;}
+    const pct=Math.max(0,Math.min(100,(parseFloat(st.pass_progress)||0)*100));
+    const panel=document.createElement('div');
+    panel.className='poxy-pass-panel';
+    const hero=document.createElement('div');
+    hero.className='poxy-pass-hero';
+    hero.innerHTML='<h3>'+escHtml(st.season_name||'Season Pass')+'</h3>'
+      +'<div class="poxy-pass-meta"><span><strong>'+st.pass_level+'</strong> / 50 LVL</span>'
+      +'<span><strong>'+Number(st.pass_xp||0).toLocaleString()+'</strong> Pass XP</span>'
+      +'<span><strong>'+(st.days_left??0)+'</strong> days left</span>'
+      +(st.premium_active?'<span>Premium · <strong>×'+st.xp_multiplier+'</strong> XP</span>':'<span>Free track only</span>')
+      +'</div><div class="poxy-pass-bar"><div class="poxy-pass-bar-fill" style="width:'+pct.toFixed(1)+'%"></div></div>';
+    panel.appendChild(hero);
+    if(!st.premium_active){
+      const buy=document.createElement('button');
+      buy.type='button';
+      buy.className='poxy-pass-buy';
+      buy.textContent='Unlock Premium — '+((st.premium_price_px)||200)+' PX (Stripe soon)';
+      buy.onclick=()=>purchasePoxyPass();
+      panel.appendChild(buy);
+    }else{
+      const active=document.createElement('div');
+      active.className='poxy-pass-buy is-active';
+      active.textContent='Premium active · ×1.5 XP';
+      panel.appendChild(active);
+    }
+    const tracks=document.createElement('div');
+    tracks.className='poxy-pass-tracks';
+    const freeCol=document.createElement('div');
+    freeCol.className='poxy-pass-track';
+    freeCol.innerHTML='<div class="poxy-pass-track-title">FREE TRACK</div>';
+    const premCol=document.createElement('div');
+    premCol.className='poxy-pass-track poxy-pass-track--prem';
+    premCol.innerHTML='<div class="poxy-pass-track-title">PREMIUM TRACK</div>';
+    (st.tiers||[]).forEach(t=>{
+      const fl=document.createElement('div');
+      fl.className='poxy-pass-tier';
+      const fBtn=document.createElement('button');
+      fBtn.type='button';
+      fBtn.className='poxy-pass-claim'+(t.free?.claimed?' is-claimed':t.free?.ready?' is-ready':'');
+      fBtn.textContent=t.free?.claimed?'Claimed':t.free?.ready?'Claim':'Locked';
+      fBtn.disabled=!t.free?.ready;
+      if(t.free?.ready)fBtn.onclick=()=>claimPoxyPassReward(t.level,'free');
+      fl.innerHTML='<span class="poxy-pass-lvl">'+t.level+'</span><span class="poxy-pass-reward">'+escHtml(t.free?.label||'')+'</span>';
+      fl.appendChild(fBtn);
+      freeCol.appendChild(fl);
+      const pl=document.createElement('div');
+      pl.className='poxy-pass-tier';
+      const pBtn=document.createElement('button');
+      pBtn.type='button';
+      const prem=t.premium||{};
+      pBtn.className='poxy-pass-claim'+(prem.claimed?' is-claimed':prem.ready?' is-ready':prem.locked?' is-locked':'');
+      pBtn.textContent=prem.claimed?'Claimed':prem.ready?'Claim':prem.locked?'Premium':'Locked';
+      pBtn.disabled=!prem.ready;
+      if(prem.ready)pBtn.onclick=()=>claimPoxyPassReward(t.level,'premium');
+      pl.innerHTML='<span class="poxy-pass-lvl">'+t.level+'</span><span class="poxy-pass-reward">'+escHtml(prem.label||'')+'</span>';
+      pl.appendChild(pBtn);
+      premCol.appendChild(pl);
+    });
+    tracks.appendChild(freeCol);
+    tracks.appendChild(premCol);
+    panel.appendChild(tracks);
+    grid.innerHTML='';
+    grid.appendChild(panel);
+    renderStoreTerminal();
+  });
+}
+window.claimPoxyPassReward=async function(level,track){
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('claim_poxy_pass_reward',{p_level:level,p_track:track});
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Claim failed');
+    if(data.px_balance!=null&&currentProfile)currentProfile.px_balance=data.px_balance;
+    updateBalanceBadge(getPxBalance());
+    await loadPlayerEconomy();
+    await loadCollection();
+    renderCaseWallet();
+    showToast('Pass reward claimed — LVL '+level+' '+track);
+    renderPoxyPassGrid($('storeGrid'));
+  }catch(e){logAndToast('pass-claim',e);}
+};
+window.purchasePoxyPass=async function(){
+  if(!currentUser)return;
+  const price=poxyPassStatus?.premium_price_px||200;
+  if(getPxBalance()<price){showToast('Need '+price+' PX');openTopUpModal();return;}
+  try{
+    const{data,error}=await sb.rpc('purchase_poxy_pass');
+    if(error)throw error;
+    if(!data?.ok)throw new Error(data.error||'Purchase failed');
+    if(data.px_balance!=null&&currentProfile)currentProfile.px_balance=data.px_balance;
+    updateBalanceBadge(getPxBalance());
+    showToast('Premium POXY PASS unlocked! ×1.5 XP all season');
+    renderPoxyPassGrid($('storeGrid'));
+    renderXpHud();
+  }catch(e){logAndToast('pass-purchase',e);}
+};
 window.purchaseXpShopItem=async function(itemId){
   const item=XP_SHOP_ITEMS.find(x=>x.id===itemId);
   if(!item||!currentUser)return;
