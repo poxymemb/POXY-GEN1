@@ -5376,39 +5376,70 @@ window.closeDailyStreakModal=function(){
   if(!$('topUpModal')||$('topUpModal').hidden)document.body.style.overflow='';
 };
 function canShowDopamineOffer(){
+  const d=playerEconomy?.dopamine;
+  if(d){
+    if(d.cooldown_until&&d.cooldown_until!=='null'){
+      const until=Date.parse(d.cooldown_until);
+      if(!isNaN(until)&&Date.now()<until)return false;
+    }
+    if(d.can_start===false)return false;
+    if(d.active)return true;
+    return d.can_start!==false;
+  }
   try{
     const raw=localStorage.getItem(DOPAMINE_OFFER_LS);
     if(!raw)return true;
-    const d=JSON.parse(raw);
-    if(d.cooldownUntil&&Date.now()<d.cooldownUntil)return false;
-    if(d.expiresAt&&Date.now()>d.expiresAt)return true;
-    return !d.claimed;
+    const ls=JSON.parse(raw);
+    if(ls.cooldownUntil&&Date.now()<ls.cooldownUntil)return false;
+    if(ls.expiresAt&&Date.now()>ls.expiresAt)return true;
+    return !ls.claimed;
   }catch(e){return true;}
 }
 function triggerDopamineOffer(reason){
   if(!canShowDopamineOffer())return;
   openDopamineOfferModal(reason);
 }
-function openDopamineOfferModal(reason){
+async function openDopamineOfferModal(reason){
   const modal=$('dopamineOfferModal');
   if(!modal)return;
-  const expiresAt=Date.now()+DOPAMINE_TIMER_MS;
+  let expiresAt=Date.now()+DOPAMINE_TIMER_MS;
+  try{
+    const{data,error}=await sb.rpc('start_dopamine_offer');
+    if(error)throw error;
+    if(data?.ok===false){
+      if((data.error||'').includes('COOLDOWN'))return;
+      console.error('start_dopamine_offer:',data.error);
+      return;
+    }
+    if(data?.expires_at)expiresAt=Date.parse(data.expires_at)||expiresAt;
+    await loadPlayerEconomy();
+  }catch(e){
+    console.error('openDopamineOfferModal:',e);
+    return;
+  }
   try{
     localStorage.setItem(DOPAMINE_OFFER_LS,JSON.stringify({reason,expiresAt,claimed:false,startedAt:Date.now()}));
   }catch(e){}
   modal.hidden=false;
-  updateDopamineTimer();
+  updateDopamineTimer(expiresAt);
   if(_dopamineTimerIv)clearInterval(_dopamineTimerIv);
-  _dopamineTimerIv=setInterval(updateDopamineTimer,1000);
+  _dopamineTimerIv=setInterval(()=>updateDopamineTimer(expiresAt),1000);
 }
-function updateDopamineTimer(){
+function updateDopamineTimer(fallbackExpiresAt){
   const el=$('dopamineTimerText');
   if(!el)return;
-  let expiresAt=Date.now()+DOPAMINE_TIMER_MS;
-  try{
-    const d=JSON.parse(localStorage.getItem(DOPAMINE_OFFER_LS)||'{}');
-    if(d.expiresAt)expiresAt=d.expiresAt;
-  }catch(e){}
+  let expiresAt=fallbackExpiresAt||Date.now()+DOPAMINE_TIMER_MS;
+  const d=playerEconomy?.dopamine;
+  if(d?.expires_at&&d.expires_at!=='null'){
+    const parsed=Date.parse(d.expires_at);
+    if(!isNaN(parsed))expiresAt=parsed;
+  }
+  if(!expiresAt){
+    try{
+      const ls=JSON.parse(localStorage.getItem(DOPAMINE_OFFER_LS)||'{}');
+      if(ls.expiresAt)expiresAt=ls.expiresAt;
+    }catch(e){}
+  }
   const rem=Math.max(0,expiresAt-Date.now());
   const m=Math.floor(rem/60000);
   const s=Math.floor((rem%60000)/1000);
@@ -5436,13 +5467,10 @@ window.claimDopamineOffer=async function(){
     openTopUpModal();
     return;
   }
-  try{
-    localStorage.setItem(DOPAMINE_OFFER_LS,JSON.stringify({cooldownUntil:Date.now()+DOPAMINE_COOLDOWN_MS,claimed:true}));
-  }catch(e){}
   closeDopamineOfferModal(false);
   showStitchTab('dashboard');
-  showToast('Flash deal — opening standard case!');
-  setTimeout(()=>{$('btnOpen')?.click();},400);
+  showToast('Flash deal — opening standard case at 25 PX!');
+  await runStandardCaseOpen({dopamine:true});
 };
 function pxFromCustomGbp(gbp){
   const tier=PX_CUSTOM_TIERS.find(t=>gbp>=t.minGbp&&gbp<=t.maxGbp)||PX_CUSTOM_TIERS[PX_CUSTOM_TIERS.length-1];
@@ -9692,35 +9720,34 @@ function resetAll(){
   const huntProofBtn=$('btnHuntProof');if(huntProofBtn)huntProofBtn.hidden=true;
   busy=false;currentTier=null;currentSerial=null;currentPoxyId=null;currentRoundId=null;currentClientSeed=null;clearBg();
 }
-$('btnOpen').addEventListener('click',async function(){
-  if(busy||!currentUser)return;
+async function runStandardCaseOpen(opts){
+  const dopamine=!!opts?.dopamine;
+  const price=dopamine?DOPAMINE_CASE_PRICE:STANDARD_CASE_PRICE;
+  const rpcName=dopamine?'open_dopamine_standard_case_v3':'open_standard_case_v3';
+  if(busy||!currentUser)return false;
   const bal=getPxBalance();
-  if(bal<STANDARD_CASE_PRICE){showToast('Insufficient PX. Add funds via Treasury.');openTopUpModal();return;}
+  if(bal<price){
+    showToast('Insufficient PX. Add funds via Treasury.');
+    openTopUpModal();
+    return false;
+  }
   busy=true;$('btnOpen').disabled=true;
   $('idleBox').style.opacity='0';
   try{
-    // ── Phase 1: Server commits to a seed (proves it cannot change outcome) ──
     const{data:commitData,error:commitErr}=await sb.functions.invoke('rng_commit',{
       body:{envelope:poxyEnvelope('rng_commit')}
     });
     if(commitErr||!commitData?.ok)throw new Error(edgeFnError(commitErr,commitData,'RNG commit failed'));
     const round_id=commitData.round_id;
-
-    // ── Phase 2: Client generates entropy (player's contribution) ──
     const client_seed=await generateClientSeed();
     currentClientSeed=client_seed;
-
-    // ── Phase 3: Reveal — result = SHA256(server_seed + client_seed + nonce) ──
     const{data:revealData,error:revealErr}=await sb.functions.invoke('rng_reveal',{
       body:{round_id,client_seed,nonce:0}
     });
     if(revealErr||!revealData?.ok)throw new Error(edgeFnError(revealErr,revealData,'RNG reveal failed'));
-
-    // ── Phase 4: Open case — atomic debit + deterministic tier from result_hash ──
-    const{data:rpcResult,error:rpcErr}=await sb.rpc('open_standard_case_v3',{p_round_id:round_id});
+    const{data:rpcResult,error:rpcErr}=await sb.rpc(rpcName,{p_round_id:round_id});
     if(rpcErr)throw rpcErr;
     if(rpcResult?.ok===false)throw new Error(rpcResult.error||'Case open failed');
-
     currentRoundId=round_id;
     currentPoxyId=rpcResult.poxy_id;
     currentSerial=rpcResult.serial;
@@ -9730,21 +9757,24 @@ $('btnOpen').addEventListener('click',async function(){
       updateBalanceBadge(getPxBalance());
     }
     await loadPlayerEconomy();
-    // Drive animation with server-determined tier (beginRound hooks inside runRouletteCarousel)
     pendingSpinTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
     runRouletteCarousel(pendingSpinTier);
-    // Auto-anchor — pass game serial + RNG result_hash so crypto identity matches gameplay
     cryptoMint(rpcResult.poxy_id,rpcResult.tier,'standard',{
       serial:rpcResult.serial,
       resultHash:revealData?.result||rpcResult.result_hash
     }).catch(()=>{});
+    bumpQuest('open_3_cases',1);
+    return true;
   }catch(e){
     showToast(e.message||'Case open failed. Try again.');
     busy=false;$('btnOpen').disabled=false;
     $('idleBox').style.opacity='1';
-    return;
+    return false;
   }
-  bumpQuest('open_3_cases',1);
+}
+$('btnOpen').addEventListener('click',async function(){
+  if(busy||!currentUser)return;
+  await runStandardCaseOpen({dopamine:false});
 });
 const stWinAdd=$('stWinAdd');
 const stWinDiscard=$('stWinDiscard');
