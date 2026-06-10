@@ -701,6 +701,11 @@ canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-e
 .box.spin-rapid,.box.spin-white{will-change:transform,opacity,background,border-color}
 .reward-box.reveal-common,.reward-box.reveal-uncommon{animation:revealFadeSoft 0.55s ease-out forwards,floatUp 2.5s ease-in-out 0.55s infinite}
 .reward-box.reveal-rare,.reward-box.reveal-epic{animation:revealPunch 0.4s cubic-bezier(0.25,1,0.5,1) forwards,revealGlowPulse 1.2s ease-in-out 0.4s infinite,floatUp 2.5s ease-in-out 0.4s infinite}
+.reward-box.reveal-epic.ach-epic-fx{animation:revealPunch 0.4s cubic-bezier(0.25,1,0.5,1) forwards,revealGlowPulse 0.8s ease-in-out 0.4s infinite,floatUp 2.5s ease-in-out 0.4s infinite,achEpicRing 2s ease-in-out 0.5s infinite}
+@keyframes achEpicRing{0%,100%{box-shadow:0 0 0 2px var(--poxy-glow,#a855f7),0 0 48px var(--rg,rgba(168,85,247,0.4))}50%{box-shadow:0 0 0 4px var(--poxy-glow,#a855f7),0 0 72px var(--rg,rgba(168,85,247,0.65))}}
+.poxy-milestones-panel.ach-gold-frame{border-color:rgba(245,158,11,0.35);box-shadow:0 0 24px rgba(245,158,11,0.12)}
+.idhub-page.ach-platinum-bg::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(148,163,184,0.04),rgba(99,102,241,0.06),rgba(148,163,184,0.04));background-size:200% 200%;animation:achPlatinumShift 8s ease-in-out infinite;z-index:0}
+@keyframes achPlatinumShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .reward-box.reveal-legendary,.reward-box.reveal-mythic{animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards}
 
 /* ── CTA ── */
@@ -3082,10 +3087,10 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         <div class="idhub-badge-list" id="badgeList"><span class="idhub-badge-empty">No badges yet.</span></div>
       </div>
     </section>
-    <section class="idhub-panel poxy-milestones-panel" id="profileMilestonesSection" aria-label="Collection milestones">
+    <section class="idhub-panel poxy-milestones-panel" id="profileMilestonesSection" aria-label="Achievements">
       <div class="idhub-panel-head">
-        <h2 class="idhub-panel-title">MILESTONES</h2>
-        <span class="idhub-panel-meta" id="milestonesCount">0 / 10</span>
+        <h2 class="idhub-panel-title">ACHIEVEMENTS</h2>
+        <span class="idhub-panel-meta" id="milestonesCount">0 / 14</span>
       </div>
       <div class="poxy-milestones-grid" id="profileMilestonesGrid"></div>
     </section>
@@ -5265,6 +5270,7 @@ let spinAnim=null, particleLoop=null, particles=[];
 let selectedAvatar=AVATARS[0], marketTab='buy';
 let pendingListItem=null, pendingBuyItem=null;
 let playerEconomy=null;
+let playerAchievements=null;
 let referralInfo=null;
 (function captureRefFromUrl(){
   try{
@@ -6229,6 +6235,7 @@ function bootstrapAfterLogin(){
     try{
       await loadProfile();
       await applyPendingReferral();
+      await loadPlayerAchievements();
       const dailyClaim=await claimDailyLoginOnce();
       if(dailyClaim)showDailyStreakModal(dailyClaim);
       await Promise.all([checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]);
@@ -6664,76 +6671,37 @@ function renderProfilePage(){
   renderMilestones();
 }
 
-const MILESTONE_DEFS=[
-  {id:'collector',name:'Collector',icon:'🎯',goal:1,metric:'total'},
-  {id:'apprentice',name:'Apprentice',icon:'📦',goal:10,metric:'total'},
-  {id:'archivist',name:'Archivist',icon:'🗄️',goal:25,metric:'total'},
-  {id:'curator',name:'Curator',icon:'🏛️',goal:50,metric:'total'},
-  {id:'jade_keeper',name:'Jade Keeper',icon:'🟢',goal:3,metric:'rare'},
-  {id:'storm_chaser',name:'Storm Chaser',icon:'⚡',goal:1,metric:'epic'},
-  {id:'legend_holder',name:'Legend Holder',icon:'👑',goal:1,metric:'legendary'},
-  {id:'mythic_bound',name:'Mythic Bound',icon:'🏮',goal:1,metric:'mythic'},
-  {id:'completionist',name:'Completionist',icon:'🧩',goal:6,metric:'types'},
-  {id:'founder',name:'Founder',icon:'🏆',goal:1,metric:'founder'}
-];
-const MILESTONE_LS_KEY='poxy_unlocked_milestones';
 async function renderMilestones(){
   const grid=$('profileMilestonesGrid');
   if(!grid||!currentUser)return;
-  let rows=[];
-  try{const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);rows=data||[];}catch(e){return;}
-  const counts={common:0,uncommon:0,rare:0,epic:0,legendary:0,mythic:0};
-  rows.forEach(r=>{const t=(r.poxy_tier||'').toLowerCase();if(counts[t]!==undefined)counts[t]++;});
-  const total=rows.length;
-  const baseTypes=['common','uncommon','rare','epic','legendary','mythic'];
-  const typesCollected=baseTypes.filter(t=>counts[t]>0).length;
-  const metricVal=(m)=>{
-    if(m==='total')return total;
-    if(m==='rare')return counts.rare;
-    if(m==='epic')return counts.epic;
-    if(m==='legendary')return counts.legendary;
-    if(m==='mythic')return counts.mythic;
-    if(m==='types')return typesCollected;
-    if(m==='founder')return (typeof isFounder==='function'&&isFounder())?1:0;
-    return 0;
-  };
-  let prev=[];
-  try{prev=JSON.parse(localStorage.getItem(MILESTONE_LS_KEY)||'[]');if(!Array.isArray(prev))prev=[];}catch(e){prev=[];}
+  if(!playerAchievements?.items){
+    grid.innerHTML='<p class="idhub-directive-loading">Loading achievements…</p>';
+    await loadPlayerAchievements();
+    if(!playerAchievements?.items){grid.innerHTML='<p class="idhub-directive-empty">Achievements unavailable.</p>';return;}
+  }
+  const items=playerAchievements.items||[];
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tierColor={epic:'#a855f7',legendary:'#f59e0b',mythic:'#ec4899',cases:'#00f5a0',crafts:'#3b82f6',set_common:'#22c55e',set_rare:'#3b82f6',set_epic:'#a855f7'};
   grid.innerHTML='';
-  const nowUnlocked=[];
-  const newlyUnlocked=[];
-  MILESTONE_DEFS.forEach((m,i)=>{
-    const val=metricVal(m.metric);
-    const done=val>=m.goal;
-    if(done)nowUnlocked.push(m.id);
-    const isNew=done&&!prev.includes(m.id);
-    if(isNew)newlyUnlocked.push(m);
-    const tierForColor={jade_keeper:'rare',storm_chaser:'epic',legend_holder:'legendary',mythic_bound:'mythic'}[m.id]||'legendary';
-    const color=(RARITY_TIER_META[tierForColor]||{}).accent||'#f59e0b';
+  let unlocked=0;
+  items.forEach((m,i)=>{
+    const done=!!m.unlocked;
+    if(done)unlocked++;
+    const color=tierColor[m.metric]||'#f59e0b';
     const el=document.createElement('div');
-    el.className='milestone-badge '+(done?'milestone-badge--done':'milestone-badge--locked')+(isNew&&!reduce?' milestone-badge--flash':'');
+    el.className='milestone-badge '+(done?'milestone-badge--done':'milestone-badge--locked');
     el.style.setProperty('--ms-color',color);
-    if(!reduce)el.style.animationDelay=(i*80)+'ms';
+    if(!reduce)el.style.animationDelay=(i*60)+'ms';
+    const prog=Math.min(Number(m.progress)||0,Number(m.goal)||1);
     el.innerHTML=
-      '<span class="milestone-icon">'+m.icon+'</span>'+
-      '<span class="milestone-name">'+sanitizeText(m.name)+'</span>'+
-      (done?'':'<span class="milestone-progress">'+Math.min(val,m.goal)+' / '+m.goal+'</span>');
+      '<span class="milestone-icon">'+(m.icon||'🏆')+'</span>'+
+      '<span class="milestone-name">'+sanitizeText(m.name||m.key)+'</span>'+
+      (done?('<span class="milestone-progress">'+sanitizeText(m.reward||'Unlocked')+'</span>'):('<span class="milestone-progress">'+prog+' / '+m.goal+'</span>'));
     grid.appendChild(el);
   });
   const cntEl=$('milestonesCount');
-  if(cntEl)cntEl.textContent=nowUnlocked.length+' / '+MILESTONE_DEFS.length;
-  try{localStorage.setItem(MILESTONE_LS_KEY,JSON.stringify(nowUnlocked));}catch(e){}
-  if(newlyUnlocked.length)newlyUnlocked.forEach((m,i)=>setTimeout(()=>_showMilestoneToast(m.name),600+i*400));
-}
-function _showMilestoneToast(name){
-  let wrap=document.querySelector('.poxy-ms-toast-wrap');
-  if(!wrap){wrap=document.createElement('div');wrap.className='poxy-ms-toast-wrap';document.body.appendChild(wrap);}
-  const t=document.createElement('div');
-  t.className='poxy-ms-toast';
-  t.textContent='🏆 Milestone Unlocked: '+name;
-  wrap.appendChild(t);
-  setTimeout(()=>t.remove(),3200);
+  if(cntEl)cntEl.textContent=unlocked+' / '+items.length;
+  applyAchievementCosmetics();
 }
 
 async function fetchMyEcosystemRank(){
@@ -6788,12 +6756,30 @@ const PROFILE_BADGE_DEFS={
   founder:{label:'FOUNDER',icon:'token',perk:'LIFETIME ACCESS',accent:true},
   developer:{label:'CORE DEV',icon:'terminal',perk:'SDK PERMISSIONS',accent:false},
   vip_club:{label:'CLUB ENTRY',icon:'meeting_room',perk:'ALPHA ACCESS',accent:false},
+  awakened:{label:'AWAKENED',icon:'auto_awesome',perk:'FIRST DRAGON',accent:true},
+  diamond_hunter:{label:'DIAMOND',icon:'diamond',perk:'1000 CASES',accent:true},
+  platinum_hunter:{label:'PLATINUM',icon:'workspace_premium',perk:'500 CASES',accent:false},
+  gold_hunter:{label:'GOLD HUNTER',icon:'emoji_events',perk:'100 CASES',accent:false},
+  silver_hunter:{label:'SILVER HUNTER',icon:'military_tech',perk:'50 CASES',accent:false},
+  bronze_hunter:{label:'BRONZE HUNTER',icon:'military_tech',perk:'10 CASES',accent:false},
+  collector:{label:'COLLECTOR',icon:'collections_bookmark',perk:'COMMON SET',accent:false},
+  alchemist:{label:'ALCHEMIST',icon:'science',perk:'FIRST CRAFT',accent:false},
   market_baron:{label:'MARKET BARON',icon:'payments',perk:'TRADING PERKS',accent:false},
   first_drop_set:{label:'FIRST DROP',icon:'check_circle',perk:'COLLECTION SET',accent:false},
   early_adopter:{label:'EARLY ADOPTER',icon:'rocket_launch',perk:'BETA ACCESS',accent:false},
   bug_hunter:{label:'BUG HUNTER',icon:'bug_report',perk:'REPORTER PERKS',accent:false}
 };
-const PROFILE_BADGE_ORDER=['founder','developer','vip_club','market_baron','first_drop_set','early_adopter','bug_hunter'];
+const PROFILE_BADGE_ORDER=['founder','developer','diamond_hunter','platinum_hunter','gold_hunter','awakened','vip_club','collector','alchemist','silver_hunter','bronze_hunter','market_baron','first_drop_set','early_adopter','bug_hunter'];
+const ACHIEVEMENT_COS_BADGES={
+  badge_awakened:'awakened',badge_bronze_hunter:'bronze_hunter',badge_silver_hunter:'silver_hunter',
+  badge_gold_hunter:'gold_hunter',badge_platinum_hunter:'platinum_hunter',badge_diamond_hunter:'diamond_hunter',
+  badge_collector:'collector',badge_alchemist:'alchemist'
+};
+const ACHIEVEMENT_NAMES={
+  first_dragon:'First Dragon',first_epic:'First Epic Drop',first_legendary:'First Legendary',first_mythic:'First Mythic',
+  cases_10:'Bronze Hunter',cases_50:'Silver Hunter',cases_100:'Gold Hunter',cases_500:'Platinum Hunter',cases_1000:'Diamond Hunter',
+  set_common:'Common Set',set_rare:'Rare Set',set_epic:'Epic Set',first_craft:'First Craft',craft_master_10:'Master Alchemist'
+};
 
 function tierGlowMeta(tierId){
   const t=TIERS.find(x=>x.id===tierId)||TIERS[0];
@@ -7027,7 +7013,47 @@ async function collectProfileBadges(){
   if(tierSet.has('mythic'))badges.add('founder');
   if(isClubMember())badges.add('vip_club');
   if(currentProfile?.is_verified_employee)badges.add('developer');
+  const cos=playerAchievements?.cosmetics||{};
+  Object.keys(ACHIEVEMENT_COS_BADGES).forEach(k=>{if(cos[k])badges.add(ACHIEVEMENT_COS_BADGES[k]);});
   return [...badges];
+}
+function applyAchievementCosmetics(){
+  const cos=playerAchievements?.cosmetics||{};
+  const panel=$('profileMilestonesSection');
+  const page=$('profilePage');
+  if(panel)panel.classList.toggle('ach-gold-frame',!!cos.gold_hunter_frame);
+  if(page)page.classList.toggle('ach-platinum-bg',!!cos.platinum_animated_bg);
+}
+async function loadPlayerAchievements(){
+  if(!currentUser)return null;
+  try{
+    const{data,error}=await sb.rpc('get_player_achievements');
+    if(error)throw error;
+    if(!data?.ok)return null;
+    const news=(data.new_unlocks||[]).filter(Boolean);
+    playerAchievements=data;
+    applyAchievementCosmetics();
+    if(news.length){
+      news.forEach((k,i)=>setTimeout(()=>_showAchievementToast(k),500+i*350));
+      await loadPlayerEconomy();
+      renderBadgeWallet();
+    }
+    if($('profileMilestonesGrid'))renderMilestones();
+    return data;
+  }catch(e){
+    console.error('loadPlayerAchievements:',e);
+    return null;
+  }
+}
+function _showAchievementToast(key){
+  const name=ACHIEVEMENT_NAMES[key]||key;
+  let wrap=document.querySelector('.poxy-ms-toast-wrap');
+  if(!wrap){wrap=document.createElement('div');wrap.className='poxy-ms-toast-wrap';document.body.appendChild(wrap);}
+  const t=document.createElement('div');
+  t.className='poxy-ms-toast';
+  t.textContent='🏆 Achievement: '+name;
+  wrap.appendChild(t);
+  setTimeout(()=>t.remove(),3200);
 }
 
 function toggleBadgeExpand(badgeId){
@@ -9964,7 +9990,8 @@ function showReward(tier,fromModal){
   $('rewardLabel').textContent=currentTier.label;$('rewardLabel').style.color=currentTier.color;
   $('rewardSerial').textContent=currentSerial;
   const rb=$('rewardBox');const aura=$('rewardAura');
-  rb.className='reward-box gpu-accel reveal-'+tid+' poxy-drop-reveal';
+  const epicFx=!!(playerAchievements?.cosmetics?.epic_drop_anim)&&tid==='epic';
+  rb.className='reward-box gpu-accel reveal-'+tid+' poxy-drop-reveal'+(epicFx?' ach-epic-fx':'');
   rb.style.setProperty('--rg',currentTier.glow);
   rb.style.setProperty('--poxy-glow',currentTier.color);
   rb.style.borderColor=currentTier.color;
@@ -10055,6 +10082,7 @@ async function runCaseOpen(opts){
       updateBalanceBadge(getPxBalance());
     }
     await loadPlayerEconomy();
+    await loadPlayerAchievements();
     pendingSpinTier=TIER_BY_ID[rpcResult.tier]||TIERS[0];
     runRouletteCarousel(pendingSpinTier);
     const mintOrigin=rpcResult.case_type||caseType||'standard';
@@ -15857,6 +15885,7 @@ async function performCraft(inheritTrait,forcedIds){
     resetCraftSockets(false);
     setColCraftZoneOpen(false);
     await loadCollection();
+    await loadPlayerAchievements();
     closeCraftModal();
   }catch(e){showToast('Craft failed: '+(e.message||'error'));}
   if(btn){btn.disabled=false;btn.classList.remove('is-ignited');btn.textContent='CRAFT';}

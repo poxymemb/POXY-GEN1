@@ -29,6 +29,8 @@ const RPCS = [
   ['get_my_referral_info', {}, 'auth'],
   ['get_referral_leaderboard', { p_limit: 5 }, 'public'],
   ['topup_balance', { p_user_id: FAKE_BUYER, p_amount: 50 }, 'auth'],
+  ['get_player_achievements', {}, 'auth'],
+  ['evaluate_player_achievements', { p_user_id: FAKE_BUYER }, 'auth'],
 ];
 
 async function rpc(name, body) {
