@@ -18,6 +18,9 @@ const RPCS = [
   ['open_premium_case_v3', { p_round_id: FAKE_ROUND, p_case_type: 'invalid', p_use_token: false }, 'invalid_case'],
   ['purchase_xp_shop_item', { p_item_id: 'xp_badge_elite' }, 'auth'],
   ['purchase_xp_shop_item', { p_item_id: 'invalid_item' }, 'invalid_item'],
+  ['list_poxy_marketplace', { p_poxy_id: FAKE_LISTING, p_price: 10 }, 'auth'],
+  ['list_poxy_marketplace', { p_poxy_id: FAKE_LISTING, p_price: 3 }, 'min_price'],
+  ['cancel_marketplace_listing', { p_listing_id: FAKE_LISTING }, 'auth'],
   ['purchase_poxy', { p_listing_id: FAKE_LISTING, p_buyer_id: FAKE_BUYER }, 'auth_or_forbidden'],
   ['craft_upgrade', { p_user_id: FAKE_BUYER, p_poxy_ids: [], p_inherit_trait: null }, 'auth'],
   ['burn_poxy_pc', { p_poxy_id: FAKE_LISTING, p_user_id: FAKE_BUYER }, 'auth'],
@@ -47,11 +50,13 @@ function evaluate(name, body, expect, r) {
     (r.status === 400 && (name === 'get_player_economy' || name === 'claim_daily_login' || name === 'start_dopamine_offer'));
   const invalidItem = expect === 'invalid_item' && (s.includes('Unknown') || s.includes('Not authenticated'));
   const invalidCase = expect === 'invalid_case' && (s.includes('Invalid case type') || s.includes('Not authenticated'));
+  const minPrice = expect === 'min_price' && (s.includes('Minimum listing price') || s.includes('Not authenticated') || s.includes('not authenticated'));
   const noConstraintBreach = !s.includes('violates check constraint');
   if (expect === 'auth') return (r.status === 200 || r.status === 400) && authHit && noConstraintBreach;
   if (expect === 'auth_or_forbidden') return (r.status === 200 || r.status === 400) && authHit && noConstraintBreach;
   if (expect === 'invalid_item') return invalidItem && noConstraintBreach;
   if (expect === 'invalid_case') return invalidCase && noConstraintBreach;
+  if (expect === 'min_price') return minPrice && noConstraintBreach;
   return false;
 }
 

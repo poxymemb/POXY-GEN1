@@ -4674,7 +4674,7 @@ Verification (anyone can do this):
   <div class="modal-card">
     <div class="modal-title" id="modalTitle">List POXY for sale</div>
     <div class="modal-sub" id="modalSub">Set your price in PX</div>
-    <input class="modal-input" type="number" id="modalPrice" placeholder="1" min="0.01" step="0.01">
+    <input class="modal-input" type="number" id="modalPrice" placeholder="5" min="5" step="1">
     <div class="modal-btns">
       <button class="btn-modal-ok" id="modalOk">List Now</button>
       <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
@@ -4999,6 +4999,12 @@ const PREMIUM_CASES = [
   {id:'legend',  label:'Legend Case',  price:LEGEND_CASE_PRICE,  icon:'🌟', gbp:'75.00'}
 ];
 const DOPAMINE_CASE_PRICE = 25;
+const MARKET_LISTING_FEE = 2;
+const MARKET_CANCEL_FEE = 1;
+const MARKET_MIN_PRICE = 5;
+const MARKET_SALE_FEE_PCT = 0.05;
+const MARKET_VIP_SALE_FEE_PCT = 0.03;
+const MARKET_TRADE_FEE_MIN = 1;
 const DOPAMINE_OFFER_LS = 'poxy_dopamine_offer';
 const DOPAMINE_TIMER_MS = 10 * 60 * 1000;
 const DOPAMINE_COOLDOWN_MS = 24 * 60 * 60 * 1000;
@@ -11486,9 +11492,15 @@ window.respondTradeOffer=async function(offerId,accept){
     if(accept){
       try{
         const cr=await cryptoTransferTradesForOffer(data,offerId);
+        const feeNote=data.trade_fee!=null?' Trade fee: '+data.trade_fee+' PX.':'';
         showToast(cr.anchored>0
-          ?'Trade accepted — '+cr.anchored+' item(s) transferred and anchored.'
-          :'Trade accepted — items transferred.');
+          ?'Trade accepted — '+cr.anchored+' item(s) transferred and anchored.'+feeNote
+          :'Trade accepted — items transferred.'+feeNote);
+        if(data.trade_fee!=null&&currentProfile){
+          if(data.px_balance!=null)currentProfile.px_balance=data.px_balance;
+          updateBalanceBadge(getPxBalance());
+          await loadPlayerEconomy();
+        }
       }catch(cryptoErr){
         logAndToast('trade-crypto',cryptoErr);
         showToast('Trade completed but crypto anchoring failed: '+(cryptoErr?.message||'unknown'));
@@ -12586,9 +12598,17 @@ async function loadMarket(){
           onCancel:item.status==='active'?async function(){
             if(!isUuid(item.id)){logAndToast('market-cancel',new Error('listing id not UUID — refresh + run migration_uuid_fix.sql'));return;}
             try{
-              const{error:err}=await sb.from('marketplace').update({status:'cancelled'}).eq('id',item.id);
+              if(getPxBalance()<MARKET_CANCEL_FEE){showToast('Need '+MARKET_CANCEL_FEE+' PX to cancel listing.');openTopUpModal();return;}
+              const{data,error:err}=await sb.rpc('cancel_marketplace_listing',{p_listing_id:item.id});
               if(err)throw err;
-              showToast('Listing cancelled.');
+              if(!data?.ok)throw new Error(data.error||'Cancel failed');
+              if(currentProfile){
+                if(data.balance!=null)currentProfile.balance=data.balance;
+                if(data.px_balance!=null)currentProfile.px_balance=data.px_balance;
+                updateBalanceBadge(getPxBalance());
+              }
+              showToast('Listing cancelled (−'+MARKET_CANCEL_FEE+' PX fee).');
+              await loadPlayerEconomy();
               loadMarket();
             }catch(e){logAndToast('market-cancel',e);}
           }:null
@@ -12601,14 +12621,17 @@ async function loadMarket(){
 function openPriceModal(){
   const o=$('priceModal');
   $('modalTitle').textContent='List POXY for sale';
-  $('modalSub').textContent=(pendingListItem.tier?.label||'')+' · '+(pendingListItem.serial||'');
+  $('modalSub').textContent=(pendingListItem.tier?.label||'')+' · '+(pendingListItem.serial||'')
+    +' · Min '+MARKET_MIN_PRICE+' PX · Listing fee '+MARKET_LISTING_FEE+' PX';
   $('modalPrice').value='';
+  $('modalPrice').min=MARKET_MIN_PRICE;
   o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
 }
 window.closeModal=function(){const o=$('priceModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingListItem=null;};
 $('modalOk').addEventListener('click',async function(){
   const price=parseFloat($('modalPrice').value);
-  if(!price||price<=0){showToast('Enter a valid price.');return;}
+  if(!price||price<MARKET_MIN_PRICE){showToast('Minimum listing price is '+MARKET_MIN_PRICE+' PX.');return;}
+  if(getPxBalance()<MARKET_LISTING_FEE){showToast('Need '+MARKET_LISTING_FEE+' PX listing fee.');openTopUpModal();return;}
   const btn=$('modalOk');btn.disabled=true;
   try{
     let poxyId=pendingListItem.poxyId;
@@ -12617,9 +12640,15 @@ $('modalOk').addEventListener('click',async function(){
       if(error)throw error;poxyId=data.id;
     }
     if(!isUuid(poxyId))throw new Error('poxy id not UUID — refresh page');
-    const{error}=await sb.from('marketplace').insert({poxy_id:poxyId,seller_id:currentUser.id,price});
+    const{data,error}=await sb.rpc('list_poxy_marketplace',{p_poxy_id:poxyId,p_price:price});
     if(error)throw error;
-    showToast('Listed! +5 XP');closeModal();bumpQuest('list_1_market',1);
+    if(!data?.ok)throw new Error(data.error||'Listing failed');
+    if(currentProfile){
+      if(data.balance!=null)currentProfile.balance=data.balance;
+      if(data.px_balance!=null)currentProfile.px_balance=data.px_balance;
+      updateBalanceBadge(getPxBalance());
+    }
+    showToast('Listed! −'+MARKET_LISTING_FEE+' PX fee · +5 XP');closeModal();bumpQuest('list_1_market',1);
     await loadPlayerEconomy();
     if(pendingListItem&&pendingListItem.fromHunt)resetAll();
   }catch(e){logAndToast('list-market',e);}
@@ -12629,7 +12658,8 @@ function openBuyModal(tierLabel,price){
   const o=$('buyModal');
   let extra='';
   if(pendingBuyItem&&pendingBuyItem.vipLocked)extra=' This is a VIP-locked item — you can purchase it, but core VIP visuals unlock only with Club membership.';
-  $('buyModalSub').textContent='Buy '+tierLabel+' for '+formatPX(price)+'? Your balance: '+formatPX(getPxBalance())+extra;
+  const feePct=(Math.round(MARKET_SALE_FEE_PCT*100))+'%';
+  $('buyModalSub').textContent='Buy '+tierLabel+' for '+formatPX(price)+'? Seller pays '+feePct+' sale fee (3% VIP). Your balance: '+formatPX(getPxBalance())+extra;
   o.classList.remove('hidden');requestAnimationFrame(()=>o.classList.add('show'));
 }
 window.closeBuyModal=function(){const o=$('buyModal');o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);pendingBuyItem=null;};
@@ -12641,10 +12671,15 @@ $('buyModalOk').addEventListener('click',async function(){
     const{data,error}=await sb.rpc('purchase_poxy',{p_listing_id:pendingBuyItem.listingId,p_buyer_id:currentUser.id});
     if(error)throw error;
     if(!data.ok)throw new Error(data.error);
-    if(currentProfile)currentProfile.balance=(currentProfile.balance||0)-parseFloat(pendingBuyItem.price);
+    if(currentProfile){
+      if(data.buyer_balance!=null)currentProfile.balance=data.buyer_balance;
+      else currentProfile.balance=(currentProfile.balance||0)-parseFloat(pendingBuyItem.price);
+      if(data.buyer_px_balance!=null)currentProfile.px_balance=data.buyer_px_balance;
+    }
     updateBalanceBadge(getPxBalance());
     await loadPlayerEconomy();
-    showToast('Purchased! Check your collection.');
+    const feeNote=data.sale_fee!=null?' (seller fee '+data.sale_fee+' PX)':'';
+    showToast('Purchased!'+feeNote+' Check your collection.');
     closeBuyModal();loadMarket();
     // Ledger transfer event — non-blocking
     if(data.asset_id){
