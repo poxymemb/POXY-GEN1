@@ -45,7 +45,24 @@
   else stripThemeToggle();
 })();
 </script>
-<title>POXY WORLD</title>
+<title>POXY WORLD — Cryptographic Dragon Collectibles</title>
+<meta name="description" content="Collect unique cryptographic dragons with provably fair drops. 5,000 Gen 1 dragons. Each one mathematically unique.">
+<meta name="keywords" content="poxy world, crypto collectibles, nft dragons, provably fair, digital collectibles">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://poxy-gens.vercel.app/">
+<meta property="og:title" content="POXY WORLD — The Awakening">
+<meta property="og:description" content="5,000 unique dragons. Every drop verifiable. Join the first collectors.">
+<meta property="og:image" content="https://poxy.world/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="POXY WORLD — The Awakening">
+<meta name="twitter:description" content="5,000 cryptographic dragons. Provably fair drops.">
+<meta name="twitter:image" content="https://poxy.world/og-image.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#080810">
+<link rel="apple-touch-icon" href="/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://rbrtjkfawdnomvvyxwvp.supabase.co">
@@ -85,7 +102,7 @@
 <link rel="stylesheet" href="assets/lumina-os/design-system.css?v=15">
 <link rel="stylesheet" href="assets/lumina-os-overrides.css?v=15">
 <link rel="stylesheet" href="assets/lumina-features.css?v=1">
-<link rel="stylesheet" href="assets/poxy-landing-page.css?v=2">
+<link rel="stylesheet" href="assets/poxy-landing-page.css?v=3">
 <link rel="stylesheet" href="assets/poxy-auth-page.css">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
@@ -108,7 +125,7 @@
 <link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=12">
 <link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=5">
 <link rel="stylesheet" href="assets/poxy-obsidian-ambient.css?v=1">
-<script src="assets/poxy-landing-page.js?v=2" defer></script>
+<script src="assets/poxy-landing-page.js?v=3" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
@@ -1454,37 +1471,48 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
   </div>
 </div>
 
-<!-- POXY World — public landing (logged out entry) -->
+<!-- POXY World — public landing (logged out entry) · L1 eight sections -->
 <div id="poxyLanding" hidden aria-label="POXY World">
   <div class="pl-ambient" aria-hidden="true">
     <div class="pl-glow pl-glow--a" id="plGlow1"></div>
     <div class="pl-glow pl-glow--b" id="plGlow2"></div>
+    <canvas class="pl-particles" id="plParticles" aria-hidden="true"></canvas>
   </div>
   <header class="pl-nav">
     <button type="button" class="pl-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">POXY</button>
-    <nav class="pl-nav-links" aria-label="Landing">
-      <a class="pl-nav-link is-active" href="#landing-hero" data-i18n="landing.nav.features">Features</a>
-      <a class="pl-nav-link" href="#landing-heritage" data-i18n="landing.nav.heritage">Heritage</a>
-      <a class="pl-nav-link" href="#landing-pillars" data-i18n="landing.nav.pillars">Pillars</a>
+    <nav class="pl-nav-links" aria-label="Landing sections">
+      <a class="pl-nav-link is-active" href="#landing-hero">Hero</a>
+      <a class="pl-nav-link" href="#landing-features">Features</a>
+      <a class="pl-nav-link" href="#landing-fair">Fair</a>
+      <a class="pl-nav-link" href="#landing-dragons">Dragons</a>
+      <a class="pl-nav-link" href="#landing-supply">Supply</a>
+      <a class="pl-nav-link pl-nav-link--hide-sm" href="#landing-howto">How</a>
+      <a class="pl-nav-link" href="#landing-social">Stats</a>
+      <a class="pl-nav-link" href="#landing-cta">Join</a>
     </nav>
-    <button type="button" class="pl-btn pl-btn--ghost" id="plPreviewBack" hidden data-i18n="landing.nav.back">Back to app</button>
-    <button type="button" class="pl-btn pl-btn--ghost" data-pl-auth data-i18n="landing.nav.signIn">Sign In</button>
+    <button type="button" class="pl-btn pl-btn--ghost" id="plPreviewBack" hidden>Back to app</button>
+    <button type="button" class="pl-btn pl-btn--ghost" data-pl-auth="login">Sign In</button>
   </header>
   <main class="pl-main">
-    <section class="pl-hero" id="landing-hero">
+    <!-- 1. Hero -->
+    <section class="pl-hero hero-section" id="landing-hero">
       <div class="pl-hero-copy pl-reveal">
-        <p class="pl-kicker" data-i18n="landing.hero.kicker">Digital heritage</p>
-        <h1 class="pl-headline" data-i18n="landing.hero.title">Own your<br>POXY identity</h1>
-        <p class="pl-lead" data-i18n="landing.hero.lead">Step into a new era of digital heritage. Mint, collect, and showcase your immutable digital self with unmatched high-contrast style.</p>
-        <div class="pl-hero-cta">
-          <button type="button" class="pl-btn pl-btn--solid" data-pl-auth data-i18n="landing.hero.cta">Enter POXY World</button>
+        <p class="pl-kicker">Gen 1 · Cryptographic collectibles</p>
+        <h1 class="pl-headline hero-title">THE AWAKENING</h1>
+        <p class="pl-lead hero-sub">5,000 cryptographic dragons. Each unique. Each verifiable.</p>
+        <div class="pl-hero-counter hero-counter">
+          <span id="gen1-claimed">—</span> / <span id="gen1-cap">5,000</span> Gen 1 Claimed
+        </div>
+        <div class="pl-hero-cta hero-cta">
+          <button type="button" class="pl-btn pl-btn--solid btn-primary" data-pl-auth="register">CLAIM YOUR DRAGON →</button>
+          <button type="button" class="pl-btn pl-btn--ghost btn-ghost" onclick="playIntro()">Watch Intro</button>
         </div>
       </div>
       <div class="pl-hero-stage pl-reveal" aria-hidden="true">
         <div class="pl-float pl-float--spin">
           <div class="pl-mock pl-mock--spin">
-            <div class="pl-mock-spin-ring"><div class="pl-mock-spin-core">🎰</div></div>
-            <button type="button" class="pl-mock-btn" tabindex="-1">Spin &amp; Win</button>
+            <div class="pl-mock-spin-ring"><div class="pl-mock-spin-core">🐉</div></div>
+            <span class="pl-mock-btn">Provably Fair</span>
           </div>
         </div>
         <div class="pl-float pl-float--dash">
@@ -1496,7 +1524,7 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
         <div class="pl-float pl-float--id">
           <div class="pl-mock pl-mock--profile">
             <div class="pl-mock-profile-row">
-              <div class="pl-mock-av"></div>
+              <div class="pl-mock-av">✦</div>
               <div class="pl-mock-lines"><div class="pl-mock-line"></div><div class="pl-mock-line pl-mock-line--short"></div></div>
             </div>
             <div class="pl-mock-line"></div><div class="pl-mock-line pl-mock-line--short"></div>
@@ -1504,65 +1532,151 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
         </div>
       </div>
     </section>
-    <section class="pl-heritage" id="landing-heritage">
-      <div class="pl-heritage-grid">
+
+    <!-- 2. Features -->
+    <section class="pl-section features-section" id="landing-features">
+      <h2 class="pl-section-title pl-reveal">What is POXY</h2>
+      <div class="pl-feature-grid">
+        <article class="pl-glass-card pl-feature-card pl-reveal">
+          <span class="pl-feature-icon feature-icon">🐉</span>
+          <h3>Collect</h3>
+          <p>Open cases to discover unique cryptographic dragons across 7 rarity tiers.</p>
+        </article>
+        <article class="pl-glass-card pl-feature-card pl-reveal">
+          <span class="pl-feature-icon feature-icon">⚔️</span>
+          <h3>Trade</h3>
+          <p>Buy, sell and trade on the peer-to-peer marketplace.</p>
+        </article>
+        <article class="pl-glass-card pl-feature-card pl-reveal">
+          <span class="pl-feature-icon feature-icon">🔍</span>
+          <h3>Verify</h3>
+          <p>Every drop has a cryptographic proof. Check any result independently.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. Provably Fair -->
+    <section class="pl-section fairness-section" id="landing-fair">
+      <div class="pl-fair-grid">
         <div class="pl-reveal">
-          <h2 class="pl-section-title" data-i18n="landing.heritage.title">Immutable<br>Digital<br>Heritage</h2>
-          <p class="pl-body" data-i18n="landing.heritage.body">POXY isn't just an asset; it's your permanent footprint in the digital realm. Built on raw authenticity and neo-brutalist transparency, your identity belongs to you—forever.</p>
+          <h2 class="pl-section-title">Provably Fair Drops</h2>
+          <p class="pl-body">Every dragon drop uses commit-reveal RNG with ED25519 signatures. You can verify any drop independently — no trust required.</p>
         </div>
-        <div class="pl-passport-wrap pl-reveal">
-          <div class="pl-passport-glow" aria-hidden="true"></div>
-          <article class="pl-passport">
-            <div class="pl-passport-head">
-              <div class="pl-passport-brand">POXY ID</div>
-              <span class="pl-badge" data-i18n="landing.passport.tier">Mythic Tier</span>
-            </div>
-            <div class="pl-passport-user">
-              <div class="pl-passport-av" aria-hidden="true">👾</div>
-              <div>
-                <p class="pl-passport-serial">#409</p>
-                <p class="pl-passport-role" data-i18n="landing.passport.verified">Verified Owner</p>
-                <span class="pl-passport-wallet">0x7F…3B9A</span>
-              </div>
-            </div>
-            <div class="pl-meta-row"><span data-i18n="landing.passport.issued">ISSUED</span><span>2024.10.24</span></div>
-            <div class="pl-meta-row pl-meta-row--active"><span data-i18n="landing.passport.status">STATUS</span><span>ACTIVE</span></div>
-            <div class="pl-meta-row"><span data-i18n="landing.passport.network">NETWORK</span><span>MAINNET</span></div>
-          </article>
+        <div class="pl-verify-demo verify-demo pl-reveal">
+          <label class="pl-verify-label" for="demo-round-id">Try a live RNG round</label>
+          <div class="pl-verify-row subscribe-input-row">
+            <input type="text" class="pl-verify-input" placeholder="Enter any round ID to verify…" id="demo-round-id" autocomplete="off" spellcheck="false">
+            <button type="button" class="pl-btn pl-btn--solid" onclick="demoVerify()">VERIFY →</button>
+          </div>
+          <div id="demo-result" class="pl-verify-result verify-result" role="status" aria-live="polite"></div>
         </div>
       </div>
     </section>
-    <section class="pl-pillars" id="landing-pillars">
-      <div class="pl-pillars-title pl-reveal">
-        <h2 class="pl-section-title" data-i18n="landing.pillars.title">Core Pillars</h2>
+
+    <!-- 4. Dragons Grid -->
+    <section class="pl-section dragons-section" id="landing-dragons">
+      <div class="pl-section-head pl-reveal">
+        <h2 class="pl-section-title">Gen 1 Dragons</h2>
+        <p class="pl-body">5,000 unique dragons. Supply is finite. Once minted — never again.</p>
       </div>
-      <div class="pl-pillar-grid">
-        <article class="pl-glass-card pl-reveal">
-          <span class="material-symbols-outlined pl-pillar-icon">lock</span>
-          <h3 class="pl-pillar-name" data-i18n="landing.pillar1.title">Immutable<br>Ownership</h3>
-          <p class="pl-pillar-desc" data-i18n="landing.pillar1.body">Your identity is locked on the ledger. No alterations, no takebacks. Pure, unapologetic ownership.</p>
+      <div class="pl-dragons-grid dragons-grid">
+        <article class="pl-dragon-card pl-reveal" data-tier="common">
+          <span class="pl-dragon-tier">Common</span>
+          <span class="pl-dragon-emoji">◆</span>
+          <h3>Ash</h3>
+          <p class="pl-dragon-traits">Eyes: Void · Horn: Spike · Aura: Smoke</p>
         </article>
-        <article class="pl-glass-card pl-reveal">
-          <span class="material-symbols-outlined pl-pillar-icon">diamond</span>
-          <h3 class="pl-pillar-name" data-i18n="landing.pillar2.title">Rare<br>Scarcity</h3>
-          <p class="pl-pillar-desc" data-i18n="landing.pillar2.body">Only a finite number of POXY identities will ever exist. Claim your space before the grid is full.</p>
+        <article class="pl-dragon-card pl-reveal" data-tier="uncommon">
+          <span class="pl-dragon-tier">Uncommon</span>
+          <span class="pl-dragon-emoji">◈</span>
+          <h3>Verdant</h3>
+          <p class="pl-dragon-traits">Eyes: Moss · Horn: Leaf · Aura: Growth</p>
         </article>
-        <article class="pl-glass-card pl-reveal">
-          <span class="material-symbols-outlined pl-pillar-icon">group</span>
-          <h3 class="pl-pillar-name" data-i18n="landing.pillar3.title">POXY<br>Club</h3>
-          <p class="pl-pillar-desc" data-i18n="landing.pillar3.body">Exclusive access to underground digital galleries, private drops, and the neo-brutalist collective.</p>
+        <article class="pl-dragon-card pl-reveal" data-tier="rare">
+          <span class="pl-dragon-tier">Rare</span>
+          <span class="pl-dragon-emoji">✦</span>
+          <h3>Azure</h3>
+          <p class="pl-dragon-traits">Eyes: Crystal · Horn: Prism · Aura: Tide</p>
+        </article>
+        <article class="pl-dragon-card pl-reveal" data-tier="epic">
+          <span class="pl-dragon-tier">Epic</span>
+          <span class="pl-dragon-emoji">⬟</span>
+          <h3>Void</h3>
+          <p class="pl-dragon-traits">Eyes: Abyss · Horn: Rift · Aura: Null</p>
+        </article>
+        <article class="pl-dragon-card pl-reveal" data-tier="legendary">
+          <span class="pl-dragon-tier">Legendary</span>
+          <span class="pl-dragon-emoji">★</span>
+          <h3>Solar</h3>
+          <p class="pl-dragon-traits">Eyes: Nova · Horn: Flare · Aura: Radiance</p>
+        </article>
+        <article class="pl-dragon-card pl-reveal" data-tier="mythic">
+          <span class="pl-dragon-tier">Mythic</span>
+          <span class="pl-dragon-emoji">✸</span>
+          <h3>Eclipse</h3>
+          <p class="pl-dragon-traits">Eyes: Singularity · Horn: Crown · Aura: Eclipse</p>
         </article>
       </div>
     </section>
-    <section class="pl-cta" id="landing-cta">
+
+    <!-- 5. Supply Status -->
+    <section class="pl-section supply-section" id="landing-supply">
+      <h2 class="pl-section-title pl-reveal">Live Gen 1 Supply</h2>
+      <p class="pl-body pl-reveal">Real-time caps from the POXY mint ledger. SOLD OUT tiers redirect to the next available rarity.</p>
+      <div class="pl-supply-bars pl-reveal" id="landing-supply-bars">
+        <div class="pl-supply-loading">Loading supply data…</div>
+      </div>
+    </section>
+
+    <!-- 6. How It Works -->
+    <section class="pl-section howto-section" id="landing-howto">
+      <h2 class="pl-section-title pl-reveal">How It Works</h2>
+      <ol class="pl-howto-steps pl-reveal">
+        <li class="pl-howto-step"><span class="pl-step-num">1</span><div><strong>Register</strong><p>Create your POXY account in seconds.</p></div></li>
+        <li class="pl-howto-step"><span class="pl-step-num">2</span><div><strong>Get PX</strong><p>Fund your wallet or earn through play.</p></div></li>
+        <li class="pl-howto-step"><span class="pl-step-num">3</span><div><strong>Open Cases</strong><p>Commit-reveal drops with verifiable RNG.</p></div></li>
+        <li class="pl-howto-step"><span class="pl-step-num">4</span><div><strong>Trade</strong><p>List, buy, and swap on the marketplace.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- 7. Social Proof -->
+    <section class="pl-section social-section" id="landing-social">
+      <h2 class="pl-section-title pl-reveal">The Ecosystem</h2>
+      <div class="pl-stats-grid pl-reveal">
+        <div class="pl-stat stat">
+          <span class="pl-stat-val" id="total-players">—</span>
+          <label>Collectors</label>
+        </div>
+        <div class="pl-stat stat">
+          <span class="pl-stat-val" id="total-minted">—</span>
+          <label>Dragons Minted</label>
+        </div>
+        <div class="pl-stat stat">
+          <span class="pl-stat-val" id="total-trades">—</span>
+          <label>Trades Completed</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. CTA + Subscribe -->
+    <section class="pl-cta cta-section" id="landing-cta">
       <div class="pl-marquee" aria-hidden="true">
         <div class="pl-marquee-track">
           <span>POXY WORLD • THE AWAKENING • </span><span>POXY WORLD • THE AWAKENING • </span><span>POXY WORLD • THE AWAKENING • </span><span>POXY WORLD • THE AWAKENING • </span>
         </div>
       </div>
       <div class="pl-cta-inner pl-reveal">
-        <h2 class="pl-cta-headline" data-i18n="landing.cta.title">Join the<br>Revolution</h2>
-        <button type="button" class="pl-btn pl-btn--outline" data-pl-auth data-i18n="landing.cta.button">Sign In / Join Now</button>
+        <h2 class="pl-cta-headline">Join the First 5,000</h2>
+        <p class="pl-cta-sub">Gen 1 supply is limited. Once it's gone — it's gone.</p>
+        <button type="button" class="pl-btn pl-btn--solid btn-primary btn-large" data-pl-auth="register">CREATE ACCOUNT →</button>
+        <div class="pl-subscribe subscribe-form">
+          <p>Not ready? Get notified about launches and events:</p>
+          <div class="pl-verify-row subscribe-input-row">
+            <input type="email" class="pl-verify-input" placeholder="your@email.com" id="subscribe-email" autocomplete="email">
+            <button type="button" class="pl-btn pl-btn--outline" onclick="subscribeEmail()">Notify me</button>
+          </div>
+          <p class="pl-subscribe-msg" id="subscribe-msg" role="status" aria-live="polite" hidden></p>
+        </div>
       </div>
     </section>
   </main>

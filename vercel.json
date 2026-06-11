@@ -5,6 +5,7 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/manifest.json", "destination": "/public/manifest.json" },
     { "source": "/sw.js", "destination": "/public/sw.js" },
     { "source": "/icon-192.png", "destination": "/public/icon-192.png" },
     { "source": "/badge-72.png", "destination": "/public/badge-72.png" },

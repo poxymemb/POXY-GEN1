@@ -1,0 +1,17 @@
+{
+  "name": "POXY WORLD",
+  "short_name": "POXY",
+  "description": "Cryptographic Dragon Collectibles — Provably Fair",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080810",
+  "theme_color": "#e879f9",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "/badge-72.png", "sizes": "72x72", "type": "image/png" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-192.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
