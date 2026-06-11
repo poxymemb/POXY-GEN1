@@ -1,0 +1,8 @@
+{
+  "name": "poxy-world",
+  "private": true,
+  "description": "POXY WORLD — static single-file app",
+  "scripts": {
+    "vercel-build": "node scripts/verify-static.mjs"
+  }
+}
