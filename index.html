@@ -106,7 +106,8 @@
 <script src="assets/poxy-gens-motion.js?v=4" defer></script>
 <link rel="stylesheet" href="assets/poxy-onboarding.css?v=2">
 <script src="assets/poxy-onboarding.js?v=2" defer></script>
-<script src="assets/poxy-player-onboarding.js?v=1" defer></script>
+<script src="assets/poxy-player-onboarding.js?v=2" defer></script>
+<script src="assets/poxy-push.js?v=1" defer></script>
 <style>
 /* ══ POXY Design System — Session C1 ══ */
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -3383,6 +3384,13 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
               </div>
               <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifEmail" onchange="saveSettingsPrefsFromUi()"><span class="poxy-settings-switch-slider"></span></label>
             </div>
+            <div class="poxy-settings-toggle-row">
+              <div class="poxy-settings-toggle-info">
+                <p class="poxy-settings-toggle-title">Browser push alerts</p>
+                <p class="poxy-settings-toggle-desc">Daily bonuses, rare drops, market offers, and streak reminders.</p>
+              </div>
+              <label class="poxy-settings-switch"><input type="checkbox" id="settingsNotifPush" onchange="onSettingsPushToggle(this.checked)"><span class="poxy-settings-switch-slider"></span></label>
+            </div>
           </div>
           </section>
           <section class="poxy-settings-block">
@@ -5062,6 +5070,8 @@ const sb = supabase.createClient(
   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}}
 );
 window.sb=sb;
+// Web Push VAPID public key — set when push sender is configured (Supabase secret / Vercel env)
+window.POXY_VAPID_PUBLIC_KEY=window.POXY_VAPID_PUBLIC_KEY||null;
 const $=id=>document.getElementById(id);
 
 // ── ECONOMY ENGINE (PHASE 2 — deterministic) ──
@@ -6475,6 +6485,9 @@ function bootstrapAfterLogin(){
         onboardingStarted=await maybeStartPlayerOnboarding();
       }
       if(!onboardingStarted&&dailyClaim)showDailyStreakModal(dailyClaim);
+      if(!onboardingStarted&&window.PoxyPush&&window.PoxyPush.maybePromptReturningUser){
+        window.PoxyPush.maybePromptReturningUser();
+      }
     }catch(e){console.error('post-login bootstrap:',e);}
     loadNotificationQueue();
     loadClubVault();
@@ -6723,6 +6736,7 @@ function applySettingsPrefsUi(){
   setChk('settingsNotifTradeDone',p.notifTradeDone!==false);
   setChk('settingsNotifNewsMajor',p.notifNewsMajor!==false);
   setChk('settingsNotifNewsHotfix',p.notifNewsHotfix!==false);
+  setChk('settingsNotifPush',typeof Notification!=='undefined'&&Notification.permission==='granted');
   setChk('settings2faTotp',!!p.totp2fa);
   const perf=$('settingsPerformanceMode');if(perf){perf.checked=!!p.performanceMode;document.body.classList.toggle('poxy-performance-mode',!!p.performanceMode);}
   const hud=$('settingsHudSound');if(hud){hud.checked=p.hudSound!==false;if(window.PoxyHudAudio)PoxyHudAudio.setEnabled(hud.checked);}
@@ -6743,6 +6757,18 @@ window.saveSettingsPrefsFromUi=function(){
   p.notifTradeIn=g('settingsNotifTradeIn');p.notifTradeDone=g('settingsNotifTradeDone');
   p.notifNewsMajor=g('settingsNotifNewsMajor');p.notifNewsHotfix=g('settingsNotifNewsHotfix');
   saveSettingsPrefs(p);
+};
+window.onSettingsPushToggle=async function(on){
+  if(!on){
+    showToast('Disable notifications in your browser settings.');
+    const el=$('settingsNotifPush');if(el)el.checked=typeof Notification!=='undefined'&&Notification.permission==='granted';
+    return;
+  }
+  if(typeof requestPushPermission==='function'){
+    const ok=await requestPushPermission();
+    const el=$('settingsNotifPush');if(el)el.checked=ok||(typeof Notification!=='undefined'&&Notification.permission==='granted');
+    showToast(ok?'Browser push enabled.':'Could not enable push — check browser permission or VAPID config.');
+  }
 };
 window.onSettings2faToggle=function(on){
   const p=loadSettingsPrefs();p.totp2fa=on;saveSettingsPrefs(p);
@@ -17022,6 +17048,19 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         <button type="button" class="pob-btn-ghost" id="pobTourSkip">Skip Tour</button>
         <button type="button" class="pob-btn-primary" id="pobTourNext">Next</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- O3: Web Push permission prompt (after onboarding) -->
+<div id="pobPushModal" class="poxy-modal-backdrop" role="dialog" aria-modal="true" aria-label="Enable push notifications" hidden>
+  <div class="pob-modal">
+    <div class="pob-modal-kicker">Stay in the loop</div>
+    <div class="pob-modal-user" style="font-size:18px">Push notifications</div>
+    <p class="pob-modal-body">Get alerts for daily bonuses, rare drops, market offers, and streak reminders — even when POXY is in the background.</p>
+    <div class="pob-modal-actions">
+      <button type="button" class="pob-btn-primary" id="pobPushEnable">ENABLE NOTIFICATIONS</button>
+      <button type="button" class="pob-btn-ghost" id="pobPushSkip">Not now</button>
     </div>
   </div>
 </div>

@@ -306,6 +306,12 @@
     markCompleteLocal();
   }
 
+  function schedulePushAfterOnboarding() {
+    if (window.PoxyPush && window.PoxyPush.scheduleAfterOnboarding) {
+      window.PoxyPush.scheduleAfterOnboarding();
+    }
+  }
+
   async function finishTour() {
     hideTour();
     hideDragonModal();
@@ -315,6 +321,7 @@
     if (typeof window.showToast === 'function') window.showToast("You're ready! +500 XP");
     await finalizeOnboarding();
     if (typeof window.resetAll === 'function') window.resetAll();
+    schedulePushAfterOnboarding();
   }
 
   async function skipAll() {
@@ -325,6 +332,7 @@
     state.awaitingCase = false;
     state.step = null;
     await finalizeOnboarding();
+    schedulePushAfterOnboarding();
   }
 
   async function onClaimDragon() {
