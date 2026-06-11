@@ -5070,8 +5070,8 @@ const sb = supabase.createClient(
   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}}
 );
 window.sb=sb;
-// Web Push VAPID public key — set when push sender is configured (Supabase secret / Vercel env)
-window.POXY_VAPID_PUBLIC_KEY=window.POXY_VAPID_PUBLIC_KEY||null;
+// Web Push VAPID public key (safe to expose client-side; private key stays in Vercel/Supabase secrets only)
+window.POXY_VAPID_PUBLIC_KEY=window.POXY_VAPID_PUBLIC_KEY||'BLQODort83dr-Yd8ypTzltzuF6QQLaCSU2V13WFSwpjRMtKxCrYuRGbrrbcBVrFbDauzYfAZNGXowzp2JDF9jzA';
 const $=id=>document.getElementById(id);
 
 // ── ECONOMY ENGINE (PHASE 2 — deterministic) ──
