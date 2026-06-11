@@ -958,15 +958,6 @@
     }
   }
 
-  const renderers = {
-    messages: null,
-    friends: renderFriends,
-    squads: renderSquadsClan,
-    activity: renderActivity,
-    notifications: renderNotifications,
-    settings: renderSettings,
-  };
-
   function render(nav) {
     const shell = document.getElementById('lcShell');
     const main = document.getElementById('lcMain');
@@ -981,9 +972,26 @@
     if (ctx) ctx.classList.toggle('lc-hidden', !isMessages);
     if (mod) mod.classList.toggle('lc-hidden', isMessages);
 
-    if (!isMessages && Object.prototype.hasOwnProperty.call(renderers, nav)) {
-      const candidate = renderers[nav];
-      if (typeof candidate === 'function') candidate();
+    if (!isMessages) {
+      switch (nav) {
+        case 'friends':
+          renderFriends();
+          break;
+        case 'squads':
+          renderSquadsClan();
+          break;
+        case 'activity':
+          renderActivity();
+          break;
+        case 'notifications':
+          renderNotifications();
+          break;
+        case 'settings':
+          renderSettings();
+          break;
+        default:
+          break;
+      }
     }
     updateNotifBadge();
   }
