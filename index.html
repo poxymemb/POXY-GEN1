@@ -46,7 +46,17 @@
 })();
 </script>
 <title>POXY WORLD</title>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://rbrtjkfawdnomvvyxwvp.supabase.co">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://js.stripe.com">
+<link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+<link rel="dns-prefetch" href="https://api.qrserver.com">
+<link rel="preload" href="assets/poxy-theme.css?v=2" as="style">
+<link rel="preload" href="assets/stitch-dashboard.css?v=18" as="style">
+<style id="poxy-critical-fcp">html,body{margin:0;background:#080810;color:#e2e8f0}#poxyLanding,.poxy-app-shell{min-height:100dvh}</style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/frames.css">
 <link rel="stylesheet" href="assets/stitch-dashboard.css?v=18">
 <link rel="stylesheet" href="assets/poxy-theme.css?v=2">
@@ -1353,46 +1363,6 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .bank-divider::before,.bank-divider::after{content:'';flex:1;height:1px;background:#e8e8e8}
 .bank-divider span{font-size:11px;color:#B0B0B0;font-weight:600}
 
-/* ── DARK CLUB (legacy pages; SPA uses .poxy-club-page) ── */
-.club-page:not(.poxy-club-page){display:none;max-width:380px;margin:0 auto;padding:24px 20px 40px;min-height:380px}
-.club-page:not(.poxy-club-page).visible{display:block;animation:fadeIn 0.4s ease}
-.club-hero{text-align:center;padding:20px 0 16px}
-.club-badge{font-size:44px;margin-bottom:6px}
-.club-title{font-size:20px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#FF5252,#FF8F00,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.club-sub{font-size:10px;color:#555;letter-spacing:2.5px;margin-top:4px;text-transform:uppercase}
-body.dark-club .club-sub{color:#888}
-.club-open-row{display:flex;gap:10px;margin:12px 0}
-.btn-club-open{flex:1;padding:14px 8px;border:none;border-radius:50px;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px;cursor:pointer;font-family:inherit;transition:transform 0.2s,opacity 0.2s}
-.btn-club-open:hover{transform:scale(1.03)}.btn-club-open:disabled{opacity:0.4;cursor:not-allowed;transform:none}
-.btn-club-open.one{background:linear-gradient(135deg,#FF5252,#FF8F00)}
-.btn-club-open.five{background:linear-gradient(135deg,#9C27B0,#FF5252)}
-.club-multi-stage{display:flex;gap:8px;justify-content:center;margin:12px 0;min-height:60px}
-.mini-box{width:52px;height:52px;border-radius:10px;border:1.5px solid #2a2a2e;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all 0.35s;background:#16161a;flex-shrink:0}
-.mini-box.revealed{border-color:var(--bc);box-shadow:0 0 14px var(--bc)}
-.club-results{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;min-height:4px}
-.club-result-card{border-radius:8px;padding:5px 10px;border:1px solid transparent;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.club-apply-form{background:#13131a;border-radius:14px;padding:16px;border:0.5px solid #252530;margin-top:14px}
-.club-apply-title{font-size:10px;font-weight:700;letter-spacing:2px;color:#FF5252;text-transform:uppercase;margin-bottom:10px}
-.club-apply-input{width:100%;padding:10px 12px;border:1px solid #2a2a2e;border-radius:8px;font-family:inherit;font-size:13px;background:#0a0a0c;color:#e8e8e8;outline:none;margin-bottom:10px;transition:border-color 0.2s}
-.club-apply-input:focus{border-color:#FF5252}
-.btn-apply{width:100%;padding:11px;background:transparent;border:1px solid #FF5252;border-radius:20px;color:#FF5252;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1px;transition:all 0.2s}
-.btn-apply:hover{background:#FF525211}
-.club-feed-wrap{margin-top:20px}
-.feed-input-row{display:flex;gap:8px;margin-bottom:14px}
-.feed-input{flex:1;padding:10px 12px;border:1px solid #2a2a2e;border-radius:10px;font-family:inherit;font-size:13px;background:#13131a;color:#e8e8e8;outline:none;transition:border-color 0.2s}
-.feed-input:focus{border-color:#FF5252}
-.btn-post{padding:10px 14px;background:#FF5252;border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
-.btn-post:hover{opacity:0.85}
-.feed-item{padding:12px;background:#13131a;border-radius:10px;margin-bottom:8px;border:0.5px solid #252530}
-.feed-author{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.feed-avatar{font-size:15px}
-.feed-username{font-size:11px;font-weight:700;color:#FF5252}
-.feed-time{font-size:9px;color:#444;margin-left:auto}
-.feed-content{font-size:12px;color:#bbb;line-height:1.5}
-.club-locked{text-align:center;padding:48px 20px}
-.club-locked-icon{font-size:48px;margin-bottom:12px}
-.club-locked-text{font-size:13px;color:#9E9E9E;line-height:1.8}
-
 /* Auth layout → assets/poxy-auth-page.css */
 
 /* ── USER BAR ── */
@@ -1987,7 +1957,7 @@ body.dark-club .club-sub{color:#888}
         <div class="nl-glow nl-glow--a" id="nlGlowA"></div>
         <div class="nl-glow nl-glow--b" id="nlGlowB"></div>
       </div>
-      <div class="page poxy-news-page poxy-news-lumina" id="newsPage" style="position:relative;z-index:1">
+      <div class="page poxy-news-page poxy-news-lumina" id="newsPage" data-lazy-section="news" style="position:relative;z-index:1">
 
         <!-- ── Hero Feature Card ── -->
         <div class="nl-card nl-hero" style="margin-bottom:20px">
@@ -3499,7 +3469,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 </div>
 
 <!-- COLLECTION PAGE — Tactical Archive -->
-<div class="page page-collection-wide poxy-page-collection poxy-collection-page" id="collectionPage">
+<div class="page page-collection-wide poxy-page-collection poxy-collection-page" id="collectionPage" data-lazy-section="collection">
   <div class="poxy-col-shell">
     <!-- ── Tactical Archive Header (Stitch: POXY - Tactical Archive Obsidian Protocol Restored) ── -->
     <header class="poxy-col-arch-header">
@@ -3885,7 +3855,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 </div>
 
 <!-- POXY CLUB v2 — Founders Circle Ecosystem (fragment for index.html) -->
-<div class="club-page poxy-club-page" id="clubPage">
+<div class="club-page poxy-club-page" id="clubPage" data-lazy-section="club">
   <div id="clubLocked" class="poxy-club-locked" style="display:none"></div>
   <div id="clubUnlocked" class="poxy-club-app club-shell" style="display:none">
     <div class="poxy-club-ambient" aria-hidden="true"></div>
@@ -4107,7 +4077,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
                   <div class="club-pass-row"><span class="club-pass-label">Club Rank</span><span id="clubPassportRank"><span class="material-symbols-outlined">key</span> Gold Keycard Level</span></div>
                   <div class="club-pass-row"><span class="club-pass-label">BALANCE</span><span id="clubPassportBalance">0 PX</span></div>
                   <div class="club-pass-qr-wrap">
-                    <img id="clubPassQR" class="club-pass-qr" width="128" height="128" alt="Dynamic club QR"/>
+                    <img id="clubPassQR" class="club-pass-qr" width="128" height="128" alt="Dynamic club QR" loading="lazy" decoding="async"/>
                     <span class="club-pass-qr-hint"><span class="material-symbols-outlined" style="font-size:12px;vertical-align:middle">timer</span> Refreshes in <strong id="clubPassQrTimer">30</strong>s · London entry</span>
                   </div>
                 </div>
@@ -4970,7 +4940,7 @@ Verification (anyone can do this):
               <input type="file" id="supportNewFile" accept="image/jpeg,image/png,image/webp" hidden onchange="onSupportNewFile()"/>
             </div>
             <div class="poxy-support-attach-preview" id="supportNewAttachPreview">
-              <img id="supportNewAttachImg" alt="Preview"/>
+              <img id="supportNewAttachImg" alt="Preview" loading="lazy" decoding="async"/>
               <div class="poxy-support-attach-meta">
                 <span id="supportNewAttachMeta"></span>
                 <button type="button" class="poxy-support-attach-remove" onclick="clearSupportNewAttach()">Remove</button>
@@ -4992,7 +4962,7 @@ Verification (anyone can do this):
         <div class="poxy-support-messages" id="supportChatMessages"></div>
         <div class="poxy-support-compose" id="supportChatCompose">
           <div class="poxy-support-attach-preview" id="supportChatAttachPreview">
-            <img id="supportChatAttachImg" alt="Preview"/>
+            <img id="supportChatAttachImg" alt="Preview" loading="lazy" decoding="async"/>
             <div class="poxy-support-attach-meta">
               <span id="supportChatAttachMeta"></span>
               <button type="button" class="poxy-support-attach-remove" onclick="clearSupportChatAttach()">Remove</button>
@@ -5071,6 +5041,73 @@ const sb = supabase.createClient(
   {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}}
 );
 window.sb=sb;
+const POXY_PROFILE_COLS='id,username,avatar_url,balance,dust,px_balance,xp_total,xp_balance,xp_level,email,badges,is_verified_employee,is_club_member,favorite_poxy_id,name_gradient,profile_theme,club_privacy,account_hash,metadata,created_at,club_issued_at,club_level,club_passport_uid,club_awakening_seen,club_xp,club_cosmetic_tokens,total_vip_opens,club_vault_progress,club_vault_claimed';
+const POXY_PROFILE_PUBLIC_COLS='id,username,avatar_url,balance,badges,is_verified_employee,is_club_member,favorite_poxy_id,account_hash,club_privacy';
+const POXY_POXY_COLS='id,user_id,poxy_tier,serial_number,dropped_at,asset_url,pinned_at,vip_serial,is_vip,dna_hash,signature,character_name,traits';
+const POXY_FRIEND_REQ_COLS='id,from_id,to_id,status,created_at';
+const POXY_FRIENDSHIP_COLS='id,user_a_id,user_b_id,created_at';
+const POXY_NEWS_POST_COLS='id,title,content,author_id,author_username,image_url,likes,dislikes,created_at';
+const POXY_NEWS_COMMENT_COLS='id,post_id,parent_id,user_id,username,content,likes,created_at';
+const POXY_CHAT_COLS='id,author_id,content,created_at';
+const POXY_DM_COLS='id,from_id,to_id,content,created_at';
+const POXY_CLUB_FEED_COLS='id,author_id,author_username,author_avatar,content,created_at';
+const POXY_FLASH_SALE_COLS='id,title,description,poxy_tier,price_pc,stock,ends_at';
+const POXY_MARKET_COLS='id,seller_id,poxy_id,price,status,created_at';
+const _queryCache=new Map();
+const _queryInflight=new Map();
+function poxyInvalidateQueryCache(prefix){
+  for(const k of [..._queryCache.keys()]){if(!prefix||k.startsWith(prefix))_queryCache.delete(k);}
+  if(!prefix)_queryInflight.clear();
+}
+async function cachedQuery(key,queryFn,ttlMs=30000){
+  const cached=_queryCache.get(key);
+  if(cached&&Date.now()-cached.ts<ttlMs)return cached.data;
+  if(_queryInflight.has(key))return _queryInflight.get(key);
+  const p=(async()=>{
+    try{
+      const data=await queryFn();
+      _queryCache.set(key,{data,ts:Date.now()});
+      return data;
+    }finally{_queryInflight.delete(key);}
+  })();
+  _queryInflight.set(key,p);
+  return p;
+}
+function poxyApplyImgPerf(img){
+  if(!img||img.tagName!=='IMG')return;
+  if(!img.getAttribute('loading'))img.loading='lazy';
+  if(!img.getAttribute('decoding'))img.decoding='async';
+}
+function poxyInitImgPerf(){
+  document.querySelectorAll('img').forEach(poxyApplyImgPerf);
+  if(window._poxyImgPerfObs)return;
+  window._poxyImgPerfObs=new MutationObserver(muts=>{
+    muts.forEach(m=>m.addedNodes.forEach(n=>{
+      if(n.nodeType!==1)return;
+      if(n.tagName==='IMG')poxyApplyImgPerf(n);
+      else if(n.querySelectorAll)n.querySelectorAll('img').forEach(poxyApplyImgPerf);
+    }));
+  });
+  window._poxyImgPerfObs.observe(document.body,{childList:true,subtree:true});
+}
+const _lazySectionHandlers={
+  collection:()=>{if(currentUser&&(!colData||!colData.length))loadCollection();},
+  news:()=>{if(currentUser&&$('newsPostsList')&&!$('newsPostsList').querySelector('.news-post-card,.poxy-news-card--demo'))loadNewsFeedTab();},
+  club:()=>{if(currentUser){if($('feedItems')&&!$('feedItems').querySelector('.poxy-club-feed-msg'))loadFeed();if($('flashSalesWrap')&&!$('flashSalesWrap').querySelector('.poxy-club-flash-card'))loadFlashSales();}},
+  ranks:()=>{if(activeStitchTab==='ranks')loadLeaderboardData();}
+};
+function poxyInitLazySections(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      const id=entry.target.dataset.lazySection;
+      const fn=_lazySectionHandlers[id];
+      if(fn&&!entry.target.dataset.lazyLoaded){entry.target.dataset.lazyLoaded='1';fn();}
+      obs.unobserve(entry.target);
+    });
+  },{rootMargin:'100px'});
+  document.querySelectorAll('[data-lazy-section]').forEach(el=>obs.observe(el));
+}
 // Web Push VAPID public key (safe to expose client-side; private key stays in Vercel/Supabase secrets only)
 window.POXY_VAPID_PUBLIC_KEY=window.POXY_VAPID_PUBLIC_KEY||'BLQODort83dr-Yd8ypTzltzuF6QQLaCSU2V13WFSwpjRMtKxCrYuRGbrrbcBVrFbDauzYfAZNGXowzp2JDF9jzA';
 const $=id=>document.getElementById(id);
@@ -5158,7 +5195,6 @@ const PX_CUSTOM_TIERS = [
   {minGbp:100,   maxGbp:199.99, pxPerGbp:23.0, bonusPct:15, upsellMin:200},
   {minGbp:200,   maxGbp:999999, pxPerGbp:24.0, bonusPct:20, upsellMin:null}
 ];
-const FOUNDER_EMAIL = 'nikitash0504@gmail.com';
 const AVATARS = ['🎭','🦊','🐲','👾','🌀','⚡'];
 const BANK_AMOUNTS = [
   {val:5,label:'Starter'},{val:10,label:'Hunter'},{val:25,label:'Elite'},
@@ -5380,6 +5416,7 @@ function renderFrameSelector(){
 
 // ── STATE (PHASE 1 — synchronized in real-time UI) ──
 let currentUser=null, currentProfile=null, currentTier=null, currentSerial=null, currentPoxyId=null;
+let _isFounder=false;
 let currentRoundId=null, currentClientSeed=null; // Phase 3: provably fair proof
 let mythicCount=0, hasMythic=false, busy=false, selectedCaseType='standard', _skipPerkClaim=false;
 let spinAnim=null, particleLoop=null, particles=[];
@@ -6226,7 +6263,20 @@ function pickCarouselTier(){
   return TIERS[5];
 }
 function pickVipTier(){let r=Math.random(),acc=0;for(const t of VIP_TIERS){acc+=t.prob;if(r<acc)return t;}return VIP_TIERS[VIP_TIERS.length-1];}
-function isFounder(){return!!(currentUser&&currentUser.email&&currentUser.email.toLowerCase()===FOUNDER_EMAIL);}
+function profileIsFounder(prof){
+  return !!(prof&&Array.isArray(prof.badges)&&prof.badges.includes('founder'));
+}
+async function refreshFounderFlag(){
+  _isFounder=false;
+  if(!currentUser)return;
+  try{
+    const{data,error}=await sb.rpc('is_founder');
+    if(!error&&data===true)_isFounder=true;
+  }catch(e){_isFounder=false;}
+}
+function isFounder(){
+  return _isFounder===true||profileIsFounder(currentProfile);
+}
 function isClubMember(){return!!(currentProfile&&(currentProfile.is_club_member||hasMythic));}
 function notifyQueueStorageKey(){return NOTIFY_QUEUE_LS+'_'+(currentUser?.id||'');}
 function loadNotificationQueue(){
@@ -6407,6 +6457,8 @@ function updateAuthModeUI(){
 }
 window.updateAuthModeUi=updateAuthModeUI;
 function setLoggedOutUI(){
+  _isFounder=false;
+  poxyInvalidateQueryCache();
   authSessionBootstrapped=false;
   if(typeof showPoxyLanding==='function')showPoxyLanding();
   else{
@@ -6617,7 +6669,7 @@ window.handleLogout=async function(){await sb.auth.signOut();clearBg();document.
 // ── PROFILE ──
 async function loadProfile(){
   try{
-    const{data}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+    const{data}=await sb.from('profiles').select(POXY_PROFILE_COLS).eq('id',currentUser.id).maybeSingle();
     if(data){
       if(data.favorite_poxy_id&&!isUuid(data.favorite_poxy_id))data.favorite_poxy_id=null;
       currentProfile=data;
@@ -6646,12 +6698,12 @@ async function loadProfile(){
       const hashEl=$('userAccountHash');
       if(hashEl)hashEl.textContent=data.account_hash?'#'+data.account_hash:'';
     } else {
-      const{data:created,error:insErr}=await sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).select('*').maybeSingle();
+      const{data:created,error:insErr}=await sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).select(POXY_PROFILE_COLS).maybeSingle();
       if(insErr&&insErr.code!=='23505')console.error('profile insert:',insErr);
       if(created){
         currentProfile=created;
       }else{
-        const{data:retry}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+        const{data:retry}=await sb.from('profiles').select(POXY_PROFILE_COLS).eq('id',currentUser.id).maybeSingle();
         currentProfile=retry||{id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null,metadata:{}};
       }
       selectedAvatar=currentProfile.avatar_url||AVATARS[0];
@@ -6659,6 +6711,7 @@ async function loadProfile(){
       updateBalanceBadge(getPxBalance());
       await loadPlayerEconomy();
     }
+    await refreshFounderFlag();
   }catch(e){console.error('loadProfile:',e);}
 }
 function applyNameGradientUI(gradient){
@@ -6979,15 +7032,17 @@ async function fetchMyEcosystemRank(){
   if(!currentUser)return null;
   if(leaderboardRankByUser[currentUser.id])return leaderboardRankByUser[currentUser.id];
   try{
-    const{data,error}=await sb.from('profiles').select('id').order('balance',{ascending:false}).limit(500);
-    if(error||!data)return null;
-    data.forEach((p,i)=>{if(p.id)leaderboardRankByUser[p.id]=i+1;});
-    return leaderboardRankByUser[currentUser.id]||null;
+    return await cachedQuery('eco_rank_map',async()=>{
+      const{data,error}=await sb.from('profiles').select('id').order('balance',{ascending:false}).limit(500);
+      if(error||!data)return null;
+      data.forEach((p,i)=>{if(p.id)leaderboardRankByUser[p.id]=i+1;});
+      return leaderboardRankByUser[currentUser.id]||null;
+    },30000);
   }catch(e){return null;}
 }
 async function renderProfileStats(){
   try{
-    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id).limit(5000);
     const total=data?.length||0;
     const rare=data?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
     const streak=playerEconomy?.streak??0;
@@ -7005,7 +7060,7 @@ async function renderMythicClubTracker(){
   try{
     const now=new Date();
     const monthStart=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
-    const{data}=await sb.from('user_poxy').select('user_id').eq('poxy_tier','mythic').gte('dropped_at',monthStart);
+    const{data}=await sb.from('user_poxy').select('user_id').eq('poxy_tier','mythic').gte('dropped_at',monthStart).limit(50);
     const uniqueUsers=new Set((data||[]).map(r=>r.user_id));
     const count=uniqueUsers.size;
     const remaining=Math.max(0,10-count);
@@ -7303,7 +7358,7 @@ async function collectProfileBadges(){
   // Earned badges (derived from activity)
   const{data:listings}=await sb.from('marketplace').select('id').eq('seller_id',currentUser.id).limit(1);
   if(listings&&listings.length)badges.add('market_baron');
-  const{data:tiers}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+  const{data:tiers}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id).limit(5000);
   const tierSet=new Set((tiers||[]).map(t=>t.poxy_tier));
   if(['common','uncommon','rare','epic','legendary'].every(t=>tierSet.has(t)))badges.add('first_drop_set');
   if(tierSet.has('mythic'))badges.add('founder');
@@ -8480,9 +8535,7 @@ window.closeTopUpModal=function(){
 function renderDevTopupPanel(){
   const slot=$('tumDevTopupSlot');
   if(!slot)return;
-  const FOUNDER=['nikitash0504@gmail.com','worldpoxy@gmail.com'];
-  const email=(currentUser?.email||'').toLowerCase();
-  const isFounderAcc=FOUNDER.includes(email)||currentProfile?.is_verified_employee;
+  const isFounderAcc=isFounder()||currentProfile?.is_verified_employee;
   if(!isFounderAcc){slot.hidden=true;return;}
   slot.hidden=false;
   if(slot.dataset.ready==='1')return;
@@ -9157,7 +9210,10 @@ async function loadGlobalTierCounts(){
   }catch(e){}
   if(!Object.keys(globalTierCounts).length){
     try{
-      const{data}=await sb.from('user_poxy').select('poxy_tier');
+      const{data}=await cachedQuery('global:tier_counts_fallback',async()=>{
+        const{data:rows}=await sb.from('user_poxy').select('poxy_tier').limit(50000);
+        return rows||[];
+      },30000);
       (data||[]).forEach(r=>{globalTierCounts[r.poxy_tier]=(globalTierCounts[r.poxy_tier]||0)+1;});
     }catch(e){}
   }
@@ -9260,7 +9316,7 @@ async function loadRarityLeaderboardPreview(){
       if(error)throw error;
       data=rows||[];
     }else{
-      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']);
+      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']).limit(5000);
       if(pe)throw pe;
       const counts={};
       (poxyData||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
@@ -10683,7 +10739,7 @@ async function loadCollection(){
   if(!colMultiSelectMode){selectedForDust=new Set();selectedItems=selectedForDust;}
   updateColActionCapsules();
   try{
-    const{data,error}=await sb.from('user_poxy').select('*').eq('user_id',currentUser.id).order('dropped_at',{ascending:false});
+    const{data,error}=await sb.from('user_poxy').select(POXY_POXY_COLS).eq('user_id',currentUser.id).order('dropped_at',{ascending:false}).limit(5000);
     if(error)throw error;
     colData=data||[];
     renderFilterButtons();renderCollection();
@@ -11433,7 +11489,7 @@ async function loadPendingRequests(){
   const cont=$('pendingRequestsContainer');
   if(!cont||!currentUser)return;
   try{
-    const{data:incoming,error}=await sb.from('friend_requests').select('*').eq('to_id',currentUser.id).eq('status','pending');
+    const{data:incoming,error}=await sb.from('friend_requests').select(POXY_FRIEND_REQ_COLS).eq('to_id',currentUser.id).eq('status','pending').limit(100);
     if(error)throw error;
     friendIncoming=incoming||[];
     if(!friendIncoming.length){cont.innerHTML='';return;}
@@ -11528,7 +11584,7 @@ function setupPresenceChannel(){
 
 // ── Chat rank styling ──
 const CHAT_RANK_STYLES=[
-  {test:p=>p?.email&&p.email.toLowerCase()===FOUNDER_EMAIL,color:'#FF0080',badge:'🏆',label:'Founder'},
+  {test:profileIsFounder,color:'#FF0080',badge:'🏆',label:'Founder'},
   {test:p=>p?.is_verified_employee,color:'#FF5252',badge:'⚡',label:'Staff'},
   {test:p=>p?.is_club_member,color:'#FFD700',badge:'✸',label:'VIP'},
   {test:p=>{const r=leaderboardRankByUser[p?.id];return r&&r<=10;},color:'#00E5FF',badge:'★',label:'Top 10'},
@@ -11609,8 +11665,8 @@ window.openFriendProfileView=window.openUserPassport=async function(userId){
     const a=userId<currentUser.id?userId:currentUser.id;
     const b=userId<currentUser.id?currentUser.id:userId;
     const[{data:prof},{data:poxyAll},{data:reqs},{data:premData},{data:friendships}]=await Promise.all([
-      sb.from('profiles').select('*').eq('id',userId).single(),
-      sb.from('user_poxy').select('poxy_tier,serial_number,dropped_at').eq('user_id',userId).order('dropped_at',{ascending:false}),
+      sb.from('profiles').select(POXY_PROFILE_PUBLIC_COLS).eq('id',userId).single(),
+      sb.from('user_poxy').select('poxy_tier,serial_number,dropped_at').eq('user_id',userId).order('dropped_at',{ascending:false}).limit(500),
       sb.from('friend_requests').select('id,status,from_id,to_id').or('and(from_id.eq.'+currentUser.id+',to_id.eq.'+userId+'),and(from_id.eq.'+userId+',to_id.eq.'+currentUser.id+')').limit(1),
       sb.from('user_poxy').select('id').eq('user_id',userId).in('poxy_tier',['legendary','mythic','diamond','secret']).limit(1),
       sb.from('friendships').select('id').eq('user_a_id',a).eq('user_b_id',b).limit(1)
@@ -11706,14 +11762,14 @@ async function loadFriends(){
   if(!cont||!currentUser)return;
   cont.innerHTML='<div class="col-loading"><div class="col-spinner"></div></div>';
   try{
-    const{data:rows,error}=await sb.from('friendships').select('*').or('user_a_id.eq.'+currentUser.id+',user_b_id.eq.'+currentUser.id);
+    const{data:rows,error}=await sb.from('friendships').select(POXY_FRIENDSHIP_COLS).or('user_a_id.eq.'+currentUser.id+',user_b_id.eq.'+currentUser.id).limit(500);
     if(error)throw error;
     if(!rows||!rows.length){cont.innerHTML='<div style="font-size:12px;color:#9d8b9b;padding:12px 0">No friends yet.</div>';friendAccepted=[];return;}
     const ids=rows.map(r=>r.user_a_id===currentUser.id?r.user_b_id:r.user_a_id);
     friendAccepted=ids.slice();
     const{data:profs}=await sb.from('profiles').select('id,username,avatar_url,is_club_member').in('id',ids);
     const premIds=new Set();
-    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic','diamond','secret']);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
+    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic','diamond','secret']).limit(500);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
     cont.innerHTML='';
     (profs||[]).forEach(p=>cont.appendChild(buildFriendRow(p,premIds)));
     syncFriendPresenceFromChannel();
@@ -12217,7 +12273,7 @@ window.searchUsers=async function(){
     const{data:reqs}=await sb.from('friend_requests').select('id,status,from_id,to_id').or(orParts);
     const reqMap={};(reqs||[]).forEach(r=>{const o=r.from_id===currentUser.id?r.to_id:r.from_id;reqMap[o]=r;});
     const premIds=new Set();
-    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic']);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
+    try{const{data:hi}=await sb.from('user_poxy').select('user_id').in('user_id',ids).in('poxy_tier',['legendary','mythic']).limit(500);(hi||[]).forEach(r=>premIds.add(r.user_id));}catch(e){}
     cont.innerHTML='';
     data.forEach(p=>{
       const ex=reqMap[p.id];
@@ -12373,7 +12429,6 @@ function poxyIdBioFromProf(prof){
 function poxyIdCollectBadges(prof){
   const badgesArr=Array.isArray(prof.badges)?prof.badges.slice():[];
   if(prof.is_verified_employee&&!badgesArr.includes('developer'))badgesArr.push('developer');
-  if(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL&&!badgesArr.includes('founder'))badgesArr.push('founder');
   if(prof.is_club_member&&!badgesArr.includes('vip_club'))badgesArr.push('vip_club');
   return badgesArr;
 }
@@ -12403,7 +12458,7 @@ function poxyIdRenderAvatar(wrap,prof,isSelf,isPrem){
       ver.textContent='verified';
       wrap.appendChild(ver);
     }
-    ver.hidden=!(prof.is_verified_employee||(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL));
+    ver.hidden=!(prof.is_verified_employee||profileIsFounder(prof));
   }
   if(isSelf)updateGlobalFrames();
 }
@@ -12579,7 +12634,7 @@ async function refreshProfileAuraBanner(){
   if(!wrap||!currentUser)return;
   let poxyData=[];
   try{
-    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id).limit(5000);
     poxyData=data||[];
   }catch(e){}
   await poxyIdHydrateAura(wrap,poxyData,'profileAuraBannerAura','profileAuraBannerRank');
@@ -12630,8 +12685,8 @@ async function openInspectModal(userId){
     const a=userId<currentUser.id?userId:currentUser.id;
     const b=userId<currentUser.id?currentUser.id:userId;
     const[{data:prof},{data:poxyData},{data:reqs},{data:premData},{data:friendships}]=await Promise.all([
-      sb.from('profiles').select('*').eq('id',userId).single(),
-      sb.from('user_poxy').select('poxy_tier').eq('user_id',userId),
+      sb.from('profiles').select(POXY_PROFILE_PUBLIC_COLS).eq('id',userId).single(),
+      sb.from('user_poxy').select('poxy_tier').eq('user_id',userId).limit(500),
       sb.from('friend_requests').select('id,status,from_id,to_id').or('and(from_id.eq.'+currentUser.id+',to_id.eq.'+userId+'),and(from_id.eq.'+userId+',to_id.eq.'+currentUser.id+')').limit(1),
       sb.from('user_poxy').select('id').eq('user_id',userId).in('poxy_tier',['legendary','mythic','diamond','secret']).limit(1),
       sb.from('friendships').select('id').eq('user_a_id',a).eq('user_b_id',b).limit(1)
@@ -12644,7 +12699,7 @@ async function openInspectModal(userId){
     await poxyIdHydrateAura($('inspectAvatarWrap'),poxyData,'inspectBannerAura','inspectBannerRank');
     poxyIdSetIdentity($('inspectDisplayName'),$('inspectHandle'),prof);
     const verified=$('inspectVerified');
-    if(verified)verified.hidden=!(prof.is_verified_employee||(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL));
+    if(verified)verified.hidden=!(prof.is_verified_employee||profileIsFounder(prof));
     const sysIdEl=$('inspectSystemId');
     if(sysIdEl&&prof.account_hash){
       sysIdEl.textContent='SYSTEM_ID: #PX-'+prof.account_hash;
@@ -12664,7 +12719,6 @@ async function openInspectModal(userId){
     $('inspectStatsGrid').innerHTML=qpInspectStatsHtml(totalItems,rareItems,prof.balance);
     const badgesArr=Array.isArray(prof.badges)?prof.badges.slice():[];
     if(prof.is_verified_employee&&!badgesArr.includes('developer'))badgesArr.push('developer');
-    if(prof.email&&prof.email.toLowerCase()===FOUNDER_EMAIL&&!badgesArr.includes('founder'))badgesArr.push('founder');
     if(prof.is_club_member&&!badgesArr.includes('vip_club'))badgesArr.push('vip_club');
     $('inspectBadgesRow').innerHTML=qpInspectBadgesHtml(badgesArr);
     const bio=qpInspectBioFromProf(prof);
@@ -12730,7 +12784,7 @@ async function loadDmThread(){
   const box=$('dmMessages');
   if(!box||!dmTargetUserId||!currentUser)return;
   try{
-    const{data,error}=await sb.from('poxy_dm').select('*')
+    const{data,error}=await sb.from('poxy_dm').select(POXY_DM_COLS)
       .or('and(from_id.eq.'+currentUser.id+',to_id.eq.'+dmTargetUserId+'),and(from_id.eq.'+dmTargetUserId+',to_id.eq.'+currentUser.id+')')
       .order('created_at',{ascending:true}).limit(80);
     if(error)throw error;
@@ -12789,7 +12843,7 @@ async function renderTradeInventory(){
   if(!grid)return;
   const listed=new Set();
   try{
-    const{data}=await sb.from('marketplace').select('poxy_id').eq('seller_id',currentUser.id).eq('status','active');
+    const{data}=await sb.from('marketplace').select('poxy_id').eq('seller_id',currentUser.id).eq('status','active').limit(500);
     (data||[]).forEach(r=>listed.add(r.poxy_id));
   }catch(e){}
   grid.innerHTML='';
@@ -12985,7 +13039,7 @@ async function loadMarket(){
   cont.innerHTML='<div class="poxy-market-loading"><div class="col-spinner"></div></div>';
   try{
     if(marketTab==='buy'){
-      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number,is_vip,vip_serial)').eq('status','active').neq('seller_id',currentUser.id).order('created_at',{ascending:false});
+      const{data,error}=await sb.from('marketplace').select(POXY_MARKET_COLS+',user_poxy(poxy_tier,serial_number,is_vip,vip_serial)').eq('status','active').neq('seller_id',currentUser.id).order('created_at',{ascending:false}).limit(200);
       if(error)throw error;
       marketBuyCache=data||[];
       const sorted=applyMarketFilters(marketBuyCache);
@@ -13008,7 +13062,7 @@ async function loadMarket(){
       });
       cont.appendChild(grid);
     }else{
-      const{data,error}=await sb.from('marketplace').select('*,user_poxy(poxy_tier,serial_number,is_vip,vip_serial)').eq('seller_id',currentUser.id).order('created_at',{ascending:false});
+      const{data,error}=await sb.from('marketplace').select(POXY_MARKET_COLS+',user_poxy(poxy_tier,serial_number,is_vip,vip_serial)').eq('seller_id',currentUser.id).order('created_at',{ascending:false}).limit(200);
       if(error)throw error;
       cont.innerHTML='';
       if(!data||!data.length){
@@ -13068,7 +13122,7 @@ $('modalOk').addEventListener('click',async function(){
   try{
     let poxyId=pendingListItem.poxyId;
     if(pendingListItem.fromHunt){
-      const{data,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:pendingListItem.tier.id,serial_number:pendingListItem.serial}).select().single();
+      const{data,error}=await sb.from('user_poxy').insert({user_id:currentUser.id,poxy_tier:pendingListItem.tier.id,serial_number:pendingListItem.serial}).select('id').single();
       if(error)throw error;poxyId=data.id;
     }
     if(!isUuid(poxyId))throw new Error('poxy id not UUID — refresh page');
@@ -13766,7 +13820,7 @@ function renderClubVerificationStatus(){
     {ok:emailOk,label:'Email verified',detail:currentUser.email||'—'},
     {ok:!!isClubMember(),label:'Founders Circle member',detail:isClubMember()?'Club access granted':'Requires mythic keycard'},
     {ok:!!(currentProfile?.is_verified_employee),label:'Staff verification',detail:'Internal operator badge'},
-    {ok:!!(currentProfile?.email&&currentProfile.email.toLowerCase()===FOUNDER_EMAIL),label:'Genesis founder seal',detail:'Protocol authority'}
+    {ok:isFounder(),label:'Genesis founder seal',detail:'Protocol authority'}
   ];
   el.innerHTML=rows.map(r=>'<div class="club-verification-row'+(r.ok?' ok':'')+'"><span class="material-symbols-outlined">'+(r.ok?'verified':'radio_button_unchecked')+'</span><div><strong>'+sanitizeText(r.label)+'</strong><span>'+sanitizeText(r.detail)+'</span></div></div>').join('');
 }
@@ -13921,7 +13975,7 @@ async function fetchClubPassportPayload(userId){
       .map(it=>{const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];return{poxy_tier:it.poxy_tier,serial_number:it.serial_number,displayName:it.serial_number?'#'+it.serial_number:t.label};});
   }else{
     try{
-      const{data:items}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('user_id',userId);
+      const{data:items}=await sb.from('user_poxy').select('poxy_tier,serial_number').eq('user_id',userId).limit(500);
       showcase=(items||[]).slice().sort((a,b)=>clubTierScore(b.poxy_tier)-clubTierScore(a.poxy_tier)).slice(0,3)
         .map(it=>{const t=TIER_BY_ID[it.poxy_tier]||TIERS[0];return{poxy_tier:it.poxy_tier,serial_number:it.serial_number,displayName:it.serial_number?'#'+it.serial_number:t.label};});
     }catch(e){}
@@ -14351,10 +14405,10 @@ async function renderClubFoundersLedger(){
   if(el.dataset.loaded==='1')return;
   el.innerHTML='<div class="poxy-club-muted">Loading sovereign ledger…</div>';
   try{
-    const{data}=await sb.from('profiles').select('username,email,created_at').order('created_at',{ascending:true}).limit(100);
+    const{data}=await sb.from('profiles').select('username,created_at').order('created_at',{ascending:true}).limit(100);
     el.innerHTML='';
     (data||[]).forEach((p,i)=>{
-      const name=sanitizeText(p.username||p.email?.split('@')[0]||'Founder '+(i+1));
+      const name=sanitizeText(p.username||'Founder '+(i+1));
       const row=document.createElement('div');
       row.className='poxy-club-ledger-row';
       row.textContent=(i+1)+'. '+name;
@@ -14613,11 +14667,16 @@ async function loadFounderAnnouncements(){
   const wrap=$('founderAnnouncements');if(!wrap)return;
   wrap.innerHTML='<div class="poxy-club-muted">Loading announcements…</div>';
   try{
-    const{data:fp}=await sb.from('profiles').select('id').eq('email',FOUNDER_EMAIL).maybeSingle();
-    if(!fp){wrap.innerHTML='';return;}
-    const{data,error}=await sb.from('news_posts').select('*').eq('author_id',fp.id).order('created_at',{ascending:false}).limit(5);
-    if(error)throw error;
-    if(!data||!data.length){wrap.innerHTML='<div class="poxy-club-muted">No founder announcements yet.</div>';return;}
+    const{data:posts,error:postsErr}=await sb.from('news_posts').select(POXY_NEWS_POST_COLS).order('created_at',{ascending:false}).limit(30);
+    if(postsErr)throw postsErr;
+    const authorIds=[...new Set((posts||[]).map(p=>p.author_id).filter(Boolean))];
+    const founderIds=new Set();
+    if(authorIds.length){
+      const{data:authors}=await sb.from('profiles').select('id,badges').in('id',authorIds);
+      (authors||[]).forEach(a=>{if(profileIsFounder(a))founderIds.add(a.id);});
+    }
+    const data=(posts||[]).filter(p=>founderIds.has(p.author_id)).slice(0,5);
+    if(!data.length){wrap.innerHTML='<div class="poxy-club-muted">No founder announcements yet.</div>';return;}
     wrap.innerHTML='';
     data.forEach(p=>{
       const el=document.createElement('article');
@@ -14633,8 +14692,11 @@ async function loadFlashSales(){
   const wrap=$('flashSalesWrap');if(!wrap)return;
   wrap.innerHTML='<div class="poxy-club-muted">Loading flash sales…</div>';
   try{
-    const{data,error}=await sb.from('flash_sales').select('*').gt('ends_at',new Date().toISOString()).order('ends_at',{ascending:true});
-    if(error)throw error;
+    const data=await cachedQuery('flash_sales:active',async()=>{
+      const{data:rows,error}=await sb.from('flash_sales').select(POXY_FLASH_SALE_COLS).gt('ends_at',new Date().toISOString()).order('ends_at',{ascending:true}).limit(20);
+      if(error)throw error;
+      return rows||[];
+    },30000);
     activeFlashSales=data||[];
     if(!activeFlashSales.length){wrap.innerHTML='<div class="poxy-club-glass poxy-club-flash-empty">No active flash drops. Check back soon.</div>';return;}
     wrap.innerHTML='';
@@ -14751,7 +14813,11 @@ async function loadFeed(){
   if(!cont)return;
   cont.innerHTML='<div class="poxy-club-muted"><div class="col-spinner" style="border-top-color:#f9abff;margin:0 auto 8px"></div></div>';
   try{
-    const{data}=await sb.from('club_feed').select('*').order('created_at',{ascending:false}).limit(20);
+    const data=await cachedQuery('club_feed:20',async()=>{
+      const{data:rows,error}=await sb.from('club_feed').select(POXY_CLUB_FEED_COLS).order('created_at',{ascending:false}).limit(20);
+      if(error)throw error;
+      return rows||[];
+    },30000);
     cont.innerHTML='';
     if(!data||!data.length){cont.innerHTML='<div class="poxy-club-feed-empty">No posts yet. Be first!</div>';return;}
     data.forEach((item,i)=>{
@@ -14784,6 +14850,7 @@ window.postToFeed=async function(){
   const avatar=currentProfile?.avatar_url&&!currentProfile.avatar_url.startsWith('http')?currentProfile.avatar_url:'✸';
   try{
     await sb.from('club_feed').insert({author_id:currentUser.id,author_username:username,author_avatar:avatar,content});
+    poxyInvalidateQueryCache('club_feed');
     input.value='';
     loadFeed();
     bumpClubBounty('club_post_2_feed',1);
@@ -14808,7 +14875,7 @@ function renderNewsDemoFeed(listEl){
   demos.forEach(d=>{
     const art=document.createElement('article');
     art.className='poxy-news-card poxy-news-card--demo'+(d.featured?' poxy-news-card--featured':' poxy-news-card--standard');
-    art.innerHTML='<div class="poxy-news-media"><img src="'+d.img+'" alt=""></div><div class="poxy-news-content"><div class="poxy-news-meta-row"><span class="poxy-news-badge poxy-news-badge--'+d.badgeMod+'">'+d.badge+'</span><time class="poxy-news-time">'+d.time+'</time></div><h2 class="poxy-news-card-title">'+sanitizeText(d.title)+'</h2><p class="poxy-news-card-snippet">'+sanitizeText(d.body)+'</p>'+(d.featured?'<span class="poxy-news-read-cta">Read full patch notes <span class="material-symbols-outlined">arrow_forward</span></span>':'')+'</div>';
+    art.innerHTML='<div class="poxy-news-media"><img src="'+d.img+'" alt="" loading="lazy" decoding="async"></div><div class="poxy-news-content"><div class="poxy-news-meta-row"><span class="poxy-news-badge poxy-news-badge--'+d.badgeMod+'">'+d.badge+'</span><time class="poxy-news-time">'+d.time+'</time></div><h2 class="poxy-news-card-title">'+sanitizeText(d.title)+'</h2><p class="poxy-news-card-snippet">'+sanitizeText(d.body)+'</p>'+(d.featured?'<span class="poxy-news-read-cta">Read full patch notes <span class="material-symbols-outlined">arrow_forward</span></span>':'')+'</div>';
     listEl.appendChild(art);
   });
 }
@@ -14819,8 +14886,12 @@ async function loadNewsFeedTab(loadMore){
   if(loadMore)newsFeedLimit=Math.min(60,newsFeedLimit+20);
   if(!loadMore)listEl.innerHTML='<div class="news-empty"><div class="col-spinner" style="border-top-color:#f9abff;margin:0 auto 12px"></div></div>';
   try{
-    const{data,error}=await sb.from('news_posts').select('*').order('created_at',{ascending:false}).limit(newsFeedLimit);
-    if(error)throw error;
+    const fetchPosts=async()=>{
+      const{data,error}=await sb.from('news_posts').select(POXY_NEWS_POST_COLS).order('created_at',{ascending:false}).limit(newsFeedLimit);
+      if(error)throw error;
+      return data||[];
+    };
+    const data=loadMore?await fetchPosts():await cachedQuery('news_feed:'+newsFeedLimit,fetchPosts,30000);
     if(!data||!data.length){
       renderNewsDemoFeed(listEl);
       const loadBtn=$('btnNewsLoadMore');
@@ -14840,7 +14911,7 @@ function renderNewsPostCard(post,container,isFeatured){
   article.id='news-post-'+post.id;
   let media='<div class="poxy-news-media">';
   if(post.image_url&&validateUrl(post.image_url)){
-    media+='<img src="'+sanitizeText(post.image_url)+'" alt="" onerror="this.nextElementSibling.style.display=\'flex\'">';
+    media+='<img src="'+sanitizeText(post.image_url)+'" alt="" loading="lazy" decoding="async" onerror="this.nextElementSibling.style.display=\'flex\'">';
   }
   media+='<div class="poxy-news-thumb-ph"'+(post.image_url&&validateUrl(post.image_url)?' style="display:none"':'')+'><span class="material-symbols-outlined">newspaper</span></div></div>';
   const myLike=(post.likes||[]).includes(currentUser?.id);
@@ -14883,11 +14954,11 @@ async function loadNewsComments(postId){
   const listEl=$('ncl-'+postId);if(!listEl)return;
   listEl.innerHTML='<div style="font-size:10px;color:#333;padding:6px 0">Loading...</div>';
   try{
-    const{data,error}=await sb.from('news_comments').select('*').eq('post_id',postId).is('parent_id',null).order('created_at',{ascending:true});
+    const{data,error}=await sb.from('news_comments').select(POXY_NEWS_COMMENT_COLS).eq('post_id',postId).is('parent_id',null).order('created_at',{ascending:true}).limit(200);
     if(error)throw error;
     if(!data||!data.length){listEl.innerHTML='<div style="font-size:10px;color:#333;padding:6px 0">No comments yet.</div>';return;}
     const allIds=data.map(c=>c.id);
-    const{data:replies}=await sb.from('news_comments').select('*').eq('post_id',postId).not('parent_id','is',null).order('created_at',{ascending:true});
+    const{data:replies}=await sb.from('news_comments').select(POXY_NEWS_COMMENT_COLS).eq('post_id',postId).not('parent_id','is',null).order('created_at',{ascending:true}).limit(500);
     listEl.innerHTML='';
     data.forEach(comment=>{
       const commentEl=buildCommentElement(comment,postId,false);
@@ -15004,7 +15075,7 @@ async function loadPoxyChat(){
   const list=$('poxyChatList');if(!list)return;
   list.innerHTML='<div class="poxychat-empty">Loading chat…</div>';
   try{
-    const{data,error}=await sb.from('poxy_chat').select('*').order('created_at',{ascending:false}).limit(80);
+    const{data,error}=await sb.from('poxy_chat').select(POXY_CHAT_COLS).order('created_at',{ascending:false}).limit(80);
     if(error)throw error;
     chatMessages=(data||[]).slice().reverse();
     if(!chatMessages.length){list.innerHTML='<div class="poxychat-empty">No messages yet. Start the conversation.</div>';return;}
@@ -15023,7 +15094,7 @@ async function loadPoxyChat(){
 }
 function renderChatMsg(m,prof,list){
   const rankStyle=getChatRankStyle(prof);
-  const isFounderMsg=prof?.email&&prof.email.toLowerCase()===FOUNDER_EMAIL;
+  const isFounderMsg=profileIsFounder(prof);
   const isClubMsg=prof?.is_club_member===true;
   const isSelf=m.author_id===currentUser?.id;
   const el=document.createElement('div');el.className='poxychat-msg'+(isFounderMsg?' founder-msg':isClubMsg?' club-msg':'');
@@ -15124,7 +15195,7 @@ async function checkFoundersRace(){
   const checklistEl=$('gen1ChecklistContainer');const founderBox=$('gen1FounderBox');
   if(!checklistEl||!founderBox||!currentUser)return;
   try{
-    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id);
+    const{data}=await sb.from('user_poxy').select('poxy_tier').eq('user_id',currentUser.id).limit(5000);
     const tierSet=new Set((data||[]).map(t=>t.poxy_tier));
     const baseTiers=['common','uncommon','rare','epic','legendary'];
     checklistEl.innerHTML='<div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#444;text-transform:uppercase;margin-bottom:8px">Founder\'s Race Progress</div>';
@@ -15182,26 +15253,29 @@ async function loadLeaderboardData(){
     const widget=$('ranksMyProfileWidget');if(widget)widget.innerHTML=loading;
   }
   try{
-    if(leaderboardMode==='balance'){
-      const{data,error}=await sb.from('profiles').select('id,username,avatar_url,balance').order('balance',{ascending:false}).limit(100);
-      if(error)throw error;
-      renderLeaderboardList(data||[],'balance');
-    } else {
-      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']);
+    const payload=await cachedQuery('leaderboard:'+leaderboardMode,async()=>{
+      if(leaderboardMode==='balance'){
+        const{data,error}=await sb.from('profiles').select('id,username,avatar_url,balance').order('balance',{ascending:false}).limit(100);
+        if(error)throw error;
+        return{mode:'balance',rows:data||[]};
+      }
+      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']).limit(5000);
       if(pe)throw pe;
       const counts={};
       (poxyData||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
       const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,100);
       const uids=sorted.map(([id])=>id);
-      if(!uids.length){
-        if(listEl.id==='spaLeaderboardList'){renderRanksPageLayout([],'collection');return;}
-        listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;
-      }
+      if(!uids.length)return{mode:'collection',rows:[]};
       const{data:profs}=await sb.from('profiles').select('id,username,avatar_url').in('id',uids);
       const pm={};(profs||[]).forEach(p=>{pm[p.id]=p;});
       const merged=sorted.map(([id,count])=>({id,count,username:pm[id]?.username,avatar_url:pm[id]?.avatar_url}));
-      renderLeaderboardList(merged,'collection');
+      return{mode:'collection',rows:merged};
+    },30000);
+    if(!payload.rows.length){
+      if(listEl.id==='spaLeaderboardList'){renderRanksPageLayout([],payload.mode);return;}
+      listEl.innerHTML='<div class="lb-empty">No data yet.</div>';return;
     }
+    renderLeaderboardList(payload.rows,payload.mode);
   }catch(e){
     console.error('loadLeaderboardData:',e);
     if(listEl.id==='spaLeaderboardList'){
@@ -16600,6 +16674,8 @@ function bootApp(){
   }
   updateAuthModeUI();
   setupAuthStateListener();
+  poxyInitImgPerf();
+  poxyInitLazySections();
   updateGlobalFrames();
   $('btnFriendProfileBack')?.addEventListener('click',closeFriendProfileView);
   $('giftPickerOverlay')?.addEventListener('click',e=>{if(e.target===$('giftPickerOverlay'))closeGiftPicker();});
