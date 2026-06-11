@@ -11,6 +11,8 @@ import { loadActiveSigningKey, sign } from "../_shared/kms.ts";
 import { sha256Hex } from "../_shared/crypto.ts";
 import { buildEventCanonical, isoMicro, poxyHashInput } from "../_shared/canonical.ts";
 import { enforceReplayProtection, handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { mintPoxySchema, parseValidated } from "../_shared/schemas.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -20,20 +22,22 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const body = await req.json();
+    const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "mint_poxy", 10);
+    if (limited) return limited;
+
+    const parsed = parseValidated(mintPoxySchema, await req.json());
+    if (!parsed.ok) return parsed.response;
     const {
       envelope,
       tier,
-      collection_id = "genesis",
-      generation_version = 1,
+      collection_id,
+      generation_version,
       link_user_poxy_id = null,
       rarity_seed: providedSeed,
       serial_number: providedSerial,
-    } = body ?? {};
+    } = parsed.data;
 
-    if (!tier) return json({ ok: false, error: "tier required" }, 400);
-
-    const admin = adminClient();
     await enforceReplayProtection(admin, userId, { ...envelope, action: "mint_poxy" });
 
     const key = await loadActiveSigningKey(admin);

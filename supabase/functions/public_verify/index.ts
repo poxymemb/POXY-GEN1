@@ -7,6 +7,9 @@
 
 import { adminClient } from "../_shared/supabase.ts";
 import { verifyMessage } from "../_shared/crypto.ts";
+import { clientInfo } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { parseValidated, publicVerifySchema } from "../_shared/schemas.ts";
 
 // Public transparency endpoint — reflect any browser origin (verify works logged-out, any account).
 function cors(req: Request) {
@@ -26,18 +29,16 @@ Deno.serve(async (req) => {
   const headers = { ...cors(req), "Content-Type": "application/json" };
 
   try {
-    const body = await req.json();
-    const { type, hash } = body ?? {};
-    const id = body?.id != null ? String(body.id).replace(/^#/, "").trim() : undefined;
-
-    if (!type) {
-      return new Response(
-        JSON.stringify({ ok: false, error: "type required: 'asset' | 'event' | 'rng'" }),
-        { status: 400, headers },
-      );
-    }
-
     const admin = adminClient();
+    const ip = clientInfo(req).ip ?? "unknown";
+    const limited = await enforceRateLimit(admin, ip, "public_verify", 60);
+    if (limited) return limited;
+
+    const parsed = parseValidated(publicVerifySchema, await req.json());
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data;
+    const { type, hash } = body;
+    const id = body.id != null ? String(body.id).replace(/^#/, "").trim() : undefined;
 
     // ── ASSET VERIFICATION ────────────────────────────────────────────────────
     if (type === "asset") {

@@ -7,6 +7,8 @@
 import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { merkleProof, merkleRoot, verifyMerkleProof } from "../_shared/crypto.ts";
 import { handleOptions, json } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { parseValidated, verifyMerkleTreeSchema } from "../_shared/schemas.ts";
 
 async function loadLeaves(admin: ReturnType<typeof adminClient>, tree: string): Promise<string[]> {
   if (tree === "events") {
@@ -27,12 +29,13 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const { tree_type = "events", leaf_hash } = (await req.json()) ?? {};
-    if (!["events", "assets"].includes(tree_type)) {
-      return json({ ok: false, error: "tree_type must be 'events' or 'assets'" }, 400);
-    }
-
     const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "verify_merkle_tree", 10);
+    if (limited) return limited;
+
+    const parsed = parseValidated(verifyMerkleTreeSchema, await req.json().catch(() => ({})));
+    if (!parsed.ok) return parsed.response;
+    const { tree_type, leaf_hash } = parsed.data;
     const leaves = await loadLeaves(admin, tree_type);
     if (!leaves.length) return json({ ok: false, error: "Tree is empty" }, 400);
 

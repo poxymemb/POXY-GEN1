@@ -7,6 +7,7 @@
 
 import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
 import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -26,6 +27,10 @@ Deno.serve(async (req) => {
     }
 
     const admin = adminClient();
+    const rateSubject = isCron ? "cron:snapshot" : userId!;
+    const limited = await enforceRateLimit(admin, rateSubject, "snapshot", 5);
+    if (limited) return limited;
+
     const { data: merkle, error: mErr } = await admin.rpc("compute_merkle_roots");
     if (mErr) return json({ ok: false, error: mErr.message }, 400);
 

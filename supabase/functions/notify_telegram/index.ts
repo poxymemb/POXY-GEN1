@@ -4,6 +4,10 @@
 // Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, POXY_NOTIFY_SECRET
 // =============================================================================
 
+import { adminClient } from "../_shared/supabase.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { notifyTelegramSchema, parseValidated } from "../_shared/schemas.ts";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -61,21 +65,6 @@ function formatNewMessage(p: NotifyPayload): string {
   ].join("\n");
 }
 
-function validatePayload(body: NotifyPayload): string | null {
-  if (!body?.type || (body.type !== "new_ticket" && body.type !== "new_message")) {
-    return "type must be new_ticket or new_message";
-  }
-  if (!body.ticket_id) return "ticket_id required";
-  if (!body.ticket_id_short) return "ticket_id_short required";
-  if (!body.username) return "username required";
-  if (!body.subject) return "subject required";
-  if (!body.created_at) return "created_at required";
-  if (body.type === "new_message" && body.message_preview == null) {
-    return "message_preview required for new_message";
-  }
-  return null;
-}
-
 async function sendTelegram(text: string): Promise<void> {
   const token = Deno.env.get("TELEGRAM_BOT_TOKEN");
   const chatId = Deno.env.get("TELEGRAM_CHAT_ID");
@@ -115,9 +104,13 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const body = (await req.json()) as NotifyPayload;
-    const err = validatePayload(body);
-    if (err) return json({ ok: false, error: err }, 400);
+    const admin = adminClient();
+    const limited = await enforceRateLimit(admin, "internal:notify_telegram", "notify_telegram", 100);
+    if (limited) return limited;
+
+    const parsed = parseValidated(notifyTelegramSchema, await req.json());
+    if (!parsed.ok) return parsed.response;
+    const body = parsed.data as NotifyPayload;
 
     const text = body.type === "new_ticket"
       ? formatNewTicket(body)

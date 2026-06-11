@@ -7,6 +7,8 @@ import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { loadActiveSigningKey, sign } from "../_shared/kms.ts";
 import { buildEventCanonical, isoMicro } from "../_shared/canonical.ts";
 import { enforceReplayProtection, handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { parseValidated, transferPoxySchema } from "../_shared/schemas.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -16,7 +18,12 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const body = await req.json();
+    const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "transfer_poxy", 20);
+    if (limited) return limited;
+
+    const parsed = parseValidated(transferPoxySchema, await req.json());
+    if (!parsed.ok) return parsed.response;
     const {
       envelope,
       asset_id,
@@ -24,11 +31,7 @@ Deno.serve(async (req) => {
       event_type = "TRANSFER",
       from_owner: explicitFrom = null,
       offer_id = null,
-    } = body ?? {};
-    if (!asset_id || !to_owner) return json({ ok: false, error: "asset_id and to_owner required" }, 400);
-    if (!["TRANSFER", "TRADE"].includes(event_type)) {
-      return json({ ok: false, error: "event_type must be TRANSFER or TRADE" }, 400);
-    }
+    } = parsed.data;
 
     let fromOwner = userId;
     let actorId = userId;
@@ -47,7 +50,6 @@ Deno.serve(async (req) => {
       if (to_owner === userId) return json({ ok: false, error: "Cannot transfer to self" }, 400);
     }
 
-    const admin = adminClient();
     await enforceReplayProtection(admin, userId, { ...envelope, action: "transfer_poxy" });
 
     const key = await loadActiveSigningKey(admin);

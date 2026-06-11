@@ -6,6 +6,8 @@
 import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { verifyWithVersion } from "../_shared/kms.ts";
 import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { parseValidated, verifyEventChainSchema } from "../_shared/schemas.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -15,9 +17,13 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const { from_seq = 1, to_seq = null, verify_signatures = true } = (await req.json()) ?? {};
-
     const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "verify_event_chain", 10);
+    if (limited) return limited;
+
+    const parsed = parseValidated(verifyEventChainSchema, await req.json().catch(() => ({})));
+    if (!parsed.ok) return parsed.response;
+    const { from_seq, to_seq, verify_signatures } = parsed.data;
 
     // 1. SQL verifies hash linkage + recomputation across the whole range.
     const { data: chain, error } = await admin.rpc("verify_event_chain", {

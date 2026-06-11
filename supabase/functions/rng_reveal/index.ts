@@ -6,6 +6,8 @@
 
 import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
 import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { parseValidated, rngRevealSchema } from "../_shared/schemas.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -15,10 +17,13 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const { round_id, client_seed, nonce = 0 } = (await req.json()) ?? {};
-    if (!round_id || client_seed == null) {
-      return json({ ok: false, error: "round_id and client_seed required" }, 400);
-    }
+    const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "rng_reveal", 30);
+    if (limited) return limited;
+
+    const parsed = parseValidated(rngRevealSchema, await req.json());
+    if (!parsed.ok) return parsed.response;
+    const { round_id, client_seed, nonce } = parsed.data;
 
     const userClient = userClientFromRequest(req);
     const { data, error } = await userClient.rpc("rng_reveal", {
@@ -28,7 +33,6 @@ Deno.serve(async (req) => {
     });
     if (error) return json({ ok: false, error: error.message }, 400);
 
-    const admin = adminClient();
     await writeAudit(admin, "RNG", userId, req, { stage: "reveal", round_id, result: data?.result });
     return json(data);
   } catch (e) {

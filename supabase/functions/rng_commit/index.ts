@@ -6,6 +6,7 @@
 
 import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
 import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -15,12 +16,14 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
+    const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "rng_commit", 30);
+    if (limited) return limited;
+
     // rng_commit re-checks auth.uid(), so it must run in the caller's JWT context.
     const userClient = userClientFromRequest(req);
     const { data, error } = await userClient.rpc("rng_commit", { p_user_id: userId });
     if (error) return json({ ok: false, error: error.message }, 400);
-
-    const admin = adminClient();
 
     await writeAudit(admin, "RNG", userId, req, { stage: "commit", round_id: data?.round_id });
     return json(data);

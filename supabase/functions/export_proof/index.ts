@@ -18,6 +18,8 @@
 import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
 import { merkleProof, merkleRoot } from "../_shared/crypto.ts";
 import { handleOptions, json } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { assetIdSchema, parseValidated } from "../_shared/schemas.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -27,10 +29,13 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const { asset_id } = (await req.json()) ?? {};
-    if (!asset_id) return json({ ok: false, error: "asset_id required" }, 400);
-
     const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "export_proof", 10);
+    if (limited) return limited;
+
+    const parsed = parseValidated(assetIdSchema, await req.json());
+    if (!parsed.ok) return parsed.response;
+    const { asset_id } = parsed.data;
 
     const { data: asset, error: aErr } = await admin
       .from("poxy_assets").select("*").eq("id", asset_id).single();

@@ -7,6 +7,8 @@ import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { loadActiveSigningKey, sign } from "../_shared/kms.ts";
 import { buildEventCanonical, isoMicro } from "../_shared/canonical.ts";
 import { enforceReplayProtection, handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { destroyPoxySchema, parseValidated } from "../_shared/schemas.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -16,11 +18,14 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const body = await req.json();
-    const { envelope, asset_id, reason = "burn", user_poxy_id = null, tier = null } = body ?? {};
-    if (!asset_id) return json({ ok: false, error: "asset_id required" }, 400);
-
     const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "destroy_poxy", 15);
+    if (limited) return limited;
+
+    const parsed = parseValidated(destroyPoxySchema, await req.json());
+    if (!parsed.ok) return parsed.response;
+    const { envelope, asset_id, reason = "burn", user_poxy_id = null, tier = null } = parsed.data;
+
     await enforceReplayProtection(admin, userId, { ...envelope, action: "destroy_poxy" });
 
     const key = await loadActiveSigningKey(admin);

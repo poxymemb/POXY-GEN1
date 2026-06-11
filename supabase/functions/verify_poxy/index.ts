@@ -7,6 +7,8 @@
 import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { verifyWithVersion } from "../_shared/kms.ts";
 import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { assetIdSchema, parseValidated } from "../_shared/schemas.ts";
 
 Deno.serve(async (req) => {
   const pre = handleOptions(req);
@@ -16,10 +18,13 @@ Deno.serve(async (req) => {
     const userId = await getUserId(req);
     if (!userId) return json({ ok: false, error: "Unauthorized" }, 401);
 
-    const { asset_id } = (await req.json()) ?? {};
-    if (!asset_id) return json({ ok: false, error: "asset_id required" }, 400);
-
     const admin = adminClient();
+    const limited = await enforceRateLimit(admin, userId, "verify_poxy", 60);
+    if (limited) return limited;
+
+    const parsed = parseValidated(assetIdSchema, await req.json());
+    if (!parsed.ok) return parsed.response;
+    const { asset_id } = parsed.data;
 
     // 1. structural + hash integrity (SQL side)
     const { data: integrity, error } = await admin.rpc("verify_asset_integrity", { p_asset_id: asset_id });
