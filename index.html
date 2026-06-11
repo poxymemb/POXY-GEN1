@@ -596,6 +596,12 @@ body.poxy-stitch-dash .page{background:#050506;color:#e8e8ec}
 .gen1-check-item.done{color:#4CAF50}
 .gen1-check-dot{width:8px;height:8px;border-radius:50%;background:#2a2a35;flex-shrink:0}
 .gen1-check-item.done .gen1-check-dot{background:#4CAF50}
+.gen1-sold-out-badge,.rarity-sold-out-badge{font-size:8px;font-weight:800;letter-spacing:0.08em;color:#ef4444;border:1px solid rgba(239,68,68,0.4);padding:2px 6px;border-radius:4px;text-transform:uppercase}
+.gen1-supply-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:999px;margin-top:6px;overflow:hidden}
+.gen1-supply-fill{height:100%;background:linear-gradient(90deg,#00f5a0,#7c3aed);border-radius:999px}
+.gen1-supply-meta{font-size:9px;color:rgba(255,255,255,0.45);margin-top:4px}
+.st-gen1-scarcity{padding:8px 12px;border-radius:10px;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.08);font-size:10px;color:#f59e0b;margin-bottom:10px;line-height:1.4}
+.st-gen1-scarcity[hidden]{display:none!important}
 
 /* ── APPRAISAL (TAB D) ── */
 .appraisal-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px}
@@ -1837,6 +1843,7 @@ body.dark-club .club-sub{color:#888}
               <div class="st-case-wallet-chips" id="stCaseWalletChips"></div>
             </div>
             <div class="st-economy-event" id="stEconomyEvent" hidden aria-live="polite"></div>
+            <div class="st-gen1-scarcity" id="stGen1Scarcity" hidden aria-live="polite"></div>
             <div class="st-premium-tray" id="stPremiumTray"></div>
             <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> <span data-i18n="dash.openBox">OPEN BOX</span> <span class="st-open-price" id="btnOpenPrice">50 PX</span></button>
             <div class="post-btns" id="postBtns">
@@ -5429,6 +5436,9 @@ async function loadPlayerEconomy(){
     renderCaseWallet();
     renderPremiumTray();
     renderEconomyEventBanner();
+    renderGen1ScarcityBanner();
+    if(activeStitchTab==='tierlist')renderRarityTierStack();
+    if($('gen1ModelGrid'))renderGen1TabContent();
     updateOpenButtonPrice();
     renderProfileStreakWidget();
     updateBalanceBadge(getPxBalance());
@@ -5442,6 +5452,7 @@ async function loadPlayerEconomy(){
     renderCaseWallet();
     renderPremiumTray();
     renderEconomyEventBanner();
+    renderGen1ScarcityBanner();
     return null;
   }
 }
@@ -5617,6 +5628,12 @@ function getEffectiveCasePrice(caseType,dopamine){
   const prem=PREMIUM_CASES.find(c=>c.id===caseType);
   return prem?prem.price:STANDARD_CASE_PRICE;
 }
+function getGen1Supply(){return playerEconomy?.gen1_supply||null;}
+function gen1TierSupply(tier){
+  const g=getGen1Supply();
+  if(!g?.tiers)return null;
+  return (g.tiers||[]).find(t=>t.tier===tier)||null;
+}
 function renderEconomyEventBanner(){
   const el=$('stEconomyEvent');
   if(!el)return;
@@ -5625,6 +5642,30 @@ function renderEconomyEventBanner(){
   el.hidden=false;
   el.innerHTML='<div class="st-economy-event-label">⚡ '+escHtml(ev.label)+'</div>'
     +'<div class="st-economy-event-sub">'+escHtml(ev.sub||'')+'</div>';
+}
+function renderGen1ScarcityBanner(){
+  const el=$('stGen1Scarcity');
+  if(!el)return;
+  const g=getGen1Supply();
+  if(!g?.ok){el.hidden=true;el.innerHTML='';return;}
+  if(g.legendary_scarcity){
+    el.hidden=false;
+    el.textContent='🔥 Last '+Number(g.legendary_remaining||0).toLocaleString()+' Legendary dragons in Gen 1 supply';
+    return;
+  }
+  if(g.fully_exhausted){
+    el.hidden=false;
+    el.textContent='Gen 1 supply sealed — acquisition via marketplace only';
+    return;
+  }
+  const rem=g.total_remaining;
+  if(rem!=null&&rem<=500){
+    el.hidden=false;
+    el.textContent='⚠ Only '+Number(rem).toLocaleString()+' / '+Number(g.total_cap||5000).toLocaleString()+' Gen 1 dragons remain';
+    return;
+  }
+  el.hidden=true;
+  el.innerHTML='';
 }
 function renderPremiumTray(){
   const tray=$('stPremiumTray');
@@ -8986,10 +9027,17 @@ function renderRarityTierStack(){
   RARITY_DISPLAY_ORDER.forEach((tid,idx)=>{
     const t=TIERS.find(x=>x.id===tid)||TIERS[0];
     const meta=RARITY_TIER_META[tid]||RARITY_TIER_META.common;
-    const total=globalTierCounts[tid]!=null?globalTierCounts[tid]:0;
+    const sup=gen1TierSupply(tid);
+    const total=sup?sup.minted:(globalTierCounts[tid]!=null?globalTierCounts[tid]:0);
+    const cap=sup?sup.cap:null;
+    const remaining=sup?sup.remaining:null;
+    const soldOut=!!sup?.sold_out;
     const dropLabel=(t.prob*100)<0.1?((t.prob*100).toFixed(2)+'% DROP'):(meta.dropPct+'% DROP');
+    const supplyTxt=cap!=null
+      ?(Number(total).toLocaleString()+' / '+Number(cap).toLocaleString()+(remaining!=null?' · '+Number(remaining).toLocaleString()+' left':''))
+      :Number(total).toLocaleString();
     const card=document.createElement('article');
-    card.className='rarity-tier-card gpu-accel rarity-reveal-up '+meta.glow;
+    card.className='rarity-tier-card gpu-accel rarity-reveal-up '+meta.glow+(soldOut?' rarity-tier-card--sold-out':'');
     card.style.transitionDelay=(0.08+idx*0.08)+'s';
     card.style.setProperty('--rt-color',meta.accent);
     card.style.setProperty('--rt-glow',t.glow);
@@ -9000,11 +9048,12 @@ function renderRarityTierStack(){
       '</div>'+
       '<div class="rarity-tier-body">'+
         '<div class="rarity-tier-title-row"><h2>'+t.label.toUpperCase()+'</h2>'+
+        (soldOut?'<span class="rarity-sold-out-badge">SOLD OUT</span>':'')+
         '<span class="rarity-drop-pill" style="background:'+meta.accent+'18;color:'+meta.accent+';border-color:'+meta.accent+'33">'+dropLabel+'</span></div>'+
         '<p class="rarity-tier-desc">'+meta.desc+'</p>'+
         '<div class="rarity-tier-stats">'+
           '<span><span class="material-symbols-outlined">bolt</span> '+meta.coeff+'x Coeff</span>'+
-          '<span><span class="material-symbols-outlined">inventory_2</span> Supply: <span class="rarity-supply-val">'+Number(total).toLocaleString()+'</span></span>'+
+          '<span><span class="material-symbols-outlined">inventory_2</span> Gen1: <span class="rarity-supply-val">'+supplyTxt+'</span></span>'+
         '</div>'+
       '</div>';
     attachRarityCardTilt(card);
@@ -14858,11 +14907,18 @@ window.sendPoxyChat=async function(){
 // ── GEN 1 TAB ──
 function renderGen1TabContent(){
   const grid=$('gen1ModelGrid');
-  if(!grid||grid.children.length>0)return;
+  if(!grid)return;
+  grid.innerHTML='';
   GEN1_MODELS.forEach(model=>{
     const tier=TIERS.find(t=>t.id===model.tier)||TIERS[0];
+    const sup=gen1TierSupply(model.tier);
+    const pct=sup&&sup.cap?Math.min(100,(sup.minted/sup.cap)*100):0;
     const card=document.createElement('div');card.className='gen1-model-card';
-    card.innerHTML='<div class="gen1-model-icon" style="color:'+tier.color+'">'+tier.icon+'</div><div class="gen1-model-name">'+model.name+'</div><div class="gen1-model-tier" style="color:'+tier.color+'">'+tier.label+'</div><div class="gen1-model-desc">'+model.desc+'</div>';
+    card.innerHTML='<div class="gen1-model-icon" style="color:'+tier.color+'">'+tier.icon+'</div>'
+      +'<div class="gen1-model-name">'+model.name+(sup?.sold_out?' <span class="gen1-sold-out-badge">SOLD OUT</span>':'')+'</div>'
+      +'<div class="gen1-model-tier" style="color:'+tier.color+'">'+tier.label+'</div>'
+      +(sup?'<div class="gen1-supply-meta">'+Number(sup.minted).toLocaleString()+' / '+Number(sup.cap).toLocaleString()+' minted</div><div class="gen1-supply-bar"><div class="gen1-supply-fill" style="width:'+pct.toFixed(1)+'%"></div></div>':'')
+      +'<div class="gen1-model-desc">'+model.desc+'</div>';
     grid.appendChild(card);
   });
   updateGen1Timer();

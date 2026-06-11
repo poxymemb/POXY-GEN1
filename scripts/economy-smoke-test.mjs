@@ -42,6 +42,7 @@ const RPCS = [
   ['claim_vip_daily_standard', {}, 'auth'],
   ['claim_vip_weekly_vip_case', {}, 'auth'],
   ['dev_activate_vip', {}, 'auth'],
+  ['get_gen1_supply_status', {}, 'public'],
 ];
 
 async function rpc(name, body) {
