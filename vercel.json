@@ -1,5 +1,11 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/sw.js", "destination": "/public/sw.js" },
+    { "source": "/icon-192.png", "destination": "/public/icon-192.png" },
+    { "source": "/badge-72.png", "destination": "/public/badge-72.png" },
+    { "source": "/_poxy-staff-mcu", "destination": "/assets/admin-terminal.html" },
+    { "source": "/_poxy-staff-mcu/", "destination": "/assets/admin-terminal.html" },
     { "source": "/lumina-os", "destination": "/index.html" },
     { "source": "/lumina-os/", "destination": "/index.html" },
     { "source": "/lumina-os/:path*", "destination": "/index.html" },
@@ -14,10 +20,6 @@
     { "source": "/stitch-export/(.*)", "destination": "/", "permanent": false },
     { "source": "/supabase/(.*)", "destination": "/", "permanent": false },
     { "source": "/tools/(.*)", "destination": "/", "permanent": false }
-  ],
-  "routes": [
-    { "src": "/_poxy-staff-mcu", "dest": "/assets/admin-terminal.html" },
-    { "src": "/_poxy-staff-mcu/", "dest": "/assets/admin-terminal.html" }
   ],
   "headers": [
     {
@@ -35,10 +37,16 @@
       ]
     },
     {
-      "source": "/_poxy-staff-mcu",
+      "source": "/public/sw.js",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "Pragma", "value": "no-cache" }
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    },
+    {
+      "source": "/_poxy-staff-mcu",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
     }
   ]
