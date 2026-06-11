@@ -106,7 +106,7 @@
 <script src="assets/poxy-gens-motion.js?v=4" defer></script>
 <link rel="stylesheet" href="assets/poxy-onboarding.css?v=2">
 <script src="assets/poxy-onboarding.js?v=2" defer></script>
-<script src="assets/poxy-player-onboarding.js?v=2" defer></script>
+<script src="assets/poxy-player-onboarding.js?v=3" defer></script>
 <script src="assets/poxy-push.js?v=1" defer></script>
 <style>
 /* ══ POXY Design System — Session C1 ══ */
@@ -370,6 +370,7 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 }
 .poxy-streak-milestone strong{color:rgba(255,255,255,0.75)}
 .poxy-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
+#pobWelcomeModal,#pobDragonModal,#pobPushModal,#dailyStreakModal{z-index:100060}
 .poxy-modal-backdrop[hidden]{display:none!important}
 .poxy-econ-modal{width:min(420px,100%);border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:#0f0f1a;padding:24px;color:#e2e8f0;position:relative}
 .poxy-econ-modal h3{font-family:var(--font-display);font-size:20px;margin-bottom:8px;color:#fff}
@@ -6645,8 +6646,18 @@ async function loadProfile(){
       const hashEl=$('userAccountHash');
       if(hashEl)hashEl.textContent=data.account_hash?'#'+data.account_hash:'';
     } else {
-      currentProfile={id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null};
-      sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).then(({error})=>{if(error&&error.code!=='23505')console.error(error);});
+      const{data:created,error:insErr}=await sb.from('profiles').insert({id:currentUser.id,avatar_url:AVATARS[0],balance:0,dust:0}).select('*').maybeSingle();
+      if(insErr&&insErr.code!=='23505')console.error('profile insert:',insErr);
+      if(created){
+        currentProfile=created;
+      }else{
+        const{data:retry}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+        currentProfile=retry||{id:currentUser.id,avatar_url:AVATARS[0],username:'',balance:0,dust:0,badges:[],is_verified_employee:false,name_gradient:null,profile_theme:null,favorite_poxy_id:null,metadata:{}};
+      }
+      selectedAvatar=currentProfile.avatar_url||AVATARS[0];
+      setBarAvatar(selectedAvatar);
+      updateBalanceBadge(getPxBalance());
+      await loadPlayerEconomy();
     }
   }catch(e){console.error('loadProfile:',e);}
 }

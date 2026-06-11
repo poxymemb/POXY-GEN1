@@ -163,7 +163,10 @@
     if (wasPrompted()) return;
     var onboardingDone = false;
     try {
-      onboardingDone = localStorage.getItem('poxy_onboarding_complete') === '1';
+      var uid = window.currentUser && window.currentUser.id;
+      onboardingDone = uid
+        ? (localStorage.getItem('poxy_onboarding_complete:' + uid) === '1')
+        : (localStorage.getItem('poxy_onboarding_complete') === '1');
     } catch (e) {}
     if (!onboardingDone && window.currentProfile && window.currentProfile.metadata) {
       onboardingDone = !!window.currentProfile.metadata.onboarding_done;

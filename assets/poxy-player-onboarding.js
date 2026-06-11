@@ -2,6 +2,11 @@
   'use strict';
 
   var LS_KEY = 'poxy_onboarding_complete';
+
+  function lsKey() {
+    var uid = window.currentUser && window.currentUser.id;
+    return uid ? (LS_KEY + ':' + uid) : LS_KEY;
+  }
   var DNA_SEASON = 'gen_china_magic';
   var TRAIT_CATS = ['Eye', 'Horn', 'Aura', 'Element', 'Scale', 'Tail'];
 
@@ -39,38 +44,44 @@
   function sb() { return window.sb; }
 
   function isCompleteLocally() {
-    return localStorage.getItem(LS_KEY) === '1' || localStorage.getItem(LS_KEY) === 'true';
+    var key = lsKey();
+    if (localStorage.getItem(key) === '1' || localStorage.getItem(key) === 'true') return true;
+    // Legacy global key from earlier builds — only honor if same user had marked it
+    return false;
   }
 
   function markCompleteLocal() {
-    try { localStorage.setItem(LS_KEY, '1'); } catch (e) {}
+    try { localStorage.setItem(lsKey(), '1'); } catch (e) {}
   }
 
   async function shouldShowOnboarding() {
     if (!window.currentUser || !window.sb) return false;
     if (isCompleteLocally()) return false;
+
     var profile = window.currentProfile;
     if (profile && profile.metadata && profile.metadata.onboarding_done) return false;
 
     try {
-      var res = await sb().from('user_poxy')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', window.currentUser.id);
-      if (res.error) {
-        console.error('[onboarding] dragon count:', res.error);
+      var dragonRes = await sb().from('user_poxy')
+        .select('id')
+        .eq('user_id', window.currentUser.id)
+        .limit(1);
+      if (dragonRes.error) {
+        console.error('[onboarding] dragon check:', dragonRes.error);
         return false;
       }
-      if ((res.count || 0) > 0) return false;
+      if (dragonRes.data && dragonRes.data.length > 0) return false;
 
-      if (!profile || !profile.created_at) {
-        var pr = await sb().from('profiles').select('created_at,metadata').eq('id', window.currentUser.id).maybeSingle();
-        if (pr.error || !pr.data) return false;
-        profile = pr.data;
-        if (profile.metadata && profile.metadata.onboarding_done) return false;
+      if (!profile || !profile.metadata) {
+        var pr = await sb().from('profiles').select('metadata').eq('id', window.currentUser.id).maybeSingle();
+        if (pr.error) {
+          console.error('[onboarding] profile:', pr.error);
+          return false;
+        }
+        if (pr.data && pr.data.metadata && pr.data.metadata.onboarding_done) return false;
       }
 
-      var isNew = Date.now() - new Date(profile.created_at).getTime() < 600000;
-      return isNew;
+      return true;
     } catch (e) {
       console.error('[onboarding] shouldShow:', e);
       return false;
