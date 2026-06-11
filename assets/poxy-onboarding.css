@@ -292,6 +292,96 @@
   .ob-s2-orbit{width:220px;height:220px}
 }
 
+/* ══ O1 PLAYER ONBOARDING (welcome · free case · tour) ══ */
+.pob-modal{
+  width:min(440px,100%);
+  border-radius:1.5rem;
+  border:1px solid rgba(255,255,255,0.08);
+  background:#0d0d0f;
+  padding:28px 24px;
+  color:#e2e8f0;
+  box-shadow:0 24px 80px rgba(0,0,0,0.55);
+}
+.pob-modal-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.14em;
+  color:#00f5a0;margin-bottom:10px;text-transform:uppercase;
+}
+.pob-modal-user{
+  font-family:'Syne','Hanken Grotesk',system-ui,sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:14px;
+}
+.pob-modal-body{
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;line-height:1.65;color:rgba(255,255,255,0.62);margin-bottom:22px;
+}
+.pob-modal-actions{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.pob-btn-primary{
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.06em;
+  padding:14px 18px;border-radius:12px;border:none;cursor:pointer;
+  background:#00f5a0;color:#0a0a0f;transition:transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94),box-shadow 0.2s;
+}
+.pob-btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 24px rgba(0,245,160,0.35)}
+.pob-btn-primary:disabled{opacity:0.55;cursor:wait;transform:none}
+.pob-btn-ghost{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.04em;
+  background:transparent;border:none;color:rgba(255,255,255,0.42);cursor:pointer;padding:6px;
+}
+.pob-btn-ghost:hover{color:rgba(255,255,255,0.75)}
+.pob-dragon-art{
+  font-size:72px;line-height:1;text-align:center;margin:8px 0 16px;
+}
+.pob-dragon-serial{
+  font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:#fff;text-align:center;
+}
+.pob-dragon-meta{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;
+  color:rgba(255,255,255,0.45);text-align:center;margin:6px 0 14px;
+}
+.pob-dragon-traits{
+  font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.7;color:rgba(255,255,255,0.55);
+  text-align:center;margin-bottom:12px;word-break:break-word;
+}
+.pob-dragon-hash{
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:#00f5a0;text-align:center;margin-bottom:6px;
+}
+.pob-dragon-proof{
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:12px;color:rgba(255,255,255,0.4);
+  text-align:center;margin-bottom:18px;
+}
+.pob-tour-overlay{
+  position:fixed;inset:0;z-index:100002;pointer-events:none;
+}
+.pob-tour-overlay.is-active{pointer-events:auto}
+.pob-tour-backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(2px);
+}
+.pob-tour-highlight{
+  position:fixed;z-index:100003;border-radius:14px;
+  box-shadow:0 0 0 9999px rgba(0,0,0,0.72),0 0 0 2px #00f5a0,0 0 24px rgba(0,245,160,0.35);
+  pointer-events:none;transition:top 0.25s ease,left 0.25s ease,width 0.25s ease,height 0.25s ease;
+}
+.pob-tour-tooltip{
+  position:fixed;z-index:100004;width:min(300px,calc(100vw - 24px));
+  border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:#111118;
+  padding:16px;box-shadow:0 16px 48px rgba(0,0,0,0.45);
+}
+.pob-tour-tooltip h4{
+  font-family:'Syne',system-ui,sans-serif;font-size:15px;font-weight:800;color:#fff;margin:0 0 6px;
+}
+.pob-tour-tooltip p{
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:12px;line-height:1.55;
+  color:rgba(255,255,255,0.55);margin:0 0 12px;
+}
+.pob-tour-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pob-tour-progress{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.35)}
+.pob-tour-actions{display:flex;gap:8px}
+.pob-tour-actions .pob-btn-primary{padding:10px 14px}
+.pob-confetti{
+  position:fixed;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:100005;
+}
+@media(max-width:420px){
+  .pob-modal{padding:22px 18px}
+  .pob-dragon-art{font-size:56px}
+}
+
 /* ── PREFERS-REDUCED-MOTION ── */
 @media(prefers-reduced-motion:reduce){
   .ob-scene--exit{animation:obFO 0.28s forwards}

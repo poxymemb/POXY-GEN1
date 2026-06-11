@@ -746,12 +746,6 @@
     else { startOnboarding(); }
   };
 
-  /* ── AUTH POLL ────────────────────────────────────────────────── */
-  var _poll = setInterval(function() {
-    if (window.currentUser) {
-      clearInterval(_poll);
-      if (!localStorage.getItem(LS_KEY)) { setTimeout(startOnboarding, 1200); }
-    }
-  }, 500);
+  /* Cinematic tour: replay only (Settings). O1 player flow uses poxy-player-onboarding.js */
 
 })();

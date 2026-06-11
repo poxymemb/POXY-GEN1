@@ -104,8 +104,9 @@
 <script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=3" defer></script>
 <script src="assets/poxy-gens-motion.js?v=4" defer></script>
-<link rel="stylesheet" href="assets/poxy-onboarding.css?v=1">
-<script src="assets/poxy-onboarding.js?v=1" defer></script>
+<link rel="stylesheet" href="assets/poxy-onboarding.css?v=2">
+<script src="assets/poxy-onboarding.js?v=2" defer></script>
+<script src="assets/poxy-player-onboarding.js?v=1" defer></script>
 <style>
 /* ══ POXY Design System — Session C1 ══ */
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -6355,10 +6356,14 @@ function bootstrapAfterLogin(){
       await applyPendingReferral();
       await loadPlayerAchievements();
       const dailyClaim=await claimDailyLoginOnce();
-      if(dailyClaim)showDailyStreakModal(dailyClaim);
       await Promise.all([checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]);
       await loadCollection();
       renderStorePage();
+      let onboardingStarted=false;
+      if(typeof maybeStartPlayerOnboarding==='function'){
+        onboardingStarted=await maybeStartPlayerOnboarding();
+      }
+      if(!onboardingStarted&&dailyClaim)showDailyStreakModal(dailyClaim);
     }catch(e){console.error('post-login bootstrap:',e);}
     loadNotificationQueue();
     loadClubVault();
@@ -9481,7 +9486,14 @@ function onRouletteLand(tier){
   currentSerial=landedSerial;
   currentPoxyId=landedPoxyId;
   playDrop(t.id);
-  openWinRevealModal(t,landedSerial);
+  if(window.PoxyPlayerOB&&window.PoxyPlayerOB.handleCaseLand){
+    window.PoxyPlayerOB.handleCaseLand(t,landedSerial,landedPoxyId).then(function(handled){
+      if(handled)return;
+      openWinRevealModal(t,landedSerial);
+    }).catch(function(){openWinRevealModal(t,landedSerial);});
+  }else{
+    openWinRevealModal(t,landedSerial);
+  }
   // v3: item already in DB — sync collection UI immediately so verify/dismiss never loses it
   if(landedPoxyId)syncDropToCollectionUI({toast:false}).catch(()=>{});
 }
@@ -16831,6 +16843,48 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
         INITIATE TRANSACTION
       </button>
       <p class="tum-legal">Funds are applied instantly to your POXY wallet in test mode. No real charges are made.</p>
+    </div>
+  </div>
+</div>
+
+<!-- O1: New player welcome + first dragon -->
+<div id="pobWelcomeModal" class="poxy-modal-backdrop" role="dialog" aria-modal="true" aria-label="Welcome to POXY World" hidden>
+  <div class="pob-modal">
+    <div class="pob-modal-kicker">✦ Welcome to POXY World</div>
+    <div class="pob-modal-user" id="pobWelcomeUser">@operative</div>
+    <p class="pob-modal-body">You've entered the digital void where 5,000 unique cryptographic dragons await.<br><br>Every dragon has a mathematical proof of existence. Every drop is verifiable on-chain.</p>
+    <div class="pob-modal-actions">
+      <button type="button" class="pob-btn-primary" id="pobWelcomeClaim">CLAIM YOUR FIRST DRAGON →</button>
+      <button type="button" class="pob-btn-ghost" id="pobWelcomeSkip">Skip introduction</button>
+    </div>
+  </div>
+</div>
+<div id="pobDragonModal" class="poxy-modal-backdrop" role="dialog" aria-modal="true" aria-label="Your first dragon" hidden>
+  <div class="pob-modal">
+    <div class="pob-modal-kicker">Your First Dragon</div>
+    <div class="pob-dragon-art" id="pobDragonArt" aria-hidden="true">🐉</div>
+    <div class="pob-dragon-serial" id="pobDragonSerial">PX-XXXXXX</div>
+    <div class="pob-dragon-meta" id="pobDragonMeta">COMMON • GEN 1</div>
+    <div class="pob-dragon-traits" id="pobDragonTraits"></div>
+    <div class="pob-dragon-hash" id="pobDragonHash">SHA-256: …</div>
+    <p class="pob-dragon-proof">Cryptographically unique. Forever yours.</p>
+    <div class="pob-modal-actions">
+      <button type="button" class="pob-btn-primary" id="pobDragonContinue">CONTINUE →</button>
+    </div>
+  </div>
+</div>
+<div id="pobTourOverlay" class="pob-tour-overlay" hidden>
+  <div class="pob-tour-backdrop" aria-hidden="true"></div>
+  <div id="pobTourHighlight" class="pob-tour-highlight" hidden></div>
+  <div id="pobTourTooltip" class="pob-tour-tooltip" role="dialog" aria-live="polite">
+    <h4 id="pobTourTitle">Open More Cases</h4>
+    <p id="pobTourText"></p>
+    <div class="pob-tour-footer">
+      <span class="pob-tour-progress" id="pobTourProgress">1 / 3</span>
+      <div class="pob-tour-actions">
+        <button type="button" class="pob-btn-ghost" id="pobTourSkip">Skip Tour</button>
+        <button type="button" class="pob-btn-primary" id="pobTourNext">Next</button>
+      </div>
     </div>
   </div>
 </div>
