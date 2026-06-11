@@ -3315,10 +3315,14 @@ async function checkStaffAccess(user){
   const authEmail = (user.email || '').toLowerCase();
   console.log('[MCU auth] checkStaffAccess — user.id:', user.id, 'auth.email:', authEmail);
 
-  const FOUNDER = ['nikitash0504@gmail.com','worldpoxy@gmail.com'];
-  if(FOUNDER.includes(authEmail)){
-    console.log('[MCU auth] allowed: founder allowlist');
-    return true;
+  try{
+    const {data: founderOk, error: founderErr} = await sb.rpc('is_founder');
+    if(!founderErr && founderOk === true){
+      console.log('[MCU auth] allowed: is_founder RPC');
+      return true;
+    }
+  }catch(e){
+    console.warn('[MCU auth] is_founder RPC failed:', e?.message || e);
   }
 
   try{
