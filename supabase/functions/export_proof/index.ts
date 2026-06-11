@@ -17,7 +17,7 @@
 
 import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
 import { merkleProof, merkleRoot } from "../_shared/crypto.ts";
-import { handleOptions, json } from "../_shared/http.ts";
+import { handleOptions, json, safeErrorResponse } from "../_shared/http.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { assetIdSchema, parseValidated } from "../_shared/schemas.ts";
 
@@ -116,6 +116,6 @@ Deno.serve(async (req) => {
 
     return json({ ok: true, proof_packet: packet });
   } catch (e) {
-    return json({ ok: false, error: String(e?.message ?? e) }, 400);
+    return safeErrorResponse(e, "export_proof", 400, "Invalid request");
   }
 });

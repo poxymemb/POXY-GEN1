@@ -59,7 +59,8 @@ Deno.serve(async (req) => {
           data.public_key as string,
         );
       } catch (e) {
-        sigError = String(e?.message ?? e);
+        console.error("public_verify signature check:", e);
+        sigError = "Signature check failed";
       }
 
       const steps = [
@@ -347,8 +348,9 @@ Deno.serve(async (req) => {
       { status: 400, headers },
     );
   } catch (e) {
+    console.error("public_verify error:", e);
     return new Response(
-      JSON.stringify({ ok: false, error: String(e?.message ?? e) }),
+      JSON.stringify({ ok: false, error: "Invalid request" }),
       { status: 400, headers },
     );
   }

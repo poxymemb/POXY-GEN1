@@ -6,7 +6,7 @@
 // =============================================================================
 
 import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
-import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { handleOptions, json, safeErrorResponse, writeAudit } from "../_shared/http.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 
 Deno.serve(async (req) => {
@@ -40,6 +40,6 @@ Deno.serve(async (req) => {
     await writeAudit(admin, "ADMIN_ACTION", userId, req, { stage: "snapshot", state_root: snap?.state_root });
     return json({ ok: true, merkle, snapshot: snap });
   } catch (e) {
-    return json({ ok: false, error: String(e?.message ?? e) }, 400);
+    return safeErrorResponse(e, "snapshot", 400, "Invalid request");
   }
 });

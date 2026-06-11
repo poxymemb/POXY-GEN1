@@ -981,7 +981,10 @@
     if (ctx) ctx.classList.toggle('lc-hidden', !isMessages);
     if (mod) mod.classList.toggle('lc-hidden', isMessages);
 
-    if (!isMessages && renderers[nav]) renderers[nav]();
+    if (!isMessages && Object.prototype.hasOwnProperty.call(renderers, nav)) {
+      const candidate = renderers[nav];
+      if (typeof candidate === 'function') candidate();
+    }
     updateNotifBadge();
   }
 

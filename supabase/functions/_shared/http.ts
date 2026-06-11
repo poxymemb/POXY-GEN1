@@ -19,6 +19,17 @@ export function json(body: unknown, status = 200): Response {
   });
 }
 
+/** Log server-side detail; return a generic client-safe error payload. */
+export function safeErrorResponse(
+  e: unknown,
+  context: string,
+  status = 400,
+  message = "Request failed",
+): Response {
+  console.error(context, e);
+  return json({ ok: false, error: message }, status);
+}
+
 export function handleOptions(req: Request): Response | null {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   return null;

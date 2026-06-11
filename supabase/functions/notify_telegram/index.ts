@@ -120,6 +120,6 @@ Deno.serve(async (req) => {
     return json({ ok: true });
   } catch (e) {
     console.error("notify_telegram:", e);
-    return json({ ok: false, error: String(e?.message ?? e) }, 500);
+    return json({ ok: false, error: "Notification failed" }, 500);
   }
 });

@@ -459,7 +459,7 @@
         nav: nav,
         user: runtime.selectedId || undefined,
       });
-      if (global.location.hash !== hash.replace(/^#/, '#')) {
+      if (global.location.hash !== hash) {
         global.history.replaceState(
           { layout: 'lumina-os', nav: nav },
           '',

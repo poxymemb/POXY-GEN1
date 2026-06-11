@@ -6,7 +6,7 @@
 
 import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { merkleProof, merkleRoot, verifyMerkleProof } from "../_shared/crypto.ts";
-import { handleOptions, json } from "../_shared/http.ts";
+import { handleOptions, json, safeErrorResponse } from "../_shared/http.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { parseValidated, verifyMerkleTreeSchema } from "../_shared/schemas.ts";
 
@@ -68,6 +68,6 @@ Deno.serve(async (req) => {
       proof_valid: proofValid,
     });
   } catch (e) {
-    return json({ ok: false, error: String(e?.message ?? e) }, 400);
+    return safeErrorResponse(e, "verify_merkle_tree", 400, "Invalid request");
   }
 });

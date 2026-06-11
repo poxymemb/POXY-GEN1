@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { adminClient, getUserId, userClientFromRequest } from "../_shared/supabase.ts";
-import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { handleOptions, json, safeErrorResponse, writeAudit } from "../_shared/http.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 
 Deno.serve(async (req) => {
@@ -28,6 +28,6 @@ Deno.serve(async (req) => {
     await writeAudit(admin, "RNG", userId, req, { stage: "commit", round_id: data?.round_id });
     return json(data);
   } catch (e) {
-    return json({ ok: false, error: String(e?.message ?? e) }, 400);
+    return safeErrorResponse(e, "rng_commit", 400, "Invalid request");
   }
 });

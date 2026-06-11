@@ -6,7 +6,7 @@
 
 import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { verifyWithVersion } from "../_shared/kms.ts";
-import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { handleOptions, json, safeErrorResponse, writeAudit } from "../_shared/http.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { assetIdSchema, parseValidated } from "../_shared/schemas.ts";
 
@@ -53,6 +53,6 @@ Deno.serve(async (req) => {
       key_version: integrity.key_version,
     });
   } catch (e) {
-    return json({ ok: false, error: String(e?.message ?? e) }, 400);
+    return safeErrorResponse(e, "verify_poxy", 400, "Invalid request");
   }
 });

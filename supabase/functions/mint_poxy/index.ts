@@ -10,7 +10,7 @@ import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { loadActiveSigningKey, sign } from "../_shared/kms.ts";
 import { sha256Hex } from "../_shared/crypto.ts";
 import { buildEventCanonical, isoMicro, poxyHashInput } from "../_shared/canonical.ts";
-import { enforceReplayProtection, handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { enforceReplayProtection, handleOptions, json, safeErrorResponse, writeAudit } from "../_shared/http.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { mintPoxySchema, parseValidated } from "../_shared/schemas.ts";
 
@@ -113,6 +113,6 @@ Deno.serve(async (req) => {
       identity: { serial_number: serialNumber, rarity_seed: raritySeed, collection_id, generation_version, mint_timestamp: timestamp },
     });
   } catch (e) {
-    return json({ ok: false, error: String(e?.message ?? e) }, 400);
+    return safeErrorResponse(e, "mint_poxy", 400, "Invalid request");
   }
 });

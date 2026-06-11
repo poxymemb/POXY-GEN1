@@ -13281,9 +13281,8 @@ function markClubAwakeningSeen(){
 function getClubPassportUid(){
   if(!currentUser)return 'PXY-000-LON';
   if(currentProfile?.club_passport_uid)return currentProfile.club_passport_uid;
-  const k='club_uid_'+currentUser.id;
-  let u=localStorage.getItem(k);
-  if(!u){const h=currentUser.id.replace(/-/g,'').toUpperCase();u='PXY-'+h.slice(0,3)+'-LON';localStorage.setItem(k,u);}
+  const h=currentUser.id.replace(/-/g,'').toUpperCase();
+  const u='PXY-'+h.slice(0,3)+'-LON';
   if(currentProfile)currentProfile.club_passport_uid=u;
   return u;
 }
@@ -14765,7 +14764,7 @@ async function loadFeed(){
       const uname=clubFeedDisplayName(item);
       const uidShort=item.author_id?'0x'+String(item.author_id).replace(/-/g,'').slice(0,2).toUpperCase()+'…'+String(item.author_id).slice(-3):'0x???';
       const stats=[12,4,89][i%3]||[3,0,24][i%3];
-      const passName=(item.author_username||'Member').replace(/'/g,"\\'");
+      const passName=sanitizeText(item.author_username||'Member');
       el.innerHTML='<div class="poxy-club-feed-msg-head">'+iconHtml
         +'<div class="club-feed-user-meta"><span class="poxy-club-feed-username" data-author="'+sanitizeText(item.author_id||'')+'" onclick="openClubPassportModal(this.dataset.author,\''+passName+'\')">'+uname+'</span>'
         +'<span class="club-feed-uid">UID: '+uidShort+'</span></div>'

@@ -5,7 +5,7 @@
 
 import { adminClient, getUserId } from "../_shared/supabase.ts";
 import { verifyWithVersion } from "../_shared/kms.ts";
-import { handleOptions, json, writeAudit } from "../_shared/http.ts";
+import { handleOptions, json, safeErrorResponse, writeAudit } from "../_shared/http.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { parseValidated, verifyEventChainSchema } from "../_shared/schemas.ts";
 
@@ -62,6 +62,6 @@ Deno.serve(async (req) => {
       signature_failures: signatureFailures,
     });
   } catch (e) {
-    return json({ ok: false, error: String(e?.message ?? e) }, 400);
+    return safeErrorResponse(e, "verify_event_chain", 400, "Invalid request");
   }
 });

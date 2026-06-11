@@ -9857,6 +9857,18 @@ function dispCopyReport(){
   navigator.clipboard.writeText(el.innerText).then(()=>toast('COPIED')).catch(()=>toast('COPY FAILED','err'));
 }
 
+function _dispEscHtml(v){
+  return String(v)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function _dispStatusPlain(s){
+  return _dispEscHtml(String(s ?? '—'));
+}
+
 // ── investigate ───────────────────────────────────────────────
 async function dispInvestigate(){
   const raw = document.getElementById('dispQuery').value.trim();
@@ -9870,7 +9882,7 @@ async function dispInvestigate(){
     const r = await _dispResolve(raw);
     box.innerHTML = r;
   } catch(e){
-    box.innerHTML = `<div class="disp-empty" style="color:var(--red)">ERROR: ${e.message}</div>`;
+    box.innerHTML = `<div class="disp-empty" style="color:var(--red)">ERROR: ${_dispEscHtml(e?.message || 'Request failed')}</div>`;
   }
 }
 
@@ -9930,7 +9942,7 @@ async function _dispResolveSerial(raw){
   if(!up||!up.length){
     const {data:a} = await sb.from('poxy_assets').select('*').ilike('serial_number',sn).limit(1);
     if(a&&a.length) return await _dispRenderAsset(a[0]);
-    return `<div class="disp-empty" style="color:var(--red)">Serial ${sn} not found.</div>`;
+    return `<div class="disp-empty" style="color:var(--red)">Serial ${_dispEscHtml(sn)} not found.</div>`;
   }
   return await _dispRenderUserPoxy(up[0]);
 }
@@ -9960,7 +9972,7 @@ function _dispRenderCaseOpen(rng){
     html += dispStep('commit_hash',     dispTrunc(rng.commit_hash,48));
     html += dispStep('client_seed',     rng.client_seed ? dispTrunc(rng.client_seed,32) : '<span class="warn">NOT YET SEEDED</span>');
     html += dispStep('result_hash',     rng.result_hash  ? dispTrunc(rng.result_hash,48) : '<span class="warn">PENDING</span>');
-    html += dispStep('status',          dispStatusBadge(rng.status).match(/<[^>]+>([^<]+)<\/span>/)?.[1] || rng.status);
+    html += dispStep('status',          _dispStatusPlain(rng.status));
     html += dispStep('committed_at',    dispTs(rng.committed_at));
     html += dispStep('revealed_at',     dispTs(rng.revealed_at));
     if(drops&&drops.length){
@@ -9999,7 +10011,7 @@ async function _dispRenderTrade(offer){
   html += dispStep('receiver',      toP   ? `@${toP.username||'—'} (#PX-${toP.account_hash||'??'})`   : dispTrunc(offer.to_id,36));
   html += dispStep('assets offered',assetList);
   html += dispStep('message',       offer.message||'(none)');
-  html += dispStep('status',        dispStatusBadge(offer.status).replace(/<[^>]*>/g,(m,i)=>i===0?m:'').replace(/<\/span>/,''));
+  html += dispStep('status',        _dispStatusPlain(offer.status));
   html += dispStep('created_at',    dispTs(offer.created_at));
   html += dispStep('updated_at',    dispTs(offer.updated_at));
   if(ev&&ev.length){
