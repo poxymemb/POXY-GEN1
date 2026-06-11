@@ -324,6 +324,50 @@ body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
 .poxy-streak-nodes{display:flex;gap:6px;flex-wrap:wrap}
 .poxy-streak-node{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.3)}
 .poxy-streak-node.is-active{border-color:rgba(0,245,160,0.5);background:rgba(0,245,160,0.12);color:#00f5a0}
+.poxy-streak-longest{font-size:10px;color:rgba(255,255,255,0.42);margin-top:4px}
+.dsh-streak-chip{
+  display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;
+  padding:8px 14px;border-radius:999px;border:1px solid rgba(245,158,11,0.25);
+  background:rgba(245,158,11,0.08);font-size:11px;color:rgba(255,255,255,0.82);
+}
+.dsh-streak-chip .material-symbols-outlined{font-size:16px;color:#f59e0b}
+.dsh-streak-longest{color:rgba(255,255,255,0.45);font-family:var(--font-mono);font-size:10px}
+.poxy-streak-modal{
+  width:min(440px,100%);border-radius:1.5rem;border:1px solid rgba(255,255,255,0.1);
+  background:linear-gradient(165deg,#12121c 0%,#0a0a0f 100%);padding:28px 24px;color:#e2e8f0;
+  box-shadow:0 24px 80px rgba(0,0,0,0.55);text-align:center;
+}
+.poxy-streak-modal-kicker{
+  font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:0.14em;
+  color:#f59e0b;text-transform:uppercase;margin-bottom:8px;
+}
+.poxy-streak-modal-title{
+  font-family:var(--font-display);font-size:clamp(22px,5vw,28px);font-weight:900;color:#fff;margin:0 0 6px;
+}
+.poxy-streak-modal-fire{font-size:15px;color:rgba(255,255,255,0.7);margin-bottom:18px}
+.poxy-streak-modal-rewards{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:18px;
+}
+.poxy-streak-reward-pill{
+  font-family:var(--font-mono);font-size:11px;font-weight:700;padding:8px 12px;border-radius:10px;
+  background:rgba(0,245,160,0.1);border:1px solid rgba(0,245,160,0.25);color:#00f5a0;
+}
+.poxy-streak-reward-pill--case{background:rgba(124,58,237,0.12);border-color:rgba(124,58,237,0.3);color:#c4b5fd}
+.poxy-streak-progress-wrap{margin:0 0 8px;text-align:left}
+.poxy-streak-progress-label{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:6px;
+}
+.poxy-streak-progress-bar{
+  height:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;
+}
+.poxy-streak-progress-fill{
+  height:100%;border-radius:999px;background:linear-gradient(90deg,#f59e0b,#00f5a0);
+  transition:width 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.poxy-streak-milestone{
+  font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:20px;line-height:1.5;
+}
+.poxy-streak-milestone strong{color:rgba(255,255,255,0.75)}
 .poxy-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
 .poxy-modal-backdrop[hidden]{display:none!important}
 .poxy-econ-modal{width:min(420px,100%);border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:#0f0f1a;padding:24px;color:#e2e8f0;position:relative}
@@ -1707,6 +1751,11 @@ body.dark-club .club-sub{color:#888}
             <div class="dsh-rank-pill">
               <span class="material-symbols-outlined">military_tech</span>
               <span id="dashHeroRankText">–</span>
+            </div>
+            <div class="dsh-streak-chip" id="dashStreakChip" hidden>
+              <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+              <span id="dashStreakText">0-day streak</span>
+              <span class="dsh-streak-longest" id="dashStreakLongest"></span>
             </div>
           </div>
         </div>
@@ -3123,6 +3172,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         </div>
         <div class="poxy-streak-days"><span id="profileStreakDays">0</span>d</div>
       </div>
+      <p class="poxy-streak-longest" id="profileStreakLongest">Longest: 0 days</p>
       <div class="poxy-streak-nodes" id="profileStreakNodes" role="list"></div>
       <p style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:10px" id="profileStreakReward">Next reward: 50 PX + 50 XP</p>
     </section>
@@ -5442,6 +5492,7 @@ async function loadPlayerEconomy(){
     if($('gen1ModelGrid'))renderGen1TabContent();
     updateOpenButtonPrice();
     renderProfileStreakWidget();
+    renderDashStreakChip();
     updateBalanceBadge(getPxBalance());
     if(!_skipPerkClaim)claimLevelPerksQuiet();
     return data;
@@ -5729,6 +5780,44 @@ function updateOpenButtonPrice(){
     if(span)span.textContent='OPEN BOX';
   }
 }
+const STREAK_MILESTONES=[
+  {day:3,label:'+1 Standard Case Token'},
+  {day:7,label:'+500 PX · +1 VIP Case Token'},
+  {day:14,label:'+1000 PX · +1 Genesis Case Token'},
+  {day:30,label:'Legendary Drop + 2000 PX'},
+  {day:60,label:'+5000 PX · +1 Mythic Case Token'},
+  {day:100,label:'+10000 PX · +1 Legend Case Token'}
+];
+let _streakMetaCache=null;
+async function fetchStreakMeta(){
+  if(!currentUser)return{longest:0,current:0};
+  if(_streakMetaCache)return _streakMetaCache;
+  try{
+    const{data}=await sb.from('login_streaks').select('current_streak,longest_streak').eq('user_id',currentUser.id).maybeSingle();
+    _streakMetaCache={
+      current:data?.current_streak??playerEconomy?.streak??0,
+      longest:data?.longest_streak??0
+    };
+    return _streakMetaCache;
+  }catch(e){
+    return{longest:0,current:playerEconomy?.streak??0};
+  }
+}
+function invalidateStreakMetaCache(){_streakMetaCache=null;}
+function streakCaseRewardForDay(day){
+  switch(day){
+    case 3:return'+1 Standard Case Token';
+    case 7:return'+1 VIP Case Token';
+    case 14:return'+1 Genesis Case Token';
+    case 30:return'+1 Legend Case Token';
+    case 60:return'+1 Mythic Case Token';
+    case 100:return'+1 Legend Case Token';
+    default:return'';
+  }
+}
+function nextStreakMilestone(day){
+  return STREAK_MILESTONES.find(m=>m.day>day)||STREAK_MILESTONES[STREAK_MILESTONES.length-1];
+}
 async function claimDailyLoginOnce(){
   if(!currentUser)return null;
   try{
@@ -5738,6 +5827,7 @@ async function claimDailyLoginOnce(){
       if(msg.includes('ALREADY_CLAIMED'))return null;
       throw error;
     }
+    invalidateStreakMetaCache();
     await loadPlayerEconomy();
     return data;
   }catch(e){
@@ -5745,37 +5835,58 @@ async function claimDailyLoginOnce(){
     return null;
   }
 }
+async function handleDailyLogin(){
+  try{
+    const data=await claimDailyLoginOnce();
+    if(data)showDailyStreakModal(data);
+    return data;
+  }catch(e){
+    if((e?.message||'').includes('ALREADY_CLAIMED_TODAY'))return null;
+    console.error('handleDailyLogin:',e);
+    return null;
+  }
+}
+window.handleDailyLogin=handleDailyLogin;
 function showDailyStreakModal(data){
   if(!data)return;
   const modal=$('dailyStreakModal');
   if(!modal)return;
-  const dayEl=$('dailyStreakDay');
-  const pxEl=$('dailyStreakPx');
-  const xpEl=$('dailyStreakXp');
-  if(dayEl)dayEl.textContent='Day '+String(data.streak||data.day||1);
-  if(pxEl)pxEl.textContent='+'+(data.px_reward||0)+' PX';
-  if(xpEl)xpEl.textContent='+'+(data.xp_reward||0)+' XP';
-  const caseEl=$('dailyStreakCases');
-  if(caseEl&&data.case_tokens){
-    const t=data.case_tokens;
-    const parts=[];
-    if((t.standard||0)>0)parts.push(t.standard+' Standard');
-    if((t.vip||0)>0)parts.push(t.vip+' VIP');
-    if((t.genesis||0)>0)parts.push(t.genesis+' Genesis');
-    if((t.mythic||0)>0)parts.push(t.mythic+' Mythic');
-    if((t.legend||0)>0)parts.push(t.legend+' Legend');
-    caseEl.textContent=parts.length?('Case tokens: '+parts.join(' · ')):'';
-    caseEl.hidden=!parts.length;
+  const streak=Number(data.streak||data.day||1);
+  const px=Number(data.px_reward||0);
+  const xp=Number(data.xp_reward||0);
+  const caseBonus=streakCaseRewardForDay(streak);
+  const titleEl=$('dailyStreakTitle');
+  const fireEl=$('dailyStreakFire');
+  const rewardsEl=$('dailyStreakRewards');
+  const progFill=$('dailyStreakProgressFill');
+  const progLabel=$('dailyStreakProgressLabel');
+  const milestoneEl=$('dailyStreakMilestone');
+  if(titleEl)titleEl.textContent='DAY '+streak+' STREAK!';
+  if(fireEl)fireEl.textContent='🔥 '+streak+' day'+(streak===1?'':'s')+' in a row!';
+  if(rewardsEl){
+    const pills=[];
+    if(px>0)pills.push('<span class="poxy-streak-reward-pill">+'+px+' PX</span>');
+    if(xp>0)pills.push('<span class="poxy-streak-reward-pill">+'+xp+' XP</span>');
+    if(caseBonus)pills.push('<span class="poxy-streak-reward-pill poxy-streak-reward-pill--case">'+caseBonus+'</span>');
+    if(!pills.length)pills.push('<span class="poxy-streak-reward-pill">Daily bonus claimed</span>');
+    rewardsEl.innerHTML=pills.join('');
   }
+  const progDay=Math.min(streak,30);
+  if(progFill)progFill.style.width=Math.round((progDay/30)*100)+'%';
+  if(progLabel)progLabel.textContent='Day '+progDay+'/30';
+  const next=nextStreakMilestone(streak);
+  if(milestoneEl)milestoneEl.innerHTML='Day <strong>'+next.day+'</strong>: '+next.label;
   modal.hidden=false;
   document.body.style.overflow='hidden';
-  triggerDopamineOffer('daily_login');
+  renderDashStreakChip();
+  renderProfileStreakWidget();
 }
 window.closeDailyStreakModal=function(){
   const modal=$('dailyStreakModal');
   if(!modal)return;
   modal.hidden=true;
   if(!$('topUpModal')||$('topUpModal').hidden)document.body.style.overflow='';
+  triggerDopamineOffer('daily_login');
 };
 function canShowDopamineOffer(){
   const d=playerEconomy?.dopamine;
@@ -6843,9 +6954,11 @@ async function renderProfileStats(){
     const total=data?.length||0;
     const rare=data?.filter(d=>['rare','epic','legendary','mythic','stellar','diamond','secret'].includes(d.poxy_tier)).length||0;
     const streak=playerEconomy?.streak??0;
+    const meta=await fetchStreakMeta();
     const totEl=$('statTotal');if(totEl)totEl.textContent=total.toLocaleString();
     const rareEl=$('statRare');if(rareEl)rareEl.textContent=rare.toLocaleString();
-    const streakEl=$('statStreak');if(streakEl)streakEl.textContent=streak?String(streak)+' days':'0';
+    const streakEl=$('statStreak');
+    if(streakEl)streakEl.textContent=streak?'🔥 '+streak+'-day':'0';
     const rank=await fetchMyEcosystemRank();
     const rankEl=$('statRank');if(rankEl)rankEl.textContent=rank?('#'+rank):'#–';
     syncProfileIdentityReadonly();
@@ -7079,17 +7192,39 @@ function recordDailyStreak(){
   return data;
 }
 
+async function renderDashStreakChip(){
+  const chip=$('dashStreakChip');
+  const textEl=$('dashStreakText');
+  const longestEl=$('dashStreakLongest');
+  if(!chip||!textEl)return;
+  const streak=playerEconomy?.streak??0;
+  if(!currentUser||streak<=0){chip.hidden=true;return;}
+  chip.hidden=false;
+  textEl.textContent='🔥 '+streak+'-day streak';
+  if(longestEl){
+    const meta=await fetchStreakMeta();
+    const longest=Math.max(meta.longest||0,streak);
+    longestEl.textContent='Longest: '+longest+' day'+(longest===1?'':'s');
+  }
+}
 function renderProfileStreakWidget(){
   const nodes=$('profileStreakNodes');
   const daysEl=$('profileStreakDays');
   const rewardEl=$('profileStreakReward');
+  const longestEl=$('profileStreakLongest');
   if(!nodes)return;
   const streak=playerEconomy?.streak??0;
   const activeCount=Math.min(7,Math.max(0,streak));
   if(daysEl)daysEl.textContent=String(streak);
+  if(longestEl){
+    fetchStreakMeta().then(meta=>{
+      const longest=Math.max(meta.longest||0,streak);
+      longestEl.textContent='🔥 '+streak+'-day streak · Longest: '+longest+' day'+(longest===1?'':'s');
+    }).catch(()=>{longestEl.textContent='🔥 '+streak+'-day streak';});
+  }
   if(rewardEl){
-    const nextPx=streak===6?500:(streak===13?1000:50);
-    rewardEl.textContent='Today: '+activeCount+'d streak · Next milestone rewards scale at day 7/14/30';
+    const next=nextStreakMilestone(streak);
+    rewardEl.textContent='Next milestone (Day '+next.day+'): '+next.label;
   }
   nodes.innerHTML='';
   for(let i=0;i<7;i++){
@@ -7102,6 +7237,7 @@ function renderProfileStreakWidget(){
   }
   const legacyMult=$('profileStreakMult');
   if(legacyMult)legacyMult.textContent='×'+(1+activeCount*0.05).toFixed(2);
+  renderDashStreakChip();
 }
 
 function badgeSerialFor(key){
@@ -9256,6 +9392,7 @@ function refreshDashHeroMetrics(){
   if(rankEl)rankEl.textContent=rank?('#'+rank):'#–';
   if(rankSubEl)rankSubEl.textContent=rank&&rank<=100?'Top 1%':(rank&&rank<=500?'Top 5%':'');
   if(rankTxtEl)rankTxtEl.textContent=rank?('Rank '+rank.toLocaleString()):'–';
+  renderDashStreakChip();
 }
 
 // ── NAVIGATION ──
@@ -16889,16 +17026,22 @@ if(window._luminaOsPending&&typeof openLuminaOS==='function'){
   </div>
 </div>
 
-<!-- Daily streak claim modal -->
-<div id="dailyStreakModal" class="poxy-modal-backdrop" role="dialog" aria-modal="true" aria-label="Daily login reward" hidden>
-  <div class="poxy-econ-modal">
-    <h3>Daily streak claimed</h3>
-    <p id="dailyStreakDay">Day 1</p>
-    <p><span id="dailyStreakPx">+50 PX</span> · <span id="dailyStreakXp">+50 XP</span></p>
-    <p class="poxy-econ-streak-cases" id="dailyStreakCases" hidden></p>
-    <div class="poxy-econ-modal-actions">
-      <button type="button" class="poxy-econ-btn poxy-econ-btn--primary" onclick="closeDailyStreakModal()">Continue</button>
+<!-- Daily streak claim modal (O2) -->
+<div id="dailyStreakModal" class="poxy-modal-backdrop" role="dialog" aria-modal="true" aria-label="Daily login streak reward" hidden>
+  <div class="poxy-streak-modal">
+    <div class="poxy-streak-modal-kicker">Daily login</div>
+    <h3 class="poxy-streak-modal-title" id="dailyStreakTitle">DAY 1 STREAK!</h3>
+    <p class="poxy-streak-modal-fire" id="dailyStreakFire">🔥 1 day in a row!</p>
+    <p style="font-size:10px;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin:0 0 10px;text-transform:uppercase">Today&apos;s reward</p>
+    <div class="poxy-streak-modal-rewards" id="dailyStreakRewards"></div>
+    <div class="poxy-streak-progress-wrap">
+      <div class="poxy-streak-progress-label" id="dailyStreakProgressLabel">Day 1/30</div>
+      <div class="poxy-streak-progress-bar" aria-hidden="true">
+        <div class="poxy-streak-progress-fill" id="dailyStreakProgressFill" style="width:3%"></div>
+      </div>
     </div>
+    <p class="poxy-streak-milestone" id="dailyStreakMilestone">Day <strong>7</strong>: +500 PX · +1 VIP Case Token</p>
+    <button type="button" class="pob-btn-primary" style="width:100%" onclick="closeDailyStreakModal()">AWESOME!</button>
   </div>
 </div>
 
