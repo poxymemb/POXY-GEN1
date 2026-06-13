@@ -60,7 +60,6 @@
 <meta name="twitter:title" content="POXY WORLD — The Awakening">
 <meta name="twitter:description" content="5,000 cryptographic dragons. Provably fair drops.">
 <meta name="twitter:image" content="https://poxy.world/og-image.png">
-<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@500,700&display=swap" rel="stylesheet" />
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#080810">
 <link rel="apple-touch-icon" href="/icon-192.png">
@@ -162,9 +161,8 @@
   --r-secret:#ffffff;
 
   /* Typography */
-  --gold:#d4af37;
-  --font-display:'Clash Display',sans-serif;
-  --font-ui:'Satoshi',sans-serif;
+  --font-display:'Syne',sans-serif;
+  --font-ui:'Plus Jakarta Sans',sans-serif;
   --font-mono:'JetBrains Mono',monospace;
 
   /* Legacy aliases — keep existing UI references working */
@@ -1397,57 +1395,6 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 /* ── TOAST ── */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:0.5px;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;z-index:2000;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* ── Glass gaming navigation (nav-only reskin) ── */
-#stGlobalNav.st-nav{
-  background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(20px) saturate(160%);
-  -webkit-backdrop-filter:blur(20px) saturate(160%);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:0;
-  box-shadow:0 8px 32px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.06);
-}
-#stGlobalNav .st-brand-link{
-  font-family:'Clash Display',sans-serif;
-  font-weight:700;
-  font-size:22px;
-  letter-spacing:0.04em;
-}
-#stGlobalNav .st-nav-pill,
-#stGlobalNav .st-nav-link{
-  position:relative;
-  font-family:'Satoshi',sans-serif;
-  font-size:14px;
-  font-weight:500;
-  color:rgba(255,255,255,0.62);
-}
-#stGlobalNav .st-nav-pill:hover,
-#stGlobalNav .st-nav-link:hover{
-  color:rgba(255,255,255,0.88);
-}
-#stGlobalNav .st-nav-pill.active,
-#stGlobalNav .st-nav-link.active{
-  color:#ffffff;
-}
-#stGlobalNav .st-nav-pill.active::after,
-#stGlobalNav .st-nav-link.active::after{
-  content:'';
-  position:absolute;
-  bottom:-2px;
-  left:50%;
-  transform:translateX(-50%);
-  width:22px;
-  height:3px;
-  border-radius:999px;
-  background:var(--gold,#d4af37);
-  box-shadow:0 0 12px rgba(212,175,55,0.8);
-}
-#stGlobalNav .st-wallet-amount,
-#stGlobalNav .st-xp-hud-level,
-#stGlobalNav .st-xp-hud-balance{
-  font-family:'Satoshi',sans-serif;
-  font-weight:700;
-}
 
 </style>
 <script>
