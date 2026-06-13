@@ -456,6 +456,7 @@
     document.body.classList.add('poxy-landing-preview');
     document.body.classList.remove('poxy-auth-modal-open');
     closePoxyAuth();
+    if (typeof renderLandingMarketingNav === 'function') renderLandingMarketingNav();
     refreshLandingPreviewChrome();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     landing.querySelectorAll('.pl-reveal').forEach(function (n) {
@@ -492,6 +493,7 @@
     bindParticles();
     bindScrollReveal();
     bindAuthOverlayUi();
+    if (typeof renderLandingMarketingNav === 'function') renderLandingMarketingNav();
     if (document.body.classList.contains('poxy-landing-active')) {
       loadLandingData();
     }

@@ -221,6 +221,7 @@
 }
 .st-nav-primary{display:none;align-items:center;gap:28px}
 @media(min-width:860px){.st-nav-primary{display:flex}}
+#poxyAppShell .st-nav-primary{display:none!important}
 .st-nav-link{
   border:none;background:transparent;
   font-family:'Hanken Grotesk',Inter,sans-serif;

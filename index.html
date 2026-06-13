@@ -1396,6 +1396,10 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:0.5px;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;z-index:2000;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* Marketing nav — landing only, never in logged-in game shell */
+#poxyAppShell .st-nav-primary,
+#poxyAppShell .st-nav-link{display:none!important}
+
 </style>
 <script>
 /* Retired localStorage maintenance overlay — clear stale flags */
@@ -1490,6 +1494,7 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
       <a class="pl-nav-link" href="#landing-social">Stats</a>
       <a class="pl-nav-link" href="#landing-cta">Join</a>
     </nav>
+    <nav class="pl-nav-marketing" id="plMarketingNav" aria-label="Platform links"></nav>
     <button type="button" class="pl-btn pl-btn--ghost" id="plPreviewBack" hidden>Back to app</button>
     <button type="button" class="pl-btn pl-btn--ghost" data-pl-auth="login">Sign In</button>
   </header>
@@ -6571,6 +6576,7 @@ function setLoggedOutUI(){
     if(landing)landing.hidden=false;
     document.body.classList.add('poxy-landing-active');
   }
+  renderLandingMarketingNav();
   const overlay=$('authOverlay');
   if(overlay){
     overlay.classList.remove('hidden','poxy-auth-overlay--open');
@@ -6598,6 +6604,7 @@ function setLoggedOutUI(){
   if(sidebarOpen)closeSidebar();
 }
 function setLoggedInUI(){
+  stripGameMarketingNav();
   if(typeof hidePoxyLanding==='function')hidePoxyLanding();
   else{
     const landing=$('poxyLanding');
@@ -8690,9 +8697,15 @@ function updateStNavOffset(){
   shell.style.setProperty('--st-nav-h',h+'px');
 }
 function showPoxyAppShell(){
+  stripGameMarketingNav();
   const shell=$('poxyAppShell');
   if(shell)shell.style.display='block';
   requestAnimationFrame(updateStNavOffset);
+}
+function stripGameMarketingNav(){
+  const shell=$('poxyAppShell');
+  if(!shell)return;
+  shell.querySelectorAll('.st-nav-primary,.st-nav-link').forEach(el=>el.remove());
 }
 const STITCH_TAB_MAP={
   dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavTelemetry',
@@ -8712,6 +8725,34 @@ const LANDING_NAV_ITEMS=[
   {id:'psdNavGens',label:'GENS',tab:'gens'},
   {id:'psdNavRarity',label:'Rarity',tab:'tierlist',i18n:'nav.rarity'}
 ];
+window.LANDING_NAV_ITEMS=LANDING_NAV_ITEMS;
+function renderLandingMarketingNav(){
+  const host=document.getElementById('plMarketingNav');
+  if(!host||host.dataset.ready)return;
+  host.innerHTML='';
+  LANDING_NAV_ITEMS.forEach(item=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='pl-nav-link pl-nav-link--marketing';
+    btn.textContent=item.label;
+    if(item.i18n)btn.setAttribute('data-i18n',item.i18n);
+    btn.addEventListener('click',function(){
+      if(item.tab==='verify'){
+        const fair=document.getElementById('landing-fair');
+        if(fair){fair.scrollIntoView({behavior:'smooth',block:'start'});return;}
+      }
+      if(!currentUser){
+        if(typeof openPoxyAuth==='function')openPoxyAuth();
+        return;
+      }
+      if(typeof closePoxyLandingPreview==='function'&&document.body.classList.contains('poxy-landing-preview'))closePoxyLandingPreview();
+      if(typeof showStitchTab==='function')showStitchTab(item.tab);
+    });
+    host.appendChild(btn);
+  });
+  host.dataset.ready='1';
+  if(typeof applyI18n==='function')applyI18n(host);
+}
 
 const RARITY_TIER_META={
   mythic:{glow:'glow-mythic',matIcon:'diamond',accent:'#FF3366',glowRgb:'rgba(255,51,102,0.8)',dropPct:'0.01',coeff:40,desc:'The absolute zenith of the Codex. Mythic items alter the fundamental physics of the local grid and grant unparalleled governance weight.'},
@@ -16759,6 +16800,8 @@ function setupGlobalEscapeClose(){
 
 function bootApp(){
   mountSpaPanels();
+  stripGameMarketingNav();
+  renderLandingMarketingNav();
   initMarketFilters();
   updateStNavOffset();
   window.addEventListener('resize',updateStNavOffset,{passive:true});

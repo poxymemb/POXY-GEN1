@@ -134,6 +134,29 @@ body.poxy-landing-preview #plPreviewBack{
 @media(min-width:768px){
   .pl-nav-links{gap:22px;max-width:none}
 }
+.pl-nav-marketing{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  flex-shrink:1;
+  min-width:0;
+  max-width:min(42vw,280px);
+}
+.pl-nav-marketing::-webkit-scrollbar{display:none}
+@media(min-width:900px){
+  .pl-nav-marketing{gap:14px;max-width:none;flex-shrink:0}
+}
+.pl-nav-link--marketing{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  font-family:inherit;
+  padding:0;
+  white-space:nowrap;
+}
 .pl-nav-link{
   font-size:0.75rem;
   font-weight:700;
