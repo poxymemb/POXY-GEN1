@@ -291,7 +291,7 @@
         border: "0.5px solid rgba(255,255,255,0.07)",
         position: "relative",
       });
-      function TopHighlight({ radius = 20, color = "rgba(255,255,255,0.1)" }) {
+      function TopHighlight({ radius = 20, color = "rgba(255,255,255,0.11)" }) {
         return (
           <div
             style={{
@@ -399,8 +399,8 @@
                   style={{
                     background:
                       hover === i
-                        ? "rgba(255,255,255,0.045)"
-                        : "rgba(255,255,255,0.025)",
+                        ? "rgba(255,255,255,0.05)"
+                        : "rgba(255,255,255,0.03)",
                     border: "0.5px solid rgba(255,255,255,0.07)",
                     borderRadius: 20,
                     padding: "24px 16px 18px",
@@ -416,11 +416,11 @@
                   <TopHighlight radius={20} />
                   <Glow
                     rarity={p.rarity}
-                    w={130}
-                    h={90}
-                    opacity={0.2}
-                    blur={32}
-                    bottom={"6px"}
+                    w={150}
+                    h={80}
+                    opacity={0.14}
+                    blur={80}
+                    bottom={"-10px"}
                   />
                   <Gem rarity={p.rarity} size={72} />
                   <div
@@ -735,8 +735,8 @@
                   rarity={poxy.rarity}
                   w={200}
                   h={160}
-                  opacity={0.2}
-                  blur={55}
+                  opacity={0.18}
+                  blur={60}
                   bottom={"30px"}
                 />
                 <Gem rarity={poxy.rarity} size={90} />
@@ -956,7 +956,7 @@
           letterSpacing: "0.2em",
           padding: "12px 0",
           borderRadius: 12,
-          background: "rgba(255,255,255,0.03)",
+          background: "rgba(255,255,255,0.05)",
           border: "0.5px solid rgba(255,255,255,0.08)",
           color: "rgba(255,255,255,0.6)",
           cursor: "pointer",
