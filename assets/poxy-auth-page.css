@@ -5,10 +5,15 @@
 }
 .poxy-auth-overlay{
   position:fixed;inset:0;z-index:1000;
-  display:flex;flex-direction:column;
+  display:none;flex-direction:column;
   background:#000;
   overflow:hidden;
   padding:0;
+  pointer-events:none;
+}
+.poxy-auth-overlay.poxy-auth-overlay--open{
+  display:flex;
+  pointer-events:auto;
 }
 .poxy-auth-overlay.hidden{
   display:none!important;visibility:hidden!important;pointer-events:none!important;

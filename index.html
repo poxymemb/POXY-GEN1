@@ -97,8 +97,8 @@
 <link rel="stylesheet" href="assets/lumina-features.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/components.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=1">
-<link rel="stylesheet" href="assets/poxy-auth-page.css">
+<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=2">
+<link rel="stylesheet" href="assets/poxy-auth-page.css?v=2">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
@@ -1495,7 +1495,7 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
     <p class="sub">A calm place to open, own, and trade unique digital figures. No noise, no rush, just a collection that feels like a real shelf.</p>
     <div class="hero-cta">
       <button type="button" class="btn btn-primary btn-lg" data-pl-auth>Start collecting</button>
-      <button class="btn btn-glass btn-lg" onclick="scrollTo({top:document.getElementById('how').offsetTop-60,behavior:'smooth'})">See how it works</button>
+      <button type="button" class="btn btn-glass btn-lg" id="plScrollHow">See how it works</button>
     </div>
     <div class="hero-meta">
       <span><b>Closed economy</b> today</span>
@@ -6528,7 +6528,7 @@ function setLoggedOutUI(){
   }
   const overlay=$('authOverlay');
   if(overlay){
-    overlay.classList.remove('hidden','poxy-auth-overlay--open');
+    overlay.classList.remove('poxy-auth-overlay--open','hidden');
     overlay.style.display='';
     overlay.setAttribute('aria-hidden','true');
   }

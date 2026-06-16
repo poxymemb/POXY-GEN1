@@ -50,6 +50,25 @@ body.poxy-landing-preview #poxyLanding {
   -webkit-overflow-scrolling: touch;
 }
 body.poxy-landing-preview #plPreviewBack { display: inline-flex !important; }
+#plPreviewBack[hidden] { display: none !important; }
+
+/* Isolate public landing from legacy app chrome */
+body.poxy-landing-active #poxyAppShell,
+body.poxy-landing-active #sidebarPanel,
+body.poxy-landing-active #sidebarBackdrop,
+body.poxy-landing-active #bottomNav,
+body.poxy-landing-active #userBar,
+body.poxy-landing-active .st-nav--global {
+  display: none !important;
+}
+body.poxy-landing-active:not(.poxy-auth-modal-open) #authOverlay {
+  display: none !important;
+  pointer-events: none !important;
+}
+body.poxy-landing-active #poxyLanding {
+  position: relative;
+  z-index: 2;
+}
 #poxyLanding .foot-col .foot-link {
   display: block;
   width: 100%;
