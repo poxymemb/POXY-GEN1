@@ -41,13 +41,13 @@ Open any file in a browser to preview. Do **not** copy mockup `<script>` into `i
 
 **Gate:** Open `design/v2/poxy-brand-guide.html` — Sky scale + Card logo visible.
 
-### Stage 1 — Landing
+### Stage 1 — Landing ✅
 
-- Reskin `#poxyLanding` from `poxy-landing.html`
-- Wire theme toggle → `poxy-sky-theme`
-- Preserve i18n `data-i18n` attributes
+- [x] Reskin `#poxyLanding` from `poxy-landing.html`
+- [x] Wire theme toggle → `poxy-sky-theme` (default light)
+- [x] Tabs: Main / FAQ / News / Policy / About + FAQ accordion
 
-**Gate:** Hero + CTA → auth overlay; FAQ accordion; mobile 375px; light default.
+**Gate:** Hero + CTA → auth, FAQ accordion, theme toggle, mobile 375px (manual check on device).
 
 ### Stage 2 — Auth
 

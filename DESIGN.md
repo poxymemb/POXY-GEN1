@@ -91,8 +91,8 @@ Screen: [name]
 See `design/v2/REBRAND.md` for staged rollout and test gates.
 
 **Stage 0:** Foundation ✅  
-**Stage 1:** Landing — next  
-**Stage 2:** Auth  
+**Stage 1:** Landing ✅  
+**Stage 2:** Auth — next  
 **Stage 3:** App shell (left rail)  
 **Stage 4+:** Individual screens  
 

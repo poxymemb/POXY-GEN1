@@ -1,27 +1,30 @@
 /**
- * POXY World — landing / entry page (motion + auth bridge)
+ * POXY World — Sky landing (Stage 1)
  */
 (function (global) {
   'use strict';
+
+  var SKY_THEME_KEY = 'poxy-sky-theme';
+  var TABS = ['main', 'faq', 'news', 'policy', 'about'];
 
   function $(id) {
     return document.getElementById(id);
   }
 
   function openPoxyAuth() {
-    const overlay = $('authOverlay');
+    var overlay = $('authOverlay');
     if (!overlay) return;
     overlay.classList.add('poxy-auth-overlay--open');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('poxy-auth-modal-open');
     requestAnimationFrame(function () {
-      const email = $('authEmail');
+      var email = $('authEmail');
       if (email) email.focus();
     });
   }
 
   function closePoxyAuth() {
-    const overlay = $('authOverlay');
+    var overlay = $('authOverlay');
     if (!overlay) return;
     overlay.classList.remove('poxy-auth-overlay--open');
     overlay.setAttribute('aria-hidden', 'true');
@@ -31,8 +34,26 @@
   global.openPoxyAuth = openPoxyAuth;
   global.closePoxyAuth = closePoxyAuth;
 
+  function getSkyTheme() {
+    try {
+      return localStorage.getItem(SKY_THEME_KEY) || 'light';
+    } catch (e) {
+      return 'light';
+    }
+  }
+
+  function applySkyTheme(theme) {
+    var t = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    try {
+      localStorage.setItem(SKY_THEME_KEY, t);
+    } catch (e) {}
+    var btn = $('plThemeBtn');
+    if (btn) btn.textContent = t === 'light' ? '◐' : '◑';
+  }
+
   function bindLandingCtas() {
-    document.querySelectorAll('[data-pl-auth]').forEach(function (btn) {
+    document.querySelectorAll('#poxyLanding [data-pl-auth]').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         if (document.body.classList.contains('poxy-landing-preview') && isLoggedInApp()) {
@@ -42,7 +63,7 @@
         openPoxyAuth();
       });
     });
-    const back = $('plPreviewBack');
+    var back = $('plPreviewBack');
     if (back) {
       back.addEventListener('click', function (e) {
         e.preventDefault();
@@ -51,150 +72,212 @@
     }
   }
 
-  function bindNavScroll() {
-    const links = document.querySelectorAll('.pl-nav-link[href^="#"]');
-    links.forEach(function (link) {
-      link.addEventListener('click', function (e) {
-        const id = link.getAttribute('href');
-        if (!id || id.length < 2) return;
-        const target = document.querySelector(id);
-        if (!target) return;
+  function landingGo(tab) {
+    if (TABS.indexOf(tab) < 0) tab = 'main';
+    TABS.forEach(function (t) {
+      var page = $('page-' + t);
+      if (page) page.classList.toggle('active', t === tab);
+      var nt = document.querySelector('#poxyLanding .nav-tab[data-tab="' + t + '"]');
+      if (nt) nt.classList.toggle('active', t === tab);
+    });
+    document.querySelectorAll('#poxyLanding .article').forEach(function (a) {
+      a.classList.remove('show');
+    });
+    var newsDoc = document.querySelector('#page-news .doc');
+    if (newsDoc) newsDoc.style.display = tab === 'news' ? 'block' : '';
+    window.scrollTo(0, 0);
+    updateGoup();
+  }
+
+  function landingArticle(id) {
+    landingGo('news');
+    var newsDoc = document.querySelector('#page-news .doc');
+    if (newsDoc) newsDoc.style.display = 'none';
+    document.querySelectorAll('#poxyLanding .article').forEach(function (a) {
+      a.classList.remove('show');
+    });
+    var art = $('article-' + id);
+    if (art) art.classList.add('show');
+    window.scrollTo(0, 0);
+    updateGoup();
+  }
+
+  function bindLandingTabs() {
+    document.querySelectorAll('#poxyLanding [data-px-tab]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
         e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        links.forEach(function (l) {
-          l.classList.toggle('is-active', l === link);
-        });
+        landingGo(el.getAttribute('data-px-tab'));
       });
     });
-  }
-
-  function bindParallaxGlows() {
-    const g1 = document.getElementById('plGlow1');
-    const g2 = document.getElementById('plGlow2');
-    if (!g1 && !g2) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    let raf = 0;
-    document.addEventListener(
-      'mousemove',
-      function (e) {
-        if (raf) return;
-        raf = requestAnimationFrame(function () {
-          raf = 0;
-          const x = e.clientX / window.innerWidth;
-          const y = e.clientY / window.innerHeight;
-          if (g1) g1.style.transform = 'translate(' + x * 30 + 'px,' + y * 30 + 'px)';
-          if (g2) g2.style.transform = 'translate(' + x * -40 + 'px,' + y * -40 + 'px)';
-        });
-      },
-      { passive: true }
-    );
-  }
-
-  function bindScrollReveal() {
-    const nodes = document.querySelectorAll('#poxyLanding .pl-reveal');
-    if (!nodes.length) return;
-    if (!('IntersectionObserver' in window)) {
-      nodes.forEach(function (n) {
-        n.classList.add('is-visible');
+    document.querySelectorAll('#poxyLanding [data-px-article]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        landingArticle(el.getAttribute('data-px-article'));
       });
-      return;
+    });
+    document.querySelectorAll('#poxyLanding .back-link[data-px-tab]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        landingGo(el.getAttribute('data-px-tab'));
+      });
+    });
+    var howBtn = $('plScrollHow');
+    if (howBtn) {
+      howBtn.addEventListener('click', function () {
+        landingGo('main');
+        var how = document.getElementById('how');
+        if (how) how.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     }
-    const io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
-    );
-    nodes.forEach(function (n) {
-      io.observe(n);
+  }
+
+  function bindLandingFaq() {
+    document.querySelectorAll('#poxyLanding .faq-q').forEach(function (q) {
+      q.addEventListener('click', function () {
+        var item = q.closest('.faq-item');
+        if (!item) return;
+        var a = item.querySelector('.faq-a');
+        var open = item.classList.toggle('open');
+        if (a) a.style.maxHeight = open ? a.scrollHeight + 'px' : '0';
+      });
     });
+  }
+
+  function bindLandingTheme() {
+    applySkyTheme(getSkyTheme());
+    var btn = $('plThemeBtn');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        applySkyTheme(getSkyTheme() === 'light' ? 'dark' : 'light');
+      });
+    }
+  }
+
+  function bindLandingLang() {
+    var menu = $('plLangMenu');
+    var btn = $('plLangBtn');
+    if (!menu || !btn) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.contains(e.target) && e.target !== btn) menu.style.display = 'none';
+    });
+    menu.querySelectorAll('.lang-opt').forEach(function (o) {
+      o.style.cssText =
+        'text-align:left;background:none;border:none;font:500 14px var(--px-font);color:var(--px-text);padding:9px 12px;border-radius:9px;cursor:pointer;width:100%';
+      o.addEventListener('mouseenter', function () {
+        o.style.background = 'var(--px-glass-strong)';
+      });
+      o.addEventListener('mouseleave', function () {
+        o.style.background = 'none';
+      });
+      o.addEventListener('click', function () {
+        btn.textContent = (o.dataset.l || 'EN').slice(0, 2).toUpperCase();
+        menu.style.display = 'none';
+      });
+    });
+  }
+
+  function bindGoup() {
+    var goup = $('plGoup');
+    if (!goup) return;
+    function updateGoup() {
+      var landing = $('poxyLanding');
+      if (!landing || landing.hidden) {
+        goup.classList.remove('show');
+        return;
+      }
+      goup.classList.toggle('show', window.scrollY > 400);
+    }
+    global.updateGoup = updateGoup;
+    window.addEventListener('scroll', updateGoup, { passive: true });
+    goup.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    updateGoup();
+  }
+
+  function updateGoup() {
+    if (typeof global.updateGoup === 'function') global.updateGoup();
   }
 
   function bindAuthOverlayUi() {
-    const overlay = $('authOverlay');
+    var overlay = $('authOverlay');
     if (!overlay) return;
-
-    const backdrop = overlay.querySelector('.poxy-auth-backdrop');
-    if (backdrop) {
-      backdrop.addEventListener('click', closePoxyAuth);
-    }
-    const closeBtn = overlay.querySelector('.poxy-auth-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', closePoxyAuth);
-    }
+    var backdrop = overlay.querySelector('.poxy-auth-backdrop');
+    if (backdrop) backdrop.addEventListener('click', closePoxyAuth);
+    var closeBtn = overlay.querySelector('.poxy-auth-close');
+    if (closeBtn) closeBtn.addEventListener('click', closePoxyAuth);
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && overlay.classList.contains('poxy-auth-overlay--open')) {
-        closePoxyAuth();
-      }
-      if (e.key === 'Escape' && landingPreviewOpen) {
-        closeLandingPreview();
-      }
+      if (e.key === 'Escape' && overlay.classList.contains('poxy-auth-overlay--open')) closePoxyAuth();
+      if (e.key === 'Escape' && landingPreviewOpen) closeLandingPreview();
     });
   }
 
   var landingPreviewOpen = false;
 
   function isLoggedInApp() {
-    const shell = $('poxyAppShell');
+    var shell = $('poxyAppShell');
     return !!(shell && shell.style.display !== 'none');
   }
 
   function refreshLandingPreviewChrome() {
-    const back = $('plPreviewBack');
-    const signIn = document.querySelector('#poxyLanding .pl-nav .pl-btn--ghost[data-pl-auth]');
+    var back = $('plPreviewBack');
+    var signIn = $('plSignInNav');
+    var ctaNav = document.querySelector('#poxyLanding .cta-nav');
     if (back) back.hidden = !landingPreviewOpen;
     if (signIn) signIn.hidden = landingPreviewOpen && isLoggedInApp();
+    if (ctaNav) ctaNav.hidden = landingPreviewOpen && isLoggedInApp();
   }
 
   function showLanding() {
-    const landing = $('poxyLanding');
+    var landing = $('poxyLanding');
     if (landing) landing.hidden = false;
     document.body.classList.add('poxy-landing-active');
     document.body.classList.remove('poxy-landing-preview');
     landingPreviewOpen = false;
+    applySkyTheme(getSkyTheme());
     closePoxyAuth();
+    landingGo('main');
     refreshLandingPreviewChrome();
+    updateGoup();
   }
 
   function hideLanding() {
-    const landing = $('poxyLanding');
+    var landing = $('poxyLanding');
     if (landing) landing.hidden = true;
     document.body.classList.remove('poxy-landing-active', 'poxy-landing-preview', 'poxy-auth-modal-open');
     landingPreviewOpen = false;
     closePoxyAuth();
     refreshLandingPreviewChrome();
+    updateGoup();
   }
 
-  /** Logged-in preview: grid button opens the public landing overlay without signing out */
   function openLandingPreview() {
-    const landing = $('poxyLanding');
+    var landing = $('poxyLanding');
     if (!landing) return;
     landing.hidden = false;
     landingPreviewOpen = true;
     document.body.classList.add('poxy-landing-preview');
     document.body.classList.remove('poxy-auth-modal-open');
+    applySkyTheme(getSkyTheme());
     closePoxyAuth();
     refreshLandingPreviewChrome();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    landing.querySelectorAll('.pl-reveal').forEach(function (n) {
-      n.classList.add('is-visible');
-    });
+    updateGoup();
   }
 
   function closeLandingPreview() {
     if (!landingPreviewOpen) return;
-    const landing = $('poxyLanding');
+    var landing = $('poxyLanding');
     if (landing) landing.hidden = true;
     landingPreviewOpen = false;
     document.body.classList.remove('poxy-landing-preview', 'poxy-auth-modal-open');
     closePoxyAuth();
     refreshLandingPreviewChrome();
+    updateGoup();
   }
 
   function toggleLandingPreview() {
@@ -210,15 +293,14 @@
 
   function init() {
     bindLandingCtas();
-    bindNavScroll();
-    bindParallaxGlows();
-    bindScrollReveal();
+    bindLandingTabs();
+    bindLandingFaq();
+    bindLandingTheme();
+    bindLandingLang();
+    bindGoup();
     bindAuthOverlayUi();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })(typeof window !== 'undefined' ? window : globalThis);
