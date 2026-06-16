@@ -1,0 +1,163 @@
+/* POXY WORLD — Sky shared components (production)
+   Prefix: px- — do not collide with legacy poxy-* until migration completes */
+
+/* Brand mark */
+.px-mark {
+  background: var(--px-btn-bg);
+  -webkit-mask: var(--px-cardmask) center / contain no-repeat;
+  mask: var(--px-cardmask) center / contain no-repeat;
+}
+
+/* Glass surfaces */
+.px-glass {
+  background: var(--px-glass);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-r);
+  box-shadow: var(--px-shadow);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+}
+
+.px-panel {
+  background: var(--px-card);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-r-lg);
+  box-shadow: var(--px-shadow);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+/* Buttons */
+.px-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font: 600 15px var(--px-font);
+  cursor: pointer;
+  padding: 13px 24px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition: transform 0.15s, filter 0.2s;
+  font-family: var(--px-font);
+}
+
+.px-btn:active {
+  transform: scale(0.97);
+}
+
+.px-btn-primary {
+  background: var(--px-btn-bg);
+  color: var(--px-btn-text);
+  border-color: var(--px-btn-bg);
+}
+
+.px-btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.px-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.px-btn-glass {
+  background: var(--px-glass-strong);
+  color: var(--px-text);
+  border-color: var(--px-border);
+  backdrop-filter: blur(12px);
+}
+
+.px-btn-glass:hover {
+  transform: translateY(-1px);
+}
+
+.px-btn-lg {
+  padding: 16px 30px;
+  font-size: 16px;
+  border-radius: 15px;
+}
+
+/* Form fields */
+.px-input {
+  width: 100%;
+  font: 500 15px var(--px-font);
+  color: var(--px-text);
+  background: var(--px-field);
+  border: 1px solid var(--px-border);
+  border-radius: var(--px-r-sm);
+  padding: 12px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.px-input::placeholder {
+  color: var(--px-text-faint);
+}
+
+.px-input:focus {
+  border-color: var(--sky-500);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sky-500) 22%, transparent);
+}
+
+.px-field-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--px-text-dim);
+  margin-bottom: 6px;
+}
+
+/* Sticky topbar (landing) */
+.px-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  background: var(--px-glass);
+  border-bottom: 1px solid var(--px-border);
+}
+
+/* Theme toggle chip */
+.px-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--px-border);
+  background: var(--px-glass-strong);
+  color: var(--px-text);
+  padding: 7px 13px;
+  border-radius: 999px;
+  font: 500 13px var(--px-font);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.px-theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* Page fade entrance */
+.px-fade-up {
+  animation: pxFadeUp 0.35s var(--px-ease);
+}
+
+@keyframes pxFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-fade-up,
+  .px-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}

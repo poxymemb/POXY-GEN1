@@ -1,0 +1,56 @@
+---
+description: Safe POXY v2 rebrand workflow — staged merge, test gates, preserve engine
+globs: ["index.html", "assets/poxy-sky/**", "design/v2/**"]
+alwaysApply: true
+---
+
+# POXY Rebrand Workflow
+
+Follow `design/v2/REBRAND.md` stages. **Do not skip test gates.**
+
+## Never touch
+
+- `supabase.createClient`, RPC names, RLS table/column names
+- `handleAuth`, `setupAuthStateListener`, `bootApp`, `showPage`, economy/case weights
+- Crypto engine: SHA-256 hashes, ledger append-only, commit-reveal RNG
+- Storage paths: `avatars/{user_id}`, `assets/{asset_id}`
+- Existing element **ids** (`#authEmail`, `#authPassword`, `#authBtn`, `#poxyLanding`, etc.)
+
+## Allowed
+
+- Add/replace CSS in `assets/poxy-sky/` or scoped blocks in `index.html`
+- Replace **inner HTML** of one container after mapping mockup → existing hooks
+- New classes with `px-` prefix
+- Wire theme: `document.documentElement.setAttribute('data-theme', …)`
+
+## Before finishing any stage
+
+1. Confirm `bootApp()` still runs last; auth uses `addEventListener`
+2. Grep for duplicate `const $` or early `$()` before definition
+3. Run smoke test from `REBRAND.md`:
+   - login → profile avatar → collection (regular + club) → one case → market
+4. Check mobile 375px
+5. Default theme remains **light** unless user toggles
+
+## Mockup → production map
+
+| Mockup | Hook |
+|--------|------|
+| `poxy-landing.html` | `#poxyLanding` |
+| `poxy-auth.html` | `#authOverlay` |
+| `poxy-dashboard.html` | app shell / `#poxyStitchDashboard` |
+
+## Agent process (mandatory)
+
+1. **Write** — minimal diff for current stage only
+2. **Verify** — grep ids, read lints, diff vs mockup
+3. **Test** — smoke checklist; browser if available
+4. **Gate** — report pass/fail before starting next stage
+
+## If mockup uses inline demo JS
+
+Convert to existing production handlers. Do **not** paste mockup auth/supabase scripts.
+
+## Deprecated rules
+
+Stitch MCP workflow is retired. Use `design/v2/` HTML as visual reference, not Stitch `get_screen`.

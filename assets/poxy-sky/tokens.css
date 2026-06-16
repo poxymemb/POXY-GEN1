@@ -1,0 +1,99 @@
+/* POXY WORLD — Sky Design System v1 (production tokens)
+   Source: design/v2/poxy-brand-guide.html
+   Default theme: light — set html[data-theme="dark"] for dark mode */
+
+:root {
+  /* Sky scale — H=194°, locked */
+  --sky-50: #EEF8FB;
+  --sky-100: #DCF1F7;
+  --sky-200: #C3E7F1;
+  --sky-300: #A6DAEB;
+  --sky-400: #8BCFE4;
+  --sky-500: #60C2E0;
+  --sky-600: #40ABCC;
+  --sky-700: #2E85A0;
+  --sky-800: #2DB1D7;
+  --sky-900: #193D48;
+
+  --ink: #1C1C1E;
+  --paper: #F0F0F1;
+
+  /* Layout */
+  --px-r-sm: 12px;
+  --px-r: 18px;
+  --px-r-lg: 24px;
+  --px-r-xl: 26px;
+  --px-maxw: 1080px;
+  --px-rail-w: 74px;
+
+  /* Typography */
+  --px-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+  --px-mono: "SF Mono", ui-monospace, Menlo, monospace;
+  --px-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Brand mark — Card logo */
+  --px-cardmask: url("logo-card.png");
+
+  /* Rarity (game economy — v2 palette from brand guide) */
+  --px-rarity-common: #8A8F98;
+  --px-rarity-rare: #60C2E0;
+  --px-rarity-epic: #456DB0;
+  --px-rarity-legendary: #E0A23C;
+  --px-rarity-mythic: #D9744F;
+
+  /* Semantic aliases (legacy bridge — prefer --sky-* / theme tokens in new code) */
+  --px-success: #3DBE8B;
+  --px-warn: #E0A23C;
+  --px-danger: #E0606A;
+}
+
+/* Default: light theme */
+html,
+html[data-theme="light"] {
+  --px-bg: #F0F0F1;
+  --px-bg-2: #E7E7E9;
+  --px-rail: #EAEAEC;
+  --px-glass: rgba(255, 255, 255, 0.62);
+  --px-glass-strong: rgba(255, 255, 255, 0.85);
+  --px-card: rgba(255, 255, 255, 0.72);
+  --px-field: #fff;
+  --px-border: rgba(0, 0, 0, 0.09);
+  --px-border-strong: rgba(0, 0, 0, 0.16);
+  --px-text: #1C1C1E;
+  --px-text-strong: #121214;
+  --px-text-dim: rgba(28, 28, 30, 0.62);
+  --px-text-faint: rgba(28, 28, 30, 0.34);
+  --px-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 24px 60px rgba(0, 0, 0, 0.1);
+  --px-btn-bg: var(--sky-800);
+  --px-btn-text: #fff;
+  --px-link: var(--sky-800);
+  --px-accent: var(--sky-500);
+  --px-hero-glow: radial-gradient(60% 50% at 50% 36%, rgba(96, 194, 224, 0.3), transparent 70%);
+  --px-auth-glow: radial-gradient(50% 40% at 50% 22%, rgba(96, 194, 224, 0.28), transparent 70%);
+}
+
+html[data-theme="dark"] {
+  --px-bg: #1C1C1E;
+  --px-bg-2: #242426;
+  --px-rail: #202022;
+  --px-glass: rgba(255, 255, 255, 0.06);
+  --px-glass-strong: rgba(255, 255, 255, 0.1);
+  --px-card: rgba(255, 255, 255, 0.05);
+  --px-field: rgba(255, 255, 255, 0.06);
+  --px-border: rgba(255, 255, 255, 0.12);
+  --px-border-strong: rgba(255, 255, 255, 0.22);
+  --px-text: #F0F0F1;
+  --px-text-strong: #F7F7F8;
+  --px-text-dim: rgba(240, 240, 241, 0.62);
+  --px-text-faint: rgba(240, 240, 241, 0.32);
+  --px-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px rgba(0, 0, 0, 0.5);
+  --px-btn-bg: var(--sky-500);
+  --px-btn-text: #fff;
+  --px-link: var(--sky-300);
+  --px-accent: var(--sky-500);
+  --px-hero-glow: radial-gradient(60% 50% at 50% 36%, rgba(96, 194, 224, 0.22), transparent 70%);
+  --px-auth-glow: radial-gradient(50% 40% at 50% 22%, rgba(96, 194, 224, 0.18), transparent 70%);
+}
+
+/* Theme init — inline in index.html <head> before paint:
+   try { var t=localStorage.getItem('poxy-sky-theme')||'light'; document.documentElement.setAttribute('data-theme',t); } catch(e){} */

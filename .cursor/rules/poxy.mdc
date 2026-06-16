@@ -8,7 +8,7 @@ alwaysApply: true
 
 ## Project Identity
 
-POXY WORLD is a mobile-first, single-file web app (`poxy_v3.html` + supporting scripts).
+POXY WORLD is a mobile-first, single-file web app (`index.html` + supporting CSS in `assets/`).
 It is a gacha/lootbox collectibles ecosystem with a full cryptographic integrity engine,
 social layer, marketplace, DAO governance, and POXY Club.
 
@@ -19,7 +19,7 @@ Stack: Vanilla HTML/CSS/JS · Supabase (auth, RPC, storage, Edge Functions) · V
 ## 1. Code Architecture Rules
 
 ### Single-File Integrity
-- The primary app lives in `poxy_v3.html`. Every edit must preserve ALL existing features.
+- The primary app lives in `index.html`. Every edit must preserve ALL existing features.
 - NEVER remove or break existing functionality when adding new features.
 - Before adding code, read the full relevant section to understand what already exists.
 - Test mentally on mobile (375px viewport) before finalizing any UI change.
@@ -68,66 +68,24 @@ EXISTS (
 
 ---
 
-## 2. Design & UI Rules
+## 2. Design & UI Rules (Sky v2 rebrand)
 
-### POXY Aesthetic — Dark Cyber-Luxury
-POXY is dark, immersive, and cryptographic. Think: underground digital vault meets
-neo-brutalist collector's world. NOT generic SaaS. NOT purple gradients on white.
+**Full spec:** `DESIGN.md`, `design/v2/REBRAND.md`, `assets/poxy-sky/tokens.css`.  
+**Mockups:** `design/v2/*.html`. **Cursor:** `poxy-sky-design.mdc`, `poxy-rebrand-workflow.mdc`.
 
-**Color Palette (CSS variables — always use these):**
-```css
---poxy-bg: #0a0a0f;          /* near-black base */
---poxy-surface: #111118;     /* card surfaces */
---poxy-border: #1e1e2e;      /* subtle borders */
---poxy-accent: #00f5a0;      /* neon mint — primary accent */
---poxy-accent-2: #7c3aed;    /* deep violet — secondary */
---poxy-accent-3: #f59e0b;    /* amber — legendary/rare glow */
---poxy-text: #e2e8f0;        /* primary text */
---poxy-muted: #64748b;       /* muted/secondary text */
---poxy-danger: #ef4444;      /* burn/danger actions */
-```
+- **Default theme:** light (`data-theme="light"`, `localStorage` → `poxy-sky-theme`)
+- **Accent:** Sky `#60C2E0`; logo Card mark via `--px-cardmask`
+- **New CSS classes:** `px-` prefix; tokens `--px-*` / `--sky-*`
+- **App layout target:** left icon rail 74px (replaces bottom nav during Stage 3+)
+- **Admin panel** (`admin-terminal.html`): out of scope for rebrand
+- Legacy `poxy-*` / Stitch CSS remains until each screen is migrated — do not delete wholesale
 
-**Rarity Glow Colors:**
-```css
---rarity-common: #94a3b8;
---rarity-uncommon: #22c55e;
---rarity-rare: #3b82f6;
---rarity-epic: #a855f7;
---rarity-legendary: #f59e0b;
---rarity-mythic: #ec4899;
---rarity-secret: #ffffff;
-```
+### Rarity (v2 palette — locked)
+Common `#8A8F98` · Rare `#60C2E0` · Epic `#456DB0` · Legendary `#E0A23C` · Mythic `#D9744F`
 
-### Typography
-- Display/headings: `'Syne'` or `'Bricolage Grotesque'` (Google Fonts) — bold, geometric
-- Body/UI: `'DM Mono'` or `'IBM Plex Mono'` for crypto/data elements
-- Secondary body: `'Plus Jakarta Sans'` for readable prose
-- NEVER use: Inter, Roboto, Arial, system-ui as primary fonts
-- Font sizes: mobile-first, minimum 14px for body, 11px for labels
-
-### Animations
-- Entry animations: staggered reveals with `animation-delay` (50ms increments)
-- Rarity reveals: scale + glow pulse — legendary/mythic get dramatic entrance
-- Hover states: subtle lift (`translateY(-2px)`) + border glow
-- Page transitions: fade + slight upward drift (200ms ease-out)
-- Lootbox opening: multi-stage — suspense build → flash → reveal
-- Performance mode toggle exists — respect it (reduce/remove animations when active)
-- NO animations that block interaction or cause layout shift
-
-### Layout
-- Mobile-first always — design for 375px, enhance for larger screens
-- Bottom navigation bar is sacred — never move or restructure it
-- Cards: rounded-xl (16px), dark surface, subtle border, glow on hover
-- Modals: full-screen on mobile, centered max-width on desktop
-- Spacing: 8px base unit — use multiples (8, 16, 24, 32, 48)
-- Safe areas: account for iOS notch/home bar (`env(safe-area-inset-*)`)
-
-### Component Patterns
-- Buttons: primary = accent fill + dark text; secondary = border only; danger = red
-- Inputs: dark background, accent border on focus, monospace font for hashes
-- Badges/chips: small, uppercase, letter-spacing 0.05em
-- Loading states: pulsing skeleton or spinner — never blank white flash
-- Empty states: always have icon + message + action CTA
+### Rebrand stages
+Stage 0 Foundation ✅ → Stage 1 Landing → Stage 2 Auth → Stage 3 App shell → Stage 4+ screens.  
+Run smoke test after every stage (see `REBRAND.md`).
 
 ---
 
@@ -172,10 +130,10 @@ When touching economy logic, preserve these invariants:
 3. State what you changed and why
 
 ### When asked to improve design:
-1. Stay within the POXY dark cyber-luxury aesthetic
-2. Use existing CSS variables — don't introduce new colors without reason
-3. Animations must be CSS-only (no new JS libraries)
-4. Mobile experience is primary — desktop is enhancement
+1. Follow Sky v2 system (`DESIGN.md`, mockups in `design/v2/`)
+2. Use `assets/poxy-sky/tokens.css` — no legacy pink/mint unless unmigrated screen
+3. Animations CSS-only; respect `prefers-reduced-motion` and performance mode
+4. Mobile-first; one stage at a time with test gate before next
 
 ### Commit message format:
 ```

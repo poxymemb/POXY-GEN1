@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POXY WORLD · Sign in</title>
+<!-- ============================================================
+  POXY WORLD · AUTH
+  Screens: login / register / verify  (switch in one file)
+  Tokens in :root — same Sky design system as the site.
+  Each screen marked SCREEN: name
+  ============================================================ -->
+<style>
+  :root{
+    --sky-50:#EEF8FB;--sky-100:#DCF1F7;--sky-200:#C3E7F1;--sky-300:#A6DAEB;--sky-400:#8BCFE4;
+    --sky-500:#60C2E0;--sky-600:#40ABCC;--sky-700:#2E85A0;--sky-800:#2DB1D7;--sky-900:#193D48;
+    --ink:#1C1C1E;--paper:#F0F0F1;
+    --r-sm:11px;--r:16px;--r-lg:24px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Segoe UI",Roboto,sans-serif;
+    --mono:"SF Mono",ui-monospace,Menlo,monospace;--ease:cubic-bezier(.4,0,.2,1);
+  }
+  [data-theme="light"]{
+    --bg:#F0F0F1;--bg-2:#E7E7E9;--card:rgba(255,255,255,.72);--field:#fff;
+    --border:rgba(0,0,0,.10);--border-strong:rgba(0,0,0,.16);--text:#1C1C1E;--text-strong:#121214;
+    --text-dim:rgba(28,28,30,.60);--text-faint:rgba(28,28,30,.38);
+    --shadow:0 1px 0 rgba(255,255,255,.8) inset,0 30px 70px rgba(0,0,0,.12);
+    --btn-bg:var(--sky-800);--btn-text:#fff;--link:var(--sky-800);
+    --glow:radial-gradient(50% 40% at 50% 22%,rgba(96,194,224,.28),transparent 70%);
+  }
+  [data-theme="dark"]{
+    --bg:#1C1C1E;--bg-2:#202022;--card:rgba(255,255,255,.05);--field:rgba(255,255,255,.06);
+    --border:rgba(255,255,255,.13);--border-strong:rgba(255,255,255,.22);--text:#F0F0F1;--text-strong:#F7F7F8;
+    --text-dim:rgba(240,240,241,.60);--text-faint:rgba(240,240,241,.36);
+    --shadow:0 1px 0 rgba(255,255,255,.05) inset,0 30px 70px rgba(0,0,0,.55);
+    --btn-bg:var(--sky-500);--btn-text:#fff;--link:var(--sky-300);
+    --glow:radial-gradient(50% 40% at 50% 22%,rgba(96,194,224,.18),transparent 70%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg)!important}
+  body{font-family:var(--font);background:var(--bg)!important;color:var(--text);min-height:100vh;
+    -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:32px 20px;position:relative;transition:background .4s,color .4s}
+  body::before{content:"";position:fixed;inset:0;background:var(--glow);pointer-events:none;z-index:0}
+
+  /* top-right theme toggle */
+  .theme-btn{position:fixed;top:20px;right:20px;width:38px;height:38px;border-radius:11px;border:1px solid var(--border);
+    background:var(--card);backdrop-filter:blur(12px);color:var(--text);cursor:pointer;font-size:14px;z-index:10;transition:transform .15s}
+  .theme-btn:hover{transform:translateY(-1px)}
+
+  .auth{position:relative;z-index:2;width:100%;max-width:400px}
+
+  /* brand mark in glass */
+  .brand{display:flex;flex-direction:column;align-items:center;margin-bottom:26px}
+  .brand .case{width:66px;height:66px;border-radius:19px;display:grid;place-items:center;position:relative;
+    background:linear-gradient(165deg,color-mix(in srgb,var(--sky-500) 20%,var(--card)),var(--card));
+    border:1px solid var(--border);box-shadow:var(--shadow),0 0 40px color-mix(in srgb,var(--sky-500) 28%,transparent);
+    backdrop-filter:blur(14px)}
+  .brand .case .mk{width:52%;height:52%;background:var(--btn-bg);
+    -webkit-mask:var(--cardmask) center/contain no-repeat;mask:var(--cardmask) center/contain no-repeat;
+    filter:drop-shadow(0 5px 12px color-mix(in srgb,var(--sky-700) 40%,transparent))}
+  .brand .name{margin-top:14px;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--text-strong)}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 26px;
+    box-shadow:var(--shadow);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%)}
+  .card h1{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:5px;color:var(--text-strong);text-align:center}
+  .card .lead{font-size:14px;color:var(--text-dim);text-align:center;margin-bottom:24px}
+
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-dim);margin-bottom:6px}
+  .input-wrap{position:relative;display:flex;align-items:center}
+  .input-wrap .prefix{position:absolute;left:13px;font-size:15px;color:var(--text-faint);font-weight:600;pointer-events:none}
+  .input{width:100%;font:500 15px var(--font);color:var(--text);background:var(--field);border:1px solid var(--border);
+    border-radius:var(--r-sm);padding:12px 14px;transition:border-color .2s,box-shadow .2s;outline:none}
+  .input.has-prefix{padding-left:28px}
+  .input::placeholder{color:var(--text-faint)}
+  .input:focus{border-color:var(--sky-500);box-shadow:0 0 0 3px color-mix(in srgb,var(--sky-500) 22%,transparent)}
+  .input.ok{border-color:#3DBE8B}
+  .input.err{border-color:#E0606A}
+  .field-hint{font-size:12px;margin-top:6px;color:var(--text-faint)}
+  .field-hint.ok{color:#3DBE8B}
+  .field-hint.err{color:#E0606A}
+
+  /* password strength */
+  .strength{display:flex;gap:5px;margin-top:8px}
+  .strength i{height:4px;flex:1;border-radius:2px;background:var(--border);transition:background .25s}
+  .strength.s1 i:nth-child(1){background:#E0606A}
+  .strength.s2 i:nth-child(-n+2){background:#E0A23C}
+  .strength.s3 i:nth-child(-n+3){background:#60C2E0}
+  .strength.s4 i{background:#3DBE8B}
+
+  .btn{width:100%;font:600 15px var(--font);cursor:pointer;padding:13px;border-radius:var(--r-sm);border:1px solid transparent;
+    transition:transform .15s,filter .2s;margin-top:6px}
+  .btn:active{transform:scale(.985)}
+  .btn-primary{background:var(--btn-bg);color:var(--btn-text);border-color:var(--btn-bg)}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;filter:none}
+
+  .row-between{display:flex;align-items:center;justify-content:space-between;margin:2px 0 16px}
+  .check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dim);cursor:pointer;user-select:none}
+  .check input{width:16px;height:16px;accent-color:var(--sky-500)}
+  .link{font-size:13px;color:var(--link);font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--font)}
+  .link:hover{filter:brightness(1.15)}
+
+  .divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text-faint);font-size:12px}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border)}
+
+  .swap{text-align:center;margin-top:20px;font-size:14px;color:var(--text-dim)}
+  .swap button{color:var(--link);font-weight:600;background:none;border:none;cursor:pointer;font-size:14px;font-family:var(--font)}
+  .swap button:hover{filter:brightness(1.15)}
+
+  .screen{display:none}
+  .screen.active{display:block;animation:fade .35s var(--ease)}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* verify code inputs */
+  .code-row{display:flex;gap:9px;justify-content:center;margin:8px 0 6px}
+  .code-row input{width:46px;height:54px;text-align:center;font:700 22px var(--mono);color:var(--text-strong);
+    background:var(--field);border:1px solid var(--border);border-radius:var(--r-sm);outline:none;transition:border-color .2s,box-shadow .2s}
+  .code-row input:focus{border-color:var(--sky-500);box-shadow:0 0 0 3px color-mix(in srgb,var(--sky-500) 22%,transparent)}
+  .resend{text-align:center;font-size:13px;color:var(--text-dim);margin-top:14px}
+  .resend button{color:var(--link);font-weight:600;background:none;border:none;cursor:pointer;font-family:var(--font);font-size:13px}
+  .verify-to{text-align:center;font-size:13px;color:var(--text-strong);font-weight:600;margin-bottom:2px}
+
+  .legal{text-align:center;font-size:12px;color:var(--text-faint);margin-top:22px;line-height:1.5}
+  .legal a{color:var(--link)}
+
+  .foot{margin-top:26px;text-align:center;font-size:12px;color:var(--text-faint);position:relative;z-index:2}
+  .foot a{color:var(--text-dim)}
+</style>
+</head>
+<body data-theme="light">
+
+<button class="theme-btn" id="themeBtn" aria-label="Theme">◐</button>
+
+<div class="auth">
+  <div class="brand">
+    <div class="case"><div class="mk"></div></div>
+    <div class="name">POXY WORLD</div>
+  </div>
+
+  <!-- SCREEN: login -->
+  <div class="screen active" id="s-login">
+    <div class="card">
+      <h1>Welcome back</h1>
+      <p class="lead">Sign in to your collection.</p>
+
+      <div class="field">
+        <label>Username or email</label>
+        <div class="input-wrap"><input class="input" type="text" placeholder="yourname or you@email.com"></div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap"><input class="input" type="password" placeholder="Your password"></div>
+      </div>
+
+      <div class="row-between">
+        <label class="check"><input type="checkbox" checked>Keep me signed in</label>
+        <button class="link">Forgot password?</button>
+      </div>
+
+      <button class="btn btn-primary">Sign in</button>
+
+      <div class="divider">or</div>
+      <button class="btn btn-primary" style="background:var(--card);color:var(--text);border-color:var(--border)">
+        Sign in with a linked device (QR)
+      </button>
+
+      <div class="swap">New to POXY? <button onclick="show('register')">Create an account</button></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: register -->
+  <div class="screen" id="s-register">
+    <div class="card">
+      <h1>Create your account</h1>
+      <p class="lead">Pick a username and you're on your way.</p>
+
+      <div class="field">
+        <label>Username</label>
+        <div class="input-wrap">
+          <span class="prefix">@</span>
+          <input class="input has-prefix" id="uname" type="text" placeholder="yourname" autocomplete="off">
+        </div>
+        <div class="field-hint" id="uhint">3–20 characters, letters and numbers.</div>
+      </div>
+
+      <div class="field">
+        <label>Name</label>
+        <div class="input-wrap"><input class="input" type="text" placeholder="First and last name"></div>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <div class="input-wrap"><input class="input" type="email" placeholder="you@email.com"></div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap"><input class="input" id="pwd" type="password" placeholder="Create a password"></div>
+        <div class="strength" id="strength"><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <button class="btn btn-primary" onclick="show('verify')">Create account</button>
+
+      <p class="legal">By continuing you agree to our <a href="#">Terms</a> and <a href="#">Policy</a>.</p>
+
+      <div class="swap">Already have an account? <button onclick="show('login')">Sign in</button></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: verify -->
+  <div class="screen" id="s-verify">
+    <div class="card">
+      <h1>Check your email</h1>
+      <p class="lead">We sent a 6-digit code to confirm it's you.</p>
+      <div class="verify-to">you@email.com</div>
+
+      <div class="code-row" id="codeRow">
+        <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+        <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+        <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+      </div>
+
+      <button class="btn btn-primary" style="margin-top:18px">Verify and continue</button>
+
+      <div class="resend">Didn't get it? <button id="resendBtn">Resend in <span id="timer">42</span>s</button></div>
+      <div class="swap"><button onclick="show('register')">← Back</button></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="foot">Protected by 2FA · <a href="#">Need help?</a></div>
+
+<script>
+  const root=document.documentElement;
+  root.style.setProperty('--cardmask',`url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAggAAAGPCAYAAAA5oSieAAAMt0lEQVR42u3dza9n5UHA8e/DvTNTSl/ApFFDbSKxLlzpH+DChSs3LhoXNWp5K1BedGCmFGilQEGQ0gozvINGxBpjNya6cmdcNC5146IxMUKLKbSgMDPMyz0uzo9yO0xTpszc3xnm80lu5s4dmHvynDm/3/ee85znFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACcUWNJGzNN057qsmrDrgHgPHs//sEY44WlbNDmwgbo56t/qH6u2vLvBYDzxGb1aLVPIJzaxdUnFrhdAHC2fXJJG3PBwgZn+PcBwHnqAhsDAKgVAEAgAAACAQAQCACAQAAABAIAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAEAgAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAEAgAAAIBABAIAIBAAAAEAgAgEAAAgQAACAQAQCAAAAIBABAIAIBAAAAEAgAgEAAAgQAACAQAAIEAAAgEAEAgAAACAQAQCACAQAAABAIAIBAAAIEAAAgEAEAgAAACAQAQCACAQAAABAIAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAEAgAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAQCAAAAIBABAIAIBAAAAEAgAgEAAAgQAACAQAQCAAAAIBABAIAIBAAAAEAgAgEAAAgQAAIBAAAIEAAAgEAEAgAAACAQAQCACAQAAABAIAIBAAAIEAAAgEAEAgAAACAQAQCACAQAAAEAgAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAEAgAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAQCAAAAIBADhdm4YAzqipOlx9sHqp+la1q9pTHauOVrurYahO2/HqxGr8ptV4fqT6jdWfb/mhBwQCLNVYxcHR6vLqn7cFwdbqYwiEn8rWKgw2VuN3YhVfj1e/Iw5AIMC54HD1H2OMQ9Uhw3H2TNP07VU4iC44gxQ3nJ2fdN/0hrVjjq0CYctQgECApTpRfbf6aPOlBc6+S1aB8KqhAIEAS7VR/WzzGYRjhmNHHFqN+yWGAgQCLNnm6thyiWFnX8eMNwgEAEAgAAACAQAQCACAQAAABAIAIBAAAIEAAAgEAEAgAAACAQBAIAAAAgEAEAgAgEAAAAQCLNtYfeB1DBxYwA8dro4Zhh3xuiEAgQDngq3VsbVhKHbELkMAAgHOlUDYWP0KIBCAqjarqbrUUJxd0zRtVD9jJODsvJABZ97F1cFpmv69ebLiBc1zEnZXH8sExp/G4erl6qJVgJ2o9lS/aWhAIMC55FerX1l9fkHzJYdd4uA9Odbbcw6OrV7DjCcIBDjn7DYEZ9SuH/M5cIaZgwAACAQAQCAAAAIBABAIAIBAAAAEAgAgEAAAgQAACAQAQCAAAAIBABAIAIBAAAAEAgAgEAAABAIAIBAAAIEAAAgEAEAgAAACAQAQCACAQAAABAIAIBAAAIEAAAgEAEAgAAACAQAQCAAAAgEAEAgAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAEAgAgEAAAAQCACAQAACBAAAIBAAAgQAACAQAQCAAAAIBABAIAIBAAAAEAgAgEAAAgQAACAQAQCAAbztcfbf6++oVwwEIBKDqP6urxxi/Xd1UvWhIAIEA57dXq2vHGP9YNcb4RnV59UI1GR5AIMD554Vq/xjjX7Z/cYzxT9U91RFDBAgEOL98u/nMwTOn+sMxxlPVtdV/V28aLkAgwPvf69Vtb11W+HHGGM9V91XfMWTAUm0aAjgjTlRfHWN88938x2OMJ6ZpOl49VH24GoYQEAjw/vL96qYxxl+fzv80xnhmmqZdzWcTLjaMwJK4xADvzZFq3+nGwbZIeLy6pXrNUAICAd4fjjfPOfiL9/KXjDH+vNpfHTKkgECAc9v3q6vGGH92Jv6yMcbTzYspvZJ1EoAFMAcBTt/R6pp3OyHxNCLh2Wma9lS3VR83zMA6OYMAp+dY9cUzHQfbIuGx5jsb3mi+MwJAIMDCvVRdMcZ48Gx+k9Vli880r5Nw2LAD6+ASA7w7bzbfyvh3O/HNxhjfnKbpouZbIC80/MBOcwYBfrKj1Zd2Kg62RcJfVvc2P/hpy24ABAIsxxvN6xw8uI5vvpqTcMcqEgAEAizAker2McaBdW7EKhL2Nz/rAUAgwJrdNcZ4ZAkbslpM6XaRAAgEWL9PTtO0mIm8qzMZNzTfTWFOAiAQYE2uqO6fpmkxx8lq4uKdzSsuAggEWIMTzQ9Senyapo0FRcJTvX13w1G7CRAIsLPeaL7mf1X1tWmaxoIi4eHquurlLKYECATYUR+pPrQ6Tq6qbp2mafeCtu9vq1ub77YAEAiwQ7aaV1CseTXDz60iYdcSNm6MMY0xnq/+uPqe3QUIBNi542PPW+/H1S9UdzfPSdi1lI0cYxys7spiSoBAgLW6srp3YZHwaHVj1kkABAKs1b7qgYXd3fB89UWRAAgE2FnT9vfjam91YEkbuLq7YW/1P823aQIIBDjb77+n+Np10zQ9ubDFlJ6pvlT9wC4DBAKsz2erh5d0C+QY4+nmuxtezmJKgECAtbmh5V1ueLx5JciXRAIgEGB9Pj1N0y0Lu9zwXPPExUN2DyAQYGec6EcnLl5YXV/dubC7G/6q+nLz5QYAgQBn2UY/OnFxo/rF5mv/Ty0sEh6u7snERUAgwFr9QfOZhCUtpvRI81wJz24ABAKsyUbzrYYPTdO0uaBI+EbzOgkWUwIEAuyg6aTf31h9fWGPin6iurl6sfmBVAACAc72++8pvnZD8zoJS7q74enqvt5+WiWAQIA1uL46OE3ThxcUCY9VN1UvVMfsImC7TUMAOxbj11Wb0zRdN8ZYxHMSxhjPrC5/3Np8B4YfGgBnEGAHnDwn4VPVF5a0gavLDXdXb9hdgECAHXr/Pen3Fzc/4OnAAldcvKN5WWYAgQBrCIZLmycuHlxYJByovlL9n90ECARYnyuquxd2C+SjzbdAHrd7QCAA67Gn+bT+1xe24uIzzWc4XrWLQCAAO2Ordy5O9IfVnyzscsOT1b7mWyABgQDswDF3quPuluqRhUXCs9UD1WG7DQQCsD7XV1+dpumjC4qEg9Vnq/+qjtpFIBCA9dhb3b6wMwnPN59JeNHuAYEA7JyT5yR8uvr8wu5ueHwVCa/nAU8gEIC1HIcfrz5fPb2wR0U/2bwk8//aZSAQgPW4pLqyOjBN08aCIuGxan/1ml0EAgFYn89Uf7qkDVqtk7A/dzeAQADW5gPVzdM0PbGwOQlPN6/f8IpdBAIBWJ9rqocWNifh6erO5lsgAYEArMne6v6FLcv8aPVQ8+UGdzeAQADWYOrtFRd3LygSDjRPqPxOdcRuAoEA7PB78erXa6t9C4uEv6m+XH3PbgKBAOzcmYOTT99fWd24sImLz1b3VS9Vx+w2OG0nlrQxm/YHnDNnDra7rPpK9cvTNN0wxljEG/IY44lpml6rfr/69eqi1R8dWb34DbsTfmhrdVxsrd6PF7Wc+aIO1mmafq36V+ECp+Xe6p4xxpsLOpYvrS7cdiwfzyRGeMehsu3jgur1McZiLtN5I4Zz383VB6dp2jfGWMSb8BjDg53gHGcOApybtofAhc23QD65pDkJgEAAlnHsXlU9bGgAgQCc7MZpmr62pBUXAYEALMPe6qklPQUSEAjAMlxe3TZN0x5DAQgE4C1b1dXVHy3p2Q2AQADWf2x/orq/etScBEAgACe7urrLLZCAQABOdmt1n0gABAKwfTGljeoL1UHDAggE4GSfs04CIBDA8X0qe6sHp2n6gCECBAKw3U3Vw+YkAAIBmE469n+v2m/FRUAgANvtrq6p7hAJgECA89fJlxM2qsua7254wIqLgEAAttusfqv6XWcSAIEAvGVX9UvVp6oPGw5AIABv2az2VB8yFIBAALb7WHXMMAACAdjO/ANAIADvYNEkQCAAAAIB+MlOGAJAIAAnOy4SAIEAAAgEAEAgAAACAQAQCACAQAAABAIAIBAAAIEAAAgEAEAgAAACAQAQCACAQAAABAIAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAEAgAgEAAAAQCACAQAACBAAAIBABAIAAAAgEAQCAAAAIBADgXA2GsPoD1HH8AiwyEI9UxuwXW4qVq0zAALfDF4OXqueqSasvugbNqVLurqTpU/dvqcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAONP+H7b/Ns2YsWWLAAAAAElFTkSuQmCC")`);
+
+  /* screen switch */
+  function show(s){
+    document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active', el.id==='s-'+s));
+    window.scrollTo(0,0);
+  }
+
+  /* theme */
+  function applyTheme(t){root.setAttribute('data-theme',t);document.body.setAttribute('data-theme',t);
+    document.getElementById('themeBtn').textContent=t==='light'?'◐':'◑';}
+  document.getElementById('themeBtn').onclick=()=>applyTheme(root.getAttribute('data-theme')==='light'?'dark':'light');
+  applyTheme('light');
+
+  /* username live check (demo) */
+  const uname=document.getElementById('uname'),uhint=document.getElementById('uhint');
+  const taken=['admin','poxy','test','support'];
+  uname.addEventListener('input',()=>{
+    const v=uname.value.trim().toLowerCase();
+    uname.classList.remove('ok','err');uhint.classList.remove('ok','err');
+    if(!v){uhint.textContent='3–20 characters, letters and numbers.';return;}
+    if(v.length<3){uhint.textContent='A little longer, at least 3 characters.';return;}
+    if(!/^[a-z0-9_]+$/.test(v)){uhint.classList.add('err');uname.classList.add('err');uhint.textContent='Letters, numbers, and underscores only.';return;}
+    if(taken.includes(v)){uhint.classList.add('err');uname.classList.add('err');uhint.textContent='@'+v+' is taken. Try another.';return;}
+    uhint.classList.add('ok');uname.classList.add('ok');uhint.textContent='@'+v+' is available.';
+  });
+
+  /* password strength (demo) */
+  const pwd=document.getElementById('pwd'),strength=document.getElementById('strength');
+  pwd.addEventListener('input',()=>{
+    const v=pwd.value;let s=0;
+    if(v.length>=8)s++;if(/[A-Z]/.test(v)&&/[a-z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+    strength.className='strength'+(v?' s'+Math.max(1,s):'');
+  });
+
+  /* code inputs auto-advance */
+  const codes=[...document.querySelectorAll('#codeRow input')];
+  codes.forEach((c,i)=>{
+    c.addEventListener('input',()=>{if(c.value&&i<codes.length-1)codes[i+1].focus()});
+    c.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!c.value&&i>0)codes[i-1].focus()});
+    c.addEventListener('paste',e=>{const d=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6);
+      if(d){d.split('').forEach((n,j)=>{if(codes[j])codes[j].value=n});codes[Math.min(d.length,5)].focus();e.preventDefault()}});
+  });
+
+  /* resend timer (demo) */
+  let t=42;const timer=document.getElementById('timer'),resendBtn=document.getElementById('resendBtn');
+  const iv=setInterval(()=>{t--;if(t<=0){clearInterval(iv);resendBtn.innerHTML='Resend code';resendBtn.style.cursor='pointer';}else timer.textContent=t;},1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+---
+description: POXY Sky v2 design system — tokens, components, brand rules for consumer app
+globs: ["index.html", "assets/poxy-sky/**", "design/v2/**", "DESIGN.md"]
+alwaysApply: true
+---
+
+# POXY Sky Design System (v2)
+
+Consumer app rebrand. Reference mockups: `design/v2/`. Production tokens: `assets/poxy-sky/`.
+
+## Source of truth
+
+1. `design/v2/poxy-brand-guide.html` — tokens, logo, typography
+2. `assets/poxy-sky/tokens.css` — production CSS variables
+3. `DESIGN.md` — integration contract
+
+**Do not** use legacy Stitch pink/mint/cyber-luxury palette for new UI.
+
+## Brand
+
+- Accent: **Sky `#60C2E0`** (scale `--sky-50` … `--sky-900`)
+- Logo: **Card** mark via `--px-cardmask` / `.px-mark`
+- Default theme: **light** (`data-theme="light"`)
+- Theme key: `localStorage` → `poxy-sky-theme`
+- Button text: **always white** on primary buttons (both themes)
+- Light primary btn: `--sky-800`; dark primary btn: `--sky-500`
+
+## Typography
+
+- UI: `--px-font` (SF Pro / Inter / system-ui)
+- Hashes, serials, codes: `--px-mono`
+- Do not add Syne, DM Mono, or neon cyber fonts for new chrome
+
+## Components
+
+Use `assets/poxy-sky/components.css` classes:
+
+- `.px-btn`, `.px-btn-primary`, `.px-btn-glass`
+- `.px-glass`, `.px-panel`
+- `.px-input`, `.px-field-label`
+- `.px-mark` for logo
+
+New screen-specific rules: `px-` prefix only.
+
+## Layout targets
+
+| Zone | Pattern |
+|------|---------|
+| Landing | Sticky glass nav, hero case float, sections in `poxy-landing.html` |
+| Auth | Centered card, glow backdrop — `poxy-auth.html` |
+| App | Left rail 74px + topbar — `poxy-dashboard.html` |
+| Open | Box → full-screen generation ritual — not spin wheel |
+
+## Rarity colors (v2 — locked)
+
+```
+Common #8A8F98 · Rare #60C2E0 · Epic #456DB0 · Legendary #E0A23C · Mythic #D9744F
+```
+
+## Animations
+
+- Entry: `pxFadeUp` 0.35s `cubic-bezier(.4,0,.2,1)`
+- Hover lift: `translateY(-1px)` or `brightness(1.08)` on primary
+- Respect `prefers-reduced-motion` and performance mode toggle
+- Open ritual timings from `poxy-dashboard.html` — do not shorten for "snappiness"
+
+## Admin panel
+
+`admin-terminal.html` is **out of scope** — do not apply Sky tokens there.

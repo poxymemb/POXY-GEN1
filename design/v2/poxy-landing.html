@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POXY WORLD · Collect what's yours</title>
+<style>
+  :root{
+    --sky-50:#EEF8FB;--sky-100:#DCF1F7;--sky-200:#C3E7F1;--sky-300:#A6DAEB;--sky-400:#8BCFE4;
+    --sky-500:#60C2E0;--sky-600:#40ABCC;--sky-700:#2E85A0;--sky-800:#2DB1D7;--sky-900:#193D48;
+    --ink:#1C1C1E;--paper:#F0F0F1;
+    --r-sm:12px;--r:18px;--r-lg:26px;--maxw:1080px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Segoe UI",Roboto,sans-serif;
+    --mono:"SF Mono",ui-monospace,Menlo,monospace;--ease:cubic-bezier(.4,0,.2,1);
+  }
+  [data-theme="light"]{
+    --bg:#F0F0F1;--bg-2:#E7E7E9;--glass:rgba(255,255,255,.62);--glass-strong:rgba(255,255,255,.85);
+    --border:rgba(0,0,0,.09);--text:#1C1C1E;--text-dim:rgba(28,28,30,.62);--text-faint:rgba(28,28,30,.34);
+    --text-strong:#121214;
+    --shadow:0 1px 0 rgba(255,255,255,.8) inset,0 24px 60px rgba(0,0,0,.10);
+    --btn-bg:var(--sky-800);--btn-text:#fff;--link:var(--sky-800);
+    --hero-glow:radial-gradient(60% 50% at 50% 36%,rgba(96,194,224,.30),transparent 70%);
+  }
+  [data-theme="dark"]{
+    --bg:#1C1C1E;--bg-2:#242426;--glass:rgba(255,255,255,.06);--glass-strong:rgba(255,255,255,.10);
+    --border:rgba(255,255,255,.12);--text:#F0F0F1;--text-dim:rgba(240,240,241,.62);--text-faint:rgba(240,240,241,.32);
+    --text-strong:#F7F7F8;
+    --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 24px 60px rgba(0,0,0,.5);
+    --btn-bg:var(--sky-500);--btn-text:#fff;--link:var(--sky-300);
+    --hero-glow:radial-gradient(60% 50% at 50% 36%,rgba(96,194,224,.22),transparent 70%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;background:var(--bg)!important;transition:background .4s var(--ease)}
+  body{font-family:var(--font);background:var(--bg)!important;color:var(--text);line-height:1.55;
+    -webkit-font-smoothing:antialiased;transition:background .4s,color .4s;overflow-x:hidden}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font:600 15px var(--font);cursor:pointer;padding:13px 24px;border-radius:14px;border:1px solid transparent;transition:transform .15s,filter .2s}
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:var(--btn-bg);color:var(--btn-text);border-color:var(--btn-bg)}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-glass{background:var(--glass-strong);color:var(--text);border-color:var(--border);backdrop-filter:blur(12px)}
+  .btn-glass:hover{transform:translateY(-1px)}
+  .btn-lg{padding:16px 30px;font-size:16px;border-radius:15px}
+
+  /* NAV — tabs on the LEFT */
+  nav{position:sticky;top:0;z-index:60;backdrop-filter:blur(20px) saturate(150%);
+    -webkit-backdrop-filter:blur(20px) saturate(150%);background:var(--glass);border-bottom:1px solid var(--border)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:14px}
+  .nav-logo{width:26px;height:26px;background:var(--btn-bg);flex-shrink:0;cursor:pointer;
+    -webkit-mask:var(--cardmask) center/contain no-repeat;mask:var(--cardmask) center/contain no-repeat}
+  .nav-tabs{display:flex;gap:2px;align-items:center}
+  .nav-tab{font-size:14px;font-weight:600;color:var(--text-dim);padding:10px 14px;border-radius:10px;cursor:pointer;
+    position:relative;transition:color .2s;background:none;border:none;font-family:var(--font)}
+  .nav-tab:hover{color:var(--text)}
+  .nav-tab.active{color:var(--text)}
+  /* active underline flush to top of header + glow downward */
+  .nav-tab.active::before{content:"";position:absolute;left:10px;right:10px;top:-11px;height:2px;border-radius:0 0 2px 2px;
+    background:var(--sky-500)}
+  .nav-tab.active::after{content:"";position:absolute;left:2px;right:2px;top:-11px;height:24px;pointer-events:none;
+    background:radial-gradient(60% 100% at 50% 0,color-mix(in srgb,var(--sky-500) 32%,transparent),transparent 75%)}
+  .nav-spacer{flex:1}
+  .nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .icon-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--border);background:var(--glass-strong);
+    color:var(--text);cursor:pointer;font-size:14px;font-weight:600;transition:transform .15s;display:grid;place-items:center}
+  .icon-btn:hover{transform:translateY(-1px)}
+  @media(max-width:720px){.nav-tab{padding:9px 10px;font-size:13px}.cta-nav{display:none}}
+
+  .page{display:none}
+  .page.active{display:block;animation:fadeUp .35s var(--ease)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* HERO */
+  .hero{padding:74px 0 70px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:var(--hero-glow);pointer-events:none}
+  .hero-inner{position:relative;z-index:2}
+  .case{width:188px;height:230px;margin:0 auto 40px;border-radius:var(--r-lg);position:relative;display:grid;place-items:center;
+    background:linear-gradient(165deg,color-mix(in srgb,var(--sky-500) 16%,var(--glass)),var(--glass));
+    border:1px solid var(--border);box-shadow:var(--shadow),0 0 60px color-mix(in srgb,var(--sky-500) 22%,transparent);
+    backdrop-filter:blur(20px);animation:floatCase 5s var(--ease) infinite}
+  .case .ring{position:absolute;inset:12px;border-radius:18px;border:1.5px solid color-mix(in srgb,var(--sky-500) 35%,transparent)}
+  .case .mk{width:50%;height:50%;background:var(--btn-bg);-webkit-mask:var(--cardmask) center/contain no-repeat;mask:var(--cardmask) center/contain no-repeat;filter:drop-shadow(0 8px 16px color-mix(in srgb,var(--sky-700) 40%,transparent))}
+  @keyframes floatCase{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .hero h1{font-size:clamp(40px,8vw,72px);font-weight:700;letter-spacing:-.04em;line-height:1.02;margin-bottom:20px}
+  .hero h1 em{font-style:normal;color:var(--sky-500)}
+  .hero .sub{font-size:clamp(16px,2.4vw,20px);color:var(--text-dim);max-width:560px;margin:0 auto 34px}
+  .hero-cta{display:flex;gap:13px;justify-content:center;flex-wrap:wrap}
+  .hero-meta{margin-top:30px;display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--text-faint)}
+  .hero-meta b{color:var(--text);font-weight:600}
+
+  .sec{padding:62px 0;border-top:1px solid var(--border)}
+  .sec h2{font-size:clamp(26px,4.2vw,38px);font-weight:700;letter-spacing:-.03em;line-height:1.06;margin-bottom:12px}
+  .sec .sec-lead{font-size:17px;color:var(--text-dim);max-width:560px}
+
+  /* WHY */
+  .why-head{text-align:center;margin-bottom:8px}
+  .why-eyebrow{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sky-700)}
+  [data-theme="dark"] .why-eyebrow{color:var(--sky-300)}
+  .why-head h2{font-size:clamp(26px,4.2vw,38px);font-weight:700;letter-spacing:-.03em;margin-top:10px}
+  .why-head p{font-size:16px;color:var(--text-dim);max-width:440px;margin:10px auto 0}
+  .why{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+  .why-card{text-align:center;padding:24px 20px}
+  .why-ic{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;margin:0 auto 15px;
+    font:700 24px var(--font);color:#fff;background:linear-gradient(165deg,var(--sky-400),var(--sky-600));
+    box-shadow:0 12px 26px color-mix(in srgb,var(--sky-500) 36%,transparent)}
+  .why-card h3{font-size:18px;font-weight:650;letter-spacing:-.01em;margin-bottom:7px;color:var(--text-strong)}
+  .why-card p{font-size:14px;color:var(--text-dim)}
+  @media(max-width:780px){.why{grid-template-columns:1fr}}
+
+  /* STEPS */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:38px}
+  .step{padding:26px;border-radius:var(--r);border:1px solid var(--border);background:var(--glass);box-shadow:var(--shadow);backdrop-filter:blur(20px);position:relative;overflow:hidden}
+  .step .n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--sky-700);margin-bottom:18px}
+  [data-theme="dark"] .step .n{color:var(--sky-300)}
+  .step h3{font-size:19px;font-weight:650;margin-bottom:8px}
+  .step p{font-size:14px;color:var(--text-dim)}
+  .step .vis{margin-top:20px;height:96px;border-radius:14px;border:1px solid var(--border);position:relative;overflow:hidden;background:linear-gradient(180deg,color-mix(in srgb,var(--sky-500) 10%,transparent),transparent)}
+  .v-box{position:absolute;inset:0;display:grid;place-items:center}
+  .v-box .b{width:46px;height:38px;border-radius:8px;background:var(--sky-500);position:relative;box-shadow:0 6px 18px color-mix(in srgb,var(--sky-500) 50%,transparent);animation:nudge 3s var(--ease) infinite}
+  .v-box .b::after{content:"";position:absolute;left:7px;right:7px;top:14px;height:3px;border-radius:2px;background:rgba(255,255,255,.55)}
+  @keyframes nudge{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-4px) rotate(2deg)}}
+  .v-gen{position:absolute;inset:0;overflow:hidden}
+  .v-gen .sweep{position:absolute;left:0;right:0;top:0;height:100%;background:linear-gradient(180deg,var(--sky-500),transparent);opacity:.4;animation:fall 2.6s var(--ease) infinite}
+  @keyframes fall{0%{transform:translateY(-100%)}60%,100%{transform:translateY(0)}}
+  .v-gen .fig{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:34px;height:42px;border-radius:46% 46% 40% 40%;background:linear-gradient(165deg,#6fd66f,#3aa83a)}
+  .v-shelf{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;gap:7px;padding:12px}
+  .v-shelf i{width:22px;border-radius:6px 6px 3px 3px;display:block}
+  .v-shelf i:nth-child(1){height:38px;background:var(--sky-400)}.v-shelf i:nth-child(2){height:54px;background:var(--sky-500)}
+  .v-shelf i:nth-child(3){height:30px;background:var(--sky-300)}.v-shelf i:nth-child(4){height:46px;background:var(--sky-600)}
+
+  /* TRUST */
+  .trust-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;margin-top:38px}
+  .trust-main{padding:32px;border-radius:var(--r-lg);border:1px solid var(--border);background:linear-gradient(160deg,color-mix(in srgb,var(--sky-500) 14%,var(--glass)),var(--glass));box-shadow:var(--shadow);backdrop-filter:blur(20px)}
+  .trust-main h3{font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px}
+  .trust-main p{font-size:15px;color:var(--text-dim);max-width:400px}
+  .trust-badges{display:flex;flex-direction:column;gap:12px}
+  .badge{padding:18px 20px;border-radius:var(--r);border:1px solid var(--border);background:var(--glass);display:flex;gap:14px;align-items:flex-start;box-shadow:var(--shadow)}
+  .badge .ic{width:38px;height:38px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;background:color-mix(in srgb,var(--sky-500) 16%,transparent);color:var(--sky-700)}
+  [data-theme="dark"] .badge .ic{color:var(--sky-300)}
+  .badge .ic svg{width:20px;height:20px}
+  .badge h4{font-size:15px;font-weight:650;margin-bottom:3px}.badge p{font-size:13px;color:var(--text-dim)}
+  @media(max-width:780px){.trust-grid{grid-template-columns:1fr}}
+
+  .final{padding:80px 0;text-align:center;border-top:1px solid var(--border);position:relative;overflow:hidden}
+  .final::before{content:"";position:absolute;inset:0;background:var(--hero-glow);pointer-events:none}
+  .final-in{position:relative;z-index:2}
+  .final h2{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.03em;margin-bottom:16px}
+  .final h2 em{font-style:normal;color:var(--sky-500)}
+  .final p{font-size:17px;color:var(--text-dim);max-width:480px;margin:0 auto 30px}
+
+  /* DOC PAGES — left aligned, smaller header, no eyebrow dup */
+  .doc{max-width:760px;margin:0 auto;padding:50px 0 80px}
+  .doc-title{font-size:clamp(26px,4vw,34px);font-weight:700;letter-spacing:-.03em;margin-bottom:12px;color:var(--text-strong)}
+  .doc-intro{font-size:16px;color:var(--text-dim);margin-bottom:8px;line-height:1.7}
+  .doc-intro a{color:var(--link);font-weight:600}
+  .doc-divider{height:1px;background:var(--border);margin:26px 0 30px}
+
+  .faq-cat{margin-bottom:34px}
+  .faq-cat h3{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sky-700);margin-bottom:6px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  [data-theme="dark"] .faq-cat h3{color:var(--sky-300)}
+  .faq-item{border-bottom:1px solid var(--border)}
+  .faq-q{width:100%;text-align:left;background:none;border:none;font:650 16px var(--font);color:var(--text-strong);padding:17px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .faq-x{font-size:21px;color:var(--sky-500);font-weight:400;flex-shrink:0;transition:transform .25s var(--ease)}
+  .faq-item.open .faq-x{transform:rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s var(--ease)}
+  .faq-a p{font-size:15px;color:var(--text-strong);opacity:.82;padding:0 0 17px;line-height:1.65}
+
+  .doc-block{margin-bottom:32px}
+  .doc-block h3{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:11px;color:var(--text-strong)}
+  .doc-block p{font-size:16px;color:var(--text-strong);opacity:.82;margin-bottom:12px;line-height:1.7}
+  .doc-block a{color:var(--link);font-weight:600}
+
+  /* NEWS */
+  .news-list{display:flex;flex-direction:column;gap:14px}
+  .news-item{padding:24px;border-radius:var(--r);border:1px solid var(--border);background:var(--glass);box-shadow:var(--shadow);border-left:3px solid var(--sky-500)}
+  .news-tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sky-700)}
+  [data-theme="dark"] .news-tag{color:var(--sky-300)}
+  .news-item h3{font-size:20px;font-weight:650;margin:7px 0 8px;letter-spacing:-.01em;color:var(--text-strong)}
+  .news-item p{font-size:15px;color:var(--text-strong);opacity:.78;line-height:1.6}
+  .news-foot{display:flex;align-items:center;gap:14px;margin-top:14px}
+  .news-date{font-size:13px;color:var(--text-faint)}
+  .read-more{background:none;border:none;font:600 14px var(--font);color:var(--link);cursor:pointer;padding:0;
+    border-bottom:1.5px solid var(--link);line-height:1.3}
+  .read-more:hover{filter:brightness(1.15)}
+
+  .article{display:none;max-width:720px;margin:0 auto;padding:46px 0 80px}
+  .article.show{display:block;animation:fadeUp .35s var(--ease)}
+  .back-link{background:none;border:none;font:600 14px var(--font);color:var(--link);cursor:pointer;padding:0;margin-bottom:22px}
+  .back-link:hover{filter:brightness(1.15)}
+  .article-title{font-size:clamp(28px,5vw,40px);font-weight:700;letter-spacing:-.03em;margin:12px 0 8px;color:var(--text-strong);line-height:1.1}
+  .article-date{font-size:14px;color:var(--text-faint);margin-bottom:26px}
+  .article-body p{font-size:17px;color:var(--text-strong);opacity:.84;margin-bottom:18px;line-height:1.75}
+
+  /* GO UP */
+  .goup{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:14px;border:1px solid var(--border);
+    background:var(--btn-bg);color:#fff;cursor:pointer;display:grid;place-items:center;z-index:80;
+    box-shadow:0 10px 30px color-mix(in srgb,var(--sky-500) 40%,rgba(0,0,0,.3));
+    opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .3s,transform .3s}
+  .goup.show{opacity:1;pointer-events:auto;transform:none}
+  .goup:hover{filter:brightness(1.1)}
+  .goup svg{width:20px;height:20px;animation:bobUp 1.8s var(--ease) infinite}
+  @keyframes bobUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+  /* FOOTER — compact */
+  footer{padding:34px 0 26px;border-top:1px solid var(--border)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:22px;align-items:start}
+  .foot-about .fb{display:flex;align-items:center;gap:9px;font-weight:700;font-size:16px;margin-bottom:9px}
+  .foot-about .fb .mk{width:20px;height:20px;background:var(--text);-webkit-mask:var(--cardmask) center/contain no-repeat;mask:var(--cardmask) center/contain no-repeat}
+  .foot-about p{font-size:13px;color:var(--text-dim);max-width:230px;line-height:1.5}
+  .foot-col h4{font-size:13px;font-weight:700;margin-bottom:10px}
+  .foot-col a{display:block;font-size:13px;color:var(--link);margin-bottom:8px;cursor:pointer}
+  .foot-col a:hover{filter:brightness(1.15)}
+  @media(max-width:780px){.foot-grid{grid-template-columns:1fr 1fr}.foot-about{grid-column:1/-1}}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body data-theme="light">
+
+<nav>
+  <div class="nav-in">
+    <div class="nav-logo" onclick="go('main')"></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="main" onclick="go('main')">Main</button>
+      <button class="nav-tab" data-tab="faq" onclick="go('faq')">FAQ</button>
+      <button class="nav-tab" data-tab="news" onclick="go('news')">News</button>
+      <button class="nav-tab" data-tab="policy" onclick="go('policy')">Policy</button>
+      <button class="nav-tab" data-tab="about" onclick="go('about')">About</button>
+    </div>
+    <div class="nav-spacer"></div>
+    <div class="nav-right">
+      <a class="btn btn-primary cta-nav" href="#" style="padding:9px 18px;font-size:14px">Get started</a>
+      <button class="icon-btn" id="themeBtn" aria-label="Theme">◐</button>
+      <button class="icon-btn" id="langBtn2" aria-label="Language">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="page active" id="page-main">
+  <header class="hero"><div class="wrap hero-inner">
+    <div class="case"><div class="ring"></div><div class="mk"></div></div>
+    <h1>Collect what's<br><em>actually yours</em>.</h1>
+    <p class="sub">A calm place to open, own, and trade unique digital figures. No noise, no rush, just a collection that feels like a real shelf.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary btn-lg" href="#">Start collecting</a>
+      <button class="btn btn-glass btn-lg" onclick="scrollTo({top:document.getElementById('how').offsetTop-60,behavior:'smooth'})">See how it works</button>
+    </div>
+    <div class="hero-meta">
+      <span><b>Closed economy</b> today</span>
+      <span><b>Every figure</b> has a passport</span>
+      <span><b>Yours</b> to keep, gift, or resell</span>
+    </div>
+  </div></header>
+
+  <section class="sec" id="why">
+    <div class="wrap">
+      <div class="why-head">
+        <div class="why-eyebrow">Why collect POXY?</div>
+        <h2>Reasons to start.</h2>
+        <p>A few simple things that make POXY worth your shelf.</p>
+      </div>
+      <div class="why"><div class="why-card"><span class="why-ic">S</span><h3>Secure</h3><p>Your account and your collection are yours. 2FA and device control keep them that way.</p></div><div class="why-card"><span class="why-ic">I</span><h3>Invest</h3><p>Show up early and grow with it. The first collectors are the ones who build the place.</p></div><div class="why-card"><span class="why-ic">O</span><h3>Open</h3><p>Clear costs, honest odds, no tricks. You always know how a box works.</p></div><div class="why-card"><span class="why-ic">S</span><h3>Social</h3><p>Gift figures, follow collectors, show your shelf. It means more when others can see it.</p></div><div class="why-card"><span class="why-ic">P</span><h3>Powerful</h3><p>Seasons, mutations, traits, certificates. Every figure carries real depth.</p></div><div class="why-card"><span class="why-ic">U</span><h3>Unique</h3><p>Each POXY is numbered, with its own passport and history. One specific thing, not one of a crowd.</p></div><div class="why-card"><span class="why-ic">F</span><h3>Fundamental</h3><p>A real company, a real roadmap, infrastructure meant to last. Not a weekend drop.</p></div><div class="why-card"><span class="why-ic">D</span><h3>Developing</h3><p>Always moving. New collections, new features, bigger plans as we grow.</p></div><div class="why-card"><span class="why-ic">B</span><h3>Belonging</h3><p>A club where the people inside take it seriously. You collect alongside thousands.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="how">
+    <div class="wrap">
+      <h2>Three steps. No spinning wheels.</h2>
+      <p class="sec-lead">Opening a POXY is a ritual, not a slot machine. The box opens, the figure forms, and it lands in your collection.</p>
+      <div class="steps">
+        <div class="step"><div class="n">STEP 1</div><h3>Open a box</h3><p>Pick a box in the tier you want. The cost is shown up front in coins, with no hidden odds.</p><div class="vis"><div class="v-box"><div class="b"></div></div></div></div>
+        <div class="step"><div class="n">STEP 2</div><h3>Watch it form</h3><p>Full screen, top to bottom, the figure generates in front of you. Slow and deliberate, because the wait is the point.</p><div class="vis"><div class="v-gen"><div class="sweep"></div><div class="fig"></div></div></div></div>
+        <div class="step"><div class="n">STEP 3</div><h3>Keep it on your shelf</h3><p>It lands in your collection with its own passport. Keep it, gift it, or list it on the market.</p><div class="vis"><div class="v-shelf"><i></i><i></i><i></i><i></i></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="trust">
+    <div class="wrap">
+      <h2>Trusted, not hyped.</h2>
+      <p class="sec-lead">POXY is a considered collectibles world. Clear rules, real ownership, and a roadmap that grows with you.</p>
+      <div class="trust-grid">
+        <div class="trust-main"><h3>A closed economy, for now</h3>
+          <p>Today, coins and figures live inside POXY, which keeps everything simple, fair, and easy to trust. As the project grows, we plan to open the economy further over time, so collecting early means being here before the next chapter starts.</p></div>
+        <div class="trust-badges">
+          <div class="badge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span><div><h4>Fair by design</h4><p>Fixed costs, visible odds, nothing rigged.</p></div></div>
+          <div class="badge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div><h4>Your account, secured</h4><p>2FA by default, devices you control.</p></div></div>
+          <div class="badge"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18"/></svg></span><div><h4>Real ownership</h4><p>Every figure has a serial and a passport.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final"><div class="wrap final-in">
+    <h2>Your shelf is <em>waiting</em>.</h2>
+    <p>Pick a username, open your first box, and start a collection that's actually yours.</p>
+    <div class="hero-cta"><a class="btn btn-primary btn-lg" href="#">Create your account</a><a class="btn btn-glass btn-lg" href="#">Log in</a></div>
+  </div></div>
+</div>
+
+<!-- FAQ -->
+<div class="page" id="page-faq"><div class="wrap"><div class="doc">
+  <h1 class="doc-title">POXY FAQ</h1>
+  <p class="doc-intro">This FAQ answers the basic questions about POXY WORLD: what it is, how it works, and how it stays safe.</p>
+  <p class="doc-intro">POXY keeps evolving and adding new features, so some details may change as we grow. We update this page as the project moves forward.</p>
+  <div class="doc-divider"></div>
+  <div class="faq-cat"><h3>General</h3><div class="faq-item"><button class="faq-q">What is POXY WORLD?<span class="faq-x">+</span></button><div class="faq-a"><p>POXY WORLD is a place to open, own, and trade unique digital collectible figures. Think of it as a shelf for one of a kind exhibits. Each figure has its own identity, history, and number.</p></div></div><div class="faq-item"><button class="faq-q">Do I need any crypto knowledge to start?<span class="faq-x">+</span></button><div class="faq-a"><p>No. You sign up with a username and email, and everything inside works with simple in app coins. No wallets, no seed phrases, nothing technical to learn.</p></div></div><div class="faq-item"><button class="faq-q">Is POXY a game or a marketplace?<span class="faq-x">+</span></button><div class="faq-a"><p>A bit of both. You collect and open figures like a game, and you can trade and resell them like a marketplace. But the heart of it is collecting something that feels real and yours.</p></div></div><div class="faq-item"><button class="faq-q">How much does it cost to start?<span class="faq-x">+</span></button><div class="faq-a"><p>Creating an account and looking around is free. Opening boxes and trading uses coins, which you top up when you're ready. You can explore without spending anything.</p></div></div><div class="faq-item"><button class="faq-q">What devices can I use POXY on?<span class="faq-x">+</span></button><div class="faq-a"><p>POXY is built mobile first and works in your browser. You can link multiple devices to one account and switch between them safely.</p></div></div></div><div class="faq-cat"><h3>Collecting and Opening</h3><div class="faq-item"><button class="faq-q">How does opening a box work?<span class="faq-x">+</span></button><div class="faq-a"><p>You pick a box, and instead of a spinning wheel, the figure generates in front of you on a full screen, forming top to bottom. It's a slow reveal, made to be felt, not rushed.</p></div></div><div class="faq-item"><button class="faq-q">What makes each figure unique?<span class="faq-x">+</span></button><div class="faq-a"><p>Every figure has a serial number, an edition like 1 of 250, traits, and a passport that documents it. No two are quite the same.</p></div></div><div class="faq-item"><button class="faq-q">What are mutations and seasons?<span class="faq-x">+</span></button><div class="faq-a"><p>Collections come in seasons, and within them figures can appear in different mutations, which are variations in look and rarity. It keeps every collection worth chasing.</p></div></div><div class="faq-item"><button class="faq-q">Can I sell a figure I don't want?<span class="faq-x">+</span></button><div class="faq-a"><p>Yes. You can list it on the market, or use Sell for coins to dissolve it instantly and add the coins straight to your balance.</p></div></div><div class="faq-item"><button class="faq-q">What is a passport?<span class="faq-x">+</span></button><div class="faq-a"><p>A passport is the identity page for a figure. It shows the serial, edition, traits, and history of ownership, so you always know exactly what you hold.</p></div></div></div><div class="faq-cat"><h3>Economy and Coins</h3><div class="faq-item"><button class="faq-q">What are coins?<span class="faq-x">+</span></button><div class="faq-a"><p>Coins are the in app currency you use to open boxes and buy figures. Your balance is shown with the coin icon, always visible while you browse.</p></div></div><div class="faq-item"><button class="faq-q">Can I withdraw coins to real money right now?<span class="faq-x">+</span></button><div class="faq-a"><p>Not at this stage. Today POXY runs as a self contained world, which keeps it simple and fair. Opening up the economy further is part of our longer term plans as the project grows.</p></div></div><div class="faq-item"><button class="faq-q">Will there ever be a wider economy?<span class="faq-x">+</span></button><div class="faq-a"><p>That's the direction we're heading. As the company grows, we plan to open up more over time. Collecting early means you're here before that chapter starts.</p></div></div><div class="faq-item"><button class="faq-q">How do prices and resale work?<span class="faq-x">+</span></button><div class="faq-a"><p>The market is driven by collectors. Rarer figures and complete editions tend to hold more interest. You can look at price history before you buy or sell.</p></div></div><div class="faq-item"><button class="faq-q">How do I top up coins?<span class="faq-x">+</span></button><div class="faq-a"><p>You'll top up from inside your account when that opens. Costs are always shown up front, with no surprises.</p></div></div></div><div class="faq-cat"><h3>Account and Security</h3><div class="faq-item"><button class="faq-q">How do I sign up?<span class="faq-x">+</span></button><div class="faq-a"><p>Pick a unique username, add your name, email, and a password. You verify your email, set up two factor authentication, and you're in.</p></div></div><div class="faq-item"><button class="faq-q">Why username instead of phone number?<span class="faq-x">+</span></button><div class="faq-a"><p>A username is your identity here. It's clean, memorable, and yours. We keep sign up simple and free of clutter.</p></div></div><div class="faq-item"><button class="faq-q">How is my account protected?<span class="faq-x">+</span></button><div class="faq-a"><p>Two factor authentication is part of setup, and you can link or remove trusted devices by QR. You stay in control of every session.</p></div></div><div class="faq-item"><button class="faq-q">What if I lose access?<span class="faq-x">+</span></button><div class="faq-a"><p>You can recover through your verified email or your 2FA backup codes. Recovery is safe and rate limited, so no one else can poke at your account.</p></div></div><div class="faq-item"><button class="faq-q">Can I use POXY on more than one device?<span class="faq-x">+</span></button><div class="faq-a"><p>Yes. Link a new device by scanning a QR from one you're already signed in on, similar to how Telegram handles devices. You can revoke any device later.</p></div></div></div><div class="faq-cat"><h3>Safety and Trust</h3><div class="faq-item"><button class="faq-q">Is POXY gambling?<span class="faq-x">+</span></button><div class="faq-a"><p>No. Costs are fixed and shown up front, and the world is closed by design. We built it specifically to stay clear of gambling mechanics.</p></div></div><div class="faq-item"><button class="faq-q">Who is behind POXY?<span class="faq-x">+</span></button><div class="faq-a"><p>POXY WORLD is built by NULLSPACE LABS LTD, a registered company. There's a real team and a real roadmap behind it, not an anonymous drop.</p></div></div><div class="faq-item"><button class="faq-q">Is my data safe?<span class="faq-x">+</span></button><div class="faq-a"><p>We follow serious security practices across the platform and only collect what we need to run your account. The Policy page has the full picture.</p></div></div><div class="faq-item"><button class="faq-q">What happens to my collection over time?<span class="faq-x">+</span></button><div class="faq-a"><p>Your collection stays tied to your account. As POXY grows and adds features, what you already own grows in context with it.</p></div></div></div>
+</div></div></div>
+
+<!-- NEWS -->
+<div class="page" id="page-news"><div class="wrap">
+  <div class="doc">
+    <h1 class="doc-title">News</h1>
+    <p class="doc-intro">Where POXY is right now and what's coming next. Follow along as the world takes shape.</p>
+    <div class="doc-divider"></div>
+    <div class="news-list"><div class="news-item">
+      <span class="news-tag">Development</span>
+      <h3>POXY WORLD is getting ready for testing</h3>
+      <p>We're entering the testing phase. The core of the product is built, the design system is in place, and we're now putting everything through its paces before the first collectors arrive.</p>
+      <div class="news-foot"><span class="news-date">15 Jun 2026</span>
+      <button class="read-more" onclick="article('testing')">Read more</button></div>
+    </div><div class="news-item">
+      <span class="news-tag">Announcement</span>
+      <h3>Coming soon: POXY WORLD opens to the public</h3>
+      <p>The next announcement on this page will be the one we've been working toward: POXY WORLD going live, with the first season of figures and an open market for collectors.</p>
+      <div class="news-foot"><span class="news-date">15 Jun 2026</span>
+      <button class="read-more" onclick="article('launch')">Read more</button></div>
+    </div></div>
+  </div>
+  <div class="article" id="article-testing">
+      <button class="back-link" onclick="go('news')">← Back to news</button>
+      <span class="news-tag">Development</span>
+      <h1 class="article-title">POXY WORLD is getting ready for testing</h1>
+      <div class="article-date">15 Jun 2026</div>
+      <div class="article-body"><p>We've reached a real milestone. After months of building quietly, POXY WORLD is moving into its testing phase. The foundation is done: the platform, the security layer, the economy, and the visual identity all sit on solid ground, and now it's time to make sure everything holds up before we open the doors.</p><p>Testing is where a product stops being an idea and starts being a thing you can trust. We're checking how boxes open, how the figure generation feels, how the collection and passport screens behave on real devices, and how the account and security flows hold up. Nothing ships until it feels calm, fast, and right.</p><p>Why share this now? Because the people who pay attention early are the ones who shape what POXY becomes. We'd rather bring you in while it's still forming than present a finished box and hope you like it. If you're reading this, you're early, and that matters here.</p><p>The next big step is opening POXY to the public. When testing is done and the first season is ready, we'll announce the launch and the moment the world becomes something you can actually step into. Keep an eye on this page.</p></div>
+      <button class="back-link" onclick="go('news')" style="margin-top:30px">← Back to news</button>
+    </div><div class="article" id="article-launch">
+      <button class="back-link" onclick="go('news')">← Back to news</button>
+      <span class="news-tag">Announcement</span>
+      <h1 class="article-title">Coming soon: POXY WORLD opens to the public</h1>
+      <div class="article-date">15 Jun 2026</div>
+      <div class="article-body"><p>This is a look at what's coming. Once testing wraps, POXY WORLD will open to the public, and the first people will be able to sign up, open their first boxes, and start real collections.</p><p>Launch brings the first season of figures, each with its own mutations and rarity, and the market where collectors buy, sell, and resell among themselves. From day one the goal is simple: a place that feels like a real shelf, where what you own is genuinely yours.</p><p>We're also building toward more. As the project grows, we plan to expand what the economy can do over time, opening it up step by step. Arriving at launch means being part of the base the whole world grows from, before the bigger chapters begin.</p><p>We'll post the exact date here when it's locked. If you want to be among the first, this is the page to watch.</p></div>
+      <button class="back-link" onclick="go('news')" style="margin-top:30px">← Back to news</button>
+    </div>
+</div></div>
+
+<!-- POLICY -->
+<div class="page" id="page-policy"><div class="wrap"><div class="doc">
+  <h1 class="doc-title">Policy</h1>
+  <p class="doc-intro">In plain language: what we collect, how we protect it, and how the economy works today. Written to be read, not skipped.</p>
+  <div class="doc-divider"></div>
+  <div class="doc-block"><h3>Your account and data</h3><p>We collect only what we need to run your account: your username, name, email, and the security information that keeps you safe. We don't sell your personal data, and we don't trade it to advertisers.</p><p>Your collection, your balance, and your activity belong to your account. You stay in control of your trusted devices and can revoke any session at any time.</p></div><div class="doc-block"><h3>Security</h3><p>Two factor authentication is part of account setup. Devices are linked through QR and can be removed whenever you choose. We apply security practices across the platform, including rate limiting, encryption in the places that matter, and regular review.</p><p>No system is perfect, and we won't pretend otherwise. What we promise is to take security seriously and to be honest with you if something ever goes wrong.</p></div><div class="doc-block"><h3>The closed economy</h3><p>At this stage, coins and figures live inside POXY. There is no withdrawal to real money today. This keeps the platform simple and clear of gambling and financial regulations while the project is young.</p><p>Any future changes to the economy, including a wider economy, will be introduced carefully, transparently, and with proper safeguards when the time comes.</p></div><div class="doc-block"><h3>Cookies and tracking</h3><p>We use only what's needed to keep you signed in and to understand how the product is used at a basic level. We don't run invasive advertising trackers across the platform.</p><p>When richer settings arrive, you'll be able to manage your preferences from your account.</p></div><div class="doc-block"><h3>Changes to this policy</h3><p>As POXY grows, this policy grows with it. When we make meaningful changes, we'll surface them clearly rather than burying them. Continued use of POXY means you're comfortable with the current version.</p><p>Formal terms will accompany the full public launch.</p></div>
+</div></div></div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about"><div class="wrap"><div class="doc">
+  <h1 class="doc-title">About POXY WORLD</h1>
+  <p class="doc-intro">Our philosophy, our economy, and where the project is headed. The full picture in words.</p>
+  <div class="doc-divider"></div>
+  <div class="doc-block"><h3>What POXY WORLD is</h3><p>POXY WORLD is a calm, considered place to collect unique digital figures. We started from a simple feeling: collecting something should feel like holding a real object, a thing with weight and identity and a place on your shelf, not like staring at another flashing game.</p><p>Every figure is a single, numbered exhibit. It has a serial, an edition, traits, and a passport that records what it is and where it came from. When you open one, you aren't pulling a card from a pile. You're receiving an object that is specifically, provably yours.</p></div><div class="doc-block"><h3>Our design philosophy</h3><p>We believe in trust over hype. The brands people rely on, like Apple and Telegram, earn that trust not by shouting, but by never letting you down. Every detail sits where you expect it, nothing tries to overstimulate you, and the whole thing feels safe to lean on.</p><p>That's why POXY is quiet. One accent colour, generous space, slow and deliberate motion. The figure is the only loud thing on the screen, and everything around it stays calm, like a glass case in a gallery. We call it a showcase, not a fair.</p></div><div class="doc-block"><h3>How the economy works today</h3><p>Right now, POXY runs as a closed world. You buy coins, open figures, trade, and gift, all inside the platform. There's no withdrawal to real money at this stage, and that's on purpose. It keeps the experience simple, fair, and easy to trust while we grow.</p><p>This isn't where the story ends. It's where it starts.</p></div><div class="doc-block"><h3>Where we're going</h3><p>As NULLSPACE LABS grows and the budget allows, we plan to open POXY up. That means expanding the marketplace, deepening the economy, and over time exploring a wider economy around the figures people collect.</p><p>We're building the foundation first, on purpose. The collectors who arrive early aren't just early users. They're the base the whole world grows from. Getting in now means being here before the bigger chapters begin.</p></div><div class="doc-block"><h3>Who we are</h3><p>POXY WORLD is built by NULLSPACE LABS LTD, a company registered in the United Kingdom. Behind it is a small, focused team that cares about doing this properly: real infrastructure, real security, and a roadmap meant to last rather than a one off drop.</p><p>We'd rather move carefully and earn your trust than move loud and lose it.</p></div><div class="doc-block"><h3>Getting started</h3><p>When POXY opens, starting is simple. You pick a username, set up your account, and open your first box. From there your collection is yours to grow, show, gift, and trade.</p><p>If you're reading this before launch, you're early, and that's the best time to arrive.</p></div>
+</div></div></div>
+
+<!-- FOOTER -->
+<footer><div class="wrap"><div class="foot-grid">
+  <div class="foot-about"><div class="fb"><span class="mk"></span>POXY WORLD</div>
+    <p>A calm place to open, own, and trade unique digital figures. Built by NULLSPACE LABS.</p></div>
+  <div class="foot-col"><h4>About</h4><a onclick="go('faq')">FAQ</a><a onclick="go('policy')">Policy</a><a onclick="go('about')">About</a><a onclick="go('news')">News</a></div>
+  <div class="foot-col"><h4>Product</h4><a href="#">Collect</a><a href="#">Open boxes</a><a href="#">Market</a><a href="#">Seasons</a></div>
+  <div class="foot-col"><h4>Account</h4><a href="#">Sign up</a><a href="#">Log in</a><a href="#">Security</a><a href="#">Devices</a></div>
+  <div class="foot-col"><h4>Company</h4><a href="#">NULLSPACE LABS</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+</div></div></footer>
+
+<button class="goup" id="goup" aria-label="Go up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+
+<!-- language menu (shared) -->
+<div id="langMenu" style="position:fixed;top:58px;right:22px;z-index:90;min-width:170px;background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:7px;box-shadow:0 20px 50px rgba(0,0,0,.3);display:none;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto"><button class="lang-opt" data-l="English">English</button><button class="lang-opt" data-l="Español">Español</button><button class="lang-opt" data-l="中文">中文</button><button class="lang-opt" data-l="हिन्दी">हिन्दी</button><button class="lang-opt" data-l="العربية">العربية</button><button class="lang-opt" data-l="Português">Português</button><button class="lang-opt" data-l="Русский">Русский</button><button class="lang-opt" data-l="Français">Français</button><button class="lang-opt" data-l="Deutsch">Deutsch</button><button class="lang-opt" data-l="日本語">日本語</button></div>
+
+<script>
+  const root=document.documentElement;
+  root.style.setProperty('--cardmask',`url("data:image/png;base64,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")`);
+  const TABS=['main','faq','news','policy','about'];
+
+  function go(tab){
+    TABS.forEach(t=>{
+      document.getElementById('page-'+t).classList.toggle('active', t===tab);
+      const nt=document.querySelector(`.nav-tab[data-tab="${t}"]`);
+      if(nt) nt.classList.toggle('active', t===tab);
+    });
+    document.querySelectorAll('.article').forEach(a=>a.classList.remove('show'));
+    if(tab==='news'){document.querySelector('#page-news .doc').style.display='block';}
+    window.scrollTo(0,0);
+    updateGoup();
+  }
+  function article(id){
+    document.getElementById('page-news').classList.add('active');
+    TABS.forEach(t=>{const nt=document.querySelector(`.nav-tab[data-tab="${t}"]`);if(nt)nt.classList.toggle('active',t==='news')});
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-news'));
+    document.querySelector('#page-news .doc').style.display='none';
+    document.querySelectorAll('.article').forEach(a=>a.classList.remove('show'));
+    document.getElementById('article-'+id).classList.add('show');
+    window.scrollTo(0,0); updateGoup();
+  }
+
+  document.querySelectorAll('.faq-q').forEach(q=>q.onclick=()=>{
+    const item=q.closest('.faq-item'),a=item.querySelector('.faq-a');
+    const open=item.classList.toggle('open');
+    a.style.maxHeight=open?a.scrollHeight+'px':0;
+  });
+
+  function applyTheme(t){root.setAttribute('data-theme',t);document.body.setAttribute('data-theme',t);
+    document.getElementById('themeBtn').textContent=t==='light'?'◐':'◑';}
+  document.getElementById('themeBtn').onclick=()=>applyTheme(root.getAttribute('data-theme')==='light'?'dark':'light');
+  applyTheme('light');
+
+  const langMenu=document.getElementById('langMenu'),langBtn2=document.getElementById('langBtn2');
+  langBtn2.onclick=e=>{e.stopPropagation();langMenu.style.display=langMenu.style.display==='flex'?'none':'flex'};
+  document.addEventListener('click',e=>{if(!langMenu.contains(e.target)&&e.target!==langBtn2)langMenu.style.display='none'});
+  document.querySelectorAll('#langMenu .lang-opt').forEach(o=>{
+    o.style.cssText='text-align:left;background:none;border:none;font:500 14px var(--font);color:var(--text);padding:9px 12px;border-radius:9px;cursor:pointer';
+    o.onmouseenter=()=>o.style.background='var(--glass-strong)';o.onmouseleave=()=>o.style.background='none';
+    o.onclick=()=>{document.getElementById('langBtn2').textContent=o.dataset.l.slice(0,2).toUpperCase();langMenu.style.display='none'};
+  });
+
+  const goup=document.getElementById('goup');
+  function updateGoup(){goup.classList.toggle('show', window.scrollY>400)}
+  window.addEventListener('scroll',updateGoup,{passive:true});
+  goup.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  updateGoup();
+</script>
+</body>
+</html>
