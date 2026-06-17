@@ -1,0 +1,530 @@
+/* POXY Sky Store — Stage 8 from poxy-dashboard.html #sc-store */
+
+
+body.poxy-sky-app-active #stPanelStore,
+
+body.poxy-sky-app-active #storePage {
+
+  background: transparent !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-sidenav,
+
+body.poxy-sky-app-active #storePage .poxy-store-bento,
+
+body.poxy-sky-app-active #storePage .poxy-store-uplinks {
+
+  display: none !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-layout {
+
+  display: block !important;
+
+  grid-template-columns: 1fr !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-main {
+
+  width: 100% !important;
+
+  max-width: none !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid-header {
+
+  display: none !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .px-sky-page-head p {
+
+  max-width: 520px;
+
+}
+
+
+
+/* ── Category chips ── */
+
+body.poxy-sky-app-active #storePage #pxSkyStoreToolbar {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 22px;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage #pxSkyStoreCatChips {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  flex: 1;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .px-sky-store-chip {
+
+  font: 600 13px var(--font);
+
+  padding: 8px 14px;
+
+  border-radius: 10px;
+
+  border: 1px solid var(--border);
+
+  background: var(--glass);
+
+  color: var(--text-dim);
+
+  cursor: pointer;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .px-sky-store-chip.on {
+
+  background: var(--btn-bg);
+
+  color: #fff;
+
+  border-color: var(--btn-bg);
+
+}
+
+
+
+body.poxy-sky-app-active #storePage #pxSkyStoreWallet {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-left: auto;
+
+  font: 700 14px var(--font);
+
+  color: var(--text-strong);
+
+}
+
+
+
+body.poxy-sky-app-active #storePage #pxSkyStoreWallet .px-sky-store-fund {
+
+  font: 600 12px var(--font);
+
+  padding: 7px 12px;
+
+  border-radius: 10px;
+
+  border: 1px solid var(--border);
+
+  background: var(--glass);
+
+  color: var(--text);
+
+  cursor: pointer;
+
+}
+
+
+
+/* ── Membership ── */
+
+body.poxy-sky-app-active #storePage #pxSkyStoreMembership {
+
+  margin-bottom: 28px;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage #pxSkyStoreMembership .plan.featured {
+
+  border-color: var(--sky-500);
+
+  background: linear-gradient(
+
+    165deg,
+
+    color-mix(in srgb, var(--sky-500) 12%, var(--card)),
+
+    var(--card)
+
+  );
+
+  box-shadow: var(--shadow), 0 0 40px color-mix(in srgb, var(--sky-500) 18%, transparent);
+
+}
+
+
+
+/* ── Grid section title ── */
+
+body.poxy-sky-app-active #storePage #pxSkyStoreSectionTitle {
+
+  margin-bottom: 14px;
+
+}
+
+
+
+/* ── Legacy cards → Sky store cards ── */
+
+body.poxy-sky-app-active #storePage .poxy-store-grid {
+
+  display: grid !important;
+
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+
+  gap: 13px !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card {
+
+  display: flex;
+
+  flex-direction: column;
+
+  background: var(--card) !important;
+
+  border: 1px solid var(--border) !important;
+
+  border-radius: var(--r) !important;
+
+  overflow: hidden;
+
+  box-shadow: var(--shadow) !important;
+
+  padding: 0 !important;
+
+  transition: transform 0.16s;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card:hover {
+
+  transform: translateY(-3px);
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card h4,
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card .poxy-store-card-desc {
+
+  display: none;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-badge {
+
+  top: 8px;
+
+  right: 8px;
+
+  font-size: 10px;
+
+  padding: 4px 8px;
+
+  border-radius: 8px;
+
+  background: var(--sky-500);
+
+  color: #fff;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-visual {
+
+  order: 1;
+
+  height: 90px !important;
+
+  min-height: 90px !important;
+
+  border: none !important;
+
+  border-bottom: 1px solid var(--border) !important;
+
+  border-radius: 0 !important;
+
+  background: radial-gradient(
+
+    120% 90% at 50% 20%,
+
+    var(--sc, var(--sky-500)),
+
+    color-mix(in srgb, var(--sc, var(--sky-500)) 40%, var(--bg-2))
+
+  ) !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-tag {
+
+  display: none;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-foot {
+
+  order: 2;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding: 12px 14px !important;
+
+  margin: 0 !important;
+
+  border: none !important;
+
+  background: transparent !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-foot::before {
+
+  content: attr(data-sky-name);
+
+  font-size: 13.5px;
+
+  font-weight: 600;
+
+  color: var(--text-strong);
+
+  flex: 1;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-price {
+
+  display: none !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-status {
+
+  font-size: 12px;
+
+  color: var(--text-dim);
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .poxy-store-card-acquire,
+
+body.poxy-sky-app-active #storePage .poxy-store-grid .px-sky-store-buy {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  font: 700 13px var(--font);
+
+  color: var(--text-strong);
+
+  background: var(--glass);
+
+  border: 1px solid var(--border);
+
+  padding: 6px 11px;
+
+  border-radius: 9px;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-store-signin,
+
+body.poxy-sky-app-active #storePage .poxy-store-empty {
+
+  grid-column: 1 / -1;
+
+  text-align: center;
+
+  color: var(--text-dim);
+
+  padding: 24px;
+
+  font-size: 14px;
+
+}
+
+
+
+/* Pass / VIP panels */
+
+body.poxy-sky-app-active #storePage .poxy-pass-panel,
+
+body.poxy-sky-app-active #storePage .poxy-vip-panel {
+
+  grid-column: 1 / -1;
+
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--r-lg);
+
+  padding: 20px;
+
+  box-shadow: var(--shadow);
+
+}
+
+
+
+body.poxy-sky-app-active #storePage .poxy-pass-buy,
+
+body.poxy-sky-app-active #storePage .poxy-vip-btn {
+
+  font: 600 13px var(--font) !important;
+
+  border-radius: 12px !important;
+
+  border: 1px solid var(--border) !important;
+
+  background: var(--btn-bg) !important;
+
+  color: var(--btn-text) !important;
+
+}
+
+
+
+body.poxy-sky-app-active #storePage #pxSkyStoreMembership .plan-feats li {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  padding-left: 22px;
+  position: relative;
+  list-style: none;
+}
+
+body.poxy-sky-app-active #storePage #pxSkyStoreMembership .plan-feats li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--sky-500);
+  font-weight: 700;
+}
+
+body.poxy-sky-app-active #storePage .store-card:hover {
+  transform: translateY(-3px);
+}
+
+@media (max-width: 680px) {
+
+  body.poxy-sky-app-active #storePage .plans {
+
+    grid-template-columns: 1fr !important;
+
+  }
+
+  body.poxy-sky-app-active #storePage #pxSkyStoreWallet {
+
+    width: 100%;
+
+    margin-left: 0;
+
+    justify-content: space-between;
+
+  }
+
+}
+
+body.poxy-sky-app-active #storePage .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #storePage .panel-h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px}
+body.poxy-sky-app-active #storePage .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:30px;max-width:620px}
+body.poxy-sky-app-active #storePage .plan{padding:24px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);position:relative}
+body.poxy-sky-app-active #storePage .plan.featured{border-color:var(--sky-500);background:linear-gradient(165deg,color-mix(in srgb,var(--sky-500) 12%,var(--card)),var(--card));box-shadow:var(--shadow),0 0 40px color-mix(in srgb,var(--sky-500) 18%,transparent)}
+body.poxy-sky-app-active #storePage .plan-badge{position:absolute;top:-11px;left:24px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--sky-500);color:#fff;padding:4px 11px;border-radius:7px}
+body.poxy-sky-app-active #storePage .plan-name{font-size:17px;font-weight:700;color:var(--text-strong);margin-bottom:8px}
+body.poxy-sky-app-active #storePage .plan-price{font-size:30px;font-weight:700;color:var(--text-strong);letter-spacing:-.02em;display:block;margin-bottom:16px}
+body.poxy-sky-app-active #storePage .plan-per{font-size:14px;font-weight:500;color:var(--text-dim)}
+body.poxy-sky-app-active #storePage .plan-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+body.poxy-sky-app-active #storePage .plan-feats li{font-size:13.5px;color:var(--text-dim);padding-left:22px;position:relative}
+body.poxy-sky-app-active #storePage .store-section{margin-bottom:26px}
+body.poxy-sky-app-active #storePage .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:13px}
+body.poxy-sky-app-active #storePage .store-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:transform .16s}
+body.poxy-sky-app-active #storePage .store-vis{height:90px;background:radial-gradient(120% 90% at 50% 20%,var(--sc),color-mix(in srgb,var(--sc) 40%,var(--bg-2)));border-bottom:1px solid var(--border)}
+body.poxy-sky-app-active #storePage .store-meta{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+body.poxy-sky-app-active #storePage .store-name{font-size:13.5px;font-weight:600;color:var(--text-strong)}
+body.poxy-sky-app-active #storePage .store-buy{display:inline-flex;align-items:center;font:700 13px var(--font);color:var(--text-strong);background:var(--glass);border:1px solid var(--border);padding:6px 11px;border-radius:9px;cursor:pointer}
+body.poxy-sky-app-active #storePage .btn{font:600 14px var(--font);cursor:pointer;padding:11px 18px;border-radius:12px;border:1px solid transparent;transition:transform .15s,filter .2s;display:inline-flex;align-items:center;gap:8px}
+body.poxy-sky-app-active #storePage .btn-primary{background:var(--btn-bg);color:var(--btn-text)}
+body.poxy-sky-app-active #storePage .btn-glass{background:var(--glass-strong);color:var(--text);border-color:var(--border)}
+body.poxy-sky-app-active #storePage .coin-sm{width:15px;height:15px;display:inline-block;vertical-align:-2px;margin-right:2px}
+body.poxy-sky-app-active #storePage .chip-filter{font:600 13px var(--font);padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text-dim);cursor:pointer}

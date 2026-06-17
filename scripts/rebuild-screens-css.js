@@ -33,26 +33,6 @@ const selectors = [
   '.miles',
   '.ring-prog',
   '.m-txt',
-  '.settings-grid',
-  '.set-group',
-  '.set-row',
-  '.set-ic',
-  '.set-txt',
-  '.set-arrow',
-  '.set-toggle',
-  '.plans',
-  '.plan',
-  '.plan-badge',
-  '.plan-name',
-  '.plan-price',
-  '.plan-feats',
-  '.store-section',
-  '.store-grid',
-  '.store-card',
-  '.store-vis',
-  '.store-meta',
-  '.store-name',
-  '.store-buy',
   '.prof-banner',
   '.prof-edit',
   '.prof-card',
@@ -126,81 +106,6 @@ body.poxy-sky-app-active #pxSkyStage > .page.visible {
   min-height: 0 !important;
   max-width: none !important;
   z-index: 1 !important;
-}
-
-/* ── Store ── */
-body.poxy-sky-app-active #stPanelStore .poxy-store-layout {
-  display: block !important;
-  grid-template-columns: 1fr !important;
-}
-body.poxy-sky-app-active #stPanelStore .poxy-store-main {
-  width: 100% !important;
-  max-width: none !important;
-}
-body.poxy-sky-app-active #storeGrid .poxy-store-item,
-body.poxy-sky-app-active #storeGrid .store-item-card {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r) !important;
-  box-shadow: var(--shadow) !important;
-}
-
-/* ── Settings ── */
-body.poxy-sky-app-active #settingsPage .poxy-settings-shell {
-  display: block !important;
-  grid-template-columns: 1fr !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-viewport {
-  width: 100% !important;
-  max-width: none !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-glass,
-body.poxy-sky-app-active #settingsPage .poxy-settings-block {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r-lg) !important;
-  box-shadow: var(--shadow) !important;
-  color: var(--text) !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-section-title {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.06em !important;
-  text-transform: uppercase !important;
-  color: var(--text-faint) !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-input {
-  background: var(--glass) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text) !important;
-  border-radius: 12px !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-btn-primary {
-  background: var(--btn-bg) !important;
-  color: var(--btn-text) !important;
-  border-radius: 12px !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-mobile-tabs {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  margin-bottom: 20px !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-nav-btn {
-  font: 600 13px var(--font) !important;
-  padding: 8px 14px !important;
-  border-radius: 10px !important;
-  border: 1px solid var(--border) !important;
-  background: var(--glass) !important;
-  color: var(--text-dim) !important;
-}
-body.poxy-sky-app-active #settingsPage .poxy-settings-nav-btn.active {
-  background: var(--btn-bg) !important;
-  color: #fff !important;
-  border-color: var(--btn-bg) !important;
 }
 
 /* ── Profile ── */

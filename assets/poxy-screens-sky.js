@@ -43,7 +43,10 @@
       if (global.PoxyCollectionSky) global.PoxyCollectionSky.onShow();
       else ensureHead('collection');
     }
-    if (page === 'settings') ensureHead('settings');
+    if (page === 'settings') {
+      if (global.PoxySettingsSky) global.PoxySettingsSky.onShow();
+      else ensureHead('settings');
+    }
     if (page === 'profile') ensureHead('profile');
   }
 
@@ -53,7 +56,10 @@
       if (global.PoxyMarketSky) global.PoxyMarketSky.onShow();
       else ensureHead('market');
     }
-    if (tab === 'store') ensureHead('store');
+    if (tab === 'store') {
+      if (global.PoxyStoreSky) global.PoxyStoreSky.onShow();
+      else ensureHead('store');
+    }
   }
 
   function initAll() {
