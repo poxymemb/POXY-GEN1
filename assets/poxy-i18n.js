@@ -1,5 +1,5 @@
 /**
- * POXY / Lumina OS — UI locale (en | ru).
+ * POXY — UI locale (en | ru).
  */
 (function (global) {
   const PREFS_KEY = 'poxy_settings_prefs_v1';
@@ -46,7 +46,7 @@
       'profile.editInSettings': 'Edit in Settings',
       'settings.language.title': 'Language',
       'settings.language.desc':
-        'Interface language for POXY WORLD and Lumina OS. Saved on this device.',
+        'Interface language for POXY WORLD. Saved on this device.',
       'settings.language.en': 'English',
       'settings.language.ru': 'Русский',
       'settings.password.title': 'Change Password',
@@ -153,7 +153,7 @@
       'profile.editInSettings': 'Изменить в настройках',
       'settings.language.title': 'Язык',
       'settings.language.desc':
-        'Язык интерфейса POXY WORLD и Lumina OS. Сохраняется на этом устройстве.',
+        'Язык интерфейса POXY WORLD. Сохраняется на этом устройстве.',
       'settings.language.en': 'English',
       'settings.language.ru': 'Русский',
       'settings.password.title': 'Сменить пароль',
@@ -313,27 +313,7 @@
     });
   }
 
-  function applyLuminaChrome() {
-    const root = document.getElementById('luminaOsRoot');
-    if (!root) return;
-    apply(root);
-    const map = {
-      messages: 'lo.nav.messages',
-      friends: 'lo.nav.friends',
-      squads: 'lo.nav.squads',
-      activity: 'lo.nav.activity',
-      notifications: 'lo.nav.notifications',
-      settings: 'lo.nav.settings',
-    };
-    root.querySelectorAll('.lc-nav-item[data-nav]').forEach((btn) => {
-      const key = map[btn.dataset.nav];
-      const label = btn.querySelector('.lo-nav-label');
-      if (key && label) label.textContent = t(key);
-    });
-    if (global.LuminaOSApp && typeof global.LuminaOSApp.syncThemeToggleLabel === 'function') {
-      global.LuminaOSApp.syncThemeToggleLabel();
-    }
-  }
+  function applyLuminaChrome() {}
 
   function applySettingsNav() {
     const page = document.getElementById('settingsPage');
@@ -376,13 +356,6 @@
           if (typeof global.switchSettingsTab === 'function' && typeof global.getActiveSettingsTab === 'function') {
             global.switchSettingsTab(global.getActiveSettingsTab());
           }
-        }
-      }
-      if (global.LuminaOSStore && global.LuminaOSPanels) {
-        const st = global.LuminaOSStore.getState();
-        const nav = st && st.activeNav;
-        if (nav && nav !== 'messages' && global.LuminaOSPanels.render) {
-          global.LuminaOSPanels.render(nav);
         }
       }
       if (typeof global.syncNavUsernameLabels === 'function') {

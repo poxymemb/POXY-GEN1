@@ -15,10 +15,12 @@
     collection: 'collection',
     club: 'community',
     ranks: 'levels',
+    levels: 'levels',
     tierlist: 'collections',
     rarity: 'collections',
     gens: 'collections',
     profile: 'profile',
+    settings: 'settings',
     settings: 'settings',
     friends: 'messenger',
     messenger: 'messenger',
@@ -65,7 +67,7 @@
       global.showStitchTab('quests');
     },
     levels: function () {
-      global.showStitchTab('ranks');
+      global.showStitchTab('levels');
     },
     profile: function () {
       global.showPage('profile');

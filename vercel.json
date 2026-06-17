@@ -10,14 +10,13 @@
     { "source": "/badge-72.png", "destination": "/public/badge-72.png" },
     { "source": "/_poxy-staff-mcu", "destination": "/assets/admin-terminal.html" },
     { "source": "/_poxy-staff-mcu/", "destination": "/assets/admin-terminal.html" },
-    { "source": "/lumina-os", "destination": "/index.html" },
-    { "source": "/lumina-os/", "destination": "/index.html" },
-    { "source": "/lumina-os/:path*", "destination": "/index.html" },
     { "source": "/chat/app", "destination": "/index.html" },
     { "source": "/chat/app/", "destination": "/index.html" },
     { "source": "/chat/app/:path*", "destination": "/index.html" }
   ],
   "redirects": [
+    { "source": "/lumina-os", "destination": "/", "permanent": false },
+    { "source": "/lumina-os/:path*", "destination": "/", "permanent": false },
     { "source": "/admin-terminal", "destination": "/", "permanent": false },
     { "source": "/admin-terminal/:path*", "destination": "/", "permanent": false },
     { "source": "/assets/admin-terminal.html", "destination": "/", "permanent": false },

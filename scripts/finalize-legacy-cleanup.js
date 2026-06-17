@@ -24,17 +24,8 @@ function appendMerge(targetRel, sourceRel, label) {
 }
 
 const merges = [
-  ['assets/poxy-sky/screens/collection.css', 'assets/poxy-collection-page.css', 'poxy-collection-page'],
-  ['assets/poxy-sky/screens/collection.css', 'assets/poxy-season-atlas.css', 'poxy-season-atlas'],
-  ['assets/poxy-sky/screens/collection.css', 'assets/poxy-museum-mode.css', 'poxy-museum-mode'],
-  ['assets/poxy-sky/screens/market.css', 'assets/poxy-market-page.css', 'poxy-market-page'],
-  ['assets/poxy-sky/screens/store.css', 'assets/poxy-store-page.css', 'poxy-store-page'],
-  ['assets/poxy-sky/screens/profile.css', 'assets/poxy-profile-page.css', 'poxy-profile-page'],
-  ['assets/poxy-sky/screens/settings.css', 'assets/poxy-settings-page.css', 'poxy-settings-page'],
-  ['assets/poxy-sky/screens/levels.css', 'assets/poxy-ranks-page.css', 'poxy-ranks-page'],
-  ['assets/poxy-sky/screens/collections-overview.css', 'assets/poxy-rarity-page.css', 'poxy-rarity-page'],
-  ['assets/poxy-sky/screens/community.css', 'assets/poxy-club-page.css', 'poxy-club-page'],
-  ['assets/poxy-sky/screens/community.css', 'assets/poxy-club-gold.css', 'poxy-club-gold'],
+  // Disabled — merged legacy CSS caused Stitch palette to override Sky screens.
+  // Use scripts/strip-merged-legacy-css.js if legacy blocks reappear.
 ];
 
 merges.forEach(([t, s, l]) => appendMerge(t, s, l));

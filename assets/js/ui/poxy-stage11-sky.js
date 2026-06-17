@@ -72,6 +72,55 @@
     return 'Newcomer';
   }
 
+  var FROG_BANNER =
+    '<div class="col-banner-frogs">' +
+    '<div class="frog" style="--c1:var(--acc);--c2:var(--acc);--belly:#c0344d"><div class="fb"></div><div class="fe l"></div><div class="fe r"></div><div class="fm"></div></div>' +
+    '<div class="frog" style="--c1:#60C2E0;--c2:#3A90B0;--belly:#c0344d"><div class="fb"></div><div class="fe l"></div><div class="fe r"></div><div class="fm"></div></div>' +
+    '<div class="frog" style="--c1:#E5C84F;--c2:#C0A52F;--belly:#c0344d"><div class="fb"></div><div class="fe l"></div><div class="fe r"></div><div class="fm"></div></div>' +
+    '</div>';
+
+  var LEVEL_NODES = [
+    { n: 1, name: 'Newcomer', reward: 'Welcome bonus', coins: 50 },
+    { n: 2, name: 'Collector', reward: 'Coin pack', coins: 80 },
+    { n: 3, name: 'Trader', reward: 'Profile colour unlock' },
+    { n: 4, name: 'Curator', reward: 'Coin pack', coins: 120 },
+    { n: 5, name: 'Enthusiast', reward: 'Banner: Sky Wave' },
+    { n: 6, name: 'Veteran', reward: 'Coin pack', coins: 200 },
+    { n: 7, name: 'Expert', reward: 'Animated avatar slot' },
+    { n: 8, name: 'Master', reward: 'Coin pack', coins: 300 },
+    { n: 9, name: 'Legend', reward: 'Exclusive figure' },
+    { n: 10, name: 'POXY Elite', reward: 'Elite badge + big bonus', coins: 500 },
+  ];
+
+  function colCard(opts) {
+    var prog = opts.prog
+      ? '<div class="col-prog"><i style="width:' + opts.prog + '%"></i></div>'
+      : '';
+    return (
+      '<button type="button" class="col-card" style="--acc:' +
+      opts.acc +
+      '"><div class="col-banner">' +
+      FROG_BANNER +
+      '<span class="col-status" style="--sc:' +
+      opts.statusColor +
+      '">' +
+      opts.status +
+      '</span></div><div class="col-body"><div class="col-top"><h3>' +
+      opts.title +
+      '</h3><span class="col-season">' +
+      opts.season +
+      '</span></div><p class="col-tag">' +
+      opts.tag +
+      '</p><div class="col-stats">' +
+      opts.stats +
+      '</div>' +
+      prog +
+      '<span class="col-btn">' +
+      opts.cta +
+      '</span></div></button>'
+    );
+  }
+
   /* ── Collections (tierlist rail) ── */
   function ensureCollectionsOverview() {
     var panel = $('stPanelTierList');
@@ -80,15 +129,52 @@
     wrap.id = 'pxSkyColOverview';
     wrap.innerHTML =
       '<div class="col-section"><div class="col-sec-h">Current</div><div class="col-grid">' +
-      '<button type="button" class="col-card" style="--acc:#E0566A"><div class="col-banner"><span class="col-status" style="--sc:#3DBE8B">Live now</span></div>' +
-      '<div class="col-body"><div class="col-top"><h3>Hearts</h3><span class="col-season">Season 01</span></div>' +
-      '<p class="col-tag">The first drop. Six symbols, fourteen mutations each.</p>' +
-      '<div class="col-stats"><span>6 items</span><span>·</span><span>100 each</span></div>' +
-      '<span class="col-btn">Explore drop →</span></div></button></div></div>' +
-      '<div class="panel-h" style="margin-top:8px">Rarity system</div>';
+      colCard({
+        acc: '#E0566A',
+        status: 'Live now',
+        statusColor: '#3DBE8B',
+        title: 'Hearts',
+        season: 'Season 01',
+        tag: 'The first drop. Six symbols, fourteen mutations each.',
+        stats: '<span>6 items</span><span>·</span><span>100 each</span><span>·</span><span>63 minted</span>',
+        prog: 63,
+        cta: 'Explore drop →',
+      }) +
+      '</div></div>' +
+      '<div class="col-section"><div class="col-sec-h">Upcoming</div><div class="col-grid">' +
+      colCard({
+        acc: '#E5C84F',
+        status: 'Coming soon',
+        statusColor: '#E0A23C',
+        title: 'Tokens',
+        season: 'Season 02',
+        tag: 'Coming next. Coins, gems, and lucky charms.',
+        stats: '<span>6 items</span><span>·</span><span>100 each</span>',
+        cta: 'Preview →',
+      }) +
+      '</div></div>' +
+      '<div class="col-section"><div class="col-sec-h">Past</div><div class="col-grid">' +
+      colCard({
+        acc: '#60C2E0',
+        status: 'Completed',
+        statusColor: '#8A8F98',
+        title: 'Beginnings',
+        season: 'Season 00',
+        tag: 'The genesis set. Where POXY started.',
+        stats: '<span>4 items</span><span>·</span><span>50 each</span><span>·</span><span>50 minted</span>',
+        cta: 'View archive →',
+      }) +
+      '</div></div>';
     var root = $('rarityPageRoot');
     if (root) root.insertBefore(wrap, root.firstChild);
     else panel.insertBefore(wrap, panel.firstChild);
+    wrap.querySelectorAll('.col-card').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.showToast === 'function') {
+          global.showToast('Collection details coming soon.');
+        }
+      });
+    });
   }
 
   var PoxyCollectionsSky = {
@@ -99,13 +185,90 @@
         panel,
         'collections',
         'Collections',
-        'Every drop, past and upcoming. Explore how rarity works across the ecosystem.'
+        'Every drop, past and upcoming. Tap one to explore its items and rarity.'
       );
       ensureCollectionsOverview();
     },
   };
 
   /* ── Community (club rail) ── */
+  function communityPost(opts) {
+    return (
+      '<div class="post"><div class="post-head"><span class="post-av" style="--ac:' +
+      opts.color +
+      '">' +
+      opts.initial +
+      '</span><div class="post-who"><span class="post-name">' +
+      opts.name +
+      '<span class="verified">✓</span></span><span class="post-time">' +
+      opts.time +
+      '</span></div></div><div class="post-text">' +
+      opts.text +
+      '</div><div class="post-actions">' +
+      '<button type="button" class="pa like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><span>' +
+      opts.likes +
+      '</span></button>' +
+      '<button type="button" class="pa repost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>' +
+      opts.reposts +
+      '</span></button>' +
+      '<button type="button" class="pa save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Save</span></button>' +
+      '</div></div>'
+    );
+  }
+
+  function ensureCommunityShell() {
+    var panel = $('stPanelClub');
+    if (!panel || $('pxSkyCommunityRoot')) return;
+    var shell = document.createElement('div');
+    shell.id = 'pxSkyCommunityRoot';
+    shell.innerHTML =
+      '<div class="comm-layout"><div>' +
+      '<div class="comm-tabs">' +
+      '<button type="button" class="comm-tab on">Recommended</button>' +
+      '<button type="button" class="comm-tab">Following</button>' +
+      '</div><div class="feed">' +
+      communityPost({
+        color: '#60C2E0',
+        initial: 'P',
+        name: 'POXY Dev Team',
+        time: '2h',
+        text: "Season 02 Tokens is almost here. Six new symbols, fresh mutations, and a launch event with an early-bird figure for everyone online.",
+        likes: '1.2k',
+        reposts: '340',
+      }) +
+      communityPost({
+        color: '#9B8FE0',
+        initial: 'C',
+        name: 'Collectors Club',
+        time: '5h',
+        text: 'Showcase of the week: someone pulled Full BW Chained Heart on number #1 with a Dark Blood Red background. One of the rarest combos possible.',
+        likes: '864',
+        reposts: '210',
+      }) +
+      communityPost({
+        color: '#E0A23C',
+        initial: 'R',
+        name: 'Rare Hunters',
+        time: '1d',
+        text: 'Reminder: low numbers AND pretty numbers both carry a rarity bonus. A #11 beats a #47 even on the same mutation.',
+        likes: '512',
+        reposts: '98',
+      }) +
+      '</div></div>' +
+      '<aside class="comm-side"><div class="comm-side-card"><div class="panel-h">POXY Club</div>' +
+      '<p style="font-size:14px;color:var(--text-dim);line-height:1.5;margin:0 0 12px">Exclusive VIP boxes and members-only drops. Collect a Mythic to unlock instantly.</p>' +
+      '<button type="button" class="btn btn-glass" id="pxSkyClubLink" style="width:100%;justify-content:center">About POXY Club</button></div></div></aside></div>';
+    panel.insertBefore(shell, panel.firstChild);
+    var clubBtn = $('pxSkyClubLink');
+    if (clubBtn) {
+      clubBtn.addEventListener('click', function () {
+        if (typeof global.showToast === 'function') {
+          global.showToast('POXY Club unlocks with a Mythic pull.');
+        }
+      });
+    }
+  }
+
   var PoxyCommunitySky = {
     onShow: function () {
       if (!isSky()) return;
@@ -114,8 +277,9 @@
         panel,
         'community',
         'Community',
-        'Club feed, VIP lounge, and collector intel. Your circle inside POXY.'
+        'Posts from verified channels. Like, save, repost, and share.'
       );
+      ensureCommunityShell();
     },
   };
 
@@ -134,12 +298,12 @@
       '<div class="msg-main"><div class="msg-main-head"><div class="chat-av" style="--ac:#60C2E0">P</div><div><div class="mmh-name">POXY News</div><div class="mmh-status">official</div></div></div>' +
       '<div class="msg-body"><div class="bubble them">Welcome to POXY messages. Open the full app to chat, trade, and gift.</div></div>' +
       '<div class="msg-compose"><input class="msg-input" placeholder="Open messages to reply" disabled></div></div></div>' +
-      '<button type="button" class="btn btn-primary px-sky-msg-open" id="pxSkyOpenLumina">Open messages app</button></div>';
-    var openBtn = $('pxSkyOpenLumina');
+      '<button type="button" class="btn btn-primary px-sky-msg-open" id="pxSkyOpenMessenger">Open messages</button></div>';
+    var openBtn = $('pxSkyOpenMessenger');
     var newBtn = $('pxSkyMsgNew');
     var open = function () {
-      if (typeof global.openLuminaOS === 'function') global.openLuminaOS(null, 'messages');
-      else if (typeof global.showToast === 'function') global.showToast('Messages app loading…');
+      if (typeof global.showStitchTab === 'function') global.showStitchTab('messenger');
+      else if (typeof global.showToast === 'function') global.showToast('Messages loading…');
     };
     if (openBtn) openBtn.addEventListener('click', open);
     if (newBtn) newBtn.addEventListener('click', open);
@@ -301,49 +465,138 @@
     },
   };
 
-  /* ── Levels (ranks rail) ── */
-  function syncLevelHead() {
-    var panel = $('stPanelRanks');
-    if (!panel) return;
-    var lvl =
+  /* ── Levels (levels rail) ── */
+  function playerLevel() {
+    return (
       (global.playerEconomy && global.playerEconomy.xp_level) ||
       (global.currentProfile && global.currentProfile.xp_level) ||
-      1;
-    var progress = Math.max(
-      0,
-      Math.min(1, parseFloat((global.playerEconomy && global.playerEconomy.xp_progress) || 0.64))
+      1
     );
-    var head = $('pxSkyLvlHead');
-    if (!head) {
-      head = document.createElement('div');
-      head.id = 'pxSkyLvlHead';
-      head.className = 'lvl-head';
-      var main = panel.querySelector('.st-main') || panel;
-      main.insertBefore(head, main.firstChild);
+  }
+
+  function playerXpProgress() {
+    return Math.max(
+      0,
+      Math.min(1, parseFloat((global.playerEconomy && global.playerEconomy.xp_progress) || 0))
+    );
+  }
+
+  function levelNodeRow(node, currentLvl) {
+    var state = 'locked';
+    if (node.n < currentLvl) state = 'claimed';
+    else if (node.n === currentLvl) state = 'ready';
+    var reward = node.reward;
+    if (node.coins) {
+      reward +=
+        ' <span class="lvl-coins">' + COIN_SVG + String(node.coins) + '</span>';
     }
-    head.innerHTML =
-      '<div class="lvl-big">' +
+    var claim =
+      state === 'claimed'
+        ? '<span class="lvl-claim claimed">Claimed</span>'
+        : state === 'ready'
+          ? '<button type="button" class="lvl-claim ready">Claim</button>'
+          : '<span class="lvl-claim locked">Locked</span>';
+    return (
+      '<div class="lvl-node' +
+      (state === 'claimed' ? ' done' : '') +
+      '"><span class="lvl-num">' +
+      node.n +
+      '</span><div class="lvl-info"><div class="lvl-name">' +
+      node.name +
+      '</div><div class="lvl-reward">' +
+      reward +
+      '</div></div>' +
+      claim +
+      '</div>'
+    );
+  }
+
+  function bindLevelTabs(panel) {
+    var mainBtn = panel.querySelector('#pxSkyLvlTabMain');
+    var passBtn = panel.querySelector('#pxSkyLvlTabPass');
+    var main = $('pxSkyLvlMain');
+    var pass = $('pxSkyLvlPass');
+    if (!mainBtn || !passBtn || !main || !pass) return;
+    var setTab = function (which) {
+      var onMain = which === 'main';
+      mainBtn.classList.toggle('on', onMain);
+      passBtn.classList.toggle('on', !onMain);
+      main.hidden = !onMain;
+      pass.hidden = onMain;
+    };
+    mainBtn.addEventListener('click', function () {
+      setTab('main');
+    });
+    passBtn.addEventListener('click', function () {
+      setTab('pass');
+    });
+  }
+
+  function ensureLevelsShell() {
+    var panel = $('stPanelLevels');
+    if (!panel || $('pxSkyLevelsRoot')) return;
+    var lvl = playerLevel();
+    var progress = playerXpProgress();
+    var track = LEVEL_NODES.map(function (n) {
+      return levelNodeRow(n, lvl);
+    }).join('');
+    panel.innerHTML =
+      '<div class="px-sky-page-head page-head" data-sky-key="levels"><h1>Levels</h1><p>Grow your account by collecting, opening, and taking part. Claim rewards as you climb.</p></div>' +
+      '<div id="pxSkyLevelsRoot">' +
+      '<div class="lvl-head" id="pxSkyLvlHead"><div class="lvl-big" id="pxSkyLvlBig">' +
       lvl +
-      '</div><div class="lvl-head-txt"><div class="lh-name">Level ' +
+      '</div><div class="lvl-head-txt"><div class="lh-name" id="pxSkyLvlName">Level ' +
       lvl +
       ' · ' +
       levelTitle(lvl) +
-      '</div><div class="lh-bar"><i style="width:' +
+      '</div><div class="lh-bar"><i id="pxSkyLvlBar" style="width:' +
       Math.round(progress * 100) +
-      '%"></i></div><div class="lh-xp">Keep collecting and opening to climb</div></div>';
+      '%"></i></div><div class="lh-xp" id="pxSkyLvlXp">Keep collecting and opening to climb</div></div></div>' +
+      '<div class="lvl-tabs"><button type="button" class="lvl-tab on" id="pxSkyLvlTabMain">Account</button>' +
+      '<button type="button" class="lvl-tab pass" id="pxSkyLvlTabPass">POXY PASS</button></div>' +
+      '<div id="pxSkyLvlMain"><div class="lvl-track" id="pxSkyLvlTrack">' +
+      track +
+      '</div></div>' +
+      '<div id="pxSkyLvlPass" hidden><div class="pass-banner"><span class="pb-ic">★</span>' +
+      '<div class="pb-txt"><div class="t">POXY PASS</div><div class="d">A separate reward track with exclusive figures, boxes, and coins.</div></div>' +
+      '<button type="button" class="btn btn-primary">Get the Pass</button></div></div></div>';
+    bindLevelTabs(panel);
+    panel.querySelectorAll('.lvl-claim.ready').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.showToast === 'function') {
+          global.showToast('Level rewards sync with your account soon.');
+        }
+      });
+    });
+  }
+
+  function syncLevelsHead() {
+    var lvl = playerLevel();
+    var progress = playerXpProgress();
+    var big = $('pxSkyLvlBig');
+    var name = $('pxSkyLvlName');
+    var bar = $('pxSkyLvlBar');
+    if (big) big.textContent = String(lvl);
+    if (name) name.textContent = 'Level ' + lvl + ' · ' + levelTitle(lvl);
+    if (bar) bar.style.width = Math.round(progress * 100) + '%';
+    var track = $('pxSkyLvlTrack');
+    if (track) {
+      track.innerHTML = LEVEL_NODES.map(function (n) {
+        return levelNodeRow(n, lvl);
+      }).join('');
+    }
   }
 
   var PoxyLevelsSky = {
     onShow: function () {
       if (!isSky()) return;
-      var panel = $('stPanelRanks');
-      ensurePageHead(
-        panel,
-        'levels',
-        'Levels',
-        'Grow your account by collecting, opening, and taking part. Global ranks below.'
-      );
-      syncLevelHead();
+      ensureLevelsShell();
+      syncLevelsHead();
+    },
+    sync: function () {
+      if (!isSky()) return;
+      if (!$('pxSkyLevelsRoot')) ensureLevelsShell();
+      syncLevelsHead();
     },
   };
 
@@ -354,6 +607,7 @@
     global.loadDailyQuests = async function () {
       await orig.apply(this, arguments);
       PoxyQuestsSky.syncFromDaily(global.dailyQuests);
+      if (isSky()) syncLevelsHead();
     };
     global.loadDailyQuests._pxSkyWrapped = true;
   }

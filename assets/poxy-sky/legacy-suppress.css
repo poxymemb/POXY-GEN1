@@ -1,0 +1,119 @@
+/**
+ * Sky mode — hide merged Stitch legacy chrome that fights mockup v2.
+ * Load after screen CSS bundles.
+ */
+body.poxy-sky-app-active {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body.poxy-sky-app-active.dark-club,
+body.poxy-sky-app-active.ranks-tab-active {
+  background: var(--bg) !important;
+}
+
+body.poxy-sky-app-active #huntPage,
+body.poxy-sky-app-active #huntPage .poxy-stitch-dash,
+body.poxy-sky-app-active #huntPage .st-spa-viewport,
+body.poxy-sky-app-active .st-spa-panel {
+  background: transparent !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+/* Collections — mockup drop grid only, no rarity tier stack / PX leaderboard aside */
+body.poxy-sky-app-active #stPanelTierList .rarity-page-layout {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #stPanelTierList .rarity-page {
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+/* Community — Sky feed shell, not POXY CLUB lock screen */
+body.poxy-sky-app-active #stPanelClub #clubPage {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #stPanelClub .poxy-club-page.visible {
+  display: none !important;
+}
+
+/* Levels — hide legacy global ranks podium if ranks tab is opened */
+body.poxy-sky-app-active #stPanelRanks .ranks-hero,
+body.poxy-sky-app-active #stPanelRanks .ranks-podium-wrap,
+body.poxy-sky-app-active #stPanelRanks .ranks-body-grid,
+body.poxy-sky-app-active #stPanelRanks .ranks-page-toggle,
+body.poxy-sky-app-active #stPanelRanks #pxSkyLvlHead {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #stPanelLevels {
+  background: transparent !important;
+}
+
+/* Legacy topbar chrome (if any stray nodes remain) */
+body.poxy-sky-app-active #pxSkyTopbar .st-xp-hud,
+body.poxy-sky-app-active #pxSkyTopbar .st-wallet-capsule,
+body.poxy-sky-app-active #pxSkyTopbar #stNavSupport,
+body.poxy-sky-app-active #pxSkyTopbar #stNavGrid {
+  display: none !important;
+}
+
+/* Neutralize pink Stitch surfaces inside Sky stage */
+body.poxy-sky-app-active .poxy-stitch-dash {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+body.poxy-sky-app-active .rarity-page,
+body.poxy-sky-app-active .ranks-page,
+body.poxy-sky-app-active .poxy-club-page {
+  font-family: var(--px-font, var(--font)) !important;
+}
+
+/* Secondary SPA panels copied from pre-Sky pages */
+body.poxy-sky-app-active #stPanelExplore,
+body.poxy-sky-app-active #stPanelGens,
+body.poxy-sky-app-active #stPanelFriends,
+body.poxy-sky-app-active #stPanelNews {
+  background: transparent !important;
+}
+
+body.poxy-sky-app-active .poxy-explore-page,
+body.poxy-sky-app-active .poxy-news-page,
+body.poxy-sky-app-active .poxy-gens-page,
+body.poxy-sky-app-active .poxy-friends-page {
+  background: transparent !important;
+  color: var(--text) !important;
+  font-family: var(--px-font, var(--font)) !important;
+}
+
+body.poxy-sky-app-active #stPanelExplore {
+  background: transparent !important;
+}
+
+/* Profile / settings — hide Stitch ambient blobs */
+body.poxy-sky-app-active .idhub-blob,
+body.poxy-sky-app-active .poxy-profile-ambient,
+body.poxy-sky-app-active .nl-glow {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #profilePage.visible,
+body.poxy-sky-app-active #settingsPage.visible {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+/* Kill global Stitch accent leaks in Sky mode */
+body.poxy-sky-app-active [style*="#050506"] {
+  /* inline legacy hooks in unmigrated panels */
+}
+
+/* Load last — wins over legacy modal CSS loaded above */
+
+body.poxy-sky-app-active .material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}

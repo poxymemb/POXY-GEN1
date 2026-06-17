@@ -17,26 +17,13 @@
 (function(){
   var p=location.pathname||'/';
   var base='';
-  var lo=p.indexOf('/lumina-os');
-  if(lo>=0)base=p.slice(0,lo);
-  else if(/index\.html$/i.test(p))base=p.replace(/\/index\.html$/i,'');
-  if(/\/$/.test(p)&&p.length>1&&lo<0)base=p.replace(/\/$/,'');
+  if(/index\.html$/i.test(p))base=p.replace(/\/index\.html$/i,'');
+  else if(/\/$/.test(p)&&p.length>1)base=p.replace(/\/$/,'');
   window.POXY_APP_BASE=base;
   var href=base?((base.endsWith('/')?base:base+'/')):'/';
-  var q=location.search||'';
-  if(q.indexOf('main=1')>=0||q.indexOf('escape=1')>=0){
-    try{sessionStorage.setItem('poxy_skip_lumina','1');}catch(e){}
-    location.replace(href);
-    return;
-  }
   var el=document.createElement('base');
   el.href=href;
   document.head.appendChild(el);
-  if(lo>=0&&location.hash.indexOf('/lumina-os')<0){
-    try{sessionStorage.setItem('poxy_skip_lumina','1');}catch(e){}
-    location.replace(href+(q?q:''));
-    return;
-  }
 })();
 </script>
 <title>POXY WORLD</title>
@@ -82,36 +69,36 @@
 <link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/landing.css?v=4">
 <link rel="stylesheet" href="assets/poxy-sky/auth.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=4">
+<link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/open.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/store.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/collections-overview.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/community.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/store.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/collections-overview.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/community.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/messenger.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/events.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/quests.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/levels.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/explore.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/gens.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/friends.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/news.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/levels.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/explore.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/gens.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/friends.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/news.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/runtime.css?v=1">
 <link rel="stylesheet" href="assets/frames.css?v=1">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=3">
 <link rel="stylesheet" href="assets/poxy-quick-profile.css?v=6">
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
 <link rel="stylesheet" href="assets/poxy-support-panel.css?v=5">
+<link rel="stylesheet" href="assets/poxy-sky/overlays.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=3">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
-<link rel="stylesheet" href="assets/lumina-chat-os.css?v=15">
-<link rel="stylesheet" href="assets/lumina-os/design-system.css?v=15">
-<link rel="stylesheet" href="assets/lumina-features.css?v=1">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/topup.css?v=2">
 <link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
 <link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=13">
 <link rel="stylesheet" href="assets/poxy-dna-traits.css?v=1">
@@ -154,12 +141,13 @@
 <script src="assets/js/ui/poxy-app-shell.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-open-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-home-sky.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-collection-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-topup-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-collection-sky.js?v=3" defer></script>
 <script src="assets/js/ui/poxy-market-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-store-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-settings-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-profile-sky.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-stage11-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-stage11-sky.js?v=2" defer></script>
 <script src="assets/js/ui/poxy-screens-sky.js?v=1" defer></script>
 <script src="assets/poxy-landing-page.js?v=4" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
@@ -510,6 +498,7 @@
 <!-- POXY Sky app shell (Stage 3) -->
 <div id="poxyAppShell" class="px-sky-app" style="display:none">
 <aside class="rail" id="pxSkyRail" aria-label="Main navigation">
+  <div class="rail-scroll">
   <button type="button" class="logo" id="pxSkyRailLogo" aria-label="POXY WORLD home"><span class="mk"></span></button>
   <button type="button" class="rail-btn active" data-nav="home"><span class="tip">Home</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></button>
   <button type="button" class="rail-btn" data-nav="open"><span class="tip">Open boxes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21 3 16.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg></button>
@@ -522,40 +511,44 @@
   <button type="button" class="rail-btn" data-nav="events"><span class="tip">Events</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.5 6 .8-4.3 4.2 1 6L12 17l-5.3 2.9 1-6L3.4 9.8l6-.8z"/></svg></button>
   <button type="button" class="rail-btn" data-nav="quests"><span class="tip">Quests</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></button>
   <button type="button" class="rail-btn" data-nav="levels"><span class="tip">Levels</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M9 14h6M10 14v4M14 14v4M8 21h8"/></svg></button>
-  <div class="rail-spacer"></div>
+  </div>
+  <div class="rail-foot">
   <button type="button" class="rail-btn" data-nav="profile"><span class="tip">Profile</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg></button>
   <button type="button" class="rail-btn" data-nav="settings"><span class="tip">Settings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H9.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h4.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5a7 7 0 0 0 .1-1z"/></svg></button>
+  </div>
 </aside>
 <div class="main" id="pxSkyMain">
 <header class="topbar" id="pxSkyTopbar">
   <div class="greet">Welcome back, <span class="at" id="pxSkyGreetUser">@Player</span></div>
   <div class="top-right">
-    <div class="st-xp-hud" id="stXpHud" aria-label="Experience progress">
-      <div class="st-xp-hud-level" id="stXpLevel">LVL 0</div>
-      <div class="st-xp-hud-track" aria-hidden="true"><div class="st-xp-hud-fill" id="stXpFill"></div></div>
-      <div class="st-xp-hud-balance" id="stXpBalance">0 XP</div>
+    <div class="xp-badge" id="stXpHud" aria-label="Experience progress">
+      <span class="xp-lvl" id="stXpLevel">0</span>
+      <span class="xp-bar" aria-hidden="true"><i id="stXpFill"></i></span>
     </div>
-    <div class="st-wallet-capsule balance-badge st-balance" id="balanceBadgeGroup">
-      <button type="button" class="st-wallet-body" id="balanceBadge" onclick="openTopUpModal()" aria-label="Wallet balance">
-        <span class="st-wallet-icon material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
-        <span class="st-wallet-amount" id="stBalanceText">0 PX</span>
-      </button>
-      <button type="button" class="st-wallet-plus-btn" id="balanceTopUpBtn" onclick="openTopUpModal()" aria-label="Add funds">
-        <span class="material-symbols-outlined" aria-hidden="true">add</span>
-      </button>
+    <div class="balance visible" id="balanceBadgeGroup" role="button" tabindex="0" onclick="openTopUpModal()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTopUpModal();}" aria-label="Coin balance">
+      <span class="coin" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="url(#pxSkyCoinGrad)"/><circle cx="24" cy="24" r="20" stroke="#8BE3FF" stroke-width="2.5"/><circle cx="24" cy="24" r="14" stroke="#0E3A48" stroke-width="2" stroke-opacity="0.45"/><path d="M24 14 L24 34 M18.5 19 Q24 14.5 29.5 19 M18.5 29 Q24 33.5 29.5 29" stroke="#0E3A48" stroke-width="3" stroke-linecap="round" stroke-opacity="0.8"/><defs><radialGradient id="pxSkyCoinGrad" cx="0.4" cy="0.32" r="0.85"><stop offset="0" stop-color="#A6E9FF"/><stop offset="0.55" stop-color="#60C2E0"/><stop offset="1" stop-color="#2E9CC0"/></radialGradient></defs></svg></span>
+      <span id="stBalanceText">0</span>
     </div>
-    <button type="button" class="st-nav-icon-btn" id="stNavNotify" aria-label="Notifications" onclick="openNotifyHub()">
-      <span class="material-symbols-outlined">notifications</span>
-      <span class="st-nav-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
+    <button type="button" class="top-icon" id="pxSkyMailBtn" aria-label="Messages" onclick="showStitchTab('messenger')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>
     </button>
-    <button type="button" class="st-nav-icon-btn" id="stNavSupport" aria-label="Support" onclick="openSupportPanel()">
-      <span class="material-symbols-outlined">support_agent</span>
-      <span class="st-nav-badge" id="supportTicketBadge" hidden aria-hidden="true">0</span>
+    <button type="button" class="top-icon" id="stNavNotify" aria-label="Notifications" onclick="openNotifyHub()">
+      <span class="top-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
     </button>
-    <button type="button" class="st-nav-icon-btn" id="stNavGrid" aria-label="Site preview" onclick="openPoxyLandingPreview()">
-      <span class="material-symbols-outlined">grid_view</span>
+    <button type="button" class="top-icon" id="pxSkyProfileBtn" aria-label="Profile" onclick="showPage('profile')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>
+    </button>
+    <button type="button" class="top-icon" id="pxSkySettingsBtn" aria-label="Settings" onclick="window._allowSettingsPage=true;showPage('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H9.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h4.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5a7 7 0 0 0 .1-1z"/></svg>
     </button>
     <button type="button" class="top-icon" id="pxSkyThemeBtn" aria-label="Theme">◐</button>
+    <button type="button" id="balanceBadge" hidden aria-hidden="true" tabindex="-1"></button>
+    <button type="button" id="balanceTopUpBtn" hidden aria-hidden="true" tabindex="-1" onclick="openTopUpModal()"></button>
+    <button type="button" id="stNavSupport" hidden aria-hidden="true" tabindex="-1" onclick="openSupportPanel()"></button>
+    <span id="supportTicketBadge" hidden aria-hidden="true"></span>
+    <button type="button" id="stNavGrid" hidden aria-hidden="true" tabindex="-1" onclick="openPoxyLandingPreview()"></button>
+    <span id="stXpBalance" hidden aria-hidden="true"></span>
   </div>
 </header>
 <div class="stage" id="pxSkyStage">
@@ -799,7 +792,7 @@
           <button type="button" class="dsh-quick-btn" onclick="showStitchTab('verify')" title="Verify">
             <span class="material-symbols-outlined">security</span>
           </button>
-          <button type="button" class="dsh-quick-btn" onclick="openLuminaOS(null,'friends')" title="Friends">
+          <button type="button" class="dsh-quick-btn" onclick="showStitchTab('messenger')" title="Messages">
             <span class="material-symbols-outlined">group</span>
           </button>
           <button type="button" class="dsh-quick-btn" onclick="showStitchTab('collection')" title="Collection">
@@ -855,6 +848,8 @@
         </div>
       </div>
     </section>
+
+    <section class="st-spa-panel" id="stPanelLevels" data-st-tab="levels" hidden></section>
 
     <section class="st-spa-panel ranks-panel" id="stPanelRanks" data-st-tab="ranks" hidden>
       <div class="st-main ranks-page">
@@ -1817,211 +1812,6 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 </div>
 </div>
 
-<!-- LUMINA OS — immersive communication environment (LuminaOSLayout) -->
-<div id="luminaOsRoot" class="lc-os" hidden aria-label="Lumina OS">
-  <div class="lc-shell layout-messages" id="lcShell">
-    <aside class="lc-nav" aria-label="Lumina OS navigation">
-      <div class="lc-nav-brand">
-        <div class="lc-nav-brand-icon"><span class="material-symbols-outlined">hub</span></div>
-        <span class="lc-nav-brand-text">Lumina</span>
-      </div>
-      <button type="button" class="lc-nav-exit" id="lcExitOs"><span class="material-symbols-outlined">arrow_back</span><span class="lo-nav-label" data-i18n="lo.nav.exit">Exit to POXY</span></button>
-      <button type="button" class="lo-theme-toggle" id="lcThemeToggle" aria-label="Toggle theme">
-        <span class="material-symbols-outlined">dark_mode</span>
-        <span class="lo-theme-toggle-label" data-i18n="lo.nav.darkMode">Dark mode</span>
-      </button>
-      <nav class="lc-nav-menu">
-        <button type="button" class="lc-nav-item is-active" data-nav="messages"><span class="material-symbols-outlined">chat_bubble</span><span class="lo-nav-label" data-i18n="lo.nav.messages">Messages</span></button>
-        <button type="button" class="lc-nav-item" data-nav="friends"><span class="material-symbols-outlined">group</span><span class="lo-nav-label" data-i18n="lo.nav.friends">Friends</span></button>
-        <button type="button" class="lc-nav-item" data-nav="squads"><span class="material-symbols-outlined">diversity_3</span><span class="lo-nav-label" data-i18n="lo.nav.squads">Squads</span></button>
-        <button type="button" class="lc-nav-item" data-nav="activity"><span class="material-symbols-outlined">bolt</span><span class="lo-nav-label" data-i18n="lo.nav.activity">Activity</span></button>
-        <button type="button" class="lc-nav-item" data-nav="notifications"><span class="material-symbols-outlined">notifications</span><span class="lo-nav-label" data-i18n="lo.nav.notifications">Notifications</span> <span class="lc-nav-badge" id="lcNavNotifBadge" hidden>0</span></button>
-        <button type="button" class="lc-nav-item" data-nav="settings"><span class="material-symbols-outlined">settings</span><span class="lo-nav-label" data-i18n="lo.nav.settings">Settings</span></button>
-      </nav>
-      <div class="lc-nav-footer">
-        <button type="button" class="lc-nav-footer-btn" id="lcNavHelp"><span class="material-symbols-outlined">help</span><span data-i18n="lo.nav.help">Help</span></button>
-        <button type="button" class="lc-nav-footer-btn lc-nav-footer-btn--logout" id="lcNavLogout"><span class="material-symbols-outlined">logout</span><span data-i18n="lo.nav.logout">Logout</span></button>
-      </div>
-      <div class="lc-nav-user">
-        <div class="lc-nav-user-av" id="lcNavUserAv">👾</div>
-        <div class="lc-nav-user-meta">
-          <div class="lc-nav-user-name" id="lcNavUserName">–</div>
-          <button type="button" class="lc-nav-user-status" id="lcUserStatusBtn" data-status="online"><span class="lc-status-dot" aria-hidden="true"></span><span id="lcNavUserStatus">Online</span></button>
-        </div>
-      </div>
-    </aside>
-    <div class="lc-workspace" id="lcWorkspace">
-      <div class="lc-workspace-ambient" aria-hidden="true"></div>
-      <div class="lc-workspace-inner" id="lcWorkspaceInner">
-    <section class="lc-main" id="lcMain">
-      <div class="lc-main-head">
-        <div class="lc-conv-list">
-          <div class="lc-conv-search"><input type="search" id="lcConvSearch" data-i18n-placeholder="lo.nav.searchConv" placeholder="Search conversations…" autocomplete="off"></div>
-          <div class="lc-conv-scroll" id="lcConvList"></div>
-        </div>
-        <div class="lc-thread" id="lcThreadPanel">
-          <div class="lc-thread-ambient" aria-hidden="true"></div>
-          <div class="lc-thread-empty" id="lcThreadEmpty">
-            <div class="lc-empty-icon-wrap">
-              <span class="material-symbols-outlined lc-empty-icon">forum</span>
-              <div class="lc-empty-glow"></div>
-            </div>
-            <h3 class="lc-empty-title">No conversation selected</h3>
-            <p class="lc-empty-sub">Choose a friend from the list or search for someone new to start a conversation.</p>
-            <button type="button" class="lc-empty-action" onclick="document.getElementById('lcConvSearch')?.focus()">
-              <span class="material-symbols-outlined">search</span>
-              Find a friend
-            </button>
-          </div>
-          <header class="lc-thread-header" id="lcThreadHeader">
-            <button type="button" class="lc-thread-back" id="lcThreadBack" aria-label="Back"><span class="material-symbols-outlined">arrow_back</span></button>
-            <div class="lc-thread-av" id="lcThreadAv"></div>
-            <div class="lc-thread-ident">
-              <div class="lc-thread-display" id="lcThreadDisplay">–</div>
-              <div class="lc-thread-handle" id="lcThreadHandle"><span class="lc-at">@</span>–</div>
-              <div class="lc-thread-subtitle" id="lcThreadSubtitle">–</div>
-            </div>
-            <div class="lc-thread-actions">
-              <button type="button" class="lc-icon-btn" aria-label="Search in conversation"><span class="material-symbols-outlined">search</span></button>
-              <button type="button" class="lc-icon-btn" id="lcToggleContext" aria-label="Profile panel"><span class="material-symbols-outlined">person</span></button>
-            </div>
-          </header>
-          <div class="lc-messages" id="lcMessages"></div>
-          <div class="lc-typing" id="lcTyping"></div>
-          <div class="lc-compose-wrap">
-            <div class="lc-compose">
-              <button type="button" class="lc-compose-attach" id="lcComposeAttach" aria-label="Attach"><span class="material-symbols-outlined">add</span></button>
-              <input type="text" id="lcComposeInput" placeholder="Start a message…" maxlength="500" autocomplete="off">
-              <div class="lc-compose-tools">
-                <button type="button" class="lc-compose-tool" id="lcComposeGif" aria-label="GIF"><span class="material-symbols-outlined">gif_box</span></button>
-                <button type="button" class="lc-compose-tool" id="lcComposeEmoji" aria-label="Emoji"><span class="material-symbols-outlined">mood</span></button>
-                <span class="lf-compose-separator" aria-hidden="true"></span>
-                <button type="button" class="lf-compose-widget-btn" id="lcWidgetTrade" data-widget-btn="trade" aria-label="Propose trade" title="Propose Trade">
-                  <span class="material-symbols-outlined">swap_horiz</span>
-                </button>
-                <button type="button" class="lf-compose-widget-btn" id="lcWidgetDuel" data-widget-btn="duel" aria-label="Challenge to duel" title="1v1 Duel Challenge">
-                  <span class="material-symbols-outlined">swords</span>
-                </button>
-              </div>
-              <button type="button" class="lc-compose-send" id="lcComposeSend" disabled aria-label="Send"><span class="material-symbols-outlined">send</span></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <aside class="lc-context" id="lcContext" aria-label="Thread context">
-      <button type="button" class="lc-context-collapse" id="lcCollapseContext" aria-label="Collapse panel"><span class="material-symbols-outlined">chevron_right</span></button>
-
-      <!-- Profile header -->
-      <div class="lc-context-profile">
-        <div class="lc-context-av-wrap">
-          <div class="lc-context-av" id="lcContextAv">👾</div>
-          <span class="lc-context-presence-ring" id="lcContextPresenceRing"></span>
-        </div>
-        <div class="lc-context-display" id="lcContextDisplay">–</div>
-        <div class="lc-context-handle" id="lcContextHandle">@–</div>
-        <div class="lc-context-role-badge" id="lcContextTitle">POXY Member</div>
-        <div class="lc-context-status-row" id="lcContextStatusRow">
-          <span class="lc-context-status-dot"></span>
-          <span class="lc-context-status-label" id="lcContextStatusLabel">Online</span>
-        </div>
-      </div>
-
-      <!-- Vault Status -->
-      <div class="lc-context-section lc-context-section--vault">
-        <h4 class="lc-ctx-section-title"><span class="material-symbols-outlined">shield</span>Vault Status</h4>
-        <div class="lc-vault-grid">
-          <div class="lc-vault-stat">
-            <span class="lc-vault-stat-icon material-symbols-outlined">verified_user</span>
-            <div>
-              <p class="lc-vault-stat-label">Security Level</p>
-              <p class="lc-vault-stat-val lc-vault-stat-val--ok" id="lcVaultSecLevel">Enhanced</p>
-            </div>
-          </div>
-          <div class="lc-vault-stat">
-            <span class="lc-vault-stat-icon material-symbols-outlined">lock</span>
-            <div>
-              <p class="lc-vault-stat-label">Encryption</p>
-              <p class="lc-vault-stat-val lc-vault-stat-val--ok">E2E Active</p>
-            </div>
-          </div>
-          <div class="lc-vault-stat">
-            <span class="lc-vault-stat-icon material-symbols-outlined">how_to_reg</span>
-            <div>
-              <p class="lc-vault-stat-label">Trust Status</p>
-              <p class="lc-vault-stat-val lc-vault-stat-val--ok">Verified</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Relationship Insights -->
-      <div class="lc-context-section" id="lcContextRelSection">
-        <h4 class="lc-ctx-section-title"><span class="material-symbols-outlined">handshake</span>Connection</h4>
-        <div class="lc-rel-list">
-          <div class="lc-rel-row">
-            <span class="material-symbols-outlined lc-rel-icon">calendar_today</span>
-            <span class="lc-rel-label">Friends since</span>
-            <span class="lc-rel-val" id="lcCtxFriendSince">Recently</span>
-          </div>
-          <div class="lc-rel-row">
-            <span class="material-symbols-outlined lc-rel-icon">group</span>
-            <span class="lc-rel-label">Mutual friends</span>
-            <span class="lc-rel-val" id="lcCtxMutualFriends">–</span>
-          </div>
-          <div class="lc-rel-row">
-            <span class="material-symbols-outlined lc-rel-icon">diversity_3</span>
-            <span class="lc-rel-label">Mutual squads</span>
-            <span class="lc-rel-val" id="lcCtxMutualSquads">–</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Activity -->
-      <div class="lc-context-section">
-        <h4 class="lc-ctx-section-title"><span class="material-symbols-outlined">bolt</span>Activity</h4>
-        <div class="lc-rel-list">
-          <div class="lc-rel-row">
-            <span class="material-symbols-outlined lc-rel-icon">schedule</span>
-            <span class="lc-rel-label">Last active</span>
-            <span class="lc-rel-val" id="lcCtxLastActive">Just now</span>
-          </div>
-          <div class="lc-rel-row">
-            <span class="material-symbols-outlined lc-rel-icon">chat_bubble</span>
-            <span class="lc-rel-label">Messages sent</span>
-            <span class="lc-rel-val" id="lcCtxMsgCount">–</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Shared Content -->
-      <div class="lc-context-section">
-        <h4 class="lc-ctx-section-title"><span class="material-symbols-outlined">perm_media</span>Shared</h4>
-        <div class="lc-media-grid" id="lcContextMedia">
-          <div class="lc-media-thumb lc-media-thumb--empty"><span class="material-symbols-outlined">image</span></div>
-          <div class="lc-media-thumb lc-media-thumb--empty"><span class="material-symbols-outlined">image</span></div>
-          <div class="lc-media-thumb lc-media-thumb--empty"><span class="material-symbols-outlined">image</span></div>
-        </div>
-        <div class="lc-shared-links" id="lcContextLinks">
-          <div class="lc-pinned-list" id="lcPinnedList">
-            <div class="lc-pinned-item lc-pinned-item--empty">No pinned messages yet.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Actions -->
-      <div class="lc-context-section lc-context-section--actions">
-        <button type="button" class="lc-context-action"><span class="material-symbols-outlined">volume_off</span>Mute notifications <span class="material-symbols-outlined lc-ctx-action-arr">chevron_right</span></button>
-        <button type="button" class="lc-context-action lc-context-action--danger"><span class="material-symbols-outlined">block</span>Block user <span class="material-symbols-outlined lc-ctx-action-arr">chevron_right</span></button>
-      </div>
-    </aside>
-    <div class="lc-module-host lc-hidden" id="lcModuleHost" aria-live="polite"></div>
-      </div>
-    </div>
-  </div>
-  <div class="lc-toast" id="lcToast" role="status"></div>
-</div>
-
 <!-- PROFILE PAGE — Stitch Identity Hub -->
 <div class="page poxy-page-profile idhub-page" id="profilePage">
   <div class="idhub-blob idhub-blob--tl" aria-hidden="true"></div>
@@ -2183,7 +1973,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
           <section class="poxy-settings-block">
           <h3 class="poxy-settings-section-title" data-i18n="settings.language.title">Language</h3>
           <div class="poxy-settings-glass">
-            <p class="poxy-settings-toggle-desc" data-i18n="settings.language.desc">Interface language for POXY WORLD and Lumina OS. Saved on this device.</p>
+            <p class="poxy-settings-toggle-desc" data-i18n="settings.language.desc">Interface language for POXY WORLD. Saved on this device.</p>
             <div class="poxy-settings-lang-row" id="settingsLangRow" role="group" aria-label="Interface language">
               <button type="button" class="poxy-settings-lang-btn" data-locale="en" onclick="selectSettingsLocale('en')" data-i18n="settings.language.en">English</button>
               <button type="button" class="poxy-settings-lang-btn" data-locale="ru" onclick="selectSettingsLocale('ru')" data-i18n="settings.language.ru">Русский</button>
@@ -4088,7 +3878,6 @@ window.PoxyTrustBridge = {
   get pendingSpinTier(){return pendingSpinTier;}
 };
 
-const POXY_BETA_HIDE_LUMINA=true; // set false when Lumina OS is ready for release
 const STANDARD_CASE_PRICE = 50;
 const VIP_CASE_PRICE = 150;
 const GENESIS_CASE_PRICE = 300;
@@ -4439,11 +4228,17 @@ function formatPX(amount){
   if(isNaN(n))return'0 PX';
   return n+' PX';
 }
+function formatCoinBalance(amount){
+  const n=parseInt(amount,10);
+  if(isNaN(n))return'0';
+  return Number(n).toLocaleString();
+}
 function updateBalanceBadge(bal){
   const grp=$('balanceBadgeGroup');
   const txt=$('stBalanceText');
   const pxBal=bal!=null?bal:getPxBalance();
-  const formatted=formatPX(pxBal);
+  const sky=document.body.classList.contains('poxy-sky-app-active');
+  const formatted=sky?formatCoinBalance(pxBal):formatPX(pxBal);
   if(txt)txt.textContent=formatted;
   if(grp){
     grp.classList.add('visible');
@@ -4572,7 +4367,8 @@ function renderXpHud(){
   const lvlEl=$('stXpLevel');
   const fill=$('stXpFill');
   const balEl=$('stXpBalance');
-  if(lvlEl)lvlEl.textContent='LVL '+lvl;
+  const sky=document.body.classList.contains('poxy-sky-app-active');
+  if(lvlEl)lvlEl.textContent=sky?String(lvl):('LVL '+lvl);
   if(fill)fill.style.width=(progress*100).toFixed(1)+'%';
   if(balEl)balEl.textContent=Number(xpBal).toLocaleString()+' XP';
   if(_lastXpLevel!=null&&lvl>_lastXpLevel){
@@ -4582,6 +4378,7 @@ function renderXpHud(){
     showToast('Level up! LVL '+lvl+' 🎉');
   }
   _lastXpLevel=lvl;
+  if(window.PoxyLevelsSky&&typeof PoxyLevelsSky.sync==='function')PoxyLevelsSky.sync();
 }
 function renderPityBar(){
   const pity=playerEconomy?.pity;
@@ -5248,7 +5045,6 @@ function removeNotificationByOfferId(offerId){
 function routeStorageKey(){return POXY_ROUTE_LS+'_'+(currentUser?.id||'');}
 function persistActiveRoute(){
   if(!currentUser)return;
-  if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive())return;
   let route=null;
   if($('settingsPage')?.classList.contains('visible'))route={kind:'page',page:'settings'};
   else{
@@ -5265,7 +5061,7 @@ function restoreActiveRoute(){
     if(!raw)return false;
     const route=JSON.parse(raw);
     if(route?.kind==='lumina-os'){
-      try{localStorage.setItem(routeStorageKey(),JSON.stringify({kind:'stitch',tab:'dashboard'}));}catch(e){}
+      try{localStorage.setItem(routeStorageKey(),JSON.stringify({kind:'stitch',tab:'messenger'}));}catch(e){}
       return false;
     }
     if(route?.kind==='stitch'&&route.tab){
@@ -5279,7 +5075,7 @@ function restoreActiveRoute(){
         return true;
       }
       if(route.page==='friends'){
-        if(typeof openLuminaOS==='function')openLuminaOS(null,'friends');
+        if(typeof showStitchTab==='function')showStitchTab('messenger');
         return true;
       }
       showPage(route.page);
@@ -5431,11 +5227,6 @@ function setLoggedOutUI(){
   $('balanceBadgeGroup')?.classList.remove('visible');
   const shell=$('poxyAppShell');if(shell)shell.style.display='none';
   const hunt=$('huntPage');if(hunt)hunt.style.display='none';
-  if(typeof LuminaOSRouter!=='undefined'){
-    LuminaOSRouter.showMainLayout();
-    try{history.replaceState({layout:'main'},'',LuminaOSRouter.homePath?LuminaOSRouter.homePath():'/');}catch(e){}
-  }
-  document.body.classList.remove('lumina-os-active');
   teardownRealtimeSubscriptions();
   if(friendPollInterval){clearInterval(friendPollInterval);friendPollInterval=null;}
   if(sidebarOpen)closeSidebar();
@@ -5462,12 +5253,6 @@ function setLoggedInUI(){
   const ub=$('userBar');
   if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
   $('balanceBadgeGroup')?.classList.add('visible');
-  var skipLumina=false;
-  try{skipLumina=sessionStorage.getItem('poxy_skip_lumina')==='1';}catch(e){}
-  if(!skipLumina&&typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive()){
-    LuminaOSRouter.enter({replace:true,...LuminaOSRouter.parseQuery()});
-    return;
-  }
   const shell=$('poxyAppShell');if(shell){shell.style.display='flex';shell.classList.add('px-sky-app--open');}
   const hunt=$('huntPage');if(hunt)hunt.style.display='block';
   showPoxyAppShell();
@@ -5742,7 +5527,7 @@ function applySettingsPrefsUi(){
   if(window.PoxyI18n){
     const loc=p.locale||PoxyI18n.getLocale();
     if(loc!==PoxyI18n.getLocale())PoxyI18n.setLocale(loc,{persist:false,rerenderSettings:false});
-    else{PoxyI18n.applySettingsNav();PoxyI18n.syncLangButtons();PoxyI18n.applyLuminaChrome();}
+    else{PoxyI18n.applySettingsNav();PoxyI18n.syncLangButtons();}
   }
   const setChk=(id,v)=>{const el=$(id);if(el)el.checked=v!==false;};
   setChk('settingsNotifInApp',p.notifInApp!==false);
@@ -5818,11 +5603,7 @@ window.selectSettingsLocale=function(loc){
   const p=loadSettingsPrefs();
   p.locale=loc;
   saveSettingsPrefs(p);
-  if(window.LuminaOSStore&&currentUser){
-    const st=LuminaOSStore.getState();
-    LuminaOSStore.setState({preferences:{...st.preferences,locale:loc}});
-  }
-  showToast(window.PoxyI18n?PoxyI18n.t('lo.toast.locale'):'Language updated.');
+  showToast('Language updated.');
   if($('settingsPage')?.classList.contains('visible'))switchSettingsTab(activeSettingsTab);
 };
 window.switchSettingsTab=function(tab){
@@ -7431,7 +7212,12 @@ window.openTopUpModal=function(){
   // Sync live balance display
   const bal=currentProfile?.balance??0;
   const el=$('tumBalanceDisplay');
-  if(el)el.textContent=formatPX(getPxBalance());
+  if(el){
+    const pxBal=typeof getPxBalance==='function'?getPxBalance():bal;
+    el.textContent=document.body.classList.contains('poxy-sky-app-active')
+      ?(typeof formatCoinBalance==='function'?formatCoinBalance(pxBal):String(pxBal))
+      :formatPX(pxBal);
+  }
   renderTopUpPaths();
   renderReferralPanel();
   // Show DEV TOPUP panel for founder accounts
@@ -7584,7 +7370,7 @@ function syncPsdTopNav(page){
   else if(tab==='verify'){const v=$('psdNavVerify');if(v)v.classList.add('active');}
   else if(tab==='whitepaper'){const w=$('psdNavWhitepaper');if(w)w.classList.add('active');}
   else if(tab==='gens'){const g=$('psdNavGens');if(g)g.classList.add('active');}
-  else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'||tab==='messenger'||tab==='events'||tab==='quests'){}
+  else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='levels'||tab==='collection'||tab==='friends'||tab==='messenger'||tab==='events'||tab==='quests'){}
   if(window.PoxyAppShell)PoxyAppShell.syncRail(tab);
   if(window.PoxyScreensSky)PoxyScreensSky.onTab(tab);
 }
@@ -7608,7 +7394,8 @@ function mountSpaPanels(){
 
 window.showStitchTab=function(tab){
   if(!currentUser){showToast('Sign in first.');return;}
-  const next=tab==='hunt'?'dashboard':tab;
+  let next=tab==='hunt'?'dashboard':tab;
+  if(next==='ranks')next='levels';
   const prev=activeStitchTab;
   activeStitchTab=next;
   mountSpaPanels();
@@ -7618,9 +7405,9 @@ window.showStitchTab=function(tab){
   $('bottomNav').style.display='none';
   const settingsEl=$('settingsPage');
   if(settingsEl)settingsEl.classList.remove('visible');
-  ['profile','collection','friends','market','bank'].forEach(p=>{
+  ['profile','collection','friends','market','bank','settings'].forEach(p=>{
     const el=$(p+'Page');
-    if(el&&el.parentElement&&el.id!=='marketPage')el.classList.remove('visible');
+    if(el&&el.id!=='marketPage')el.classList.remove('visible');
   });
   const prevPanel=document.querySelector('.st-spa-panel[data-st-tab="'+prev+'"]');
   const nextPanel=document.querySelector('.st-spa-panel[data-st-tab="'+next+'"]');
@@ -7635,7 +7422,14 @@ window.showStitchTab=function(tab){
   requestAnimationFrame(updateStNavOffset);
   document.body.classList.toggle('ranks-tab-active',next==='ranks');
   document.body.classList.remove('dark-club');
-  if(next==='club'){document.body.classList.add('dark-club');enterClubExperience();}
+  if(next==='club'){
+    if(document.body.classList.contains('poxy-sky-app-active')){
+      if(window.PoxyCommunitySky)PoxyCommunitySky.onShow();
+    }else{
+      document.body.classList.add('dark-club');
+      enterClubExperience();
+    }
+  }
   if(next==='dashboard'){
     refreshStitchDashboardChrome();
     renderDashColPreview();
@@ -7674,6 +7468,7 @@ window.showStitchTab=function(tab){
     if(np)np.classList.remove('visible');
   }
   if(next==='tierlist')loadTierListPanel();
+  if(next==='levels'&&window.PoxyLevelsSky)PoxyLevelsSky.onShow();
   updatePresenceTrack();
   if(next==='ranks'){
     ensureRanksPanelReady();
@@ -8464,12 +8259,13 @@ window.showPage=function(page){
   if(page==='bank'){openTopUpModal();return;}
   if(page==='store'){scrollToStore();return;}
   if(page==='friends'){
-    if(typeof openLuminaOS==='function'){openLuminaOS(null,'friends');return;}
+    if(typeof showStitchTab==='function'){showStitchTab('messenger');return;}
   }
-  const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks',messenger:'messenger',events:'events',quests:'quests'};
+  const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks',levels:'levels',messenger:'messenger',events:'events',quests:'quests'};
   if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
   showPoxyAppShell();
   document.body.classList.add('poxy-sky-app-active');
+  document.querySelectorAll('.st-spa-panel').forEach(p=>{p.hidden=true;});
   $('huntPage').style.display='none';
   $('bottomNav').style.display='none';
   ['profile','collection','friends','settings'].forEach(p=>{
@@ -8479,6 +8275,13 @@ window.showPage=function(page){
   syncPsdTopNav(page);
   if(window.PoxyScreensSky)PoxyScreensSky.onPage(page);
   if(page==='collection'){
+    if(document.body.classList.contains('poxy-sky-app-active')){
+      const colPage=document.getElementById('collectionPage');
+      if(colPage){
+        colPage.style.paddingTop='0';
+        colPage.style.paddingBottom='24px';
+      }
+    }else{
     // Ensure the fixed nav never overlaps the collection page.
     // Measure the actual nav height and apply it as an inline top offset.
     (function enforceColPadding(){
@@ -8496,6 +8299,7 @@ window.showPage=function(page){
         colPage.style.paddingBottom=bottomPad+'px';
       });
     })();
+    }
     colFilter='all';colSortPreset='default';colMultiSelectMode=false;colCraftZoneOpen=false;
     selectedForDust=new Set();selectedItems=selectedForDust;colLastSelectIndex=-1;
     resetCraftSockets(false);closeColSortMenu();syncColMultiToggleUi();setColCraftZoneOpen(false);
@@ -8516,6 +8320,10 @@ window.showPage=function(page){
     if(!colData.length)loadCollection().then(()=>renderProfileShowcaseMatrix());
   }
   if(page==='settings'){
+    if(document.body.classList.contains('poxy-sky-app-active')){
+      const settingsPage=document.getElementById('settingsPage');
+      if(settingsPage)settingsPage.style.paddingTop='0';
+    }else{
     (function enforceSettingsPadding(){
       const nav=document.getElementById('stGlobalNav')||document.querySelector('nav.st-nav--global');
       const settingsPage=document.getElementById('settingsPage');
@@ -8527,6 +8335,7 @@ window.showPage=function(page){
         settingsPage.style.paddingTop=(navH2+20)+'px';
       });
     })();
+    }
     renderSettingsPage();
     applySettingsPrefsUi();
     switchSettingsTab(activeSettingsTab||'account');
@@ -9022,7 +8831,7 @@ function openWinRevealModal(tier,forcedSerial){
     return false;
   }
 
-  // Check on load and on hash change (before lumina-os router processes it)
+  // Check on load and on hash change
   window.addEventListener('hashchange', handleCryptoHashRoute, false);
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', handleCryptoHashRoute);
@@ -10593,7 +10402,6 @@ function closeFriendProfileView(){
   if(view){view.hidden=true;view.classList.remove('is-active');}
 }
 function ensureFriendsPageForProfile(){
-  if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive())LuminaOSRouter.exit();
   if($('friendsPage')?.classList.contains('visible'))return;
   showPoxyAppShell();
   document.body.classList.add('poxy-sky-app-active');
@@ -11715,30 +11523,22 @@ window.closeInspectModal=function(){
   inspectTargetUserId=null;
 };
 
-// ── LUMINA OS (SPA /lumina-os — LuminaOSLayout) ──
-window.openLuminaOS=function(userId,nav){
-  if(POXY_BETA_HIDE_LUMINA){showToast('Lumina OS is coming soon.');return;}
-  if(!currentUser){showToast('Sign in to open Lumina OS.');return;}
-  if(userId&&String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
-  try{sessionStorage.removeItem('poxy_skip_lumina');}catch(e){}
-  if(typeof LuminaOSRouter!=='undefined'){LuminaOSRouter.enter({user:userId,nav:nav});return;}
-  window._luminaOsPending={user:userId,nav:nav};
-  showToast('Loading Lumina OS…');
-};
-window.forceExitLuminaOS=function(){
-  try{sessionStorage.setItem('poxy_skip_lumina','1');}catch(e){}
-  if(currentUser){
-    try{localStorage.setItem(routeStorageKey(),JSON.stringify({kind:'stitch',tab:'dashboard'}));}catch(e){}
-  }
-  if(typeof LuminaOSRouter!=='undefined'){LuminaOSRouter.exit({force:true});return;}
-  var home=(window.POXY_APP_BASE||'')+'/';
-  if(!home.startsWith('/'))home='/'+home;
-  location.replace(home+'?main=1');
-};
-window.openLuminaChatApp=window.openLuminaOS;
+// ── Direct messages (slide-over) ──
 window.openDmOverlay=function(userId,username,avatarUrl){
   if(!currentUser||!userId||String(userId)===String(currentUser.id)){showToast('Cannot message yourself.');return;}
-  if(typeof openLuminaOS==='function')openLuminaOS(userId);
+  dmTargetUserId=userId;
+  const nameEl=$('dmHeaderName');
+  const avEl=$('dmHeaderAvatar');
+  if(nameEl)nameEl.textContent=username||'Player';
+  if(avEl){
+    if(avatarUrl&&String(avatarUrl).startsWith('http'))avEl.innerHTML='<img src="'+sanitizeText(avatarUrl)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    else avEl.textContent=avatarUrl||'👾';
+  }
+  const o=$('dmOverlay');
+  if(!o)return;
+  o.classList.remove('hidden');
+  requestAnimationFrame(()=>o.classList.add('show'));
+  loadDmThread();
 };
 window.closeDmOverlay=function(){
   const o=$('dmOverlay');
@@ -15673,31 +15473,11 @@ function bootApp(){
     if(pop&&!pop.hidden&&!e.target.closest('#chatUserInspectPopover')&&!e.target.closest('.pcm-name')&&!e.target.closest('.pcm-avatar'))closeChatInspectPopover();
   });
   if(window.PoxyHudAudio)PoxyHudAudio.syncToggleUi();
-  var skipLo=false;
-  try{skipLo=sessionStorage.getItem('poxy_skip_lumina')==='1';}catch(e){}
-  if(!skipLo&&typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive()){
-    LuminaOSRouter.bootstrapFromUrl();
-  }
 }
 </script>
-<script src="assets/lumina-chat-config.js?v=4"></script>
-<script src="assets/lumina-widgets.js?v=1" defer></script>
-<script src="assets/lumina-clan-system.js?v=1" defer></script>
-<script src="assets/lumina-os/tokens.js?v=12"></script>
-<script src="assets/lumina-os/theme.js?v=12"></script>
-<script src="assets/lumina-os/data.js?v=12"></script>
-<script src="assets/lumina-os/components.js?v=13"></script>
-<script src="assets/lumina-os/store.js?v=14"></script>
-<script src="assets/lumina-os/panels.js?v=17"></script>
-<script src="assets/lumina-os/router.js?v=12"></script>
-<script src="assets/lumina-os/app.js?v=14"></script>
 <script src="assets/poxy-support-panel.js?v=5"></script>
 <script>
 bootApp();
-if(window._luminaOsPending&&typeof openLuminaOS==='function'){
-  var p=window._luminaOsPending;window._luminaOsPending=null;
-  openLuminaOS(p.user,p.nav);
-}
 </script>
 <!-- ══════════════════════════════════════════════════════════════
      ASSET VIEWER MODAL  — triggered by collection card click

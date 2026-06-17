@@ -1,8 +1,10 @@
 {
   "rewrites": [
-    { "source": "/lumina-os", "destination": "/index.html" },
-    { "source": "/lumina-os/**", "destination": "/index.html" },
     { "source": "/chat/app", "destination": "/index.html" },
     { "source": "/chat/app/**", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/lumina-os", "destination": "/", "type": 302 },
+    { "source": "/lumina-os/**", "destination": "/", "type": 302 }
   ]
 }

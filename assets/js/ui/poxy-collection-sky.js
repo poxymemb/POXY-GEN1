@@ -135,6 +135,49 @@
     _colObserver.observe(col, { childList: true, subtree: false });
   }
 
+  function relabelSkySortOptions() {
+    if (!document.body.classList.contains('poxy-sky-app-active')) return;
+    var labels = {
+      default: 'Default (pinned)',
+      duplicates: 'Duplicates first',
+      recent: 'Recently acquired',
+      value: 'Highest value',
+    };
+    document.querySelectorAll('#colSortMenu .poxy-col-sort-opt').forEach(function (btn) {
+      var key = btn.getAttribute('data-sort');
+      if (labels[key]) btn.textContent = labels[key];
+    });
+  }
+
+  function relabelSkyCraftExecute() {
+    var btn = $('btnCraftExecute');
+    if (!btn || !document.body.classList.contains('poxy-sky-app-active')) return;
+    if (btn.textContent.trim().toUpperCase() === 'CRAFT') btn.textContent = 'Craft';
+  }
+
+  function wrapCraftZoneOpen() {
+    if (typeof global.setColCraftZoneOpen !== 'function' || wrapCraftZoneOpen.done) return;
+    var orig = global.setColCraftZoneOpen;
+    global.setColCraftZoneOpen = function (open) {
+      orig(open);
+      relabelSkyCraftZone();
+      relabelSkyCraftExecute();
+      relabelSkyActionButtons();
+    };
+    wrapCraftZoneOpen.done = true;
+  }
+
+  function relabelSkyCraftZone() {
+    if (!document.body.classList.contains('poxy-sky-app-active')) return;
+    var zone = $('colCraftZone');
+    if (!zone || zone.dataset.skyCraftLabel) return;
+    var h2 = zone.querySelector('.poxy-col-craft-zone-head h2');
+    var p = zone.querySelector('.poxy-col-craft-zone-head p');
+    if (h2) h2.textContent = 'Craft commons';
+    if (p) p.textContent = 'Drop 5 commons into the slots to craft one uncommon.';
+    zone.dataset.skyCraftLabel = '1';
+  }
+
   function relabelSkyActionButtons() {
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
     var multi = $('btnColMultiSelect');
@@ -191,6 +234,9 @@
     ensureMilesPanel();
     ensureSearchStub();
     bindColContentObserver();
+    relabelSkyCraftZone();
+    relabelSkySortOptions();
+    relabelSkyCraftExecute();
     syncMilesProgress();
     relabelSkyActionButtons();
     requestAnimationFrame(resetSkyPadding);
@@ -203,8 +249,12 @@
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', wrapActionCapsules);
+    document.addEventListener('DOMContentLoaded', function () {
+      wrapActionCapsules();
+      wrapCraftZoneOpen();
+    });
   } else {
     wrapActionCapsules();
+    wrapCraftZoneOpen();
   }
 })(window);

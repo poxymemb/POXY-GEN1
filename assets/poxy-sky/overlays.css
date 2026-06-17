@@ -1,0 +1,379 @@
+/* POXY Sky — modals & overlays (functional CSS from legacy stitch-dashboard) */
+
+body.st-win-reveal-open {
+  overflow: hidden;
+}
+
+.st-win-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease, cubic-bezier(0.4, 0, 0.2, 1)),
+    visibility 0.35s var(--ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+.st-win-reveal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.st-win-reveal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.st-win-reveal-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 360px;
+  padding: 32px 24px 24px;
+  border-radius: var(--r-lg, 24px);
+  border: 1px solid var(--border);
+  background: var(--card);
+  text-align: center;
+  transform: scale(0.92);
+  opacity: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.st-win-reveal.is-open .st-win-reveal-card {
+  animation: pxWinPop 0.45s var(--ease, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+}
+
+@keyframes pxWinPop {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.st-win-reveal-flare {
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(circle, var(--flare-color, rgba(96, 194, 224, 0.25)) 0%, transparent 68%);
+  pointer-events: none;
+}
+
+.st-win-reveal-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--sky-500);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.st-win-reveal-icon {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.st-win-reveal-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin-bottom: 8px;
+}
+
+.st-win-reveal-rarity {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  background: var(--glass);
+  margin-bottom: 8px;
+}
+
+.st-win-reveal-serial {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--px-mono, ui-monospace, monospace);
+  margin-bottom: 18px;
+}
+
+.st-win-reveal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.st-win-reveal-btn {
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s, filter 0.2s;
+}
+
+.st-win-reveal-btn--add {
+  background: var(--btn-bg);
+  color: #fff;
+  border: none;
+}
+
+.st-win-reveal-btn--add:hover {
+  filter: brightness(1.08);
+}
+
+.st-win-reveal-btn--discard {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.st-win-reveal-btn--discard:hover {
+  color: var(--text);
+}
+
+/* Legacy hunt chrome must not paint over Sky screens */
+body.poxy-sky-app-active #pxSkyStage > .st-win-reveal {
+  position: fixed;
+}
+
+body.poxy-sky-app-active #pxSkyStage > #stGlobalNav,
+body.poxy-sky-app-active #pxSkyStage > #stGlobalNav * {
+  display: none !important;
+}
+
+#poxyAppShell .rail-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+body.poxy-sky-app-active #huntPage,
+body.poxy-sky-app-active #huntPage .poxy-stitch-dash,
+body.poxy-sky-app-active #huntPage .st-spa-viewport {
+  background: transparent !important;
+}
+
+body.poxy-sky-app-active.ranks-tab-active #huntPage,
+body.poxy-sky-app-active.ranks-tab-active #huntPage .poxy-stitch-dash,
+body.poxy-sky-app-active.ranks-tab-active #huntPage .st-spa-viewport {
+  background: transparent !important;
+  animation: none !important;
+}
+
+/* ── Sky reskin: notification / support / gift overlays ── */
+body.poxy-sky-app-active .poxy-notify-drawer,
+body.poxy-sky-app-active .poxy-support-drawer {
+  background: var(--bg-2) !important;
+  border-left: 1px solid var(--border) !important;
+  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.18) !important;
+  color: var(--text) !important;
+  font-family: var(--px-font, var(--font)) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-drawer-head,
+body.poxy-sky-app-active .poxy-support-head {
+  border-bottom: 1px solid var(--border) !important;
+  padding: 18px 16px 12px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-drawer-head h2,
+body.poxy-sky-app-active .poxy-support-head h2 {
+  font-family: var(--px-font, var(--font)) !important;
+  color: var(--text-strong) !important;
+  font-size: 17px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-close,
+body.poxy-sky-app-active .poxy-support-close {
+  border: 1px solid var(--border) !important;
+  background: var(--card) !important;
+  color: var(--text-dim) !important;
+  border-radius: 10px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-close:hover,
+body.poxy-sky-app-active .poxy-support-close:hover {
+  color: var(--text) !important;
+  background: var(--glass-strong) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tabs,
+body.poxy-sky-app-active .poxy-support-tabs {
+  border-bottom: 1px solid var(--border) !important;
+  gap: 8px !important;
+  padding: 10px 14px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tab,
+body.poxy-sky-app-active .poxy-support-tab {
+  color: var(--text-dim) !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 13px !important;
+  border-radius: 11px !important;
+  border: 1px solid transparent !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tab:hover,
+body.poxy-sky-app-active .poxy-support-tab:hover {
+  color: var(--text) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tab.active,
+body.poxy-sky-app-active .poxy-support-tab.active {
+  background: var(--btn-bg) !important;
+  border-color: var(--btn-bg) !important;
+  color: #fff !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tab-badge {
+  background: #e0563a !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-empty,
+body.poxy-sky-app-active .poxy-support-empty {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-activity-item {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 13px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-activity-item time {
+  color: var(--text-faint) !important;
+  font-family: var(--px-mono, ui-monospace, monospace) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-gift-card {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-gift-card--pending {
+  border-color: color-mix(in srgb, var(--sky-500) 45%, var(--border)) !important;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--sky-500) 18%, transparent) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-gift-mini {
+  background: var(--glass) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-gift-from {
+  color: var(--text-strong) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-gift-sub {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-btn-reveal,
+body.poxy-sky-app-active .poxy-notify-trade-accept {
+  background: var(--btn-bg) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  border-radius: 10px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-btn-collection {
+  background: color-mix(in srgb, var(--sky-500) 16%, var(--card)) !important;
+  color: var(--text-strong) !important;
+  border: 1px solid color-mix(in srgb, var(--sky-500) 35%, var(--border)) !important;
+  box-shadow: none !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-card {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-head .material-symbols-outlined {
+  color: var(--sky-500) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-title {
+  color: var(--text-strong) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-sub,
+body.poxy-sky-app-active .poxy-notify-trade-msg {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-decline {
+  border: 1px solid var(--border) !important;
+  color: var(--text-dim) !important;
+  background: transparent !important;
+}
+
+body.poxy-sky-app-active .poxy-gift-unbox-overlay {
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+body.poxy-sky-app-active .poxy-gift-unbox-reveal-card {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  color: var(--text) !important;
+}
+
+body.poxy-sky-app-active .poxy-gift-unbox-reveal-tier,
+body.poxy-sky-app-active .poxy-gift-unbox-reveal-serial {
+  font-family: var(--px-mono, ui-monospace, monospace) !important;
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-gift-unbox-skip {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-field input,
+body.poxy-sky-app-active .poxy-support-field textarea,
+body.poxy-sky-app-active .poxy-support-input,
+body.poxy-sky-app-active .poxy-support-search {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 11px !important;
+}
+
+body.poxy-sky-app-active .poxy-support-label {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-cats button.active,
+body.poxy-sky-app-active .poxy-support-faq-item {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}

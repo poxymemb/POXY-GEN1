@@ -69,6 +69,7 @@
     if (tab === 'events' && global.PoxyEventsSky) global.PoxyEventsSky.onShow();
     if (tab === 'quests' && global.PoxyQuestsSky) global.PoxyQuestsSky.onShow();
     if (tab === 'ranks' && global.PoxyLevelsSky) global.PoxyLevelsSky.onShow();
+    if (tab === 'levels' && global.PoxyLevelsSky) global.PoxyLevelsSky.onShow();
   }
 
   function initAll() {
