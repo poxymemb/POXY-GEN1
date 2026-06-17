@@ -83,7 +83,7 @@
 <link rel="stylesheet" href="assets/poxy-sky/landing.css?v=4">
 <link rel="stylesheet" href="assets/poxy-sky/auth.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/home.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=1">
@@ -97,6 +97,36 @@
 <link rel="stylesheet" href="assets/poxy-sky/screens/events.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/quests.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/levels.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/explore.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/gens.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/friends.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/news.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/runtime.css?v=1">
+<link rel="stylesheet" href="assets/frames.css?v=1">
+<link rel="stylesheet" href="assets/poxy-identity.css?v=3">
+<link rel="stylesheet" href="assets/poxy-quick-profile.css?v=6">
+<link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
+<link rel="stylesheet" href="assets/poxy-support-panel.css?v=5">
+<link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
+<link rel="stylesheet" href="assets/lumina-chat-os.css?v=15">
+<link rel="stylesheet" href="assets/lumina-os/design-system.css?v=15">
+<link rel="stylesheet" href="assets/lumina-features.css?v=1">
+<link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
+<link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
+<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=13">
+<link rel="stylesheet" href="assets/poxy-dna-traits.css?v=1">
+<link rel="stylesheet" href="assets/poxy-lore.css?v=1">
+<link rel="stylesheet" href="assets/poxy-passport-extras.css?v=1">
+<link rel="stylesheet" href="assets/poxy-discovery-feed.css?v=1">
+<link rel="stylesheet" href="assets/poxy-milestones.css?v=1">
+<link rel="stylesheet" href="assets/poxy-certificate.css?v=1">
+<link rel="stylesheet" href="assets/poxy-share-preview.css?v=1">
+<link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
+<link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
+<link rel="stylesheet" href="assets/poxy-telemetry.css?v=4">
+<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=6">
+<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=12">
+<link rel="stylesheet" href="assets/poxy-onboarding.css?v=2">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
 
 
@@ -120,18 +150,17 @@
 
 
 
-<script src="assets/poxy-sky/legacy-styles.js?v=2"></script>
-<script src="assets/poxy-auth-sky.js?v=1" defer></script>
-<script src="assets/poxy-app-shell.js?v=1" defer></script>
-<script src="assets/poxy-open-sky.js?v=1" defer></script>
-<script src="assets/poxy-home-sky.js?v=1" defer></script>
-<script src="assets/poxy-collection-sky.js?v=1" defer></script>
-<script src="assets/poxy-market-sky.js?v=1" defer></script>
-<script src="assets/poxy-store-sky.js?v=1" defer></script>
-<script src="assets/poxy-settings-sky.js?v=1" defer></script>
-<script src="assets/poxy-profile-sky.js?v=1" defer></script>
-<script src="assets/poxy-stage11-sky.js?v=1" defer></script>
-<script src="assets/poxy-screens-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-auth-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-app-shell.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-open-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-home-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-collection-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-market-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-store-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-settings-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-profile-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-stage11-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-screens-sky.js?v=1" defer></script>
 <script src="assets/poxy-landing-page.js?v=4" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -5375,7 +5404,6 @@ function updateAuthModeUI(){
 }
 window.updateAuthModeUi=updateAuthModeUI;
 function setLoggedOutUI(){
-  if(window.PoxyLegacyStyles&&PoxyLegacyStyles.isMounted())PoxyLegacyStyles.unmount();
   _isFounder=false;
   poxyInvalidateQueryCache();
   authSessionBootstrapped=false;
@@ -5426,7 +5454,6 @@ function setLoggedInUI(){
     overlay.style.display='none';
     overlay.setAttribute('aria-hidden','true');
   }
-  if(window.PoxyLegacyStyles)PoxyLegacyStyles.mount();
   document.body.classList.add('poxy-sky-app-active');
   const shellEl=$('poxyAppShell');if(shellEl)shellEl.classList.add('px-sky-app--open');
   const skyHome=$('pxSkyHome');if(skyHome){skyHome.hidden=false;skyHome.classList.add('px-sky-screen--active');}

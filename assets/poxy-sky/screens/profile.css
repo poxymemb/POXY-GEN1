@@ -216,3 +216,477 @@ body.poxy-sky-app-active #profilePage .prof-section{margin-bottom:20px}
 body.poxy-sky-app-active #profilePage .pthemes{display:flex;gap:10px;flex-wrap:wrap}
 body.poxy-sky-app-active #profilePage .ptheme{width:42px;height:42px;border-radius:13px;background:var(--pc);border:2px solid var(--border);cursor:pointer;transition:transform .15s}
 body.poxy-sky-app-active #profilePage .pro-lock{display:flex;align-items:center;gap:13px;padding:16px 18px;border-radius:var(--r);border:1px dashed var(--sky-500);background:color-mix(in srgb,var(--sky-500) 8%,transparent);margin-top:14px}
+
+
+/* ── merged legacy: poxy-profile-page ── */
+/* POXY Identity Hub — Stitch 1:1 (vanilla CSS port) */
+#profilePage.poxy-page-profile{
+  --idhub-obsidian:#050506;
+  --idhub-accent:#ec4899;
+  --idhub-accent-glow:rgba(236,72,153,0.2);
+  --idhub-glass:rgba(255,255,255,0.03);
+  --idhub-border:rgba(255,255,255,0.08);
+  --idhub-on:#e5e2e3;
+  --idhub-muted:#c4c7c8;
+  --idhub-max:1600px;
+  position:relative;
+  background:var(--idhub-obsidian)!important;
+  color:var(--idhub-on);
+  max-width:none;
+  width:100%;
+  min-height:100vh;
+  margin:0 auto;
+  padding:calc(var(--st-nav-h,92px) + 32px) 20px 80px;
+  box-sizing:border-box;
+  overflow-x:hidden;
+}
+body.poxy-stitch-dash #profilePage.poxy-page-profile{
+  padding-top:calc(var(--st-nav-h,92px) + 32px)!important;
+  padding-right:20px;
+  padding-bottom:120px!important;
+  padding-left:20px;
+}
+@media(min-width:768px){
+  body.poxy-stitch-dash #profilePage.poxy-page-profile{
+    padding-top:calc(var(--st-nav-h,92px) + 40px)!important;
+    padding-right:64px;
+    padding-bottom:140px!important;
+    padding-left:64px;
+  }
+  #profilePage.poxy-page-profile{padding:calc(var(--st-nav-h,92px) + 40px) 64px 140px}
+}
+@media(min-width:1280px){
+  body.poxy-stitch-dash #profilePage.poxy-page-profile{
+    padding-top:calc(var(--st-nav-h,124px) + 48px)!important;
+  }
+}
+
+/* Ambient blobs */
+.idhub-blob{
+  position:fixed;
+  width:600px;
+  height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(236,72,153,0.08) 0%,rgba(0,0,0,0) 70%);
+  filter:blur(120px);
+  z-index:0;
+  pointer-events:none;
+  transition:transform 0.15s ease-out;
+}
+.idhub-blob--tl{top:-10%;left:-10%}
+.idhub-blob--br{bottom:-10%;right:-10%}
+
+.idhub-shell{
+  position:relative;
+  z-index:1;
+  max-width:var(--idhub-max);
+  margin:0 auto;
+  width:100%;
+}
+
+.idhub-settings-btn{
+  position:absolute;
+  top:0;
+  right:0;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:1px solid var(--idhub-border);
+  background:var(--idhub-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  color:var(--idhub-muted);
+  cursor:pointer;
+  transition:border-color 0.3s,color 0.3s,box-shadow 0.3s;
+}
+.idhub-settings-btn:hover{
+  border-color:rgba(236,72,153,0.4);
+  color:#fff;
+  box-shadow:0 0 20px rgba(236,72,153,0.15);
+}
+.idhub-settings-btn .material-symbols-outlined{font-size:20px}
+
+/* Hero */
+.idhub-hero{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  margin-bottom:64px;
+}
+.idhub-avatar-wrap{
+  position:relative;
+  margin-bottom:32px;
+}
+.idhub-avatar-ring{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  border:4px solid rgba(236,72,153,0.2);
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(236,72,153,0.2);
+  margin:0!important;
+}
+.idhub-avatar-inner{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.idhub-avatar-inner img,
+.idhub-avatar-inner .avatar-upload-preview{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+.idhub-avatar-inner .profile-menu-avatar-face{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+  font-size:64px;
+  line-height:1;
+}
+.idhub-rank-pill{
+  position:absolute;
+  bottom:-8px;
+  right:16px;
+  background:var(--idhub-accent);
+  color:#fff;
+  padding:4px 12px;
+  border-radius:9999px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.idhub-name{
+  margin:0 0 16px;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:clamp(48px,10vw,80px);
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-0.04em;
+  color:#fff;
+  text-transform:uppercase;
+}
+.idhub-operator{
+  margin:0 0 16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+}
+.idhub-operator #profileDisplayHandle,
+.idhub-operator #profileSystemId{color:rgba(255,255,255,0.6)}
+.idhub-operator-sep{margin:0 6px;opacity:0.5}
+.idhub-wallet-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 16px;
+  border-radius:9999px;
+  border:1px solid var(--idhub-border);
+  background:rgba(255,255,255,0.05);
+  color:var(--idhub-muted);
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  cursor:pointer;
+  transition:background 0.3s,color 0.3s;
+}
+.idhub-wallet-badge:hover{background:rgba(255,255,255,0.1);color:#fff}
+.idhub-wallet-badge .material-symbols-outlined{font-size:14px;color:rgba(255,255,255,0.4);transition:color 0.3s}
+.idhub-wallet-badge:hover .material-symbols-outlined{color:#fff}
+
+/* Stats grid */
+.idhub-stats{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+  margin-bottom:32px;
+}
+@media(min-width:640px){.idhub-stats{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.idhub-stats{grid-template-columns:repeat(4,1fr)}}
+.idhub-stat-card{
+  background:var(--idhub-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--idhub-border);
+  border-radius:8px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.idhub-stat-card:hover{
+  border-color:rgba(236,72,153,0.4);
+  box-shadow:0 0 20px rgba(236,72,153,0.15);
+}
+.idhub-stat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  margin-bottom:8px;
+}
+.idhub-stat-val{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:32px;
+  font-weight:700;
+  line-height:1.2;
+  letter-spacing:-0.01em;
+  color:#fff;
+}
+.idhub-stat-card--accent .idhub-stat-val{color:var(--idhub-accent)}
+
+/* Glass panels */
+.idhub-panel{
+  background:var(--idhub-glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--idhub-border);
+  border-radius:8px;
+  padding:32px;
+}
+.idhub-split{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+  margin-bottom:32px;
+}
+@media(min-width:1024px){.idhub-split{grid-template-columns:repeat(2,1fr)}}
+.idhub-panel-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:32px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.idhub-panel-title{
+  margin:0;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:32px;
+  font-weight:700;
+  line-height:1.2;
+  letter-spacing:-0.01em;
+  color:#fff;
+}
+.idhub-panel-title--solo{margin-bottom:32px}
+.idhub-panel-meta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:rgba(255,255,255,0.4);
+  white-space:nowrap;
+}
+.idhub-panel-meta--accent{color:var(--idhub-accent)}
+
+/* Showcase matrix */
+.idhub-showcase-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:12px;
+}
+@media(max-width:640px){.idhub-showcase-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.idhub-showcase-slot{
+  position:relative;
+  aspect-ratio:1/1;
+  border-radius:6px;
+  border:1px solid var(--idhub-border);
+  background:rgba(255,255,255,0.05);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  cursor:pointer;
+  padding:0;
+  font-family:inherit;
+  transition:border-color 0.3s,background 0.3s;
+}
+.idhub-showcase-slot.is-empty{
+  border-style:dashed;
+  border-color:rgba(255,255,255,0.2);
+}
+.idhub-showcase-slot.is-empty:hover{border-color:rgba(255,255,255,0.4)}
+.idhub-showcase-slot.is-empty .material-symbols-outlined{
+  font-size:24px;
+  color:rgba(255,255,255,0.2);
+  transition:color 0.3s;
+}
+.idhub-showcase-slot.is-empty:hover .material-symbols-outlined{color:#fff}
+.idhub-showcase-slot.is-pinned .idhub-showcase-icon{
+  font-size:28px;
+  line-height:1;
+  filter:drop-shadow(0 0 8px currentColor);
+}
+.idhub-showcase-overlay{
+  position:absolute;
+  inset:0;
+  border:2px solid;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow:inset 0 0 20px rgba(236,72,153,0.3);
+}
+
+/* Badge wallet */
+.idhub-badge-list{display:flex;flex-direction:column;gap:12px}
+.idhub-badge-empty{
+  font-size:13px;
+  color:var(--idhub-muted);
+}
+.idhub-badge-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--idhub-border);
+  border-radius:6px;
+  transition:background 0.3s;
+}
+.idhub-badge-row:hover{background:rgba(255,255,255,0.1)}
+.idhub-badge-left{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  min-width:0;
+}
+.idhub-badge-icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.idhub-badge-icon--accent{background:rgba(236,72,153,0.2)}
+.idhub-badge-icon .material-symbols-outlined{
+  font-size:20px;
+  color:#fff;
+  font-variation-settings:'FILL' 1;
+}
+.idhub-badge-icon--accent .material-symbols-outlined{color:var(--idhub-accent)}
+.idhub-badge-label{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:0.05em;
+  color:#fff;
+  text-transform:uppercase;
+}
+.idhub-badge-perk{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.05em;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* Daily directives */
+.idhub-directives-panel{margin-bottom:0}
+.idhub-directives{display:flex;flex-direction:column;gap:16px}
+.idhub-directive-loading,
+.idhub-directive-empty{
+  font-size:13px;
+  color:var(--idhub-muted);
+  margin:0;
+}
+.idhub-directive{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  padding:12px;
+  background:var(--idhub-obsidian);
+  border:1px solid var(--idhub-border);
+  border-radius:8px;
+}
+@media(min-width:768px){
+  .idhub-directive{
+    flex-direction:row;
+    align-items:center;
+  }
+}
+.idhub-directive-body{flex:1;width:100%;min-width:0}
+.idhub-directive-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+}
+.idhub-directive-title{
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:0.05em;
+  color:#fff;
+  text-transform:uppercase;
+}
+.idhub-directive-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
+}
+.idhub-directive-pct.is-complete{color:var(--idhub-accent)}
+.idhub-directive-track{
+  width:100%;
+  height:8px;
+  background:rgba(255,255,255,0.1);
+  border-radius:9999px;
+  overflow:hidden;
+}
+.idhub-directive-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--idhub-accent),#f472b6);
+  border-radius:9999px;
+  box-shadow:0 0 10px rgba(236,72,153,0.5);
+  transition:width 0.4s ease;
+}
+.idhub-directive-claim{
+  width:100%;
+  padding:12px 32px;
+  border:none;
+  border-radius:6px;
+  font-family:'Hanken Grotesk',Inter,sans-serif;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:background 0.3s,transform 0.2s,opacity 0.3s;
+  flex-shrink:0;
+}
+@media(min-width:768px){.idhub-directive-claim{width:auto}}
+.idhub-directive-claim.is-ready{
+  background:#fff;
+  color:var(--idhub-obsidian);
+}
+.idhub-directive-claim.is-ready:hover{background:#fce7f3}
+.idhub-directive-claim.is-ready:active{transform:scale(0.95)}
+.idhub-directive-claim.is-progress,
+.idhub-directive-claim.is-claimed{
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  cursor:not-allowed;
+  opacity:0.5;
+}
+
+/* Showcase picker (keep compatible) */
+.poxy-showcase-picker-backdrop{background:rgba(5,5,6,0.82)}
+.poxy-showcase-picker-card{border-color:var(--idhub-border);background:rgba(28,27,27,0.95)}

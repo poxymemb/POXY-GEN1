@@ -85,9 +85,8 @@ deleted once nothing references it. This is how large products do full redesigns
 single blind `delete`.
 
 Mechanism already in place:
-- Public head loads only Sky CSS (`tokens.css`, `landing.css`, `auth.css`, `app-shell.css`, `home.css`).
-- Legacy CSS loads **only after login** via `PoxyLegacyStyles.mount()` (`assets/poxy-sky/legacy-styles.js`), and that mount list shrinks as each screen is reskinned.
-- When all screens are reskinned → `mount()` list becomes empty → **only then** delete legacy files + inline CSS in one clean commit.
+- Public head loads Sky CSS (`tokens.css`, `landing.css`, `auth.css`, `app-shell.css`, `screens/*.css`, `runtime.css`) plus functional modals/Lumina sheets.
+- Legacy CSS was lazy-loaded after login via `PoxyLegacyStyles.mount()` — **removed** in cleanup (`8c82ebc`+). Functional CSS now loads from `index.html`; layout rules live in `assets/poxy-sky/runtime.css` and merged `screens/*.css`.
 
 ### DOM tree (simplified)
 ```
@@ -160,12 +159,8 @@ Auth hook ids to preserve: `#authEmail`, `#authPassword`, `#authSubmitBtn`, `#au
 
 Known stubs (UI only today): QR device login, forgot password, verify OTP flow.
 
-### After Stage 11 — cleanup phase
-Only when `PoxyLegacyStyles.mount()` list is empty:
-1. Delete legacy page CSS files + `legacy-app-inline.css`.
-2. Remove dead JS, unused ids, obsolete scripts.
-3. Restructure repo (see §7).
-4. One clean commit: `chore: remove legacy design system`.
+### After Stage 11 — cleanup phase ✅
+Completed: legacy page CSS merged into Sky screens, `runtime.css` replaces inline legacy, lazy mount removed, Sky JS under `assets/js/ui/`.
 
 ---
 
@@ -203,10 +198,8 @@ Telegram's web client is cleanly split by concern, not one mega-file. Our long-t
 │   │   ├── app-shell.css
 │   │   └── screens/            # one css per screen (home.css, collection.css…)
 │   ├── js/
-│   │   ├── core/               # boot, supabase client, router
-│   │   ├── features/           # auth, economy, collection, market, social…
-│   │   └── ui/                 # shared widgets
-│   └── legacy/                 # quarantined; deleted after Stage 11
+│   │   └── ui/                 # Sky screen controllers + app shell
+│   ├── frames.css, lumina-*, modals…  # functional CSS (static in index.html)
 ├── scripts/                    # build/rebuild/patch helpers
 ├── supabase/                   # migrations, edge functions, RLS policies
 ├── design/v2/                  # mockups (source of truth)

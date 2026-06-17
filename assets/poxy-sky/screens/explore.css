@@ -1,3 +1,4 @@
+/* POXY Sky — explore panel (from legacy page css) */
 /* POXY Explore — aligned with Stitch dashboard / marketplace */
 #stPanelExplore{width:100%;max-width:100%;overflow:visible;overflow-x:clip;box-sizing:border-box;position:relative;background:#050506;min-height:calc(100dvh - var(--st-nav-h,92px))}
 .poxy-explore-page{

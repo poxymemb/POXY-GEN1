@@ -22,7 +22,7 @@ seems to require changing a production hook, STOP and ask the architect.
 - No em-dashes in user copy. Plain, human wording — not "AI-ish" filler.
 
 ## Strangler Fig discipline
-- New Sky code grows beside legacy. Legacy CSS loads only after login via `PoxyLegacyStyles.mount()`.
+- New Sky code grows beside legacy. Legacy lazy-mount is removed; remaining functional CSS loads statically from `index.html`.
 - To "remove" a legacy screen: reskin it, then hide its legacy CSS via `body.poxy-sky-app-active`,
   then drop it from the mount list. Delete files only after Stage 11, when nothing references them.
 - Never blind-delete. Always leave a restore point (commit first).

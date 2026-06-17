@@ -122,7 +122,7 @@ body.poxy-sky-app-active #pxSkyOpen .st-hero-glow {
 const header = `/* POXY Sky Home — Stage 4 from poxy-dashboard.html */\n`;
 
 fs.writeFileSync(
-  path.join(__dirname, '../assets/poxy-sky/home.css'),
+  path.join(__dirname, '../assets/poxy-sky/screens/home.css'),
   header + manual + scopeCss(extracted) + '\n'
 );
 console.log('home.css built');
