@@ -1,0 +1,46 @@
+/* POXY Sky Stage 11 — community.css from poxy-dashboard.html */
+
+body.poxy-sky-app-active.dark-club #stPanelClub,
+body.poxy-sky-app-active #stPanelClub {
+  background: transparent !important;
+}
+body.poxy-sky-app-active #stPanelClub .club-page,
+body.poxy-sky-app-active #stPanelClub #clubPage {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+body.poxy-sky-app-active #stPanelClub .club-topbar,
+body.poxy-sky-app-active #stPanelClub .poxy-club-glass {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow) !important;
+  color: var(--text) !important;
+}
+body.poxy-sky-app-active #stPanelClub .club-nav-btn.active {
+  background: var(--sky-500) !important;
+  color: #fff !important;
+}
+body.poxy-sky-app-active #stPanelClub .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #stPanelClub .comm-layout{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start}
+body.poxy-sky-app-active #stPanelClub .comm-tabs{display:flex;gap:8px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
+body.poxy-sky-app-active #stPanelClub .comm-tab{font:600 14px var(--font);padding:9px 16px;border-radius:11px;border:1px solid var(--border);background:var(--glass);color:var(--text-dim);cursor:pointer}
+body.poxy-sky-app-active #stPanelClub .feed{max-width:600px;display:flex;flex-direction:column;gap:14px}
+body.poxy-sky-app-active #stPanelClub .post{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelClub .post-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+body.poxy-sky-app-active #stPanelClub .post-av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:17px;display:grid;place-items:center;flex-shrink:0;border:none;cursor:pointer}
+body.poxy-sky-app-active #stPanelClub .post-who{display:flex;flex-direction:column}
+body.poxy-sky-app-active #stPanelClub .post-name{font-size:15px;font-weight:650;color:var(--text-strong);display:flex;align-items:center;gap:6px}
+body.poxy-sky-app-active #stPanelClub .post-time{font-size:12.5px;color:var(--text-faint)}
+body.poxy-sky-app-active #stPanelClub .post-text{font-size:15px;color:var(--text-strong);opacity:.9;line-height:1.55;margin-bottom:13px}
+body.poxy-sky-app-active #stPanelClub .post-actions{display:flex;align-items:center;gap:6px}
+body.poxy-sky-app-active #stPanelClub .pa{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font:600 13px var(--font);color:var(--text-dim);padding:7px 11px;border-radius:9px;transition:background .15s,color .15s}
+body.poxy-sky-app-active #stPanelClub .comm-side{position:sticky;top:80px}
+body.poxy-sky-app-active #stPanelClub .comm-side-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+body.poxy-sky-app-active #stPanelClub .comm-search-box{display:flex;align-items:center;gap:9px;background:var(--glass);border:1px solid var(--border);border-radius:11px;padding:10px 13px;margin-bottom:6px}
+body.poxy-sky-app-active #stPanelClub .cs-item{display:flex;align-items:center;gap:11px;padding:10px 0;border:none;background:none;cursor:pointer;font-family:var(--font);text-align:left;width:100%;border-bottom:1px solid var(--border)}
+body.poxy-sky-app-active #stPanelClub .cs-av{width:38px;height:38px;border-radius:12px;background:var(--ac);color:#fff;font-weight:700;font-size:15px;display:grid;place-items:center;flex-shrink:0}
+body.poxy-sky-app-active #stPanelClub .cs-mid{flex:1;min-width:0;display:flex;flex-direction:column}
+body.poxy-sky-app-active #stPanelClub .cs-name{font-size:14px;font-weight:650;color:var(--text-strong);display:flex;align-items:center;gap:5px}
+body.poxy-sky-app-active #stPanelClub .cs-followers{font-size:12px;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelClub .cs-join{font-size:12px;font-weight:600;color:var(--sky-700);background:color-mix(in srgb,var(--sky-500) 14%,transparent);padding:5px 11px;border-radius:8px;flex-shrink:0}
+body.poxy-sky-app-active #stPanelClub .verified{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--sky-500);color:#fff;font-size:9px;font-weight:700;vertical-align:middle}

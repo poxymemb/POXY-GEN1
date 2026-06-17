@@ -1,5 +1,5 @@
 /**
- * Stages 5–10 — Sky page heads + navigation chrome for app screens.
+ * Stages 5–11 — Sky page heads + navigation chrome for app screens.
  */
 (function (global) {
   'use strict';
@@ -63,6 +63,12 @@
       if (global.PoxyStoreSky) global.PoxyStoreSky.onShow();
       else ensureHead('store');
     }
+    if (tab === 'tierlist' && global.PoxyCollectionsSky) global.PoxyCollectionsSky.onShow();
+    if (tab === 'club' && global.PoxyCommunitySky) global.PoxyCommunitySky.onShow();
+    if (tab === 'messenger' && global.PoxyMessengerSky) global.PoxyMessengerSky.onShow();
+    if (tab === 'events' && global.PoxyEventsSky) global.PoxyEventsSky.onShow();
+    if (tab === 'quests' && global.PoxyQuestsSky) global.PoxyQuestsSky.onShow();
+    if (tab === 'ranks' && global.PoxyLevelsSky) global.PoxyLevelsSky.onShow();
   }
 
   function initAll() {

@@ -21,6 +21,9 @@
     profile: 'profile',
     settings: 'settings',
     friends: 'messenger',
+    messenger: 'messenger',
+    events: 'events',
+    quests: 'quests',
     news: 'home',
     verify: 'home',
     whitepaper: 'home',
@@ -53,21 +56,13 @@
       global.showStitchTab('club');
     },
     messenger: function () {
-      if (typeof global.openLuminaOS === 'function') {
-        global.openLuminaOS(null, 'messages');
-      } else if (typeof global.showToast === 'function') {
-        global.showToast('Messages — coming soon.');
-      }
+      global.showStitchTab('messenger');
     },
     events: function () {
-      if (typeof global.showToast === 'function') {
-        global.showToast('Events — coming soon.');
-      }
+      global.showStitchTab('events');
     },
     quests: function () {
-      if (typeof global.showToast === 'function') {
-        global.showToast('Quests — coming soon.');
-      }
+      global.showStitchTab('quests');
     },
     levels: function () {
       global.showStitchTab('ranks');

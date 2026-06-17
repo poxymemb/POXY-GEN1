@@ -1,0 +1,48 @@
+/* POXY Sky Stage 11 — collections-overview.css from poxy-dashboard.html */
+
+body.poxy-sky-app-active #stPanelTierList {
+  background: transparent !important;
+}
+body.poxy-sky-app-active #stPanelTierList .rarity-page-header {
+  display: none !important;
+}
+body.poxy-sky-app-active #stPanelTierList .rarity-tier-card {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--shadow) !important;
+  color: var(--text) !important;
+}
+body.poxy-sky-app-active #stPanelTierList .rarity-lb-panel {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--shadow) !important;
+}
+body.poxy-sky-app-active #stPanelTierList .rarity-lb-tab {
+  font-family: var(--px-font) !important;
+}
+body.poxy-sky-app-active #stPanelTierList .rarity-lb-tab.active {
+  background: var(--sky-500) !important;
+  color: #fff !important;
+}
+body.poxy-sky-app-active #stPanelTierList .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #stPanelTierList .panel-h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px}
+body.poxy-sky-app-active #stPanelTierList .col-section{margin-bottom:30px}
+body.poxy-sky-app-active #stPanelTierList .col-sec-h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px}
+body.poxy-sky-app-active #stPanelTierList .col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+body.poxy-sky-app-active #stPanelTierList .col-card{text-align:left;background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:transform .18s,border-color .2s;box-shadow:var(--shadow);font-family:var(--font);padding:0}
+body.poxy-sky-app-active #stPanelTierList .col-banner{height:120px;position:relative;display:grid;place-items:center;overflow:hidden;
+    background:radial-gradient(120% 100% at 50% 0,color-mix(in srgb,var(--acc) 32%,var(--bg-2)),var(--bg-2));border-bottom:1px solid var(--border)}
+body.poxy-sky-app-active #stPanelTierList .col-banner-frogs{display:flex;gap:8px;transform:scale(.62)}
+body.poxy-sky-app-active #stPanelTierList .col-status{position:absolute;top:11px;right:11px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--sc);background:color-mix(in srgb,var(--sc) 16%,var(--bg-2));padding:4px 9px;border-radius:7px;border:1px solid color-mix(in srgb,var(--sc) 30%,transparent)}
+body.poxy-sky-app-active #stPanelTierList .col-body{padding:18px}
+body.poxy-sky-app-active #stPanelTierList .col-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+body.poxy-sky-app-active #stPanelTierList .col-season{font-size:12px;font-family:var(--mono);color:var(--text-faint)}
+body.poxy-sky-app-active #stPanelTierList .col-tag{font-size:13.5px;color:var(--text-dim);margin-bottom:12px}
+body.poxy-sky-app-active #stPanelTierList .col-stats{display:flex;gap:6px;font-size:12.5px;color:var(--text-dim);margin-bottom:12px;flex-wrap:wrap}
+body.poxy-sky-app-active #stPanelTierList .col-prog{height:5px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:14px}
+body.poxy-sky-app-active #stPanelTierList .col-btn{font-size:13.5px;font-weight:650;color:var(--acc)}
+body.poxy-sky-app-active #stPanelTierList .rarity-explain{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+body.poxy-sky-app-active #stPanelTierList .rx-axis{padding:18px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)}

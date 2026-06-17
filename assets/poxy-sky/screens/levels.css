@@ -1,0 +1,44 @@
+/* POXY Sky Stage 11 — levels.css from poxy-dashboard.html */
+
+body.poxy-sky-app-active #stPanelRanks {
+  background: transparent !important;
+}
+body.poxy-sky-app-active #stPanelRanks .ranks-hero {
+  display: none !important;
+}
+body.poxy-sky-app-active #stPanelRanks .ranks-list-heading {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+body.poxy-sky-app-active #stPanelRanks .ranks-podium-wrap {
+  margin-top: 8px;
+}
+body.poxy-sky-app-active #stPanelRanks .lb-toggle-btn.active {
+  background: var(--sky-500) !important;
+  color: #fff !important;
+}
+body.poxy-sky-app-active #stPanelRanks .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #stPanelRanks .lvl-head{display:flex;gap:14px;align-items:center;padding:20px;border-radius:var(--r-lg);border:1px solid var(--border);
+    background:linear-gradient(135deg,color-mix(in srgb,var(--sky-500) 14%,var(--card)),var(--card));box-shadow:var(--shadow);margin-bottom:8px}
+body.poxy-sky-app-active #stPanelRanks .lvl-big{width:62px;height:62px;border-radius:50%;background:linear-gradient(165deg,var(--sky-400),var(--sky-600));color:#fff;font-weight:700;font-size:24px;display:grid;place-items:center;flex-shrink:0}
+body.poxy-sky-app-active #stPanelRanks .lvl-head-txt{flex:1}
+body.poxy-sky-app-active #stPanelRanks .lvl-tabs{display:flex;gap:8px;margin:22px 0 16px}
+body.poxy-sky-app-active #stPanelRanks .lvl-tab{font:600 14px var(--font);padding:9px 16px;border-radius:11px;border:1px solid var(--border);background:var(--glass);color:var(--text-dim);cursor:pointer}
+body.poxy-sky-app-active #stPanelRanks .lvl-track{display:flex;flex-direction:column;gap:9px;max-width:560px}
+body.poxy-sky-app-active #stPanelRanks .lvl-node{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:14px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelRanks .lvl-num{width:34px;height:34px;border-radius:11px;background:var(--glass);border:1px solid var(--border);color:var(--text-dim);font-weight:700;font-size:15px;display:grid;place-items:center;flex-shrink:0;font-family:var(--mono)}
+body.poxy-sky-app-active #stPanelRanks .lvl-info{flex:1}
+body.poxy-sky-app-active #stPanelRanks .lvl-name{font-size:14.5px;font-weight:650;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelRanks .lvl-reward{font-size:13px;color:var(--text-dim);margin-top:2px;display:flex;align-items:center;gap:6px}
+body.poxy-sky-app-active #stPanelRanks .lvl-coins{display:inline-flex;align-items:center;font-weight:600;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelRanks .lvl-claim{font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:9px;flex-shrink:0;border:none;font-family:var(--font)}
+body.poxy-sky-app-active #stPanelRanks .coin-sm{width:15px;height:15px;display:inline-block;vertical-align:-2px;margin-right:2px}
+body.poxy-sky-app-active #stPanelRanks .leaderboard{display:flex;flex-direction:column;gap:8px;max-width:560px}
+body.poxy-sky-app-active #stPanelRanks .lb-row{display:flex;align-items:center;gap:13px;padding:11px 15px;border-radius:13px;border:1px solid var(--border);background:var(--card)}
+body.poxy-sky-app-active #stPanelRanks .lb-rank{font-size:17px;font-weight:700;width:28px;text-align:center;flex-shrink:0;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelRanks .lb-av{width:34px;height:34px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center;flex-shrink:0}
+body.poxy-sky-app-active #stPanelRanks .lb-name{flex:1;font-size:14.5px;font-weight:600;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelRanks .lb-score{font-size:14px;font-weight:700;color:var(--text-strong);display:inline-flex;align-items:center}

@@ -1,0 +1,23 @@
+/* POXY Sky Stage 11 — quests.css from poxy-dashboard.html */
+
+body.poxy-sky-app-active #stPanelQuests {
+  background: transparent !important;
+}
+body.poxy-sky-app-active #stPanelQuests .quest .q-reward.is-ready {
+  background: var(--sky-500) !important;
+  color: #fff !important;
+  border-color: var(--sky-500) !important;
+  cursor: pointer;
+}
+body.poxy-sky-app-active #stPanelQuests .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #stPanelQuests .quest-group{margin-bottom:24px}
+body.poxy-sky-app-active #stPanelQuests .qg-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+body.poxy-sky-app-active #stPanelQuests .qg-count{font-size:12px;font-weight:700;color:var(--sky-700);background:color-mix(in srgb,var(--sky-500) 14%,transparent);padding:3px 9px;border-radius:7px}
+body.poxy-sky-app-active #stPanelQuests .quest-list{display:flex;flex-direction:column;gap:9px}
+body.poxy-sky-app-active #stPanelQuests .quest{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelQuests .q-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);flex-shrink:0}
+body.poxy-sky-app-active #stPanelQuests .q-txt{flex:1}
+body.poxy-sky-app-active #stPanelQuests .q-title{font-size:14.5px;font-weight:650;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelQuests .q-desc{font-size:12.5px;color:var(--text-dim);margin-top:1px}
+body.poxy-sky-app-active #stPanelQuests .q-reward{font-size:13.5px;font-weight:700;color:var(--text-strong);display:inline-flex;align-items:center;background:var(--glass);border:1px solid var(--border);padding:6px 12px;border-radius:9px;flex-shrink:0}
+body.poxy-sky-app-active #stPanelQuests .coin-sm{width:15px;height:15px;display:inline-block;vertical-align:-2px;margin-right:2px}

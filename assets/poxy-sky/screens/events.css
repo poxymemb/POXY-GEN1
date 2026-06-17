@@ -1,0 +1,19 @@
+/* POXY Sky Stage 11 — events.css from poxy-dashboard.html */
+
+body.poxy-sky-app-active #stPanelEvents {
+  background: transparent !important;
+}
+body.poxy-sky-app-active #stPanelEvents .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #stPanelEvents .panel-h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px}
+body.poxy-sky-app-active #stPanelEvents .ev-sec{margin-bottom:28px}
+body.poxy-sky-app-active #stPanelEvents .ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+body.poxy-sky-app-active #stPanelEvents .ev-card{text-align:left;background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:transform .18s,border-color .2s;box-shadow:var(--shadow);font-family:var(--font);padding:0}
+body.poxy-sky-app-active #stPanelEvents .ev-banner{height:96px;position:relative;background:linear-gradient(135deg,var(--evc),color-mix(in srgb,var(--evc) 45%,#1c2630));border-bottom:1px solid var(--border)}
+body.poxy-sky-app-active #stPanelEvents .ev-status{position:absolute;top:11px;right:11px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:color-mix(in srgb,var(--sc) 85%,#000);padding:4px 9px;border-radius:7px}
+body.poxy-sky-app-active #stPanelEvents .ev-body{padding:18px}
+body.poxy-sky-app-active #stPanelEvents .ev-org{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+body.poxy-sky-app-active #stPanelEvents .ev-org-name{font-size:12.5px;font-weight:600;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelEvents .verified{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--sky-500);color:#fff;font-size:9px;font-weight:700;vertical-align:middle}
+body.poxy-sky-app-active #stPanelEvents .ev-open{font-size:13.5px;font-weight:650;color:var(--evc)}
+body.poxy-sky-app-active #stPanelEvents .back-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+body.poxy-sky-app-active #stPanelEvents .back-btn{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font:600 13px var(--font);color:var(--text-dim);cursor:pointer}

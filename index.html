@@ -91,6 +91,12 @@
 <link rel="stylesheet" href="assets/poxy-sky/screens/store.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/collections-overview.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/community.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/messenger.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/events.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/quests.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens/levels.css?v=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
 
 
@@ -124,6 +130,7 @@
 <script src="assets/poxy-store-sky.js?v=1" defer></script>
 <script src="assets/poxy-settings-sky.js?v=1" defer></script>
 <script src="assets/poxy-profile-sky.js?v=1" defer></script>
+<script src="assets/poxy-stage11-sky.js?v=1" defer></script>
 <script src="assets/poxy-screens-sky.js?v=1" defer></script>
 <script src="assets/poxy-landing-page.js?v=4" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
@@ -1665,6 +1672,9 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
 
     <section class="st-spa-panel" id="stPanelMarket" data-st-tab="market" hidden></section>
     <section class="st-spa-panel" id="stPanelClub" data-st-tab="club" hidden></section>
+    <section class="st-spa-panel" id="stPanelMessenger" data-st-tab="messenger" hidden></section>
+    <section class="st-spa-panel" id="stPanelEvents" data-st-tab="events" hidden></section>
+    <section class="st-spa-panel" id="stPanelQuests" data-st-tab="quests" hidden></section>
     <section class="st-spa-panel" id="stPanelStore" data-st-tab="store" hidden>
       <div class="poxy-store-layout" id="storePage">
         <aside class="poxy-store-sidenav" aria-label="Store categories">
@@ -7547,7 +7557,7 @@ function syncPsdTopNav(page){
   else if(tab==='verify'){const v=$('psdNavVerify');if(v)v.classList.add('active');}
   else if(tab==='whitepaper'){const w=$('psdNavWhitepaper');if(w)w.classList.add('active');}
   else if(tab==='gens'){const g=$('psdNavGens');if(g)g.classList.add('active');}
-  else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'){}
+  else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'||tab==='messenger'||tab==='events'||tab==='quests'){}
   if(window.PoxyAppShell)PoxyAppShell.syncRail(tab);
   if(window.PoxyScreensSky)PoxyScreensSky.onTab(tab);
 }
@@ -8429,7 +8439,7 @@ window.showPage=function(page){
   if(page==='friends'){
     if(typeof openLuminaOS==='function'){openLuminaOS(null,'friends');return;}
   }
-  const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks'};
+  const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks',messenger:'messenger',events:'events',quests:'quests'};
   if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
   showPoxyAppShell();
   document.body.classList.add('poxy-sky-app-active');
