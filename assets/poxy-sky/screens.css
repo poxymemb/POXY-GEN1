@@ -33,52 +33,8 @@ body.poxy-sky-app-active #profilePage .idhub-settings-btn {
   display: none !important;
 }
 
-/* ── Collection ── */
-body.poxy-sky-app-active #collectionPage.visible {
-  background: transparent !important;
-  padding-top: 0 !important;
-  padding-bottom: 24px !important;
-}
 body.poxy-sky-app-active #settingsPage.visible {
   padding-top: 0 !important;
-}
-body.poxy-sky-app-active #collectionPage .poxy-col-shell {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-body.poxy-sky-app-active #collectionPage .poxy-col-console {
-  background: var(--glass) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r-lg) !important;
-  box-shadow: var(--shadow) !important;
-  backdrop-filter: blur(20px) saturate(140%) !important;
-}
-body.poxy-sky-app-active #collectionPage .poxy-col-filter-tab {
-  font: 600 13px var(--font) !important;
-  padding: 8px 14px !important;
-  border-radius: 10px !important;
-  border: 1px solid var(--border) !important;
-  background: var(--glass) !important;
-  color: var(--text-dim) !important;
-}
-body.poxy-sky-app-active #collectionPage .poxy-col-filter-tab.active {
-  background: var(--btn-bg) !important;
-  color: #fff !important;
-  border-color: var(--btn-bg) !important;
-}
-body.poxy-sky-app-active #colContent .col-card,
-body.poxy-sky-app-active #colContent .poxy-col-card {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r) !important;
-  box-shadow: var(--shadow) !important;
-  transition: transform 0.16s, border-color 0.2s !important;
-}
-body.poxy-sky-app-active #colContent .col-card:hover,
-body.poxy-sky-app-active #colContent .poxy-col-card:hover {
-  transform: translateY(-3px) !important;
-  border-color: var(--sky-500) !important;
 }
 
 /* ── Market ── */

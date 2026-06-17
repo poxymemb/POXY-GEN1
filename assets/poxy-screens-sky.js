@@ -39,7 +39,10 @@
 
   function onPage(page) {
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
-    if (page === 'collection') ensureHead('collection');
+    if (page === 'collection') {
+      if (global.PoxyCollectionSky) global.PoxyCollectionSky.onShow();
+      else ensureHead('collection');
+    }
     if (page === 'settings') ensureHead('settings');
     if (page === 'profile') ensureHead('profile');
   }
