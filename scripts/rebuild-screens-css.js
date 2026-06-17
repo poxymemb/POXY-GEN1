@@ -33,15 +33,6 @@ const selectors = [
   '.miles',
   '.ring-prog',
   '.m-txt',
-  '.prof-banner',
-  '.prof-edit',
-  '.prof-card',
-  '.prof-av',
-  '.prof-name',
-  '.prof-handle',
-  '.prof-stats',
-  '.prof-stat',
-  '.prof-section',
   '.btn',
   '.btn-primary',
   '.btn-glass',
@@ -106,46 +97,6 @@ body.poxy-sky-app-active #pxSkyStage > .page.visible {
   min-height: 0 !important;
   max-width: none !important;
   z-index: 1 !important;
-}
-
-/* ── Profile ── */
-body.poxy-sky-app-active #profilePage {
-  background: transparent !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-shell {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-hero {
-  background: linear-gradient(135deg, var(--sky-500), color-mix(in srgb, var(--sky-500) 40%, #1c2a30)) !important;
-  border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
-  border: 1px solid var(--border) !important;
-  padding: 24px !important;
-  text-align: center !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-name {
-  color: var(--text-strong) !important;
-  font-size: 22px !important;
-  text-shadow: none !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-operator {
-  color: var(--text-dim) !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-stat-card,
-body.poxy-sky-app-active #profilePage .idhub-panel {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r-lg) !important;
-  box-shadow: var(--shadow) !important;
-  color: var(--text) !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-stat-label,
-body.poxy-sky-app-active #profilePage .idhub-panel-title {
-  color: var(--text-faint) !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-stat-val {
-  color: var(--text-strong) !important;
 }
 
 /* SPA panels transparent in sky mode */

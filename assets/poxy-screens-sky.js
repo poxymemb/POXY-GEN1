@@ -47,7 +47,10 @@
       if (global.PoxySettingsSky) global.PoxySettingsSky.onShow();
       else ensureHead('settings');
     }
-    if (page === 'profile') ensureHead('profile');
+    if (page === 'profile') {
+      if (global.PoxyProfileSky) global.PoxyProfileSky.onShow();
+      else ensureHead('profile');
+    }
   }
 
   function onTab(tab) {

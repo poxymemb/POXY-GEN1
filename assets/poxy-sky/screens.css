@@ -47,46 +47,6 @@ body.poxy-sky-app-active #pxSkyStage > .page.visible {
   z-index: 1 !important;
 }
 
-/* ── Profile ── */
-body.poxy-sky-app-active #profilePage {
-  background: transparent !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-shell {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-hero {
-  background: linear-gradient(135deg, var(--sky-500), color-mix(in srgb, var(--sky-500) 40%, #1c2a30)) !important;
-  border-radius: var(--r-lg) var(--r-lg) 0 0 !important;
-  border: 1px solid var(--border) !important;
-  padding: 24px !important;
-  text-align: center !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-name {
-  color: var(--text-strong) !important;
-  font-size: 22px !important;
-  text-shadow: none !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-operator {
-  color: var(--text-dim) !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-stat-card,
-body.poxy-sky-app-active #profilePage .idhub-panel {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r-lg) !important;
-  box-shadow: var(--shadow) !important;
-  color: var(--text) !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-stat-label,
-body.poxy-sky-app-active #profilePage .idhub-panel-title {
-  color: var(--text-faint) !important;
-}
-body.poxy-sky-app-active #profilePage .idhub-stat-val {
-  color: var(--text-strong) !important;
-}
-
 /* SPA panels transparent in sky mode */
 body.poxy-sky-app-active #pxSkyStage .st-spa-panel,
 body.poxy-sky-app-active #pxSkyStage .page.visible {
@@ -111,15 +71,6 @@ body.poxy-sky-app-active #pxSkyStage .page.visible {
 #pxSkyStage .miles{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:18px 20px}
 #pxSkyStage .ring-prog{--p:34;width:54px;height:54px;border-radius:50%;flex-shrink:0;
     background:conic-gradient(var(--sky-500) calc(var(--p)*1%),var(--border) 0);display:grid;place-items:center}
-#pxSkyStage .prof-banner{height:160px;border-radius:var(--r-lg) var(--r-lg) 0 0;position:relative;overflow:hidden;
-    background:linear-gradient(135deg,var(--pc,#60C2E0),color-mix(in srgb,var(--pc,#60C2E0) 40%,#1c2a30));border:1px solid var(--border);border-bottom:none;transition:background .3s}
-#pxSkyStage .prof-edit{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.3);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:7px 13px;font:600 12px var(--font);cursor:pointer;backdrop-filter:blur(8px)}
-#pxSkyStage .prof-card{background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);padding:0 26px 24px;box-shadow:var(--shadow);margin-bottom:22px}
-#pxSkyStage .prof-av{width:92px;height:92px;border-radius:26px;background:linear-gradient(165deg,var(--pc,#60C2E0),color-mix(in srgb,var(--pc,#60C2E0) 50%,#1c2a30));border:4px solid var(--card);margin-top:-46px;display:grid;place-items:center;color:#fff;font-size:34px;font-weight:700;position:relative}
-#pxSkyStage .prof-name{font-size:22px;font-weight:700;color:var(--text-strong);margin-top:12px}
-#pxSkyStage .prof-handle{font-size:14px;color:var(--text-dim)}
-#pxSkyStage .prof-stats{display:flex;gap:24px;margin-top:16px}
-#pxSkyStage .prof-section{margin-bottom:20px}
 #pxSkyStage .btn{font:600 14px var(--font);cursor:pointer;padding:11px 18px;border-radius:12px;border:1px solid transparent;transition:transform .15s,filter .2s;display:inline-flex;align-items:center;gap:8px}
 #pxSkyStage .btn-primary{background:var(--btn-bg);color:var(--btn-text)}
 #pxSkyStage .btn-glass{background:var(--glass-strong);color:var(--text);border-color:var(--border)}

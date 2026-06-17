@@ -1,0 +1,218 @@
+/* POXY Sky Profile — Stage 10 from poxy-dashboard.html #sc-profile */
+
+
+body.poxy-sky-app-active #profilePage {
+
+  background: transparent !important;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .idhub-blob,
+
+body.poxy-sky-app-active #profilePage .idhub-settings-btn,
+
+body.poxy-sky-app-active #profilePage .idhub-hero,
+
+body.poxy-sky-app-active #profilePage .idhub-stats {
+
+  display: none !important;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .idhub-shell {
+
+  background: transparent !important;
+
+  border: none !important;
+
+  box-shadow: none !important;
+
+  padding: 0 !important;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .prof-stat .v {
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: var(--text-strong);
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .prof-stat .l {
+
+  font-size: 12px;
+
+  color: var(--text-dim);
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .prof-section h3 {
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.05em;
+
+  text-transform: uppercase;
+
+  color: var(--text-faint);
+
+  margin-bottom: 13px;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .ptheme.sel {
+
+  border-color: var(--text);
+
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc) 40%, transparent);
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .pro-lock .pl-ic {
+
+  width: 36px;
+
+  height: 36px;
+
+  border-radius: 11px;
+
+  background: var(--sky-500);
+
+  color: #fff;
+
+  display: grid;
+
+  place-items: center;
+
+  flex-shrink: 0;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .pro-lock .pl-ic svg {
+
+  width: 18px;
+
+  height: 18px;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .pro-lock .pl-txt .t {
+
+  font-size: 14px;
+
+  font-weight: 650;
+
+  color: var(--text-strong);
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .pro-lock .pl-txt .d {
+
+  font-size: 12.5px;
+
+  color: var(--text-dim);
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .idhub-panel,
+
+body.poxy-sky-app-active #profilePage .poxy-streak-panel {
+
+  background: var(--card) !important;
+
+  border: 1px solid var(--border) !important;
+
+  border-radius: var(--r-lg) !important;
+
+  box-shadow: var(--shadow) !important;
+
+  color: var(--text) !important;
+
+  margin-bottom: 20px;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .idhub-panel-title {
+
+  color: var(--text-faint) !important;
+
+  font-size: 13px !important;
+
+  font-weight: 700 !important;
+
+  letter-spacing: 0.05em !important;
+
+  text-transform: uppercase !important;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .idhub-panel-meta,
+
+body.poxy-sky-app-active #profilePage .poxy-streak-head p {
+
+  color: var(--text-dim) !important;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .idhub-stat-label {
+
+  color: var(--text-faint) !important;
+
+}
+
+
+
+body.poxy-sky-app-active #profilePage .idhub-stat-val,
+
+body.poxy-sky-app-active #profilePage .poxy-streak-days {
+
+  color: var(--text-strong) !important;
+
+}
+
+body.poxy-sky-app-active #profilePage .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #profilePage .prof-banner{height:160px;border-radius:var(--r-lg) var(--r-lg) 0 0;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--pc,#60C2E0),color-mix(in srgb,var(--pc,#60C2E0) 40%,#1c2a30));border:1px solid var(--border);border-bottom:none;transition:background .3s}
+body.poxy-sky-app-active #profilePage .prof-edit{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.3);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:9px;padding:7px 13px;font:600 12px var(--font);cursor:pointer;backdrop-filter:blur(8px)}
+body.poxy-sky-app-active #profilePage .prof-card{background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);padding:0 26px 24px;box-shadow:var(--shadow);margin-bottom:22px}
+body.poxy-sky-app-active #profilePage .prof-av{width:92px;height:92px;border-radius:26px;background:linear-gradient(165deg,var(--pc,#60C2E0),color-mix(in srgb,var(--pc,#60C2E0) 50%,#1c2a30));border:4px solid var(--card);margin-top:-46px;display:grid;place-items:center;color:#fff;font-size:34px;font-weight:700;position:relative}
+body.poxy-sky-app-active #profilePage .prof-name{font-size:22px;font-weight:700;color:var(--text-strong);margin-top:12px}
+body.poxy-sky-app-active #profilePage .prof-handle{font-size:14px;color:var(--text-dim)}
+body.poxy-sky-app-active #profilePage .prof-stats{display:flex;gap:24px;margin-top:16px}
+body.poxy-sky-app-active #profilePage .prof-section{margin-bottom:20px}
+body.poxy-sky-app-active #profilePage .pthemes{display:flex;gap:10px;flex-wrap:wrap}
+body.poxy-sky-app-active #profilePage .ptheme{width:42px;height:42px;border-radius:13px;background:var(--pc);border:2px solid var(--border);cursor:pointer;transition:transform .15s}
+body.poxy-sky-app-active #profilePage .pro-lock{display:flex;align-items:center;gap:13px;padding:16px 18px;border-radius:var(--r);border:1px dashed var(--sky-500);background:color-mix(in srgb,var(--sky-500) 8%,transparent);margin-top:14px}
