@@ -11,3 +11,6 @@ stitch-export/screens/*.html
 # Vercel excludes them via "ignoreCommand" or manual exclusions below.
 
 .vercel
+
+# Supabase CLI local cache (never commit)
+supabase/.temp/

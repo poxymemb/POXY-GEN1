@@ -12,6 +12,7 @@
   }
 
   function openPoxyAuth() {
+    if (typeof global.switchTab === 'function') global.switchTab('login');
     var overlay = $('authOverlay');
     if (!overlay) return;
     overlay.classList.add('poxy-auth-overlay--open');

@@ -39,22 +39,6 @@
   }
 })();
 </script>
-<script>
-/* Remove legacy light-theme toggle if served from browser cache */
-(function(){
-  try{
-    localStorage.removeItem('poxy-theme');
-    document.documentElement.removeAttribute('data-theme');
-  }catch(e){}
-  function stripThemeToggle(){
-    var btn=document.getElementById('poxyThemeToggle');
-    if(btn)btn.remove();
-    document.querySelectorAll('link[href*="poxy-light-theme"]').forEach(function(l){l.remove();});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',stripThemeToggle);
-  else stripThemeToggle();
-})();
-</script>
 <title>POXY WORLD</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,1335 +47,82 @@
 <link rel="dns-prefetch" href="https://js.stripe.com">
 <link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
 <link rel="dns-prefetch" href="https://api.qrserver.com">
-<link rel="preload" href="assets/poxy-theme.css?v=2" as="style">
-<link rel="preload" href="assets/stitch-dashboard.css?v=18" as="style">
+
+
 <style id="poxy-critical-fcp">html,body{margin:0;background:#F0F0F1;color:#1C1C1E}html[data-theme="dark"],html[data-theme="dark"] body{background:#1C1C1E;color:#F0F0F1}#poxyLanding,.poxy-app-shell{min-height:100dvh}</style>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/frames.css">
-<link rel="stylesheet" href="assets/stitch-dashboard.css?v=18">
-<link rel="stylesheet" href="assets/poxy-theme.css?v=2">
-<link rel="stylesheet" href="assets/poxy-spa-nav.css?v=6">
-<link rel="stylesheet" href="assets/poxy-identity.css?v=3">
-<link rel="stylesheet" href="assets/poxy-quick-profile.css?v=6">
-<link rel="stylesheet" href="assets/poxy-ranks-page.css?v=8">
-<link rel="stylesheet" href="assets/poxy-rarity-page.css?v=5">
-<link rel="stylesheet" href="assets/poxy-club-page.css?v=2">
-<link rel="stylesheet" href="assets/poxy-club-gold.css?v=2">
-<link rel="stylesheet" href="assets/poxy-market-page.css?v=6">
-<link rel="stylesheet" href="assets/poxy-store-page.css?v=2">
-<link rel="stylesheet" href="assets/poxy-explore-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-gens-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-profile-page.css?v=7">
-<link rel="stylesheet" href="assets/poxy-collection-page.css?v=21">
-<link rel="stylesheet" href="assets/poxy-friends-page.css?v=3">
-<link rel="stylesheet" href="assets/poxy-news-page.css?v=4">
-<link rel="stylesheet" href="assets/poxy-settings-page.css?v=7">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script src="assets/poxy-i18n-extra.js?v=5"></script>
 <script src="assets/poxy-i18n.js?v=5"></script>
-<link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
-<link rel="stylesheet" href="assets/poxy-support-panel.css?v=5">
-<link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
-<link rel="stylesheet" href="assets/lumina-chat-os.css?v=15">
-<link rel="stylesheet" href="assets/lumina-os/design-system.css?v=15">
-<link rel="stylesheet" href="assets/lumina-os-overrides.css?v=15">
-<link rel="stylesheet" href="assets/lumina-features.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/components.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=2">
-<link rel="stylesheet" href="assets/poxy-auth-page.css?v=2">
-<link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
-<link rel="stylesheet" href="assets/poxy-dash-hero.css?v=1">
-<link rel="stylesheet" href="assets/poxy-card-engine.css?v=6">
-<link rel="stylesheet" href="assets/poxy-asset-viewer.css?v=13">
-<link rel="stylesheet" href="assets/poxy-dna-traits.css?v=1">
-<link rel="stylesheet" href="assets/poxy-lore.css?v=1">
-<link rel="stylesheet" href="assets/poxy-passport-extras.css?v=1">
-<link rel="stylesheet" href="assets/poxy-discovery-feed.css?v=1">
-<link rel="stylesheet" href="assets/poxy-season-atlas.css?v=1">
-<link rel="stylesheet" href="assets/poxy-museum-mode.css?v=1">
-<link rel="stylesheet" href="assets/poxy-milestones.css?v=1">
-<link rel="stylesheet" href="assets/poxy-certificate.css?v=1">
-<link rel="stylesheet" href="assets/poxy-share-preview.css?v=1">
-<link rel="stylesheet" href="assets/poxy-crypto-docs.css?v=1">
-<link rel="stylesheet" href="assets/poxy-trust-motion.css?v=1">
-<link rel="stylesheet" href="assets/poxy-news-lumina.css?v=3">
-<link rel="stylesheet" href="assets/poxy-telemetry.css?v=4">
-<link rel="stylesheet" href="assets/poxy-whitepaper.css?v=6">
-<link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=12">
-<link rel="stylesheet" href="assets/poxy-obsidian-reskin.css?v=5">
-<link rel="stylesheet" href="assets/poxy-obsidian-ambient.css?v=1">
-<script src="assets/poxy-landing-page.js?v=3" defer></script>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=4">
+<link rel="stylesheet" href="assets/poxy-sky/auth.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/home.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/screens.css?v=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="assets/poxy-sky/legacy-styles.js?v=2"></script>
+<script src="assets/poxy-auth-sky.js?v=1" defer></script>
+<script src="assets/poxy-app-shell.js?v=1" defer></script>
+<script src="assets/poxy-home-sky.js?v=1" defer></script>
+<script src="assets/poxy-screens-sky.js?v=1" defer></script>
+<script src="assets/poxy-landing-page.js?v=4" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
-<script src="assets/st-nav-right-motion.js?v=1" defer></script>
 <script src="assets/poxy-trust-motion.js?v=3" defer></script>
 <script src="assets/poxy-gens-motion.js?v=4" defer></script>
-<link rel="stylesheet" href="assets/poxy-onboarding.css?v=2">
+
 <script src="assets/poxy-onboarding.js?v=2" defer></script>
 <script src="assets/poxy-player-onboarding.js?v=3" defer></script>
 <script src="assets/poxy-push.js?v=1" defer></script>
-<style>
-/* ══ POXY Design System — Session C1 ══ */
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-:root{
-  /* Core surfaces */
-  --poxy-black:#080810;
-  --poxy-surface:#0f0f1a;
-  --poxy-border:#1a1a2e;
-
-  /* Brand accents */
-  --poxy-pink:#e879f9;
-  --poxy-violet:#7c3aed;
-  --poxy-mint:#00f5a0;
-  --poxy-amber:#f59e0b;
-
-  /* Rarity spectrum */
-  --r-common:#64748b;
-  --r-uncommon:#22c55e;
-  --r-rare:#3b82f6;
-  --r-epic:#a855f7;
-  --r-legendary:#f59e0b;
-  --r-mythic:#ec4899;
-  --r-secret:#ffffff;
-
-  /* Typography */
-  --font-display:'Syne',sans-serif;
-  --font-ui:'Plus Jakarta Sans',sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
-
-  /* Legacy aliases — keep existing UI references working */
-  --poxy-bg:var(--poxy-black);
-  --poxy-surface-high:#16162a;
-  --poxy-surface-highest:#1e1e32;
-  --poxy-on-surface:#e2e8f0;
-  --poxy-on-surface-variant:#94a3b8;
-  --poxy-primary:var(--poxy-pink);
-  --poxy-primary-container:var(--poxy-violet);
-  --poxy-secondary:#d70357;
-  --poxy-cyan:var(--poxy-mint);
-  --poxy-accent:var(--poxy-mint);
-  --poxy-muted:#64748b;
-  --poxy-text:var(--poxy-on-surface);
-  --poxy-danger:#ef4444;
-  --poxy-glass:rgba(255,255,255,0.08);
-  --poxy-max:1280px;
-  --poxy-r-common:var(--r-common);
-  --poxy-r-uncommon:var(--r-uncommon);
-  --poxy-r-rare:var(--r-rare);
-  --poxy-r-epic:var(--r-epic);
-  --poxy-r-legendary:var(--r-legendary);
-  --poxy-r-mythic:var(--r-mythic);
-  --poxy-r-secret:var(--r-secret);
-}
-
-/* Typography — display / UI / mono */
-html{font-family:var(--font-ui)}
-h1,h2,h3,h4,h5,h6,
-.page-title,.psd-hero-title,.psd-brand,.psd-collection-title,.psd-panel-title,
-.auth-logo,.nl-broadcast__title{
-  font-family:var(--font-display);
-}
-code,pre,kbd,samp,
-.section-label,.profile-label,.bank-form-label,
-.st-win-proof-round,.psd-dash-card-serial,
-[class*="hash"],[class*="mono"],.hash,.mono,.serial,.proof-hash{
-  font-family:var(--font-mono);
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
-/* Hide scrollbars site-wide — wheel, trackpad, and touch scrolling still work */
-html,body,*{
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-}
-html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{
-  width:0;
-  height:0;
-  display:none;
-}
-html{zoom:1.09}
-body{background:#fff;font-family:var(--font-ui),system-ui,sans-serif;min-height:100vh;transition:background 1s ease}
-body.bg-rare{background:linear-gradient(135deg,rgba(41,182,246,0.07) 0%,#fff 70%)}
-body.bg-epic{background:linear-gradient(135deg,rgba(171,71,188,0.08) 0%,#fff 60%)}
-body.bg-legendary{background:linear-gradient(135deg,rgba(255,202,40,0.10) 0%,rgba(255,152,0,0.05) 50%,#fff 80%)}
-body.bg-mythic{animation:prism 3s ease-in-out infinite}
-body.dark-club{background:transparent;color:inherit;animation:none}
-body[data-theme="cyberpunk"]{background:#0d0d10}
-body[data-theme="cyberpunk"] .page,.page.visible[data-theme="cyberpunk"],.app{background:transparent}
-body[data-theme="mayfair"]{background:#0e0608}
-@keyframes prism{0%,100%{background:linear-gradient(135deg,#ffe0e0,#fff0e0,#ffe0f0,#fff)}50%{background:linear-gradient(225deg,#ffe8f0,#fff5e0,#f8e0ff,#fff)}}
-@keyframes burst{0%{transform:scale(1)}40%{transform:scale(1.22)}70%{transform:scale(0.95)}100%{transform:scale(1)}}
-@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes mythicShimmer{0%,100%{filter:drop-shadow(0 0 10px #FF5252) drop-shadow(0 0 24px #FF525266)}50%{filter:drop-shadow(0 0 20px #FF5252) drop-shadow(0 0 48px #FF525299)}}
-@keyframes legendaryShimmer{0%,100%{filter:drop-shadow(0 0 10px #FFCA28) drop-shadow(0 0 24px #FFCA2866)}50%{filter:drop-shadow(0 0 20px #FFCA28) drop-shadow(0 0 48px #FFCA2899)}}
-@keyframes glitchIn{0%{opacity:0;transform:scale(0.6) rotate(-8deg)}60%{transform:scale(1.08) rotate(2deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes burnOut{0%{opacity:1;transform:scale(1)}40%{transform:scale(1.05);opacity:0.6}100%{opacity:0;transform:scale(0.75)}}
-.st-win-proof{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08)}
-.st-win-proof-btn{background:none;border:1px solid rgba(0,245,160,0.35);color:#00f5a0;font-size:11px;font-family:inherit;letter-spacing:.06em;padding:5px 14px;border-radius:20px;cursor:pointer;transition:background .2s,border-color .2s}
-.st-win-proof-btn:hover{background:rgba(0,245,160,0.08);border-color:#00f5a0}
-.st-win-proof-round{font-size:10px;color:rgba(255,255,255,0.35);font-family:monospace;letter-spacing:.04em}
-@keyframes neonPulse{0%,100%{box-shadow:0 0 8px #FF5252,0 0 20px #FF525244}50%{box-shadow:0 0 18px #FF5252,0 0 44px #FF525288}}
-@keyframes balancePop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
-@keyframes screenShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-4px,2px)}30%{transform:translate(4px,-2px)}45%{transform:translate(-3px,-3px)}60%{transform:translate(3px,3px)}75%{transform:translate(-2px,1px)}}
-@keyframes screenShakeHeavy{0%,100%{transform:translate(0,0)}10%{transform:translate(-8px,4px)}25%{transform:translate(8px,-6px)}40%{transform:translate(-6px,-8px)}55%{transform:translate(6px,6px)}70%{transform:translate(-4px,2px)}85%{transform:translate(4px,-2px)}}
-@keyframes revealGlowPulse{0%,100%{box-shadow:0 0 0 1px var(--rg),0 0 24px var(--rg)}50%{box-shadow:0 0 0 2px var(--rg),0 0 56px var(--rg),0 0 80px var(--rg)}}
-@keyframes revealExplode{0%{opacity:0;transform:scale(0.3) rotate(-12deg);filter:blur(8px)}55%{opacity:1;transform:scale(1.15) rotate(3deg);filter:blur(0)}75%{transform:scale(0.96) rotate(-1deg)}100%{opacity:1;transform:scale(1) rotate(0deg)}}
-@keyframes revealFadeSoft{0%{opacity:0;transform:scale(0.88) translateY(12px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-@keyframes revealPunch{0%{opacity:0;transform:scale(0.75)}40%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
-@keyframes premiumFrameShift{0%,100%{box-shadow:0 0 0 2px #FFCA28,0 0 12px #FFCA2888,0 0 0 3px #FF525266}50%{box-shadow:0 0 0 2px #FF5252,0 0 18px #FF5252aa,0 0 0 3px #AB47BC66}}
-@keyframes hamburgerBreathe{0%,100%{transform:scale(1);box-shadow:0 0 10px #ff416c66,0 4px 14px #ff4b2b44}50%{transform:scale(1.07);box-shadow:0 0 22px #ff416caa,0 4px 22px #ff4b2b88}}
-@keyframes sidebarSlideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
-@keyframes gradientShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-@keyframes auraBurst{0%{opacity:0;transform:scale(0.3)}40%{opacity:0.85;transform:scale(1.2)}100%{opacity:0.35;transform:scale(1.5)}}
-
-/* ── GPU / MOTION ── */
-.gpu-accel{will-change:transform,opacity;transform:translateZ(0);backface-visibility:hidden}
-.box,.reward-box,#spinBox,.col-card,.market-card,.feed-item,.poxychat-msg{will-change:transform,opacity}
-/* PHASE 10 — 3D tilt-card */
-.tilt-3d{transform-style:preserve-3d;transform:perspective(620px) rotateX(0deg) rotateY(0deg);transition:transform 0.18s ease;will-change:transform}
-.tilt-3d-inner{transform:translateZ(20px)}
-body.screen-shake{animation:screenShake 0.45s ease-out}
-body.screen-shake-heavy{animation:screenShakeHeavy 0.65s ease-out}
-
-/* ── PX / XP ECONOMY HUD ── */
-.st-xp-hud{display:none;flex-direction:column;gap:4px;min-width:88px;max-width:120px;padding:6px 10px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(15,15,26,0.85);backdrop-filter:blur(8px)}
-.st-xp-hud.visible{display:flex}
-.st-xp-hud-level{font-size:9px;font-weight:800;letter-spacing:0.12em;color:var(--poxy-mint,#00f5a0);font-family:var(--font-mono)}
-.st-xp-hud-track{height:4px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden}
-.st-xp-hud-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#00f5a0,#7c3aed);transition:width 0.6s cubic-bezier(0.16,1,0.3,1)}
-.st-xp-hud-balance{font-size:10px;font-weight:700;color:rgba(255,255,255,0.72);font-family:var(--font-mono);font-variant-numeric:tabular-nums}
-.st-xp-hud.st-xp-level-up .st-xp-hud-level{animation:burst 0.5s cubic-bezier(0.34,1.56,0.64,1)}
-.st-pity-bar{margin-bottom:10px;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);font-size:10px;color:rgba(255,255,255,0.55)}
-.st-pity-bar-row{display:flex;justify-content:space-between;gap:8px;margin-top:4px;font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.45)}
-.st-pity-bar-row strong{color:#e879f9;font-weight:700}
-.st-vip-pity-bar{margin-bottom:10px;padding:8px 12px;border-radius:12px;border:1px solid rgba(124,58,237,0.2);background:rgba(124,58,237,0.06);font-size:10px;color:rgba(255,255,255,0.55)}
-.st-case-wallet{margin-bottom:10px;padding:8px 12px;border-radius:12px;border:1px solid rgba(0,245,160,0.2);background:rgba(0,245,160,0.05);font-size:10px;color:rgba(255,255,255,0.55)}
-.st-case-wallet-label{display:block;font-size:9px;font-weight:800;letter-spacing:0.1em;color:var(--poxy-mint,#00f5a0);margin-bottom:6px}
-.st-case-wallet-chips{display:flex;flex-wrap:wrap;gap:6px}
-.st-case-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.75)}
-.st-case-chip-open{padding:2px 8px;border-radius:999px;border:1px solid rgba(0,245,160,0.45);background:rgba(0,245,160,0.12);color:#00f5a0;font-size:8px;font-weight:800;letter-spacing:0.06em;cursor:pointer;font-family:inherit}
-.st-premium-tray{margin-bottom:10px}
-.st-premium-tray-label{font-size:9px;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-bottom:6px}
-.st-premium-tray-row{display:flex;flex-wrap:wrap;gap:6px}
-.st-case-pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.65);font-size:9px;font-weight:700;cursor:pointer;font-family:var(--font-mono);transition:border-color 0.2s,background 0.2s}
-.st-case-pill:hover{border-color:rgba(232,121,249,0.4)}
-.st-case-pill.active{border-color:#e879f9;background:rgba(232,121,249,0.15);color:#fff}
-.st-case-pill.sold-out{opacity:0.45;cursor:not-allowed;text-decoration:line-through}
-.tum-path-a{width:100%;margin-bottom:16px;padding:14px 16px;border-radius:14px;border:1px solid rgba(0,245,160,0.35);background:rgba(0,245,160,0.08);color:#00f5a0;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94)}
-.tum-path-a:hover{transform:translateY(-2px)}
-.tum-px-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
-.tum-px-pkg{position:relative;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);cursor:pointer;text-align:left;transition:border-color 0.2s,transform 0.2s}
-.tum-px-pkg:hover,.tum-px-pkg.selected{border-color:rgba(232,121,249,0.5);transform:translateY(-1px)}
-.tum-px-pkg-badge{position:absolute;top:8px;right:8px;font-size:8px;font-weight:800;letter-spacing:0.08em;padding:2px 6px;border-radius:999px;background:rgba(232,121,249,0.2);color:#e879f9}
-.tum-px-pkg-px{font-size:18px;font-weight:800;color:#fff;font-family:var(--font-mono)}
-.tum-px-pkg-gbp{font-size:10px;color:rgba(255,255,255,0.45);margin-top:2px}
-.tum-custom-row{display:flex;gap:8px;margin-bottom:10px}
-.tum-custom-row input{flex:1}
-.tum-upsell{padding:10px 12px;border-radius:10px;border:1px dashed rgba(245,158,11,0.35);background:rgba(245,158,11,0.06);font-size:10px;color:rgba(245,158,11,0.9);margin-bottom:12px}
-.tum-ref-card{margin-top:14px;padding:12px;border-radius:12px;border:1px solid rgba(0,245,160,0.2);background:rgba(0,245,160,0.04)}
-.tum-ref-eyebrow{font-size:9px;font-weight:800;letter-spacing:0.12em;color:rgba(0,245,160,0.75);margin-bottom:6px}
-.tum-ref-code{font-family:var(--font-mono);font-size:15px;font-weight:800;color:#fff;letter-spacing:0.08em}
-.tum-ref-stats{display:flex;gap:12px;margin-top:8px;font-size:10px;color:rgba(255,255,255,0.5)}
-.tum-ref-stat strong{color:#00f5a0;font-weight:700}
-.tum-ref-copy{width:100%;margin-top:10px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#e2e8f0;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform 0.2s cubic-bezier(0.25,0.46,0.45,0.94)}
-.tum-ref-copy:hover{transform:translateY(-1px);border-color:rgba(0,245,160,0.35)}
-.tum-ref-hint{font-size:9px;color:rgba(255,255,255,0.35);margin-top:8px;line-height:1.4}
-.tum-ref-leaders{margin-top:10px;font-size:9px;color:rgba(255,255,255,0.45);max-height:72px;overflow-y:auto}
-.tum-ref-leader-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-.poxy-pass-panel{display:flex;flex-direction:column;gap:14px}
-.poxy-pass-hero{padding:16px;border-radius:16px;border:1px solid rgba(0,245,160,0.22);background:linear-gradient(135deg,rgba(0,245,160,0.06),rgba(124,58,237,0.1))}
-.poxy-pass-hero h3{margin:0 0 6px;font-size:16px;color:#fff}
-.poxy-pass-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:rgba(255,255,255,0.5)}
-.poxy-pass-meta strong{color:#00f5a0}
-.poxy-pass-bar{height:6px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-top:10px}
-.poxy-pass-bar-fill{height:100%;background:linear-gradient(90deg,#00f5a0,#7c3aed);border-radius:999px;transition:width 0.4s ease}
-.poxy-pass-buy{align-self:flex-start;padding:10px 14px;border-radius:10px;border:1px solid rgba(245,158,11,0.4);background:rgba(245,158,11,0.1);color:#f59e0b;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit}
-.poxy-pass-buy.is-active{border-color:rgba(0,245,160,0.35);background:rgba(0,245,160,0.08);color:#00f5a0;cursor:default}
-.poxy-pass-tracks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media(max-width:520px){.poxy-pass-tracks{grid-template-columns:1fr}}
-.poxy-pass-track{padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
-.poxy-pass-track--prem{border-color:rgba(245,158,11,0.25)}
-.poxy-pass-track-title{font-size:9px;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.45);margin-bottom:8px}
-.poxy-pass-tier{display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:10px}
-.poxy-pass-tier:last-child{border-bottom:none}
-.poxy-pass-lvl{font-family:var(--font-mono);font-weight:800;color:#fff}
-.poxy-pass-reward{color:rgba(255,255,255,0.55);line-height:1.3}
-.poxy-pass-claim{padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.4);font-size:9px;font-weight:700;cursor:default;font-family:inherit}
-.poxy-pass-claim.is-ready{border-color:rgba(0,245,160,0.4);background:rgba(0,245,160,0.1);color:#00f5a0;cursor:pointer}
-.poxy-pass-claim.is-claimed{opacity:0.5}
-.poxy-pass-claim.is-locked{opacity:0.35}
-.st-economy-event{padding:10px 14px;border-radius:12px;border:1px solid rgba(0,245,160,0.22);background:linear-gradient(135deg,rgba(0,245,160,0.06),rgba(124,58,237,0.08));margin-bottom:12px;font-size:10px}
-.st-economy-event[hidden]{display:none!important}
-.st-economy-event-label{font-weight:800;letter-spacing:0.08em;color:#00f5a0;text-transform:uppercase}
-.st-economy-event-sub{color:rgba(255,255,255,0.55);margin-top:4px;line-height:1.4}
-.poxy-vip-panel{display:flex;flex-direction:column;gap:14px}
-.poxy-vip-hero{padding:16px;border-radius:16px;border:1px solid rgba(245,158,11,0.3);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(0,245,160,0.05))}
-.poxy-vip-hero h3{margin:0 0 6px;font-size:16px;color:#fff}
-.poxy-vip-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:rgba(255,255,255,0.5)}
-.poxy-vip-meta strong{color:#f59e0b}
-.poxy-vip-perks{display:grid;gap:6px;font-size:10px;color:rgba(255,255,255,0.55)}
-.poxy-vip-perk{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
-.poxy-vip-actions{display:flex;flex-wrap:wrap;gap:8px}
-.poxy-vip-btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.1);color:#f59e0b;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit}
-.poxy-vip-btn.is-ready{border-color:rgba(0,245,160,0.4);background:rgba(0,245,160,0.1);color:#00f5a0}
-.poxy-vip-btn.is-done{opacity:0.45;cursor:default}
-.poxy-vip-btn.is-active{border-color:rgba(0,245,160,0.35);background:rgba(0,245,160,0.08);color:#00f5a0;cursor:default}
-.poxy-store-layout--vip .poxy-store-bento,.poxy-store-layout--vip .poxy-store-uplinks{display:none}
-.poxy-store-grid--vip{display:block!important;grid-template-columns:1fr!important}
-.poxy-streak-panel{padding:16px}
-.poxy-streak-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.poxy-streak-days{font-size:22px;font-weight:800;color:#fff;font-family:var(--font-display)}
-.poxy-streak-nodes{display:flex;gap:6px;flex-wrap:wrap}
-.poxy-streak-node{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.3)}
-.poxy-streak-node.is-active{border-color:rgba(0,245,160,0.5);background:rgba(0,245,160,0.12);color:#00f5a0}
-.poxy-streak-longest{font-size:10px;color:rgba(255,255,255,0.42);margin-top:4px}
-.dsh-streak-chip{
-  display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;
-  padding:8px 14px;border-radius:999px;border:1px solid rgba(245,158,11,0.25);
-  background:rgba(245,158,11,0.08);font-size:11px;color:rgba(255,255,255,0.82);
-}
-.dsh-streak-chip .material-symbols-outlined{font-size:16px;color:#f59e0b}
-.dsh-streak-longest{color:rgba(255,255,255,0.45);font-family:var(--font-mono);font-size:10px}
-.poxy-streak-modal{
-  width:min(440px,100%);border-radius:1.5rem;border:1px solid rgba(255,255,255,0.1);
-  background:linear-gradient(165deg,#12121c 0%,#0a0a0f 100%);padding:28px 24px;color:#e2e8f0;
-  box-shadow:0 24px 80px rgba(0,0,0,0.55);text-align:center;
-}
-.poxy-streak-modal-kicker{
-  font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:0.14em;
-  color:#f59e0b;text-transform:uppercase;margin-bottom:8px;
-}
-.poxy-streak-modal-title{
-  font-family:var(--font-display);font-size:clamp(22px,5vw,28px);font-weight:900;color:#fff;margin:0 0 6px;
-}
-.poxy-streak-modal-fire{font-size:15px;color:rgba(255,255,255,0.7);margin-bottom:18px}
-.poxy-streak-modal-rewards{
-  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:18px;
-}
-.poxy-streak-reward-pill{
-  font-family:var(--font-mono);font-size:11px;font-weight:700;padding:8px 12px;border-radius:10px;
-  background:rgba(0,245,160,0.1);border:1px solid rgba(0,245,160,0.25);color:#00f5a0;
-}
-.poxy-streak-reward-pill--case{background:rgba(124,58,237,0.12);border-color:rgba(124,58,237,0.3);color:#c4b5fd}
-.poxy-streak-progress-wrap{margin:0 0 8px;text-align:left}
-.poxy-streak-progress-label{
-  font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:6px;
-}
-.poxy-streak-progress-bar{
-  height:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;
-}
-.poxy-streak-progress-fill{
-  height:100%;border-radius:999px;background:linear-gradient(90deg,#f59e0b,#00f5a0);
-  transition:width 0.5s cubic-bezier(0.16,1,0.3,1);
-}
-.poxy-streak-milestone{
-  font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:20px;line-height:1.5;
-}
-.poxy-streak-milestone strong{color:rgba(255,255,255,0.75)}
-.poxy-modal-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.72);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
-#pobWelcomeModal,#pobDragonModal,#pobPushModal,#dailyStreakModal{z-index:100060}
-.poxy-modal-backdrop[hidden]{display:none!important}
-.poxy-econ-modal{width:min(420px,100%);border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:#0f0f1a;padding:24px;color:#e2e8f0;position:relative}
-.poxy-econ-modal h3{font-family:var(--font-display);font-size:20px;margin-bottom:8px;color:#fff}
-.poxy-econ-modal p{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5;margin-bottom:16px}
-.poxy-econ-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
-.poxy-econ-btn{flex:1;min-width:120px;padding:12px 16px;border-radius:12px;border:none;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit}
-.poxy-econ-btn--primary{background:#00f5a0;color:#0a0a0f}
-.poxy-econ-btn--ghost{background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.12)}
-.poxy-dopamine-timer{font-size:28px;font-weight:800;font-family:var(--font-mono);color:#e879f9;text-align:center;margin:12px 0}
-.poxy-craft-trait-grid{display:grid;gap:8px;max-height:220px;overflow-y:auto;margin-bottom:14px}
-.poxy-craft-trait-opt{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);cursor:pointer;font-size:11px;text-align:left}
-.poxy-craft-trait-opt.selected{border-color:#e879f9;background:rgba(232,121,249,0.1)}
-.poxy-craft-trait-opt strong{display:block;color:#fff;margin-bottom:2px}
-.dsh-metric-card--hidden{display:none!important}
-.poxy-store-terminal-row--hidden{display:none!important}
-/* ── PX CURRENCY ── */
-.pc-badge{display:inline-block;font-weight:800;letter-spacing:0.5px}
-.balance-badge{position:fixed;top:10px;right:12px;z-index:200;background:#1a1a1a;color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:0.5px;display:none;cursor:pointer;transition:transform 0.15s}
-.balance-badge:hover{transform:scale(1.05)}
-.balance-badge.visible{display:block}
-.balance-badge.pop{animation:balancePop 0.3s ease}
-body.poxy-stitch-dash .balance-badge{position:static;display:none}
-body.poxy-stitch-dash .balance-badge.visible,
-body.poxy-stitch-dash .st-wallet-capsule.visible{display:inline-flex}
-body.poxy-stitch-dash .hamburger-btn.visible{display:none}
-body.poxy-stitch-dash .poxy-text-logo.visible{display:none}
-body.poxy-stitch-dash{background:#050506;color:#e8e8ec}
-body.poxy-stitch-dash .page{background:#050506;color:#e8e8ec}
-/* ── STITCH DASHBOARD (main logged-in home) ── */
-.poxy-stitch-dash{min-height:100vh;background:#050506;color:#e8e8ec;padding-bottom:0}
-.psd-header{display:flex;align-items:center;gap:12px;padding:14px 20px 12px;border-bottom:1px solid rgba(255,255,255,0.06);flex-wrap:wrap;position:sticky;top:0;z-index:120;background:rgba(10,10,14,0.92);backdrop-filter:blur(16px)}
-.psd-menu{width:40px;height:40px;border:1px solid rgba(255,255,255,0.08);background:rgba(19,19,26,0.9);border-radius:12px;color:#ccc;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0;flex-shrink:0}
-.psd-menu span{display:block;width:16px;height:2px;background:currentColor;border-radius:1px}
-.psd-brand{font-size:15px;font-weight:900;letter-spacing:0.12em;color:#fff;flex-shrink:0}
-.psd-brand span{font-weight:700;color:rgba(255,255,255,0.55);margin-left:4px}
-.psd-nav{display:flex;gap:4px;background:rgba(19,19,26,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:999px;padding:4px;flex:1;justify-content:center;min-width:0;overflow-x:auto;scrollbar-width:none}
-.psd-nav::-webkit-scrollbar{display:none}
-.psd-nav-btn{flex-shrink:0;padding:8px 16px;border:none;background:transparent;color:#6a6a7a;font-size:11px;font-weight:700;letter-spacing:0.06em;border-radius:999px;cursor:pointer;font-family:inherit;transition:all 0.25s;white-space:nowrap}
-.psd-nav-btn.active{color:#fff;background:rgba(255,255,255,0.08)}
-.psd-nav-btn:hover:not(.active){color:#b0b0bc}
-.psd-nav-club{display:none}.psd-nav-club.show{display:inline-block}
-.psd-header-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
-.psd-balance{display:none;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1px solid rgba(0,229,200,0.35);background:rgba(0,229,200,0.08);color:#00e5c8;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;transition:transform 0.15s}
-.psd-balance::before{content:'';width:8px;height:8px;border-radius:50%;background:#00e5c8;box-shadow:0 0 10px #00e5c8}
-.psd-balance:hover{transform:scale(1.04)}
-.psd-user{display:none;align-items:center;gap:10px}
-.psd-user-meta{text-align:right;min-width:0}
-.psd-user-name{font-size:12px;font-weight:700;color:#fff;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.psd-user-badge{font-size:8px;font-weight:800;letter-spacing:0.1em;color:#ff416c;text-transform:uppercase;margin-top:2px}
-.psd-main{max-width:1100px;margin:0 auto;padding:16px 16px 0}
-.psd-hero{background:linear-gradient(145deg,rgba(19,19,28,0.95),rgba(12,12,18,0.98));border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:28px 24px 24px;margin-bottom:20px;position:relative;overflow:hidden}
-.psd-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,rgba(255,65,108,0.12),transparent 50%);pointer-events:none}
-.psd-hero-title{font-size:clamp(28px,5vw,40px);font-weight:800;color:#fff;margin-bottom:8px;position:relative}
-.psd-hero-sub{font-size:14px;color:#8a8a9a;margin-bottom:24px;line-height:1.5;position:relative;max-width:420px}
-.psd-carousel{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px;position:relative;min-height:200px}
-.psd-carousel-slot{width:72px;height:72px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;font-size:28px;color:#444;flex-shrink:0;opacity:0.5}
-.psd-carousel-slot--active{width:88px;height:88px;border-color:rgba(0,229,200,0.5);box-shadow:0 0 24px rgba(0,229,200,0.25);opacity:1;color:#00e5c8;font-size:10px;font-weight:800;letter-spacing:0.05em;flex-direction:column;gap:4px}
-.psd-carousel-center{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.psd-carousel-center .stage{width:200px;height:200px;margin:0}
-.psd-carousel-center .box{width:110px;height:110px;border-radius:16px;border-color:rgba(255,255,255,0.12);background:rgba(19,19,26,0.9)}
-.psd-carousel-center .reward-box{width:150px;height:150px}
-.psd-cta-wrap{display:flex;justify-content:center;position:relative}
-.psd-open-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:none;border-radius:999px;background:linear-gradient(90deg,#ff416c,#c026d3);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 8px 32px rgba(255,65,108,0.35);transition:transform 0.2s,box-shadow 0.2s,opacity 0.3s}
-.psd-open-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,65,108,0.45)}
-.psd-open-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
-.psd-open-price{padding:4px 10px;border-radius:999px;background:rgba(0,0,0,0.25);font-size:12px;font-weight:800}
-.psd-hero .fomo,.psd-hero #greatBurnCounter{text-align:center;margin-bottom:8px}
-.psd-hero .cta-wrap{width:100%}
-.psd-hero .post-btns,.psd-hero .btn-list-market{max-width:360px;margin:8px auto 0}
-.psd-collection-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-.psd-collection-title{font-size:20px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px}
-.psd-collection-sub{font-size:12px;color:#6a6a7a;margin-top:4px}
-.psd-completion{text-align:right;min-width:100px}
-.psd-completion-label{font-size:9px;font-weight:700;letter-spacing:0.12em;color:#6a6a7a;text-transform:uppercase}
-.psd-completion-val{font-size:14px;font-weight:800;color:#ff416c}
-.psd-completion-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:4px;margin-top:6px;overflow:hidden}
-.psd-completion-fill{height:100%;background:linear-gradient(90deg,#ff416c,#ff4b2b);border-radius:4px;transition:width 0.4s}
-.psd-dash-col-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:12px}
-@media(max-width:720px){.psd-dash-col-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.psd-dash-card{aspect-ratio:0.85;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(19,19,26,0.85);padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:transform 0.2s,border-color 0.2s;position:relative}
-.psd-dash-card:hover{transform:translateY(-3px)}
-.psd-dash-card-tag{position:absolute;top:6px;right:6px;font-size:7px;font-weight:800;letter-spacing:0.06em;padding:2px 5px;border-radius:4px;text-transform:uppercase}
-.psd-dash-card-icon{font-size:28px;line-height:1}
-.psd-dash-card-name{font-size:9px;font-weight:700;color:#ccc;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.psd-dash-card-serial{font-size:8px;color:#555;font-family:monospace}
-.psd-dash-card--empty{border-style:dashed;color:#444;cursor:default}
-.psd-dash-card--empty:hover{transform:none}
-.psd-view-all{display:block;width:100%;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:transparent;color:#8a8a9a;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;font-family:inherit;margin-bottom:24px;transition:border-color 0.2s,color 0.2s}
-.psd-view-all:hover{border-color:rgba(255,65,108,0.4);color:#ff416c}
-.psd-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-@media(max-width:800px){.psd-bottom{grid-template-columns:1fr}}
-.psd-panel{background:rgba(19,19,26,0.9);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px}
-.psd-panel-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.psd-panel-title{font-size:16px;font-weight:800;color:#fff}
-.psd-test-tag{font-size:8px;font-weight:800;letter-spacing:0.1em;padding:3px 8px;border-radius:6px;background:rgba(255,65,108,0.2);color:#ff416c}
-.psd-panel-desc{font-size:12px;color:#6a6a7a;line-height:1.5;margin-bottom:16px}
-.psd-treasury .bank-form-label{color:#8a8a9a}
-.psd-treasury .bank-input{background:#0d0d12;border-color:rgba(255,255,255,0.1);color:#e8e8ec}
-.psd-treasury .btn-primary{background:linear-gradient(90deg,#2a2a35,#1a1a24);border:1px solid rgba(255,255,255,0.1);box-shadow:none}
-.psd-treasury .bank-amounts{display:none}
-.psd-legal-block{margin-bottom:14px}
-.psd-legal-block h4{font-size:12px;font-weight:800;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.psd-legal-block p{font-size:11px;color:#6a6a7a;line-height:1.6}
-.psd-subpages-hint{text-align:center;padding:12px;font-size:11px;color:#555}
-#huntPage .user-bar{display:none!important}
-#huntPage .user-bar.psd-user-active{display:flex!important}
-
-/* ── USERNAME GRADIENT ── */
-.username-gradient-active{background:var(--ug);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% 100%;animation:gradientShift 3s linear infinite}
-
-/* ── HAMBURGER ── */
-.hamburger-btn{position:fixed;top:10px;left:12px;z-index:300;width:36px;height:36px;border:none;border-radius:10px;background:linear-gradient(45deg,#ff416c,#ff4b2b);display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;will-change:transform,opacity;animation:hamburgerBreathe 2.5s ease-in-out infinite;padding:0}
-.hamburger-btn.visible{display:flex}
-.hamburger-line{width:18px;height:2px;background:#fff;border-radius:2px;transition:transform 0.3s ease,opacity 0.3s ease}
-
-/* GLOBAL HOME LOGO — gradient-text "POXY" placed directly to the right of the
-   hamburger button. Both elements stay independent fixed-positioned siblings;
-   the hamburger occupies left:12px–48px (36px wide), the logo starts at
-   left:60px (12px gap) so they NEVER overlap regardless of viewport. */
-.poxy-text-logo{position:fixed;top:15px;left:60px;z-index:1000;font-family:'Inter',system-ui,sans-serif;font-size:24px;font-weight:900;letter-spacing:2px;line-height:1;background:linear-gradient(45deg,#ff416c,#ff4b2b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;cursor:pointer;transition:transform 0.2s ease,filter 0.2s ease;will-change:transform,filter;user-select:none;-webkit-user-select:none;display:none}
-.poxy-text-logo.visible{display:inline-block}
-.poxy-text-logo:hover{transform:scale(1.05);filter:drop-shadow(0 0 8px rgba(255,65,108,0.6))}
-.poxy-text-logo:active{transform:scale(0.97)}
-.poxy-text-logo:focus-visible{outline:2px solid #ff416c;outline-offset:3px;border-radius:4px}
-
-/* ── SIDEBAR (Stitch Coral Blaze — obsidian overlay) ── */
-.sidebar-backdrop,.poxy-sidebar-backdrop{position:fixed;inset:0;z-index:400;background:rgba(10,10,12,0.72);opacity:0;transition:opacity 0.4s ease;pointer-events:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.sidebar-backdrop.open{opacity:1;pointer-events:all}
-.sidebar-panel,.poxy-sidebar-panel{position:fixed;inset:0;z-index:401;width:100vw;max-width:100vw;height:100vh;background:rgba(10,10,12,0.97);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-right:none;display:flex;flex-direction:column;opacity:0;transform:scale(1.03) translateY(10px);pointer-events:none;transition:opacity 0.4s cubic-bezier(0.25,1,0.5,1),transform 0.45s cubic-bezier(0.25,1,0.5,1);will-change:transform,opacity;overflow:hidden}
-.sidebar-panel.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
-.sidebar-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 18% 0%,rgba(255,65,108,0.09),transparent 52%),radial-gradient(circle at 88% 100%,rgba(132,41,200,0.07),transparent 58%);pointer-events:none;z-index:0}
-.poxy-sidebar-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.poxy-sidebar-bg-blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.14}
-.poxy-sidebar-bg-blob--tr{top:-8%;right:-12%;width:45vw;height:45vw;background:linear-gradient(90deg,#ff416c,#ff4b2b)}
-.poxy-sidebar-bg-blob--bl{bottom:-12%;left:-8%;width:55vw;height:55vw;background:#8429c8}
-.sidebar-header,.poxy-sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;position:relative;z-index:2}
-.sidebar-logo,.poxy-sidebar-logo{display:flex;align-items:baseline;gap:0;user-select:none}
-.poxy-sidebar-logo-p{font-size:18px;font-weight:900;letter-spacing:2px;color:#f0f0f2}
-.poxy-sidebar-logo-x{font-size:20px;font-weight:900;letter-spacing:-0.04em;background:linear-gradient(90deg,#ff416c,#ff4b2b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sidebar-close,.poxy-sidebar-close{width:36px;height:36px;border:1px solid rgba(255,255,255,0.08);background:rgba(19,19,26,0.85);backdrop-filter:blur(12px);border-radius:12px;color:#9a9aad;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s,color 0.2s,transform 0.2s;font-family:inherit;flex-shrink:0;padding:0}
-.sidebar-close svg,.poxy-sidebar-close svg{width:18px;height:18px;display:block}
-.sidebar-close:hover,.poxy-sidebar-close:hover{background:rgba(37,37,48,0.95);border-color:rgba(255,65,108,0.35);color:#fff;transform:scale(1.04)}
-.sidebar-tabs,.poxy-sidebar-tabs{flex-shrink:0;position:relative;z-index:2;padding:10px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.05)}
-.poxy-sidebar-tabs-track{display:flex;gap:4px;overflow-x:auto;padding:4px;background:rgba(19,19,26,0.75);border:1px solid #1e1e28;border-radius:999px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.poxy-sidebar-tabs-track::-webkit-scrollbar{display:none}
-.sidebar-tab-btn{flex-shrink:0;padding:8px 14px;border:none;background:none;color:#6a6a7a;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.25s;border-radius:999px;border-bottom:none;font-family:inherit;white-space:nowrap}
-.sidebar-tab-btn.active{color:#fffbff;background:linear-gradient(90deg,#ff416c,#ff4b2b);box-shadow:0 2px 10px rgba(255,65,108,0.35)}
-.sidebar-tab-btn:hover:not(.active){color:#b8b8c8;background:rgba(255,255,255,0.04)}
-.sidebar-content{flex:1;overflow-y:auto;padding:20px 18px 88px;scrollbar-width:thin;scrollbar-color:#2a2a35 transparent;max-width:760px;width:100%;margin:0 auto;position:relative;z-index:2}
-.sidebar-content::-webkit-scrollbar{width:4px}
-.sidebar-content::-webkit-scrollbar-track{background:transparent}
-.sidebar-content::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#ff416c55,#8429c855);border-radius:4px}
-.sidebar-tab-content{display:none}
-.sidebar-tab-content.active{display:block;animation:fadeIn 0.25s ease}
-.poxy-sidebar-panel .codex-hero{background:rgba(19,19,26,0.65);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px 16px;margin-bottom:18px;border-bottom:none}
-.poxy-sidebar-panel .codex-amenity{background:rgba(19,19,26,0.8);border:1px solid rgba(255,255,255,0.05);border-left:3px solid rgba(255,65,108,0.55);border-radius:12px}
-.poxy-sidebar-panel .news-create-form,.poxy-sidebar-panel .news-post-card{border-radius:14px;border-color:rgba(255,255,255,0.06)}
-
-/* ── CODEX (TAB A) ── */
-.codex-hero{text-align:center;margin-bottom:22px;padding:18px 0 16px;border-bottom:1px solid #1a1a24}
-.codex-emblem{font-size:32px;margin-bottom:6px}
-.codex-title{font-size:13px;font-weight:900;letter-spacing:4px;color:#fff;margin-bottom:4px}
-.codex-subtitle{font-size:9.5px;color:#444;letter-spacing:1.5px}
-.codex-section{margin-bottom:20px}
-.codex-section h3{font-size:9px;font-weight:800;letter-spacing:2.5px;color:#ff416c;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a1a24}
-.codex-section p{font-size:11px;color:#7070880;line-height:1.8;margin-bottom:9px;color:#707080}
-.codex-amenities{margin:12px 0;display:flex;flex-direction:column;gap:8px}
-.codex-amenity{padding:10px 12px;background:#13131a;border-radius:8px;border-left:2px solid #ff416c55}
-.codex-amenity-title{font-size:11px;font-weight:700;color:#ccc;margin-bottom:3px}
-.codex-amenity p{font-size:10px;color:#555;line-height:1.6;margin:0}
-.codex-note{font-size:10px;color:#3a3a4a;font-style:italic;border-top:1px solid #1a1a24;padding-top:10px;margin-top:12px;line-height:1.6}
-
-/* ── NEWS FEED (TAB B) ── */
-.news-create-form{background:#13131a;border-radius:10px;padding:14px;margin-bottom:16px;border:1px solid #1e1e28}
-.news-create-title{font-size:9px;font-weight:700;letter-spacing:2px;color:#ff416c;text-transform:uppercase;margin-bottom:10px}
-.news-input{width:100%;padding:9px 12px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:12px;outline:none;transition:border-color 0.2s;margin-bottom:8px}
-.news-input:focus{border-color:#ff416c}
-.news-input::placeholder{color:#333}
-.news-textarea{width:100%;padding:9px 12px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:12px;outline:none;resize:vertical;min-height:70px;transition:border-color 0.2s;margin-bottom:8px}
-.news-textarea:focus{border-color:#ff416c}
-.news-textarea::placeholder{color:#333}
-.btn-news-publish{width:100%;padding:10px;background:linear-gradient(135deg,#ff416c,#ff4b2b);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
-.btn-news-publish:hover{opacity:0.85}
-.btn-news-publish:disabled{opacity:0.4;cursor:not-allowed}
-.news-post-card{background:#13131a;border-radius:10px;border:1px solid #1e1e28;margin-bottom:12px;overflow:hidden}
-.news-post-image{width:100%;max-height:160px;object-fit:cover;display:block}
-.news-post-body{padding:12px}
-.news-post-title-text{font-size:13px;font-weight:800;color:#e0e0e0;margin-bottom:6px;line-height:1.4}
-.news-post-content-text{font-size:11px;color:#707080;line-height:1.7;margin-bottom:10px}
-.news-post-meta{display:flex;align-items:center;gap:6px;font-size:9px;color:#444;margin-bottom:10px}
-.news-post-author{color:#ff416c;font-weight:700}
-.news-post-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn-news-action{background:none;border:1px solid #252530;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;color:#555}
-.btn-news-action.liked{border-color:#4CAF50;color:#4CAF50}
-.btn-news-action.disliked{border-color:#E91E63;color:#E91E63}
-.btn-news-action:hover{border-color:#ff416c;color:#ff416c}
-.btn-news-delete{background:none;border:1px solid #FF525255;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;color:#FF5252;margin-left:auto}
-.btn-news-delete:hover{background:#FF525222}
-.btn-toggle-comments{background:none;border:none;font-size:10px;color:#444;cursor:pointer;font-family:inherit;padding:0;transition:color 0.2s}
-.btn-toggle-comments:hover{color:#ff416c}
-.news-comments-section{border-top:1px solid #1a1a24;padding:10px 12px;display:none}
-.news-comments-section.open{display:block}
-.news-comment-item{padding:7px 0;border-bottom:1px solid #12121a}
-.news-comment-item:last-child{border-bottom:none}
-.news-comment-header{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.news-comment-username{font-size:10px;font-weight:700;color:#ff416c}
-.news-comment-time{font-size:9px;color:#333;margin-left:auto}
-.news-comment-text{font-size:11px;color:#8080a0;line-height:1.6}
-.news-comment-actions{display:flex;gap:8px;margin-top:4px;align-items:center}
-.btn-comment-like{background:none;border:none;font-size:9px;color:#444;cursor:pointer;font-family:inherit;padding:0;transition:color 0.2s}
-.btn-comment-like:hover,.btn-comment-like.liked{color:#4CAF50}
-.btn-comment-reply-toggle{background:none;border:none;font-size:9px;color:#444;cursor:pointer;font-family:inherit;padding:0;transition:color 0.2s}
-.btn-comment-reply-toggle:hover{color:#ff416c}
-.news-reply-indent{padding-left:14px;border-left:1px solid #1e1e28;margin-top:6px}
-.news-comment-input-row{display:flex;gap:6px;margin-top:8px}
-.news-comment-input{flex:1;padding:7px 10px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:11px;outline:none;transition:border-color 0.2s}
-.news-comment-input:focus{border-color:#ff416c}
-.news-comment-input::placeholder{color:#333}
-.btn-comment-submit{padding:7px 12px;background:#ff416c;border:none;border-radius:8px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;flex-shrink:0}
-.btn-comment-submit:hover{opacity:0.85}
-.news-empty{text-align:center;padding:40px 20px;color:#333;font-size:12px}
-
-/* ── POXY CHAT (global, inside news tab) ── */
-.poxychat-section{margin-top:24px;padding-top:16px;border-top:1px solid #1a1a24}
-.poxychat-title{font-size:9px;font-weight:800;letter-spacing:2.5px;color:#ff416c;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.poxychat-title .chat-dot{width:6px;height:6px;border-radius:50%;background:#4CAF50;box-shadow:0 0 6px #4CAF50;animation:floatUp 1.5s ease-in-out infinite}
-.poxychat-input-row{display:flex;gap:6px;margin-bottom:12px}
-.poxychat-input{flex:1;padding:9px 12px;border:1px solid #252530;border-radius:8px;background:#0d0d10;color:#e0e0e0;font-family:inherit;font-size:12px;outline:none;transition:border-color 0.2s}
-.poxychat-input:focus{border-color:#ff416c}
-.poxychat-input::placeholder{color:#333}
-.btn-poxychat-send{padding:9px 16px;background:linear-gradient(135deg,#ff416c,#ff4b2b);border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;flex-shrink:0}
-.btn-poxychat-send:hover{opacity:0.85}
-.btn-poxychat-send:disabled{opacity:0.4;cursor:not-allowed}
-.poxychat-list{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;padding-right:2px}
-.poxychat-list::-webkit-scrollbar{width:3px}
-.poxychat-list::-webkit-scrollbar-thumb{background:#2a2a35;border-radius:3px}
-.poxychat-msg{padding:8px 10px;background:#13131a;border-left:2px solid #1e1e28;border-radius:6px;font-size:11px;color:#a0a0b0;line-height:1.5;animation:fadeIn 0.25s ease}
-.poxychat-msg.founder-msg{border-left-color:#FFCA28;background:linear-gradient(90deg,rgba(255,202,40,0.08),#13131a 80%);box-shadow:0 0 12px rgba(255,202,40,0.18)}
-.poxychat-msg.club-msg{border-left-color:#FF6E40}
-.poxychat-msg .pcm-head{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.pcm-avatar{display:flex;align-items:center;justify-content:center;background:#0d0d10;border-radius:50%;overflow:visible;line-height:1;box-sizing:border-box;margin:0;padding:0}
-.pcm-avatar img{width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;margin:0;padding:0}
-.poxychat-msg .pcm-name{font-size:10.5px;font-weight:700;color:#ff416c}
-.poxychat-msg.founder-msg .pcm-name{color:#FFCA28}
-.poxychat-msg.club-msg .pcm-name{color:#FF6E40}
-.poxychat-msg .pcm-time{font-size:9px;color:#3a3a4a;margin-left:auto}
-.poxychat-msg .pcm-del{background:none;border:none;color:#444;cursor:pointer;font-size:11px;padding:0 0 0 6px}
-.poxychat-msg .pcm-del:hover{color:#FF5252}
-.poxychat-msg .pcm-text{font-size:11px;color:#bdbdc8;word-break:break-word}
-.poxychat-empty{font-size:10.5px;color:#3a3a4a;text-align:center;padding:14px}
-
-/* ── GEN 1 (TAB C) ── */
-.gen1-season-banner{background:linear-gradient(135deg,#1a0505,#2a0808);border:1px solid #FF525244;border-radius:10px;padding:12px 14px;margin-bottom:16px;text-align:center}
-.gen1-season-label{font-size:8px;font-weight:700;letter-spacing:2px;color:#FF5252;text-transform:uppercase;margin-bottom:4px}
-.gen1-season-timer{font-size:18px;font-weight:900;color:#fff;font-variant-numeric:tabular-nums}
-.gen1-season-sub{font-size:9px;color:#555;margin-top:3px}
-.gen1-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.gen1-model-card{background:#13131a;border-radius:9px;border:1px solid #1e1e28;padding:10px;text-align:center}
-.gen1-model-icon{font-size:24px;margin-bottom:4px}
-.gen1-model-name{font-size:11px;font-weight:800;color:#e0e0e0;margin-bottom:2px}
-.gen1-model-tier{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.gen1-model-desc{font-size:9px;color:#555;line-height:1.6;margin-top:4px}
-.gen1-founder-box{background:linear-gradient(135deg,#0a0800,#1a1200);border:1px solid #FFCA2844;border-radius:10px;padding:14px;margin-top:12px;display:none}
-.gen1-founder-box.unlocked{display:block}
-.gen1-founder-title{font-size:10px;font-weight:800;letter-spacing:2px;color:#FFCA28;text-transform:uppercase;margin-bottom:6px}
-.gen1-founder-badge{font-size:20px;margin-bottom:4px}
-.gen1-founder-text{font-size:11px;color:#888;line-height:1.7}
-.gen1-checklist{margin-top:12px}
-.gen1-check-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;color:#666}
-.gen1-check-item.done{color:#4CAF50}
-.gen1-check-dot{width:8px;height:8px;border-radius:50%;background:#2a2a35;flex-shrink:0}
-.gen1-check-item.done .gen1-check-dot{background:#4CAF50}
-.gen1-sold-out-badge,.rarity-sold-out-badge{font-size:8px;font-weight:800;letter-spacing:0.08em;color:#ef4444;border:1px solid rgba(239,68,68,0.4);padding:2px 6px;border-radius:4px;text-transform:uppercase}
-.gen1-supply-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:999px;margin-top:6px;overflow:hidden}
-.gen1-supply-fill{height:100%;background:linear-gradient(90deg,#00f5a0,#7c3aed);border-radius:999px}
-.gen1-supply-meta{font-size:9px;color:rgba(255,255,255,0.45);margin-top:4px}
-.st-gen1-scarcity{padding:8px 12px;border-radius:10px;border:1px solid rgba(245,158,11,0.35);background:rgba(245,158,11,0.08);font-size:10px;color:#f59e0b;margin-bottom:10px;line-height:1.4}
-.st-gen1-scarcity[hidden]{display:none!important}
-
-/* ── APPRAISAL (TAB D) ── */
-.appraisal-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.appraisal-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#13131a;border-radius:8px;border-left:3px solid var(--tc)}
-.appraisal-left{display:flex;align-items:center;gap:10px}
-.appraisal-icon{font-size:18px}
-.appraisal-name{font-size:11px;font-weight:700;color:#ccc}
-.appraisal-tier-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tc)}
-.appraisal-price{font-size:13px;font-weight:900;color:var(--tc)}
-.appraisal-header{font-size:9px;font-weight:700;letter-spacing:2px;color:#444;text-transform:uppercase;margin-bottom:12px}
-.appraisal-algo-note{font-size:10px;color:#333;line-height:1.7;margin-top:12px;padding:10px;background:#0d0d10;border-radius:8px;border:1px solid #1a1a24}
-
-/* ── LEADERBOARDS (TAB E) ── */
-.lb-toggle{display:flex;margin-bottom:14px;background:#0d0d10;border-radius:8px;padding:3px}
-.lb-toggle-btn{flex:1;padding:8px;border:none;background:none;font-family:inherit;font-size:9.5px;font-weight:700;letter-spacing:0.5px;color:#444;cursor:pointer;border-radius:6px;transition:all 0.2s;text-transform:uppercase}
-.lb-toggle-btn.active{background:#13131a;color:#ff416c}
-.lb-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:6px;background:#13131a;border:1px solid #1a1a24}
-.lb-rank{font-size:11px;font-weight:900;color:#ff416c;width:20px;text-align:center;flex-shrink:0}
-.lb-rank.gold{color:#FFCA28}
-.lb-rank.silver{color:#C0C0C0}
-.lb-rank.bronze{color:#CD7F32}
-.lb-avatar{font-size:16px;width:30px;height:30px;border-radius:50%;background:#0d0d10;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
-.lb-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.lb-username{font-size:11px;font-weight:700;color:#ccc;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lb-value{font-size:11px;font-weight:800;color:#ff416c;text-align:right;flex-shrink:0}
-.lb-empty{text-align:center;padding:30px;color:#333;font-size:11px}
-.lb-loading{text-align:center;padding:30px}
-
-/* ── SUPPORT (TAB F) ── */
-.support-section{margin-bottom:18px}
-.support-section h3{font-size:9px;font-weight:800;letter-spacing:2.5px;color:#ff416c;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1a1a24}
-.support-section p{font-size:10.5px;color:#606070;line-height:1.8;margin-bottom:8px}
-.support-section strong{color:#888}
-.support-email{display:inline-block;padding:10px 16px;background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;margin:8px 0;transition:opacity 0.2s}
-.support-email:hover{opacity:0.85}
-.support-response{font-size:9.5px;color:#333;margin-top:8px;font-style:italic}
-
-/* ── CUSTOMIZATION (TAB G) ── */
-.customize-section-label{font-size:9px;font-weight:700;letter-spacing:2px;color:#555;text-transform:uppercase;margin-bottom:10px}
-.customize-items{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
-.customize-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#13131a;border-radius:9px;border:1px solid #1e1e28;transition:border-color 0.2s}
-.customize-item:hover{border-color:#ff416c44}
-.customize-preview{width:32px;height:32px;border-radius:6px;flex-shrink:0;border:1px solid #2a2a35}
-.customize-info{flex:1;min-width:0}
-.customize-name{font-size:11px;font-weight:700;color:#ccc;margin-bottom:2px}
-.customize-desc{font-size:9px;color:#444}
-.customize-cost{font-size:11px;font-weight:800;color:#ff416c;white-space:nowrap;margin-right:8px}
-.btn-customize-buy{padding:6px 12px;border:1px solid #ff416c;border-radius:20px;background:none;color:#ff416c;font-size:9.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;flex-shrink:0}
-.btn-customize-buy:hover{background:#ff416c;color:#fff}
-.btn-customize-buy.owned{border-color:#4CAF50;color:#4CAF50;cursor:default}
-.btn-customize-buy:disabled{opacity:0.4;cursor:not-allowed}
-
-/* ── PROFILE INSPECTION MODAL ── */
-.inspect-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.inspect-avatar-wrap{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;background:#f7f7f7;overflow:hidden;box-sizing:border-box;margin:0;padding:0;line-height:1}
-.inspect-avatar-wrap img{width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;margin:0;padding:0}
-.inspect-avatar-wrap.inspect-prem{padding:2px;background:linear-gradient(135deg,#FFCA28,#FF5252,#AB47BC);animation:premiumFrameShift 3.5s ease-in-out infinite}
-.inspect-header-info{flex:1;min-width:0}
-.inspect-username-text{font-size:15px;font-weight:800;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.inspect-sub-text{font-size:11px;color:#B0B0B0;margin-top:2px}
-.inspect-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.inspect-stat{background:#f7f7f7;border-radius:9px;padding:10px 6px;text-align:center}
-.inspect-stat-val{font-size:16px;font-weight:800;color:#1a1a1a}
-.inspect-stat-label{font-size:9px;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
-.inspect-fav-poxy{background:#f7f7f7;border-radius:10px;padding:12px;margin-bottom:14px;text-align:center;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
-.inspect-fav-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:4px}
-.inspect-fav-icon{font-size:28px}
-.inspect-fav-tier{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.inspect-fav-serial{font-size:9px;color:#B0B0B0;font-family:monospace}
-.inspect-fav-none{font-size:11px;color:#C8C8C8}
-.inspect-actions-row{display:flex;gap:8px}
-
-/* ── PROFILE BADGES ── */
-.badge-wallet{margin:14px 0}
-.badge-wallet-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:8px}
-.badge-list{display:flex;flex-wrap:wrap;gap:6px}
-.badge-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:9.5px;font-weight:700;letter-spacing:0.5px;border:1px solid transparent}
-.badge-chip.market_baron{background:rgba(255,202,40,0.1);border-color:#FFCA2855;color:#FFCA28}
-.badge-chip.first_drop_set{background:rgba(76,175,80,0.1);border-color:#4CAF5055;color:#4CAF50}
-.badge-chip.founder{background:rgba(171,71,188,0.1);border-color:#AB47BC55;color:#AB47BC}
-.badge-chip.developer{background:rgba(255,82,82,0.1);border-color:#FF525255;color:#FF5252}
-.badge-none{font-size:11px;color:#C8C8C8}
-
-/* ── PROFILE MYTHIC TRACKER ── */
-.mythic-club-tracker{background:linear-gradient(135deg,#fafafa,#fff5f2);border:1px solid #FFE0D5;border-radius:12px;padding:12px 14px;margin:12px 0}
-.mct-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#FF5722;text-transform:uppercase;margin-bottom:6px}
-.mct-bar-track{height:6px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:6px}
-.mct-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#FF5722,#E91E63);transition:width 0.6s ease}
-.mct-status{font-size:11px;font-weight:600;color:#1a1a1a}
-.mct-status.closed{color:#E91E63}
-
-/* ── PROFILE PASSWORD FORM ── */
-.pwd-form{background:#f7f7f7;border-radius:12px;padding:14px;margin:12px 0}
-.pwd-form-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:10px}
-.pwd-msg{font-size:11px;margin-top:8px;min-height:16px;font-weight:500}
-.pwd-msg.error{color:#E91E63}
-.pwd-msg.success{color:#4CAF50}
-
-/* ── FEATURED POXY ── */
-.featured-poxy-section{margin:12px 0}
-.featured-poxy-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:8px}
-.featured-poxy-display{background:#f7f7f7;border-radius:10px;padding:12px;text-align:center}
-.featured-poxy-empty{font-size:11px;color:#C8C8C8}
-
-/* ── PENDING REQUESTS ── */
-.pending-section{margin-bottom:18px}
-.pending-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#FF5722;text-transform:uppercase;margin-bottom:8px}
-.pending-card{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#fff5f2;border-radius:10px;border:1px solid #FFE0D5;margin-bottom:6px}
-.pending-actions{display:flex;gap:6px;flex-shrink:0}
-.btn-accept-req{padding:5px 12px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:9.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
-.btn-accept-req:hover{opacity:0.85}
-.btn-decline-req{padding:5px 10px;background:none;border:1px solid #e0e0e0;border-radius:20px;color:#B0B0B0;font-size:9.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s}
-.btn-decline-req:hover{background:#f5f5f5}
-.btn-remove-friend{padding:5px 10px;border:1px solid #e0e0e0;border-radius:20px;font-size:9.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;background:none;color:#B0B0B0}
-.btn-remove-friend:hover{border-color:#E91E63;color:#E91E63}
-.user-card-clickable{cursor:pointer}
-.user-card-clickable:hover .user-card-name{color:#FF5722}
-
-/* ── LAYOUT ── */
-.app{background:transparent;min-height:520px;display:flex;flex-direction:column;align-items:center;padding:44px 24px 16px;position:relative;max-width:380px;margin:0 auto}
-
-/* ── LOGO ── */
-.logo-row{display:flex;align-items:baseline;position:relative;user-select:none;margin-bottom:8px}
-.l-letter{font-size:52px;font-weight:900;line-height:1;background:linear-gradient(135deg,#FF5722 0%,#E91E63 50%,#9C27B0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:transform 0.4s cubic-bezier(0.25,1,0.5,1)}
-.l-x{font-size:76px;font-weight:900;line-height:1;letter-spacing:-4px;background:linear-gradient(135deg,#FF5722 0%,#E91E63 40%,#9C27B0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;cursor:pointer;transition:transform 0.4s cubic-bezier(0.25,1,0.5,1),filter 0.4s cubic-bezier(0.25,1,0.5,1);position:relative;z-index:2;padding:0 2px}
-.logo-row:hover .l-x,.logo-row.x-active .l-x{transform:scale(1.25);filter:drop-shadow(0 0 14px #FF572299)}
-.logo-row:hover .l-p,.logo-row.x-active .l-p{transform:translateX(-18px)}
-.logo-row:hover .l-o,.logo-row.x-active .l-o{transform:translateX(-10px)}
-.logo-row:hover .l-y,.logo-row.x-active .l-y{transform:translateX(18px)}
-.fomo{font-size:11px;color:#B0B0B0;letter-spacing:0.3px;margin-bottom:28px;font-weight:400}
-
-/* ── STAGE ── */
-.stage{width:240px;height:240px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:20px;flex-shrink:0;overflow:visible}
-.box{width:128px;height:128px;border-radius:18px;border:2px solid #e8e8e8;display:flex;align-items:center;justify-content:center;position:absolute;transition:opacity 0.25s;will-change:transform;background:#fafafa}
-.box-qmark{font-size:50px;font-weight:900;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.reward-box{width:168px;height:168px;border-radius:22px;border:2.5px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;position:absolute;opacity:0;gap:6px;padding:18px;transition:opacity 0.3s}
-.reward-icon{font-size:52px;line-height:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12))}
-.reward-label{font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase}
-.reward-serial{font-size:8.5px;font-weight:500;letter-spacing:1.5px;color:#9E9E9E;font-family:'Inter',monospace;margin-top:2px}
-canvas.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.reward-aura{position:absolute;inset:-30px;border-radius:50%;opacity:0;pointer-events:none;z-index:-1;will-change:transform,opacity}
-.reward-aura.burst{animation:auraBurst 0.9s ease-out forwards}
-.box.spin-rapid,.box.spin-white{will-change:transform,opacity,background,border-color}
-.reward-box.reveal-common,.reward-box.reveal-uncommon{animation:revealFadeSoft 0.55s ease-out forwards,floatUp 2.5s ease-in-out 0.55s infinite}
-.reward-box.reveal-rare,.reward-box.reveal-epic{animation:revealPunch 0.4s cubic-bezier(0.25,1,0.5,1) forwards,revealGlowPulse 1.2s ease-in-out 0.4s infinite,floatUp 2.5s ease-in-out 0.4s infinite}
-.reward-box.reveal-epic.ach-epic-fx{animation:revealPunch 0.4s cubic-bezier(0.25,1,0.5,1) forwards,revealGlowPulse 0.8s ease-in-out 0.4s infinite,floatUp 2.5s ease-in-out 0.4s infinite,achEpicRing 2s ease-in-out 0.5s infinite}
-@keyframes achEpicRing{0%,100%{box-shadow:0 0 0 2px var(--poxy-glow,#a855f7),0 0 48px var(--rg,rgba(168,85,247,0.4))}50%{box-shadow:0 0 0 4px var(--poxy-glow,#a855f7),0 0 72px var(--rg,rgba(168,85,247,0.65))}}
-.poxy-milestones-panel.ach-gold-frame{border-color:rgba(245,158,11,0.35);box-shadow:0 0 24px rgba(245,158,11,0.12)}
-.idhub-page.ach-platinum-bg::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(148,163,184,0.04),rgba(99,102,241,0.06),rgba(148,163,184,0.04));background-size:200% 200%;animation:achPlatinumShift 8s ease-in-out infinite;z-index:0}
-@keyframes achPlatinumShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.reward-box.reveal-legendary,.reward-box.reveal-mythic{animation:revealExplode 0.85s cubic-bezier(0.2,1.2,0.4,1) forwards}
-
-/* ── CTA ── */
-.cta-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
-.btn-open{background:linear-gradient(135deg,#FF5722 0%,#E91E63 60%,#9C27B0 100%);border:none;border-radius:50px;padding:16px 40px;color:#fff;font-size:15px;font-weight:700;letter-spacing:0.5px;cursor:pointer;font-family:inherit;transition:transform 0.2s,box-shadow 0.2s,opacity 0.4s;box-shadow:0 4px 20px #FF572233;white-space:nowrap;will-change:transform,opacity}
-.btn-open:hover{transform:scale(1.03);box-shadow:0 6px 28px #FF572266}
-.btn-open:active{transform:scale(0.97)}
-.btn-open:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
-.post-btns{display:none;flex-direction:row;gap:10px;width:100%;opacity:0;transition:opacity 0.35s}
-.post-btns.visible{display:flex}.post-btns.faded-in{opacity:1}
-.btn-add{flex:1;background:#fff;border:1.5px solid #FF5722;border-radius:50px;padding:13px 12px;color:#FF5722;font-size:12px;font-weight:700;letter-spacing:0.3px;cursor:pointer;font-family:inherit;transition:background 0.2s,transform 0.15s}
-.btn-add:hover{background:#fff5f2;transform:scale(1.02)}.btn-add:active{transform:scale(0.97)}
-.btn-add:disabled{opacity:0.5;cursor:not-allowed}
-.btn-discard{flex:1;background:transparent;border:1px solid #e0e0e0;border-radius:50px;padding:13px 12px;color:#9E9E9E;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.2s}
-.btn-discard:hover{background:#f5f5f5}
-.btn-list-market{width:100%;background:transparent;border:1px solid #e0e0e0;border-radius:50px;padding:9px;color:#9E9E9E;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:inherit;transition:all 0.2s;text-transform:uppercase;display:none}
-.btn-list-market.show{display:block}
-.btn-list-market:hover{border-color:#FF5722;color:#FF5722}
-.btn-club-enter{width:100%;background:transparent;border:1px solid #FF5252;border-radius:50px;padding:10px;color:#FF5252;font-size:10px;font-weight:700;letter-spacing:2px;cursor:pointer;font-family:inherit;text-transform:uppercase;display:none;animation:neonPulse 2s ease-in-out infinite}
-.btn-club-enter.show{display:block}
-
-/* ── NAV ── */
-.bottom-nav{max-width:380px;margin:0 auto;border-top:1px solid #f0f0f0;display:flex;align-items:center;justify-content:center;padding:0}
-.nav-btn{flex:1;padding:12px 2px;background:none;border:none;font-family:inherit;font-size:9.5px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;cursor:pointer;transition:color 0.2s;text-transform:uppercase;position:relative;white-space:nowrap}
-.nav-btn.active{color:#FF5722}
-.nav-btn.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,#FF5722,#E91E63);border-radius:2px 2px 0 0}
-.nav-btn.club-tab{color:#FF5252;display:none}.nav-btn.club-tab.show{display:block}
-.nav-btn.club-tab.active::after{background:linear-gradient(90deg,#FF5252,#FF8F00)}
-
-/* ── PREMIUM CLUB TAB (visual-only, layout unchanged) ── */
-.nav-btn.club-tab{
-  background:linear-gradient(45deg,#FFD700,#FF8C00,#FF4500,#FFD700);
-  background-size:300% 300%;
-  background-position:0% 50%;
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-  color:transparent;
-  filter:drop-shadow(0 0 8px rgba(255,140,0,0.6));
-  transition:transform 0.25s ease,filter 0.25s ease,background-position 0.6s ease;
-  overflow:visible;
-  will-change:transform,filter,background-position;
-}
-.nav-btn.club-tab:hover{
-  transform:scale(1.15);
-  background-position:100% 50%;
-  filter:drop-shadow(0 0 14px rgba(255,140,0,0.85));
-}
-/* Sparkles only render when the tab is NOT active so the existing
-   .nav-btn.club-tab.active::after underline indicator is preserved. */
-.nav-btn.club-tab:not(.active)::before,
-.nav-btn.club-tab:not(.active)::after{
-  content:"";
-  position:absolute;
-  width:3px;
-  height:3px;
-  border-radius:50%;
-  background:#FFD700;
-  pointer-events:none;
-  will-change:transform,opacity;
-  animation:floatSparks 2s ease-in-out infinite;
-}
-.nav-btn.club-tab:not(.active)::before{
-  left:30%;
-  bottom:32%;
-  box-shadow:-10px 1px 0 -1px #FFA500,9px 2px 0 -1px #FF8C00;
-  animation-delay:0s;
-}
-.nav-btn.club-tab:not(.active)::after{
-  left:62%;
-  bottom:32%;
-  box-shadow:8px 4px 0 0 #FFD700,-9px 5px 0 -1px #FF4500;
-  animation-delay:0.7s;
-}
-@keyframes floatSparks {
-  0%   { transform: translateY(0) scale(1); opacity: 1; }
-  100% { transform: translateY(-15px) scale(0); opacity: 0; }
-}
-.nav-sep{width:1px;height:16px;background:#f0f0f0;flex-shrink:0}
-
-/* ── PAGES ── */
-.page{display:none;max-width:380px;margin:0 auto;padding:24px 20px 40px;min-height:380px}
-.page.visible{display:block;animation:fadeIn 0.3s ease}
-.page-title{font-size:17px;font-weight:800;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px;margin-bottom:18px}
-.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:50px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform 0.15s,opacity 0.2s;box-shadow:0 4px 14px #FF572233}
-.btn-primary:hover{transform:scale(1.02)}.btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none}
-
-/* ── PROFILE ── */
-.avatar-upload-preview{width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center center;border:2px solid #e8e8e8;display:block;margin:0}
-.profile-avatar-row{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;justify-content:center}
-.avatar-opt{font-size:26px;width:48px;height:48px;border-radius:50%;border:2px solid #f0f0f0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;background:#fafafa}
-.avatar-opt.selected{border-color:#FF5722;background:#fff5f2;transform:scale(1.1)}
-.frame-cosmetic-panel{margin:18px 0 16px;padding:16px 14px 14px;background:linear-gradient(165deg,rgba(12,12,16,0.98),rgba(6,6,10,0.99));border-radius:18px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 16px 44px rgba(0,0,0,0.38),inset 0 1px 0 rgba(255,255,255,0.06);position:relative;overflow:hidden}
-.frame-cosmetic-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 0%,rgba(255,65,108,0.14),transparent 42%),radial-gradient(circle at 88% 100%,rgba(124,77,255,0.12),transparent 48%);pointer-events:none}
-.frame-selector-header{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:12px;padding:0;border:none;background:transparent;cursor:pointer;font-family:inherit;text-align:left;position:relative;z-index:1;transition:margin-bottom 0.28s ease}
-.frame-cosmetic-panel.is-collapsed .frame-selector-header{margin-bottom:0}
-.frame-selector-header-text{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
-.frame-selector-label{font-size:10px;font-weight:800;letter-spacing:2.5px;color:#e8e8f0;text-transform:uppercase;margin:0;transition:color 0.2s ease}
-.frame-selector-sub{font-size:9px;color:#666;letter-spacing:1px;text-transform:uppercase}
-.frame-selector-chevron{font-size:13px;color:#777;line-height:1;flex-shrink:0;margin-left:10px;transition:transform 0.32s cubic-bezier(0.25,1,0.5,1),color 0.2s ease}
-.frame-cosmetic-panel.is-collapsed .frame-selector-chevron{transform:rotate(-90deg)}
-.frame-selector-header:hover .frame-selector-label{color:#fff}
-.frame-selector-header:hover .frame-selector-chevron{color:#bbb}
-.frame-selector-body{max-height:360px;overflow:hidden;transition:max-height 0.36s cubic-bezier(0.25,1,0.5,1),opacity 0.28s ease;opacity:1;position:relative;z-index:1}
-.frame-cosmetic-panel.is-collapsed .frame-selector-body{max-height:0;opacity:0;pointer-events:none}
-.frame-selector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;max-height:320px;overflow-y:auto;padding:4px 2px;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
-.frame-selector-grid::-webkit-scrollbar{width:4px}
-.frame-selector-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px}
-.frame-cosmetic-slot{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;padding:0;border:none;background:transparent;cursor:pointer;font-family:inherit;perspective:520px;transition:transform 0.28s cubic-bezier(0.25,1,0.5,1);will-change:transform}
-.frame-cosmetic-slot:hover{transform:scale(1.06) translateY(-3px)}
-.frame-cosmetic-slot:hover .frame-slot-glass{box-shadow:0 14px 28px rgba(0,0,0,0.55),0 0 20px var(--frame-accent-glow,rgba(255,65,108,0.25));border-color:rgba(255,255,255,0.22)}
-.frame-cosmetic-slot:hover .frame-slot-glass{transform:rotateX(4deg) rotateY(-4deg)}
-.frame-cosmetic-slot.active .frame-slot-glow{opacity:1;animation:frameSelectPulse 2.4s ease-in-out infinite}
-.frame-cosmetic-slot.active .frame-slot-glass{border-color:var(--frame-accent,#ff416c);box-shadow:0 0 0 1px var(--frame-accent,#ff416c),0 12px 32px rgba(0,0,0,0.5),0 0 24px var(--frame-accent-glow,rgba(255,65,108,0.35))}
-.frame-cosmetic-slot.frame-locked{cursor:not-allowed}
-.frame-cosmetic-slot.frame-locked:hover{transform:none}
-.frame-cosmetic-slot.frame-locked .frame-slot-glass{filter:grayscale(0.85);opacity:0.65}
-.frame-cosmetic-slot.frame-locked .frame-slot-lock{display:flex}
-.frame-slot-glow{position:absolute;top:8px;left:50%;width:70%;height:55%;transform:translateX(-50%);background:radial-gradient(circle,var(--frame-accent-glow,rgba(255,65,108,0.35)) 0%,transparent 70%);opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:0}
-.frame-slot-glass{position:relative;width:100%;aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 20px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 6px 6px;overflow:hidden;transition:transform 0.28s cubic-bezier(0.25,1,0.5,1),box-shadow 0.28s ease,border-color 0.28s ease;transform-style:preserve-3d;will-change:transform}
-.frame-slot-glass::before{content:"";position:absolute;inset:0;border-radius:14px;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,0.18),transparent 40%,rgba(255,255,255,0.08));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.7}
-.frame-slot-emblem{font-size:16px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));position:relative;z-index:2}
-.frame-slot-preview{width:38px;height:38px;font-size:16px;position:relative;z-index:2;display:flex;align-items:center;justify-content:center;margin:0;padding:0}
-.frame-slot-face{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 50%,#2a2a32,#121218);font-size:15px;line-height:1;box-shadow:inset 0 2px 6px rgba(0,0,0,0.5);margin:0;padding:0;overflow:hidden}
-.frame-slot-face img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;margin:0;padding:0;border-radius:50%;font-size:0;color:transparent}
-.frame-slot-emoji-fallback{font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
-/* ── Frame selector preview rings — localized inset alignment (#frameSelectorGrid only) ── */
-#frameSelectorGrid .frame-slot-preview.avatar-frame-target{
-  width:38px;
-  height:38px;
-  min-width:38px;
-  min-height:38px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  overflow:visible;
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  flex-shrink:0;
-  isolation:isolate;
-}
-#frameSelectorGrid .frame-slot-preview.avatar-frame-target[data-frame]::before,
-#frameSelectorGrid .frame-slot-preview.avatar-frame-target[data-frame]::after{
-  top:-4px;
-  left:-4px;
-  right:-4px;
-  bottom:-4px;
-  width:auto;
-  height:auto;
-  margin:0;
-  padding:0;
-  transform-origin:center center;
-  transform:none;
-}
-#frameSelectorGrid .frame-slot-preview.avatar-frame-target[data-frame]::after{
-  top:-2px;
-  left:-2px;
-  right:-2px;
-  bottom:-2px;
-}
-#frameSelectorGrid .frame-slot-preview[data-frame="venom-frame"]::before{animation:afUBVenomBio 4.4s ease-in-out infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="venom-frame"]::after{animation:afUBVenomSpike 4.4s ease-in-out infinite 0.35s}
-#frameSelectorGrid .frame-slot-preview[data-frame="magma-frame"]::before{animation:afUBMagmaFlow 3.6s ease-in-out infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="magma-frame"]::after{animation:afUBMagmaHeat 3.6s ease-in-out infinite 0.25s}
-#frameSelectorGrid .frame-slot-preview[data-frame="prism-frame"]::before{animation:afUBPrismRefract 5s linear infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="prism-frame"]::after{animation:afUBPrismSpark 5s ease-in-out infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="bio-storm-frame"]::before{animation:afUBBioScan 2.8s linear infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="bio-storm-frame"]::after{animation:afUBBioMatrix 2.8s linear infinite reverse}
-#frameSelectorGrid .frame-slot-preview[data-frame="ethereal-flame"]::before{animation:afUBEtherealRise 3.4s ease-in-out infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="ethereal-flame"]::after{animation:afUBEtherealPulse 3.4s ease-in-out infinite 0.4s}
-#frameSelectorGrid .frame-slot-preview[data-frame="void-frame"]::before{animation:afUBVoidGalaxy 6s ease-in-out infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="void-frame"]::after{animation:afUBVoidGravity 6s ease-in-out infinite 0.5s}
-#frameSelectorGrid .frame-slot-preview[data-frame="tesla-frame"]::before{animation:afUBTeslaArc 2.2s steps(10,end) infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="tesla-frame"]::after{animation:afUBTeslaCoil 2.2s steps(10,end) infinite 0.08s}
-#frameSelectorGrid .frame-slot-preview[data-frame="ocean-frame"]::before{animation:afUBOceanCaustic 4s ease-in-out infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="ocean-frame"]::after{animation:afUBOceanBubble 4s ease-in-out infinite 0.3s}
-#frameSelectorGrid .frame-slot-preview[data-frame="glitch-frame"]::before{animation:afUBGlitchR 2.6s steps(8,end) infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="glitch-frame"]::after{animation:afUBGlitchB 2.6s steps(8,end) infinite 0.06s}
-#frameSelectorGrid .frame-slot-preview[data-frame="ruby-frame"]::before{animation:afUBRubyCore 3.8s ease-in-out infinite}
-#frameSelectorGrid .frame-slot-preview[data-frame="ruby-frame"]::after{animation:afUBRubyBlood 3.8s ease-in-out infinite 0.45s}
-#frameSelectorGrid .frame-slot-preview > .frame-slot-face{
-  width:38px;
-  height:38px;
-  min-width:38px;
-  min-height:38px;
-  max-width:38px;
-  max-height:38px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-  z-index:1;
-  margin:0;
-  padding:0;
-  line-height:0;
-  flex-shrink:0;
-  transform:none;
-  box-sizing:border-box;
-}
-#frameSelectorGrid .frame-slot-preview .frame-slot-face img{
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center center;
-  margin:0;
-  padding:0;
-  border:none;
-  border-radius:50%;
-  box-sizing:border-box;
-  transform:none;
-}
-.frame-slot-shine{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,0.12),transparent);animation:frameSlotShine 4s ease-in-out infinite;pointer-events:none;z-index:3}
-.frame-slot-name{font-size:8px;font-weight:800;color:#ddd;letter-spacing:1.2px;text-transform:uppercase;text-align:center;line-height:1.2;max-width:100%}
-.frame-slot-tier{font-size:7px;font-weight:600;color:#666;letter-spacing:0.8px;text-transform:uppercase;text-align:center}
-.frame-slot-lock{position:absolute;inset:0;border-radius:14px;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;font-size:18px;z-index:5;pointer-events:none}
-@keyframes frameSelectPulse{0%,100%{opacity:0.55;transform:translateX(-50%) scale(0.95)}50%{opacity:1;transform:translateX(-50%) scale(1.08)}}
-@keyframes frameSlotShine{0%{transform:translateX(0);opacity:0}30%{opacity:1}100%{transform:translateX(280%);opacity:0}}
-.profile-field{margin-bottom:12px}
-.profile-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:5px}
-.profile-input{width:100%;padding:11px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:14px;color:#1a1a1a;outline:none;transition:border-color 0.2s;background:#fafafa}
-.profile-input:focus{border-color:#FF5722;background:#fff}
-.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
-.pstat{background:#f7f7f7;border-radius:10px;padding:12px 8px;text-align:center}
-.pstat-val{font-size:18px;font-weight:800;color:#1a1a1a}
-.pstat-label{font-size:9px;color:#B0B0B0;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
-
-/* ── COLLECTION ── */
-.page-collection-wide{max-width:min(1100px,96vw)!important;padding:20px 24px 40px!important}
-.col-sticky-bar{position:sticky;top:0;z-index:10;background:#fff;padding:12px 0 10px;margin:-12px 0 14px;border-bottom:1px solid #f0f0f0}
-body[data-theme="cyberpunk"] .col-sticky-bar{background:#0d0d10}
-body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
-.col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.col-title{font-size:17px;font-weight:800;background:linear-gradient(135deg,#FF5722,#E91E63,#9C27B0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.5px}
-.col-count{font-size:11px;color:#B0B0B0;font-weight:500}
-.dust-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:8px 12px;background:#f7f7f7;border-radius:10px}
-.dust-val{font-size:13px;font-weight:800;color:#FF5722}
-.dust-tip{font-size:10px;color:#C8C8C8;margin-left:auto}
-.filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.filter-btn{padding:5px 12px;border-radius:20px;border:1.5px solid #e8e8e8;background:#fff;font-size:10px;font-weight:700;letter-spacing:1px;color:#B0B0B0;cursor:pointer;font-family:inherit;transition:all 0.2s;text-transform:uppercase}
-.filter-btn.active{border-color:var(--fc);color:var(--fc);background:var(--fb)}
-.bulk-bar{display:flex;gap:8px;align-items:center;margin-bottom:14px;padding:8px 12px;background:#fff5f2;border-radius:10px;border:1px solid #FFE0D5;display:none}
-.bulk-bar.show{display:flex}
-.bulk-count{font-size:11px;color:#FF5722;font-weight:700;flex:1}
-.btn-bulk-dust{padding:7px 16px;background:#FF5722;border:none;border-radius:20px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
-.btn-bulk-dust:hover{opacity:0.85}
-.col-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
-.col-grid-wide{grid-template-columns:repeat(auto-fill,minmax(176px,1fr))!important;gap:16px!important}
-.col-card{width:100%;box-sizing:border-box;border-radius:16px;padding:14px 10px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1.5px solid transparent;transition:transform 0.2s,opacity 0.35s;cursor:default;animation:fadeIn 0.4s ease both;position:relative;text-align:center;overflow:visible}
-#colGrid.col-grid-wide .col-card{aspect-ratio:1/1;min-height:0;padding:16px 12px 12px}
-#colGrid .col-card-body{flex:1;justify-content:center}
-.col-card:hover{transform:translateY(-2px)}
-.col-card.selected-for-dust{outline:2px solid #FF5722;outline-offset:2px}
-.col-card-body{display:flex;flex-direction:column;align-items:center;width:100%;gap:5px;text-align:center;position:relative;z-index:2}
-.col-card-icon{font-size:28px;line-height:1;text-align:center;width:100%}
-.col-card-tier{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;width:100%}
-.col-card-date{font-size:8.5px;color:#9E9E9E;text-align:center;width:100%}
-.col-card-serial{font-size:8px;font-weight:500;letter-spacing:1px;color:#B8B8B8;font-family:'Inter',monospace;text-align:center;width:100%;word-break:break-word}
-.col-card-actions{display:flex;gap:6px;margin-top:4px}
-.btn-burn,.btn-sell-card,.btn-feature-card{border:none;background:none;cursor:pointer;font-size:13px;opacity:0.4;transition:opacity 0.2s,transform 0.2s;padding:2px;line-height:1}
-.btn-burn:hover,.btn-sell-card:hover,.btn-feature-card:hover{opacity:0.9;transform:scale(1.2)}
-/* ── INVENTORY KEBAB MENU + PIN ── */
-.col-card-kebab{position:absolute;top:6px;right:6px;width:26px;height:26px;border:none;border-radius:8px;background:rgba(20,20,28,0.55);color:#fff;font-size:18px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:8;transition:background 0.18s ease,transform 0.18s ease;padding:0;letter-spacing:0;flex-shrink:0}
-.col-card-kebab:hover{background:rgba(20,20,28,0.85);transform:scale(1.08)}
-.col-card-kebab:active{transform:scale(0.92)}
-/* Lift the entire card above its grid siblings while its dropdown is open,
-   otherwise neighboring cards (separate stacking contexts due to .tilt-3d
-   transform) paint over the dropdown regardless of its z-index. */
-.col-card-menu{
-  position:absolute;
-  top:36px;
-  right:6px;
-  min-width:170px;
-  background:#111111;
-  background-color:#111111;
-  backdrop-filter:none;
-  -webkit-backdrop-filter:none;
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:12px;
-  box-shadow:0 14px 36px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.05) inset;
-  padding:8px 10px;
-  box-sizing:border-box;
-  z-index:9999;
-  opacity:0;
-  transform:translateY(-4px) scale(0.95);
-  transform-origin:top right;
-  pointer-events:none;
-  transition:opacity 0.18s ease,transform 0.18s ease;
-  will-change:transform,opacity;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-  isolation:isolate;
-  transform-style:flat;
-  -webkit-transform-style:flat;
-  overflow:visible;
-}
-.col-card-menu.open{
-  opacity:1;
-  transform:translateY(0) scale(1);
-  pointer-events:auto;
-}
-.col-card-menu--portal{
-  display:none;
-  position:fixed;
-  z-index:100000;
-  min-width:200px;
-  width:max-content;
-  max-width:min(260px,calc(100vw - 16px));
-  opacity:1;
-  transform:none;
-  pointer-events:auto;
-  visibility:visible;
-}
-.col-card-menu--portal.open{
-  display:flex;
-}
-.col-card-menu.open *{pointer-events:auto}
-.col-card.col-card--menu-open{z-index:9999}
-.col-card-menu-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  width:100%;
-  min-height:36px;
-  text-align:left;
-  padding:10px 12px 10px 10px;
-  box-sizing:border-box;
-  border:none;
-  background:transparent;
-  color:#f1f1f1;
-  font-family:inherit;
-  font-size:11.5px;
-  font-weight:600;
-  letter-spacing:0.4px;
-  border-radius:8px;
-  cursor:pointer;
-  transition:background 0.15s ease,color 0.15s ease;
-  line-height:1.2;
-  pointer-events:auto;
-  user-select:none;
-  -webkit-user-select:none;
-}
-.col-card-menu-item:hover{background:rgba(255,255,255,0.08)}
-.col-card-menu-item:active{background:rgba(255,255,255,0.14)}
-.col-card-menu-item.active{background:rgba(255,180,40,0.18);color:#ffce6a}
-.col-card-menu-item.danger{color:#ff7373}
-.col-card-menu-item.danger:hover{background:rgba(255,80,80,0.16);color:#ff5555}
-.col-card-menu-item .ic{font-size:14px;width:20px;min-width:20px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;pointer-events:none;line-height:1}
-.col-card.pinned{box-shadow:0 0 22px rgba(255,180,40,0.32),inset 0 0 0 1px rgba(255,180,40,0.45)!important}
-.col-card-pin-badge{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#ffb840,#ff7e36);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,165,40,0.5);z-index:7;pointer-events:none;line-height:1}
-
-/* ────────────────────────────────────────
-   POXY CLUB EXCLUSIVES — VIP RARITY SYSTEM
-   All animations use transform + opacity ONLY (GPU-friendly, no layout shifts)
-   ──────────────────────────────────────── */
-.poxy-vip-obsidian,.poxy-vip-cursed,.poxy-vip-souvenir,.poxy-vip-stellar,.poxy-vip-diamond,.poxy-vip-secret{position:relative;isolation:isolate;overflow:hidden}
-
-/* OBSIDIAN — slow void breathing pulse */
-.poxy-vip-obsidian{background:radial-gradient(circle at 50% 30%,rgba(70,80,100,0.28),rgba(8,8,16,0.96))!important;border-color:rgba(120,130,160,0.45)!important}
-.poxy-vip-obsidian::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle,rgba(180,200,255,0.22) 0%,transparent 60%);pointer-events:none;will-change:opacity,transform;animation:vipObsidianPulse 5.5s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
-@keyframes vipObsidianPulse{0%,100%{opacity:0.25;transform:scale(0.85)}50%{opacity:0.7;transform:scale(1.12)}}
-
-/* CURSED — low-frequency glitch flicker */
-.poxy-vip-cursed{background:radial-gradient(circle at 50% 35%,rgba(126,87,194,0.28),rgba(36,18,54,0.96))!important;border-color:rgba(170,110,230,0.55)!important}
-.poxy-vip-cursed::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(180,80,255,0.18) 50%,transparent 100%);pointer-events:none;will-change:opacity,transform;animation:vipCursedFlicker 4.5s steps(20,end) infinite;z-index:0;mix-blend-mode:screen}
-@keyframes vipCursedFlicker{0%,87%,93%,98%,100%{opacity:0.45;transform:translateY(0) scaleY(1)}89%{opacity:0.95;transform:translateY(-3px) scaleY(1.04)}91%{opacity:0.1;transform:translateY(2px) scaleY(0.96)}95%{opacity:0.85;transform:translateY(0) scaleY(1.06)}}
-
-/* SOUVENIR — bronze/gold shimmer sweep */
-.poxy-vip-souvenir{background:linear-gradient(135deg,rgba(180,120,40,0.22),rgba(220,180,80,0.12))!important;border-color:rgba(255,170,60,0.6)!important}
-.poxy-vip-souvenir::before{content:"";position:absolute;top:0;left:-50%;width:200%;height:100%;background:linear-gradient(110deg,transparent 38%,rgba(255,210,120,0.55) 50%,transparent 62%);pointer-events:none;will-change:transform;animation:vipSouvenirShimmer 4s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
-@keyframes vipSouvenirShimmer{0%{transform:translateX(-50%)}100%{transform:translateX(50%)}}
-
-/* STELLAR — nebula bloom + 6 star particles (1 dot + 5 box-shadow ghosts) */
-.poxy-vip-stellar{background:radial-gradient(ellipse at 30% 50%,rgba(100,80,200,0.32),rgba(20,20,60,0.96))!important;border-color:rgba(140,120,255,0.55)!important}
-.poxy-vip-stellar::before{content:"";position:absolute;inset:-15%;background:radial-gradient(circle at 70% 30%,rgba(220,180,255,0.4),transparent 45%),radial-gradient(circle at 30% 70%,rgba(140,200,255,0.32),transparent 55%);pointer-events:none;will-change:opacity,transform;animation:vipStellarPulse 5s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
-.poxy-vip-stellar::after{content:"";position:absolute;top:30%;left:30%;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:22px -10px 0 0 rgba(255,255,255,0.95),-12px 18px 0 0 rgba(255,255,255,0.85),32px 16px 0 0 rgba(200,220,255,0.9),-18px -14px 0 0 #fff,10px 26px 0 0 rgba(180,200,255,0.85);pointer-events:none;will-change:opacity,transform;animation:vipStellarTwinkle 3.2s ease-in-out infinite;z-index:1}
-@keyframes vipStellarPulse{0%,100%{opacity:0.5;transform:scale(0.95)}50%{opacity:0.95;transform:scale(1.08)}}
-@keyframes vipStellarTwinkle{0%,100%{opacity:0.45;transform:scale(0.7)}50%{opacity:1;transform:scale(1.4)}}
-
-/* DIAMOND — single light sweep left → right */
-.poxy-vip-diamond{background:linear-gradient(135deg,rgba(180,220,255,0.22),rgba(220,240,255,0.12))!important;border-color:rgba(180,220,255,0.65)!important}
-.poxy-vip-diamond::before{content:"";position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.7),transparent);pointer-events:none;will-change:transform,opacity;animation:vipDiamondSweep 3.6s ease-in-out infinite;z-index:0;mix-blend-mode:screen}
-@keyframes vipDiamondSweep{0%{transform:translateX(0);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateX(320%);opacity:0}}
-
-/* SECRET — slow conic gradient shift (rotation = transform-only) */
-.poxy-vip-secret{background:linear-gradient(135deg,#2a0a3a,#0a0a2a)!important;border-color:rgba(233,30,99,0.7)!important}
-.poxy-vip-secret::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg,#ff5722,#e91e63,#9c27b0,#3f51b5,#00bcd4,#ff5722);pointer-events:none;opacity:0.3;will-change:transform;animation:vipSecretGradient 6s linear infinite;z-index:0;mix-blend-mode:screen}
-@keyframes vipSecretGradient{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-
-/* VIP serial badge — top-center, prominent #X */
-.col-card-vip-serial{position:absolute;top:8px;left:50%;transform:translateX(-50%);max-width:calc(100% - 56px);background:rgba(0,0,0,0.6);color:#ffce6a;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:1.2px;border:1px solid rgba(255,206,106,0.5);font-family:'Inter',monospace;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:6;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.45);box-shadow:0 4px 14px rgba(255,140,0,0.28),0 0 0 1px rgba(0,0,0,0.4) inset;line-height:1;white-space:nowrap}
-
-/* TEASER — non-VIP locked view (blur + grayscale + lock overlay) */
-.col-vip-locked-wrap{position:relative;display:flex;width:100%;height:100%;align-items:stretch}
-.col-vip-locked-wrap > .col-card{flex:1;height:100%}
-.poxy-club-teaser{filter:blur(11px) grayscale(0.5)!important;opacity:0.7!important;pointer-events:none!important}
-.col-card-locked-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(0,0,0,0.32);border-radius:16px;color:#fff;font-size:11px;font-weight:900;letter-spacing:3px;pointer-events:none;z-index:10;text-transform:uppercase}
-.col-card-locked-overlay .ic{font-size:24px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6))}
-.col-card-locked-overlay .lbl{text-shadow:0 2px 8px rgba(0,0,0,0.7),0 0 14px rgba(255,206,106,0.4)}
-
-/* POXY CLUB EXCLUSIVES section header + CTA */
-.col-club-section{margin-top:28px;padding-top:18px;border-top:1px solid rgba(255,206,106,0.18);position:relative}
-.col-club-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:9px 12px;background:linear-gradient(135deg,rgba(255,180,40,0.1),rgba(255,80,120,0.08));border-radius:12px;border:1px solid rgba(255,180,40,0.25)}
-.col-club-bullet{font-size:14px;color:#ffce6a;will-change:opacity,transform;animation:vipObsidianPulse 4s ease-in-out infinite}
-.col-club-title{flex:1;font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;background:linear-gradient(90deg,#FFD700,#FF8C00,#FF4500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
-.col-club-count{font-size:10px;font-weight:800;color:#ffce6a;background:rgba(255,206,106,0.12);padding:3px 9px;border-radius:999px;border:1px solid rgba(255,206,106,0.25)}
-.col-club-grid{grid-template-columns:repeat(auto-fill,minmax(152px,1fr))!important;gap:16px!important;margin-bottom:14px;align-items:stretch;justify-items:stretch}
-.col-club-grid .col-vip-locked-wrap{aspect-ratio:3/4;min-height:178px;width:100%;display:flex;align-items:stretch}
-.col-club-grid .col-vip-locked-wrap > .col-card{flex:1;width:100%;height:100%;min-height:100%;aspect-ratio:unset}
-.col-club-grid .col-card{aspect-ratio:3/4;min-height:178px;padding:0;gap:0;justify-content:flex-start;align-items:stretch;overflow:hidden}
-.col-club-grid .col-card.col-card--menu-open{overflow:visible;z-index:9999}
-.col-club-grid .col-card[class*="poxy-vip-"].col-card--menu-open{overflow:visible}
-.col-club-grid .col-card > .col-card-kebab,
-.col-club-grid .col-card > .col-card-pin-badge,
-.col-club-grid .col-card > .col-card-vip-serial{position:absolute;z-index:8}
-.col-club-grid .col-card > .col-card-vip-serial{z-index:6}
-.col-club-grid .col-card-body{position:absolute;inset:36px 8px 10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:auto;gap:7px;margin:0;padding:0;text-align:center;z-index:2}
-.col-club-grid .col-card.col-card--menu-open .col-card-body{opacity:0.35;pointer-events:none}
-.col-club-grid .col-card-icon{font-size:30px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;margin:0}
-.col-club-grid .col-card-tier,
-.col-club-grid .col-card-date,
-.col-club-grid .col-card-serial{width:100%;text-align:center;margin:0}
-.col-club-grid .col-card-kebab{top:6px;right:6px;width:20px;height:20px;font-size:13px;border-radius:6px;line-height:0.9;padding:0 0 1px 0;z-index:12}
-#colCardMenuPortal.col-card-menu--portal .col-card-menu-item{font-size:11px}
-.col-club-grid .col-card-pin-badge{top:6px;left:6px;width:20px;height:20px;font-size:10px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.22);box-shadow:0 4px 12px rgba(0,0,0,0.22),inset 0 1px 0 rgba(255,255,255,0.16)}
-.col-club-grid .col-card-vip-serial{top:8px;left:50%;transform:translateX(-50%)}
-.col-club-cta{width:100%;margin-top:6px;padding:13px 16px;border:1px solid rgba(255,140,0,0.6);border-radius:12px;background:linear-gradient(135deg,rgba(255,180,40,0.15),rgba(255,80,80,0.1));color:#ffce6a;font-family:inherit;font-size:11px;font-weight:900;letter-spacing:2.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-transform:uppercase;transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.2s ease;will-change:transform}
-.col-club-cta:hover{transform:scale(1.02);background:linear-gradient(135deg,rgba(255,180,40,0.25),rgba(255,80,80,0.18));box-shadow:0 6px 18px rgba(255,140,0,0.35)}
-.col-club-cta:active{transform:scale(0.98)}
-.col-club-cta .ic{font-size:13px}
-.col-empty{text-align:center;padding:60px 20px;color:#C8C8C8;font-size:13px;line-height:1.7}
-.col-empty-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
-.col-loading{text-align:center;padding:60px 20px}
-.col-spinner{width:24px;height:24px;border:2px solid #f0f0f0;border-top-color:#FF5722;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto}
-
-/* ── FRIENDS ── */
-.search-bar{display:flex;gap:8px;margin-bottom:8px}
-.search-input{flex:1;padding:11px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-family:inherit;font-size:13px;outline:none;background:#fafafa;transition:border-color 0.2s}
-.search-input:focus{border-color:#FF5722;background:#fff}
-.btn-search{padding:11px 16px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:12px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-.user-card{display:flex;align-items:center;gap:12px;padding:11px;background:#fafafa;border-radius:12px;border:0.5px solid #f0f0f0;margin-bottom:8px;transition:border-color 0.2s}
-.user-card-avatar{font-size:22px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #f0f0f0;flex-shrink:0;overflow:hidden;box-sizing:border-box;margin:0;padding:0;line-height:1}
-.user-card-avatar img{width:100%;height:100%;object-fit:cover;object-position:center center;border-radius:50%;display:block;margin:0;padding:0}
-.user-card-avatar.avatar-premium-frame{padding:2px}
-.user-card-info{flex:1;min-width:0}
-.user-card-name{font-size:13px;font-weight:700;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color 0.2s}
-.user-card-sub{font-size:10px;color:#B0B0B0;margin-top:1px}
-.btn-friend{padding:6px 14px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;border:1.5px solid #FF5722;color:#FF5722;background:transparent;white-space:nowrap}
-.btn-friend:hover{background:#FF5722;color:#fff}
-.btn-friend.sent{border-color:#e0e0e0;color:#B0B0B0;cursor:default}
-.section-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#B0B0B0;text-transform:uppercase;margin-bottom:10px}
-.search-hint{font-size:11px;color:#C8C8C8;padding:4px 0 12px;line-height:1.5}
-
-/* ── MARKETPLACE ── */
-.market-tabs{display:flex;margin-bottom:16px;border-radius:10px;background:#f7f7f7;padding:3px}
-.market-tab{flex:1;padding:9px;border:none;background:none;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:0.5px;color:#B0B0B0;cursor:pointer;border-radius:8px;transition:all 0.2s;text-transform:uppercase}
-.market-tab.active{background:#fff;color:#FF5722;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-.market-card{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;border:1.5px solid transparent;margin-bottom:10px;transition:transform 0.15s;will-change:transform,opacity}
-.market-card:hover{transform:translateY(-1px)}
-.market-card-icon{font-size:22px;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.market-card-info{flex:1;min-width:0}
-.market-card-tier{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.market-card-serial{font-size:9px;color:#9E9E9E;font-family:monospace;margin-top:1px}
-.market-card-price{font-size:14px;font-weight:800;color:#1a1a1a;text-align:right;white-space:nowrap}
-.market-card-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.btn-buy{display:block;padding:6px 12px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:transform 0.15s,opacity 0.2s}
-.btn-buy:hover{transform:scale(1.05)}.btn-buy:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-.btn-quick-buy{padding:7px 14px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:20px;color:#fff;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:0.5px;transition:transform 0.15s;white-space:nowrap}
-.btn-quick-buy:hover{transform:scale(1.05)}
-.btn-quick-buy:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-.market-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.market-sort-select{flex:1;min-width:140px;padding:9px 12px;border:1.5px solid #f0f0f0;border-radius:10px;font-family:inherit;font-size:11px;font-weight:700;color:#1a1a1a;background:#fafafa;cursor:pointer;outline:none}
-.market-sort-select:focus{border-color:#FF5722}
-
-/* ── MODALS ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity 0.25s}
-.modal-overlay.show{opacity:1}.modal-overlay.hidden{display:none}
-.modal-card{background:#fff;border-radius:22px;padding:28px 24px;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,0.18);transform:translateY(20px);transition:transform 0.25s}
-.modal-overlay.show .modal-card{transform:translateY(0)}
-.modal-title{font-size:16px;font-weight:800;color:#1a1a1a;margin-bottom:5px}
-.modal-sub{font-size:12px;color:#9E9E9E;margin-bottom:18px;line-height:1.5}
-.modal-input{width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:10px;font-family:inherit;font-size:15px;font-weight:600;color:#1a1a1a;outline:none;transition:border-color 0.2s;background:#fafafa;margin-bottom:12px}
-.modal-input:focus{border-color:#FF5722;background:#fff}
-.modal-btns{display:flex;gap:10px}
-.btn-modal-ok{flex:1;padding:13px;background:linear-gradient(135deg,#FF5722,#E91E63);border:none;border-radius:50px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform 0.15s,opacity 0.2s}
-.btn-modal-ok:hover{transform:scale(1.02)}.btn-modal-ok:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-.btn-modal-cancel{flex:1;padding:13px;background:transparent;border:1px solid #e0e0e0;border-radius:50px;color:#9E9E9E;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
-.btn-modal-cancel:hover{background:#f5f5f5}
-
-/* ── BANK ── */
-.bank-amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
-.bank-amt{padding:12px 8px;border-radius:12px;border:1.5px solid #f0f0f0;background:#fafafa;text-align:center;cursor:pointer;transition:all 0.2s;font-family:inherit}
-.bank-amt:hover{border-color:#FF5722}
-.bank-amt.selected{border-color:#FF5722;background:#fff5f2}
-.bank-amt-val{font-size:14px;font-weight:800;color:#1a1a1a}
-.bank-amt-sub{font-size:9px;color:#B0B0B0;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
-.bank-amt-custom{display:flex;align-items:stretch;padding:0;overflow:hidden;cursor:default;min-height:100%}
-.bank-amt-custom:focus-within,.bank-amt-custom.selected{border-color:#FF5722;background:#fff5f2}
-.bank-custom-input{flex:1;min-width:0;border:none;background:transparent;padding:12px 6px;font-family:inherit;font-size:13px;font-weight:800;color:#1a1a1a;text-align:center;outline:none;-moz-appearance:textfield}
-.bank-custom-input::-webkit-outer-spin-button,.bank-custom-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.bank-custom-input::placeholder{font-weight:600;font-size:10px;color:#B0B0B0;letter-spacing:0.5px}
-.bank-custom-add{flex-shrink:0;width:38px;border:none;border-left:1.5px solid #f0f0f0;background:transparent;color:#FF5722;font-family:inherit;font-size:18px;font-weight:900;line-height:1;cursor:pointer;transition:background 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center}
-.bank-custom-add:hover{background:#fff0eb;color:#E64A19}
-.bank-custom-add:disabled{opacity:0.45;cursor:not-allowed}
-.bank-form{background:#f7f7f7;border-radius:16px;padding:16px;margin-bottom:16px}
-.bank-form-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#B0B0B0;text-transform:uppercase;margin-bottom:6px}
-.bank-form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.bank-input{width:100%;padding:11px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-family:inherit;font-size:13px;color:#1a1a1a;outline:none;background:#fff;transition:border-color 0.2s;margin-bottom:8px}
-.bank-input:focus{border-color:#FF5722}
-.psd-pay-methods{margin-bottom:4px;width:100%}
-.psd-wallet-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px;width:100%}
-@media(max-width:420px){.psd-wallet-row{grid-template-columns:1fr}}
-.psd-pay-divider{text-align:center;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6a6a7a;margin:14px 0 12px;position:relative}
-.psd-pay-divider span{background:#0a0a0c;padding:0 10px;position:relative;z-index:1}
-.psd-pay-divider::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,0.08)}
-.btn-wallet-pay{
-  width:100%;
-  height:48px;
-  min-height:48px;
-  padding:0 16px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:0;
-  box-sizing:border-box;
-  transition:transform 0.15s,opacity 0.2s,box-shadow 0.2s;
-}
-.btn-wallet-pay:hover{transform:scale(1.02)}
-.btn-wallet-pay:disabled{opacity:0.45;cursor:not-allowed;transform:none}
-.btn-apple-pay{background:#fff;color:#000;box-shadow:0 1px 2px rgba(0,0,0,0.28),inset 0 0 0 1px rgba(0,0,0,0.06)}
-.btn-apple-pay:hover{opacity:0.94}
-.btn-apple-pay .apple-pay-inner{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:88px;max-width:100%}
-.btn-apple-pay .apple-pay-icon{
-  flex:0 0 18px;
-  width:18px;
-  height:22px;
-  background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 814 1000'%3E%3Cpath fill='%23000' d='M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-163.3-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57-155.5-127C46.7 790.7 0 663 0 541.8c0-194.4 125.8-297.5 249.8-297.5 65.5 0 120.1 43.1 161.2 43.1 37.9 0 98.1-45.7 172.5-45.7 27.7 0 127.5 2.6 193.6 99.2zm-234-181.6c27.1-32.4 46.7-77.3 46.7-122.2 0-6.2-.6-12.4-1.5-18.4-44.8 1.6-97.9 29.9-130 67.6-25.2 29.5-48.7 74.5-48.7 120.4 0 7.1.6 14.2 1.1 16.5 2.8.5 7.4 1.1 10.9 1.1 40.2 0 90.7-28.8 121.5-65z'/%3E%3C/svg%3E");
-}
-.btn-apple-pay .apple-pay-word{font-size:18px;font-weight:600;letter-spacing:-0.02em;line-height:1;white-space:nowrap}
-.btn-paypal-pay{background:#ffc439;color:#003087;box-shadow:0 1px 2px rgba(0,0,0,0.22)}
-.btn-paypal-pay:hover{filter:brightness(1.04)}
-.btn-paypal-pay .paypal-mark{font-size:18px;font-weight:700;letter-spacing:-0.03em;line-height:1;white-space:nowrap}
-.btn-pay-card{margin-top:12px;width:100%}
-.bank-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.bank-divider::before,.bank-divider::after{content:'';flex:1;height:1px;background:#e8e8e8}
-.bank-divider span{font-size:11px;color:#B0B0B0;font-weight:600}
-
-/* Auth layout → assets/poxy-auth-page.css */
-
-/* ── USER BAR ── */
-.user-bar{max-width:380px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;gap:8px}
-.user-bar-left{display:flex;align-items:center;gap:8px;min-width:0}
-.user-bar-avatar{font-size:18px;cursor:pointer;transition:transform 0.2s;flex-shrink:0;width:28px;height:28px;border-radius:50%;overflow:visible;display:flex;align-items:center;justify-content:center;box-sizing:border-box;margin:0;padding:0}
-.user-email{font-size:10.5px;color:#B0B0B0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.user-username{font-size:11px;font-weight:700;color:#1a1a1a}
-.btn-logout{background:none;border:none;font-family:inherit;font-size:11px;font-weight:600;color:#FF5722;cursor:pointer;padding:4px 0}
-.btn-logout:hover{opacity:0.7}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:0.5px;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;white-space:nowrap;z-index:2000;max-width:90vw;text-align:center}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-</style>
 <script>
 /* Retired localStorage maintenance overlay — clear stale flags */
 (function(){try{localStorage.removeItem('poxy_maintenance');localStorage.removeItem('poxy_maintenance_msg');}catch(e){}})();
@@ -1466,7 +197,7 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
   </div>
 </div>
 
-<!-- POXY World — Sky landing (Stage 1) -->
+<!-- POXY Sky landing (clean slate 1:1) -->
 <div id="poxyLanding" hidden aria-label="POXY World">
 <nav>
   <div class="nav-in">
@@ -1479,7 +210,7 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
       <button type="button" class="nav-tab" data-tab="about" data-px-tab="about">About</button>
     </div>
     <div class="nav-spacer"></div>
-    <div class="nav-right"><button type="button" class="btn btn-glass" id="plPreviewBack" hidden data-i18n="landing.nav.back">Back to app</button><button type="button" class="btn btn-glass" id="plSignInNav" data-pl-auth data-i18n="landing.nav.signIn">Sign in</button>
+    <div class="nav-right"><button type="button" class="btn btn-glass" id="plPreviewBack" hidden>Back to app</button><button type="button" class="btn btn-glass" id="plSignInNav" data-pl-auth>Sign in</button>
       <button type="button" class="btn btn-primary cta-nav" data-pl-auth>Get started</button>
       <button type="button" class="icon-btn" id="plThemeBtn" aria-label="Theme">◐</button>
       <button type="button" class="icon-btn" id="plLangBtn" aria-label="Language">EN</button>
@@ -1616,9 +347,9 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 <footer><div class="wrap"><div class="foot-grid">
   <div class="foot-about"><div class="fb"><span class="mk"></span>POXY WORLD</div>
     <p>A calm place to open, own, and trade unique digital figures. Built by NULLSPACE LABS.</p></div>
-  <div class="foot-col"><h4>About</h4><button type="button" class="foot-link" data-px-tab="faq">FAQ</button><button type="button" class="foot-link" data-px-tab="policy">Policy</button><button type="button" class="foot-link" data-px-tab="about">About</button><button type="button" class="foot-link" data-px-tab="news">News</button></div>
-  <div class="foot-col"><h4>Product</h4><a href="#">Collect</a><a href="#">Open boxes</a><a href="#">Market</a><a href="#">Seasons</a></div>
-  <div class="foot-col"><h4>Account</h4><a href="#">Sign up</a><a href="#">Log in</a><a href="#">Security</a><a href="#">Devices</a></div>
+  <div class="foot-col"><h4>About</h4><button type="button" class="foot-link" data-px-tab="faq">FAQ</a><button type="button" class="foot-link" data-px-tab="policy">Policy</a><button type="button" class="foot-link" data-px-tab="about">About</a><button type="button" class="foot-link" data-px-tab="news">News</button></div>
+  <div class="foot-col"><h4>Product</h4><a href="#">Collect</a><a href="#">Open boxes</a><a href="#">Market</a><a href="#">Seasons</button></div>
+  <div class="foot-col"><h4>Account</h4><a href="#">Sign up</a><a href="#">Log in</a><a href="#">Security</a><a href="#">Devices</button></div>
   <div class="foot-col"><h4>Company</h4><a href="#">NULLSPACE LABS</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
 </div></div></footer>
 
@@ -1628,127 +359,187 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
 <div id="plLangMenu" style="position:fixed;top:58px;right:22px;z-index:90;min-width:170px;background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:7px;box-shadow:0 20px 50px rgba(0,0,0,.3);display:none;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto"><button class="lang-opt" data-l="English">English</button><button class="lang-opt" data-l="Español">Español</button><button class="lang-opt" data-l="中文">中文</button><button class="lang-opt" data-l="हिन्दी">हिन्दी</button><button class="lang-opt" data-l="العربية">العربية</button><button class="lang-opt" data-l="Português">Português</button><button class="lang-opt" data-l="Русский">Русский</button><button class="lang-opt" data-l="Français">Français</button><button class="lang-opt" data-l="Deutsch">Deutsch</button><button class="lang-opt" data-l="日本語">日本語</button></div>
 </div>
 
-<!-- AUTH — X-style split (POXY dark) -->
+<!-- AUTH — Sky (Stage 2) -->
 <div class="auth-overlay poxy-auth-overlay" id="authOverlay" role="dialog" aria-labelledby="authHeadline" aria-hidden="true">
-  <div class="poxy-auth-backdrop" aria-hidden="true"></div>
-  <button type="button" class="poxy-auth-close" aria-label="Close sign in" onclick="typeof closePoxyAuth==='function'&&closePoxyAuth()"><span class="material-symbols-outlined">close</span></button>
-  <div class="poxy-auth-shell">
-    <section class="poxy-auth-panel">
-      <div class="poxy-auth-panel-logo-mobile" aria-hidden="true">
-        <span class="auth-hero-l">PO</span><span class="auth-hero-x">X</span><span class="auth-hero-y">Y</span>
+  <button type="button" class="px-auth-close" id="authCloseBtn" aria-label="Close sign in">×</button>
+  <button type="button" class="theme-btn" id="authThemeBtn" aria-label="Theme">◐</button>
+
+  <div class="auth">
+    <div class="brand">
+      <div class="case"><div class="mk"></div></div>
+      <div class="name">POXY WORLD</div>
+    </div>
+
+    <div class="screen active" id="authScreen-login">
+      <div class="card">
+        <h1 id="authHeadline">Welcome back</h1>
+        <p class="lead">Sign in to your collection.</p>
+
+        <div class="field">
+          <label for="authEmail">Username or email</label>
+          <div class="input-wrap"><input class="input" type="text" id="authEmail" placeholder="yourname or you@email.com" autocomplete="username"></div>
+        </div>
+        <div class="field">
+          <label for="authPassword">Password</label>
+          <div class="input-wrap"><input class="input" type="password" id="authPassword" placeholder="Your password" autocomplete="current-password"></div>
+        </div>
+
+        <div class="row-between">
+          <label class="check"><input type="checkbox" id="authRemember" checked>Keep me signed in</label>
+          <button type="button" class="link" id="authForgotBtn">Forgot password?</button>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="authSubmitBtn">Sign in</button>
+        <div class="auth-msg" id="authMsg" role="status"></div>
+
+        <div class="divider" aria-hidden="true"><span>or</span></div>
+        <button type="button" class="btn btn-primary btn-oauth" id="authQrBtn">Sign in with a linked device (QR)</button>
+        <button type="button" class="btn btn-primary btn-oauth" onclick="handleAuthOAuth('google')" style="margin-top:10px">Continue with Google</button>
+
+        <div class="swap">New to POXY? <button type="button" id="authModeSwitch">Create an account</button></div>
       </div>
-      <h1 class="poxy-auth-headline" id="authHeadline" data-i18n="auth.headline">Enter POXY WORLD.</h1>
-      <div class="poxy-auth-oauth-stack">
-        <button type="button" class="poxy-auth-oauth poxy-auth-oauth--google" onclick="handleAuthOAuth('google')">
-          <span class="poxy-auth-oauth-icon" aria-hidden="true"></span>
-          <span data-i18n="auth.oauth.google">Continue with Google</span>
-        </button>
-        <button type="button" class="poxy-auth-oauth poxy-auth-oauth--apple" onclick="handleAuthOAuth('apple')">
-          <span class="poxy-auth-oauth-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg></span>
-          <span data-i18n="auth.oauth.apple">Continue with Apple</span>
-        </button>
-        <button type="button" class="poxy-auth-oauth poxy-auth-oauth--phone" onclick="showToast('Phone login — coming soon.')">
-          <span class="poxy-auth-oauth-icon material-symbols-outlined" style="font-size:18px">phone_iphone</span>
-          <span data-i18n="auth.oauth.phone">Continue with phone</span>
-        </button>
+    </div>
+
+    <div class="screen" id="authScreen-register">
+      <div class="card">
+        <h1>Create your account</h1>
+        <p class="lead">Pick a username and you're on your way.</p>
+
+        <div class="field">
+          <label for="authUsername">Username</label>
+          <div class="input-wrap">
+            <span class="prefix">@</span>
+            <input class="input has-prefix" id="authUsername" type="text" placeholder="yourname" autocomplete="username">
+          </div>
+          <div class="field-hint" id="authUsernameHint">3–20 characters, letters and numbers.</div>
+        </div>
+        <div class="field">
+          <label for="authDisplayName">Name</label>
+          <div class="input-wrap"><input class="input" id="authDisplayName" type="text" placeholder="First and last name" autocomplete="name"></div>
+        </div>
+        <div class="field">
+          <label for="authSignupEmail">Email</label>
+          <div class="input-wrap"><input class="input" id="authSignupEmail" type="email" placeholder="you@email.com" autocomplete="email"></div>
+        </div>
+        <div class="field">
+          <label for="authSignupPassword">Password</label>
+          <div class="input-wrap"><input class="input" id="authSignupPassword" type="password" placeholder="Create a password" autocomplete="new-password"></div>
+          <div class="strength" id="authPasswordStrength"><i></i><i></i><i></i><i></i></div>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="authSubmitBtnRegister">Create account</button>
+        <div class="auth-msg" id="authRegisterMsg" role="status"></div>
+
+        <p class="legal">By continuing you agree to our <a href="#" onclick="event.preventDefault()">Terms</a> and <a href="#" onclick="event.preventDefault()">Policy</a>.</p>
+        <div class="swap">Already have an account? <button type="button" id="authModeSwitchRegister">Sign in</button></div>
       </div>
-      <div class="poxy-auth-sep" aria-hidden="true"><span data-i18n="auth.sep.or">or</span></div>
-      <label class="visually-hidden" for="authEmail" data-i18n="auth.email.placeholder">Email or username</label>
-      <input class="poxy-auth-field auth-input" type="text" id="authEmail" data-i18n-placeholder="auth.email.placeholder" placeholder="Email or username" autocomplete="username">
-      <label class="visually-hidden" for="authPassword" data-i18n="auth.password.placeholder">Password</label>
-      <input class="poxy-auth-field auth-input" type="password" id="authPassword" data-i18n-placeholder="auth.password.placeholder" placeholder="Password" autocomplete="current-password">
-      <button type="button" class="poxy-auth-continue is-primary auth-btn" id="authSubmitBtn">Continue</button>
-      <button type="button" class="poxy-auth-mode-switch" id="authModeSwitch">Create account</button>
-      <div class="auth-msg poxy-auth-msg" id="authMsg" role="status"></div>
-      <p class="poxy-auth-legal">By continuing, you agree to the <a href="#" onclick="event.preventDefault()">Terms of Service</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>, including cookie use.</p>
-    </section>
-    <aside class="poxy-auth-hero" aria-hidden="true">
-      <div class="poxy-auth-hero-glow"></div>
-      <div class="poxy-auth-hero-logo">
-        <span class="auth-hero-l">PO</span><span class="auth-hero-x">X</span><span class="auth-hero-y">Y</span>
+    </div>
+
+    <div class="screen" id="authScreen-verify">
+      <div class="card">
+        <h1>Check your email</h1>
+        <p class="lead">We sent a 6-digit code to confirm it's you.</p>
+        <div class="verify-to" id="authVerifyEmail">you@email.com</div>
+
+        <div class="code-row" id="authCodeRow">
+          <input maxlength="1" inputmode="numeric" aria-label="Digit 1"><input maxlength="1" inputmode="numeric" aria-label="Digit 2">
+          <input maxlength="1" inputmode="numeric" aria-label="Digit 3"><input maxlength="1" inputmode="numeric" aria-label="Digit 4">
+          <input maxlength="1" inputmode="numeric" aria-label="Digit 5"><input maxlength="1" inputmode="numeric" aria-label="Digit 6">
+        </div>
+
+        <button type="button" class="btn btn-primary" id="authVerifyBtn" style="margin-top:18px">Verify and continue</button>
+        <div class="auth-msg" id="authVerifyMsg" role="status"></div>
+
+        <div class="resend">Didn't get it? <button type="button" id="authResendBtn">Resend in <span id="authResendTimer">42</span>s</button></div>
+        <div class="swap"><button type="button" id="authVerifyBack">← Back</button></div>
       </div>
-    </aside>
+    </div>
   </div>
+
+  <div class="foot">Protected by 2FA · <a href="#" onclick="event.preventDefault()">Need help?</a></div>
 </div>
 
-<!-- STITCH app shell: global top nav stays on every page -->
-<div id="poxyAppShell" style="display:none">
-  <nav class="st-nav st-nav--global" id="stGlobalNav" aria-label="POXY World">
-      <div class="st-nav-inner">
-        <div class="st-nav-zone st-nav-zone--left">
-          <button type="button" class="st-menu hamburger-btn gpu-accel" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu"><span></span><span></span><span></span></button>
-          <button type="button" class="st-brand-link" id="psdNavBrand" onclick="showStitchTab('dashboard')" data-i18n="nav.brand">POXY WORLD</button>
-          <div class="st-nav-primary" aria-label="Main">
-            <button type="button" class="st-nav-link" id="psdNavNews" onclick="showStitchTab('news')" data-i18n="nav.news">News</button>
-            <button type="button" class="st-nav-link" id="psdNavVerify" onclick="showStitchTab('verify')">Verify</button>
-            <button type="button" class="st-nav-link" id="psdNavWhitepaper" onclick="showStitchTab('whitepaper')">Whitepaper</button>
-            <button type="button" class="st-nav-link" id="psdNavTelemetry" onclick="showStitchTab('telemetry')">Explore</button>
-            <button type="button" class="st-nav-link" id="psdNavGens" onclick="showStitchTab('gens')">GENS</button>
-            <button type="button" class="st-nav-link" id="psdNavExplore" onclick="showStitchTab('explore')" data-i18n="nav.explore" style="display:none">Explore</button>
-            <button type="button" class="st-nav-link" id="psdNavRarity" onclick="showStitchTab('tierlist')" data-i18n="nav.rarity">Rarity</button>
-          </div>
-        </div>
-        <div class="st-nav-zone st-nav-zone--center" aria-label="App navigation">
-          <div class="st-nav-pills">
-            <button type="button" class="st-nav-pill" id="psdNavDashboard" onclick="showStitchTab('dashboard')"><span class="material-symbols-outlined">home</span><span data-i18n="nav.dash">Dash</span></button>
-            <button type="button" class="st-nav-pill" id="psdNavMarket" onclick="showStitchTab('market')"><span class="material-symbols-outlined">storefront</span><span data-i18n="nav.market">Market</span></button>
-            <button type="button" class="st-nav-pill psd-nav-club" id="psdNavClub" onclick="showStitchTab('club')"><span class="material-symbols-outlined">local_play</span><span data-i18n="nav.club">Club</span></button>
-            <button type="button" class="st-nav-pill" id="psdNavRanks" onclick="showStitchTab('ranks')"><span class="material-symbols-outlined">leaderboard</span><span data-i18n="nav.ranks">Ranks</span></button>
-            <button type="button" class="st-nav-pill" id="psdNavCollection" onclick="showPage('collection')"><span class="material-symbols-outlined">inventory_2</span><span data-i18n="nav.collection">Collection</span></button>
-            <button type="button" class="st-nav-pill" id="psdNavStore" onclick="showStitchTab('store')"><span class="material-symbols-outlined">local_grocery_store</span><span data-i18n="nav.store">Store</span></button>
-            <button type="button" class="st-nav-pill" id="psdNavLuminaOs" hidden data-beta-hidden="lumina" onclick="openLuminaOS()"><span class="material-symbols-outlined">hub</span><span data-i18n="nav.lumina">Lumina OS</span></button>
-          </div>
-        </div>
-        <div class="st-nav-zone st-nav-zone--right">
-          <div class="st-xp-hud" id="stXpHud" aria-label="Experience progress">
-            <div class="st-xp-hud-level" id="stXpLevel">LVL 0</div>
-            <div class="st-xp-hud-track" aria-hidden="true"><div class="st-xp-hud-fill" id="stXpFill"></div></div>
-            <div class="st-xp-hud-balance" id="stXpBalance">0 XP</div>
-          </div>
-          <div class="st-wallet-capsule balance-badge st-balance st-spring-interactive gpu-accel" id="balanceBadgeGroup">
-            <button type="button" class="st-wallet-body" id="balanceBadge" onclick="openTopUpModal()" data-i18n-aria="nav.wallet" aria-label="Wallet balance">
-              <span class="st-wallet-icon material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
-              <span class="st-wallet-amount" id="stBalanceText">0 PX</span>
-            </button>
-            <button type="button" class="st-wallet-plus-btn st-spring-interactive" id="balanceTopUpBtn" onclick="openTopUpModal()" data-i18n-aria="nav.topUp" aria-label="Add funds">
-              <span class="material-symbols-outlined" aria-hidden="true">add</span>
-            </button>
-          </div>
-          <div class="st-nav-actions" role="group" data-i18n-aria="nav.quickActions" aria-label="Quick actions">
-            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavNotify" data-i18n-aria="nav.notifications" aria-label="Notifications" onclick="openNotifyHub()">
-              <span class="material-symbols-outlined">notifications</span>
-              <span class="st-nav-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
-            </button>
-            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavSupport" aria-label="Support" title="Support" onclick="openSupportPanel()">
-              <span class="material-symbols-outlined">support_agent</span>
-              <span class="st-nav-badge" id="supportTicketBadge" hidden aria-hidden="true">0</span>
-            </button>
-            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavChat" hidden data-beta-hidden="lumina" data-i18n-aria="nav.messages" aria-label="Messages" onclick="openLuminaOS(null,'messages')">
-              <span class="material-symbols-outlined">chat_bubble</span>
-              <span class="st-nav-badge" id="notifyChatDot" hidden aria-hidden="true"></span>
-            </button>
-            <button type="button" class="st-nav-icon-btn st-spring-interactive" id="stNavGrid" data-i18n-aria="nav.sitePreview" aria-label="Site preview" onclick="openPoxyLandingPreview()">
-              <span class="material-symbols-outlined">grid_view</span>
-            </button>
-          </div>
-          <div class="user-bar st-user st-profile-zone" id="userBar" role="group" aria-label="Account">
-            <button type="button" class="st-nav-user-chip" onclick="showPage('profile')" data-i18n-title="nav.profile.title" title="My profile">
-              <div class="st-nav-avatar-slot">
-                <span class="st-profile-glow" aria-hidden="true"></span>
-                <div class="user-bar-avatar gpu-accel avatar-frame-target st-nav-avatar-frame" id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
-              </div>
-            </button>
-            <div class="st-user-meta">
-              <div class="st-user-name" id="userUsernameEl">Player</div>
-              <div class="st-user-role" id="userRoleEl">POXY MEMBER</div>
-              <div class="st-user-hash" id="userAccountHash" title="Your unique account hash — use this to verify your identity" style="font-size:9px;font-family:monospace;color:rgba(255,255,255,0.35);letter-spacing:.08em;cursor:default;user-select:all"></div>
-            </div>
-            <span class="user-email" id="userEmailEl" style="display:none"></span>
-          </div>
-        </div>
-      </div>
-  </nav>
-  <div class="st-win-reveal" id="stWinReveal" aria-hidden="true" role="dialog" aria-labelledby="stWinRevealTitle">
+<!-- POXY Sky app shell (Stage 3) -->
+<div id="poxyAppShell" class="px-sky-app" style="display:none">
+<aside class="rail" id="pxSkyRail" aria-label="Main navigation">
+  <button type="button" class="logo" id="pxSkyRailLogo" aria-label="POXY WORLD home"><span class="mk"></span></button>
+  <button type="button" class="rail-btn active" data-nav="home"><span class="tip">Home</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="open"><span class="tip">Open boxes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21 3 16.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="collection"><span class="tip">Collection</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="market"><span class="tip">Market</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1 4H5z"/><path d="M5 11v8h14v-8M9 19v-4h6v4"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="collections"><span class="tip">All collections</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a1 1 0 0 1 1-1h4l2 2h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 9h17"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="store"><span class="tip">Store</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M3 9h18M8 13h8"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="community"><span class="tip">Community</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><circle cx="17" cy="10" r="2.4"/><path d="M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5M15 20c0-2.2 1.3-3.5 3-3.7"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="messenger"><span class="tip">Messages</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 4V6a1 1 0 0 1 1-1z"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="events"><span class="tip">Events</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.5 6 .8-4.3 4.2 1 6L12 17l-5.3 2.9 1-6L3.4 9.8l6-.8z"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="quests"><span class="tip">Quests</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="levels"><span class="tip">Levels</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M9 14h6M10 14v4M14 14v4M8 21h8"/></svg></button>
+  <div class="rail-spacer"></div>
+  <button type="button" class="rail-btn" data-nav="profile"><span class="tip">Profile</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg></button>
+  <button type="button" class="rail-btn" data-nav="settings"><span class="tip">Settings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H9.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h4.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5a7 7 0 0 0 .1-1z"/></svg></button>
+</aside>
+<div class="main" id="pxSkyMain">
+<header class="topbar" id="pxSkyTopbar">
+  <div class="greet">Welcome back, <span class="at" id="pxSkyGreetUser">@Player</span></div>
+  <div class="top-right">
+    <div class="st-xp-hud" id="stXpHud" aria-label="Experience progress">
+      <div class="st-xp-hud-level" id="stXpLevel">LVL 0</div>
+      <div class="st-xp-hud-track" aria-hidden="true"><div class="st-xp-hud-fill" id="stXpFill"></div></div>
+      <div class="st-xp-hud-balance" id="stXpBalance">0 XP</div>
+    </div>
+    <div class="st-wallet-capsule balance-badge st-balance" id="balanceBadgeGroup">
+      <button type="button" class="st-wallet-body" id="balanceBadge" onclick="openTopUpModal()" aria-label="Wallet balance">
+        <span class="st-wallet-icon material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+        <span class="st-wallet-amount" id="stBalanceText">0 PX</span>
+      </button>
+      <button type="button" class="st-wallet-plus-btn" id="balanceTopUpBtn" onclick="openTopUpModal()" aria-label="Add funds">
+        <span class="material-symbols-outlined" aria-hidden="true">add</span>
+      </button>
+    </div>
+    <button type="button" class="st-nav-icon-btn" id="stNavNotify" aria-label="Notifications" onclick="openNotifyHub()">
+      <span class="material-symbols-outlined">notifications</span>
+      <span class="st-nav-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
+    </button>
+    <button type="button" class="st-nav-icon-btn" id="stNavSupport" aria-label="Support" onclick="openSupportPanel()">
+      <span class="material-symbols-outlined">support_agent</span>
+      <span class="st-nav-badge" id="supportTicketBadge" hidden aria-hidden="true">0</span>
+    </button>
+    <button type="button" class="st-nav-icon-btn" id="stNavGrid" aria-label="Site preview" onclick="openPoxyLandingPreview()">
+      <span class="material-symbols-outlined">grid_view</span>
+    </button>
+    <button type="button" class="top-icon" id="pxSkyThemeBtn" aria-label="Theme">◐</button>
+  </div>
+</header>
+<div class="stage" id="pxSkyStage">
+<nav class="st-nav st-nav--global px-legacy-nav" id="stGlobalNav" aria-hidden="true" hidden>
+  <div class="st-nav-inner px-legacy-nav-inner">
+    <button type="button" id="psdNavBrand" hidden></button>
+    <button type="button" id="psdNavNews" hidden></button>
+    <button type="button" id="psdNavVerify" hidden></button>
+    <button type="button" id="psdNavWhitepaper" hidden></button>
+    <button type="button" id="psdNavTelemetry" hidden></button>
+    <button type="button" id="psdNavGens" hidden></button>
+    <button type="button" id="psdNavExplore" hidden></button>
+    <button type="button" id="psdNavRarity" hidden></button>
+    <button type="button" class="st-nav-pill" id="psdNavDashboard" hidden></button>
+    <button type="button" class="st-nav-pill" id="psdNavMarket" hidden></button>
+    <button type="button" class="st-nav-pill" id="psdNavClub" hidden></button>
+    <button type="button" class="st-nav-pill" id="psdNavRanks" hidden></button>
+    <button type="button" class="st-nav-pill" id="psdNavCollection" hidden></button>
+    <button type="button" class="st-nav-pill" id="psdNavStore" hidden></button>
+    <button type="button" class="st-nav-pill" id="psdNavLuminaOs" hidden></button>
+    <div class="user-bar" id="userBar" hidden aria-hidden="true">
+      <div id="userUsernameEl">Player</div>
+      <div id="userRoleEl"></div>
+      <div id="userAccountHash"></div>
+      <span id="userEmailEl" style="display:none"></span>
+      <div id="userBarAvatarWrap"><span id="userBarAvatar">🎭</span></div>
+    </div>
+    <button type="button" id="hamburgerBtn" hidden></button>
+    <button type="button" id="stNavChat" hidden></button>
+  </div>
+</nav>
+<div class="st-win-reveal" id="stWinReveal" aria-hidden="true" role="dialog" aria-labelledby="stWinRevealTitle">
     <div class="st-win-reveal-backdrop" aria-hidden="true"></div>
     <div class="st-win-reveal-card" id="stWinRevealCard">
       <div class="st-win-reveal-flare" id="stWinFlare" aria-hidden="true"></div>
@@ -1772,7 +563,113 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
     <div class="st-spa-viewport" id="stSpaViewport">
     <section class="st-spa-panel st-spa-panel--active" id="stPanelDashboard" data-st-tab="dashboard">
     <main class="st-main">
+<!-- POXY Sky Home (Stage 4) -->
+<div id="pxSkyHome" class="px-sky-screen px-sky-screen--active" hidden>
+  <div class="page-head"><h1>Home</h1><p>Your world at a glance.</p></div>
+  <div class="panel panel-pad px-home-welcome">
+    <div class="px-home-welcome-main">
+      <div class="panel-h" style="margin-bottom:8px">Welcome to POXY</div>
+      <p class="px-home-lead">Open your first box to start a collection. Everything you own lives on your shelf, with its own passport.</p>
+      <div class="px-home-actions">
+        <button type="button" class="btn btn-primary" id="pxSkyHomeOpenBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21 3 16.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg> Open a box</button>
+        <button type="button" class="btn btn-glass" id="pxSkyHomeColBtn">My collection</button>
+      </div>
+    </div>
+    <div class="px-home-stats">
+      <div class="px-stat-chip"><div class="px-stat-val" id="pxSkyHomeFigures">0</div><div class="px-stat-lbl">Figures</div></div>
+      <div class="px-stat-chip"><div class="px-stat-val"><span class="coin-sm" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="url(#pxCoinGrad)"/><circle cx="24" cy="24" r="20" stroke="#8BE3FF" stroke-width="2.5"/><circle cx="24" cy="24" r="14" stroke="#0E3A48" stroke-width="2" stroke-opacity="0.45"/><path d="M24 14 L24 34 M18.5 19 Q24 14.5 29.5 19 M18.5 29 Q24 33.5 29.5 29" stroke="#0E3A48" stroke-width="3" stroke-linecap="round" stroke-opacity="0.8"/><defs><radialGradient id="pxCoinGrad" cx="0.4" cy="0.32" r="0.85"><stop offset="0" stop-color="#A6E9FF"/><stop offset="0.55" stop-color="#60C2E0"/><stop offset="1" stop-color="#2E9CC0"/></radialGradient></defs></svg></span><span id="pxSkyHomeBalanceNum">0</span></div><div class="px-stat-lbl">Balance</div></div>
+    </div>
+  </div>
+  <div class="px-home-col-section">
+    <div class="panel-h">Recent on your shelf</div>
+    <div class="cards" id="pxSkyHomeColGrid"></div>
+    <button type="button" class="btn btn-glass px-home-view-all" onclick="showPage('collection')">View full collection →</button>
+  </div>
+</div>
+<div id="pxSkyOpen" class="px-sky-screen" hidden>
+  <div class="page-head"><h1>Open a box</h1><p>Pick a tier. The box opens, then your figure forms on a full screen.</p></div>
+  <div class="px-open-spin-host">
+<!-- ══ SPIN BLOCK ═════════════════════════════════════════════════ -->
+      <section class="st-hero">
+        <div class="st-hero-glow" aria-hidden="true"></div>
+        <div class="st-hero-inner">
+          <div class="logo-row" id="logoRow" style="display:none" aria-hidden="true"><span class="l-letter l-p">P</span><span class="l-letter l-o">O</span><span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span></div>
+          <div class="dsh-spin-label">
+            <span class="dsh-spin-eyebrow">SYSTEM ACCESS</span>
+            <h2 class="dsh-spin-title" data-i18n="dash.spin.title">REWARD DECRYPTER</h2>
+          </div>
+          <div class="fomo" id="fomoText" hidden aria-hidden="true">Mythic POXY claimed this month: 0/10</div>
+          <div id="greatBurnCounter" hidden aria-hidden="true">🔥 The Great Burn — 0 POXY</div>
+          <div class="st-hero-playfield" id="stHeroPlayfield">
+          <div class="st-roulette-wrap">
+            <div class="st-roulette-mask">
+              <div class="st-roulette-track-wrap" aria-hidden="true">
+                <div class="st-roulette-track" id="stRouletteTrack"></div>
+              </div>
+              <div class="st-roulette-deco st-energy-grid" id="stRouletteIdle" aria-hidden="true">
+                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span></div>
+                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">diamond</span></div>
+                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">token</span></div>
+                <div class="st-energy-cell st-energy-cell--core" aria-label="Prize window"><span class="material-symbols-outlined" aria-hidden="true">stars</span></div>
+                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span></div>
+                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">diamond</span></div>
+                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">token</span></div>
+              </div>
+              <div class="st-spin-mount app" id="stSpinMount">
+                <div class="stage">
+                  <canvas class="particles" id="cvs" width="240" height="240"></canvas>
+                  <div class="box" id="idleBox"><div class="box-qmark">?</div></div>
+                  <div class="box gpu-accel spin-rapid" id="spinBox" style="opacity:0;border-width:2.5px"></div>
+                  <div class="reward-aura" id="rewardAura"></div>
+                  <div class="reward-box gpu-accel" id="rewardBox">
+                    <div class="reward-icon" id="rewardIcon"></div>
+                    <div class="reward-label" id="rewardLabel"></div>
+                    <div class="reward-serial" id="rewardSerial"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cta-wrap">
+            <div class="st-pity-bar" id="stPityBar" aria-live="polite">
+              <div>PITY TRACKER · Standard case</div>
+              <div class="st-pity-bar-row">
+                <span>Opens <strong id="stPityOpens">0</strong></span>
+                <span>Epic pity <strong id="stPityEpic">30/30</strong></span>
+                <span>Leg pity <strong id="stPityLeg">80/80</strong></span>
+              </div>
+            </div>
+            <div class="st-vip-pity-bar" id="stVipPityBar" aria-live="polite">
+              <div>PITY TRACKER · VIP case</div>
+              <div class="st-pity-bar-row">
+                <span>Epic+ <strong id="stVipPityEpic">15/15</strong></span>
+                <span>Mythic <strong id="stVipPityMythic">50/50</strong></span>
+              </div>
+            </div>
+            <div class="st-case-wallet" id="stCaseWallet" hidden>
+              <span class="st-case-wallet-label">CASE WALLET · FREE OPENS</span>
+              <div class="st-case-wallet-chips" id="stCaseWalletChips"></div>
+            </div>
+            <div class="st-economy-event" id="stEconomyEvent" hidden aria-live="polite"></div>
+            <div class="st-gen1-scarcity" id="stGen1Scarcity" hidden aria-live="polite"></div>
+            <div class="st-premium-tray" id="stPremiumTray"></div>
+            <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> <span data-i18n="dash.openBox">OPEN BOX</span> <span class="st-open-price" id="btnOpenPrice">50 PX</span></button>
+            <div class="post-btns" id="postBtns">
+              <button type="button" class="btn-add" id="btnAdd" data-i18n="dash.addToCollection">ADD TO COLLECTION</button>
+              <button type="button" class="btn-discard" id="btnDiscard" data-i18n="dash.discard">DISCARD</button>
+            </div>
+            <button type="button" class="btn-list-market" id="btnListFromHunt" data-i18n="dash.listOnMarket">LIST ON MARKET INSTEAD</button>
+            <button type="button" class="st-win-proof-btn" id="btnHuntProof" onclick="goToVerifyWithRound()" hidden style="margin-top:8px;font-size:10px">⚡ PROVABLY FAIR — Verify (drop stays saved)</button>
+          </div>
+          </div>
+        </div>
+      </section>
+        </div><!-- /px-open-spin-host -->
+</div><!-- /pxSkyOpen -->
 
+
+
+<div class="px-legacy-dash" aria-hidden="true" hidden>
       <!-- ══ HERO IDENTITY HEADER (Obsidian Gold) ══════════════════════ -->
       <div class="dsh-ambient-fog" aria-hidden="true"></div>
       <header class="dsh-hero-header">
@@ -1863,81 +760,6 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
         </div>
       </section>
 
-      <!-- ══ SPIN BLOCK ═════════════════════════════════════════════════ -->
-      <section class="st-hero">
-        <div class="st-hero-glow" aria-hidden="true"></div>
-        <div class="st-hero-inner">
-          <div class="logo-row" id="logoRow" style="display:none" aria-hidden="true"><span class="l-letter l-p">P</span><span class="l-letter l-o">O</span><span class="l-x" id="lX">X</span><span class="l-letter l-y">Y</span></div>
-          <div class="dsh-spin-label">
-            <span class="dsh-spin-eyebrow">SYSTEM ACCESS</span>
-            <h2 class="dsh-spin-title" data-i18n="dash.spin.title">REWARD DECRYPTER</h2>
-          </div>
-          <div class="fomo" id="fomoText" hidden aria-hidden="true">Mythic POXY claimed this month: 0/10</div>
-          <div id="greatBurnCounter" hidden aria-hidden="true">🔥 The Great Burn — 0 POXY</div>
-          <div class="st-hero-playfield" id="stHeroPlayfield">
-          <div class="st-roulette-wrap">
-            <div class="st-roulette-mask">
-              <div class="st-roulette-track-wrap" aria-hidden="true">
-                <div class="st-roulette-track" id="stRouletteTrack"></div>
-              </div>
-              <div class="st-roulette-deco st-energy-grid" id="stRouletteIdle" aria-hidden="true">
-                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span></div>
-                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">diamond</span></div>
-                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">token</span></div>
-                <div class="st-energy-cell st-energy-cell--core" aria-label="Prize window"><span class="material-symbols-outlined" aria-hidden="true">stars</span></div>
-                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">view_in_ar</span></div>
-                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">diamond</span></div>
-                <div class="st-energy-cell"><span class="material-symbols-outlined" aria-hidden="true">token</span></div>
-              </div>
-              <div class="st-spin-mount app" id="stSpinMount">
-                <div class="stage">
-                  <canvas class="particles" id="cvs" width="240" height="240"></canvas>
-                  <div class="box" id="idleBox"><div class="box-qmark">?</div></div>
-                  <div class="box gpu-accel spin-rapid" id="spinBox" style="opacity:0;border-width:2.5px"></div>
-                  <div class="reward-aura" id="rewardAura"></div>
-                  <div class="reward-box gpu-accel" id="rewardBox">
-                    <div class="reward-icon" id="rewardIcon"></div>
-                    <div class="reward-label" id="rewardLabel"></div>
-                    <div class="reward-serial" id="rewardSerial"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="cta-wrap">
-            <div class="st-pity-bar" id="stPityBar" aria-live="polite">
-              <div>PITY TRACKER · Standard case</div>
-              <div class="st-pity-bar-row">
-                <span>Opens <strong id="stPityOpens">0</strong></span>
-                <span>Epic pity <strong id="stPityEpic">30/30</strong></span>
-                <span>Leg pity <strong id="stPityLeg">80/80</strong></span>
-              </div>
-            </div>
-            <div class="st-vip-pity-bar" id="stVipPityBar" aria-live="polite">
-              <div>PITY TRACKER · VIP case</div>
-              <div class="st-pity-bar-row">
-                <span>Epic+ <strong id="stVipPityEpic">15/15</strong></span>
-                <span>Mythic <strong id="stVipPityMythic">50/50</strong></span>
-              </div>
-            </div>
-            <div class="st-case-wallet" id="stCaseWallet" hidden>
-              <span class="st-case-wallet-label">CASE WALLET · FREE OPENS</span>
-              <div class="st-case-wallet-chips" id="stCaseWalletChips"></div>
-            </div>
-            <div class="st-economy-event" id="stEconomyEvent" hidden aria-live="polite"></div>
-            <div class="st-gen1-scarcity" id="stGen1Scarcity" hidden aria-live="polite"></div>
-            <div class="st-premium-tray" id="stPremiumTray"></div>
-            <button type="button" class="btn-open st-open-btn gpu-accel" id="btnOpen"><span class="material-symbols-outlined">lock_open</span> <span data-i18n="dash.openBox">OPEN BOX</span> <span class="st-open-price" id="btnOpenPrice">50 PX</span></button>
-            <div class="post-btns" id="postBtns">
-              <button type="button" class="btn-add" id="btnAdd" data-i18n="dash.addToCollection">ADD TO COLLECTION</button>
-              <button type="button" class="btn-discard" id="btnDiscard" data-i18n="dash.discard">DISCARD</button>
-            </div>
-            <button type="button" class="btn-list-market" id="btnListFromHunt" data-i18n="dash.listOnMarket">LIST ON MARKET INSTEAD</button>
-            <button type="button" class="st-win-proof-btn" id="btnHuntProof" onclick="goToVerifyWithRound()" hidden style="margin-top:8px;font-size:10px">⚡ PROVABLY FAIR — Verify (drop stays saved)</button>
-          </div>
-          </div>
-        </div>
-      </section>
       <section class="st-glass-surface st-collection-block">
         <div class="st-col-hdr">
           <div>
@@ -1955,6 +777,7 @@ body[data-theme="mayfair"] .col-sticky-bar{background:#0e0608}
         <div class="st-col-grid" id="dashColGrid"></div>
         <button type="button" class="st-view-all" onclick="showPage('collection')" data-i18n="dash.viewAllCollection">View full collection →</button>
       </section>
+      </div><!-- /px-legacy-dash -->
       <div class="st-bottom"></div>
     </main>
     </section>
@@ -4449,8 +3272,9 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
       </section>
     </div>
   </div>
-</div>
-
+</div><!-- /pxSkyStage -->
+</div><!-- /pxSkyMain -->
+</div><!-- /poxyAppShell -->
 <!-- ═══════════════════════════════════════════════════════════════════════════
      POXY CRYPTO TRANSPARENCY OVERLAY
      Accessible at  #/crypto-docs  and  #/verify  — no login required.
@@ -6485,38 +5309,51 @@ window.switchSidebarTab=function(tab){
 
 // ── AUTH ──
 let authSessionBootstrapped=false;
+function getAuthMsgEl(){
+  return authMode.v==='signup'?($('authRegisterMsg')||$('authMsg')):$('authMsg');
+}
+function getAuthSubmitBtn(){
+  return authMode.v==='signup'?$('authSubmitBtnRegister'):$('authSubmitBtn');
+}
 function resetAuthBtn(btn){
+  if(!btn)btn=getAuthSubmitBtn();
   if(!btn)return;
   btn.disabled=false;
   const I=window.PoxyI18n;
-  btn.textContent=I?(authMode.v==='login'?I.t('auth.submit.continue'):I.t('auth.submit.create')):(authMode.v==='login'?'Continue':'Create account');
-  btn.classList.add('is-primary');
+  btn.textContent=authMode.v==='login'?'Sign in':'Create account';
   syncAuthContinueState();
 }
 function syncAuthContinueState(){
-  const btn=$('authSubmitBtn');
-  const email=$('authEmail'),pw=$('authPassword');
-  if(!btn)return;
-  const ok=!!(email?.value.trim()&&pw?.value);
-  btn.disabled=!ok;
+  if(authMode.v==='login'){
+    const btn=$('authSubmitBtn'),email=$('authEmail'),pw=$('authPassword');
+    if(btn)btn.disabled=!(email?.value.trim()&&pw?.value);
+  }else{
+    const btn=$('authSubmitBtnRegister'),email=$('authSignupEmail'),pw=$('authSignupPassword');
+    if(btn)btn.disabled=!(email?.value.trim()&&pw?.value);
+  }
 }
 function updateAuthModeUI(){
   const m=authMode.v;
   const I=window.PoxyI18n;
-  const headline=$('authHeadline'),modeBtn=$('authModeSwitch'),btn=$('authSubmitBtn');
+  if(window.PoxyAuthSky)PoxyAuthSky.showScreen(m==='login'?'login':'register');
+  const headline=$('authHeadline'),modeBtn=$('authModeSwitch'),modeBtnReg=$('authModeSwitchRegister');
+  const btnLogin=$('authSubmitBtn'),btnReg=$('authSubmitBtnRegister');
+  if(headline)headline.textContent='Welcome back';
+  if(modeBtn)modeBtn.textContent='Create an account';
+  if(modeBtnReg)modeBtnReg.textContent='Sign in';
+  if(btnLogin)btnLogin.textContent='Sign in';
+  if(btnReg)btnReg.textContent='Create account';
   const email=$('authEmail');
-  if(headline)headline.textContent=I?(m==='login'?I.t('auth.headline'):I.t('auth.headline.signup')):(m==='login'?'Enter POXY WORLD.':'Join the hunt.');
-  if(modeBtn)modeBtn.textContent=I?(m==='login'?I.t('auth.mode.switchToSignup'):I.t('auth.mode.switchToLogin')):(m==='login'?'Create account':'Already have an account? Sign in');
-  if(btn){btn.textContent=I?(m==='login'?I.t('auth.submit.continue'):I.t('auth.submit.create')):(m==='login'?'Continue':'Create account');btn.classList.add('is-primary');}
   if(email){
-    email.placeholder=I?(m==='login'?I.t('auth.email.placeholder'):I.t('settings.account.email')):(m==='login'?'Email or username':'Email');
-    email.type=m==='login'?'text':'email';
-    email.autocomplete=m==='login'?'username':'email';
+    email.placeholder='yourname or you@email.com';
+    email.type='text';
+    email.autocomplete='username';
   }
   syncAuthContinueState();
 }
 window.updateAuthModeUi=updateAuthModeUI;
 function setLoggedOutUI(){
+  if(window.PoxyLegacyStyles&&PoxyLegacyStyles.isMounted())PoxyLegacyStyles.unmount();
   _isFounder=false;
   poxyInvalidateQueryCache();
   authSessionBootstrapped=false;
@@ -6536,7 +5373,8 @@ function setLoggedOutUI(){
     setTimeout(function(){if(typeof openPoxyAuth==='function')openPoxyAuth();},120);
   }
   updateAuthModeUI();
-  document.body.classList.remove('poxy-app-dark','poxy-stitch-dash','ranks-tab-active','poxy-auth-modal-open');
+  document.body.classList.remove('poxy-sky-app-active','poxy-app-dark','poxy-stitch-dash','ranks-tab-active','poxy-auth-modal-open');
+  const shellOff=$('poxyAppShell');if(shellOff){shellOff.classList.remove('px-sky-app--open');shellOff.style.display='none';}
   const ub=$('userBar');
   if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
   const bn=$('bottomNav');if(bn)bn.style.display='none';
@@ -6566,7 +5404,12 @@ function setLoggedInUI(){
     overlay.style.display='none';
     overlay.setAttribute('aria-hidden','true');
   }
-  document.body.classList.add('poxy-app-dark','poxy-stitch-dash');
+  if(window.PoxyLegacyStyles)PoxyLegacyStyles.mount();
+  document.body.classList.add('poxy-sky-app-active');
+  const shellEl=$('poxyAppShell');if(shellEl)shellEl.classList.add('px-sky-app--open');
+  const skyHome=$('pxSkyHome');if(skyHome){skyHome.hidden=false;skyHome.classList.add('px-sky-screen--active');}
+  if(window.PoxyHomeSky)PoxyHomeSky.showHome();
+  if(window.PoxyScreensSky)PoxyScreensSky.initAll();
   const ub=$('userBar');
   if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
   $('balanceBadgeGroup')?.classList.add('visible');
@@ -6576,7 +5419,7 @@ function setLoggedInUI(){
     LuminaOSRouter.enter({replace:true,...LuminaOSRouter.parseQuery()});
     return;
   }
-  const shell=$('poxyAppShell');if(shell)shell.style.display='block';
+  const shell=$('poxyAppShell');if(shell){shell.style.display='flex';shell.classList.add('px-sky-app--open');}
   const hunt=$('huntPage');if(hunt)hunt.style.display='block';
   showPoxyAppShell();
   try{
@@ -6650,7 +5493,7 @@ function setupAuthStateListener(){
 const authMode={v:'login'};
 window.switchTab=function(m){
   authMode.v=m==='signup'?'signup':'login';
-  const msg=$('authMsg');if(msg){msg.textContent='';msg.className='auth-msg poxy-auth-msg';}
+  const msg=getAuthMsgEl();if(msg){msg.textContent='';msg.className='auth-msg';}
   updateAuthModeUI();
 };
 window.handleAuthOAuth=async function(provider){
@@ -6663,16 +5506,16 @@ window.handleAuthOAuth=async function(provider){
     if(error)throw error;
   }catch(e){
     const hint=(e?.message||'').includes('provider')?' Enable '+provider+' in Supabase Auth.':'';
-    if(msg){msg.className='auth-msg poxy-auth-msg error';msg.textContent=(e?.message||provider+' sign-in failed.')+hint;}
+    if(msg){msg.className='auth-msg error';msg.textContent=(e?.message||provider+' sign-in failed.')+hint;}
     else showToast(provider+' sign-in unavailable.'+hint);
   }
 };
 window.handleAuth=async function(){
-  let identifier=$('authEmail').value.trim();
-  const pw=$('authPassword').value;
-  const msg=$('authMsg'),btn=$('authSubmitBtn');
-  if(!identifier||!pw){msg.className='auth-msg poxy-auth-msg error';msg.textContent=window.PoxyI18n?PoxyI18n.t('toast.auth.fillFields'):'Please fill in all fields.';return;}
-  btn.disabled=true;msg.className='auth-msg poxy-auth-msg';msg.textContent='';
+  let identifier=authMode.v==='login'?$('authEmail').value.trim():($('authSignupEmail')?.value.trim()||'');
+  const pw=authMode.v==='login'?$('authPassword').value:($('authSignupPassword')?.value||'');
+  const msg=getAuthMsgEl(),btn=getAuthSubmitBtn();
+  if(!identifier||!pw){msg.className='auth-msg error';msg.textContent=window.PoxyI18n?PoxyI18n.t('toast.auth.fillFields'):'Please fill in all fields.';return;}
+  btn.disabled=true;msg.className='auth-msg';msg.textContent='';
   btn.textContent=window.PoxyI18n?(authMode.v==='login'?PoxyI18n.t('toast.auth.signingIn'):PoxyI18n.t('toast.auth.creating')):(authMode.v==='login'?'Signing in…':'Creating account…');
   try{
     let res;
@@ -6681,7 +5524,7 @@ window.handleAuth=async function(){
       if(!identifier.includes('@')){
         const{data:emailData,error:lookupErr}=await sb.rpc('get_email_by_username',{p_username:identifier});
         if(lookupErr||!emailData){
-          msg.className='auth-msg poxy-auth-msg error';
+          msg.className='auth-msg error';
           msg.textContent=lookupErr?(lookupErr.message||'Username lookup failed.'):'Username not found.';
           resetAuthBtn(btn);
           return;
@@ -6692,8 +5535,9 @@ window.handleAuth=async function(){
     } else {
       res=await sb.auth.signUp({email:identifier,password:pw});
       if(!res.error&&res.data?.user&&!res.data?.session){
-        msg.className='auth-msg poxy-auth-msg success';
-        msg.textContent='Check your email to confirm, then sign in.';
+        if(window.PoxyAuthSky)PoxyAuthSky.showVerify(identifier);
+        msg.className='auth-msg success';
+        msg.textContent='Check your email to confirm, then enter the code.';
         resetAuthBtn(btn);
         return;
       }
@@ -6702,7 +5546,7 @@ window.handleAuth=async function(){
     const session=res.data?.session;
     if(session){
       await applyAuthSession(session);
-      msg.className='auth-msg poxy-auth-msg success';
+      msg.className='auth-msg success';
       msg.textContent='';
       resetAuthBtn(btn);
       return;
@@ -6713,10 +5557,10 @@ window.handleAuth=async function(){
       resetAuthBtn(btn);
       return;
     }
-    msg.className='auth-msg poxy-auth-msg error';
+    msg.className='auth-msg error';
     msg.textContent='Signed in but session missing. Refresh the page or try again.';
   }catch(e){
-    msg.className='auth-msg poxy-auth-msg error';
+    msg.className='auth-msg error';
     const em=(e?.message||'').toLowerCase();
     if(em.includes('invalid login credentials')||em.includes('invalid_credentials'))msg.textContent='Wrong email or password.';
     else if(em.includes('email not confirmed'))msg.textContent='Confirm your email first, then sign in.';
@@ -7390,6 +6234,7 @@ function renderProfileStreakWidget(){
   const legacyMult=$('profileStreakMult');
   if(legacyMult)legacyMult.textContent='×'+(1+activeCount*0.05).toFixed(2);
   renderDashStreakChip();
+  if(window.PoxyHomeSky){PoxyHomeSky.sync();PoxyHomeSky.renderColPreview();}
 }
 
 function badgeSerialFor(key){
@@ -8645,9 +7490,15 @@ function updateStNavOffset(){
   shell.style.setProperty('--st-nav-h',h+'px');
 }
 function showPoxyAppShell(){
+  document.body.classList.remove('poxy-landing-active','poxy-landing-preview');
   const shell=$('poxyAppShell');
-  if(shell)shell.style.display='block';
+  if(shell){
+    shell.style.display='flex';
+    shell.classList.add('px-sky-app--open');
+  }
+  if(window.PoxyAppShell)PoxyAppShell.syncGreet();
   requestAnimationFrame(updateStNavOffset);
+  try{window.scrollTo(0,0);}catch(e){}
 }
 const STITCH_TAB_MAP={
   dashboard:'psdNavDashboard',hunt:'psdNavDashboard',explore:'psdNavTelemetry',
@@ -8685,6 +7536,8 @@ function syncPsdTopNav(page){
   else if(tab==='whitepaper'){const w=$('psdNavWhitepaper');if(w)w.classList.add('active');}
   else if(tab==='gens'){const g=$('psdNavGens');if(g)g.classList.add('active');}
   else if(tab==='market'||tab==='club'||tab==='ranks'||tab==='collection'||tab==='friends'){}
+  if(window.PoxyAppShell)PoxyAppShell.syncRail(tab);
+  if(window.PoxyScreensSky)PoxyScreensSky.onTab(tab);
 }
 
 function mountSpaPanels(){
@@ -8711,7 +7564,7 @@ window.showStitchTab=function(tab){
   activeStitchTab=next;
   mountSpaPanels();
   showPoxyAppShell();
-  document.body.classList.add('poxy-stitch-dash');
+  document.body.classList.add('poxy-sky-app-active');
   $('huntPage').style.display='block';
   $('bottomNav').style.display='none';
   const settingsEl=$('settingsPage');
@@ -8738,6 +7591,7 @@ window.showStitchTab=function(tab){
     refreshStitchDashboardChrome();
     renderDashColPreview();
     renderTopUpPaths();
+    if(window.PoxyHomeSky)PoxyHomeSky.showHome();
   }
   if(next==='store'){
     if(!colData.length)loadCollection().then(()=>renderStorePage()).catch(()=>renderStorePage());
@@ -8787,6 +7641,7 @@ window.showStitchTab=function(tab){
 function syncNavUsernameLabels(){
   const name=currentProfile?.username||'Player';
   const u1=$('userUsernameEl');if(u1)u1.textContent=name;
+  if(window.PoxyAppShell)PoxyAppShell.syncGreet();
   updatePsdMemberBadge();
 }
 
@@ -9565,7 +8420,7 @@ window.showPage=function(page){
   const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks'};
   if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
   showPoxyAppShell();
-  document.body.classList.add('poxy-stitch-dash');
+  document.body.classList.add('poxy-sky-app-active');
   $('huntPage').style.display='none';
   $('bottomNav').style.display='none';
   ['profile','collection','friends','settings'].forEach(p=>{
@@ -9573,6 +8428,7 @@ window.showPage=function(page){
     if(el)el.classList.toggle('visible',page===p);
   });
   syncPsdTopNav(page);
+  if(window.PoxyScreensSky)PoxyScreensSky.onPage(page);
   if(page==='collection'){
     // Ensure the fixed nav never overlaps the collection page.
     // Measure the actual nav height and apply it as an inline top offset.
@@ -11691,7 +10547,7 @@ function ensureFriendsPageForProfile(){
   if(typeof LuminaOSRouter!=='undefined'&&LuminaOSRouter.isActive())LuminaOSRouter.exit();
   if($('friendsPage')?.classList.contains('visible'))return;
   showPoxyAppShell();
-  document.body.classList.add('poxy-stitch-dash');
+  document.body.classList.add('poxy-sky-app-active');
   $('huntPage').style.display='none';
   $('bottomNav').style.display='none';
   document.querySelectorAll('.st-spa-panel').forEach(p=>{p.hidden=true;p.classList.remove('st-spa-panel--active','st-spa-panel--leaving');});
@@ -16714,14 +15570,24 @@ function bootApp(){
   if(frameToggle)frameToggle.addEventListener('click',toggleFrameSelectorSection);
   const authBtn=$('authSubmitBtn');
   if(authBtn)authBtn.addEventListener('click',handleAuth);
+  const authBtnReg=$('authSubmitBtnRegister');
+  if(authBtnReg)authBtnReg.addEventListener('click',handleAuth);
   const authModeSwitch=$('authModeSwitch');
   if(authModeSwitch){
     authModeSwitch.addEventListener('click',function(){
-      switchTab(authMode.v==='login'?'signup':'login');
+      switchTab('signup');
+    });
+  }
+  const authModeSwitchReg=$('authModeSwitchRegister');
+  if(authModeSwitchReg){
+    authModeSwitchReg.addEventListener('click',function(){
+      switchTab('login');
     });
   }
   const authEmail=$('authEmail');
   const authPassword=$('authPassword');
+  const authSignupEmail=$('authSignupEmail');
+  const authSignupPassword=$('authSignupPassword');
   const onAuthInput=()=>syncAuthContinueState();
   if(authEmail){authEmail.addEventListener('input',onAuthInput);authEmail.addEventListener('keydown',function(e){
       if(e.key==='Enter'){e.preventDefault();if(authPassword)authPassword.focus();}
@@ -16730,6 +15596,20 @@ function bootApp(){
     authPassword.addEventListener('input',onAuthInput);
     authPassword.addEventListener('keydown',function(e){
       if(e.key==='Enter'){e.preventDefault();handleAuth();}
+    });
+  }
+  if(authSignupEmail){authSignupEmail.addEventListener('input',onAuthInput);}
+  if(authSignupPassword){
+    authSignupPassword.addEventListener('input',onAuthInput);
+    authSignupPassword.addEventListener('keydown',function(e){
+      if(e.key==='Enter'){e.preventDefault();handleAuth();}
+    });
+  }
+  const authVerifyBtn=$('authVerifyBtn');
+  if(authVerifyBtn){
+    authVerifyBtn.addEventListener('click',function(){
+      const vm=$('authVerifyMsg');
+      if(vm){vm.className='auth-msg';vm.textContent='Email verification — confirm via the link in your inbox for now.';}
     });
   }
   updateAuthModeUI();

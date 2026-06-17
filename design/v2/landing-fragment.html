@@ -1,4 +1,4 @@
-<!-- POXY World — Sky landing (Stage 1) -->
+<!-- POXY Sky landing (clean slate 1:1) -->
 <div id="poxyLanding" hidden aria-label="POXY World">
 <nav>
   <div class="nav-in">
@@ -11,7 +11,7 @@
       <button type="button" class="nav-tab" data-tab="about" data-px-tab="about">About</button>
     </div>
     <div class="nav-spacer"></div>
-    <div class="nav-right"><button type="button" class="btn btn-glass" id="plPreviewBack" hidden data-i18n="landing.nav.back">Back to app</button><button type="button" class="btn btn-glass" id="plSignInNav" data-pl-auth data-i18n="landing.nav.signIn">Sign in</button>
+    <div class="nav-right"><button type="button" class="btn btn-glass" id="plPreviewBack" hidden>Back to app</button><button type="button" class="btn btn-glass" id="plSignInNav" data-pl-auth>Sign in</button>
       <button type="button" class="btn btn-primary cta-nav" data-pl-auth>Get started</button>
       <button type="button" class="icon-btn" id="plThemeBtn" aria-label="Theme">◐</button>
       <button type="button" class="icon-btn" id="plLangBtn" aria-label="Language">EN</button>
@@ -27,7 +27,7 @@
     <p class="sub">A calm place to open, own, and trade unique digital figures. No noise, no rush, just a collection that feels like a real shelf.</p>
     <div class="hero-cta">
       <button type="button" class="btn btn-primary btn-lg" data-pl-auth>Start collecting</button>
-      <button class="btn btn-glass btn-lg" onclick="scrollTo({top:document.getElementById('how').offsetTop-60,behavior:'smooth'})">See how it works</button>
+      <button type="button" class="btn btn-glass btn-lg" id="plScrollHow">See how it works</button>
     </div>
     <div class="hero-meta">
       <span><b>Closed economy</b> today</span>
@@ -148,9 +148,9 @@
 <footer><div class="wrap"><div class="foot-grid">
   <div class="foot-about"><div class="fb"><span class="mk"></span>POXY WORLD</div>
     <p>A calm place to open, own, and trade unique digital figures. Built by NULLSPACE LABS.</p></div>
-  <div class="foot-col"><h4>About</h4><button type="button" class="foot-link" data-px-tab="faq">FAQ</button><button type="button" class="foot-link" data-px-tab="policy">Policy</button><button type="button" class="foot-link" data-px-tab="about">About</button><button type="button" class="foot-link" data-px-tab="news">News</button></div>
-  <div class="foot-col"><h4>Product</h4><a href="#">Collect</a><a href="#">Open boxes</a><a href="#">Market</a><a href="#">Seasons</a></div>
-  <div class="foot-col"><h4>Account</h4><a href="#">Sign up</a><a href="#">Log in</a><a href="#">Security</a><a href="#">Devices</a></div>
+  <div class="foot-col"><h4>About</h4><button type="button" class="foot-link" data-px-tab="faq">FAQ</a><button type="button" class="foot-link" data-px-tab="policy">Policy</a><button type="button" class="foot-link" data-px-tab="about">About</a><button type="button" class="foot-link" data-px-tab="news">News</button></div>
+  <div class="foot-col"><h4>Product</h4><a href="#">Collect</a><a href="#">Open boxes</a><a href="#">Market</a><a href="#">Seasons</button></div>
+  <div class="foot-col"><h4>Account</h4><a href="#">Sign up</a><a href="#">Log in</a><a href="#">Security</a><a href="#">Devices</button></div>
   <div class="foot-col"><h4>Company</h4><a href="#">NULLSPACE LABS</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
 </div></div></footer>
 
