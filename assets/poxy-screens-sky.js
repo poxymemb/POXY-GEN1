@@ -49,7 +49,10 @@
 
   function onTab(tab) {
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
-    if (tab === 'market') ensureHead('market');
+    if (tab === 'market') {
+      if (global.PoxyMarketSky) global.PoxyMarketSky.onShow();
+      else ensureHead('market');
+    }
     if (tab === 'store') ensureHead('store');
   }
 

@@ -94,6 +94,7 @@
   function showOpen() {
     if (typeof global.showStitchTab === 'function') global.showStitchTab('dashboard');
     setView('open');
+    if (global.PoxyOpenSky) global.PoxyOpenSky.onShow();
   }
 
   function bind() {

@@ -118,26 +118,6 @@ body.poxy-sky-app-active #settingsPage.visible {
   padding-top: 0 !important;
 }
 
-/* ── Market ── */
-body.poxy-sky-app-active #marketPage {
-  background: transparent !important;
-}
-body.poxy-sky-app-active #marketPage .poxy-market-toolbar {
-  background: var(--glass) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r-lg) !important;
-  box-shadow: var(--shadow) !important;
-  backdrop-filter: blur(20px) saturate(140%) !important;
-  margin-bottom: 20px !important;
-}
-body.poxy-sky-app-active #marketPage .poxy-market-search input,
-body.poxy-sky-app-active #marketPage .poxy-market-select {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text) !important;
-  border-radius: 12px !important;
-}
-
 /* Full-page routes inside stage */
 body.poxy-sky-app-active #pxSkyStage > .page.visible {
   display: block !important;
@@ -146,12 +126,6 @@ body.poxy-sky-app-active #pxSkyStage > .page.visible {
   min-height: 0 !important;
   max-width: none !important;
   z-index: 1 !important;
-}
-body.poxy-sky-app-active #marketPage .poxy-market-card {
-  background: var(--card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--r) !important;
-  box-shadow: var(--shadow) !important;
 }
 
 /* ── Store ── */
