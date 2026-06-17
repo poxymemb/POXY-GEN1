@@ -1,0 +1,48 @@
+# POXY WORLD — Cursor Rules (global)
+
+You are working on POXY WORLD, a vanilla-JS SPA collectibles platform by NULLSPACE LABS LTD.
+**Read `POXY_CONTEXT.md` at the start of every session before doing anything.**
+
+## Stack reality (do not fight it)
+- Plain HTML + CSS + JS in `index.html` + `assets/`. No React, no framework.
+- Backend: Supabase (auth, RPC, storage, Edge Functions, RLS).
+- Deploy: Vercel from `main`.
+- We are NOT migrating to a framework now. The rebrand is visual-only via Sky layers.
+
+## The prime directive
+**Visual changes must never alter behavior.** Preserve every Supabase hook, id, RPC call,
+crypto/ledger function, and economy invariant listed in `POXY_CONTEXT.md` §4. If a task
+seems to require changing a production hook, STOP and ask the architect.
+
+## Design contract
+- Accent `#60C2E0` (Sky-500). Default theme **light**, key `poxy-sky-theme`.
+- Left rail 74px + topbar. Coin SVG for currency, never "PX". "Sell for coins", never "burn".
+- Mockups in `design/v2/` are the UI source of truth. Implement 1:1, scoped under the
+  correct `#pxSky*` / screen id.
+- No em-dashes in user copy. Plain, human wording — not "AI-ish" filler.
+
+## Strangler Fig discipline
+- New Sky code grows beside legacy. Legacy CSS loads only after login via `PoxyLegacyStyles.mount()`.
+- To "remove" a legacy screen: reskin it, then hide its legacy CSS via `body.poxy-sky-app-active`,
+  then drop it from the mount list. Delete files only after Stage 11, when nothing references them.
+- Never blind-delete. Always leave a restore point (commit first).
+
+## Working method (mandatory)
+1. **Plan before code.** State the scoped change, files touched, and hooks preserved.
+2. **One screen / one unit per task.** Do not batch unrelated changes.
+3. **Builder + Reviewer.** After implementing, run a self-review pass (or a Reviewer agent)
+   against `.cursor/rules/reviewer.md` before declaring done.
+4. **Verify.** Confirm the app still boots, login works, and the touched screen renders in
+   both themes before moving on.
+5. **Commit** with a clear message. Do not commit unless the unit is reviewed and works.
+
+## Safety (top priority, above features)
+- Never weaken RLS or expose service-role keys client-side.
+- Never move crypto/RNG/ledger logic client-side. It stays server-side (Edge Functions).
+- Treat all user input as untrusted. Validate with Zod in Edge Functions.
+- Child safety, security, and honest UX outrank speed and scope.
+
+## Output hygiene
+- Full file output when editing whole files; minimal diffs when patching.
+- Preserve CRLF on Windows; UTF-8 without BOM.
+- Separate CSS file per feature/screen. Do not inline new styles into `index.html`.
