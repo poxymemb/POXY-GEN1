@@ -64,6 +64,11 @@
         openPoxyAuth();
       });
     });
+    document.querySelectorAll('#poxyLanding [data-pl-nop]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+      });
+    });
     var back = $('plPreviewBack');
     if (back) {
       back.addEventListener('click', function (e) {
@@ -160,23 +165,15 @@
     if (!menu || !btn) return;
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
-      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+      menu.hidden = !menu.hidden;
     });
     document.addEventListener('click', function (e) {
-      if (!menu.contains(e.target) && e.target !== btn) menu.style.display = 'none';
+      if (!menu.contains(e.target) && e.target !== btn) menu.hidden = true;
     });
     menu.querySelectorAll('.lang-opt').forEach(function (o) {
-      o.style.cssText =
-        'text-align:left;background:none;border:none;font:500 14px var(--px-font);color:var(--px-text);padding:9px 12px;border-radius:9px;cursor:pointer;width:100%';
-      o.addEventListener('mouseenter', function () {
-        o.style.background = 'var(--px-glass-strong)';
-      });
-      o.addEventListener('mouseleave', function () {
-        o.style.background = 'none';
-      });
       o.addEventListener('click', function () {
         btn.textContent = (o.dataset.l || 'EN').slice(0, 2).toUpperCase();
-        menu.style.display = 'none';
+        menu.hidden = true;
       });
     });
   }
@@ -226,10 +223,8 @@
 
   function refreshLandingPreviewChrome() {
     var back = $('plPreviewBack');
-    var signIn = $('plSignInNav');
     var ctaNav = document.querySelector('#poxyLanding .cta-nav');
     if (back) back.hidden = !landingPreviewOpen;
-    if (signIn) signIn.hidden = landingPreviewOpen && isLoggedInApp();
     if (ctaNav) ctaNav.hidden = landingPreviewOpen && isLoggedInApp();
   }
 

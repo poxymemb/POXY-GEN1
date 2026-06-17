@@ -67,7 +67,7 @@
 
 
 <link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=4">
+<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/auth.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=1">
@@ -149,7 +149,7 @@
 <script src="assets/js/ui/poxy-profile-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-stage11-sky.js?v=2" defer></script>
 <script src="assets/js/ui/poxy-screens-sky.js?v=1" defer></script>
-<script src="assets/poxy-landing-page.js?v=4" defer></script>
+<script src="assets/poxy-landing-page.js?v=5" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
 <script src="assets/poxy-trust-motion.js?v=3" defer></script>
@@ -246,7 +246,7 @@
       <button type="button" class="nav-tab" data-tab="about" data-px-tab="about">About</button>
     </div>
     <div class="nav-spacer"></div>
-    <div class="nav-right"><button type="button" class="btn btn-glass" id="plPreviewBack" hidden>Back to app</button><button type="button" class="btn btn-glass" id="plSignInNav" data-pl-auth>Sign in</button>
+    <div class="nav-right"><button type="button" class="btn btn-glass" id="plPreviewBack" hidden>Back to app</button>
       <button type="button" class="btn btn-primary cta-nav" data-pl-auth>Get started</button>
       <button type="button" class="icon-btn" id="plThemeBtn" aria-label="Theme">◐</button>
       <button type="button" class="icon-btn" id="plLangBtn" aria-label="Language">EN</button>
@@ -383,16 +383,16 @@
 <footer><div class="wrap"><div class="foot-grid">
   <div class="foot-about"><div class="fb"><span class="mk"></span>POXY WORLD</div>
     <p>A calm place to open, own, and trade unique digital figures. Built by NULLSPACE LABS.</p></div>
-  <div class="foot-col"><h4>About</h4><button type="button" class="foot-link" data-px-tab="faq">FAQ</a><button type="button" class="foot-link" data-px-tab="policy">Policy</a><button type="button" class="foot-link" data-px-tab="about">About</a><button type="button" class="foot-link" data-px-tab="news">News</button></div>
-  <div class="foot-col"><h4>Product</h4><a href="#">Collect</a><a href="#">Open boxes</a><a href="#">Market</a><a href="#">Seasons</button></div>
-  <div class="foot-col"><h4>Account</h4><a href="#">Sign up</a><a href="#">Log in</a><a href="#">Security</a><a href="#">Devices</button></div>
-  <div class="foot-col"><h4>Company</h4><a href="#">NULLSPACE LABS</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+  <div class="foot-col"><h4>About</h4><button type="button" class="foot-link" data-px-tab="faq">FAQ</button><button type="button" class="foot-link" data-px-tab="policy">Policy</button><button type="button" class="foot-link" data-px-tab="about">About</button><button type="button" class="foot-link" data-px-tab="news">News</button></div>
+  <div class="foot-col"><h4>Product</h4><a href="#" data-pl-nop>Collect</a><a href="#" data-pl-nop>Open boxes</a><a href="#" data-pl-nop>Market</a><a href="#" data-pl-nop>Seasons</a></div>
+  <div class="foot-col"><h4>Account</h4><button type="button" class="foot-link" data-pl-auth>Sign up</button><button type="button" class="foot-link" data-pl-auth>Log in</button><a href="#" data-pl-nop>Security</a><a href="#" data-pl-nop>Devices</a></div>
+  <div class="foot-col"><h4>Company</h4><a href="#" data-pl-nop>NULLSPACE LABS</a><a href="#" data-pl-nop>Contact</a><a href="#" data-pl-nop>Privacy</a><a href="#" data-pl-nop>Terms</a></div>
 </div></div></footer>
 
 <button class="goup" id="plGoup" aria-label="Go up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
 
 <!-- language menu (shared) -->
-<div id="plLangMenu" style="position:fixed;top:58px;right:22px;z-index:90;min-width:170px;background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:7px;box-shadow:0 20px 50px rgba(0,0,0,.3);display:none;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto"><button class="lang-opt" data-l="English">English</button><button class="lang-opt" data-l="Español">Español</button><button class="lang-opt" data-l="中文">中文</button><button class="lang-opt" data-l="हिन्दी">हिन्दी</button><button class="lang-opt" data-l="العربية">العربية</button><button class="lang-opt" data-l="Português">Português</button><button class="lang-opt" data-l="Русский">Русский</button><button class="lang-opt" data-l="Français">Français</button><button class="lang-opt" data-l="Deutsch">Deutsch</button><button class="lang-opt" data-l="日本語">日本語</button></div>
+<div id="plLangMenu" hidden><button type="button" class="lang-opt" data-l="English">English</button><button class="lang-opt" data-l="Español">Español</button><button class="lang-opt" data-l="中文">中文</button><button class="lang-opt" data-l="हिन्दी">हिन्दी</button><button class="lang-opt" data-l="العربية">العربية</button><button class="lang-opt" data-l="Português">Português</button><button class="lang-opt" data-l="Русский">Русский</button><button class="lang-opt" data-l="Français">Français</button><button class="lang-opt" data-l="Deutsch">Deutsch</button><button class="lang-opt" data-l="日本語">日本語</button></div>
 </div>
 
 <!-- AUTH — Sky (Stage 2) -->

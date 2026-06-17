@@ -72,7 +72,7 @@ function transformRule(rule) {
   const sel = trimmed.slice(0, open).trim();
   const body = trimmed.slice(open);
   if (sel === 'html') {
-    return 'html { scroll-behavior: smooth; transition: background 0.4s var(--ease); }';
+    return '';
   }
   if (sel === 'body') {
     return (
@@ -94,6 +94,8 @@ const scoped = splitTopLevelRules(stripComments(css))
 
 const header = `/* POXY Sky landing — 1:1 scoped from design/v2/poxy-landing.html */
 html { scroll-behavior: smooth; transition: background 0.4s var(--ease); }
+html:has(body.poxy-landing-active),
+html:has(body.poxy-landing-preview) { background: var(--bg) !important; }
 body.poxy-landing-active {
   font-family: var(--font);
   background: var(--bg) !important;
@@ -125,6 +127,10 @@ body.poxy-landing-active:not(.poxy-auth-modal-open) #authOverlay {
   display: none !important;
   pointer-events: none !important;
 }
+body.poxy-landing-active.poxy-auth-modal-open #authOverlay {
+  display: flex !important;
+  pointer-events: auto !important;
+}
 body.poxy-landing-active #poxyAppShell,
 body.poxy-landing-active #sidebarPanel,
 body.poxy-landing-active #sidebarBackdrop,
@@ -134,11 +140,19 @@ body.poxy-landing-active #userBar {
 }
 #plPreviewBack[hidden] { display: none !important; }
 body.poxy-landing-preview #plPreviewBack { display: inline-flex !important; }
-#poxyLanding .nav-logo { border: none; padding: 0; cursor: pointer; }
+#poxyLanding .nav-logo { border: none; padding: 0; cursor: pointer; background: var(--btn-bg); }
 #poxyLanding .foot-col .foot-link {
   display: block; width: 100%; text-align: left; background: none; border: none;
   font: inherit; padding: 0; margin-bottom: 8px; color: var(--link); cursor: pointer;
 }
+#poxyLanding .foot-col .foot-link:hover { filter: brightness(1.15); }
+#plLangMenu {
+  position: fixed; top: 58px; right: 22px; z-index: 90; min-width: 170px;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px;
+  padding: 7px; box-shadow: 0 20px 50px rgba(0,0,0,.3); display: flex;
+  flex-direction: column; gap: 2px; max-height: 300px; overflow-y: auto;
+}
+#plLangMenu[hidden] { display: none !important; }
 #poxyLanding .lang-opt {
   display: block; width: 100%; text-align: left; padding: 9px 12px; border: none;
   background: none; font: 600 13px var(--font); color: var(--text); border-radius: 9px; cursor: pointer;
