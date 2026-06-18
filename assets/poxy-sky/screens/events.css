@@ -16,4 +16,31 @@ body.poxy-sky-app-active #stPanelEvents .ev-org-name{font-size:12.5px;font-weigh
 body.poxy-sky-app-active #stPanelEvents .verified{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--sky-500);color:#fff;font-size:9px;font-weight:700;vertical-align:middle}
 body.poxy-sky-app-active #stPanelEvents .ev-open{font-size:13.5px;font-weight:650;color:var(--evc)}
 body.poxy-sky-app-active #stPanelEvents .back-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-body.poxy-sky-app-active #stPanelEvents .back-btn{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font:600 13px var(--font);color:var(--text-dim);cursor:pointer}
+body.poxy-sky-app-active #stPanelEvents .ev-card:hover{transform:translateY(-3px);border-color:var(--evc)}
+body.poxy-sky-app-active #stPanelEvents .ev-body h3{font-size:18px;font-weight:700;color:var(--text-strong);letter-spacing:-.01em;margin-bottom:6px}
+body.poxy-sky-app-active #stPanelEvents .ev-body p{font-size:13.5px;color:var(--text-dim);margin-bottom:12px}
+body.poxy-sky-app-active #stPanelEvents .back-btn:hover{color:var(--text)}
+body.poxy-sky-app-active #stPanelEvents .ev-detail-banner{height:180px;border-radius:var(--r-lg);background:linear-gradient(135deg,var(--evc),color-mix(in srgb,var(--evc) 40%,#1c2630));border:1px solid var(--border);margin-bottom:18px;box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelEvents .ev-org-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+body.poxy-sky-app-active #stPanelEvents .ev-org-big{font-size:15px;font-weight:650;color:var(--text-strong);display:inline-flex;align-items:center;gap:7px}
+body.poxy-sky-app-active #stPanelEvents .ev-org-link{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font:600 13px var(--font);color:var(--link,var(--sky-700));cursor:pointer;font-family:var(--px-font)}
+body.poxy-sky-app-active #stPanelEvents .ev-org-link:hover{filter:brightness(1.08)}
+body.poxy-sky-app-active #stPanelEvents .ev-title{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--text-strong);margin-bottom:10px}
+body.poxy-sky-app-active #stPanelEvents .ev-short{font-size:16px;color:var(--text-dim);margin-bottom:18px;max-width:640px}
+body.poxy-sky-app-active #stPanelEvents .ev-progress{margin-bottom:18px;max-width:500px}
+body.poxy-sky-app-active #stPanelEvents .ev-prog-top{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-strong);margin-bottom:7px}
+body.poxy-sky-app-active #stPanelEvents .ev-prog-bar{height:9px;border-radius:5px;background:var(--border);overflow:hidden}
+body.poxy-sky-app-active #stPanelEvents .ev-prog-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sky-400),var(--sky-600))}
+body.poxy-sky-app-active #stPanelEvents .ev-goal-chip{display:inline-block;font-size:13px;font-weight:600;color:var(--text-dim);background:var(--glass);border:1px solid var(--border);padding:7px 14px;border-radius:9px;margin-bottom:18px}
+body.poxy-sky-app-active #stPanelEvents .ev-long{font-size:15px;color:var(--text-strong);opacity:.82;line-height:1.7;max-width:660px;max-height:48px;overflow:hidden;position:relative;transition:max-height .3s ease}
+body.poxy-sky-app-active #stPanelEvents .ev-long.open{max-height:400px}
+body.poxy-sky-app-active #stPanelEvents .ev-readmore{background:none;border:none;color:var(--link,var(--sky-700));font:600 14px var(--font);cursor:pointer;padding:6px 0;margin-bottom:8px;font-family:var(--px-font)}
+body.poxy-sky-app-active #stPanelEvents .leaderboard{display:flex;flex-direction:column;gap:8px;max-width:560px}
+body.poxy-sky-app-active #stPanelEvents .lb-row{display:flex;align-items:center;gap:13px;padding:11px 15px;border-radius:13px;border:1px solid var(--border);background:var(--card)}
+body.poxy-sky-app-active #stPanelEvents .lb-row.top3{background:linear-gradient(135deg,color-mix(in srgb,#E5C84F 14%,var(--card)),var(--card));border-color:color-mix(in srgb,#E5C84F 35%,var(--border))}
+body.poxy-sky-app-active #stPanelEvents .lb-rank{font-size:17px;font-weight:700;width:28px;text-align:center;flex-shrink:0;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelEvents .lb-av{width:34px;height:34px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center;flex-shrink:0}
+body.poxy-sky-app-active #stPanelEvents .lb-name{flex:1;font-size:14.5px;font-weight:600;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelEvents .lb-score{font-size:14px;font-weight:700;color:var(--text-strong);display:inline-flex;align-items:center;gap:4px}
+body.poxy-sky-app-active #stPanelEvents .coin-sm{width:18px;height:18px;display:inline-flex;vertical-align:middle}
+body.poxy-sky-app-active #stPanelEvents .coin-sm svg{width:100%;height:100%}

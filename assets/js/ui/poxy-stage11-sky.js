@@ -1016,6 +1016,159 @@
   };
 
   /* ── Events ── */
+  var LB_PLAYERS = [
+    { rank: '🥇', color: '#60C2E0', initial: 'S', name: 'Slava', score: 142 },
+    { rank: '🥈', color: '#7BE0A0', initial: 'M', name: 'Mira', score: 128 },
+    { rank: '🥉', color: '#9B8FE0', initial: 'A', name: 'alex_p', score: 97 },
+    { rank: '4', color: '#E5C84F', initial: 'N', name: 'nova', score: 74 },
+    { rank: '5', color: '#E0563A', initial: 'K', name: 'kira', score: 61 },
+    { rank: '6', color: '#8BCFE4', initial: 'D', name: 'dmitri', score: 55 },
+    { rank: '7', color: '#9ADBB0', initial: 'L', name: 'luna', score: 48 },
+    { rank: '8', color: '#E0A23C', initial: 'M', name: 'max99', score: 41 },
+    { rank: '9', color: '#D9744F', initial: 'Z', name: 'zed', score: 37 },
+    { rank: '10', color: '#456DB0', initial: 'P', name: 'pol', score: 33 },
+  ];
+
+  function lbRow(player, top3) {
+    return (
+      '<div class="lb-row' +
+      (top3 ? ' top3' : ' top10') +
+      '"><span class="lb-rank">' +
+      player.rank +
+      '</span><span class="lb-av" style="--ac:' +
+      player.color +
+      '">' +
+      player.initial +
+      '</span><span class="lb-name">' +
+      player.name +
+      '</span><span class="lb-score">' +
+      COIN_SVG +
+      player.score +
+      '</span></div>'
+    );
+  }
+
+  function buildLeaderboard() {
+    return (
+      '<div class="panel-h" style="margin-top:24px">Top players</div><div class="leaderboard">' +
+      LB_PLAYERS.map(function (p, i) {
+        return lbRow(p, i < 3);
+      }).join('') +
+      '</div>'
+    );
+  }
+
+  function eventOrgRow() {
+    return (
+      '<div class="ev-org-row"><span class="ev-org-big">POXY Dev Team<span class="verified">✓</span></span>' +
+      '<button type="button" class="ev-org-link" data-ev-messenger>Open group →</button></div>'
+    );
+  }
+
+  function buildEventDetail(id) {
+    if (id === 'open1000') {
+      return (
+        '<div class="ev-detail-banner" style="--evc:#E0563A"></div>' +
+        eventOrgRow() +
+        '<h1 class="ev-title">Community Box Rush</h1>' +
+        '<p class="ev-short">Open boxes together. The community goal is 1,000 boxes opened. The top openers take the rewards.</p>' +
+        '<div class="ev-progress"><div class="ev-prog-top"><span>630 opened</span><span>1,000 boxes</span></div>' +
+        '<div class="ev-prog-bar"><i style="width:63%"></i></div></div>' +
+        '<div class="ev-long" id="pxSkyEvLong_open1000"><p>Every box you open counts toward the community total. When we hit 1,000 together, everyone who took part gets a bonus drop. On top of that, the players who opened the most climb the leaderboard for bigger rewards. The race runs all week.</p></div>' +
+        buildLeaderboard()
+      );
+    }
+    if (id === 'season2') {
+      return (
+        '<div class="ev-detail-banner" style="--evc:#E5C84F"></div>' +
+        eventOrgRow() +
+        '<h1 class="ev-title">Season 02 Launch Party</h1>' +
+        '<p class="ev-short">The Tokens collection goes live. Join the launch and get an early-bird figure.</p>' +
+        '<div class="ev-goal-chip">Starts in 12 days</div>' +
+        '<div class="ev-long" id="pxSkyEvLong_season2"><p>Season 02 brings the Tokens collection: coins, gems, and lucky charms, each with its own mutations. Everyone online at launch gets an exclusive early-bird figure to mark the moment.</p></div>'
+      );
+    }
+    if (id === 'genesis') {
+      return (
+        '<div class="ev-detail-banner" style="--evc:#60C2E0"></div>' +
+        eventOrgRow() +
+        '<h1 class="ev-title">Genesis Drop</h1>' +
+        '<p class="ev-short">The very first POXY drop. Where it all started.</p>' +
+        '<div class="ev-goal-chip">Completed</div>' +
+        '<div class="ev-long" id="pxSkyEvLong_genesis"><p>The Genesis event launched the Beginnings collection and welcomed the first collectors into POXY. Completed, archived, and remembered.</p></div>'
+      );
+    }
+    return '';
+  }
+
+  function attachEventReadMore(root, id) {
+    var long = root.querySelector('#pxSkyEvLong_' + id);
+    if (!long || long.scrollHeight <= 56) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ev-readmore';
+    btn.textContent = 'Read more';
+    btn.addEventListener('click', function () {
+      var open = long.classList.toggle('open');
+      btn.textContent = open ? 'Show less' : 'Read more';
+    });
+    long.after(btn);
+  }
+
+  function showEventsOverview() {
+    var overview = $('pxSkyEvOverview');
+    var detail = $('pxSkyEvDetail');
+    if (overview) overview.hidden = false;
+    if (detail) detail.hidden = true;
+    var panel = $('stPanelEvents');
+    if (panel) {
+      var head = panel.querySelector('.px-sky-page-head');
+      if (head) {
+        head.querySelector('h1').textContent = 'Events';
+        head.querySelector('p').textContent =
+          'Community goals, launches, and history. Tap an event to see details and the leaderboard.';
+      }
+    }
+    scrollEventsTop();
+  }
+
+  function showEventDetail(id) {
+    var overview = $('pxSkyEvOverview');
+    var detail = $('pxSkyEvDetail');
+    var content = $('pxSkyEvDetailContent');
+    if (!detail || !content) return;
+    if (overview) overview.hidden = true;
+    detail.hidden = false;
+    content.innerHTML = buildEventDetail(id);
+    attachEventReadMore(content, id);
+    content.querySelectorAll('[data-ev-messenger]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.showStitchTab === 'function') global.showStitchTab('messenger');
+        else if (typeof global.showToast === 'function') global.showToast('Open Messages from the rail.');
+      });
+    });
+    var ev = EVENTS.filter(function (e) {
+      return e.id === id;
+    })[0];
+    var panel = $('stPanelEvents');
+    if (ev && panel) {
+      var head = panel.querySelector('.px-sky-page-head');
+      if (head) {
+        head.querySelector('h1').textContent = ev.title;
+        head.querySelector('p').textContent = ev.body;
+      }
+    }
+    scrollEventsTop();
+  }
+
+  function scrollEventsTop() {
+    var main = $('pxSkyMain');
+    if (main) main.scrollTop = 0;
+    try {
+      window.scrollTo(0, 0);
+    } catch (e) {}
+  }
+
   function eventCard(ev) {
     return (
       '<button type="button" class="ev-card" style="--evc:' +
@@ -1048,8 +1201,9 @@
       return e.status === 'Ended';
     });
     panel.innerHTML =
-      '<div class="px-sky-page-head page-head" data-sky-key="events"><h1>Events</h1><p>Community goals, launches, and history. Tap an event to see details.</p></div>' +
+      '<div class="px-sky-page-head page-head" data-sky-key="events"><h1>Events</h1><p>Community goals, launches, and history. Tap an event to see details and the leaderboard.</p></div>' +
       '<div id="pxSkyEventsRoot">' +
+      '<div id="pxSkyEvOverview">' +
       (live.length
         ? '<div class="ev-sec"><div class="panel-h">Happening now</div><div class="ev-grid">' +
           live.map(eventCard).join('') +
@@ -1065,12 +1219,13 @@
           past.map(eventCard).join('') +
           '</div></div>'
         : '') +
-      '</div>';
+      '</div>' +
+      '<div id="pxSkyEvDetail" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyEvBack">← All events</button></div>' +
+      '<div id="pxSkyEvDetailContent"></div></div></div>';
+    $('pxSkyEvBack').addEventListener('click', showEventsOverview);
     panel.querySelectorAll('.ev-card').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        if (typeof global.showToast === 'function') {
-          global.showToast('Event details coming soon.');
-        }
+        showEventDetail(btn.getAttribute('data-ev'));
       });
     });
   }
@@ -1079,6 +1234,7 @@
     onShow: function () {
       if (!isSky()) return;
       ensureEventsShell();
+      showEventsOverview();
     },
   };
 

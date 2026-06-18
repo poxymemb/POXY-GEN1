@@ -180,7 +180,7 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | All collections | `#sc-collections` | `tierlist` / `PoxyCollectionsSky` | **Near 1:1** | Overview → Hearts detail → item drill-down wired |
 | Community | `#sc-community` | `club` / `PoxyCommunitySky` | **Near 1:1** | Feed, sidebar search, channel profile drill-down |
 | Messenger | `#sc-messenger` | `messenger` / `PoxyMessengerSky` | **Near 1:1** | Chat list, search, thread switch, attach menu, send |
-| Events | `#sc-events` | `events` / `PoxyEventsSky` | **Near** | Event cards from Sky layer |
+| Events | `#sc-events` | `events` / `PoxyEventsSky` | **Near 1:1** | Overview → detail with progress, leaderboard, read more |
 | Quests | `#sc-quests` | `quests` / `PoxyQuestsSky` | **Near** | Daily quest rows wired to production data |
 | Levels | `#sc-levels` | `levels` / `PoxyLevelsSky` | **Near** | Level path UI; legacy ranks podium hidden |
 | Modals / overlays | mockup modals | notify, support, top-up, crypto overlay | **Partial** | Functional legacy modals + `overlays.css` reskin |
