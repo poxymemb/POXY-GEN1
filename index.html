@@ -67,16 +67,16 @@
 
 
 <link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=3">
-<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=17">
+<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=24">
 <link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/screens.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=5">
+<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=6">
 <link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=8">
 <link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=4">
-<link rel="stylesheet" href="assets/poxy-sky/screens/open.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/open.css?v=3">
 <link rel="stylesheet" href="assets/poxy-sky/screens/store.css?v=3">
-<link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=4">
+<link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=3">
 <link rel="stylesheet" href="assets/poxy-sky/screens/collections-overview.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/community.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/messenger.css?v=1">
@@ -145,8 +145,8 @@
 <script src="assets/js/ui/poxy-collection-sky.js?v=9" defer></script>
 <script src="assets/js/ui/poxy-market-sky.js?v=3" defer></script>
 <script src="assets/js/ui/poxy-store-sky.js?v=3" defer></script>
-<script src="assets/js/ui/poxy-settings-sky.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-profile-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-settings-sky.js?v=2" defer></script>
+<script src="assets/js/ui/poxy-profile-sky.js?v=2" defer></script>
 <script src="assets/js/ui/poxy-stage11-sky.js?v=2" defer></script>
 <script src="assets/js/ui/poxy-screens-sky.js?v=2" defer></script>
 <script src="assets/poxy-landing-page.js?v=5" defer></script>
@@ -8233,6 +8233,7 @@ window.showPage=function(page){
   if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
   document.body.classList.remove('poxy-sky-collection-active');
   if(page!=='collection'&&window.PoxyCollectionSky&&PoxyCollectionSky.onHide)PoxyCollectionSky.onHide();
+  if(page!=='settings'&&window.PoxySettingsSky&&PoxySettingsSky.onHide)PoxySettingsSky.onHide();
   showPoxyAppShell();
   mountSpaPanels();
   document.body.classList.add('poxy-sky-app-active');
@@ -8292,6 +8293,16 @@ window.showPage=function(page){
   }
   if(page==='profile'||page==='settings'){
     hideHuntPageShell();
+    document.body.classList.toggle('poxy-sky-profile-active',page==='profile');
+    document.body.classList.toggle('poxy-sky-settings-active',page==='settings');
+    if(skyMain){skyMain.scrollTop=0;window.scrollTo(0,0);}
+    const routePage=document.getElementById(page+'Page');
+    if(routePage){
+      routePage.style.paddingTop='0';
+      routePage.style.marginTop='0';
+    }
+  }else{
+    document.body.classList.remove('poxy-sky-profile-active','poxy-sky-settings-active');
   }
   if(page==='friends'){
     closeFriendProfileView();

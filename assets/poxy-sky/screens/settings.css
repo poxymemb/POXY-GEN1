@@ -11,6 +11,40 @@ body.poxy-sky-app-active #settingsPage {
 
 
 
+body.poxy-sky-app-active #settingsPage.visible {
+
+  display: block !important;
+
+  width: 100% !important;
+
+  max-width: none !important;
+
+  margin: 0 !important;
+
+  min-height: 0 !important;
+
+  overflow: visible !important;
+
+}
+
+
+
+body.poxy-sky-app-active #settingsPage.px-sky-settings--hub #pxSkySettingsHub {
+
+  padding-bottom: 24px;
+
+}
+
+
+
+body.poxy-sky-app-active #settingsPage.px-sky-settings--detail .poxy-settings-panels {
+
+  padding-bottom: 32px;
+
+}
+
+
+
 body.poxy-sky-app-active #settingsPage .poxy-settings-sidebar,
 
 body.poxy-sky-app-active #settingsPage .poxy-settings-viewport-head,
@@ -28,6 +62,14 @@ body.poxy-sky-app-active #settingsPage .poxy-settings-shell {
   display: block !important;
 
   grid-template-columns: 1fr !important;
+
+}
+
+
+
+body.poxy-sky-app-active #settingsPage.px-sky-settings--hub .poxy-settings-shell {
+
+  display: none !important;
 
 }
 

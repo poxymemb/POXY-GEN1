@@ -17,6 +17,8 @@ const marketCss = path.join(root, 'assets/poxy-sky/screens/market.css');
 const marketSkyJs = path.join(root, 'assets/js/ui/poxy-market-sky.js');
 const storeCss = path.join(root, 'assets/poxy-sky/screens/store.css');
 const storeSkyJs = path.join(root, 'assets/js/ui/poxy-store-sky.js');
+const settingsCss = path.join(root, 'assets/poxy-sky/screens/settings.css');
+const settingsSkyJs = path.join(root, 'assets/js/ui/poxy-settings-sky.js');
 
 const mock = fs.readFileSync(mockPath, 'utf8');
 const index = fs.readFileSync(indexPath, 'utf8');
@@ -29,6 +31,8 @@ const marketCssText = fs.readFileSync(marketCss, 'utf8');
 const marketSkyJsText = fs.readFileSync(marketSkyJs, 'utf8');
 const storeCssText = fs.readFileSync(storeCss, 'utf8');
 const storeSkyJsText = fs.readFileSync(storeSkyJs, 'utf8');
+const settingsCssText = fs.readFileSync(settingsCss, 'utf8');
+const settingsSkyJsText = fs.readFileSync(settingsSkyJs, 'utf8');
 
 const checks = [];
 
@@ -49,13 +53,21 @@ function lacks(html, needle, label) {
   else fail(label, 'should not contain: ' + needle.slice(0, 80));
 }
 
-// Rail structure (mockup flat rail + rail-spacer)
+// Rail structure — flat mockup + rail-spacer (DESIGN PX)
 has(index, 'class="rail-spacer"', 'Rail has rail-spacer');
 has(index, 'data-nav="profile"', 'Rail profile button');
 has(index, 'data-nav="settings"', 'Rail settings button');
 lacks(index, 'class="rail-body"', 'No rail-body wrapper');
 lacks(index, 'class="rail-foot"', 'No rail-foot wrapper');
 lacks(index, 'class="rail-scroll"', 'No rail-scroll wrapper');
+const railIdx = index.indexOf('class="rail-spacer"');
+const profileIdx = index.indexOf('data-nav="profile"');
+const settingsIdx = index.indexOf('data-nav="settings"');
+if (railIdx !== -1 && profileIdx > railIdx && settingsIdx > profileIdx) {
+  pass('Profile and settings after rail-spacer');
+} else {
+  fail('Profile and settings after rail-spacer', 'rail order');
+}
 
 // Topbar matches mockup (no profile/settings in topbar)
 lacks(index, 'id="pxSkyProfileBtn"', 'No topbar profile button');
@@ -141,6 +153,50 @@ if (/body\.poxy-sky-app-active #stPanelStore\.st-spa-panel--active/.test(storeCs
   fail('Store panel active layout', 'store.css stPanelStore rule missing');
 }
 has(mock, 'id="sc-store"', 'Mockup has sc-store');
+
+// Settings functional (Phase A)
+has(index, 'poxy-settings-sky.js', 'Settings sky script linked');
+has(settingsSkyJsText, 'pxSkySettingsHub', 'Settings hub wired');
+has(settingsSkyJsText, 'prepSettingsPanel', 'Settings panel prep wired');
+has(settingsSkyJsText, 'isSkySettingsHub', 'Settings hub guard on tab switch');
+has(settingsSkyJsText, 'openTopUpModal', 'Settings top-up wired');
+has(settingsSkyJsText, 'toggleTheme', 'Settings theme toggle wired');
+if (/body\.poxy-sky-app-active #settingsPage \.poxy-settings-sidebar[\s\S]*display:\s*none/.test(settingsCssText)) {
+  pass('Settings legacy sidebar hidden in sky mode');
+} else {
+  fail('Settings legacy sidebar hidden in sky mode', 'settings.css rule missing');
+}
+if (/body\.poxy-sky-app-active #settingsPage\.px-sky-settings--hub/.test(settingsCssText)) {
+  pass('Settings hub mode layout');
+} else {
+  fail('Settings hub mode layout', 'settings.css hub rule missing');
+}
+if (/\.rail-spacer[\s\S]*flex:\s*1/.test(shellCss) && /padding:\s*16px 0/.test(shellCss)) {
+  pass('Rail mockup flex + spacer in app shell');
+} else {
+  fail('Rail mockup flex + spacer in app shell', 'app-shell.css rail rules missing');
+}
+if (/max-width:\s*1120px/.test(shellCss) && /html:has\(body\.poxy-sky-app-active\)[\s\S]*zoom:\s*1/.test(shellCss)) {
+  pass('Sky stage max-width + zoom neutralized');
+} else {
+  fail('Sky stage max-width + zoom neutralized', 'app-shell.css scale rules');
+}
+if (/body\.poxy-sky-app-active #profilePage \.idhub-shell[\s\S]*display:\s*none/.test(fs.readFileSync(path.join(root, 'assets/poxy-sky/screens/profile.css'), 'utf8'))) {
+  pass('Profile legacy shell hidden in sky mode');
+} else {
+  fail('Profile legacy shell hidden in sky mode', 'profile.css rule missing');
+}
+if (/body\.poxy-sky-app-active #settingsPage\.px-sky-settings--hub \.poxy-settings-shell[\s\S]*display:\s*none/.test(settingsCssText)) {
+  pass('Settings legacy shell hidden in hub mode');
+} else {
+  fail('Settings legacy shell hidden in hub mode', 'settings.css rule missing');
+}
+if (/body\.poxy-sky-app-active #pxSkyStage:has\(#settingsPage\.visible\) > #huntPage/.test(fs.readFileSync(path.join(root, 'assets/poxy-sky/legacy-suppress.css'), 'utf8'))) {
+  pass('Settings route hides huntPage shell');
+} else {
+  fail('Settings route hides huntPage shell', 'legacy-suppress.css rule missing');
+}
+has(mock, 'id="sc-settings"', 'Mockup has sc-settings');
 
 if (/function isSkyLegacyRarityUi/.test(index) && /if\(isSkyLegacyRarityUi\(\)\)return;[\s\S]*?loadTierListPanel/.test(index)) {
   pass('Sky tierlist skips legacy loadTierListPanel');

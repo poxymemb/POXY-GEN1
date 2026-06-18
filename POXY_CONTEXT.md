@@ -135,32 +135,70 @@ Auth hook ids to preserve: `#authEmail`, `#authPassword`, `#authSubmitBtn`, `#au
 
 ## 5. Done vs remaining
 
-### Done (Stages 0–4)
-- **Stage 0** (`998b9ef`): tokens.css, components.css, DESIGN.md, rules
-- **Stage 1** (`9f8edca`, fix `18ebd72`): Landing 1:1 → `landing.css`, `poxy-landing-page.js`
-- **Clean slate** (local): legacy CSS extracted → lazy mount after login
-- **Stage 2** (local, uncommitted): Auth → `auth.css`, `poxy-auth-sky.js`
-- **Stage 3** (local, uncommitted): App shell → rail + topbar, legacy chrome killed
-- **Stage 4** (local, uncommitted): Home + Open → `home.css`, `poxy-home-sky.js`
+> **Last updated:** 2026-06-17 · branch `main` · Stages **0–11 committed**.  
+> Pixel-parity is separate from “stage landed” — a stage means Sky CSS/JS is wired; **1:1** means visual match to `design/v2/` mockups + smoke gate passed.
 
-> ⚠️ **FIRST ACTION:** Stages 2–4 + clean slate are **uncommitted**. Commit them before
-> any new work so there is a restore point. (See task `a` below.)
+### Committed stages (git)
 
-### Remaining (Stages 5–11) — reskin one screen per stage from `design/v2/poxy-dashboard.html`
-| Stage | Screen | Mockup id |
-|---|---|---|
-| 5 | Collection | `#sc-collection` |
-| 6 | Market | `#sc-market` |
-| 7 | Open ritual UI | box cards + full-screen generation |
-| 8 | Store | `#sc-store` |
-| 9 | Settings | `#sc-settings` |
-| 10 | Profile | `#sc-profile` |
-| 11 | Collections overview, Community, Messenger, Events, Quests, Levels | respective ids |
+| Stage | Scope | Commit(s) | Notes |
+|-------|--------|-----------|--------|
+| **0** | Foundation — tokens, components, mockups, rules | `998b9ef` | |
+| **1** | Landing reskin | `9f8edca` · fix `18ebd72` · 1:1 pass `5417166` | |
+| — | Clean slate — legacy CSS lazy-mount (later removed) | `a1ea58b` | Superseded by cleanup below |
+| **2** | Auth overlay | `d2f9cdb` | |
+| **3** | App shell — rail 74px, topbar, nav | `32aed61` · 1:1 pass `84eeaee` | Shell chrome in `84eeaee` |
+| **4** | Home + Open screens | `f8bfd01` · Home polish `84eeaee` | Open grid ≠ full ritual 1:1 |
+| **5** | Collection | `5a8e157` | |
+| **6** | Market | `85a7192` | Same commit as Stage 7 |
+| **7** | Open ritual UI | `85a7192` | Economy/spin hooks preserved |
+| **8** | Store | `a7f6558` | Same commit as Stage 9 |
+| **9** | Settings | `a7f6558` | |
+| **10** | Profile | `7f04562` | |
+| **11** | Collections, Community, Messenger, Events, Quests, Levels | `8c82ebc` | |
+| — | Partial cleanup — legacy design system, Lumina strip | `a8cb8c4` · `2e236e8` | Not final `cleanup.md` pass |
 
-Known stubs (UI only today): QR device login, forgot password, verify OTP flow.
+**Head (local, unpushed at last doc sync):** `84eeaee` — 13 commits ahead of `origin/main` is possible; run `git log -1` before deploy.
 
-### After Stage 11 — cleanup phase ✅
-Completed: legacy page CSS merged into Sky screens, `runtime.css` replaces inline legacy, lazy mount removed, Sky JS under `assets/js/ui/`.
+### Pixel-parity vs `design/v2/` (honest)
+
+Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, minor gaps · **Partial** Sky layer on legacy DOM · **Stub** UI placeholder only
+
+| Screen | Mockup | Production hook | Parity | Gap (if not 1:1) |
+|--------|--------|-----------------|--------|------------------|
+| Brand / tokens | `poxy-brand-guide.html` | `tokens.css`, `components.css` | **Near** | Production tokens synced; spot-check components |
+| Landing | `poxy-landing.html` | `#poxyLanding` | **Near 1:1** | Rebuilt `5417166`; manual mobile 375px gate |
+| Auth | `poxy-auth.html` | `#authOverlay` | **Near** | Login/register wired; verify/forgot/QR stubs |
+| App shell | `poxy-dashboard.html` (rail + topbar) | `#poxyAppShell`, `#pxSkyRail`, `#pxSkyTopbar` | **Near 1:1** | Rail-spacer pins profile/settings; sticky flex layout; `zoom:1` in Sky mode; stage `max-width:1120px` |
+| Home | `#sc-home` | `#pxSkyHome` | **Near 1:1** | Welcome + stats; smoke on real login advised |
+| Open — box picker | `#sc-open` | `#pxSkyOpen` | **Near** | Sky box grid + ritual overlay; **5** tiers in prod (Legend is production-only) |
+| Open — ritual | mockup full-screen gen | `#pxSkyRitual`, `#btnOpen`, `#stSpinMount` | **Near** | Sky generation sweep + reveal; legacy spin host hidden |
+| Collection | `#sc-collection` | `#collectionPage` | **Near** | Miles ring, chip filters, search, card grid reskin; legacy console hidden |
+| Market | `#sc-market` | `#stPanelMarket` / `#marketPage` | **Near** | Sky toolbar, rarity chips, sell CTA, listing cards |
+| Store | `#sc-store` | store panel | **Near** | Category chips, membership block, grid polish; legacy bento hidden |
+| Settings | `#sc-settings` | `#settingsPage` | **Near** | Hub + detail groups, theme/top-up wired; legacy sidebar hidden |
+| Profile | `#sc-profile` | `#profilePage` | **Near** | Sky banner/card/swatches; legacy `idhub-shell` hidden |
+| All collections | `#sc-collections` | `tierlist` / `PoxyCollectionsSky` | **Near** | Stage 11 grid shell; tier data from production |
+| Community | `#sc-community` | `club` / `PoxyCommunitySky` | **Near** | Feed layout + legacy club suppressed in sky mode |
+| Messenger | `#sc-messenger` | `messenger` / `PoxyMessengerSky` | **Near** | Sky chat chrome; friends legacy hooks preserved |
+| Events | `#sc-events` | `events` / `PoxyEventsSky` | **Near** | Event cards from Sky layer |
+| Quests | `#sc-quests` | `quests` / `PoxyQuestsSky` | **Near** | Daily quest rows wired to production data |
+| Levels | `#sc-levels` | `levels` / `PoxyLevelsSky` | **Near** | Level path UI; legacy ranks podium hidden |
+| Modals / overlays | mockup modals | notify, support, top-up, crypto overlay | **Partial** | Functional legacy modals + `overlays.css` reskin |
+
+Known UI stubs (no backend): QR device login, forgot password flow, verify OTP polish.
+
+### What is **not** done (post–Stage 11)
+
+1. **Per-screen 1:1 audit** — Landing, Auth, Shell, Home are closest; Open ritual frog reveal and passport modal still differ from mockup.
+2. **Full smoke gate** on all 13 routes — login → profile → collection → open case → market → 375px — run manually before deploy.
+3. **Final cleanup** (`cleanup.md`) — `index.html` still monolithic; feature CSS (identity, cards, notify…) still loaded; Telegram-style split incomplete.
+4. **Push** — local `main` may be ahead of `origin`; deploy when ready.
+
+### After Stage 11 — cleanup (partial ✅)
+
+Done: `PoxyLegacyStyles.mount()` removed; page layout merged into `assets/poxy-sky/runtime.css` + `screens/*.css`; Sky JS under `assets/js/ui/`; Stitch page CSS deleted (`a8cb8c4`, `2e236e8`).
+
+Remaining: prove-zero-reference deletes, thin `index.html`, incremental `core/` / `features/` split per §7.
 
 ---
 

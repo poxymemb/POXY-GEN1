@@ -372,9 +372,29 @@
 
 
 
+  function prepProfilePanel() {
+
+    if (typeof global.hideHuntPageShell === 'function') global.hideHuntPageShell();
+
+    var main = $('pxSkyMain');
+
+    if (main) main.scrollTop = 0;
+
+    try {
+
+      window.scrollTo(0, 0);
+
+    } catch (e) {}
+
+  }
+
+
+
   function onShow() {
 
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
+
+    prepProfilePanel();
 
     ensurePageHead();
 

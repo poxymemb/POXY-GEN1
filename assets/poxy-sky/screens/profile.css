@@ -1,9 +1,19 @@
 /* POXY Sky Profile — Stage 10 from poxy-dashboard.html #sc-profile */
 
 
-body.poxy-sky-app-active #profilePage {
+body.poxy-sky-app-active #profilePage.visible {
 
-  background: transparent !important;
+  display: block !important;
+
+  width: 100% !important;
+
+  max-width: none !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  min-height: 0 !important;
 
 }
 
@@ -25,13 +35,7 @@ body.poxy-sky-app-active #profilePage .idhub-stats {
 
 body.poxy-sky-app-active #profilePage .idhub-shell {
 
-  background: transparent !important;
-
-  border: none !important;
-
-  box-shadow: none !important;
-
-  padding: 0 !important;
+  display: none !important;
 
 }
 

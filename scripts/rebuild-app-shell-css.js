@@ -54,47 +54,41 @@ const extra = `
     #poxyAppShell .stage{padding:18px 16px 30px}
   }
 
-  /* ── Shell open: rail fixed 100dvh, main offset (mockup 1:1) ── */
+  /* ── Shell open: mockup flex row (sticky rail + scrolling main) ── */
   #poxyAppShell.px-sky-app--open {
-    align-items: flex-start !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
     width: 100% !important;
     min-height: 100dvh !important;
   }
   #poxyAppShell.px-sky-app--open .main {
     display: flex;
     flex-direction: column;
-    min-height: 100dvh;
-    margin-left: var(--rail-w, 74px) !important;
-    width: calc(100% - var(--rail-w, 74px)) !important;
     flex: 1 1 auto !important;
     min-width: 0 !important;
+    min-height: 0 !important;
+    margin-left: 0 !important;
+    width: auto !important;
   }
 
-  /* ── Rail 1:1 mockup — fixed viewport height, spacer pins profile/settings ── */
-  #poxyAppShell .rail {
-    position: fixed !important;
+  /* ── Rail 1:1 DESIGN PX — sticky column, spacer pins profile/settings ── */
+  #poxyAppShell.px-sky-app--open .rail {
+    position: sticky !important;
     top: 0 !important;
-    left: 0 !important;
     align-self: flex-start !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
+    width: var(--rail-w) !important;
+    flex-shrink: 0 !important;
+    height: 100vh !important;
+    height: 100svh !important;
+    max-height: 100svh !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
-    box-sizing: border-box !important;
     z-index: 35 !important;
   }
   #poxyAppShell .rail-spacer {
-    display: none !important;
-  }
-  #poxyAppShell .rail .logo,
-  #poxyAppShell .rail .rail-btn {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box !important;
-    flex-shrink: 0;
-    line-height: 0;
-  }
-  #poxyAppShell .rail-btn[data-nav="profile"] {
-    margin-top: auto !important;
+    flex: 1 1 auto !important;
+    min-height: 8px !important;
+    width: 100% !important;
   }
   #poxyAppShell #pxSkyTopbar {
     flex-shrink: 0;
@@ -103,7 +97,7 @@ const extra = `
     flex: 1;
     min-height: 0;
   }
-  /* Legacy spin .stage must not hit #pxSkyStage (fixes text under topbar) */
+  /* Legacy spin .stage must not break sky stage (mockup .stage metrics) */
   #poxyAppShell #pxSkyStage.stage {
     width: 100% !important;
     max-width: 1120px !important;
@@ -111,9 +105,10 @@ const extra = `
     min-height: 0 !important;
     display: block !important;
     margin: 0 auto !important;
-    margin-bottom: 0 !important;
-    flex-shrink: initial !important;
+    flex: 1 !important;
     overflow: visible !important;
+    padding: 28px 26px 40px !important;
+    box-sizing: border-box !important;
     align-items: initial !important;
     justify-content: initial !important;
     position: relative !important;
@@ -128,29 +123,7 @@ const extra = `
     height: 38px !important;
     border-radius: 11px !important;
     margin-bottom: 12px !important;
-  }
-  @media (max-height: 940px) {
-    #poxyAppShell .rail {
-      gap: 5px !important;
-      padding: 10px 0 !important;
-    }
-    #poxyAppShell .rail .logo {
-      margin-bottom: 0 !important;
-      width: 34px !important;
-      height: 34px !important;
-    }
-    #poxyAppShell .rail-btn {
-      width: 42px !important;
-      height: 42px !important;
-      min-width: 42px !important;
-      min-height: 42px !important;
-      max-width: 42px !important;
-      max-height: 42px !important;
-    }
-    #poxyAppShell .rail-btn svg {
-      width: 20px !important;
-      height: 20px !important;
-    }
+    flex-shrink: 0 !important;
   }
   #poxyAppShell .rail-btn {
     width: 46px !important;
@@ -226,6 +199,9 @@ body.poxy-sky-app-active {
   background: var(--bg) !important;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+}
+html:has(body.poxy-sky-app-active) {
+  zoom: 1 !important;
 }
 body.poxy-sky-app-active.poxy-landing-active #poxyAppShell:not(.px-sky-app--open) {
   display: none !important;
