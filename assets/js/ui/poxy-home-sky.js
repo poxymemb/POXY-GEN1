@@ -29,42 +29,9 @@
     }
   }
 
-  function renderColPreview() {
-    var grid = $('pxSkyHomeColGrid');
-    if (!grid || !global.colData) return;
-    grid.innerHTML = '';
-    var items = (global.applyPinSort ? global.applyPinSort(global.colData) : global.colData).slice(0, 4);
-    var tiers = global.TIERS || [];
-    var tierById = global.TIER_BY_ID || {};
-    items.forEach(function (item) {
-      var tier = tierById[item.poxy_tier] || tiers[0] || { label: 'Common', color: '#8A8F98' };
-      var name = (item.character_name || tier.label || 'POXY').slice(0, 24);
-      var ring = tier.color || '#60C2E0';
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'cards-cell';
-      btn.style.setProperty('--ring', ring);
-      btn.addEventListener('click', function () {
-        if (typeof global.showPage === 'function') global.showPage('collection');
-      });
-      btn.innerHTML =
-        '<div class="cell-frame"><span class="material-symbols-outlined" style="font-size:42px;color:' +
-        ring +
-        '">view_in_ar</span></div>' +
-        '<div class="cell-meta"><div class="cell-name">' +
-        (global.sanitizeText ? global.sanitizeText(name) : name) +
-        '</div>' +
-        '<div class="cell-rar" style="color:' +
-        ring +
-        '">' +
-        (tier.label || 'POXY').toUpperCase() +
-        '</div></div>';
-      grid.appendChild(btn);
-    });
-    if (!items.length) {
-      grid.innerHTML =
-        '<div class="panel panel-pad" style="grid-column:1/-1;text-align:center;color:var(--text-dim);font-size:14px">Open your first box to start your shelf.</div>';
-    }
+  function ensureHuntVisible() {
+    var hunt = $('huntPage');
+    if (hunt) hunt.style.display = 'block';
   }
 
   function setView(view) {
@@ -73,11 +40,9 @@
     var open = $('pxSkyOpen');
     if (home) {
       home.classList.toggle('px-sky-screen--active', activeView === 'home');
-      home.hidden = activeView !== 'home';
     }
     if (open) {
       open.classList.toggle('px-sky-screen--active', activeView === 'open');
-      open.hidden = activeView !== 'open';
     }
     if (global.PoxyAppShell && typeof global.PoxyAppShell.syncRail === 'function') {
       global.PoxyAppShell.syncRail(activeView === 'open' ? 'open' : 'dashboard');
@@ -85,13 +50,14 @@
   }
 
   function showHome() {
+    ensureHuntVisible();
     if (typeof global.showStitchTab === 'function') global.showStitchTab('dashboard');
     setView('home');
     sync();
-    renderColPreview();
   }
 
   function showOpen() {
+    ensureHuntVisible();
     if (typeof global.showStitchTab === 'function') global.showStitchTab('dashboard');
     setView('open');
     if (global.PoxyOpenSky) global.PoxyOpenSky.onShow();
@@ -116,7 +82,6 @@
 
   global.PoxyHomeSky = {
     sync: sync,
-    renderColPreview: renderColPreview,
     showHome: showHome,
     showOpen: showOpen,
     setView: setView,

@@ -75,7 +75,10 @@ function transformRule(rule) {
   if (open < 0) return trimmed;
   const sel = trimmed.slice(0, open).trim();
   const body = trimmed.slice(open);
-  if (sel === 'html' || sel === 'body') return '';
+  if (sel === '*') {
+    return '#authOverlay, #authOverlay * { box-sizing: border-box; }';
+  }
+  if (sel === 'html' || sel === 'body' || sel === 'body::before') return '';
   return prefixSelector(sel) + body;
 }
 
@@ -134,8 +137,9 @@ ${themeVars}
   font-family: var(--font);
   pointer-events: none;
 }
-.poxy-auth-overlay.poxy-auth-overlay--open {
-  display: flex;
+.poxy-auth-overlay.poxy-auth-overlay--open,
+body.poxy-auth-modal-open #authOverlay {
+  display: flex !important;
   pointer-events: auto;
 }
 .poxy-auth-overlay.hidden {
@@ -151,42 +155,62 @@ ${themeVars}
   pointer-events: none;
   z-index: 0;
 }
-#authOverlay .px-auth-close {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  backdrop-filter: blur(12px);
-  color: var(--text);
-  cursor: pointer;
-  font-size: 18px;
-  z-index: 12;
-  display: grid;
-  place-items: center;
-  transition: transform 0.15s;
-}
-#authOverlay .px-auth-close:hover { transform: translateY(-1px); }
 #authOverlay .auth-msg {
   margin-top: 12px;
   font-size: 13px;
-  min-height: 18px;
+  min-height: 0;
   line-height: 1.45;
   text-align: center;
 }
+#authOverlay .auth-msg:not(:empty) { min-height: 18px; }
 #authOverlay .auth-msg.error { color: #E0606A; }
 #authOverlay .auth-msg.success { color: #3DBE8B; }
-#authOverlay .btn-oauth {
+
+`;
+
+const isolation = `
+/* ── Auth isolation (must load after scoped rules + runtime.css) ── */
+#authOverlay .btn {
+  width: 100% !important;
+  font-family: var(--font) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+#authOverlay .btn-primary {
+  background: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+  border: 1px solid var(--btn-bg) !important;
+  border-radius: var(--r-sm) !important;
+  padding: 13px !important;
+  font-size: 15px !important;
+}
+#authOverlay .btn-primary:hover {
+  transform: none !important;
+  filter: brightness(1.08) !important;
+}
+#authOverlay .btn-primary:active {
+  transform: scale(0.985) !important;
+}
+#authOverlay .btn-auth-alt {
   background: var(--card) !important;
   color: var(--text) !important;
   border-color: var(--border) !important;
 }
-#authOverlay .btn-oauth:hover { filter: brightness(1.04); }
-
+#authOverlay .btn-auth-alt:hover {
+  filter: brightness(1.04) !important;
+}
+#authOverlay .divider span {
+  display: none;
+}
 `;
 
-fs.writeFileSync(path.join(__dirname, '../assets/poxy-sky/auth.css'), header + scoped + '\n');
+fs.writeFileSync(
+  path.join(__dirname, '../assets/poxy-sky/auth.css'),
+  header + scoped + isolation + '\n'
+);
 console.log('auth.css rebuilt');

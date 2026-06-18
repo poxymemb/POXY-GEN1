@@ -65,7 +65,7 @@ body.poxy-landing-preview #plPreviewBack { display: inline-flex !important; }
 }
 #poxyLanding .lang-opt:hover { background: var(--glass-strong); }
 
-#poxyLanding, #poxyLanding *{box-sizing:border-box;margin:0;padding:0}
+#poxyLanding, #poxyLanding * { box-sizing: border-box; }
 
 body.poxy-landing-active {font-family:var(--font);background:var(--bg)!important;color:var(--text);line-height:1.55;
     -webkit-font-smoothing:antialiased;transition:background .4s,color .4s;overflow-x:hidden}
@@ -378,5 +378,104 @@ html[data-theme="dark"] #poxyLanding .news-tag{color:var(--sky-300)}
 }
 
 @media(prefers-reduced-motion:reduce){
-#poxyLanding, #poxyLanding *{animation:none!important}
+#poxyLanding, #poxyLanding * { box-sizing: border-box; }
 }
+/* ── Landing isolation (must load after scoped rules) ── */
+body.poxy-landing-active #poxyLanding,
+body.poxy-landing-preview #poxyLanding {
+  width: 100%;
+  max-width: none;
+}
+body.poxy-landing-active #poxyLanding .page,
+body.poxy-landing-preview #poxyLanding .page {
+  display: none;
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  color: inherit !important;
+}
+body.poxy-landing-active #poxyLanding .page.active,
+body.poxy-landing-preview #poxyLanding .page.active {
+  display: block !important;
+}
+body.poxy-landing-active #poxyLanding > footer,
+body.poxy-landing-preview #poxyLanding > footer {
+  display: block !important;
+  width: 100%;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+#poxyLanding .wrap,
+#poxyLanding .nav-in {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Kill legacy runtime .btn-primary (gradient pill, width 100%) */
+body.poxy-landing-active #poxyLanding .btn,
+body.poxy-landing-preview #poxyLanding .btn {
+  width: auto !important;
+  font-family: var(--font) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+body.poxy-landing-active #poxyLanding .btn-primary,
+body.poxy-landing-preview #poxyLanding .btn-primary {
+  background: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+  border: 1px solid var(--btn-bg) !important;
+  border-radius: 14px !important;
+  padding: 13px 24px !important;
+  font-size: 15px !important;
+}
+/* Nav CTA — mockup: compact Get started */
+body.poxy-landing-active #poxyLanding .btn.btn-primary.cta-nav,
+body.poxy-landing-preview #poxyLanding .btn.btn-primary.cta-nav {
+  padding: 9px 18px !important;
+  font-size: 14px !important;
+  width: auto !important;
+  border-radius: 14px !important;
+}
+body.poxy-landing-active #poxyLanding .btn-primary.btn-lg,
+body.poxy-landing-preview #poxyLanding .btn-primary.btn-lg {
+  padding: 16px 30px !important;
+  font-size: 16px !important;
+  border-radius: 15px !important;
+}
+body.poxy-landing-active #poxyLanding .btn-glass,
+body.poxy-landing-preview #poxyLanding .btn-glass {
+  background: var(--glass-strong) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 15px !important;
+}
+body.poxy-landing-active #poxyLanding .btn-primary:hover,
+body.poxy-landing-preview #poxyLanding .btn-primary:hover {
+  transform: none !important;
+  filter: brightness(1.08) !important;
+}
+body.poxy-landing-active #poxyLanding .btn-glass:hover,
+body.poxy-landing-preview #poxyLanding .btn-glass:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* Hide app chrome while landing is visible */
+body.poxy-landing-active #dmOverlay,
+body.poxy-landing-preview #dmOverlay,
+body.poxy-landing-active #tradeModal,
+body.poxy-landing-preview #tradeModal,
+body.poxy-landing-active #poxySupportPanel,
+body.poxy-landing-preview #poxySupportPanel,
+body.poxy-landing-active #inspectModal,
+body.poxy-landing-preview #inspectModal {
+  display: none !important;
+  pointer-events: none !important;
+}
+

@@ -44,7 +44,25 @@ body.poxy-sky-app-active #pxSkyStage > .page.visible {
   inset: auto !important;
   min-height: 0 !important;
   max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
   z-index: 1 !important;
+}
+
+body.poxy-sky-app-active #pxSkyStage #huntPage,
+body.poxy-sky-app-active #pxSkyStage #huntPage .poxy-stitch-dash,
+body.poxy-sky-app-active #pxSkyStage #huntPage .st-spa-viewport,
+body.poxy-sky-app-active #pxSkyStage #huntPage .st-spa-panel {
+  position: relative !important;
+  top: auto !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+body.poxy-sky-app-active #pxSkyStage .px-sky-screen {
+  position: relative;
+  z-index: 1;
 }
 
 /* SPA panels transparent in sky mode */

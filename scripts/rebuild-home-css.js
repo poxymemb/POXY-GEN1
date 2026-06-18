@@ -88,35 +88,65 @@ body.poxy-sky-app-active #stPanelDashboard .px-legacy-dash {
   margin-top: 16px;
   flex-wrap: wrap;
 }
-#pxSkyHome .px-home-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+#pxSkyHome .px-home-stats { display: flex; gap: 10px; }
 #pxSkyHome .px-stat-chip {
   text-align: center;
   background: var(--glass);
   border-radius: 16px;
   border: 1px solid var(--border);
-  padding: 16px 20px;
-  min-width: 100px;
 }
 #pxSkyHome .px-stat-val {
   font-size: 24px;
   font-weight: 700;
   color: var(--text-strong);
+}
+#pxSkyHome .px-stat-val--balance {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
 }
-#pxSkyHome .px-stat-lbl { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
-#pxSkyHome .px-home-col-section { margin-top: 28px; }
-#pxSkyHome .px-home-view-all { margin-top: 16px; }
+#pxSkyHome .px-stat-lbl { font-size: 12px; color: var(--text-dim); }
 #pxSkyOpen .page-head { margin-bottom: 22px; }
-#pxSkyOpen .px-open-spin-host { margin-top: 8px; }
-#pxSkyOpen .px-open-spin-host .st-hero { margin: 0; padding: 0; }
-body.poxy-sky-app-active #pxSkyOpen .dsh-spin-label,
-body.poxy-sky-app-active #pxSkyOpen .st-hero-glow {
+body.poxy-sky-app-active #pxSkyOpen .px-open-spin-host {
   display: none !important;
 }
-#pxSkyOpen .px-open-spin-host .st-glass-surface { display: none; }
+
+/* ── Sky home/open button isolation (kill legacy runtime pills) ── */
+body.poxy-sky-app-active #pxSkyHome .btn,
+body.poxy-sky-app-active #pxSkyOpen .btn {
+  width: auto !important;
+  font-family: var(--font) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  border-radius: 12px !important;
+}
+body.poxy-sky-app-active #pxSkyHome .btn-primary,
+body.poxy-sky-app-active #pxSkyOpen .btn-primary {
+  background: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+  border: 1px solid var(--btn-bg) !important;
+  padding: 11px 18px !important;
+  font-size: 14px !important;
+}
+body.poxy-sky-app-active #pxSkyHome .btn-primary:hover,
+body.poxy-sky-app-active #pxSkyOpen .btn-primary:hover {
+  transform: none !important;
+  filter: brightness(1.08) !important;
+}
+body.poxy-sky-app-active #pxSkyHome .btn-glass,
+body.poxy-sky-app-active #pxSkyOpen .btn-glass {
+  background: var(--glass-strong) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+body.poxy-sky-app-active #pxSkyHome .btn-glass:hover,
+body.poxy-sky-app-active #pxSkyOpen .btn-glass:hover {
+  transform: translateY(-1px) !important;
+}
 `;
 
 const header = `/* POXY Sky Home — Stage 4 from poxy-dashboard.html */\n`;

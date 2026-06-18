@@ -114,6 +114,12 @@
         e.preventDefault();
         landingGo(el.getAttribute('data-px-tab'));
       });
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          landingGo(el.getAttribute('data-px-tab'));
+        }
+      });
     });
     document.querySelectorAll('#poxyLanding [data-px-article]').forEach(function (el) {
       el.addEventListener('click', function (e) {

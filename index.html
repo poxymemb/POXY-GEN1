@@ -67,11 +67,10 @@
 
 
 <link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=5">
-<link rel="stylesheet" href="assets/poxy-sky/auth.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=5">
-<link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=16">
+<link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=5">
+<link rel="stylesheet" href="assets/poxy-sky/screens.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=4">
 <link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=4">
 <link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/open.css?v=1">
@@ -88,14 +87,13 @@
 <link rel="stylesheet" href="assets/poxy-sky/screens/gens.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/friends.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/news.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/runtime.css?v=1">
+<link rel="stylesheet" href="assets/poxy-sky/runtime.css?v=2">
 <link rel="stylesheet" href="assets/frames.css?v=1">
 <link rel="stylesheet" href="assets/poxy-identity.css?v=3">
 <link rel="stylesheet" href="assets/poxy-quick-profile.css?v=6">
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
 <link rel="stylesheet" href="assets/poxy-support-panel.css?v=5">
-<link rel="stylesheet" href="assets/poxy-sky/overlays.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=3">
+<link rel="stylesheet" href="assets/poxy-sky/overlays.css?v=3">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/topup.css?v=2">
@@ -114,6 +112,8 @@
 <link rel="stylesheet" href="assets/poxy-whitepaper.css?v=6">
 <link rel="stylesheet" href="assets/poxy-verify-terminal.css?v=12">
 <link rel="stylesheet" href="assets/poxy-onboarding.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/landing.css?v=9">
+<link rel="stylesheet" href="assets/poxy-sky/auth.css?v=4">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
 
 
@@ -137,10 +137,10 @@
 
 
 
-<script src="assets/js/ui/poxy-auth-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-auth-sky.js?v=3" defer></script>
 <script src="assets/js/ui/poxy-app-shell.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-open-sky.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-home-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-home-sky.js?v=4" defer></script>
 <script src="assets/js/ui/poxy-topup-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-collection-sky.js?v=3" defer></script>
 <script src="assets/js/ui/poxy-market-sky.js?v=1" defer></script>
@@ -237,7 +237,7 @@
 <div id="poxyLanding" hidden aria-label="POXY World">
 <nav>
   <div class="nav-in">
-    <button type="button" class="nav-logo" data-px-tab="main" aria-label="POXY WORLD home"></button>
+    <div class="nav-logo" role="button" tabindex="0" data-px-tab="main" aria-label="POXY WORLD home"></div>
     <div class="nav-tabs">
       <button type="button" class="nav-tab active" data-tab="main" data-px-tab="main">Main</button>
       <button type="button" class="nav-tab" data-tab="faq" data-px-tab="faq">FAQ</button>
@@ -314,7 +314,7 @@
     <h2>Your shelf is <em>waiting</em>.</h2>
     <p>Pick a username, open your first box, and start a collection that's actually yours.</p>
     <div class="hero-cta"><button type="button" class="btn btn-primary btn-lg" data-pl-auth>Create your account</button><button type="button" class="btn btn-glass btn-lg" data-pl-auth>Log in</button></div>
-  </div></div>
+  </div></section>
 </div>
 
 <!-- FAQ -->
@@ -397,7 +397,6 @@
 
 <!-- AUTH — Sky (Stage 2) -->
 <div class="auth-overlay poxy-auth-overlay" id="authOverlay" role="dialog" aria-labelledby="authHeadline" aria-hidden="true">
-  <button type="button" class="px-auth-close" id="authCloseBtn" aria-label="Close sign in">×</button>
   <button type="button" class="theme-btn" id="authThemeBtn" aria-label="Theme">◐</button>
 
   <div class="auth">
@@ -428,9 +427,8 @@
         <button type="button" class="btn btn-primary" id="authSubmitBtn">Sign in</button>
         <div class="auth-msg" id="authMsg" role="status"></div>
 
-        <div class="divider" aria-hidden="true"><span>or</span></div>
-        <button type="button" class="btn btn-primary btn-oauth" id="authQrBtn">Sign in with a linked device (QR)</button>
-        <button type="button" class="btn btn-primary btn-oauth" onclick="handleAuthOAuth('google')" style="margin-top:10px">Continue with Google</button>
+        <div class="divider">or</div>
+        <button type="button" class="btn btn-primary btn-auth-alt" id="authQrBtn">Sign in with a linked device (QR)</button>
 
         <div class="swap">New to POXY? <button type="button" id="authModeSwitch">Create an account</button></div>
       </div>
@@ -445,7 +443,7 @@
           <label for="authUsername">Username</label>
           <div class="input-wrap">
             <span class="prefix">@</span>
-            <input class="input has-prefix" id="authUsername" type="text" placeholder="yourname" autocomplete="username">
+            <input class="input has-prefix" id="authUsername" type="text" placeholder="yourname" autocomplete="off">
           </div>
           <div class="field-hint" id="authUsernameHint">3–20 characters, letters and numbers.</div>
         </div>
@@ -498,7 +496,6 @@
 <!-- POXY Sky app shell (Stage 3) -->
 <div id="poxyAppShell" class="px-sky-app" style="display:none">
 <aside class="rail" id="pxSkyRail" aria-label="Main navigation">
-  <div class="rail-scroll">
   <button type="button" class="logo" id="pxSkyRailLogo" aria-label="POXY WORLD home"><span class="mk"></span></button>
   <button type="button" class="rail-btn active" data-nav="home"><span class="tip">Home</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></button>
   <button type="button" class="rail-btn" data-nav="open"><span class="tip">Open boxes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21 3 16.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg></button>
@@ -511,11 +508,9 @@
   <button type="button" class="rail-btn" data-nav="events"><span class="tip">Events</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.5 6 .8-4.3 4.2 1 6L12 17l-5.3 2.9 1-6L3.4 9.8l6-.8z"/></svg></button>
   <button type="button" class="rail-btn" data-nav="quests"><span class="tip">Quests</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></button>
   <button type="button" class="rail-btn" data-nav="levels"><span class="tip">Levels</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M9 14h6M10 14v4M14 14v4M8 21h8"/></svg></button>
-  </div>
-  <div class="rail-foot">
+  <div class="rail-spacer" aria-hidden="true"></div>
   <button type="button" class="rail-btn" data-nav="profile"><span class="tip">Profile</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg></button>
   <button type="button" class="rail-btn" data-nav="settings"><span class="tip">Settings</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H9.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h4.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5a7 7 0 0 0 .1-1z"/></svg></button>
-  </div>
 </aside>
 <div class="main" id="pxSkyMain">
 <header class="topbar" id="pxSkyTopbar">
@@ -529,18 +524,13 @@
       <span class="coin" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="url(#pxSkyCoinGrad)"/><circle cx="24" cy="24" r="20" stroke="#8BE3FF" stroke-width="2.5"/><circle cx="24" cy="24" r="14" stroke="#0E3A48" stroke-width="2" stroke-opacity="0.45"/><path d="M24 14 L24 34 M18.5 19 Q24 14.5 29.5 19 M18.5 29 Q24 33.5 29.5 29" stroke="#0E3A48" stroke-width="3" stroke-linecap="round" stroke-opacity="0.8"/><defs><radialGradient id="pxSkyCoinGrad" cx="0.4" cy="0.32" r="0.85"><stop offset="0" stop-color="#A6E9FF"/><stop offset="0.55" stop-color="#60C2E0"/><stop offset="1" stop-color="#2E9CC0"/></radialGradient></defs></svg></span>
       <span id="stBalanceText">0</span>
     </div>
-    <button type="button" class="top-icon" id="pxSkyMailBtn" aria-label="Messages" onclick="showStitchTab('messenger')">
+    <button type="button" class="top-icon" id="pxSkyMailBtn" aria-label="Mail" onclick="showStitchTab('messenger')">
+      <span class="top-badge" id="pxSkyMailBadge" hidden aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>
     </button>
     <button type="button" class="top-icon" id="stNavNotify" aria-label="Notifications" onclick="openNotifyHub()">
-      <span class="top-badge poxy-notify-dot" id="notifyBellDot" hidden aria-hidden="true"></span>
+      <span class="top-badge" id="notifyBellDot" hidden aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-    </button>
-    <button type="button" class="top-icon" id="pxSkyProfileBtn" aria-label="Profile" onclick="showPage('profile')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>
-    </button>
-    <button type="button" class="top-icon" id="pxSkySettingsBtn" aria-label="Settings" onclick="window._allowSettingsPage=true;showPage('settings')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H9.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4L5 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h4.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5a7 7 0 0 0 .1-1z"/></svg>
     </button>
     <button type="button" class="top-icon" id="pxSkyThemeBtn" aria-label="Theme">◐</button>
     <button type="button" id="balanceBadge" hidden aria-hidden="true" tabindex="-1"></button>
@@ -605,7 +595,7 @@
     <section class="st-spa-panel st-spa-panel--active" id="stPanelDashboard" data-st-tab="dashboard">
     <main class="st-main">
 <!-- POXY Sky Home (Stage 4) -->
-<div id="pxSkyHome" class="px-sky-screen px-sky-screen--active" hidden>
+<div id="pxSkyHome" class="px-sky-screen px-sky-screen--active">
   <div class="page-head"><h1>Home</h1><p>Your world at a glance.</p></div>
   <div class="panel panel-pad px-home-welcome">
     <div class="px-home-welcome-main">
@@ -617,17 +607,12 @@
       </div>
     </div>
     <div class="px-home-stats">
-      <div class="px-stat-chip"><div class="px-stat-val" id="pxSkyHomeFigures">0</div><div class="px-stat-lbl">Figures</div></div>
-      <div class="px-stat-chip"><div class="px-stat-val"><span class="coin-sm" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="url(#pxCoinGrad)"/><circle cx="24" cy="24" r="20" stroke="#8BE3FF" stroke-width="2.5"/><circle cx="24" cy="24" r="14" stroke="#0E3A48" stroke-width="2" stroke-opacity="0.45"/><path d="M24 14 L24 34 M18.5 19 Q24 14.5 29.5 19 M18.5 29 Q24 33.5 29.5 29" stroke="#0E3A48" stroke-width="3" stroke-linecap="round" stroke-opacity="0.8"/><defs><radialGradient id="pxCoinGrad" cx="0.4" cy="0.32" r="0.85"><stop offset="0" stop-color="#A6E9FF"/><stop offset="0.55" stop-color="#60C2E0"/><stop offset="1" stop-color="#2E9CC0"/></radialGradient></defs></svg></span><span id="pxSkyHomeBalanceNum">0</span></div><div class="px-stat-lbl">Balance</div></div>
+      <div class="panel-pad px-stat-chip"><div class="px-stat-val" id="pxSkyHomeFigures">0</div><div class="px-stat-lbl">Figures</div></div>
+      <div class="panel-pad px-stat-chip"><div class="px-stat-val px-stat-val--balance"><span class="coin-sm" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="20" fill="url(#pxCoinGrad)"/><circle cx="24" cy="24" r="20" stroke="#8BE3FF" stroke-width="2.5"/><circle cx="24" cy="24" r="14" stroke="#0E3A48" stroke-width="2" stroke-opacity="0.45"/><path d="M24 14 L24 34 M18.5 19 Q24 14.5 29.5 19 M18.5 29 Q24 33.5 29.5 29" stroke="#0E3A48" stroke-width="3" stroke-linecap="round" stroke-opacity="0.8"/><defs><radialGradient id="pxCoinGrad" cx="0.4" cy="0.32" r="0.85"><stop offset="0" stop-color="#A6E9FF"/><stop offset="0.55" stop-color="#60C2E0"/><stop offset="1" stop-color="#2E9CC0"/></radialGradient></defs></svg></span><span id="pxSkyHomeBalanceNum">0</span></div><div class="px-stat-lbl">Balance</div></div>
     </div>
   </div>
-  <div class="px-home-col-section">
-    <div class="panel-h">Recent on your shelf</div>
-    <div class="cards" id="pxSkyHomeColGrid"></div>
-    <button type="button" class="btn btn-glass px-home-view-all" onclick="showPage('collection')">View full collection →</button>
-  </div>
 </div>
-<div id="pxSkyOpen" class="px-sky-screen" hidden>
+<div id="pxSkyOpen" class="px-sky-screen">
   <div class="page-head"><h1>Open a box</h1><p>Pick a tier. The box opens, then your figure forms on a full screen.</p></div>
   <div class="px-open-spin-host">
 <!-- ══ SPIN BLOCK ═════════════════════════════════════════════════ -->
@@ -640,7 +625,6 @@
             <h2 class="dsh-spin-title" data-i18n="dash.spin.title">REWARD DECRYPTER</h2>
           </div>
           <div class="fomo" id="fomoText" hidden aria-hidden="true">Mythic POXY claimed this month: 0/10</div>
-          <div id="greatBurnCounter" hidden aria-hidden="true">🔥 The Great Burn — 0 POXY</div>
           <div class="st-hero-playfield" id="stHeroPlayfield">
           <div class="st-roulette-wrap">
             <div class="st-roulette-mask">
@@ -1084,8 +1068,8 @@
                     </li>
                     <li class="poxy-explore-update">
                       <div class="poxy-explore-update-tag">Economy</div>
-                      <h4>Burn, Craft &amp; Daily Quests</h4>
-                      <p>Secure burn RPCs, Syndicate Forge crafting, and rotating daily objectives for PX rewards.</p>
+                      <h4>Daily Quests</h4>
+                      <p>Rotating daily objectives for PX rewards.</p>
                     </li>
                   </ul>
                 </div>
@@ -2258,11 +2242,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         </div>
       </div>
     </div>
-    <!-- Bulk actions (JS-controlled, keep intact) -->
-    <div class="poxy-col-header-actions" id="colHeaderBulk" hidden>
-      <span class="poxy-col-bulk-count" id="bulkCount" data-i18n="col.bulk.selected" data-i18n-vars="n:0">0 selected</span>
-      <button type="button" class="poxy-col-bulk-burn" id="btnBulkDust" data-i18n="col.bulk.burnAll">Burn All Selected</button>
-    </div>
+    <!-- Bulk actions removed with burn system -->
     <div class="poxy-col-controls">
       <!-- ╔══ TACTICAL CONSOLE — Stitch 1:1 ══╗ -->
       <div class="poxy-col-console">
@@ -2272,7 +2252,6 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
         <div class="poxy-col-console-row poxy-col-console-row--top">
           <div class="poxy-col-filters filter-row" id="filterRow"></div>
           <div class="poxy-col-utils">
-            <button type="button" class="poxy-col-multi-toggle" id="btnColMultiSelect" aria-pressed="false">SELECT MULTIPLE</button>
             <div class="poxy-col-sort-wrap">
               <button type="button" class="poxy-col-sort-btn" id="colSortBtn" aria-haspopup="listbox" aria-expanded="false">
                 <span class="material-symbols-outlined" aria-hidden="true">sort</span>
@@ -2288,42 +2267,8 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
           </div>
         </div>
 
-        <!-- ROW 2: telemetry (left) + primary actions (right) -->
-        <div class="poxy-col-console-row poxy-col-console-row--bottom">
-          <div class="poxy-col-burn-panel">
-            <div class="poxy-col-burn-label">
-              <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
-              <span>BURN <span class="material-symbols-outlined poxy-col-arrow-icon" aria-hidden="true">arrow_forward</span> PX</span>
-            </div>
-            <div class="poxy-col-burn-rates">
-              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">COMMON</span><span class="poxy-burn-chip-val">2</span></span>
-              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">MYTHIC</span><span class="poxy-burn-chip-val">2500</span></span>
-              <span class="poxy-col-burn-chip"><span class="poxy-burn-chip-key">SECRET</span><span class="poxy-burn-chip-val">2500</span></span>
-            </div>
-          </div>
-          <div class="poxy-col-actions">
-            <button type="button" class="poxy-col-capsule poxy-col-capsule-burn" id="btnColBurnCapsule" disabled>
-              <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
-              BURN
-            </button>
-            <button type="button" class="poxy-col-capsule poxy-col-capsule-craft" id="btnColCraftCapsule">
-              CRAFT <span class="poxy-craft-sep">|</span> [5X CMN <span class="material-symbols-outlined poxy-col-arrow-icon" aria-hidden="true">arrow_forward</span> 1X UNC]
-            </button>
-          </div>
-        </div>
       </div><!-- /poxy-col-console -->
 
-      <div class="poxy-col-craft-zone" id="colCraftZone" aria-hidden="true">
-        <div class="poxy-col-craft-zone-head">
-          <div>
-            <h2>Alchemical Processing Zone</h2>
-            <p>Drag 5 Common POXY from the grid into the sockets below.</p>
-          </div>
-          <button type="button" class="poxy-col-craft-close" id="btnColCraftClose" aria-label="Close craft zone">✕</button>
-        </div>
-        <div class="poxy-col-craft-sockets" id="colCraftSockets"></div>
-        <button type="button" class="poxy-col-craft-execute" id="btnCraftExecute" disabled>CRAFT</button>
-      </div>
     </div>
     <main class="poxy-col-main">
       <div class="poxy-col-view-tabs">
@@ -2847,10 +2792,7 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
                 <div class="poxy-club-inventory-vault" id="clubInventoryVaultGrid"></div>
               </div>
             </div>
-            <div class="poxy-club-grid-2">
-              <div class="poxy-club-glass club-forge"><h2 class="poxy-club-kicker">Alchemist's Forge</h2><p class="poxy-club-muted">Burn duplicate commons → guaranteed tier-up roll.</p><div id="clubForgeGrid" class="club-forge-grid"></div><button type="button" class="poxy-club-btn-gold" id="btnClubForge" onclick="runClubForge()">Transmute selection</button></div>
-              <div class="poxy-club-glass"><h2 class="poxy-club-kicker">Elite bounties</h2><div id="clubBountiesList" class="poxy-club-bounties-list"></div></div>
-            </div>
+            <div class="poxy-club-glass"><h2 class="poxy-club-kicker">Elite bounties</h2><div id="clubBountiesList" class="poxy-club-bounties-list"></div></div>
             <div class="poxy-club-glass poxy-club-flash-sales-block"><h2 class="poxy-club-kicker"><span class="material-symbols-outlined">bolt</span> VIP flash desk</h2><div id="flashSalesWrap"></div></div>
           </div>
         </section>
@@ -2897,13 +2839,6 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
               </div>
             </div>
             <aside class="club-otc-rail">
-              <section class="club-forge-panel club-chamfer-edge">
-                <span class="material-symbols-outlined club-forge-bg">local_fire_department</span>
-                <h2>The Forge</h2>
-                <p>Burn 5 identical assets to forge 1 next-tier artifact.</p>
-                <div class="club-forge-slots" id="clubOtcForgeSlots"></div>
-                <button type="button" class="club-forge-init" onclick="switchClubSubTab('lounge')">Initialize Burn</button>
-              </section>
               <section class="poxy-club-glass club-lending">
                 <h2><span class="material-symbols-outlined">timelapse</span> Asset Lending</h2>
                 <p class="poxy-club-muted">Rent assets out. Auto-return smart contract ensures safety.</p>
@@ -3518,19 +3453,6 @@ Verification (anyone can do this):
   </div>
 </div>
 
-<!-- CRAFT MODAL (5 Common → 1 Uncommon) -->
-<div class="modal-overlay hidden" id="craftModal">
-  <div class="modal-card" style="max-width:360px">
-    <div class="modal-title">Craft Upgrade</div>
-    <div class="modal-sub">Pick exactly 5 Common POXY to fuse into 1 Uncommon. <span id="craftSelectCount" style="color:#f9abff;font-weight:800">0 / 5</span></div>
-    <div id="craftPool" style="max-height:300px;overflow-y:auto;margin:14px 0"></div>
-    <div class="modal-btns">
-      <button class="btn-modal-ok" id="btnCraftDoIt" onclick="tryPerformCraft()">Craft Now</button>
-      <button class="btn-modal-cancel" onclick="closeCraftModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <!-- EXPANDED PLAYER PROFILE MODAL (X-style Quick Profile) -->
 <div class="modal-overlay hidden profile-expanded-backdrop" id="inspectModal" role="dialog" aria-modal="true" aria-labelledby="inspectDisplayName">
   <button type="button" class="qp-profile-close" onclick="closeInspectModal()" aria-label="Close profile"><span class="material-symbols-outlined">close</span></button>
@@ -3902,7 +3824,6 @@ const REF_CODE_LS = 'poxy_pending_ref_code';
 const REF_BASE_URL = 'https://poxyworld.com/?ref=';
 const DOPAMINE_TIMER_MS = 10 * 60 * 1000;
 const DOPAMINE_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-const CRAFT_INHERIT_LS = 'poxy_craft_inherit_trait';
 const PX_PACKAGES = [
   {id:'starter',  badge:'STARTER',  label:'Starter Pack',  gbp:4.99,  px:100,  bonus:0,  tag:'1× account'},
   {id:'explorer', badge:'EXPLORER', label:'Explorer Pack', gbp:12.99, px:280,  bonus:0,  tag:'+8% bonus'},
@@ -4159,12 +4080,10 @@ let referralInfo=null;
 })();
 let _lastXpLevel=null;
 let _dopamineTimerIv=null;
-let pendingCraftTrait=null;
 let selectedPxPackageId='explorer';
 let colFilter='all', selectedForDust=new Set(), selectedItems=selectedForDust;
-let colMultiSelectMode=false, colSortPreset='default', colCraftZoneOpen=false;
+let colMultiSelectMode=false, colSortPreset='default';
 let colDisplayOrder=[], colLastSelectIndex=-1;
-let craftSockets=[null,null,null,null,null];
 let marketSort='newest', hasPremiumFrame=false, pendingSpinTier=null;
 let marketBuyCache=[];
 let marketSearchQuery='', marketRarityFilter='all';
@@ -4199,9 +4118,7 @@ let activeFlashSales=[];
 // social
 let chatMessages=[];
 // economy + crafting + quests + global burn
-let craftSelection=new Set(); /* legacy modal; forge uses craftSockets */
 let dailyQuests=[];
-let greatBurnTotal=0;
 // notifications queue (Phase 1)
 let notificationQueue=[];
 let pendingGifts=[];
@@ -5247,18 +5164,19 @@ function setLoggedInUI(){
   }
   document.body.classList.add('poxy-sky-app-active');
   const shellEl=$('poxyAppShell');if(shellEl)shellEl.classList.add('px-sky-app--open');
-  const skyHome=$('pxSkyHome');if(skyHome){skyHome.hidden=false;skyHome.classList.add('px-sky-screen--active');}
-  if(window.PoxyHomeSky)PoxyHomeSky.showHome();
   if(window.PoxyScreensSky)PoxyScreensSky.initAll();
   const ub=$('userBar');
-  if(ub){ub.style.display='flex';ub.classList.add('psd-user-active');}
+  if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
   $('balanceBadgeGroup')?.classList.add('visible');
   const shell=$('poxyAppShell');if(shell){shell.style.display='flex';shell.classList.add('px-sky-app--open');}
   const hunt=$('huntPage');if(hunt)hunt.style.display='block';
   showPoxyAppShell();
   try{
-    if(!restoreActiveRoute())showStitchTab('dashboard');
-  }catch(e){console.error('showStitchTab:',e);showStitchTab('dashboard');}
+    if(!restoreActiveRoute()){
+      if(window.PoxyHomeSky)PoxyHomeSky.showHome();
+      else showStitchTab('dashboard');
+    }
+  }catch(e){console.error('showStitchTab:',e);if(window.PoxyHomeSky)PoxyHomeSky.showHome();else showStitchTab('dashboard');}
 }
 function bootstrapAfterLogin(){
   return (async()=>{
@@ -5267,7 +5185,7 @@ function bootstrapAfterLogin(){
       await applyPendingReferral();
       await loadPlayerAchievements();
       const dailyClaim=await claimDailyLoginOnce();
-      await Promise.all([checkMythic(),refreshPremiumFrame(),loadGreatBurnTotal()]);
+      await Promise.all([checkMythic(),refreshPremiumFrame()]);
       await loadCollection();
       renderStorePage();
       let onboardingStarted=false;
@@ -6064,7 +5982,7 @@ function renderProfileStreakWidget(){
   const legacyMult=$('profileStreakMult');
   if(legacyMult)legacyMult.textContent='×'+(1+activeCount*0.05).toFixed(2);
   renderDashStreakChip();
-  if(window.PoxyHomeSky){PoxyHomeSky.sync();PoxyHomeSky.renderColPreview();}
+  if(window.PoxyHomeSky){PoxyHomeSky.sync();}
 }
 
 function badgeSerialFor(key){
@@ -6388,8 +6306,6 @@ window.openAssetViewerModal = function(item) {
   const ser = $('avmSerial'); if(ser) ser.textContent = item.serial_number || '–';
 
   // Conditional rows — hide rows when data is unavailable
-  const forgeRow = $('avmForgeRow');
-  if(forgeRow) forgeRow.hidden = typeof findCraftSocketForItem !== 'function' || findCraftSocketForItem(item.id) < 0;
   const pinRow = $('avmPinnedRow');
   if(pinRow) pinRow.hidden = !item.pinned_at;
 
@@ -6419,10 +6335,7 @@ window.openAssetViewerModal = function(item) {
   const listBtn = $('avmListBtn');
   if(listBtn){ listBtn.onclick = ()=>{ closeAssetViewerModal(); const t=TIERS.find(t=>t.id===item.poxy_tier)||TIERS[0]; pendingListItem={poxyId:item.id,tier:t,serial:item.serial_number||'',fromHunt:false}; openPriceModal(); }; }
 
-  const burnBtn = $('avmBurnBtn');
-  if(burnBtn){ burnBtn.onclick = ()=>{ closeAssetViewerModal(); const card=document.querySelector('.col-card[data-id="'+CSS.escape(String(item.id))+'"]'); burnPoxySecure(item.id, card); }; }
-
-  // ── Particle system — Stitch 1:1: 100 particles, all amber, mix-blend-screen on container ──
+  // ── Particle system
   const pCont = $('avmParticles');
   if(pCont){
     pCont.innerHTML = '';
@@ -7431,10 +7344,11 @@ window.showStitchTab=function(tab){
     }
   }
   if(next==='dashboard'){
-    refreshStitchDashboardChrome();
-    renderDashColPreview();
-    renderTopUpPaths();
-    if(window.PoxyHomeSky)PoxyHomeSky.showHome();
+    if(!document.body.classList.contains('poxy-sky-app-active')){
+      refreshStitchDashboardChrome();
+      renderDashColPreview();
+      renderTopUpPaths();
+    }
   }
   if(next==='store'){
     if(!colData.length)loadCollection().then(()=>renderStorePage()).catch(()=>renderStorePage());
@@ -8215,6 +8129,10 @@ function updatePsdMemberBadge(){
 }
 function refreshStitchDashboardChrome(){
   updateOpenButtonPrice();
+  if(document.body.classList.contains('poxy-sky-app-active')){
+    if(window.PoxyHomeSky)PoxyHomeSky.sync();
+    return;
+  }
   updatePsdMemberBadge();
   renderDashColPreview();
   refreshDashHeroMetrics();
@@ -8268,6 +8186,12 @@ window.showPage=function(page){
   document.querySelectorAll('.st-spa-panel').forEach(p=>{p.hidden=true;});
   $('huntPage').style.display='none';
   $('bottomNav').style.display='none';
+  if(document.body.classList.contains('poxy-sky-app-active')&&window.PoxyHomeSky){
+    const home=$('pxSkyHome');
+    const open=$('pxSkyOpen');
+    if(home)home.classList.remove('px-sky-screen--active');
+    if(open)open.classList.remove('px-sky-screen--active');
+  }
   ['profile','collection','friends','settings'].forEach(p=>{
     const el=$(p+'Page');
     if(el)el.classList.toggle('visible',page===p);
@@ -8300,9 +8224,9 @@ window.showPage=function(page){
       });
     })();
     }
-    colFilter='all';colSortPreset='default';colMultiSelectMode=false;colCraftZoneOpen=false;
+    colFilter='all';colSortPreset='default';colMultiSelectMode=false;
     selectedForDust=new Set();selectedItems=selectedForDust;colLastSelectIndex=-1;
-    resetCraftSockets(false);closeColSortMenu();syncColMultiToggleUi();setColCraftZoneOpen(false);
+    closeColSortMenu();syncColMultiToggleUi();
     colData=[]; // always force fresh fetch — never show stale cache
     loadCollection().then(()=>{const c=$('colContent');if(c&&window.PoxyHudAudio)PoxyHudAudio.bindCollectionGrid(c);});
     refreshPremiumFrame();
@@ -9314,145 +9238,19 @@ function applyPinSort(arr){
   if(colSortPreset==='default')return merged;
   return applyColSortPreset(merged);
 }
-function estimateBurnPayout(ids){
-  let sum=0;
-  ids.forEach(id=>{
-    const it=colData.find(i=>String(i.id)===String(id));
-    if(it)sum+=TIER_BY_ID[it.poxy_tier]?.burn||0;
-  });
-  return sum;
-}
-function resetCraftSockets(rerender){
-  craftSockets=[null,null,null,null,null];
-  if(rerender!==false)renderCraftSockets();
-  updateColActionCapsules();
-}
-function getCraftSocketIds(){return craftSockets.filter(Boolean);}
-function setColCraftZoneOpen(open){
-  colCraftZoneOpen=!!open;
-  const zone=$('colCraftZone');
-  if(zone){
-    zone.classList.toggle('is-open',colCraftZoneOpen);
-    zone.setAttribute('aria-hidden',colCraftZoneOpen?'false':'true');
-  }
-  document.body.classList.toggle('col-craft-zone-active',colCraftZoneOpen);
-  if(colCraftZoneOpen)renderCraftSockets();
-  else resetCraftSockets(false);
-  renderCollection();
-  updateColActionCapsules();
-}
-function renderCraftSockets(){
-  const row=$('colCraftSockets');if(!row)return;
-  row.innerHTML='';
-  for(let i=0;i<5;i++){
-    const id=craftSockets[i];
-    const item=id?colData.find(x=>String(x.id)===String(id)):null;
-    const tier=item?TIER_BY_ID[item.poxy_tier]:TIERS[0];
-    const sock=document.createElement('div');
-    sock.className='poxy-col-craft-socket'+(id?' is-filled':'')+(id?' socket-pop':'');
-    sock.dataset.socketIndex=String(i);
-    sock.setAttribute('role','listitem');
-    sock.addEventListener('dragover',onCraftSocketDragOver);
-    sock.addEventListener('dragleave',onCraftSocketDragLeave);
-    sock.addEventListener('drop',onCraftSocketDrop);
-    if(id&&item){
-      const inner=document.createElement('div');
-      inner.className='poxy-col-craft-socket-inner';
-      inner.draggable=true;
-      inner.dataset.dragKind='socket';
-      inner.dataset.itemId=id;
-      inner.dataset.socketIndex=String(i);
-      inner.addEventListener('dragstart',onColItemDragStart);
-      inner.innerHTML='<span class="poxy-col-craft-socket-icon" style="color:'+tier.color+'">'+tier.icon+'</span><span class="poxy-col-craft-socket-ser">'+sanitizeText(item.serial_number||'–')+'</span>';
-      inner.addEventListener('dblclick',()=>clearCraftSocket(i));
-      sock.appendChild(inner);
-    }else{
-      const ph=document.createElement('span');
-      ph.className='poxy-col-craft-socket-ph';
-      ph.textContent=String(i+1);
-      sock.appendChild(ph);
-    }
-    row.appendChild(sock);
-  }
-  const exec=$('btnCraftExecute');
-  const filled=getCraftSocketIds().length;
-  if(exec){
-    exec.disabled=filled!==5;
-    exec.classList.toggle('is-ignited',filled===5);
-    exec.textContent=filled===5?'EXECUTE CRAFT → 1 UNCOMMON':'CRAFT ('+filled+' / 5)';
-  }
-  updateColActionCapsules();
-}
-function clearCraftSocket(idx){
-  if(craftSockets[idx]==null)return;
-  craftSockets[idx]=null;
-  renderCraftSockets();
-  renderCollection();
-}
-function findCraftSocketForItem(itemId){
-  return craftSockets.findIndex(x=>x&&String(x)===String(itemId));
-}
-function onColItemDragStart(e){
-  const el=e.currentTarget;
-  const id=el.dataset.itemId||el.closest('.col-card')?.dataset.id;
-  if(!id)return;
-  const item=colData.find(i=>String(i.id)===String(id));
-  if(!item||item.poxy_tier!=='common'){e.preventDefault();showToast('Only Common POXY can be forged.');return;}
-  e.dataTransfer.setData('text/poxy-item-id',id);
-  e.dataTransfer.setData('text/poxy-drag-from',el.dataset.dragKind||'grid');
-  if(el.dataset.socketIndex!=null)e.dataTransfer.setData('text/poxy-socket-index',el.dataset.socketIndex);
-  e.dataTransfer.effectAllowed='move';
-  el.classList.add('is-dragging');
-}
-function onColItemDragEnd(e){e.currentTarget.classList.remove('is-dragging');}
-function onCraftSocketDragOver(e){
-  e.preventDefault();
-  e.dataTransfer.dropEffect='move';
-  e.currentTarget.classList.add('is-drag-over');
-}
-function onCraftSocketDragLeave(e){e.currentTarget.classList.remove('is-drag-over');}
-function onCraftSocketDrop(e){
-  e.preventDefault();
-  e.currentTarget.classList.remove('is-drag-over');
-  const itemId=e.dataTransfer.getData('text/poxy-item-id');
-  if(!itemId)return;
-  const item=colData.find(i=>String(i.id)===String(itemId));
-  if(!item||item.poxy_tier!=='common'){showToast('Only Common POXY fit the forge.');return;}
-  const socketIdx=parseInt(e.currentTarget.dataset.socketIndex,10);
-  if(Number.isNaN(socketIdx)||socketIdx<0||socketIdx>4)return;
-  const fromSock=e.dataTransfer.getData('text/poxy-socket-index');
-  const prevIdx=findCraftSocketForItem(itemId);
-  if(prevIdx>=0&&prevIdx!==socketIdx)craftSockets[prevIdx]=null;
-  craftSockets[socketIdx]=itemId;
-  if(fromSock!==''){const fi=parseInt(fromSock,10);if(!Number.isNaN(fi)&&fi!==socketIdx)craftSockets[fi]=null;}
-  renderCraftSockets();
-  renderCollection();
-}
-function updateColActionCapsules(){
-  const n=selectedForDust.size;
-  const payout=estimateBurnPayout([...selectedForDust]);
-  const burnBtn=$('btnColBurnCapsule');
-  const craftBtn=$('btnColCraftCapsule');
-  if(burnBtn){
-    burnBtn.disabled=n===0;
-    burnBtn.innerHTML=n?'<span class="material-symbols-outlined" style="font-size:14px">local_fire_department</span> BURN '+n+' → +'+payout+' PX':'<span class="material-symbols-outlined" style="font-size:14px">local_fire_department</span> BURN';
-    burnBtn.classList.toggle('poxy-capsule-ready',n>0);
-  }
-  if(craftBtn){
-    const filled=getCraftSocketIds().length;
-    if(colCraftZoneOpen){
-      craftBtn.disabled=filled!==5;
-      craftBtn.innerHTML=filled===5?'CRAFT <span class="poxy-craft-sep">|</span> [EXECUTE 5 → 1]':'CRAFT <span class="poxy-craft-sep">|</span> ['+filled+' / 5 IN FORGE]';
-      craftBtn.classList.toggle('poxy-capsule-ready',filled===5);
-    }else{
-      const commons=[...selectedForDust].filter(id=>colData.find(i=>String(i.id)===String(id))?.poxy_tier==='common').length;
-      craftBtn.disabled=false;
-      craftBtn.innerHTML=n?'CRAFT <span class="poxy-craft-sep">|</span> ['+commons+'X CMN SELECTED]':'CRAFT <span class="poxy-craft-sep">|</span> [5X CMN <span class="material-symbols-outlined poxy-col-arrow-icon" aria-hidden="true">arrow_forward</span> 1X UNC]';
-      craftBtn.classList.toggle('poxy-capsule-ready',commons>=5);
-    }
-  }
-  updateBulkBar();
-}
+function estimateBurnPayout(){return 0;}
+function resetCraftSockets(){}
+function getCraftSocketIds(){return [];}
+function setColCraftZoneOpen(){}
+function renderCraftSockets(){}
+function clearCraftSocket(){}
+function findCraftSocketForItem(){return -1;}
+function onColItemDragStart(e){e.preventDefault();}
+function onColItemDragEnd(){}
+function onCraftSocketDragOver(e){e.preventDefault();}
+function onCraftSocketDragLeave(){}
+function onCraftSocketDrop(e){e.preventDefault();}
+function updateColActionCapsules(){}
 function syncColMultiToggleUi(){
   const btn=$('btnColMultiSelect');
   if(btn){
@@ -9716,7 +9514,6 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
   const isVip=!!vipTier||item.is_vip===true;
   const d=new Date(item.dropped_at),ds=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
   const isPinned=!!item.pinned_at;
-  const inForge=findCraftSocketForItem(item.id)>=0;
   const isSelected=isColItemSelected(item.id);
 
   // ── Use the Card Engine for layered rendering ──
@@ -9739,21 +9536,12 @@ function buildCollectionCard(item,index,lockedView,displayIndex){
     (vipTier?' '+vipClassFor(item):'')+
     (item.poxy_tier==='legendary'?' poxy-col-card-legendary':'')+
     (lockedView?' poxy-club-teaser':'')+
-    (isSelected?' selected-for-dust col-inv-selected':'')+
-    (inForge?' col-inv-in-forge':'');
+    (isSelected?' selected-for-dust col-inv-selected':'');
 
   card.dataset.index = displayIndex!=null ? String(displayIndex) : '';
   card.dataset.tier  = item.poxy_tier || '';
   card.dataset.pinnedAt = item.pinned_at || '';
   card.style.animationDelay = (index*0.04)+'s';
-
-  // ── Status layer: forge drag ──
-  if(colCraftZoneOpen&&item.poxy_tier==='common'&&!lockedView&&!inForge){
-    card.draggable=true;
-    card.dataset.dragKind='grid';
-    card.addEventListener('dragstart',onColItemDragStart);
-    card.addEventListener('dragend',onColItemDragEnd);
-  }
 
   // ── Status layer: pin badge ──
   if(isPinned){
@@ -9815,8 +9603,7 @@ function buildColCardMenuHtml(item){
     '<button type="button" class="col-card-menu-item'+(isFeatured?' active':'')+'" data-action="feature" data-id="'+item.id+'" role="menuitem"><span class="ic">'+(isFeatured?'⭐':'☆')+'</span>'+(isFeatured?tr('col.menu.unfeature'):tr('col.menu.feature'))+'</button>'+
     '<button type="button" class="col-card-menu-item" data-action="list" data-id="'+item.id+'" role="menuitem"><span class="ic">💰</span>'+tr('col.menu.list')+'</button>'+
     '<button type="button" class="col-card-menu-item" data-action="share" data-id="'+item.id+'" role="menuitem"><span class="ic">🔗</span>'+tr('col.menu.share')+'</button>'+
-    '<button type="button" class="col-card-menu-item" data-action="crypto" data-id="'+item.id+'" role="menuitem"><span class="ic">🔐</span>Crypto info</button>'+
-    '<button type="button" class="col-card-menu-item danger" data-action="burn" data-id="'+item.id+'" role="menuitem"><span class="ic">🔥</span>'+tr('col.menu.burn')+'</button>'
+    '<button type="button" class="col-card-menu-item" data-action="crypto" data-id="'+item.id+'" role="menuitem"><span class="ic">🔐</span>Crypto info</button>'
   );
 }
 
@@ -9855,7 +9642,7 @@ function renderCollection(){
   const base=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
   const filtered=applyPinSort(base);
   const splitClubSection=colFilter==='all';
-  const normalItems=splitClubSection?filtered.filter(i=>!isVipPoxyItem(i)&&findCraftSocketForItem(i.id)<0):filtered.filter(i=>findCraftSocketForItem(i.id)<0);
+  const normalItems=splitClubSection?filtered.filter(i=>!isVipPoxyItem(i)):filtered;
   const vipItems=splitClubSection?filtered.filter(i=>isVipPoxyItem(i)):[];
 
   cont.innerHTML='';
@@ -10043,11 +9830,6 @@ async function sharePoxy(poxyId,rarity,serialNumber){
     if(e)e.stopPropagation();
     const id=mi.dataset.id;
     const action=mi.dataset.action;
-    if(colMultiSelectMode&&['feature','pin','list','share'].includes(action)){
-      showToast('Turn off Select Multiple Mode to use this action.');
-      closeColCardMenuPortal();
-      return;
-    }
     const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(id));
     const card=root.querySelector('.col-card[data-id="'+CSS.escape(String(id))+'"]');
     if(!item)return;
@@ -10076,7 +9858,6 @@ async function sharePoxy(poxyId,rarity,serialNumber){
       openPriceModal();
       return;
     }
-    if(action==='burn'){burnPoxySecure(item.id,card);return;}
   }
   // The menu lives in a body-level portal, so its clicks never bubble to the
   // collection root. Delegate menu-item actions on the portal directly.
@@ -10109,15 +9890,6 @@ async function sharePoxy(poxyId,rarity,serialNumber){
       e.preventDefault();
       closeColCardMenuPortal();
       if(e.target.closest('.col-card-kebab'))return;
-      if(colMultiSelectMode){
-        const idx=parseInt(card.dataset.index,10);
-        toggleColSelection(card.dataset.id,Number.isNaN(idx)?-1:idx,e.shiftKey);
-        return;
-      }
-      if(colCraftZoneOpen&&card.dataset.tier==='common'){
-        showToast('Drag this Common into a forge socket.');
-        return;
-      }
       // ── Normal single-card tap → Asset Viewer Modal ──
       const itemId=card.dataset.id;
       const item=colData.find(i=>normalizeColItemId(i.id)===normalizeColItemId(itemId));
@@ -10141,102 +9913,11 @@ function updateBulkBar(){
   if(strip)strip.hidden=n===0;
   if(cnt)cnt.textContent=window.PoxyI18n?PoxyI18n.t('col.bulk.selected',{n:n}):(n+' selected');
 }
-function runColBulkBurn(){
-  if(!selectedForDust.size)return;
-  $('btnBulkDust')?.click();
-}
-function fillCraftFromSelection(){
-  const commons=[...selectedForDust].filter(id=>colData.find(i=>String(i.id)===String(id))?.poxy_tier==='common');
-  if(commons.length<5){showToast('Select at least 5 Common POXY.');return;}
-  resetCraftSockets(false);
-  commons.slice(0,5).forEach((id,i)=>{craftSockets[i]=id;});
-  setColCraftZoneOpen(true);
-  renderCraftSockets();
-  renderCollection();
-}
-const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-async function burnPoxySecure(itemId,cardEl){
-  cardEl.style.pointerEvents='none';
-  cardEl.style.animation='burnOut 0.5s ease forwards';
-  const item=colData.find(i=>i.id===itemId);
-  const tier=item?TIER_BY_ID[item.poxy_tier]:null;
-  if(!itemId||!UUID_RE.test(String(itemId))){
-    cardEl.style.pointerEvents='';cardEl.style.animation='';
-    showToast('Burn blocked: row id is not UUID. Run migration_uuid_fix.sql.');
-    return;
-  }
-  try{
-    await cryptoDestroyForUserPoxy(itemId,tier?.id||item?.poxy_tier);
-    const{data,error}=await sb.rpc('burn_poxy_pc',{p_poxy_id:itemId,p_user_id:currentUser.id});
-    if(error)throw error;
-    if(!data.ok)throw new Error(data.error||'Burn failed');
-    setTimeout(async ()=>{
-      cardEl.remove();
-      colData=colData.filter(i=>i.id!==itemId);
-      selectedForDust.delete(itemId);updateColActionCapsules();
-      if(currentProfile){
-        currentProfile.balance=parseFloat(data.new_balance);
-        if(data.px_balance!=null)currentProfile.px_balance=data.px_balance;
-      }
-      updateBalanceBadge(getPxBalance());
-      await loadPlayerEconomy();
-      const rem=document.querySelectorAll('.col-card').length;
-      $('colCount').textContent=rem?rem+' item'+(rem!==1?'s':''):'';
-      const dragonName=item?(TIER_BY_ID[item.poxy_tier]?.label||'Dragon'):'Dragon';
-      showToast(dragonName+' burned → +'+data.payout+' PX');
-      greatBurnTotal++;updateGreatBurnUI();
-      refreshPremiumFrame();
-      if(tier&&tier.id==='common')bumpQuest('burn_5_commons',1);
-    },520);
-  }catch(e){cardEl.style.pointerEvents='';cardEl.style.animation='';showToast('Burn failed: '+(e.message||'server error'));}
-}
-$('btnBulkDust').addEventListener('click',async function(){
-  if(!selectedForDust.size)return;
-  const ids=[...selectedForDust];
-  const bad=ids.filter(x=>!UUID_RE.test(String(x)));
-  if(bad.length){showToast('Burn blocked: '+bad.length+' selected ids are not UUID. Run migration_uuid_fix.sql.');return;}
-  const commonsBeingBurned=colData.filter(i=>ids.includes(i.id)&&i.poxy_tier==='common').length;
-  const btn=$('btnBulkDust');btn.disabled=true;btn.textContent='Burning...';
-  try{
-    for(const id of ids){
-      const row=colData.find(i=>i.id===id);
-      await cryptoDestroyForUserPoxy(id,row?.poxy_tier);
-    }
-    const{data,error}=await sb.rpc('burn_poxy_bulk_pc',{p_poxy_ids:ids,p_user_id:currentUser.id});
-    if(error)throw error;
-    if(!data.ok)throw new Error(data.error);
-    colData=colData.filter(i=>!ids.includes(i.id));
-    if(currentProfile){
-      currentProfile.balance=parseFloat(data.new_balance);
-      if(data.px_balance!=null)currentProfile.px_balance=data.px_balance;
-    }
-    updateBalanceBadge(getPxBalance());
-    await loadPlayerEconomy();
-    selectedForDust=new Set();selectedItems=selectedForDust;updateColActionCapsules();renderCollection();
-    $('colCount').textContent=colData.length?colData.length+' item'+(colData.length!==1?'s':''):'';
-    showToast('Bulk burn → +'+data.payout+' PX ('+data.count+' dragons)');
-    greatBurnTotal+=data.count;updateGreatBurnUI();
-    refreshPremiumFrame();
-    if(commonsBeingBurned>0)bumpQuest('burn_5_commons',commonsBeingBurned);
-  }catch(e){showToast('Bulk burn failed: '+(e.message||'error'));}
-  btn.disabled=false;btn.textContent='Burn All Selected';
-  updateColActionCapsules();
-});
+function runColBulkBurn(){}
+function fillCraftFromSelection(){}
+async function burnPoxySecure(){}
 
 (function initCollectionArchiveUi(){
-  $('btnColMultiSelect')?.addEventListener('click',toggleColMultiSelectMode);
-  $('btnColCraftMode')?.addEventListener('click',()=>{
-    setColCraftZoneOpen(!colCraftZoneOpen);
-  });
-  $('btnColCraftClose')?.addEventListener('click',()=>setColCraftZoneOpen(false));
-  $('btnColBurnCapsule')?.addEventListener('click',runColBulkBurn);
-  $('btnColCraftCapsule')?.addEventListener('click',()=>{
-    if(colCraftZoneOpen&&getCraftSocketIds().length===5)tryPerformCraft();
-    else if(getCraftSocketIds().length===5)tryPerformCraft();
-    else if([...selectedForDust].filter(id=>colData.find(i=>String(i.id)===String(id))?.poxy_tier==='common').length>=5)fillCraftFromSelection();
-    else setColCraftZoneOpen(true);
-  });
-  $('btnCraftExecute')?.addEventListener('click',tryPerformCraft);
   const sortBtn=$('colSortBtn'),sortMenu=$('colSortMenu');
   sortBtn?.addEventListener('click',e=>{
     e.stopPropagation();
@@ -13034,25 +12715,8 @@ function populateClubOtcItems(){
     sel.appendChild(o);
   });
 }
-function renderClubForge(){
-  const grid=$('clubForgeGrid');if(!grid)return;
-  const commons=(colData||[]).filter(i=>i.poxy_tier==='common').slice(0,12);
-  grid.innerHTML='';
-  if(!commons.length){grid.innerHTML='<div class="poxy-club-muted">No duplicate commons to burn.</div>';return;}
-  commons.forEach(i=>{
-    const t=TIER_BY_ID.common;
-    const cell=document.createElement('div');
-    cell.className='club-forge-item';cell.dataset.id=i.id;
-    cell.textContent=t.icon;cell.title=i.serial_number||'';
-    cell.onclick=()=>cell.classList.toggle('selected');
-    grid.appendChild(cell);
-  });
-}
-window.runClubForge=function(){
-  const sel=document.querySelectorAll('.club-forge-item.selected');
-  if(sel.length<3){showToast('Select at least 3 commons to transmute.');return;}
-  showToast('Forge: '+sel.length+' burned → rolling tier-up… (demo)');
-};
+function renderClubForge(){}
+window.runClubForge=function(){};
 async function loadClubBounties(){
   const list=$('clubBountiesList');if(!list||!currentUser)return;
   list.innerHTML='<div class="poxy-club-muted">Loading bounties…</div>';
@@ -13210,16 +12874,6 @@ function renderClubOtcDesk(){
       logs.appendChild(row);
     });
   }
-  const forge=$('clubOtcForgeSlots');
-  if(forge){
-    forge.innerHTML='';
-    for(let i=0;i<5;i++){
-      const s=document.createElement('div');
-      s.className='club-forge-slot';
-      s.innerHTML='<span class="material-symbols-outlined">add</span>';
-      forge.appendChild(s);
-    }
-  }
   const slots=$('clubLendSlots');
   if(slots){
     slots.innerHTML='';
@@ -13347,7 +13001,6 @@ async function initClubLuxuryModules(){
   checkClubAirgap();
   renderClubVaultSlots();
   renderClubInventoryVault();
-  renderClubForge();
   renderClubOtcDesk();
   renderClubGovernance();
   renderClubPassport(clubStatusCache);
@@ -15162,19 +14815,6 @@ function teardownRealtimeSubscriptions(){
   document.addEventListener('mouseout',onLeave,{passive:true});
 })();
 
-// ── PHASE 11 — THE GREAT BURN counter (global stat) ──
-async function loadGreatBurnTotal(){
-  try{
-    const{count,error}=await sb.from('burn_log').select('*',{count:'exact',head:true});
-    if(!error&&typeof count==='number')greatBurnTotal=count;
-    updateGreatBurnUI();
-  }catch(e){}
-}
-function updateGreatBurnUI(){
-  const el=$('greatBurnCounter');if(!el)return;
-  el.textContent='🔥 The Great Burn — '+greatBurnTotal.toLocaleString()+' POXY';
-}
-
 // ── PHASE 11 — DAILY QUESTS ──
 async function loadDailyQuests(){
   if(!currentUser)return;
@@ -15183,9 +14823,9 @@ async function loadDailyQuests(){
   try{
     const{data,error}=await sb.rpc('ensure_daily_quests',{p_user_id:currentUser.id});
     if(error)throw error;
-    dailyQuests=data||[];
+    dailyQuests=(data||[]).filter(q=>q.quest_key!=='burn_5_commons');
     if(!dailyQuests.length){list.innerHTML='<p class="idhub-directive-empty">No directives today.</p>';return;}
-    const labels={open_3_cases:'VOID RUNNER CHALLENGE',burn_5_commons:'SYNTHETIC DUST EXTRACTION',list_1_market:'MARKET LISTING PROTOCOL',send_chat:'COMMS UPLINK'};
+    const labels={open_3_cases:'VOID RUNNER CHALLENGE',list_1_market:'MARKET LISTING PROTOCOL',send_chat:'COMMS UPLINK'};
     list.innerHTML='';
     dailyQuests.forEach(q=>{
       const pct=Math.min(100,Math.round((q.progress/q.goal)*100));
@@ -15230,140 +14870,19 @@ async function claimQuestReward(qid){
   }catch(e){showToast('Claim failed: '+(e.message||'error'));}
 }
 
-// ── PHASE 11 — CRAFTING (5 commons → 1 uncommon) ──
-function tryPerformCraft(){
-  if(!currentUser)return;
-  const socketIds=getCraftSocketIds();
-  const ids=socketIds.length?socketIds:[...craftSelection];
-  if(ids.length!==5){showToast('Pick exactly 5 Common POXY.');return;}
-  const allCommon=ids.every(rid=>{
-    const it=colData.find(i=>String(i.id)===String(rid));
-    return it&&it.poxy_tier==='common';
-  });
-  if(!allCommon){showToast('All 5 must be Common.');return;}
-  openCraftTraitModal(ids);
-}
-function openCraftTraitModal(ids){
-  pendingCraftTrait=null;
-  const modal=$('craftTraitModal');
-  const grid=$('craftTraitGrid');
-  const sub=$('craftTraitSub');
-  if(!modal||!grid)return;
-  const items=ids.map(id=>colData.find(i=>String(i.id)===String(id))).filter(Boolean);
-  const options=[];
-  items.forEach(it=>{
-    const traits=it.traits&&typeof it.traits==='object'?it.traits:{};
-    DNA_CATEGORY_ORDER.forEach(cat=>{
-      const t=traits[cat];
-      if(t&&t.name){
-        options.push({category:cat,name:t.name,serial:it.serial_number||'–',itemId:it.id});
-      }
-    });
-  });
-  if(sub)sub.textContent=options.length?'Pick one DNA trait to inherit from your forge dragons.':'No DNA traits found — craft will proceed without inheritance.';
-  grid.innerHTML='';
-  if(!options.length){
-    grid.innerHTML='<p style="font-size:11px;color:rgba(255,255,255,0.45)">Forge will fuse without trait inheritance.</p>';
-  }else{
-    options.forEach((opt,i)=>{
-      const btn=document.createElement('button');
-      btn.type='button';
-      btn.className='poxy-craft-trait-opt';
-      btn.innerHTML='<strong>'+sanitizeText(opt.category)+' · '+sanitizeText(opt.name)+'</strong><span style="color:rgba(255,255,255,0.4)">from '+sanitizeText(opt.serial)+'</span>';
-      btn.onclick=()=>{
-        pendingCraftTrait={category:opt.category,name:opt.name,source_id:opt.itemId};
-        grid.querySelectorAll('.poxy-craft-trait-opt').forEach(x=>x.classList.remove('selected'));
-        btn.classList.add('selected');
-      };
-      grid.appendChild(btn);
-    });
-  }
-  modal.dataset.craftIds=JSON.stringify(ids);
-  modal.hidden=false;
-  document.body.style.overflow='hidden';
-}
-window.closeCraftTraitModal=function(){
-  const modal=$('craftTraitModal');
-  if(!modal)return;
-  modal.hidden=true;
-  pendingCraftTrait=null;
-  if(!$('topUpModal')||$('topUpModal').hidden)document.body.style.overflow='';
-};
-window.confirmCraftTrait=async function(){
-  const modal=$('craftTraitModal');
-  let ids=[];
-  try{ids=JSON.parse(modal?.dataset.craftIds||'[]');}catch(e){}
-  closeCraftTraitModal();
-  await performCraft(pendingCraftTrait,ids);
-};
-async function performCraft(inheritTrait,forcedIds){
-  if(!currentUser)return;
-  const socketIds=getCraftSocketIds();
-  const ids=forcedIds?.length?forcedIds:(socketIds.length?socketIds:[...craftSelection]);
-  if(ids.length!==5){showToast('Pick exactly 5 Common POXY.');return;}
-  const trait=inheritTrait||pendingCraftTrait||null;
-  if(trait){
-    try{localStorage.setItem(CRAFT_INHERIT_LS,JSON.stringify(trait));}catch(e){}
-  }
-  const btn=$('btnCraftExecute')||$('btnCraftDoIt');
-  if(btn){btn.disabled=true;btn.textContent='Crafting...';}
-  try{
-    const payload={p_user_id:currentUser.id,p_poxy_ids:ids};
-    if(trait)payload.p_inherit_trait=trait;
-    const{data,error}=await sb.rpc('craft_upgrade',payload);
-    if(error)throw error;
-    if(!data.ok)throw new Error(data.error);
-    cryptoMint(data.new_id,'uncommon','craft').catch(()=>{});
-    showToast('Crafted! 5 '+((data.from_tier)||'common')+' → 1 '+(data.to_tier||'uncommon')+' ('+(data.serial||'')+')'+(trait?(' · inherited '+trait.category+': '+trait.name):''));
-    if(trait)showToast('DNA inherited: '+trait.category+' · '+trait.name);
-    craftSelection=new Set();
-    pendingCraftTrait=null;
-    resetCraftSockets(false);
-    setColCraftZoneOpen(false);
-    await loadCollection();
-    await loadPlayerAchievements();
-    closeCraftModal();
-  }catch(e){showToast('Craft failed: '+(e.message||'error'));}
-  if(btn){btn.disabled=false;btn.classList.remove('is-ignited');btn.textContent='CRAFT';}
-}
-window.openCraftModal=function(){
-  if(!currentUser)return;
-  resetCraftSockets(false);
-  setColCraftZoneOpen(true);
-  if(typeof showPage==='function')showPage('collection');
-};
-window.closeCraftModal=function(){
-  const o=$('craftModal');if(!o)return;
-  o.classList.remove('show');setTimeout(()=>o.classList.add('hidden'),250);
-};
-function renderCraftPool(){
-  const cont=$('craftPool');if(!cont)return;
-  const commons=colData.filter(i=>i.poxy_tier==='common');
-  if(!commons.length){cont.innerHTML='<div style="font-size:11px;color:#B0B0B0;padding:8px 0">You need at least 5 Common POXY in your collection.</div>';return;}
-  cont.innerHTML='';
-  commons.forEach(it=>{
-    const tier=TIERS.find(t=>t.id==='common');
-    const card=document.createElement('div');
-    card.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 10px;background:#1c1b1b;border:1px solid rgba(255,255,255,0.08);border-radius:9px;margin-bottom:6px;cursor:pointer';
-    if(craftSelection.has(it.id)){card.style.borderColor='#f9abff';card.style.background='rgba(249,171,255,0.08)';}
-    card.innerHTML='<div style="font-size:18px;color:'+stitchTierColor('common')+'">'+tier.icon+'</div><div style="flex:1"><div style="font-size:11px;color:#e5e2e1;font-weight:700">'+sanitizeText(it.serial_number||'–')+'</div><div style="font-size:9px;color:#9d8b9b">Common</div></div><span style="font-size:11px;color:'+(craftSelection.has(it.id)?'#f9abff':'#9d8b9b')+';font-weight:700">'+(craftSelection.has(it.id)?'Selected':'Tap to select')+'</span>';
-    card.addEventListener('click',()=>{
-      if(craftSelection.has(it.id))craftSelection.delete(it.id);
-      else if(craftSelection.size<5)craftSelection.add(it.id);
-      else{showToast('Already 5 selected.');return;}
-      renderCraftPool();
-      const sel=$('craftSelectCount');if(sel)sel.textContent=craftSelection.size+' / 5';
-    });
-    cont.appendChild(card);
-  });
-  const sel=$('craftSelectCount');if(sel)sel.textContent=craftSelection.size+' / 5';
-}
+// craft/burn removed
+function tryPerformCraft(){}
+function openCraftTraitModal(){}
+window.closeCraftTraitModal=function(){};
+window.confirmCraftTrait=async function(){};
+async function performCraft(){}
+window.openCraftModal=function(){};
+window.closeCraftModal=function(){}
+function renderCraftPool(){}
 
 // Init
 renderTopUpPaths();
 updateBalanceBadge(0);
-updateGreatBurnUI();
-
 function setupGlobalEscapeClose(){
   document.addEventListener('keydown',function(e){
     if(e.key!=='Escape')return;
@@ -15376,15 +14895,11 @@ function setupGlobalEscapeClose(){
     if($('tradeModal')&&!$('tradeModal').classList.contains('hidden')){closeTradeModal();return;}
     if($('dmOverlay')&&!$('dmOverlay').classList.contains('hidden')){closeDmOverlay();return;}
     if($('inspectModal')&&!$('inspectModal').classList.contains('hidden')){closeInspectModal();return;}
-    if(colCraftZoneOpen){setColCraftZoneOpen(false);return;}
     const giftOv=$('giftPickerOverlay');
     if(giftOv&&!giftOv.hidden){closeGiftPicker();return;}
     const chatPop=$('chatUserInspectPopover');
     if(chatPop&&!chatPop.hidden){closeChatInspectPopover();return;}
     if($('friendProfileView')&&!$('friendProfileView').hidden){closeFriendProfileView();return;}
-    if($('craftModal')&&!$('craftModal').classList.contains('hidden')){closeCraftModal();return;}
-    const craftTrait=$('craftTraitModal');
-    if(craftTrait&&!craftTrait.hidden){closeCraftTraitModal();return;}
     const streakM=$('dailyStreakModal');
     if(streakM&&!streakM.hidden){closeDailyStreakModal();return;}
     const dopM=$('dopamineOfferModal');
@@ -15590,10 +15105,6 @@ bootApp();
             <span class="avm-data-key">SERIAL KEY</span>
             <span class="avm-data-val avm-val-mono" id="avmSerial">–</span>
           </div>
-          <div class="avm-data-row" id="avmForgeRow">
-            <span class="avm-data-key">FORGE</span>
-            <span class="avm-data-val avm-val-forge">IN SYNDICATE FORGE</span>
-          </div>
           <div class="avm-data-row" id="avmPinnedRow">
             <span class="avm-data-key">PINNED</span>
             <span class="avm-data-val">COLLECTION TOP</span>
@@ -15672,10 +15183,6 @@ bootApp();
         <button type="button" class="avm-sec-btn" id="avmListBtn" title="List on market">
           <span class="material-symbols-outlined">sell</span>
           <span>List</span>
-        </button>
-        <button type="button" class="avm-sec-btn avm-sec-danger" id="avmBurnBtn" title="Burn for dust">
-          <span class="material-symbols-outlined">local_fire_department</span>
-          <span>Burn</span>
         </button>
       </div>
     </div>
@@ -15952,17 +15459,5 @@ bootApp();
   </div>
 </div>
 
-<!-- Craft DNA trait picker -->
-<div id="craftTraitModal" class="poxy-modal-backdrop" role="dialog" aria-modal="true" aria-label="Inherit DNA trait" hidden>
-  <div class="poxy-econ-modal">
-    <h3>Inherit DNA trait</h3>
-    <p id="craftTraitSub">Pick one trait category from your 5 forge dragons.</p>
-    <div class="poxy-craft-trait-grid" id="craftTraitGrid"></div>
-    <div class="poxy-econ-modal-actions">
-      <button type="button" class="poxy-econ-btn poxy-econ-btn--primary" onclick="confirmCraftTrait()">Craft with selection</button>
-      <button type="button" class="poxy-econ-btn poxy-econ-btn--ghost" onclick="confirmCraftTrait()">Skip inheritance</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>

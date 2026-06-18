@@ -112,6 +112,36 @@ body.poxy-sky-app-active [style*="#050506"] {
   /* inline legacy hooks in unmigrated panels */
 }
 
+body.poxy-sky-app-active #stPanelDashboard .st-main {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.poxy-sky-app-active #stPanelDashboard .st-bottom,
+body.poxy-sky-app-active #stPanelDashboard .px-legacy-dash {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #huntPage .st-spa-viewport,
+body.poxy-sky-app-active #huntPage .poxy-stitch-dash {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.poxy-sky-app-active #pxSkyStage > .page.visible {
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.poxy-sky-app-active #userBar,
+body.poxy-sky-app-active #userBar.psd-user-active {
+  display: none !important;
+}
+
 /* Load last — wins over legacy modal CSS loaded above */
 
 body.poxy-sky-app-active .material-symbols-outlined {

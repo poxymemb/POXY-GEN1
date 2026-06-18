@@ -149,41 +149,10 @@
     });
   }
 
-  function relabelSkyCraftExecute() {
-    var btn = $('btnCraftExecute');
-    if (!btn || !document.body.classList.contains('poxy-sky-app-active')) return;
-    if (btn.textContent.trim().toUpperCase() === 'CRAFT') btn.textContent = 'Craft';
-  }
-
-  function wrapCraftZoneOpen() {
-    if (typeof global.setColCraftZoneOpen !== 'function' || wrapCraftZoneOpen.done) return;
-    var orig = global.setColCraftZoneOpen;
-    global.setColCraftZoneOpen = function (open) {
-      orig(open);
-      relabelSkyCraftZone();
-      relabelSkyCraftExecute();
-      relabelSkyActionButtons();
-    };
-    wrapCraftZoneOpen.done = true;
-  }
-
-  function relabelSkyCraftZone() {
-    if (!document.body.classList.contains('poxy-sky-app-active')) return;
-    var zone = $('colCraftZone');
-    if (!zone || zone.dataset.skyCraftLabel) return;
-    var h2 = zone.querySelector('.poxy-col-craft-zone-head h2');
-    var p = zone.querySelector('.poxy-col-craft-zone-head p');
-    if (h2) h2.textContent = 'Craft commons';
-    if (p) p.textContent = 'Drop 5 commons into the slots to craft one uncommon.';
-    zone.dataset.skyCraftLabel = '1';
-  }
-
   function relabelSkyActionButtons() {
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
     var multi = $('btnColMultiSelect');
     var sortLbl = $('colSortLabel');
-    var burn = $('btnColBurnCapsule');
-    var craft = $('btnColCraftCapsule');
     if (multi && !multi.dataset.skyLabel) {
       multi.dataset.skyLabel = '1';
       multi.textContent = 'Multi-select';
@@ -191,29 +160,6 @@
     if (sortLbl && sortLbl.textContent.indexOf('SORT:') === 0) {
       sortLbl.textContent = sortLbl.textContent.replace(/^SORT:\s*/i, 'Sort: ');
     }
-    if (burn) {
-      var n = global.selectedForDust ? global.selectedForDust.size : 0;
-      var payout =
-        typeof global.estimateBurnPayout === 'function'
-          ? global.estimateBurnPayout([].slice.call(global.selectedForDust || []))
-          : 0;
-      burn.textContent = n
-        ? 'Sell ' + n + ' for coins (+' + payout + ')'
-        : 'Sell for coins';
-    }
-    if (craft) {
-      if (global.colCraftZoneOpen) {
-        var filled =
-          typeof global.getCraftSocketIds === 'function'
-            ? global.getCraftSocketIds().length
-            : 0;
-        craft.textContent = filled === 5 ? 'Craft now' : 'Craft (' + filled + '/5)';
-      } else {
-        craft.textContent = 'Craft';
-      }
-    }
-    var bulkBurn = $('btnBulkDust');
-    if (bulkBurn) bulkBurn.textContent = 'Sell all selected for coins';
   }
 
   function wrapActionCapsules() {
@@ -234,9 +180,7 @@
     ensureMilesPanel();
     ensureSearchStub();
     bindColContentObserver();
-    relabelSkyCraftZone();
     relabelSkySortOptions();
-    relabelSkyCraftExecute();
     syncMilesProgress();
     relabelSkyActionButtons();
     requestAnimationFrame(resetSkyPadding);
@@ -249,12 +193,8 @@
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      wrapActionCapsules();
-      wrapCraftZoneOpen();
-    });
+    document.addEventListener('DOMContentLoaded', wrapActionCapsules);
   } else {
     wrapActionCapsules();
-    wrapCraftZoneOpen();
   }
 })(window);

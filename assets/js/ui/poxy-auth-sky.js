@@ -86,7 +86,7 @@
       }
       uhint.classList.add('ok');
       uname.classList.add('ok');
-      uhint.textContent = '@' + v + ' looks good.';
+      uhint.textContent = '@' + v + ' is available.';
     });
   }
 
@@ -171,15 +171,6 @@
     }, 1000);
   }
 
-  function bindClose() {
-    var close = $('authCloseBtn');
-    if (close) {
-      close.addEventListener('click', function () {
-        if (typeof global.closePoxyAuth === 'function') global.closePoxyAuth();
-      });
-    }
-  }
-
   function bindQr() {
     var qr = $('authQrBtn');
     if (qr) {
@@ -205,7 +196,6 @@
     bindPasswordStrength();
     bindCodeInputs();
     bindVerifyBack();
-    bindClose();
     bindQr();
     startResendTimer(42);
     showAuthScreen('login');

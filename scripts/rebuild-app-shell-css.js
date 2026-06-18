@@ -48,10 +48,169 @@ const extra = `
   @keyframes pxSkyFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   @media(max-width:820px){#poxyAppShell .topbar{padding:12px 16px}}
   @media(max-width:560px){
-    #poxyAppShell .rail{position:fixed;bottom:0;top:auto;width:100%;height:auto;flex-direction:row;border-right:none;border-top:1px solid var(--border);padding:8px;z-index:40;justify-content:space-around}
+    #poxyAppShell .rail{position:fixed;bottom:0;top:auto;left:0;width:100%;height:auto;max-height:none;flex-direction:row;border-right:none;border-top:1px solid var(--border);padding:8px;z-index:40;justify-content:space-around;overflow:visible}
+    #poxyAppShell.px-sky-app--open .main{margin-left:0!important;width:100%!important;padding-bottom:70px}
     #poxyAppShell .rail .logo,#poxyAppShell .rail-spacer,#poxyAppShell .rail-btn .tip{display:none}
-    #poxyAppShell .main{padding-bottom:70px}
     #poxyAppShell .stage{padding:18px 16px 30px}
+  }
+
+  /* ── Shell open: rail fixed 100dvh, main offset (mockup 1:1) ── */
+  #poxyAppShell.px-sky-app--open {
+    align-items: flex-start !important;
+    width: 100% !important;
+    min-height: 100dvh !important;
+  }
+  #poxyAppShell.px-sky-app--open .main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    margin-left: var(--rail-w, 74px) !important;
+    width: calc(100% - var(--rail-w, 74px)) !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  /* ── Rail 1:1 mockup — fixed viewport height, spacer pins profile/settings ── */
+  #poxyAppShell .rail {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    align-self: flex-start !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+    z-index: 35 !important;
+  }
+  #poxyAppShell .rail-spacer {
+    display: none !important;
+  }
+  #poxyAppShell .rail .logo,
+  #poxyAppShell .rail .rail-btn {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box !important;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+  #poxyAppShell .rail-btn[data-nav="profile"] {
+    margin-top: auto !important;
+  }
+  #poxyAppShell #pxSkyTopbar {
+    flex-shrink: 0;
+  }
+  #poxyAppShell #pxSkyStage {
+    flex: 1;
+    min-height: 0;
+  }
+  /* Legacy spin .stage must not hit #pxSkyStage (fixes text under topbar) */
+  #poxyAppShell #pxSkyStage.stage {
+    width: 100% !important;
+    max-width: 1120px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: block !important;
+    margin: 0 auto !important;
+    margin-bottom: 0 !important;
+    flex-shrink: initial !important;
+    overflow: visible !important;
+    align-items: initial !important;
+    justify-content: initial !important;
+    position: relative !important;
+  }
+  body.poxy-sky-app-active #pxSkyStage > .st-win-reveal:not(.is-open) {
+    display: none !important;
+  }
+
+  /* ── Dashboard 1:1 overrides (mockup rail + topbar) ── */
+  #poxyAppShell .rail .logo {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 11px !important;
+    margin-bottom: 12px !important;
+  }
+  @media (max-height: 940px) {
+    #poxyAppShell .rail {
+      gap: 5px !important;
+      padding: 10px 0 !important;
+    }
+    #poxyAppShell .rail .logo {
+      margin-bottom: 0 !important;
+      width: 34px !important;
+      height: 34px !important;
+    }
+    #poxyAppShell .rail-btn {
+      width: 42px !important;
+      height: 42px !important;
+      min-width: 42px !important;
+      min-height: 42px !important;
+      max-width: 42px !important;
+      max-height: 42px !important;
+    }
+    #poxyAppShell .rail-btn svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+  }
+  #poxyAppShell .rail-btn {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    max-width: 46px !important;
+    max-height: 46px !important;
+    border-radius: 14px !important;
+  }
+  #poxyAppShell .top-icon {
+    position: relative;
+  }
+  #poxyAppShell .top-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 17px;
+    height: 17px;
+    border-radius: 9px;
+    background: #E0563A;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    padding: 0 4px;
+    border: 2px solid var(--bg);
+  }
+  #poxyAppShell #balanceBadgeGroup.balance {
+    padding: 7px 15px 7px 8px !important;
+  }
+  body.poxy-sky-app-active #poxyAppShell .btn {
+    width: auto !important;
+    font-family: var(--font) !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+    background-image: none !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    border-radius: 12px !important;
+  }
+  body.poxy-sky-app-active #poxyAppShell .btn-primary {
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    border: 1px solid var(--btn-bg) !important;
+    padding: 11px 18px !important;
+    font-size: 14px !important;
+  }
+  body.poxy-sky-app-active #poxyAppShell .btn-primary:hover {
+    transform: none !important;
+    filter: brightness(1.08) !important;
+  }
+  body.poxy-sky-app-active #poxyAppShell .btn-glass {
+    background: var(--glass-strong) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+  }
+  body.poxy-sky-app-active #poxyAppShell .balance.visible {
+    display: inline-flex !important;
   }
 `;
 
@@ -82,6 +241,7 @@ body.poxy-sky-app-active #poxyLanding {
   color: var(--text);
   font-family: var(--font);
   --rail-w: 74px;
+  --r-lg: 24px;
 }
 #poxyAppShell.px-sky-app.px-sky-app--open {
   display: flex !important;
