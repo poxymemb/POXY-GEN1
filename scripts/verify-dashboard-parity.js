@@ -239,6 +239,21 @@ if (/body\.poxy-sky-app-active #pxSkyStage:has\(#settingsPage\.visible\) > #hunt
   fail('Settings route hides huntPage shell', 'legacy-suppress.css rule missing');
 }
 has(mock, 'id="sc-settings"', 'Mockup has sc-settings');
+if (/title: 'Account'[\s\S]*title: 'Coins'[\s\S]*title: 'Appearance'[\s\S]*title: 'POXY'/.test(settingsSkyJsText)) {
+  pass('Settings four hub groups');
+} else {
+  fail('Settings four hub groups');
+}
+if (/pxSkyThemeToggle|set-toggle/.test(settingsSkyJsText) && /\.set-toggle\.on/.test(settingsCssText)) {
+  pass('Settings dark theme toggle 1:1');
+} else {
+  fail('Settings dark theme toggle 1:1');
+}
+if (/rowTheme/.test(settingsSkyJsText) && /set-group > \.px-sky-set-row:first-of-type/.test(settingsCssText)) {
+  pass('Settings hub row layout 1:1');
+} else {
+  fail('Settings hub row layout 1:1');
+}
 
 if (/function isSkyLegacyRarityUi/.test(index) && /if\(isSkyLegacyRarityUi\(\)\)return;[\s\S]*?loadTierListPanel/.test(index)) {
   pass('Sky tierlist skips legacy loadTierListPanel');

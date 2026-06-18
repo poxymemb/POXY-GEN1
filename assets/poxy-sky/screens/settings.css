@@ -284,6 +284,11 @@ body.poxy-sky-app-active #settingsPage .poxy-settings-btn-primary {
 }
 
 body.poxy-sky-app-active #settingsPage .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #settingsPage .set-group > .px-sky-set-row:first-of-type{border-top:none}
+body.poxy-sky-app-active #settingsPage .px-sky-set-row{width:100%;border:none;background:transparent;text-align:left;font:inherit;color:inherit}
+body.poxy-sky-app-active #settingsPage .set-ic svg{width:18px;height:18px}
+[data-theme="dark"] body.poxy-sky-app-active #settingsPage .set-ic{color:var(--sky-300)}
+body.poxy-sky-app-active #settingsPage .set-arrow svg{width:16px;height:16px}
 body.poxy-sky-app-active #settingsPage .settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
 body.poxy-sky-app-active #settingsPage .set-group{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
 body.poxy-sky-app-active #settingsPage .set-group h3{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);padding:16px 18px 4px}

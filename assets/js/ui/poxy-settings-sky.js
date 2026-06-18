@@ -14,7 +14,7 @@
         {
           id: 'profile',
           title: 'Profile',
-          sub: '@yourname · edit name and avatar',
+          sub: '@yourname · edit name & avatar',
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>',
           action: 'profile',
         },
@@ -95,14 +95,14 @@
         {
           id: 'faq',
           title: 'What POXY can do',
-          sub: 'Features and FAQ',
+          sub: 'Features & FAQ',
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4 2c0 1.5-2 2-2 3.5"/><circle cx="11.5" cy="17.5" r="0.6" fill="currentColor"/></svg>',
           action: 'faq',
         },
         {
           id: 'privacy',
           title: 'Privacy',
-          sub: 'Policy and data',
+          sub: 'Policy & data',
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
           action: 'privacy',
         },
@@ -173,6 +173,7 @@
     el.type = 'button';
     el.className = 'set-row px-sky-set-row';
     el.dataset.rowId = row.id;
+    if (row.id === 'theme') el.id = 'rowTheme';
     el.innerHTML =
       '<span class="set-ic" aria-hidden="true">' +
       row.icon +
@@ -279,7 +280,8 @@
       return;
     }
     if (row.action === 'privacy') {
-      if (typeof global.openSupportPanel === 'function') global.openSupportPanel();
+      if (typeof global.showStitchTab === 'function') global.showStitchTab('explore');
+      if (typeof global.switchExploreSection === 'function') global.switchExploreSection('legal');
       return;
     }
   }
@@ -310,7 +312,7 @@
     var sub = $('pxSkySetSub-profile');
     var handle = $('settingsDisplayHandle');
     if (sub && handle && handle.textContent) {
-      sub.textContent = handle.textContent + ' · edit name and avatar';
+      sub.textContent = handle.textContent + ' · edit name & avatar';
     }
   }
 
