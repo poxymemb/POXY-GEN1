@@ -170,8 +170,8 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | Auth | `poxy-auth.html` | `#authOverlay` | **Near** | Login/register wired; verify/forgot/QR stubs |
 | App shell | `poxy-dashboard.html` (rail + topbar) | `#poxyAppShell`, `#pxSkyRail`, `#pxSkyTopbar` | **Near 1:1** | Rail-spacer pins profile/settings; sticky flex layout; `zoom:1` in Sky mode; stage `max-width:1120px` |
 | Home | `#sc-home` | `#pxSkyHome` | **Near 1:1** | Welcome + stats; smoke on real login advised |
-| Open — box picker | `#sc-open` | `#pxSkyOpen` | **Near** | Sky box grid + ritual overlay; **5** tiers in prod (Legend is production-only) |
-| Open — ritual | mockup full-screen gen | `#pxSkyRitual`, `#btnOpen`, `#stSpinMount` | **Near** | Sky generation sweep + reveal; legacy spin host hidden |
+| Open — box picker | `#sc-open` | `#pxSkyOpen` | **Near 1:1** | Sky box grid matches mockup; Legend tier is production-only (5 cards) |
+| Open — ritual | mockup full-screen gen | `#pxSkyRitual`, `#btnOpen`, `#stSpinMount` | **Near 1:1** | Frog reveal top-to-bottom, sweep animation, Keep/Sell/Open another |
 | Collection | `#sc-collection` | `#collectionPage` | **Near** | Miles ring, chip filters, search, card grid reskin; legacy console hidden |
 | Market | `#sc-market` | `#stPanelMarket` / `#marketPage` | **Near** | Sky toolbar, rarity chips, sell CTA, listing cards |
 | Store | `#sc-store` | store panel | **Near** | Category chips, membership block, grid polish; legacy bento hidden |

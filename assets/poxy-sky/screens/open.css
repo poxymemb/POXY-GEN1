@@ -21,7 +21,16 @@ body.poxy-sky-app-active #pxSkyOpen .box-price{display:inline-flex;align-items:c
 #pxSkyRitual .gen-frame{width:240px;height:300px;border-radius:var(--r-lg);position:relative;overflow:hidden;
     background:radial-gradient(120% 80% at 50% 14%,color-mix(in srgb,var(--sky-500) 30%,var(--bg-2)),var(--bg-2));
     border:1px solid var(--border);display:grid;place-items:center;box-shadow:var(--shadow)}
-#pxSkyRitual .gen-reveal{position:relative;opacity:0}
+#pxSkyRitual #pxSkyResultFrame{
+    background:radial-gradient(120% 80% at 50% 14%,color-mix(in srgb,var(--mr,var(--sky-500)) 30%,var(--bg-2)),var(--bg-2))}
+#pxSkyRitual .frog{width:78px;height:92px;position:relative}
+#pxSkyRitual .frog .fb{position:absolute;inset:0;border-radius:46% 46% 42% 42%;background:linear-gradient(165deg,var(--c1),var(--c2));box-shadow:inset -5px -8px 0 rgba(0,0,0,.10),0 8px 18px rgba(0,0,0,.28)}
+#pxSkyRitual .frog .fe{position:absolute;top:15px;width:22px;height:22px;border-radius:50%;background:#fff}
+#pxSkyRitual .frog .fe.l{left:10px}
+#pxSkyRitual .frog .fe.r{right:10px}
+#pxSkyRitual .frog .fe::after{content:"";position:absolute;top:6px;left:6px;width:9px;height:9px;border-radius:50%;background:#1c1c1e}
+#pxSkyRitual .frog .fm{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:32px;height:16px;background:var(--belly);border-radius:0 0 16px 16px}
+#pxSkyRitual .gen-reveal{position:relative;opacity:0;z-index:2}
 #pxSkyRitual .gen-sweep{position:absolute;left:0;right:0;height:40px;top:0;z-index:4;pointer-events:none;
     background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--sky-300) 80%,transparent),transparent);opacity:0}
 #pxSkyRitual .gen-frame .ring{position:absolute;inset:14px;border-radius:16px;border:1.5px solid color-mix(in srgb,var(--sky-500) 32%,transparent);z-index:3}
@@ -98,10 +107,17 @@ body.poxy-sky-app-active #pxSkyOpen .px-sky-box-card.sold-out {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
   text-align: center;
   width: 100%;
   max-width: 420px;
+}
+
+#pxSkyRitual .stage-box {
+  gap: 26px;
+}
+
+#pxSkyRitual .result {
+  gap: 18px;
 }
 
 #pxSkyRitual .stage-box.is-active,
@@ -131,6 +147,15 @@ body.poxy-sky-app-active #pxSkyOpen .px-sky-box-card.sold-out {
   transform: scale(0.9);
   opacity: 0;
   transition: all 0.6s var(--ease, cubic-bezier(0.4, 0, 0.2, 1)) 0.1s;
+}
+
+#pxSkyRitual .ritual-close {
+  border: none;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  display: grid;
+  place-items: center;
 }
 
 #pxSkyRitual .btn {

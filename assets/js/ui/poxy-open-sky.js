@@ -19,6 +19,61 @@
   var curBox = SKY_BOXES[0];
   var _opening = false;
 
+  var SKY_RAR_COLOR = {
+    common: '#8A8F98',
+    uncommon: '#8A8F98',
+    rare: '#60C2E0',
+    epic: '#456DB0',
+    legendary: '#E0A23C',
+    mythic: '#D9744F',
+    obsidian: '#8A8F98',
+    cursed: '#456DB0',
+    souvenir: '#60C2E0',
+    stellar: '#60C2E0',
+    diamond: '#60C2E0',
+    secret: '#D9744F',
+  };
+
+  var FROG_BY_TIER = {
+    common: { c1: '#6FD66F', c2: '#3AA83A' },
+    uncommon: { c1: '#7BE0C0', c2: '#3AA888' },
+    rare: { c1: '#8FD7E5', c2: '#46A8C0' },
+    epic: { c1: '#9B8FE0', c2: '#5B4FB0' },
+    legendary: { c1: '#7BE0A0', c2: '#3AA85F' },
+    mythic: { c1: '#E58F6F', c2: '#C0552F' },
+    obsidian: { c1: '#556872', c2: '#37474F' },
+    cursed: { c1: '#9B8FE0', c2: '#7E57C2' },
+    souvenir: { c1: '#5ec4b8', c2: '#26A69A' },
+    stellar: { c1: '#6eb8f5', c2: '#42A5F5' },
+    diamond: { c1: '#a8eef5', c2: '#80DEEA' },
+    secret: { c1: '#ff9a7a', c2: '#FF6E40' },
+  };
+
+  function frogHTML(c1, c2) {
+    return (
+      '<div class="frog px-sky-frog" style="--c1:' +
+      c1 +
+      ';--c2:' +
+      c2 +
+      ';--belly:#c0344d"><div class="fb"></div><div class="fe l"></div><div class="fe r"></div><div class="fm"></div></div>'
+    );
+  }
+
+  function tierFrogColors(tier) {
+    if (!tier || !tier.id) return FROG_BY_TIER.common;
+    return FROG_BY_TIER[tier.id] || { c1: tier.color || '#60C2E0', c2: tier.color || '#40ABCC' };
+  }
+
+  function tierRarColor(tier) {
+    if (!tier || !tier.id) return '#60C2E0';
+    return SKY_RAR_COLOR[tier.id] || tier.color || '#60C2E0';
+  }
+
+  function renderFrogForTier(tier) {
+    var colors = tierFrogColors(tier);
+    return frogHTML(colors.c1, colors.c2);
+  }
+
   function $(id) {
     return document.getElementById(id);
   }
@@ -189,12 +244,7 @@
     var reveal = $('pxSkyGenReveal');
     if (genStage) genStage.classList.add('is-active');
     if (reveal && winTier) {
-      reveal.innerHTML =
-        '<span class="material-symbols-outlined" style="font-size:64px;color:' +
-        (winTier.color || '#60C2E0') +
-        '">' +
-        (winTier.icon || 'view_in_ar') +
-        '</span>';
+      reveal.innerHTML = renderFrogForTier(winTier);
     }
     if (frame) {
       frame.classList.remove('run');
@@ -238,21 +288,19 @@
     var name = $('pxSkyResultName');
     var rar = $('pxSkyResultRar');
     var frame = $('pxSkyResultFrame');
-    if (frame && tier && tier.color) frame.style.setProperty('--mr', tier.color);
+    var rc = tierRarColor(tier);
+    if (frame) frame.style.setProperty('--mr', rc);
     if (fig) {
-      fig.innerHTML =
-        '<span class="material-symbols-outlined" style="font-size:72px;color:' +
-        (tier.color || '#60C2E0') +
-        '">' +
-        (tier.icon || 'view_in_ar') +
-        '</span>';
+      fig.innerHTML = renderFrogForTier(tier);
     }
-    if (name) name.textContent = 'POXY ' + (tier.label || 'Figure');
+    if (name) {
+      var label = tier.label || 'Figure';
+      name.textContent = serial ? 'POXY · ' + label + ' · ' + serial : 'POXY · ' + label;
+    }
     if (rar) {
       rar.textContent = tier.label || 'POXY';
-      rar.style.color = tier.color || '';
+      rar.style.color = rc;
     }
-    if (serial && name) name.textContent = 'POXY ' + (tier.label || '') + ' · ' + serial;
     if (typeof global.triggerRevealFX === 'function') global.triggerRevealFX(tier.id);
     if (typeof global.setBodyBg === 'function') global.setBodyBg(tier.id);
     _opening = false;

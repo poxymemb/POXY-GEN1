@@ -11,6 +11,7 @@ const indexPath = path.join(root, 'index.html');
 const appShellCss = path.join(root, 'assets/poxy-sky/app-shell.css');
 const homeCss = path.join(root, 'assets/poxy-sky/screens/home.css');
 const openCss = path.join(root, 'assets/poxy-sky/screens/open.css');
+const openSkyJs = path.join(root, 'assets/js/ui/poxy-open-sky.js');
 const collectionCss = path.join(root, 'assets/poxy-sky/screens/collection.css');
 const collectionSkyJs = path.join(root, 'assets/js/ui/poxy-collection-sky.js');
 const marketCss = path.join(root, 'assets/poxy-sky/screens/market.css');
@@ -25,6 +26,7 @@ const index = fs.readFileSync(indexPath, 'utf8');
 const shellCss = fs.readFileSync(appShellCss, 'utf8');
 const homeCssText = fs.readFileSync(homeCss, 'utf8');
 const openCssText = fs.readFileSync(openCss, 'utf8');
+const openSkyJsText = fs.readFileSync(openSkyJs, 'utf8');
 const collectionCssText = fs.readFileSync(collectionCss, 'utf8');
 const collectionSkyJsText = fs.readFileSync(collectionSkyJs, 'utf8');
 const marketCssText = fs.readFileSync(marketCss, 'utf8');
@@ -96,6 +98,11 @@ if (/body\.poxy-sky-app-active #pxOpenHooksPreserve[\s\S]*display:\s*none/.test(
   fail('Legacy open hooks hidden in sky mode', 'open.css rule missing');
 }
 has(mock, 'id="sc-open"', 'Mockup has sc-open');
+if (/function frogHTML|renderFrogForTier/.test(openSkyJsText) && /#pxSkyRitual \.frog/.test(openCssText)) {
+  pass('Open ritual frog generation');
+} else {
+  fail('Open ritual frog generation', 'poxy-open-sky.js / open.css');
+}
 
 // Collection functional (Phase A)
 has(index, 'poxy-collection-sky.js', 'Collection sky script linked');
