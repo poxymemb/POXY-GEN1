@@ -27,6 +27,51 @@ body.poxy-sky-app-active #settingsPage.visible {
 
 }
 
+/* Route layout — hunt shell must not reserve height above settings (mirrors collection) */
+body.poxy-sky-app-active.poxy-sky-settings-active #huntPage,
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyStage > #huntPage {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyStage {
+  display: block !important;
+  flex: 0 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding-top: 0 !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyMain {
+  overflow: auto !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-settings-active #settingsPage.visible {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  padding: 0 !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyStage > .page:not(#settingsPage),
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyStage > #clubPage,
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyStage > .club-page {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #pxSkySettingsHub {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
 
 
 body.poxy-sky-app-active #settingsPage.px-sky-settings--hub #pxSkySettingsHub {

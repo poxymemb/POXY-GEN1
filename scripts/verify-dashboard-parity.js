@@ -20,6 +20,7 @@ const storeCss = path.join(root, 'assets/poxy-sky/screens/store.css');
 const storeSkyJs = path.join(root, 'assets/js/ui/poxy-store-sky.js');
 const settingsCss = path.join(root, 'assets/poxy-sky/screens/settings.css');
 const settingsSkyJs = path.join(root, 'assets/js/ui/poxy-settings-sky.js');
+const screensSkyJs = path.join(root, 'assets/js/ui/poxy-screens-sky.js');
 
 const mock = fs.readFileSync(mockPath, 'utf8');
 const index = fs.readFileSync(indexPath, 'utf8');
@@ -35,6 +36,7 @@ const storeCssText = fs.readFileSync(storeCss, 'utf8');
 const storeSkyJsText = fs.readFileSync(storeSkyJs, 'utf8');
 const settingsCssText = fs.readFileSync(settingsCss, 'utf8');
 const settingsSkyJsText = fs.readFileSync(settingsSkyJs, 'utf8');
+const screensSkyJsText = fs.readFileSync(screensSkyJs, 'utf8');
 
 const checks = [];
 
@@ -223,10 +225,25 @@ if (/max-width:\s*1120px/.test(shellCss) && /html:has\(body\.poxy-sky-app-active
 } else {
   fail('Sky stage max-width + zoom neutralized', 'app-shell.css scale rules');
 }
+if (/body\.poxy-sky-app-active\.poxy-sky-profile-active #huntPage/.test(fs.readFileSync(path.join(root, 'assets/poxy-sky/screens/profile.css'), 'utf8'))) {
+  pass('Profile route hides huntPage shell');
+} else {
+  fail('Profile route hides huntPage shell', 'profile.css layout rule missing');
+}
+if (/pxSkyProfileChrome|prof-banner/.test(fs.readFileSync(path.join(root, 'assets/js/ui/poxy-profile-sky.js'), 'utf8'))) {
+  pass('Profile sky chrome wired');
+} else {
+  fail('Profile sky chrome wired');
+}
 if (/body\.poxy-sky-app-active #profilePage \.idhub-shell[\s\S]*display:\s*none/.test(fs.readFileSync(path.join(root, 'assets/poxy-sky/screens/profile.css'), 'utf8'))) {
   pass('Profile legacy shell hidden in sky mode');
 } else {
   fail('Profile legacy shell hidden in sky mode', 'profile.css rule missing');
+}
+if (/body\.poxy-sky-app-active\.poxy-sky-settings-active #huntPage/.test(settingsCssText)) {
+  pass('Settings route hides huntPage shell');
+} else {
+  fail('Settings route hides huntPage shell', 'settings.css layout rule missing');
 }
 if (/body\.poxy-sky-app-active #settingsPage\.px-sky-settings--hub \.poxy-settings-shell[\s\S]*display:\s*none/.test(settingsCssText)) {
   pass('Settings legacy shell hidden in hub mode');
@@ -254,6 +271,25 @@ if (/rowTheme/.test(settingsSkyJsText) && /set-group > \.px-sky-set-row:first-of
 } else {
   fail('Settings hub row layout 1:1');
 }
+
+function pxSkyStageDepth(html) {
+  const start = html.indexOf('id="pxSkyStage"');
+  const end = html.indexOf('<!-- /pxSkyStage -->');
+  if (start === -1 || end === -1) return null;
+  let depth = 0;
+  html.slice(start, end).split('\n').forEach((line) => {
+    depth += (line.match(/<div[\s>]/gi) || []).length;
+    depth -= (line.match(/<\/div>/gi) || []).length;
+  });
+  return depth;
+}
+if (pxSkyStageDepth(index) === 0) {
+  pass('pxSkyStage DOM balance (profile/settings inside stage)');
+} else {
+  fail('pxSkyStage DOM balance (profile/settings inside stage)', 'extra/missing </div> before /pxSkyStage');
+}
+has(screensSkyJsText, 'ensureSkyPagesInStage', 'Sky pages reparent into pxSkyStage');
+has(index, 'ensureSkyPagesInStage', 'showPoxyAppShell calls stage reparent');
 
 if (/function isSkyLegacyRarityUi/.test(index) && /if\(isSkyLegacyRarityUi\(\)\)return;[\s\S]*?loadTierListPanel/.test(index)) {
   pass('Sky tierlist skips legacy loadTierListPanel');

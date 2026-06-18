@@ -70,13 +70,13 @@
 <link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=24">
 <link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/screens.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=6">
+<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=7">
 <link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=9">
 <link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/screens/open.css?v=4">
 <link rel="stylesheet" href="assets/poxy-sky/screens/store.css?v=4">
-<link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=5">
-<link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=3">
+<link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=7">
+<link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/screens/collections-overview.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/community.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/messenger.css?v=1">
@@ -93,7 +93,7 @@
 <link rel="stylesheet" href="assets/poxy-quick-profile.css?v=6">
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
 <link rel="stylesheet" href="assets/poxy-support-panel.css?v=5">
-<link rel="stylesheet" href="assets/poxy-sky/overlays.css?v=4">
+<link rel="stylesheet" href="assets/poxy-sky/overlays.css?v=5">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/topup.css?v=2">
@@ -146,9 +146,9 @@
 <script src="assets/js/ui/poxy-market-sky.js?v=4" defer></script>
 <script src="assets/js/ui/poxy-store-sky.js?v=4" defer></script>
 <script src="assets/js/ui/poxy-settings-sky.js?v=3" defer></script>
-<script src="assets/js/ui/poxy-profile-sky.js?v=2" defer></script>
+<script src="assets/js/ui/poxy-profile-sky.js?v=3" defer></script>
 <script src="assets/js/ui/poxy-stage11-sky.js?v=2" defer></script>
-<script src="assets/js/ui/poxy-screens-sky.js?v=2" defer></script>
+<script src="assets/js/ui/poxy-screens-sky.js?v=3" defer></script>
 <script src="assets/poxy-landing-page.js?v=5" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -1794,7 +1794,6 @@ signature = ed25519.sign(private_key, canonical_json(genesis_payload))
     </section>
     </div>
   </div>
-</div>
 </div>
 
 <!-- PROFILE PAGE — Stitch Identity Hub -->
@@ -7266,6 +7265,7 @@ function showPoxyAppShell(){
     shell.style.display='flex';
     shell.classList.add('px-sky-app--open');
   }
+  if(window.PoxyScreensSky&&PoxyScreensSky.ensureSkyPagesInStage)PoxyScreensSky.ensureSkyPagesInStage();
   if(window.PoxyAppShell)PoxyAppShell.syncGreet();
   requestAnimationFrame(updateStNavOffset);
   try{window.scrollTo(0,0);}catch(e){}
@@ -7345,7 +7345,7 @@ function mountSpaPanels(){
 
 window.showStitchTab=function(tab){
   if(!currentUser){showToast('Sign in first.');return;}
-  document.body.classList.remove('poxy-sky-collection-active');
+  document.body.classList.remove('poxy-sky-collection-active','poxy-sky-profile-active','poxy-sky-settings-active');
   const colWasVisible=!!($('collectionPage')&&$('collectionPage').classList.contains('visible'));
   let next=tab==='hunt'?'dashboard':tab;
   if(next==='ranks')next='levels';
@@ -8226,6 +8226,9 @@ window.showPage=function(page){
   if(page==='settings')window._allowSettingsPage=false;
   if(page==='bank'){openTopUpModal();return;}
   if(page==='store'){scrollToStore();return;}
+  if(page==='profile'||page==='settings'){
+    hideHuntPageShell();
+  }
   if(page==='friends'){
     if(typeof showStitchTab==='function'){showStitchTab('messenger');return;}
   }

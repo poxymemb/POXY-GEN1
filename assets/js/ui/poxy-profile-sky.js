@@ -260,11 +260,19 @@
 
       var h = handle ? handle.textContent : '@yourname';
 
-      var figText = $('statTotal') ? $('statTotal').textContent : '0';
+      var lvl = 1;
 
-      var figNum = parseInt(String(figText).replace(/,/g, ''), 10) || 0;
+      if (global.playerEconomy && global.playerEconomy.xp_level != null) {
 
-      $('pxSkyProfHandle').textContent = h + ' · Level ' + (figNum > 0 ? '1' : '0');
+        lvl = global.playerEconomy.xp_level;
+
+      } else if (global.currentProfile && global.currentProfile.xp_level != null) {
+
+        lvl = global.currentProfile.xp_level;
+
+      }
+
+      $('pxSkyProfHandle').textContent = h + ' · Level ' + lvl;
 
     }
 
@@ -375,6 +383,10 @@
   function prepProfilePanel() {
 
     if (typeof global.hideHuntPageShell === 'function') global.hideHuntPageShell();
+
+    document.body.classList.add('poxy-sky-profile-active');
+
+    document.body.classList.remove('poxy-sky-settings-active');
 
     var main = $('pxSkyMain');
 

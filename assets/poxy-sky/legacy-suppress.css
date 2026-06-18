@@ -181,6 +181,10 @@ body.poxy-sky-app-active.poxy-sky-collection-active #pxSkyStage > .club-page {
 }
 
 /* Profile / Settings — hunt dashboard must not reserve height above page */
+body.poxy-sky-app-active.poxy-sky-profile-active #huntPage,
+body.poxy-sky-app-active.poxy-sky-profile-active #pxSkyStage > #huntPage,
+body.poxy-sky-app-active.poxy-sky-settings-active #huntPage,
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyStage > #huntPage,
 body.poxy-sky-app-active #pxSkyStage:has(#profilePage.visible) > #huntPage,
 body.poxy-sky-app-active #pxSkyStage:has(#settingsPage.visible) > #huntPage {
   display: none !important;
@@ -194,12 +198,22 @@ body.poxy-sky-app-active #pxSkyStage:has(#settingsPage.visible) > #huntPage {
   pointer-events: none !important;
 }
 
+body.poxy-sky-app-active.poxy-sky-profile-active #pxSkyStage,
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyStage,
 body.poxy-sky-app-active #pxSkyStage:has(#profilePage.visible),
 body.poxy-sky-app-active #pxSkyStage:has(#settingsPage.visible) {
   min-height: 0 !important;
+  height: auto !important;
   padding-top: 0 !important;
 }
 
+body.poxy-sky-app-active.poxy-sky-profile-active #pxSkyMain,
+body.poxy-sky-app-active.poxy-sky-settings-active #pxSkyMain {
+  overflow: auto !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-profile-active #profilePage.visible,
+body.poxy-sky-app-active.poxy-sky-settings-active #settingsPage.visible,
 body.poxy-sky-app-active #profilePage.visible,
 body.poxy-sky-app-active #settingsPage.visible {
   position: relative !important;

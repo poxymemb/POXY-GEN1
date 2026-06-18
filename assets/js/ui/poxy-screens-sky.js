@@ -24,6 +24,21 @@
     return document.getElementById(id);
   }
 
+  function ensureSkyPagesInStage() {
+    var stage = $('pxSkyStage');
+    var main = $('pxSkyMain');
+    if (!stage || !main) return;
+    Array.from(main.children).forEach(function (el) {
+      if (el === stage || el.id === 'pxSkyTopbar') return;
+      if (
+        el.classList.contains('page') ||
+        (el.classList.contains('club-page') && el.id === 'clubPage')
+      ) {
+        stage.appendChild(el);
+      }
+    });
+  }
+
   function ensureHead(key) {
     var cfg = PAGE_HEADS[key];
     if (!cfg) return;
@@ -83,14 +98,20 @@
 
   global.PoxyScreensSky = {
     ensureHead: ensureHead,
+    ensureSkyPagesInStage: ensureSkyPagesInStage,
     onPage: onPage,
     onTab: onTab,
     initAll: initAll,
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
+  function bootScreensSky() {
+    ensureSkyPagesInStage();
     initAll();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootScreensSky);
+  } else {
+    bootScreensSky();
   }
 })(window);
