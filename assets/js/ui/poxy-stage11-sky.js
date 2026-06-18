@@ -492,7 +492,7 @@
       p.name +
       '<span class="verified big">✓</span></h1><div class="cp-meta">' +
       p.handle +
-      '</div></div><button type="button" class="px-sky-set-btn-primary cp-follow">Follow</button></div>' +
+      '</div></div><button type="button" class="cp-follow">Follow</button></div>' +
       '<p class="cp-desc">' +
       p.desc +
       '</p><div class="panel-h">Channels & links</div><div class="cp-channels">' +
