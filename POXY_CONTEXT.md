@@ -179,7 +179,7 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | Profile | `#sc-profile` | `#profilePage` | **Near 1:1** | Banner, avatar overlap, colour swatches, Plus lock; hunt shell suppressed on route |
 | All collections | `#sc-collections` | `tierlist` / `PoxyCollectionsSky` | **Near 1:1** | Overview → Hearts detail → item drill-down wired |
 | Community | `#sc-community` | `club` / `PoxyCommunitySky` | **Near 1:1** | Feed, sidebar search, channel profile drill-down |
-| Messenger | `#sc-messenger` | `messenger` / `PoxyMessengerSky` | **Near** | Sky chat chrome; friends legacy hooks preserved |
+| Messenger | `#sc-messenger` | `messenger` / `PoxyMessengerSky` | **Near 1:1** | Chat list, search, thread switch, attach menu, send |
 | Events | `#sc-events` | `events` / `PoxyEventsSky` | **Near** | Event cards from Sky layer |
 | Quests | `#sc-quests` | `quests` / `PoxyQuestsSky` | **Near** | Daily quest rows wired to production data |
 | Levels | `#sc-levels` | `levels` / `PoxyLevelsSky` | **Near** | Level path UI; legacy ranks podium hidden |

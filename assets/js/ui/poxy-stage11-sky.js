@@ -682,31 +682,330 @@
   };
 
   /* ── Messenger ── */
+  var MSG_SEND_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>';
+
+  var SKY_CHATS = [
+    {
+      id: 'slava',
+      color: '#60C2E0',
+      initial: 'S',
+      name: 'Slava',
+      time: '2m',
+      last: 'Sent you a trade offer',
+      unread: 2,
+      online: true,
+      status: 'online',
+      placeholder: 'Message Slava',
+      messages: [
+        { who: 'them', text: 'Hey, you around? Got a trade idea' },
+        { who: 'them', text: 'I want your Golden Heart #11', time: '14:02' },
+        { who: 'me', text: 'Maybe! What are you offering?', time: '14:03' },
+        { who: 'them', text: 'Two figures: Frost Heart and Royal. Fair?', time: '14:03' },
+        { who: 'me', text: "Send the trade, I'll look", time: '14:04' },
+      ],
+    },
+    {
+      id: 'news',
+      color: '#E0A23C',
+      initial: 'P',
+      name: 'POXY News',
+      time: '1h',
+      last: 'Season 02 is coming soon!',
+      status: 'official',
+      placeholder: 'Message POXY News',
+      messages: [
+        { who: 'them', text: 'Season 02 Tokens is almost here.' },
+        { who: 'them', text: 'Six new symbols, fresh mutations, and a launch event with an early-bird figure.', time: '11:20' },
+      ],
+    },
+    {
+      id: 'collectors',
+      color: '#9B8FE0',
+      initial: 'C',
+      name: 'Collectors Club',
+      time: '3h',
+      last: 'alex: anyone got Golden Heart?',
+      unread: 5,
+      status: 'group · 12.8k members',
+      placeholder: 'Message Collectors Club',
+      messages: [
+        { who: 'them', text: 'alex: anyone got Golden Heart?' },
+        { who: 'them', text: 'nova: I have #47, not selling yet', time: '09:14' },
+      ],
+    },
+    {
+      id: 'mira',
+      color: '#7BE0A0',
+      initial: 'M',
+      name: 'Mira',
+      time: '1d',
+      last: 'Thanks for the gift!',
+      online: true,
+      status: 'online',
+      placeholder: 'Message Mira',
+      messages: [
+        { who: 'them', text: 'Thanks for the gift!' },
+        { who: 'me', text: 'Enjoy it!', time: '18:22' },
+      ],
+    },
+    {
+      id: 'tradehub',
+      color: '#8BCFE4',
+      initial: 'T',
+      name: 'Trade Hub',
+      time: '2d',
+      last: 'New listings you might like',
+      status: 'group · 3.4k members',
+      placeholder: 'Message Trade Hub',
+      messages: [{ who: 'them', text: 'New listings you might like. Tap Market to browse.' }],
+    },
+  ];
+
+  var MSG_SEARCH_PEOPLE = [
+    { color: '#60C2E0', initial: 'S', name: 'Slava', handle: '@slava', online: true, chatId: 'slava' },
+    { color: '#7BE0A0', initial: 'M', name: 'Mira', handle: '@mira_k', online: true, chatId: 'mira' },
+    { color: '#9B8FE0', initial: 'A', name: 'Alex P', handle: '@alex_p', chatId: 'slava' },
+    { color: '#E5C84F', initial: 'N', name: 'Nova', handle: '@nova', chatId: 'mira' },
+  ];
+
+  var MSG_SEARCH_GROUPS = [
+    { color: '#9B8FE0', initial: 'C', name: 'Collectors Club', handle: '@collectors · 12.8k members', verified: true, chatId: 'collectors' },
+    { color: '#8BCFE4', initial: 'T', name: 'Trade Hub', handle: '@tradehub · 3.4k members', chatId: 'tradehub' },
+    { color: '#E0A23C', initial: 'R', name: 'Rare Hunters', handle: '@rarehunt · 7.3k members', verified: true, chatId: 'collectors' },
+  ];
+
+  function chatById(id) {
+    for (var i = 0; i < SKY_CHATS.length; i++) {
+      if (SKY_CHATS[i].id === id) return SKY_CHATS[i];
+    }
+    return SKY_CHATS[0];
+  }
+
+  function chatListItem(chat, active) {
+    var online = chat.online
+      ? '<span class="chat-online" aria-hidden="true"></span>'
+      : '';
+    var unread = chat.unread
+      ? '<span class="chat-unread">' + chat.unread + '</span>'
+      : '';
+    return (
+      '<button type="button" class="chat-item' +
+      (active ? ' active' : '') +
+      '" data-chat-id="' +
+      chat.id +
+      '"><div class="chat-av" style="--ac:' +
+      chat.color +
+      '">' +
+      chat.initial +
+      online +
+      '</div><div class="chat-mid"><div class="chat-top"><span class="chat-name">' +
+      chat.name +
+      '</span><span class="chat-time">' +
+      chat.time +
+      '</span></div><div class="chat-last">' +
+      chat.last +
+      '</div></div>' +
+      unread +
+      '</button>'
+    );
+  }
+
+  function bubbleHtml(msg) {
+    var time = msg.time ? '<div class="bt">' + msg.time + '</div>' : '';
+    return (
+      '<div class="bubble ' +
+      msg.who +
+      '">' +
+      msg.text +
+      time +
+      '</div>'
+    );
+  }
+
+  function renderChatBody(chat) {
+    return chat.messages.map(bubbleHtml).join('');
+  }
+
+  function searchResultItem(opts) {
+    var online = opts.online ? '<span class="sr-online" aria-hidden="true"></span>' : '';
+    var verified = opts.verified ? '<span class="verified">✓</span>' : '';
+    var groupCls = opts.group ? ' group' : '';
+    return (
+      '<button type="button" class="sr-item" data-chat-id="' +
+      opts.chatId +
+      '"><span class="sr-av' +
+      groupCls +
+      '" style="--ac:' +
+      opts.color +
+      '">' +
+      opts.initial +
+      online +
+      '</span><span class="sr-mid"><span class="sr-name">' +
+      opts.name +
+      verified +
+      '</span><span class="sr-handle">' +
+      opts.handle +
+      '</span></span><span class="sr-action">' +
+      (opts.group ? 'Join' : 'Message') +
+      '</span></button>'
+    );
+  }
+
+  function buildSearchResults() {
+    var people = MSG_SEARCH_PEOPLE.map(searchResultItem).join('');
+    var groups = MSG_SEARCH_GROUPS.map(function (g) {
+      return searchResultItem({
+        color: g.color,
+        initial: g.initial,
+        name: g.name,
+        handle: g.handle,
+        verified: g.verified,
+        chatId: g.chatId,
+        group: true,
+      });
+    }).join('');
+    return (
+      '<div class="sr-group-h">People</div>' +
+      people +
+      '<div class="sr-group-h">Public groups</div>' +
+      groups
+    );
+  }
+
+  function openSkyChat(id) {
+    var chat = chatById(id);
+    var list = $('pxSkyChatList');
+    if (list) {
+      list.querySelectorAll('.chat-item').forEach(function (btn) {
+        btn.classList.toggle('active', btn.dataset.chatId === id);
+      });
+    }
+    var headAv = $('pxSkyMsgHeadAv');
+    if (headAv) {
+      headAv.style.setProperty('--ac', chat.color);
+      headAv.textContent = chat.initial;
+    }
+    var headName = $('pxSkyMsgHeadName');
+    if (headName) headName.textContent = chat.name;
+    var headStatus = $('pxSkyMsgHeadStatus');
+    if (headStatus) headStatus.textContent = chat.status;
+    var body = $('pxSkyMsgBody');
+    if (body) body.innerHTML = renderChatBody(chat);
+    var input = $('pxSkyMsgInput');
+    if (input) {
+      input.placeholder = chat.placeholder;
+      input.value = '';
+    }
+    var results = $('pxSkyMsgResults');
+    var search = $('pxSkyMsgSearch');
+    if (results) results.classList.remove('show');
+    if (search) search.value = '';
+    if (list) list.style.display = '';
+  }
+
+  function bindMessengerUi(root) {
+    if (!root) return;
+    root.querySelectorAll('[data-chat-id]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        openSkyChat(btn.dataset.chatId);
+      });
+    });
+    var search = $('pxSkyMsgSearch');
+    var list = $('pxSkyChatList');
+    var results = $('pxSkyMsgResults');
+    if (search && list && results) {
+      search.addEventListener('input', function () {
+        var has = search.value.trim().length > 0;
+        results.classList.toggle('show', has);
+        list.style.display = has ? 'none' : '';
+      });
+    }
+    var attachBtn = $('pxSkyMsgAttach');
+    var attachMenu = $('pxSkyMsgAttachMenu');
+    if (attachBtn && attachMenu) {
+      attachBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        attachMenu.classList.toggle('open');
+      });
+      document.addEventListener('click', function (e) {
+        if (!attachMenu.classList.contains('open')) return;
+        if (attachMenu.contains(e.target) || attachBtn.contains(e.target)) return;
+        attachMenu.classList.remove('open');
+      });
+    }
+    root.querySelectorAll('.attach-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        attachMenu.classList.remove('open');
+        if (typeof global.showToast === 'function') {
+          global.showToast('Attachments open in the full messenger.');
+        }
+      });
+    });
+    var sendBtn = $('pxSkyMsgSend');
+    var input = $('pxSkyMsgInput');
+    if (sendBtn && input) {
+      sendBtn.addEventListener('click', function () {
+        var text = input.value.trim();
+        if (!text) return;
+        var body = $('pxSkyMsgBody');
+        if (body) {
+          body.insertAdjacentHTML('beforeend', bubbleHtml({ who: 'me', text: text, time: 'now' }));
+          body.scrollTop = body.scrollHeight;
+        }
+        input.value = '';
+      });
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendBtn.click();
+        }
+      });
+    }
+    var newBtn = $('pxSkyMsgNew');
+    if (newBtn) {
+      newBtn.addEventListener('click', function () {
+        if (typeof global.showToast === 'function') {
+          global.showToast('Start a chat from search or a profile.');
+        }
+      });
+    }
+  }
+
   function ensureMessengerShell() {
     var panel = $('stPanelMessenger');
     if (!panel || $('pxSkyMessengerRoot')) return;
     panel.innerHTML =
       '<div class="px-sky-page-head page-head" data-sky-key="messenger"><h1>Messages</h1><p>Chats, channels, and groups. Send trades, gifts, and figures.</p></div>' +
-      '<div id="pxSkyMessengerRoot">' +
-      '<div class="msg-wrap">' +
+      '<div id="pxSkyMessengerRoot"><div class="msg-wrap">' +
       '<div class="msg-side"><div class="msg-side-head"><h3>Chats</h3><button type="button" class="msg-new" id="pxSkyMsgNew" aria-label="New chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>' +
+      '<div class="msg-search"><div class="msg-search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>' +
+      '<input type="search" id="pxSkyMsgSearch" placeholder="Search @username or public groups" aria-label="Search chats"></div></div>' +
+      '<div class="msg-results" id="pxSkyMsgResults">' +
+      buildSearchResults() +
+      '</div>' +
       '<div class="chat-list" id="pxSkyChatList">' +
-      '<button type="button" class="chat-item active"><div class="chat-av" style="--ac:#60C2E0">P</div><div class="chat-mid"><div class="chat-top"><span class="chat-name">POXY News</span><span class="chat-time">now</span></div><div class="chat-last">Season updates and drops</div></div></button>' +
+      SKY_CHATS.map(function (c, i) {
+        return chatListItem(c, i === 0);
+      }).join('') +
       '</div></div>' +
-      '<div class="msg-main"><div class="msg-main-head"><div class="chat-av" style="--ac:#60C2E0">P</div><div><div class="mmh-name">POXY News</div><div class="mmh-status">official</div></div></div>' +
-      '<div class="msg-body"><div class="bubble them">Welcome to POXY messages. Open the full app to chat, trade, and gift.</div></div>' +
-      '<div class="msg-compose"><input class="msg-input" placeholder="Open messages to reply" disabled></div></div></div>' +
-      '<button type="button" class="btn btn-primary px-sky-msg-open" id="pxSkyOpenMessenger">Open messages</button></div>';
-    var openBtn = $('pxSkyOpenMessenger');
-    var newBtn = $('pxSkyMsgNew');
-    var open = function () {
-      if (typeof global.showStitchTab === 'function') global.showStitchTab('messenger');
-      else if (typeof global.showToast === 'function') global.showToast('Messages loading…');
-    };
-    if (openBtn) openBtn.addEventListener('click', open);
-    if (newBtn) newBtn.addEventListener('click', open);
-    var list = $('pxSkyChatList');
-    if (list) list.addEventListener('click', open);
+      '<div class="msg-main"><div class="msg-main-head"><div class="chat-av" id="pxSkyMsgHeadAv" style="--ac:#60C2E0">S</div><div><div class="mmh-name" id="pxSkyMsgHeadName">Slava</div><div class="mmh-status" id="pxSkyMsgHeadStatus">online</div></div></div>' +
+      '<div class="msg-body" id="pxSkyMsgBody">' +
+      renderChatBody(SKY_CHATS[0]) +
+      '</div><div class="msg-compose"><div class="msg-attach-wrap">' +
+      '<button type="button" class="msg-attach" id="pxSkyMsgAttach" aria-label="Attach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12l-9 9a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a1.5 1.5 0 0 1-2-2l8-8"/></svg></button>' +
+      '<div class="attach-menu" id="pxSkyMsgAttachMenu">' +
+      '<button type="button" class="attach-opt"><span class="ao-ic">🖼</span>Photo or GIF</button>' +
+      '<button type="button" class="attach-opt"><span class="ao-ic">⇄</span>Send a trade</button>' +
+      '<button type="button" class="attach-opt"><span class="ao-ic">🎁</span>Send a gift</button>' +
+      '<button type="button" class="attach-opt"><span class="ao-ic">📦</span>Gift a case</button>' +
+      '<button type="button" class="attach-opt"><span class="ao-ic">★</span>Gift a subscription</button>' +
+      '</div></div><input class="msg-input" id="pxSkyMsgInput" placeholder="Message Slava" autocomplete="off">' +
+      '<button type="button" class="msg-send" id="pxSkyMsgSend" aria-label="Send">' +
+      MSG_SEND_SVG +
+      '</button></div></div></div></div>';
+    bindMessengerUi(panel);
+    openSkyChat('slava');
   }
 
   var PoxyMessengerSky = {

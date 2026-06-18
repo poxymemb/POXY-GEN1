@@ -3,10 +3,45 @@
 body.poxy-sky-app-active #stPanelMessenger {
   background: transparent !important;
 }
-body.poxy-sky-app-active #stPanelMessenger .px-sky-msg-open {
-  margin-top: 16px;
-}
 body.poxy-sky-app-active #stPanelMessenger .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #stPanelMessenger .msg-side-head h3{font-size:16px;font-weight:700;color:var(--text-strong);margin:0}
+body.poxy-sky-app-active #stPanelMessenger .msg-new svg{width:16px;height:16px}
+body.poxy-sky-app-active #stPanelMessenger .msg-search{padding:12px 14px;border-bottom:1px solid var(--border)}
+body.poxy-sky-app-active #stPanelMessenger .msg-search-bar{display:flex;align-items:center;gap:9px;background:var(--glass);border:1px solid var(--border);border-radius:11px;padding:9px 13px}
+body.poxy-sky-app-active #stPanelMessenger .msg-search-bar svg{width:17px;height:17px;color:var(--text-faint);flex-shrink:0}
+body.poxy-sky-app-active #stPanelMessenger .msg-search-bar input{border:none;background:none;outline:none;font:500 14px var(--font);color:var(--text);width:100%}
+body.poxy-sky-app-active #stPanelMessenger .msg-results{display:none;flex-direction:column;flex:1;overflow-y:auto}
+body.poxy-sky-app-active #stPanelMessenger .msg-results.show{display:flex}
+body.poxy-sky-app-active #stPanelMessenger .sr-group-h{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);padding:12px 15px 6px}
+body.poxy-sky-app-active #stPanelMessenger .sr-item{display:flex;align-items:center;gap:11px;padding:10px 15px;border:none;background:none;cursor:pointer;font-family:var(--font);text-align:left;width:100%;transition:background .15s}
+body.poxy-sky-app-active #stPanelMessenger .sr-item:hover{background:var(--glass)}
+body.poxy-sky-app-active #stPanelMessenger .sr-av{width:38px;height:38px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:15px;display:grid;place-items:center;flex-shrink:0;position:relative}
+body.poxy-sky-app-active #stPanelMessenger .sr-av.group{border-radius:12px}
+body.poxy-sky-app-active #stPanelMessenger .sr-online{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#3DBE8B;border:2px solid var(--card)}
+body.poxy-sky-app-active #stPanelMessenger .sr-mid{flex:1;min-width:0;display:flex;flex-direction:column}
+body.poxy-sky-app-active #stPanelMessenger .sr-name{font-size:14px;font-weight:650;color:var(--text-strong);display:flex;align-items:center;gap:5px}
+body.poxy-sky-app-active #stPanelMessenger .sr-handle{font-size:12px;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelMessenger .sr-action{font-size:12px;font-weight:600;color:var(--sky-700);background:color-mix(in srgb,var(--sky-500) 14%,transparent);padding:5px 11px;border-radius:8px;flex-shrink:0}
+[data-theme="dark"] body.poxy-sky-app-active #stPanelMessenger .sr-action{color:var(--sky-300)}
+body.poxy-sky-app-active #stPanelMessenger .verified{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--sky-500);color:#fff;font-size:9px;font-weight:700}
+body.poxy-sky-app-active #stPanelMessenger .chat-item:hover{background:var(--glass)}
+body.poxy-sky-app-active #stPanelMessenger .chat-item.active{background:color-mix(in srgb,var(--sky-500) 10%,transparent)}
+body.poxy-sky-app-active #stPanelMessenger .msg-main-head .chat-av{width:38px;height:38px;font-size:15px}
+body.poxy-sky-app-active #stPanelMessenger .mmh-name{font-size:15px;font-weight:650;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelMessenger .mmh-status{font-size:12px;color:#3DBE8B}
+body.poxy-sky-app-active #stPanelMessenger .bubble.them{align-self:flex-start;background:var(--card);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:5px}
+body.poxy-sky-app-active #stPanelMessenger .bubble.me{align-self:flex-end;background:var(--sky-500);color:#fff;border-bottom-right-radius:5px}
+body.poxy-sky-app-active #stPanelMessenger .bubble .bt{font-size:10px;opacity:.6;margin-top:3px;text-align:right}
+body.poxy-sky-app-active #stPanelMessenger .msg-attach-wrap{position:relative;flex-shrink:0}
+body.poxy-sky-app-active #stPanelMessenger .msg-attach svg{width:19px;height:19px}
+body.poxy-sky-app-active #stPanelMessenger .msg-send svg{width:18px;height:18px}
+body.poxy-sky-app-active #stPanelMessenger .msg-input:focus{border-color:var(--sky-500)}
+body.poxy-sky-app-active #stPanelMessenger .attach-menu{position:absolute;bottom:48px;left:0;background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:7px;box-shadow:0 20px 50px rgba(0,0,0,.3);display:none;flex-direction:column;gap:2px;z-index:10;min-width:180px}
+body.poxy-sky-app-active #stPanelMessenger .attach-menu.open{display:flex}
+body.poxy-sky-app-active #stPanelMessenger .attach-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:none;border:none;font:500 13.5px var(--font);color:var(--text);cursor:pointer;text-align:left;width:100%}
+body.poxy-sky-app-active #stPanelMessenger .attach-opt:hover{background:var(--glass-strong,var(--glass))}
+body.poxy-sky-app-active #stPanelMessenger .attach-opt .ao-ic{width:22px;text-align:center}
+@media (max-width:680px){body.poxy-sky-app-active #stPanelMessenger .msg-wrap{grid-template-columns:1fr;height:auto;min-height:480px}body.poxy-sky-app-active #stPanelMessenger .msg-main{min-height:360px}}
 body.poxy-sky-app-active #stPanelMessenger .msg-wrap{display:grid;grid-template-columns:300px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);height:560px;background:var(--card)}
 body.poxy-sky-app-active #stPanelMessenger .msg-side{border-right:1px solid var(--border);display:flex;flex-direction:column;min-width:0}
 body.poxy-sky-app-active #stPanelMessenger .msg-side-head{padding:15px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
