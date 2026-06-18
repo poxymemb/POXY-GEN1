@@ -30,8 +30,14 @@
   }
 
   function ensureHuntVisible() {
-    var hunt = $('huntPage');
-    if (hunt) hunt.style.display = 'block';
+    if (typeof global.showHuntPageShell === 'function') global.showHuntPageShell();
+    else {
+      var hunt = $('huntPage');
+      if (hunt) {
+        hunt.style.removeProperty('display');
+        hunt.style.display = 'block';
+      }
+    }
   }
 
   function setView(view) {

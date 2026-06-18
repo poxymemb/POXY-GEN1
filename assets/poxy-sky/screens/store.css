@@ -2,11 +2,23 @@
 
 
 body.poxy-sky-app-active #stPanelStore,
-
 body.poxy-sky-app-active #storePage {
-
   background: transparent !important;
+}
 
+body.poxy-sky-app-active #stPanelStore.st-spa-panel--active {
+  padding: 0 !important;
+  min-height: 0 !important;
+  display: block !important;
+}
+
+body.poxy-sky-app-active #stPanelStore #storePage {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
 }
 
 
@@ -43,10 +55,9 @@ body.poxy-sky-app-active #storePage .poxy-store-main {
 
 
 
-body.poxy-sky-app-active #storePage .poxy-store-grid-header {
-
+body.poxy-sky-app-active #storePage .poxy-store-grid-header,
+body.poxy-sky-app-active #storePage #storeGridSub {
   display: none !important;
-
 }
 
 
@@ -112,13 +123,14 @@ body.poxy-sky-app-active #storePage .px-sky-store-chip {
 
 
 body.poxy-sky-app-active #storePage .px-sky-store-chip.on {
-
   background: var(--btn-bg);
-
   color: #fff;
-
   border-color: var(--btn-bg);
+}
 
+body.poxy-sky-app-active #storePage .px-sky-store-chip:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 

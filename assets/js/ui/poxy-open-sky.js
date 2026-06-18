@@ -112,11 +112,9 @@
   }
 
   function ensureBoxGrid() {
-    var open = $('pxSkyOpen');
-    if (!open || $('pxSkyOpenBoxes')) return;
-    var grid = document.createElement('div');
-    grid.id = 'pxSkyOpenBoxes';
-    grid.className = 'boxes';
+    var grid = $('pxSkyOpenBoxes');
+    if (!grid || grid.dataset.ready === '1') return;
+    grid.dataset.ready = '1';
     SKY_BOXES.forEach(function (cfg) {
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -149,9 +147,6 @@
       });
       grid.appendChild(btn);
     });
-    var host = open.querySelector('.px-open-spin-host');
-    if (host) open.insertBefore(grid, host);
-    else open.appendChild(grid);
   }
 
   function refreshBoxPrices() {

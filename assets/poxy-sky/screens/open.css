@@ -34,8 +34,8 @@ body.poxy-sky-app-active #pxSkyOpen .btn-primary{background:var(--btn-bg);color:
 body.poxy-sky-app-active #pxSkyOpen .btn-glass{background:var(--glass-strong);color:var(--text);border-color:var(--border)}
 body.poxy-sky-app-active #pxSkyOpen .coin-sm{width:15px;height:15px;display:inline-block;vertical-align:-2px;margin-right:2px}
 
-body.poxy-sky-app-active #pxSkyOpen .px-open-spin-host,
-body.poxy-sky-app-active #pxSkyOpen .st-premium-tray {
+body.poxy-sky-app-active #pxOpenHooksPreserve,
+body.poxy-sky-app-active #pxSkyOpen .px-open-spin-host {
   display: none !important;
 }
 

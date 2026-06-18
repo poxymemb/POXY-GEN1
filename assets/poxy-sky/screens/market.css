@@ -94,12 +94,53 @@ body.poxy-sky-app-active #marketPage .px-sky-market-chip:disabled {
 }
 
 body.poxy-sky-app-active #marketPage .poxy-market-field--sort-native,
-body.poxy-sky-app-active #marketPage #marketSort {
+body.poxy-sky-app-active #marketPage .poxy-market-field--rarity-native,
+body.poxy-sky-app-active #marketPage #marketSort,
+body.poxy-sky-app-active #marketPage #marketRarityFilter {
   position: absolute;
   width: 1px;
   height: 1px;
   opacity: 0;
   pointer-events: none;
+  overflow: hidden;
+}
+
+body.poxy-sky-app-active #stPanelMarket.st-spa-panel--active {
+  padding: 0 !important;
+  min-height: 0 !important;
+  display: block !important;
+}
+
+body.poxy-sky-app-active #stPanelMarket #marketPage {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+body.poxy-sky-app-active #stPanelMarket .poxy-market-shell {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+body.poxy-sky-app-active #marketPage #pxSkyMarketRarityChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+body.poxy-sky-app-active #marketPage .px-sky-market-tb-spacer {
+  flex: 1;
+  min-width: 12px;
+}
+
+body.poxy-sky-app-active #marketPage .px-sky-market-sell-btn {
+  white-space: nowrap;
 }
 
 body.poxy-sky-app-active #marketPage .poxy-market-search {

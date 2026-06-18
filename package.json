@@ -3,6 +3,7 @@
   "private": true,
   "description": "POXY WORLD — static single-file app",
   "scripts": {
+    "dev": "npx serve -l 3000",
     "vercel-build": "node scripts/verify-static.mjs"
   }
 }

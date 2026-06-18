@@ -10,11 +10,25 @@ const mockPath = path.join(root, 'design/v2/poxy-dashboard.html');
 const indexPath = path.join(root, 'index.html');
 const appShellCss = path.join(root, 'assets/poxy-sky/app-shell.css');
 const homeCss = path.join(root, 'assets/poxy-sky/screens/home.css');
+const openCss = path.join(root, 'assets/poxy-sky/screens/open.css');
+const collectionCss = path.join(root, 'assets/poxy-sky/screens/collection.css');
+const collectionSkyJs = path.join(root, 'assets/js/ui/poxy-collection-sky.js');
+const marketCss = path.join(root, 'assets/poxy-sky/screens/market.css');
+const marketSkyJs = path.join(root, 'assets/js/ui/poxy-market-sky.js');
+const storeCss = path.join(root, 'assets/poxy-sky/screens/store.css');
+const storeSkyJs = path.join(root, 'assets/js/ui/poxy-store-sky.js');
 
 const mock = fs.readFileSync(mockPath, 'utf8');
 const index = fs.readFileSync(indexPath, 'utf8');
 const shellCss = fs.readFileSync(appShellCss, 'utf8');
 const homeCssText = fs.readFileSync(homeCss, 'utf8');
+const openCssText = fs.readFileSync(openCss, 'utf8');
+const collectionCssText = fs.readFileSync(collectionCss, 'utf8');
+const collectionSkyJsText = fs.readFileSync(collectionSkyJs, 'utf8');
+const marketCssText = fs.readFileSync(marketCss, 'utf8');
+const marketSkyJsText = fs.readFileSync(marketSkyJs, 'utf8');
+const storeCssText = fs.readFileSync(storeCss, 'utf8');
+const storeSkyJsText = fs.readFileSync(storeSkyJs, 'utf8');
 
 const checks = [];
 
@@ -57,11 +71,83 @@ has(index, 'id="pxSkyHomeOpenBtn"', 'Open a box CTA');
 has(index, 'id="pxSkyHomeColBtn">My collection', 'My collection CTA');
 lacks(index, 'id="pxSkyHome" class="px-sky-screen px-sky-screen--active" hidden', 'Home not hidden by attribute');
 
-// Open: legacy spin hidden in sky CSS
-if (/body\.poxy-sky-app-active #pxSkyOpen \.px-open-spin-host[\s\S]*display:\s*none/.test(homeCssText)) {
-  pass('Legacy spin host hidden in sky open');
+// Open screen (Phase A)
+has(index, '<h1>Open a box</h1><p>Pick a tier. The box opens, then your figure forms on a full screen.</p>', 'Open page-head copy');
+has(index, 'id="pxSkyOpenBoxes" class="boxes"', 'Open boxes grid container');
+has(index, 'id="pxOpenHooksPreserve"', 'Open hooks preserve block');
+has(index, 'id="btnOpen"', 'btnOpen hook preserved');
+has(index, 'id="stSpinMount"', 'stSpinMount hook preserved');
+has(index, 'poxy-open-sky.js', 'Open sky script linked');
+if (/body\.poxy-sky-app-active #pxOpenHooksPreserve[\s\S]*display:\s*none/.test(openCssText)) {
+  pass('Legacy open hooks hidden in sky mode');
 } else {
-  fail('Legacy spin host hidden in sky open', 'home.css rule missing');
+  fail('Legacy open hooks hidden in sky mode', 'open.css rule missing');
+}
+has(mock, 'id="sc-open"', 'Mockup has sc-open');
+
+// Collection functional (Phase A)
+has(index, 'poxy-collection-sky.js', 'Collection sky script linked');
+has(index, 'matchColSkySearch', 'Collection search filter hook');
+has(collectionSkyJsText, 'global.matchColSkySearch', 'Collection search exported');
+has(collectionSkyJsText, "input.placeholder = 'Search figures'", 'Collection search input wired');
+if (/body\.poxy-sky-app-active #collectionPage \.poxy-col-view-tabs[\s\S]*display:\s*none/.test(collectionCssText)) {
+  pass('Collection legacy view tabs hidden');
+} else {
+  fail('Collection legacy view tabs hidden', 'collection.css rule missing');
+}
+if (/body\.poxy-sky-app-active #collectionPage #pxSkyColMiles/.test(collectionCssText)) {
+  pass('Collection miles panel styled');
+} else {
+  fail('Collection miles panel styled');
+}
+has(mock, 'id="sc-collection"', 'Mockup has sc-collection');
+
+// Market functional (Phase A)
+has(index, 'poxy-market-sky.js', 'Market sky script linked');
+has(marketSkyJsText, 'pxSkyMarketRarityChips', 'Market rarity chips wired');
+has(marketSkyJsText, 'pxSkyMarketSellBtn', 'Market sell CTA wired');
+if (/body\.poxy-sky-app-active #marketPage \.poxy-market-field--rarity-native/.test(marketCssText)) {
+  pass('Market native rarity filter hidden in sky mode');
+} else {
+  fail('Market native rarity filter hidden in sky mode', 'market.css rule missing');
+}
+if (/body\.poxy-sky-app-active #pxSkyStage:has\(#collectionPage\.visible\) > #huntPage/.test(collectionCssText)) {
+  pass('Collection hides huntPage when visible');
+} else {
+  fail('Collection hides huntPage when visible', 'collection.css :has rule missing');
+}
+has(index, 'POXY_POXY_SELECT_TIERS', 'Collection tiered select fallback');
+if (/body\.poxy-sky-app-active\.poxy-sky-collection-active #huntPage/.test(fs.readFileSync(path.join(root, 'assets/poxy-sky/overlays.css'), 'utf8'))) {
+  pass('Collection huntPage suppressed when active');
+} else {
+  fail('Collection huntPage suppressed when active', 'overlays.css rule missing');
+}
+has(mock, 'id="sc-market"', 'Mockup has sc-market');
+
+// Store functional (Phase A)
+has(index, 'poxy-store-sky.js', 'Store sky script linked');
+has(storeSkyJsText, 'pxSkyStoreCatChips', 'Store category chips wired');
+has(storeSkyJsText, 'pxSkyStoreMembership', 'Store membership block wired');
+has(storeSkyJsText, 'openTopUpModal', 'Store add funds wired');
+has(storeSkyJsText, 'subtree: false', 'Store grid observer avoids subtree loop');
+if (/body\.poxy-sky-app-active #storePage \.poxy-store-sidenav[\s\S]*display:\s*none/.test(storeCssText)) {
+  pass('Store legacy sidenav hidden in sky mode');
+} else {
+  fail('Store legacy sidenav hidden in sky mode', 'store.css rule missing');
+}
+if (/body\.poxy-sky-app-active #stPanelStore\.st-spa-panel--active/.test(storeCssText)) {
+  pass('Store panel active layout');
+} else {
+  fail('Store panel active layout', 'store.css stPanelStore rule missing');
+}
+has(mock, 'id="sc-store"', 'Mockup has sc-store');
+
+if (/function isSkyLegacyRarityUi/.test(index) && /if\(isSkyLegacyRarityUi\(\)\)return;[\s\S]*?loadTierListPanel/.test(index)) {
+  pass('Sky tierlist skips legacy loadTierListPanel');
+} else if (/if\(next==='tierlist'\)\{[\s\S]*?poxy-sky-app-active/.test(index)) {
+  pass('Sky tierlist skips legacy loadTierListPanel');
+} else {
+  fail('Sky tierlist skips legacy loadTierListPanel', 'showStitchTab still loads legacy tier stack in sky mode');
 }
 
 // Shell tokens

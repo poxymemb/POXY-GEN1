@@ -280,23 +280,31 @@ body.poxy-sky-app-active.poxy-stitch-dash {
     flex-shrink: 0;
   }
   #poxyAppShell #pxSkyStage {
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 24px 32px;
+    box-sizing: border-box;
   }
   /* Legacy spin .stage must not hit #pxSkyStage (fixes text under topbar) */
   #poxyAppShell #pxSkyStage.stage {
     width: 100% !important;
-    max-width: 1120px !important;
+    max-width: none !important;
     height: auto !important;
     min-height: 0 !important;
     display: block !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     margin-bottom: 0 !important;
+    flex: 1 1 auto !important;
     flex-shrink: initial !important;
     overflow: visible !important;
     align-items: initial !important;
-    justify-content: initial !important;
+    justify-content: flex-start !important;
     position: relative !important;
+    padding: 0 24px 32px !important;
+    box-sizing: border-box !important;
   }
   body.poxy-sky-app-active #pxSkyStage > .st-win-reveal:not(.is-open) {
     display: none !important;

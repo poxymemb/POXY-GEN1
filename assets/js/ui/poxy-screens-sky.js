@@ -63,7 +63,9 @@
       if (global.PoxyStoreSky) global.PoxyStoreSky.onShow();
       else ensureHead('store');
     }
-    if (tab === 'tierlist' && global.PoxyCollectionsSky) global.PoxyCollectionsSky.onShow();
+    if ((tab === 'tierlist' || tab === 'rarity') && global.PoxyCollectionsSky) {
+      global.PoxyCollectionsSky.onShow();
+    }
     if (tab === 'club' && global.PoxyCommunitySky) global.PoxyCommunitySky.onShow();
     if (tab === 'messenger' && global.PoxyMessengerSky) global.PoxyMessengerSky.onShow();
     if (tab === 'events' && global.PoxyEventsSky) global.PoxyEventsSky.onShow();

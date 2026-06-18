@@ -137,6 +137,49 @@ body.poxy-sky-app-active #pxSkyStage > .page.visible {
   margin: 0 !important;
 }
 
+/* Collection route — hunt dashboard must not reserve viewport height (loads after runtime.css) */
+body.poxy-sky-app-active.poxy-sky-collection-active #huntPage,
+body.poxy-sky-app-active.poxy-sky-collection-active #pxSkyStage > #huntPage {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-collection-active #pxSkyStage {
+  display: block !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding-top: 0 !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-collection-active #pxSkyMain {
+  overflow: auto !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-collection-active #collectionPage.visible {
+  display: block !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding-top: 0 !important;
+  min-height: 0 !important;
+}
+
+body.poxy-sky-app-active.poxy-sky-collection-active #pxSkyStage > .page:not(#collectionPage),
+body.poxy-sky-app-active.poxy-sky-collection-active #pxSkyStage > #clubPage,
+body.poxy-sky-app-active.poxy-sky-collection-active #pxSkyStage > .club-page {
+  display: none !important;
+}
+
 body.poxy-sky-app-active #userBar,
 body.poxy-sky-app-active #userBar.psd-user-active {
   display: none !important;

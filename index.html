@@ -66,15 +66,15 @@
 
 
 
-<link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=16">
+<link rel="stylesheet" href="assets/poxy-sky/tokens.css?v=3">
+<link rel="stylesheet" href="assets/poxy-sky/app-shell.css?v=17">
 <link rel="stylesheet" href="assets/poxy-sky/screens/home.css?v=5">
 <link rel="stylesheet" href="assets/poxy-sky/screens.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=4">
-<link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=4">
-<link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=2">
-<link rel="stylesheet" href="assets/poxy-sky/screens/open.css?v=1">
-<link rel="stylesheet" href="assets/poxy-sky/screens/store.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/legacy-suppress.css?v=5">
+<link rel="stylesheet" href="assets/poxy-sky/screens/collection.css?v=8">
+<link rel="stylesheet" href="assets/poxy-sky/screens/market.css?v=4">
+<link rel="stylesheet" href="assets/poxy-sky/screens/open.css?v=2">
+<link rel="stylesheet" href="assets/poxy-sky/screens/store.css?v=3">
 <link rel="stylesheet" href="assets/poxy-sky/screens/settings.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/profile.css?v=2">
 <link rel="stylesheet" href="assets/poxy-sky/screens/collections-overview.css?v=2">
@@ -93,7 +93,7 @@
 <link rel="stylesheet" href="assets/poxy-quick-profile.css?v=6">
 <link rel="stylesheet" href="assets/poxy-notify-hub.css?v=3">
 <link rel="stylesheet" href="assets/poxy-support-panel.css?v=5">
-<link rel="stylesheet" href="assets/poxy-sky/overlays.css?v=3">
+<link rel="stylesheet" href="assets/poxy-sky/overlays.css?v=4">
 <link rel="stylesheet" href="assets/poxy-chat-social.css?v=1">
 <link rel="stylesheet" href="assets/poxy-topup-modal.css?v=1">
 <link rel="stylesheet" href="assets/poxy-sky/topup.css?v=2">
@@ -139,16 +139,16 @@
 
 <script src="assets/js/ui/poxy-auth-sky.js?v=3" defer></script>
 <script src="assets/js/ui/poxy-app-shell.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-open-sky.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-home-sky.js?v=4" defer></script>
+<script src="assets/js/ui/poxy-open-sky.js?v=2" defer></script>
+<script src="assets/js/ui/poxy-home-sky.js?v=5" defer></script>
 <script src="assets/js/ui/poxy-topup-sky.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-collection-sky.js?v=3" defer></script>
-<script src="assets/js/ui/poxy-market-sky.js?v=1" defer></script>
-<script src="assets/js/ui/poxy-store-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-collection-sky.js?v=9" defer></script>
+<script src="assets/js/ui/poxy-market-sky.js?v=3" defer></script>
+<script src="assets/js/ui/poxy-store-sky.js?v=3" defer></script>
 <script src="assets/js/ui/poxy-settings-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-profile-sky.js?v=1" defer></script>
 <script src="assets/js/ui/poxy-stage11-sky.js?v=2" defer></script>
-<script src="assets/js/ui/poxy-screens-sky.js?v=1" defer></script>
+<script src="assets/js/ui/poxy-screens-sky.js?v=2" defer></script>
 <script src="assets/poxy-landing-page.js?v=5" defer></script>
 <script src="assets/poxy-card-engine.js?v=7" defer></script>
 <script src="assets/poxy-hud-audio.js" defer></script>
@@ -614,8 +614,10 @@
 </div>
 <div id="pxSkyOpen" class="px-sky-screen">
   <div class="page-head"><h1>Open a box</h1><p>Pick a tier. The box opens, then your figure forms on a full screen.</p></div>
-  <div class="px-open-spin-host">
-<!-- ══ SPIN BLOCK ═════════════════════════════════════════════════ -->
+  <div id="pxSkyOpenBoxes" class="boxes" aria-label="Case tiers"></div>
+</div><!-- /pxSkyOpen -->
+<div id="pxOpenHooksPreserve" class="px-open-spin-host" hidden aria-hidden="true">
+<!-- ══ SPIN BLOCK (production hooks preserved) ═════════════════════ -->
       <section class="st-hero">
         <div class="st-hero-glow" aria-hidden="true"></div>
         <div class="st-hero-inner">
@@ -689,8 +691,7 @@
           </div>
         </div>
       </section>
-        </div><!-- /px-open-spin-host -->
-</div><!-- /pxSkyOpen -->
+</div><!-- /pxOpenHooksPreserve -->
 
 
 
@@ -3690,7 +3691,28 @@ const sb = supabase.createClient(
 window.sb=sb;
 const POXY_PROFILE_COLS='id,username,avatar_url,balance,dust,px_balance,xp_total,xp_balance,xp_level,email,badges,is_verified_employee,is_club_member,favorite_poxy_id,name_gradient,profile_theme,club_privacy,account_hash,metadata,created_at,club_issued_at,club_level,club_passport_uid,club_awakening_seen,club_xp,club_cosmetic_tokens,total_vip_opens,club_vault_progress,club_vault_claimed';
 const POXY_PROFILE_PUBLIC_COLS='id,username,avatar_url,balance,badges,is_verified_employee,is_club_member,favorite_poxy_id,account_hash,club_privacy';
-const POXY_POXY_COLS='id,user_id,poxy_tier,serial_number,dropped_at,asset_url,pinned_at,vip_serial,is_vip,dna_hash,signature,character_name,traits';
+const POXY_POXY_COLS='id,user_id,poxy_tier,serial_number,dropped_at,pinned_at,is_vip,vip_serial,traits,dna_hash';
+const POXY_POXY_SELECT_TIERS=[
+  'id,user_id,poxy_tier,serial_number,dropped_at,pinned_at,is_vip,vip_serial,traits,dna_hash',
+  'id,user_id,poxy_tier,serial_number,dropped_at,pinned_at,is_vip,vip_serial',
+  'id,user_id,poxy_tier,serial_number,dropped_at,pinned_at',
+  'id,user_id,poxy_tier,serial_number,dropped_at',
+];
+async function fetchUserPoxyCollection(){
+  if(!currentUser) return [];
+  let lastErr=null;
+  for(const cols of POXY_POXY_SELECT_TIERS){
+    const{data,error}=await sb.from('user_poxy').select(cols).eq('user_id',currentUser.id).order('dropped_at',{ascending:false}).limit(5000);
+    if(!error) return data||[];
+    const hint=String(error.message||'')+' '+String(error.code||'');
+    if(/column|42703|does not exist/i.test(hint)){
+      lastErr=error;
+      continue;
+    }
+    throw error;
+  }
+  throw lastErr||new Error('Could not load collection');
+}
 const POXY_FRIEND_REQ_COLS='id,from_id,to_id,status,created_at';
 const POXY_FRIENDSHIP_COLS='id,user_a_id,user_b_id,created_at';
 const POXY_NEWS_POST_COLS='id,title,content,author_id,author_username,image_url,likes,dislikes,created_at';
@@ -4183,7 +4205,7 @@ async function loadPlayerEconomy(){
     renderPremiumTray();
     renderEconomyEventBanner();
     renderGen1ScarcityBanner();
-    if(activeStitchTab==='tierlist')renderRarityTierStack();
+    if(activeStitchTab==='tierlist'&&!document.body.classList.contains('poxy-sky-app-active'))renderRarityTierStack();
     if($('gen1ModelGrid'))renderGen1TabContent();
     updateOpenButtonPrice();
     renderProfileStreakWidget();
@@ -5169,7 +5191,7 @@ function setLoggedInUI(){
   if(ub){ub.style.display='none';ub.classList.remove('psd-user-active');}
   $('balanceBadgeGroup')?.classList.add('visible');
   const shell=$('poxyAppShell');if(shell){shell.style.display='flex';shell.classList.add('px-sky-app--open');}
-  const hunt=$('huntPage');if(hunt)hunt.style.display='block';
+  showHuntPageShell();
   showPoxyAppShell();
   try{
     if(!restoreActiveRoute()){
@@ -7288,6 +7310,22 @@ function syncPsdTopNav(page){
   if(window.PoxyScreensSky)PoxyScreensSky.onTab(tab);
 }
 
+function showHuntPageShell(){
+  const h=$('huntPage');
+  if(!h)return;
+  h.style.removeProperty('display');
+  h.style.display='block';
+}
+function hideHuntPageShell(){
+  const h=$('huntPage');
+  if(!h)return;
+  h.style.removeProperty('display');
+  h.style.display='none';
+}
+
+window.showHuntPageShell=showHuntPageShell;
+window.hideHuntPageShell=hideHuntPageShell;
+
 function mountSpaPanels(){
   const mPanel=$('stPanelMarket');
   const cPanel=$('stPanelClub');
@@ -7307,6 +7345,8 @@ function mountSpaPanels(){
 
 window.showStitchTab=function(tab){
   if(!currentUser){showToast('Sign in first.');return;}
+  document.body.classList.remove('poxy-sky-collection-active');
+  const colWasVisible=!!($('collectionPage')&&$('collectionPage').classList.contains('visible'));
   let next=tab==='hunt'?'dashboard':tab;
   if(next==='ranks')next='levels';
   const prev=activeStitchTab;
@@ -7314,8 +7354,8 @@ window.showStitchTab=function(tab){
   mountSpaPanels();
   showPoxyAppShell();
   document.body.classList.add('poxy-sky-app-active');
-  $('huntPage').style.display='block';
-  $('bottomNav').style.display='none';
+  showHuntPageShell();
+  const bn=$('bottomNav');if(bn)bn.style.display='none';
   const settingsEl=$('settingsPage');
   if(settingsEl)settingsEl.classList.remove('visible');
   ['profile','collection','friends','market','bank','settings'].forEach(p=>{
@@ -7355,8 +7395,9 @@ window.showStitchTab=function(tab){
     else renderStorePage();
   }
   // Release offscreen card engine observers when leaving the collection tab
-  if(prev==='collection'&&next!=='collection'){
+  if(colWasVisible){
     if(window.PoxyCardEngine)PoxyCardEngine.destroyAll();
+    if(window.PoxyCollectionSky&&PoxyCollectionSky.onHide)PoxyCollectionSky.onHide();
   }
   if(next==='market')loadMarket();
   if(next==='explore')loadExplorePanel();
@@ -7381,7 +7422,9 @@ window.showStitchTab=function(tab){
     const np=$('newsPage');
     if(np)np.classList.remove('visible');
   }
-  if(next==='tierlist')loadTierListPanel();
+  if(next==='tierlist'&&!isSkyLegacyRarityUi()){
+    loadTierListPanel();
+  }
   if(next==='levels'&&window.PoxyLevelsSky)PoxyLevelsSky.onShow();
   updatePresenceTrack();
   if(next==='ranks'){
@@ -7872,6 +7915,10 @@ window.wpNavSelect=function(section,btn){
   window.scrollTo({top:0,behavior:'smooth'});
 };
 
+function isSkyLegacyRarityUi(){
+  return document.body.classList.contains('poxy-sky-app-active');
+}
+
 async function loadGlobalTierCounts(){
   globalTierCounts={};
   try{
@@ -7884,7 +7931,7 @@ async function loadGlobalTierCounts(){
   if(!Object.keys(globalTierCounts).length){
     try{
       const{data}=await cachedQuery('global:tier_counts_fallback',async()=>{
-        const{data:rows}=await sb.from('user_poxy').select('poxy_tier').limit(50000);
+        const{data:rows}=await sb.from('user_poxy').select('poxy_tier').limit(2000);
         return rows||[];
       },30000);
       (data||[]).forEach(r=>{globalTierCounts[r.poxy_tier]=(globalTierCounts[r.poxy_tier]||0)+1;});
@@ -7928,6 +7975,7 @@ function attachRarityCardTilt(card){
 }
 
 function renderRarityTierStack(){
+  if(isSkyLegacyRarityUi())return;
   const stack=$('rarityTierStack');
   if(!stack)return;
   stack.innerHTML='';
@@ -7975,10 +8023,11 @@ window.switchRarityLeaderboard=function(mode){
   $('rarityLbBtnBalance')?.classList.toggle('active',mode==='balance');
   $('rarityLbBtnCollection')?.classList.toggle('active',mode==='collection');
   syncLeaderboardToggleUI();
-  loadRarityLeaderboardPreview();
+  if(!isSkyLegacyRarityUi())loadRarityLeaderboardPreview();
 };
 
 async function loadRarityLeaderboardPreview(){
+  if(isSkyLegacyRarityUi())return;
   const list=$('rarityLbList');
   if(!list)return;
   list.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
@@ -7989,7 +8038,7 @@ async function loadRarityLeaderboardPreview(){
       if(error)throw error;
       data=rows||[];
     }else{
-      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']).limit(5000);
+      const{data:poxyData,error:pe}=await sb.from('user_poxy').select('user_id').in('poxy_tier',['rare','epic','legendary','mythic']).limit(2000);
       if(pe)throw pe;
       const counts={};
       (poxyData||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
@@ -8046,6 +8095,7 @@ function renderRarityLeaderboardRows(data,mode){
 function renderTierListPanel(){renderRarityTierStack();}
 
 async function loadTierListPanel(){
+  if(isSkyLegacyRarityUi())return;
   const stack=$('rarityTierStack');
   if(!stack)return;
   stack.innerHTML='<div class="lb-loading"><div class="col-spinner"></div></div>';
@@ -8181,11 +8231,15 @@ window.showPage=function(page){
   }
   const spaRoute={hunt:'dashboard',market:'market',club:'club',tierlist:'tierlist',ranks:'ranks',levels:'levels',messenger:'messenger',events:'events',quests:'quests'};
   if(spaRoute[page]){showStitchTab(spaRoute[page]);return;}
+  document.body.classList.remove('poxy-sky-collection-active');
+  if(page!=='collection'&&window.PoxyCollectionSky&&PoxyCollectionSky.onHide)PoxyCollectionSky.onHide();
   showPoxyAppShell();
+  mountSpaPanels();
   document.body.classList.add('poxy-sky-app-active');
   document.querySelectorAll('.st-spa-panel').forEach(p=>{p.hidden=true;});
-  $('huntPage').style.display='none';
-  $('bottomNav').style.display='none';
+  const skyMain=$('pxSkyMain');
+  if(skyMain)skyMain.scrollTop=0;
+  const bnPage=$('bottomNav');if(bnPage)bnPage.style.display='none';
   if(document.body.classList.contains('poxy-sky-app-active')&&window.PoxyHomeSky){
     const home=$('pxSkyHome');
     const open=$('pxSkyOpen');
@@ -8199,12 +8253,16 @@ window.showPage=function(page){
   syncPsdTopNav(page);
   if(window.PoxyScreensSky)PoxyScreensSky.onPage(page);
   if(page==='collection'){
-    if(document.body.classList.contains('poxy-sky-app-active')){
+    document.body.classList.add('poxy-sky-collection-active');
+    hideHuntPageShell();
+    if(skyMain){skyMain.scrollTop=0;window.scrollTo(0,0);}
       const colPage=document.getElementById('collectionPage');
       if(colPage){
         colPage.style.paddingTop='0';
         colPage.style.paddingBottom='24px';
       }
+    if(document.body.classList.contains('poxy-sky-app-active')){
+      /* sky padding enforced above */
     }else{
     // Ensure the fixed nav never overlaps the collection page.
     // Measure the actual nav height and apply it as an inline top offset.
@@ -8231,6 +8289,9 @@ window.showPage=function(page){
     loadCollection().then(()=>{const c=$('colContent');if(c&&window.PoxyHudAudio)PoxyHudAudio.bindCollectionGrid(c);});
     refreshPremiumFrame();
     updatePresenceTrack();
+  }
+  if(page==='profile'||page==='settings'){
+    hideHuntPageShell();
   }
   if(page==='friends'){
     closeFriendProfileView();
@@ -9311,16 +9372,18 @@ async function loadCollection(){
   if(!colMultiSelectMode){selectedForDust=new Set();selectedItems=selectedForDust;}
   updateColActionCapsules();
   try{
-    const{data,error}=await sb.from('user_poxy').select(POXY_POXY_COLS).eq('user_id',currentUser.id).order('dropped_at',{ascending:false}).limit(5000);
-    if(error)throw error;
-    colData=data||[];
+    colData=await fetchUserPoxyCollection();
     renderFilterButtons();renderCollection();
     renderDashColPreview();
     refreshColArchMetrics();
     if(cnt)cnt.textContent=colData.length?String(colData.length):'0';
     syncStoreData();
     if($('storeGrid')&&currentProfile)renderStoreGrid();
-  }catch(e){cont.innerHTML='<div class="poxy-col-empty">Failed to load archive.</div>';}
+  }catch(e){
+    console.error('[collection] loadCollection:',e);
+    const msg=(e&&(e.message||e.details))?String(e.message||e.details):'Unknown error';
+    cont.innerHTML='<div class="poxy-col-empty col-empty"><h2>Could not load collection</h2><p>'+sanitizeText(msg)+'</p></div>';
+  }
 }
 
 const ATLAS_SEASON_ID='gen_china_magic';
@@ -9624,7 +9687,7 @@ function refreshColArchMetrics(){
   if(el('archMetricDeploy'))el('archMetricDeploy').textContent=(deployReady||'0')+' UNITS READY FOR ACTIVE DUTY';
 
   // Display count updated after filtering
-  const base=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
+  const base=(colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter)).filter(i=>typeof matchColSkySearch!=='function'||matchColSkySearch(i));
   if(el('archDisplayCount')){
     const shown=Math.min(base.length,base.length); // show all
     el('archDisplayCount').textContent=base.length?'DISPLAYING: 1–'+shown+' OF '+total:'DISPLAYING: — OF '+total;
@@ -9639,7 +9702,7 @@ function renderCollection(){
   if(window.PoxyCardEngine)PoxyCardEngine.destroyAll();
   if(typeof closeAllColCardMenus==='function')closeAllColCardMenus();
   else document.querySelectorAll('.col-card-menu.open').forEach(m=>{m.classList.remove('open');m.classList.remove('is-fixed');});
-  const base=colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter);
+  const base=(colFilter==='all'?colData:colData.filter(i=>i.poxy_tier===colFilter)).filter(i=>typeof matchColSkySearch!=='function'||matchColSkySearch(i));
   const filtered=applyPinSort(base);
   const splitClubSection=colFilter==='all';
   const normalItems=splitClubSection?filtered.filter(i=>!isVipPoxyItem(i)):filtered;
@@ -10034,7 +10097,10 @@ function setupPresenceChannel(){
   presenceChannel.subscribe(async status=>{
     if(status==='SUBSCRIBED')await updatePresenceTrack();
   });
-  document.addEventListener('visibilitychange',updatePresenceTrack);
+  if(!window._poxyPresenceVisBound){
+    window._poxyPresenceVisBound=true;
+    document.addEventListener('visibilitychange',updatePresenceTrack);
+  }
 }
 
 // ── Chat rank styling ──
@@ -10084,9 +10150,10 @@ function closeFriendProfileView(){
 }
 function ensureFriendsPageForProfile(){
   if($('friendsPage')?.classList.contains('visible'))return;
+  document.body.classList.remove('poxy-sky-collection-active');
   showPoxyAppShell();
   document.body.classList.add('poxy-sky-app-active');
-  $('huntPage').style.display='none';
+  hideHuntPageShell();
   $('bottomNav').style.display='none';
   document.querySelectorAll('.st-spa-panel').forEach(p=>{p.hidden=true;p.classList.remove('st-spa-panel--active','st-spa-panel--leaving');});
   ['profile','collection','friends','settings'].forEach(p=>{
@@ -13650,7 +13717,7 @@ window.switchLeaderboard=function(mode){
   rarityLbMode=mode;
   syncLeaderboardToggleUI();
   loadLeaderboardData();
-  if(activeStitchTab==='tierlist')loadRarityLeaderboardPreview();
+  if(activeStitchTab==='tierlist'&&!isSkyLegacyRarityUi())loadRarityLeaderboardPreview();
 };
 async function loadLeaderboardData(){
   if(activeStitchTab==='ranks')ensureRanksPanelReady();

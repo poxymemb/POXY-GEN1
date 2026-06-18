@@ -1,5 +1,5 @@
 /**
- * POXY Sky Market screen (Stage 6).
+ * POXY Sky Market screen (Stage 6 / Phase A-functional).
  */
 (function (global) {
   'use strict';
@@ -15,6 +15,14 @@
     { id: 'desc', label: 'Price ↓', sort: 'price_desc' },
   ];
 
+  var RARITY_CHIPS = [
+    { id: 'all', label: 'All tiers', rarity: 'all' },
+    { id: 'legendary', label: 'Legendary', rarity: 'legendary' },
+    { id: 'epic', label: 'Epic', rarity: 'epic' },
+    { id: 'rare', label: 'Rare', rarity: 'rare' },
+    { id: 'common', label: 'Common', rarity: 'common' },
+  ];
+
   function $(id) {
     return document.getElementById(id);
   }
@@ -22,8 +30,16 @@
   function isSkyMarketVisible() {
     return (
       document.body.classList.contains('poxy-sky-app-active') &&
-      ($('stPanelMarket') && !$('stPanelMarket').hidden)
+      $('stPanelMarket') &&
+      !$('stPanelMarket').hidden
     );
+  }
+
+  function prepMarketPanel() {
+    if (typeof global.mountSpaPanels === 'function') global.mountSpaPanels();
+    var main = $('pxSkyMain');
+    if (main) main.scrollTop = 0;
+    if (typeof global.showHuntPageShell === 'function') global.showHuntPageShell();
   }
 
   function ensureSortChips() {
@@ -32,6 +48,9 @@
     var sortEl = $('marketSort');
     var sortWrap = sortEl && sortEl.closest ? sortEl.closest('.poxy-market-field') : null;
     if (sortWrap) sortWrap.classList.add('poxy-market-field--sort-native');
+    var rarityEl = $('marketRarityFilter');
+    var rarityWrap = rarityEl && rarityEl.closest ? rarityEl.closest('.poxy-market-field') : null;
+    if (rarityWrap) rarityWrap.classList.add('poxy-market-field--rarity-native');
     var row = document.createElement('div');
     row.id = 'pxSkyMarketSortChips';
     row.className = 'px-sky-market-sort-chips';
@@ -44,7 +63,6 @@
       if (chip.stub) {
         btn.disabled = true;
         btn.title = 'Coming soon';
-        // TODO Stage 6: trending filter stub — no backend sort yet
       }
       btn.addEventListener('click', function () {
         if (chip.stub) return;
@@ -55,18 +73,48 @@
     toolbar.insertBefore(row, toolbar.firstChild);
   }
 
+  function ensureRarityChips() {
+    var toolbar = $('marketToolbar');
+    if (!toolbar || $('pxSkyMarketRarityChips')) return;
+    var row = document.createElement('div');
+    row.id = 'pxSkyMarketRarityChips';
+    row.className = 'px-sky-market-rarity-chips';
+    RARITY_CHIPS.forEach(function (chip) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'px-sky-market-chip px-sky-market-rarity-chip chip-filter';
+      btn.dataset.rarity = chip.rarity;
+      btn.textContent = chip.label;
+      btn.addEventListener('click', function () {
+        applyRarityChip(chip);
+      });
+      row.appendChild(btn);
+    });
+    var sortRow = $('pxSkyMarketSortChips');
+    if (sortRow && sortRow.nextSibling) toolbar.insertBefore(row, sortRow.nextSibling);
+    else toolbar.appendChild(row);
+  }
+
   function ensureSellButton() {
     var toolbar = $('marketToolbar');
     if (!toolbar || $('pxSkyMarketSellBtn')) return;
+    var spacer = document.createElement('div');
+    spacer.className = 'tb-spacer px-sky-market-tb-spacer';
     var btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'btn btn-primary';
+    btn.className = 'btn btn-primary px-sky-market-sell-btn';
     btn.id = 'pxSkyMarketSellBtn';
     btn.innerHTML =
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3 7 9l5 12 5-12-2-6"/></svg> Sell a figure';
     btn.addEventListener('click', function () {
-      if (typeof global.showPage === 'function') global.showPage('collection');
+      if (typeof global.showPage === 'function') {
+        global.showPage('collection');
+        if (typeof global.showToast === 'function') {
+          global.showToast('Open a figure menu and choose List on market.');
+        }
+      }
     });
+    toolbar.appendChild(spacer);
     toolbar.appendChild(btn);
   }
 
@@ -74,7 +122,7 @@
     var sort = $('marketSort');
     var val = sort ? sort.value : global.marketSort || 'newest';
     var rarity = $('marketRarityFilter');
-    var rarityVal = rarity ? rarity.value : 'all';
+    var rarityVal = rarity ? rarity.value : global.marketRarityFilter || 'all';
     document.querySelectorAll('#pxSkyMarketSortChips .px-sky-market-chip').forEach(function (btn) {
       var chip = SORT_CHIPS.find(function (c) {
         return c.id === btn.dataset.chip;
@@ -88,6 +136,9 @@
           ? val === 'newest' && rarityVal === 'all'
           : chip.sort === val && (chip.rarity ? rarityVal === chip.rarity : true);
       btn.classList.toggle('on', on);
+    });
+    document.querySelectorAll('#pxSkyMarketRarityChips .px-sky-market-rarity-chip').forEach(function (btn) {
+      btn.classList.toggle('on', btn.dataset.rarity === rarityVal);
     });
   }
 
@@ -106,6 +157,18 @@
       if (typeof global.onMarketSortChange === 'function') global.onMarketSortChange();
     } else {
       global.marketSort = chip.sort;
+      if (typeof global.loadMarket === 'function') global.loadMarket();
+    }
+    syncSortChipUi();
+  }
+
+  function applyRarityChip(chip) {
+    var rarity = $('marketRarityFilter');
+    if (rarity) {
+      rarity.value = chip.rarity;
+      if (typeof global.onMarketRarityChange === 'function') global.onMarketRarityChange();
+    } else {
+      global.marketRarityFilter = chip.rarity;
       if (typeof global.loadMarket === 'function') global.loadMarket();
     }
     syncSortChipUi();
@@ -148,11 +211,14 @@
 
   function onShow() {
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
+    prepMarketPanel();
     if (global.PoxyScreensSky) global.PoxyScreensSky.ensureHead('market');
     wrapLoadMarket();
     wrapSwitchMarketTab();
     ensureSortChips();
+    ensureRarityChips();
     ensureSellButton();
+    if (typeof global.initMarketFilters === 'function') global.initMarketFilters();
     syncSortChipUi();
     relabelMarketPrices();
   }

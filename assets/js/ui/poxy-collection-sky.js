@@ -1,11 +1,12 @@
 /**
- * POXY Sky Collection screen (Stage 5).
+ * POXY Sky Collection screen (Stage 5 / Phase A-functional).
  */
 (function (global) {
   'use strict';
 
   var ATLAS_SEASON_ID = 'gen_china_magic';
   var _colObserver = null;
+  var _milesSyncTimer = null;
 
   function $(id) {
     return document.getElementById(id);
@@ -17,6 +18,22 @@
     page.style.paddingTop = '0';
     page.style.paddingBottom = '';
   }
+
+  function matchColSkySearch(item) {
+    var q = (global.colSkySearch || '').trim().toLowerCase();
+    if (!q || !item) return true;
+    var tier = String(item.poxy_tier || '');
+    var tierLabel = '';
+    if (global.TIER_BY_ID && global.TIER_BY_ID[tier]) {
+      tierLabel = global.TIER_BY_ID[tier].label || '';
+    }
+    var serial = String(item.serial_number != null ? item.serial_number : item.serial || '');
+    var vip = item.vip_serial != null ? String(item.vip_serial) : '';
+    var hay = (tier + ' ' + tierLabel + ' ' + serial + ' ' + vip).toLowerCase();
+    return hay.indexOf(q) !== -1;
+  }
+
+  global.matchColSkySearch = matchColSkySearch;
 
   function ensureMilesPanel() {
     var shell = document.querySelector('#collectionPage .poxy-col-shell');
@@ -50,11 +67,58 @@
     input.id = 'pxSkyColSearch';
     input.type = 'search';
     input.placeholder = 'Search figures';
-    input.disabled = true;
-    input.setAttribute('aria-disabled', 'true');
-    // TODO Stage 5: search stub — no backend filter yet
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('enterkeyhint', 'search');
     wrap.appendChild(input);
     utils.appendChild(wrap);
+    wireColSearch();
+  }
+
+  function wireColSearch() {
+    var input = $('pxSkyColSearch');
+    if (!input || input.dataset.wired === '1') return;
+    input.dataset.wired = '1';
+    var timer;
+    input.addEventListener('input', function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        global.colSkySearch = input.value || '';
+        if (typeof global.renderCollection === 'function') global.renderCollection();
+      }, 180);
+    });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        input.value = '';
+        global.colSkySearch = '';
+        if (typeof global.renderCollection === 'function') global.renderCollection();
+      }
+    });
+  }
+
+  function hideStageNoise() {
+    document.body.classList.add('poxy-sky-collection-active');
+    if (typeof global.hideHuntPageShell === 'function') global.hideHuntPageShell();
+    var club = $('clubPage');
+    if (club && club.parentElement && club.parentElement.id !== 'stPanelClub') {
+      club.style.display = 'none';
+    }
+    var main = $('pxSkyMain');
+    if (main) main.scrollTop = 0;
+    try {
+      window.scrollTo(0, 0);
+    } catch (e) {}
+    var stage = $('pxSkyStage');
+    if (stage) stage.scrollTop = 0;
+  }
+
+  function ensureInventoryView() {
+    var inv = $('colInventoryView');
+    var atlas = $('colAtlas');
+    if (inv) inv.hidden = false;
+    if (atlas) atlas.hidden = true;
+    document.querySelectorAll('#collectionPage .poxy-col-view-tab').forEach(function (tab) {
+      tab.classList.toggle('is-active', tab.dataset.colView === 'inventory');
+    });
   }
 
   function applyMiles(collected, total) {
@@ -125,12 +189,23 @@
       });
   }
 
+  function teardownColObserver() {
+    if (_colObserver) {
+      _colObserver.disconnect();
+      _colObserver = null;
+    }
+  }
+
   function bindColContentObserver() {
     if (_colObserver) return;
     var col = $('colContent');
     if (!col || typeof MutationObserver === 'undefined') return;
     _colObserver = new MutationObserver(function () {
-      syncMilesProgress();
+      if (_milesSyncTimer) clearTimeout(_milesSyncTimer);
+      _milesSyncTimer = setTimeout(function () {
+        _milesSyncTimer = null;
+        syncMilesProgress();
+      }, 150);
     });
     _colObserver.observe(col, { childList: true, subtree: false });
   }
@@ -172,13 +247,27 @@
     wrapActionCapsules.done = true;
   }
 
+  function wrapRenderCollection() {
+    if (wrapRenderCollection.done || typeof global.renderCollection !== 'function') return;
+    var orig = global.renderCollection;
+    global.renderCollection = function () {
+      orig();
+      syncMilesProgress();
+    };
+    wrapRenderCollection.done = true;
+  }
+
   function onShow() {
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
     if (global.PoxyScreensSky) global.PoxyScreensSky.ensureHead('collection');
     wrapActionCapsules();
+    wrapRenderCollection();
+    hideStageNoise();
     resetSkyPadding();
     ensureMilesPanel();
     ensureSearchStub();
+    wireColSearch();
+    ensureInventoryView();
     bindColContentObserver();
     relabelSkySortOptions();
     syncMilesProgress();
@@ -188,13 +277,19 @@
 
   global.PoxyCollectionSky = {
     onShow: onShow,
+    onHide: teardownColObserver,
     syncMilesProgress: syncMilesProgress,
     relabelSkyActionButtons: relabelSkyActionButtons,
+    matchColSkySearch: matchColSkySearch,
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', wrapActionCapsules);
+    document.addEventListener('DOMContentLoaded', function () {
+      wrapActionCapsules();
+      wrapRenderCollection();
+    });
   } else {
     wrapActionCapsules();
+    wrapRenderCollection();
   }
 })(window);

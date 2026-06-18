@@ -4,12 +4,69 @@ body.poxy-sky-app-active #collectionPage.visible {
   background: transparent !important;
   padding-top: 0 !important;
   padding-bottom: 24px !important;
+  display: block !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+}
+
+body.poxy-sky-app-active #pxSkyStage > #clubPage,
+body.poxy-sky-app-active #pxSkyStage > .club-page:not(#stPanelClub .club-page) {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #pxSkyStage:has(#collectionPage.visible) > #huntPage {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.poxy-sky-app-active #pxSkyStage:has(#collectionPage.visible) > .page:not(#collectionPage) {
+  display: none !important;
 }
 
 body.poxy-sky-app-active #collectionPage .poxy-col-shell {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+body.poxy-sky-app-active #collectionPage .poxy-col-console-grid {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #collectionPage .poxy-col-view-tabs,
+body.poxy-sky-app-active #collectionPage #colAtlas,
+body.poxy-sky-app-active #collectionPage .poxy-col-inv-header {
+  display: none !important;
+}
+
+body.poxy-sky-app-active #collectionPage .px-sky-col-search input {
+  opacity: 1;
+  cursor: text;
+}
+
+body.poxy-sky-app-active #collectionPage .poxy-col-console-row--top .poxy-col-filters {
+  flex: 1;
+  min-width: 0;
+}
+
+body.poxy-sky-app-active #collectionPage .poxy-col-utils {
+  margin-left: auto;
+}
+
+body.poxy-sky-app-active #collectionPage .px-sky-col-search {
+  margin-left: 0;
 }
 
 /* ── Hide legacy tactical chrome ── */
@@ -117,13 +174,17 @@ body.poxy-sky-app-active #collectionPage .poxy-col-sort-btn .material-symbols-ou
 }
 
 body.poxy-sky-app-active #collectionPage .px-sky-col-search {
-  margin-left: auto;
   min-width: 180px;
 }
 
 body.poxy-sky-app-active #collectionPage .px-sky-col-search input:disabled {
   opacity: 0.72;
   cursor: not-allowed;
+}
+
+body.poxy-sky-app-active #collectionPage .px-sky-col-search input:not(:disabled) {
+  opacity: 1;
+  cursor: text;
 }
 
 body.poxy-sky-app-active #collectionPage .poxy-col-actions {

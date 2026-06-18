@@ -17,26 +17,21 @@
 
 
   var CAT_CHIPS = [
-
     { id: 'themes', label: 'Themes' },
-
     { id: 'gradients', label: 'Gradients' },
-
-    { id: 'boosters', label: 'Boosters' },
-
-    { id: 'bundles', label: 'Bundles' },
-
+    { id: 'boosters', label: 'Boosters', stub: true },
+    { id: 'bundles', label: 'Bundles', stub: true },
     { id: 'xpshop', label: 'XP Shop' },
-
     { id: 'poxypass', label: 'POXY Pass' },
-
     { id: 'vip', label: 'Membership' },
-
   ];
+
+  var STUB_CATS = { boosters: 1, bundles: 1 };
 
 
 
   var _storeCat = 'themes';
+  var _afterStoreLock = false;
 
   function getStoreCat() {
     var active = document.querySelector('#storePage .poxy-store-nav-btn.active');
@@ -53,17 +48,21 @@
 
 
   function isSkyStoreVisible() {
-
     return (
-
       document.body.classList.contains('poxy-sky-app-active') &&
-
       $('stPanelStore') &&
-
       !$('stPanelStore').hidden
-
     );
+  }
 
+  function prepStorePanel() {
+    if (typeof global.mountSpaPanels === 'function') global.mountSpaPanels();
+    if (typeof global.showHuntPageShell === 'function') global.showHuntPageShell();
+    var main = $('pxSkyMain');
+    if (main) main.scrollTop = 0;
+    try {
+      window.scrollTo(0, 0);
+    } catch (e) {}
   }
 
 
@@ -203,15 +202,20 @@
       btn.dataset.cat = chip.id;
 
       btn.textContent = chip.label;
-
+      if (chip.stub || STUB_CATS[chip.id]) {
+        btn.disabled = true;
+        btn.title = 'Coming soon';
+      }
       btn.addEventListener('click', function () {
-
-        if (typeof global.switchStoreCategory === 'function') {
-
-          global.switchStoreCategory(chip.id);
-
+        if (chip.stub || STUB_CATS[chip.id]) {
+          if (typeof global.showToast === 'function') {
+            global.showToast('This category opens in a future update.');
+          }
+          return;
         }
-
+        if (typeof global.switchStoreCategory === 'function') {
+          global.switchStoreCategory(chip.id);
+        }
       });
 
       chips.appendChild(btn);
@@ -386,12 +390,11 @@
 
         var btn = card.querySelector('.poxy-store-card-acquire');
 
-        if (btn && amount) {
-
+        if (btn && amount && !btn.dataset.skyStoreCoin) {
+          btn.dataset.skyStoreCoin = '1';
           btn.classList.add('px-sky-store-buy');
 
           btn.innerHTML = formatCoinAmount(amount);
-
         }
 
       }
@@ -407,19 +410,14 @@
     if (!isSkyStoreVisible()) return;
 
     document.querySelectorAll('#storeGrid .poxy-pass-buy, #storeGrid .poxy-vip-btn').forEach(function (btn) {
-
+      if (btn.dataset.skyStoreLabel) return;
       var text = btn.textContent || '';
-
       if (/\d+\s*PX/i.test(text)) {
-
+        btn.dataset.skyStoreLabel = '1';
         btn.innerHTML = text.replace(/(\d[\d,]*)\s*PX/gi, function (_m, n) {
-
           return COIN_SVG + n;
-
         });
-
       }
-
     });
 
   }
@@ -427,17 +425,17 @@
 
 
   function afterStoreRender() {
-
-    ensureSectionTitle();
-
-    syncCatChips();
-
-    syncWallet();
-
-    polishThemeCards();
-
-    relabelPassVipPrices();
-
+    if (_afterStoreLock) return;
+    _afterStoreLock = true;
+    try {
+      ensureSectionTitle();
+      syncCatChips();
+      syncWallet();
+      polishThemeCards();
+      relabelPassVipPrices();
+    } finally {
+      _afterStoreLock = false;
+    }
   }
 
 
@@ -533,10 +531,8 @@
     if (!grid) return;
 
     new MutationObserver(function () {
-
       if (isSkyStoreVisible()) afterStoreRender();
-
-    }).observe(grid, { childList: true, subtree: true });
+    }).observe(grid, { childList: true, subtree: false });
 
     observeStoreGrid.done = true;
 
@@ -544,10 +540,20 @@
 
 
 
+  function wrapPurchaseCustomization() {
+    if (wrapPurchaseCustomization.done || typeof global.purchaseCustomization !== 'function') return;
+    var orig = global.purchaseCustomization;
+    global.purchaseCustomization = async function () {
+      await orig.apply(this, arguments);
+      syncWallet();
+      afterStoreRender();
+    };
+    wrapPurchaseCustomization.done = true;
+  }
+
   function onShow() {
-
     if (!document.body.classList.contains('poxy-sky-app-active')) return;
-
+    prepStorePanel();
     ensurePageHead();
 
     ensureMembership();
@@ -563,6 +569,7 @@
     wrapSwitchStoreCategory();
 
     wrapRenderStoreTerminal();
+    wrapPurchaseCustomization();
 
     if (typeof global.renderStorePage === 'function') global.renderStorePage();
 
@@ -595,19 +602,14 @@
       wrapSwitchStoreCategory();
 
       wrapRenderStoreTerminal();
-
+      wrapPurchaseCustomization();
     });
-
   } else {
-
     wrapRenderStoreGrid();
-
     wrapRenderStorePage();
-
     wrapSwitchStoreCategory();
-
     wrapRenderStoreTerminal();
-
+    wrapPurchaseCustomization();
   }
 
 })(window);
