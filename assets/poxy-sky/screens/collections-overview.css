@@ -47,6 +47,39 @@ body.poxy-sky-app-active #stPanelTierList .col-season{font-size:12px;font-family
 body.poxy-sky-app-active #stPanelTierList .col-tag{font-size:13.5px;color:var(--text-dim);margin-bottom:12px}
 body.poxy-sky-app-active #stPanelTierList .col-stats{display:flex;gap:6px;font-size:12.5px;color:var(--text-dim);margin-bottom:12px;flex-wrap:wrap}
 body.poxy-sky-app-active #stPanelTierList .col-prog{height:5px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:14px}
+body.poxy-sky-app-active #stPanelTierList .col-prog i{display:block;height:100%;border-radius:3px;background:var(--acc)}
+body.poxy-sky-app-active #stPanelTierList .col-card:hover{transform:translateY(-3px);border-color:var(--sky-500)}
 body.poxy-sky-app-active #stPanelTierList .col-btn{font-size:13.5px;font-weight:650;color:var(--acc)}
+body.poxy-sky-app-active #stPanelTierList .back-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+body.poxy-sky-app-active #stPanelTierList .back-btn{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font:600 13px var(--font);color:var(--text-dim);cursor:pointer;font-family:var(--px-font)}
+body.poxy-sky-app-active #stPanelTierList .back-btn:hover{color:var(--text)}
+body.poxy-sky-app-active #stPanelTierList .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:13px}
+body.poxy-sky-app-active #stPanelTierList .item-card{text-align:left;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:transform .16s,border-color .2s;box-shadow:var(--shadow);font-family:var(--font);padding:0}
+body.poxy-sky-app-active #stPanelTierList .item-card:hover{transform:translateY(-3px);border-color:var(--sky-500)}
+body.poxy-sky-app-active #stPanelTierList .item-frame{height:130px;display:grid;place-items:center;background:radial-gradient(110% 80% at 50% 16%,color-mix(in srgb,var(--sky-500) 18%,var(--bg-2)),var(--bg-2));border-bottom:1px solid var(--border)}
+body.poxy-sky-app-active #stPanelTierList .item-frame .frog{transform:scale(.82)}
+body.poxy-sky-app-active #stPanelTierList .item-meta{padding:12px 14px}
+body.poxy-sky-app-active #stPanelTierList .item-name{font-size:14.5px;font-weight:650;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelTierList .item-sub{font-size:12px;color:var(--text-dim);margin-top:2px}
 body.poxy-sky-app-active #stPanelTierList .rarity-explain{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+@media (max-width:720px){body.poxy-sky-app-active #stPanelTierList .rarity-explain{grid-template-columns:1fr}}
 body.poxy-sky-app-active #stPanelTierList .rx-axis{padding:18px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelTierList .rx-axis .rx-n{width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--sky-500) 16%,transparent);color:var(--sky-700);display:grid;place-items:center;font-weight:700;font-size:14px;margin-bottom:12px}
+[data-theme="dark"] body.poxy-sky-app-active #stPanelTierList .rx-axis .rx-n{color:var(--sky-300)}
+body.poxy-sky-app-active #stPanelTierList .rx-axis h4{font-size:15px;font-weight:650;color:var(--text-strong);margin-bottom:5px}
+body.poxy-sky-app-active #stPanelTierList .rx-axis p{font-size:13px;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelTierList .item-detail-head{display:flex;gap:20px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+body.poxy-sky-app-active #stPanelTierList .idh-frame{width:140px;height:160px;border-radius:var(--r-lg);display:grid;place-items:center;flex-shrink:0;background:radial-gradient(110% 80% at 50% 16%,color-mix(in srgb,#E0566A 28%,var(--bg-2)),var(--bg-2));border:1px solid var(--border);box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelTierList .idh-txt h2{font-size:24px;font-weight:700;color:var(--text-strong);letter-spacing:-.02em}
+body.poxy-sky-app-active #stPanelTierList .idh-txt p{font-size:14px;color:var(--text-dim);margin-top:4px;max-width:380px}
+body.poxy-sky-app-active #stPanelTierList .axis-block{margin-bottom:26px}
+body.poxy-sky-app-active #stPanelTierList .axis-block .ab-h{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+body.poxy-sky-app-active #stPanelTierList .axis-block .ab-h h3{font-size:17px;font-weight:700;color:var(--text-strong);letter-spacing:-.01em}
+body.poxy-sky-app-active #stPanelTierList .axis-block .ab-h span{font-size:13px;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelTierList .mut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+body.poxy-sky-app-active #stPanelTierList .mut-chip{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:13px;border:1px solid var(--border);background:var(--glass)}
+body.poxy-sky-app-active #stPanelTierList .mut-swatch{width:40px;height:46px;flex-shrink:0;display:grid;place-items:center}
+body.poxy-sky-app-active #stPanelTierList .mut-swatch .frog{transform:scale(.42)}
+body.poxy-sky-app-active #stPanelTierList .mut-info{flex:1;display:flex;flex-direction:column}
+body.poxy-sky-app-active #stPanelTierList .mut-name{font-size:13.5px;font-weight:600;color:var(--text-strong)}
+body.poxy-sky-app-active #stPanelTierList .mut-rate{font-size:12px;color:var(--text-dim);font-family:var(--mono)}

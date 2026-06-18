@@ -121,13 +121,96 @@
     );
   }
 
+  function frogMini(c1, c2) {
+    return (
+      '<div class="frog" style="--c1:' +
+      c1 +
+      ';--c2:' +
+      c2 +
+      ';--belly:#c0344d"><div class="fb"></div><div class="fe l"></div><div class="fe r"></div><div class="fm"></div></div>'
+    );
+  }
+
+  function itemCard(name) {
+    return (
+      '<button type="button" class="item-card" data-col-item="' +
+      name +
+      '"><div class="item-frame">' +
+      frogMini('#E0566A', '#B03048') +
+      '</div><div class="item-meta"><div class="item-name">' +
+      name +
+      '</div><div class="item-sub">14 mutations · 100 minted</div></div></button>'
+    );
+  }
+
+  var COL_HEARTS_ITEMS = ['Heart', 'Star', 'Drop', 'Bolt', 'Moon', 'Crown'];
+
+  function colView(id) {
+    return $('pxSkyCol' + id);
+  }
+
+  function showColView(which) {
+    ['Overview', 'Detail', 'Item'].forEach(function (v) {
+      var el = colView(v);
+      if (el) el.hidden = v !== which;
+    });
+    var main = $('pxSkyMain');
+    if (main) main.scrollTop = 0;
+    try {
+      window.scrollTo(0, 0);
+    } catch (e) {}
+  }
+
+  function showColOverview() {
+    showColView('Overview');
+    var panel = $('stPanelTierList');
+    if (panel) {
+      ensurePageHead(
+        panel,
+        'collections',
+        'Collections',
+        'Every drop, past and upcoming. Tap one to explore its items and rarity.'
+      );
+    }
+  }
+
+  function showColDetail() {
+    showColView('Detail');
+    var panel = $('stPanelTierList');
+    if (panel) {
+      ensurePageHead(
+        panel,
+        'collections',
+        'Hearts · Season 01',
+        'Six symbols, each with its own mutations. Tap an item to see the full rarity system.'
+      );
+    }
+  }
+
+  function showColItem(name) {
+    showColView('Item');
+    var panel = $('stPanelTierList');
+    var title = name || 'Heart';
+    if (panel) {
+      ensurePageHead(
+        panel,
+        'collections',
+        title,
+        'The signature symbol of Season 01. Fourteen mutations, one hundred minted, three rarity axes stacked on every copy.'
+      );
+    }
+    var h2 = $('pxSkyColItemTitle');
+    if (h2) h2.textContent = title;
+  }
+
   /* ── Collections (tierlist rail) ── */
   function ensureCollectionsOverview() {
     var panel = $('stPanelTierList');
-    if (!panel || $('pxSkyColOverview')) return;
-    var wrap = document.createElement('div');
-    wrap.id = 'pxSkyColOverview';
-    wrap.innerHTML =
+    if (!panel || $('pxSkyColRoot')) return;
+    var root = document.createElement('div');
+    root.id = 'pxSkyColRoot';
+    root.innerHTML =
+      '<div id="pxSkyColOverview">' +
       '<div class="col-section"><div class="col-sec-h">Current</div><div class="col-grid">' +
       colCard({
         acc: '#E0566A',
@@ -164,15 +247,55 @@
         stats: '<span>4 items</span><span>·</span><span>50 each</span><span>·</span><span>50 minted</span>',
         cta: 'View archive →',
       }) +
-      '</div></div>';
-    var root = $('rarityPageRoot');
-    if (root) root.insertBefore(wrap, root.firstChild);
-    else panel.insertBefore(wrap, panel.firstChild);
-    wrap.querySelectorAll('.col-card').forEach(function (btn) {
+      '</div></div></div>' +
+      '<div id="pxSkyColDetail" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyColBackOverview">← All collections</button></div>' +
+      '<div class="panel-h">How rarity works</div>' +
+      '<div class="rarity-explain">' +
+      '<div class="rx-axis"><div class="rx-n">1</div><h4>Mutation</h4><p>The look of the item. Each symbol has its own named mutations with their own drop rates.</p></div>' +
+      '<div class="rx-axis"><div class="rx-n">2</div><h4>Number</h4><p>Your mint number out of the total. Low numbers and pretty patterns are worth more.</p></div>' +
+      '<div class="rx-axis"><div class="rx-n">3</div><h4>Background</h4><p>The frame and glow behind the item. A system-wide scale, shared across every collection.</p></div>' +
+      '</div><div class="panel-h">Items in this drop</div>' +
+      '<div class="items-grid">' +
+      COL_HEARTS_ITEMS.map(itemCard).join('') +
+      '</div></div>' +
+      '<div id="pxSkyColItem" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyColBackDetail">← Hearts</button></div>' +
+      '<div class="item-detail-head"><div class="idh-frame">' +
+      frogMini('#E0566A', '#B03048') +
+      '</div><div class="idh-txt"><h2 id="pxSkyColItemTitle">Heart</h2><p>The signature symbol of Season 01. Fourteen mutations, one hundred minted, three rarity axes stacked on every copy.</p></div></div>' +
+      '<div class="axis-block"><div class="ab-h"><h3>1 · Mutation</h3><span>the look, with its own drop rate</span></div>' +
+      '<div class="mut-grid">' +
+      '<div class="mut-chip"><div class="mut-swatch">' +
+      frogMini('#E0566A', '#B03048') +
+      '</div><div class="mut-info"><span class="mut-name">Classic Red</span><span class="mut-rate">30.0%</span></div></div>' +
+      '<div class="mut-chip"><div class="mut-swatch">' +
+      frogMini('#60C2E0', '#3A90B0') +
+      '</div><div class="mut-info"><span class="mut-name">Blue Sky Poxy</span><span class="mut-rate">10.0%</span></div></div>' +
+      '<div class="mut-chip"><div class="mut-swatch">' +
+      frogMini('#E5C84F', '#C0A52F') +
+      '</div><div class="mut-info"><span class="mut-name">Golden Heart</span><span class="mut-rate">5.0%</span></div></div>' +
+      '</div></div></div>';
+    var mount = $('rarityPageRoot');
+    if (mount) mount.insertBefore(root, mount.firstChild);
+    else panel.insertBefore(root, panel.firstChild);
+
+    var overview = $('pxSkyColOverview');
+    if (overview) {
+      overview.querySelectorAll('.col-card').forEach(function (btn, idx) {
+        btn.addEventListener('click', function () {
+          if (idx === 0) showColDetail();
+          else if (typeof global.showToast === 'function') {
+            global.showToast(idx === 1 ? 'Tokens preview opens at launch.' : 'Beginnings archive is read-only.');
+          }
+        });
+      });
+    }
+    var backOverview = $('pxSkyColBackOverview');
+    if (backOverview) backOverview.addEventListener('click', showColOverview);
+    var backDetail = $('pxSkyColBackDetail');
+    if (backDetail) backDetail.addEventListener('click', showColDetail);
+    root.querySelectorAll('[data-col-item]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        if (typeof global.showToast === 'function') {
-          global.showToast('Collection details coming soon.');
-        }
+        showColItem(btn.getAttribute('data-col-item'));
       });
     });
   }
@@ -180,14 +303,8 @@
   var PoxyCollectionsSky = {
     onShow: function () {
       if (!isSky()) return;
-      var panel = $('stPanelTierList');
-      ensurePageHead(
-        panel,
-        'collections',
-        'Collections',
-        'Every drop, past and upcoming. Tap one to explore its items and rarity.'
-      );
       ensureCollectionsOverview();
+      showColOverview();
     },
   };
 

@@ -177,7 +177,7 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | Store | `#sc-store` | store panel | **Near 1:1** | Free/Plus plans, Banners/Effects chips, coin buy buttons, Add funds |
 | Settings | `#sc-settings` | `#settingsPage` | **Near 1:1** | Four groups hub, dark theme toggle, detail drill-down; legacy sidebar hidden |
 | Profile | `#sc-profile` | `#profilePage` | **Near 1:1** | Banner, avatar overlap, colour swatches, Plus lock; hunt shell suppressed on route |
-| All collections | `#sc-collections` | `tierlist` / `PoxyCollectionsSky` | **Near** | Stage 11 grid shell; tier data from production |
+| All collections | `#sc-collections` | `tierlist` / `PoxyCollectionsSky` | **Near 1:1** | Overview → Hearts detail → item drill-down wired |
 | Community | `#sc-community` | `club` / `PoxyCommunitySky` | **Near** | Feed layout + legacy club suppressed in sky mode |
 | Messenger | `#sc-messenger` | `messenger` / `PoxyMessengerSky` | **Near** | Sky chat chrome; friends legacy hooks preserved |
 | Events | `#sc-events` | `events` / `PoxyEventsSky` | **Near** | Event cards from Sky layer |
