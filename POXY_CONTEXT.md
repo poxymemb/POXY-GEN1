@@ -172,8 +172,8 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | Home | `#sc-home` | `#pxSkyHome` | **Near 1:1** | Welcome + stats; smoke on real login advised |
 | Open — box picker | `#sc-open` | `#pxSkyOpen` | **Near 1:1** | Sky box grid matches mockup; Legend tier is production-only (5 cards) |
 | Open — ritual | mockup full-screen gen | `#pxSkyRitual`, `#btnOpen`, `#stSpinMount` | **Near 1:1** | Frog top-to-bottom reveal, sweep, result name `Heart · mutation`, Keep/Sell/Open another |
-| Collection | `#sc-collection` | `#collectionPage` | **Near 1:1** | Miles ring, filters, search, card grid; Sky `#pxSkyFigureModal` passport (frog, Serial/Edition/Season, Sell/Close) |
-| Market | `#sc-market` | `#stPanelMarket` / `#marketPage` | **Near 1:1** | Listing cards with rarity rings, coin prices, click-to-buy modal; sort chips + Sell CTA |
+| Collection | `#sc-collection` | `#collectionPage` | **Near 1:1** | Miles ring, filters, grid; passport via `PoxyPassportSky` (`Heart · mutation`, PX serial, edition cap, Season) |
+| Market | `#sc-market` | `#stPanelMarket` / `#marketPage` | **Near 1:1** | Listing cards + buy modal shares `PoxyPassportSky`; sort chips + Sell CTA |
 | Store | `#sc-store` | store panel | **Near 1:1** | Free/Plus plans, Banners/Effects chips, coin buy buttons, Add funds |
 | Settings | `#sc-settings` | `#settingsPage` | **Near 1:1** | Four groups hub, dark theme toggle, detail drill-down; legacy sidebar hidden |
 | Profile | `#sc-profile` | `#profilePage` | **Near 1:1** | Banner, avatar overlap, colour swatches, Plus lock; hunt shell suppressed on route |
@@ -189,9 +189,9 @@ Known UI stubs (no backend): QR device login, forgot password flow, verify OTP p
 
 ### What is **not** done (post–Stage 11)
 
-1. **Per-screen 1:1 audit** — Landing, Auth, Shell, Home are closest; Open ritual frog reveal and passport modal still differ from mockup.
-2. **Full smoke gate** on all 13 routes — login → profile → collection → open case → market → 375px — run manually before deploy.
-3. **Final cleanup** (`cleanup.md`) — `index.html` still monolithic; feature CSS (identity, cards, notify…) still loaded; Telegram-style split incomplete.
+1. **Per-screen 1:1 audit** — spot-check Landing/Auth mobile 375px; Open ritual frog timing vs mockup.
+2. **Structural smoke gate** — `node scripts/smoke-gate.js` (13 rail routes + landing/auth hooks). Manual login smoke still advised before deploy.
+3. **Final cleanup** (`cleanup.md`) — `index.html` still monolithic; prove-zero deletes + `core/` split remain.
 4. **Push** — local `main` may be ahead of `origin`; deploy when ready.
 
 ### After Stage 11 — cleanup (partial ✅)

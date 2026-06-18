@@ -169,6 +169,11 @@ if (/#pxSkyMarketFigureModal \.modal-passport/.test(marketCssText) && /Buy for/.
 } else {
   fail('Market buy modal with coin price');
 }
+if (/poxy-passport-sky\.js/.test(index) && /PoxyPassportSky/.test(marketSkyJsText) && /normalizeFromMarket/.test(marketSkyJsText)) {
+  pass('Shared passport module wired for market modal');
+} else {
+  fail('Shared passport module wired for market modal');
+}
 
 // Store functional (Phase A)
 has(index, 'poxy-store-sky.js', 'Store sky script linked');

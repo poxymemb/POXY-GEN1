@@ -290,6 +290,31 @@
 
   var _skyModalItem = null;
 
+  function passportApi() {
+    return global.PoxyPassportSky || {};
+  }
+
+  function figureTitle(item, tier) {
+    var api = passportApi();
+    if (api.figureTitle) return api.figureTitle(item, tier);
+    return (tier && tier.label) || 'POXY';
+  }
+
+  function passportSerial(item) {
+    var api = passportApi();
+    return api.passportSerial ? api.passportSerial(item) : '—';
+  }
+
+  function passportEdition(item, tier) {
+    var api = passportApi();
+    return api.passportEdition ? api.passportEdition(item, tier) : '—';
+  }
+
+  function passportSeason(item) {
+    var api = passportApi();
+    return api.passportSeason ? api.passportSeason(item) : '01';
+  }
+
   function tierFromItem(item) {
     if (!item) return (global.TIERS && global.TIERS[0]) || { id: 'common', label: 'Common', color: '#8A8F98' };
     return (global.TIER_BY_ID && global.TIER_BY_ID[item.poxy_tier]) || (global.TIERS && global.TIERS[0]) || { id: 'common', label: 'Common', color: '#8A8F98' };
@@ -323,15 +348,6 @@
       .replace(/>/g, '&gt;');
   }
 
-  function figureTitle(item, tier) {
-    var base = item.display_name || item.character_name || 'POXY';
-    var sub = tier.label || 'Figure';
-    if (item.traits && typeof item.traits === 'object') {
-      if (item.traits.mutation) sub = item.traits.mutation;
-      else if (item.traits.variant) sub = item.traits.variant;
-    }
-    return base + ' · ' + sub;
-  }
 
   function frameHtmlForItem(item, tier) {
     if (item.asset_url) {
@@ -400,11 +416,9 @@
       rar.textContent = tier.label || 'POXY';
       rar.style.color = rc;
     }
-    if (serial) serial.textContent = item.serial_number || 'PX-' + String(item.id || '').slice(0, 8).toUpperCase();
-    if (edition) {
-      edition.textContent = item.vip_serial != null ? '#' + item.vip_serial + ' / Club' : 'Season 01';
-    }
-    if (season) season.textContent = '01';
+    if (serial) serial.textContent = passportSerial(item);
+    if (edition) edition.textContent = passportEdition(item, tier);
+    if (season) season.textContent = passportSeason(item);
     $('pxSkyFigureModal').classList.add('open');
     document.body.classList.add('px-sky-figure-modal-open');
   }

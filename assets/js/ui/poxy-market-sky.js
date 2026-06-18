@@ -279,6 +279,9 @@
     _skyMarketCtx = { item: item, opts: opts, meta: meta || {} };
     var tier = meta.tier || tierFromId(item.user_poxy && item.user_poxy.poxy_tier);
     var rc = meta.rc || tierRarColor(tier);
+    var poxy = global.PoxyPassportSky
+      ? global.PoxyPassportSky.normalizeFromMarket(item)
+      : item.user_poxy || item;
     var frame = $('pxSkyMarketFigureFrame');
     var art = $('pxSkyMarketFigureArt');
     var title = $('pxSkyMarketFigureTitle');
@@ -292,23 +295,22 @@
     var status = $('pxSkyMarketFigureStatus');
     var primary = $('pxSkyMarketFigurePrimary');
     var priceText = meta.priceText || formatCoinPrice(item.price);
-    var displayName = meta.name || (item.user_poxy && item.user_poxy.serial_number) || 'POXY';
+    var passport = global.PoxyPassportSky;
 
     if (frame) frame.style.setProperty('--mr', rc);
     if (art) art.innerHTML = renderFrogForTier(tier);
-    if (title) title.textContent = displayName;
+    if (title) {
+      title.textContent = passport
+        ? passport.figureTitle(poxy, tier)
+        : meta.name || 'POXY';
+    }
     if (rar) {
       rar.textContent = tier.label + (opts.isVip ? ' · VIP' : '');
       rar.style.color = rc;
     }
-    if (serial) serial.textContent = (item.user_poxy && item.user_poxy.serial_number) || displayName;
-    if (edition) {
-      edition.textContent =
-        item.user_poxy && item.user_poxy.vip_serial != null
-          ? '#' + item.user_poxy.vip_serial + ' / Club'
-          : 'Season 01';
-    }
-    if (season) season.textContent = '01';
+    if (serial) serial.textContent = passport ? passport.passportSerial(poxy) : '—';
+    if (edition) edition.textContent = passport ? passport.passportEdition(poxy, tier) : '—';
+    if (season) season.textContent = passport ? passport.passportSeason(poxy) : '01';
     if (price) price.innerHTML = COIN_SVG + priceText;
     if (priceRow) priceRow.hidden = global.marketTab === 'sell' && !item.price;
     if (statusRow && status) {
