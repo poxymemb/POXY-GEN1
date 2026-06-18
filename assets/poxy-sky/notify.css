@@ -1,0 +1,245 @@
+/* POXY Sky — notification inbox (mail-panel dropdown) */
+
+body.poxy-sky-app-active .poxy-notify-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 12000 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-overlay.is-open {
+  pointer-events: auto !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-backdrop {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-drawer {
+  position: fixed !important;
+  top: 62px !important;
+  right: 18px !important;
+  left: auto !important;
+  width: 340px !important;
+  max-width: calc(100vw - 36px) !important;
+  height: auto !important;
+  max-height: min(480px, calc(100vh - 80px)) !important;
+  transform: none !important;
+  border-radius: var(--r-lg, 20px) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-overlay.is-open .poxy-notify-drawer {
+  transform: none !important;
+  animation: pxSkyMailIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pxSkyMailIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) !important;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) !important;
+  }
+}
+
+body.poxy-sky-app-active .poxy-notify-drawer-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 18px !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-drawer-head h2 {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-close {
+  display: none !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tabs {
+  display: flex !important;
+  gap: 4px !important;
+  padding: 0 18px 12px !important;
+  border-bottom: none !important;
+  margin: 0 !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tab {
+  font: 600 12px var(--px-font, var(--font)) !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
+  background: none !important;
+  border: none !important;
+  color: var(--text-dim) !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tab:hover {
+  color: var(--text) !important;
+  background: var(--glass) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-tab.active {
+  background: var(--btn-bg) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-body {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  padding: 0 !important;
+}
+
+body.poxy-sky-app-active #notifyActivityList,
+body.poxy-sky-app-active .poxy-notify-gift-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-item {
+  display: flex !important;
+  gap: 12px !important;
+  align-items: flex-start !important;
+  padding: 14px 18px !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  transition: background 0.15s !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-item:hover {
+  background: var(--glass) !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-dot {
+  width: 9px !important;
+  height: 9px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+  margin-top: 5px !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-body {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--text-strong) !important;
+  line-height: 1.35 !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-desc {
+  font-size: 12.5px !important;
+  color: var(--text-dim) !important;
+  margin-top: 2px !important;
+  line-height: 1.4 !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-time {
+  font-size: 11px !important;
+  color: var(--text-faint) !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-activity-item time,
+body.poxy-sky-app-active .poxy-notify-trade-card time {
+  display: none !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-card.px-sky-mail-item {
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-card .poxy-notify-trade-head {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  gap: 12px !important;
+  align-items: flex-start !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-card .poxy-notify-trade-title {
+  font-size: 14px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-card .poxy-notify-trade-sub {
+  font-size: 12.5px !important;
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-card {
+  margin: 0 !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-head .material-symbols-outlined {
+  display: none !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-trade-actions {
+  margin-top: 10px !important;
+  padding-left: 21px !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-gift-card {
+  border-radius: 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  margin: 0 !important;
+}
+
+body.poxy-sky-app-active .poxy-notify-empty {
+  padding: 24px 18px !important;
+  text-align: center !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-foot {
+  padding: 12px 18px !important;
+  text-align: center !important;
+  border-top: 1px solid var(--border) !important;
+  flex-shrink: 0 !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-foot button {
+  background: none !important;
+  border: none !important;
+  color: var(--link, var(--sky-700)) !important;
+  font: 600 13px var(--px-font, var(--font)) !important;
+  cursor: pointer !important;
+}
+
+body.poxy-sky-app-active .px-sky-mail-foot button:hover {
+  filter: brightness(1.1);
+}
+
+@media (max-width: 480px) {
+  body.poxy-sky-app-active .poxy-notify-drawer {
+    right: 12px !important;
+    left: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
