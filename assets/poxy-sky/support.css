@@ -1,0 +1,280 @@
+/* POXY Sky — Help center / support panel (centered modal, not legacy dark sheet) */
+
+body.poxy-sky-app-active .poxy-support-overlay {
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  font-family: var(--px-font, var(--font)) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-backdrop {
+  display: block !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-drawer,
+body.poxy-sky-app-active .poxy-support-drawer.px-sky-support-drawer {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  height: auto !important;
+  max-height: min(86vh, 720px) !important;
+  margin: 0 !important;
+  transform: none !important;
+  border-radius: var(--r-lg, 20px) !important;
+  border: 1px solid var(--border) !important;
+  background: var(--bg-2) !important;
+  color: var(--text) !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28) !important;
+  overflow: hidden !important;
+}
+
+body.poxy-sky-app-active .poxy-support-overlay.is-open .poxy-support-drawer {
+  transform: none !important;
+  animation: pxSkySupportIn 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes pxSkySupportIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98) !important;
+  }
+  to {
+    opacity: 1;
+    transform: none !important;
+  }
+}
+
+body.poxy-sky-app-active .poxy-support-drag-handle {
+  display: none !important;
+}
+
+body.poxy-sky-app-active .poxy-support-head {
+  border-bottom: 1px solid var(--border) !important;
+  padding: 18px 20px 14px !important;
+  background: transparent !important;
+}
+
+body.poxy-sky-app-active .poxy-support-head h2 {
+  font-family: var(--px-font, var(--font)) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--text-strong) !important;
+  letter-spacing: -0.02em !important;
+}
+
+body.poxy-sky-app-active .px-sky-support-sub {
+  font-size: 13px !important;
+  color: var(--text-dim) !important;
+  margin: 4px 0 0 !important;
+  font-weight: 400 !important;
+}
+
+body.poxy-sky-app-active .poxy-support-close {
+  border: 1px solid var(--border) !important;
+  background: var(--card) !important;
+  color: var(--text-dim) !important;
+  border-radius: 10px !important;
+  width: 34px !important;
+  height: 34px !important;
+}
+
+body.poxy-sky-app-active .poxy-support-close:hover {
+  color: var(--text) !important;
+  background: var(--glass-strong) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-tabs {
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0 16px 12px !important;
+  gap: 8px !important;
+}
+
+body.poxy-sky-app-active .poxy-support-tab {
+  font: 600 13px var(--px-font, var(--font)) !important;
+  color: var(--text-dim) !important;
+  border-radius: 11px !important;
+  padding: 8px 12px !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.poxy-sky-app-active .poxy-support-tab:hover {
+  color: var(--text) !important;
+  background: var(--glass) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-tab.active {
+  background: var(--btn-bg) !important;
+  color: #fff !important;
+}
+
+body.poxy-sky-app-active .poxy-support-body {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-panel {
+  padding: 16px 20px 20px !important;
+}
+
+body.poxy-sky-app-active .poxy-support-search,
+body.poxy-sky-app-active .poxy-support-input,
+body.poxy-sky-app-active .poxy-support-textarea,
+body.poxy-sky-app-active .poxy-support-compose-input {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 11px !important;
+  font-family: var(--px-font, var(--font)) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-search::placeholder,
+body.poxy-sky-app-active .poxy-support-input::placeholder,
+body.poxy-sky-app-active .poxy-support-textarea::placeholder,
+body.poxy-sky-app-active .poxy-support-compose-input::placeholder {
+  color: var(--text-faint) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-search:focus,
+body.poxy-sky-app-active .poxy-support-input:focus,
+body.poxy-sky-app-active .poxy-support-textarea:focus,
+body.poxy-sky-app-active .poxy-support-compose-input:focus {
+  border-color: var(--sky-500) !important;
+  outline: none !important;
+}
+
+body.poxy-sky-app-active .poxy-support-label {
+  color: var(--text-dim) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body.poxy-sky-app-active .poxy-support-cat {
+  background: var(--glass) !important;
+  color: var(--text-dim) !important;
+  border: 1px solid var(--border) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-cat.active {
+  background: color-mix(in srgb, var(--sky-500) 14%, var(--card)) !important;
+  color: var(--text-strong) !important;
+  border-color: color-mix(in srgb, var(--sky-500) 35%, var(--border)) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-faq-item {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-faq-q {
+  color: var(--text-strong) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-faq-q span.ico {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-faq-a {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-ticket {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-ticket-subj {
+  color: var(--text-strong) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-ticket-meta {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-empty {
+  color: var(--text-dim) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-submit,
+body.poxy-sky-app-active .poxy-support-send {
+  background: var(--btn-bg) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+body.poxy-sky-app-active .poxy-support-submit:hover,
+body.poxy-sky-app-active .poxy-support-send:hover {
+  filter: brightness(1.06);
+}
+
+body.poxy-sky-app-active .poxy-support-attach-btn {
+  background: var(--glass) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-dim) !important;
+  border-radius: 10px !important;
+}
+
+body.poxy-sky-app-active .poxy-support-chat-head {
+  border-bottom: 1px solid var(--border) !important;
+  background: var(--card) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-back {
+  color: var(--sky-700) !important;
+  background: none !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+body.poxy-sky-app-active .poxy-support-chat-subj {
+  color: var(--text-strong) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-messages {
+  background: transparent !important;
+}
+
+body.poxy-sky-app-active .poxy-support-msg {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-msg.is-staff {
+  background: color-mix(in srgb, var(--sky-500) 12%, var(--card)) !important;
+  border-color: color-mix(in srgb, var(--sky-500) 30%, var(--border)) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-compose {
+  border-top: 1px solid var(--border) !important;
+  background: var(--bg-2) !important;
+}
+
+body.poxy-sky-app-active .poxy-support-drawer ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-faint) 50%, transparent) !important;
+}
+
+@media (max-width: 520px) {
+  body.poxy-sky-app-active .poxy-support-overlay {
+    padding: 12px !important;
+    align-items: flex-end !important;
+  }
+
+  body.poxy-sky-app-active .poxy-support-drawer {
+    max-height: 92vh !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+}

@@ -183,7 +183,7 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | Events | `#sc-events` | `events` / `PoxyEventsSky` | **Near 1:1** | Overview → detail with progress, leaderboard, read more |
 | Quests | `#sc-quests` | `quests` / `PoxyQuestsSky` | **Near 1:1** | Five mockup groups + daily directives with claim wired |
 | Levels | `#sc-levels` | `levels` / `PoxyLevelsSky` | **Near 1:1** | Account track + POXY PASS tab with five pass nodes; XP headline from economy |
-| Modals / overlays | mockup modals | notify, support, top-up, crypto overlay | **Near 1:1** | Inbox dropdown (All/Trades/Gifts), top-up tabs, support reskinned |
+| Modals / overlays | mockup modals | notify, support, top-up, crypto overlay | **Near 1:1** | Inbox dropdown, top-up tabs, Help center modal; gift unbox reskinned |
 
 Known UI stubs (no backend): QR device login, forgot password flow, verify OTP polish.
 
