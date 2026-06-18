@@ -172,9 +172,9 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | Home | `#sc-home` | `#pxSkyHome` | **Near 1:1** | Welcome + stats; smoke on real login advised |
 | Open — box picker | `#sc-open` | `#pxSkyOpen` | **Near 1:1** | Sky box grid matches mockup; Legend tier is production-only (5 cards) |
 | Open — ritual | mockup full-screen gen | `#pxSkyRitual`, `#btnOpen`, `#stSpinMount` | **Near 1:1** | Frog reveal top-to-bottom, sweep animation, Keep/Sell/Open another |
-| Collection | `#sc-collection` | `#collectionPage` | **Near** | Miles ring, chip filters, search, card grid reskin; legacy console hidden |
-| Market | `#sc-market` | `#stPanelMarket` / `#marketPage` | **Near** | Sky toolbar, rarity chips, sell CTA, listing cards |
-| Store | `#sc-store` | store panel | **Near** | Category chips, membership block, grid polish; legacy bento hidden |
+| Collection | `#sc-collection` | `#collectionPage` | **Near 1:1** | Miles ring, filters, search, card grid; Sky `#pxSkyFigureModal` passport (frog, Serial/Edition/Season, Sell/Close) |
+| Market | `#sc-market` | `#stPanelMarket` / `#marketPage` | **Near 1:1** | Listing cards with rarity rings, coin prices, click-to-buy modal; sort chips + Sell CTA |
+| Store | `#sc-store` | store panel | **Near 1:1** | Free/Plus plans, Banners/Effects chips, coin buy buttons, Add funds |
 | Settings | `#sc-settings` | `#settingsPage` | **Near** | Hub + detail groups, theme/top-up wired; legacy sidebar hidden |
 | Profile | `#sc-profile` | `#profilePage` | **Near** | Sky banner/card/swatches; legacy `idhub-shell` hidden |
 | All collections | `#sc-collections` | `tierlist` / `PoxyCollectionsSky` | **Near** | Stage 11 grid shell; tier data from production |

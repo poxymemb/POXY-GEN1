@@ -120,6 +120,16 @@ if (/body\.poxy-sky-app-active #collectionPage #pxSkyColMiles/.test(collectionCs
   fail('Collection miles panel styled');
 }
 has(mock, 'id="sc-collection"', 'Mockup has sc-collection');
+if (/pxSkyFigureModal|openSkyFigureModal/.test(collectionSkyJsText) && /#pxSkyFigureModal \.modal-passport/.test(collectionCssText)) {
+  pass('Collection passport modal 1:1');
+} else {
+  fail('Collection passport modal 1:1', 'poxy-collection-sky.js / collection.css');
+}
+if (/wrapAssetViewerModal|isSkyCollectionRoute/.test(collectionSkyJsText)) {
+  pass('Collection intercepts asset viewer in sky mode');
+} else {
+  fail('Collection intercepts asset viewer in sky mode');
+}
 
 // Market functional (Phase A)
 has(index, 'poxy-market-sky.js', 'Market sky script linked');
@@ -142,6 +152,21 @@ if (/body\.poxy-sky-app-active\.poxy-sky-collection-active #huntPage/.test(fs.re
   fail('Collection huntPage suppressed when active', 'overlays.css rule missing');
 }
 has(mock, 'id="sc-market"', 'Mockup has sc-market');
+if (/pxSkyMarketFigureModal|openSkyMarketModal|reskinMarketCards/.test(marketSkyJsText) && /px-sky-mkt-card \.cell-frame::before/.test(marketCssText)) {
+  pass('Market listing cards 1:1 reskin');
+} else {
+  fail('Market listing cards 1:1 reskin', 'poxy-market-sky.js / market.css');
+}
+if (/wrapBuildMarketCard|_skyMarketItem/.test(marketSkyJsText) && /window\.buildMarketCard/.test(index)) {
+  pass('Market cards retain listing hooks');
+} else {
+  fail('Market cards retain listing hooks');
+}
+if (/#pxSkyMarketFigureModal \.modal-passport/.test(marketCssText) && /Buy for/.test(marketSkyJsText)) {
+  pass('Market buy modal with coin price');
+} else {
+  fail('Market buy modal with coin price');
+}
 
 // Store functional (Phase A)
 has(index, 'poxy-store-sky.js', 'Store sky script linked');
@@ -160,6 +185,16 @@ if (/body\.poxy-sky-app-active #stPanelStore\.st-spa-panel--active/.test(storeCs
   fail('Store panel active layout', 'store.css stPanelStore rule missing');
 }
 has(mock, 'id="sc-store"', 'Mockup has sc-store');
+if (/SKY_SECTION_TITLES|Banners/.test(storeSkyJsText) && /pxSkyStoreMembership/.test(storeSkyJsText)) {
+  pass('Store membership and mockup section titles');
+} else {
+  fail('Store membership and mockup section titles');
+}
+if (/skyStoreAccent|px-sky-store-vis/.test(storeSkyJsText) && /\.coin-sm svg/.test(storeCssText)) {
+  pass('Store grid cards with accent swatch and coin buy');
+} else {
+  fail('Store grid cards with accent swatch and coin buy');
+}
 
 // Settings functional (Phase A)
 has(index, 'poxy-settings-sky.js', 'Settings sky script linked');

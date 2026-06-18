@@ -17,14 +17,24 @@
 
 
   var CAT_CHIPS = [
-    { id: 'themes', label: 'Themes' },
-    { id: 'gradients', label: 'Gradients' },
+    { id: 'themes', label: 'Banners' },
+    { id: 'gradients', label: 'Effects' },
     { id: 'boosters', label: 'Boosters', stub: true },
     { id: 'bundles', label: 'Bundles', stub: true },
     { id: 'xpshop', label: 'XP Shop' },
     { id: 'poxypass', label: 'POXY Pass' },
     { id: 'vip', label: 'Membership' },
   ];
+
+  var SKY_SECTION_TITLES = {
+    themes: 'Banners',
+    gradients: 'Effects',
+    xpshop: 'XP Shop',
+    poxypass: 'POXY Pass',
+    vip: 'Membership perks',
+    boosters: 'Boosters',
+    bundles: 'Bundles',
+  };
 
   var STUB_CATS = { boosters: 1, bundles: 1 };
 
@@ -123,7 +133,7 @@
 
       '<li>Basic profile</li>' +
 
-      '<li>Open boxes and trade</li>' +
+      '<li>Open boxes & trade</li>' +
 
       '</ul>' +
 
@@ -143,7 +153,7 @@
 
       '<li>Full profile customization</li>' +
 
-      '<li>Animated avatar and banner</li>' +
+      '<li>Animated avatar & banner</li>' +
 
       '<li>Profile background music</li>' +
 
@@ -283,10 +293,10 @@
     });
 
     var title = $('pxSkyStoreSectionTitle');
-
     var gridTitle = $('storeGridTitle');
-
-    if (title && gridTitle) title.textContent = gridTitle.textContent;
+    if (title) {
+      title.textContent = SKY_SECTION_TITLES[cat] || (gridTitle && gridTitle.textContent) || 'Store';
+    }
 
     var plusBtn = document.querySelector('.px-sky-plan-plus');
 
@@ -358,6 +368,26 @@
 
 
 
+  function skyStoreAccent(bg) {
+    if (!bg) return '#60C2E0';
+    var s = String(bg);
+    if (s.charAt(0) === '#') return s.split(' ')[0];
+    var hex = s.match(/#[0-9a-fA-F]{3,8}/);
+    if (hex) return hex[0];
+    var rgb = s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (rgb) {
+      return (
+        '#' +
+        [rgb[1], rgb[2], rgb[3]]
+          .map(function (n) {
+            return ('0' + parseInt(n, 10).toString(16)).slice(-2);
+          })
+          .join('')
+      );
+    }
+    return '#60C2E0';
+  }
+
   function polishThemeCards() {
 
     if (!isSkyStoreVisible()) return;
@@ -376,10 +406,10 @@
 
       }
 
-      if (visual && visual.style.background) {
-
-        visual.style.setProperty('--sc', visual.style.background);
-
+      if (visual) {
+        var bg = visual.style.background || visual.style.backgroundColor || '';
+        visual.style.setProperty('--sc', skyStoreAccent(bg));
+        visual.classList.add('px-sky-store-vis');
       }
 
       var price = card.querySelector('.poxy-store-card-price');

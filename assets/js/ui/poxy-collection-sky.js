@@ -253,8 +253,218 @@
     global.renderCollection = function () {
       orig();
       syncMilesProgress();
+      applySkyCardRings();
     };
     wrapRenderCollection.done = true;
+  }
+
+  var SKY_RAR_COLOR = {
+    common: '#8A8F98',
+    uncommon: '#8A8F98',
+    rare: '#60C2E0',
+    epic: '#456DB0',
+    legendary: '#E0A23C',
+    mythic: '#D9744F',
+    obsidian: '#8A8F98',
+    cursed: '#456DB0',
+    souvenir: '#60C2E0',
+    stellar: '#60C2E0',
+    diamond: '#60C2E0',
+    secret: '#D9744F',
+  };
+
+  var FROG_BY_TIER = {
+    common: { c1: '#6FD66F', c2: '#3AA83A' },
+    uncommon: { c1: '#7BE0C0', c2: '#3AA888' },
+    rare: { c1: '#8FD7E5', c2: '#46A8C0' },
+    epic: { c1: '#9B8FE0', c2: '#5B4FB0' },
+    legendary: { c1: '#7BE0A0', c2: '#3AA85F' },
+    mythic: { c1: '#E58F6F', c2: '#C0552F' },
+    obsidian: { c1: '#556872', c2: '#37474F' },
+    cursed: { c1: '#9B8FE0', c2: '#7E57C2' },
+    souvenir: { c1: '#5ec4b8', c2: '#26A69A' },
+    stellar: { c1: '#6eb8f5', c2: '#42A5F5' },
+    diamond: { c1: '#a8eef5', c2: '#80DEEA' },
+    secret: { c1: '#ff9a7a', c2: '#FF6E40' },
+  };
+
+  var _skyModalItem = null;
+
+  function tierFromItem(item) {
+    if (!item) return (global.TIERS && global.TIERS[0]) || { id: 'common', label: 'Common', color: '#8A8F98' };
+    return (global.TIER_BY_ID && global.TIER_BY_ID[item.poxy_tier]) || (global.TIERS && global.TIERS[0]) || { id: 'common', label: 'Common', color: '#8A8F98' };
+  }
+
+  function tierRarColor(tier) {
+    if (!tier || !tier.id) return '#60C2E0';
+    return SKY_RAR_COLOR[tier.id] || tier.color || '#60C2E0';
+  }
+
+  function frogHTML(c1, c2) {
+    return (
+      '<div class="frog px-sky-frog" style="--c1:' +
+      c1 +
+      ';--c2:' +
+      c2 +
+      ';--belly:#c0344d"><div class="fb"></div><div class="fe l"></div><div class="fe r"></div><div class="fm"></div></div>'
+    );
+  }
+
+  function renderFrogForTier(tier) {
+    var pal = FROG_BY_TIER[tier.id] || { c1: tier.color || '#60C2E0', c2: tier.color || '#40ABCC' };
+    return frogHTML(pal.c1, pal.c2);
+  }
+
+  function skyText(value) {
+    if (typeof global.sanitizeText === 'function') return global.sanitizeText(String(value == null ? '' : value));
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function figureTitle(item, tier) {
+    var base = item.display_name || item.character_name || 'POXY';
+    var sub = tier.label || 'Figure';
+    if (item.traits && typeof item.traits === 'object') {
+      if (item.traits.mutation) sub = item.traits.mutation;
+      else if (item.traits.variant) sub = item.traits.variant;
+    }
+    return base + ' · ' + sub;
+  }
+
+  function frameHtmlForItem(item, tier) {
+    if (item.asset_url) {
+      return (
+        '<img class="px-sky-fig-img" src="' +
+        skyText(item.asset_url) +
+        '" alt="' +
+        skyText(tier.label || 'POXY') +
+        '">'
+      );
+    }
+    return renderFrogForTier(tier);
+  }
+
+  function ensureFigureModal() {
+    if ($('pxSkyFigureModal')) return;
+    var el = document.createElement('div');
+    el.id = 'pxSkyFigureModal';
+    el.className = 'modal px-sky-figure-modal';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.setAttribute('aria-label', 'Figure passport');
+    el.innerHTML =
+      '<div class="modal-card" id="pxSkyFigureCard">' +
+      '<div class="modal-frame" id="pxSkyFigureFrame"><div id="pxSkyFigureArt"></div></div>' +
+      '<div class="modal-body">' +
+      '<h3 id="pxSkyFigureTitle">POXY</h3>' +
+      '<div class="mrar" id="pxSkyFigureRar">Rare</div>' +
+      '<div class="modal-passport">' +
+      '<div class="mp-row"><span class="k">Serial</span><span class="v" id="pxSkyFigureSerial">—</span></div>' +
+      '<div class="mp-row"><span class="k">Edition</span><span class="v" id="pxSkyFigureEdition">—</span></div>' +
+      '<div class="mp-row"><span class="k">Season</span><span class="v" id="pxSkyFigureSeason">01</span></div>' +
+      '</div>' +
+      '<div class="modal-actions">' +
+      '<button type="button" class="btn btn-primary" id="pxSkyFigureSell">Sell on market</button>' +
+      '<button type="button" class="btn btn-glass" id="pxSkyFigureClose">Close</button>' +
+      '</div></div></div>';
+    document.body.appendChild(el);
+    el.addEventListener('click', function (e) {
+      if (e.target === el) closeSkyFigureModal();
+    });
+    $('pxSkyFigureClose').addEventListener('click', closeSkyFigureModal);
+    $('pxSkyFigureSell').addEventListener('click', onSkyFigureSell);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && el.classList.contains('open')) closeSkyFigureModal();
+    });
+  }
+
+  function openSkyFigureModal(item) {
+    if (!item) return;
+    ensureFigureModal();
+    _skyModalItem = item;
+    var tier = tierFromItem(item);
+    var rc = tierRarColor(tier);
+    var frame = $('pxSkyFigureFrame');
+    var art = $('pxSkyFigureArt');
+    var title = $('pxSkyFigureTitle');
+    var rar = $('pxSkyFigureRar');
+    var serial = $('pxSkyFigureSerial');
+    var edition = $('pxSkyFigureEdition');
+    var season = $('pxSkyFigureSeason');
+    if (frame) frame.style.setProperty('--mr', rc);
+    if (art) art.innerHTML = frameHtmlForItem(item, tier);
+    if (title) title.textContent = figureTitle(item, tier);
+    if (rar) {
+      rar.textContent = tier.label || 'POXY';
+      rar.style.color = rc;
+    }
+    if (serial) serial.textContent = item.serial_number || 'PX-' + String(item.id || '').slice(0, 8).toUpperCase();
+    if (edition) {
+      edition.textContent = item.vip_serial != null ? '#' + item.vip_serial + ' / Club' : 'Season 01';
+    }
+    if (season) season.textContent = '01';
+    $('pxSkyFigureModal').classList.add('open');
+    document.body.classList.add('px-sky-figure-modal-open');
+  }
+
+  function closeSkyFigureModal() {
+    var modal = $('pxSkyFigureModal');
+    if (modal) modal.classList.remove('open');
+    document.body.classList.remove('px-sky-figure-modal-open');
+    _skyModalItem = null;
+  }
+
+  function onSkyFigureSell() {
+    var item = _skyModalItem;
+    if (!item) return;
+    var tier = tierFromItem(item);
+    global.pendingListItem = {
+      poxyId: item.id,
+      tier: tier,
+      serial: item.serial_number || '',
+      fromHunt: false,
+    };
+    closeSkyFigureModal();
+    if (typeof global.openPriceModal === 'function') global.openPriceModal();
+  }
+
+  function isSkyCollectionRoute() {
+    return (
+      document.body.classList.contains('poxy-sky-app-active') &&
+      $('collectionPage') &&
+      $('collectionPage').classList.contains('visible')
+    );
+  }
+
+  function wrapAssetViewerModal() {
+    if (wrapAssetViewerModal.done || typeof global.openAssetViewerModal !== 'function') return;
+    var openOrig = global.openAssetViewerModal;
+    global.openAssetViewerModal = function (item) {
+      if (isSkyCollectionRoute()) {
+        openSkyFigureModal(item);
+        return;
+      }
+      openOrig(item);
+    };
+    if (typeof global.closeAssetViewerModal === 'function') {
+      var closeOrig = global.closeAssetViewerModal;
+      global.closeAssetViewerModal = function () {
+        closeSkyFigureModal();
+        closeOrig();
+      };
+    }
+    wrapAssetViewerModal.done = true;
+  }
+
+  function applySkyCardRings() {
+    if (!document.body.classList.contains('poxy-sky-app-active')) return;
+    var map = SKY_RAR_COLOR;
+    document.querySelectorAll('#collectionPage #colContent .col-card[data-tier]').forEach(function (card) {
+      var ring = map[card.dataset.tier] || card.style.getPropertyValue('--rarity-color') || '#60C2E0';
+      card.style.setProperty('--ring', ring);
+    });
   }
 
   function onShow() {
@@ -262,6 +472,7 @@
     if (global.PoxyScreensSky) global.PoxyScreensSky.ensureHead('collection');
     wrapActionCapsules();
     wrapRenderCollection();
+    wrapAssetViewerModal();
     hideStageNoise();
     resetSkyPadding();
     ensureMilesPanel();
@@ -272,24 +483,32 @@
     relabelSkySortOptions();
     syncMilesProgress();
     relabelSkyActionButtons();
+    applySkyCardRings();
     requestAnimationFrame(resetSkyPadding);
   }
 
   global.PoxyCollectionSky = {
     onShow: onShow,
-    onHide: teardownColObserver,
+    onHide: function () {
+      closeSkyFigureModal();
+      teardownColObserver();
+    },
     syncMilesProgress: syncMilesProgress,
     relabelSkyActionButtons: relabelSkyActionButtons,
     matchColSkySearch: matchColSkySearch,
+    openSkyFigureModal: openSkyFigureModal,
+    closeSkyFigureModal: closeSkyFigureModal,
   };
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       wrapActionCapsules();
       wrapRenderCollection();
+      wrapAssetViewerModal();
     });
   } else {
     wrapActionCapsules();
     wrapRenderCollection();
+    wrapAssetViewerModal();
   }
 })(window);

@@ -203,6 +203,41 @@ body.poxy-sky-app-active #marketPage .poxy-market-card:hover {
   border-color: var(--sky-500) !important;
 }
 
+body.poxy-sky-app-active #marketPage .poxy-market-card.px-sky-mkt-card:hover {
+  border-color: var(--ring, var(--sky-500)) !important;
+}
+
+body.poxy-sky-app-active #marketPage .poxy-market-card.px-sky-mkt-card {
+  display: block;
+  cursor: pointer;
+}
+
+body.poxy-sky-app-active #marketPage .px-sky-mkt-card .cell-frame {
+  height: 160px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background: radial-gradient(
+    110% 80% at 50% 16%,
+    color-mix(in srgb, var(--ring, var(--sky-500)) 26%, var(--bg-2)),
+    var(--bg-2)
+  );
+  border-bottom: 1px solid var(--border);
+}
+
+body.poxy-sky-app-active #marketPage .px-sky-mkt-card .cell-frame::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border-radius: 12px;
+  border: 1.5px solid color-mix(in srgb, var(--ring, var(--sky-500)) 38%, transparent);
+  pointer-events: none;
+}
+
+body.poxy-sky-app-active #marketPage .px-sky-mkt-stash {
+  display: none !important;
+}
+
 body.poxy-sky-app-active #marketPage .poxy-market-card-visual {
   order: 1;
   height: 160px !important;
@@ -305,3 +340,39 @@ body.poxy-sky-app-active #marketPage .btn{font:600 14px var(--font);cursor:point
 body.poxy-sky-app-active #marketPage .btn-primary{background:var(--btn-bg);color:var(--btn-text)}
 body.poxy-sky-app-active #marketPage .btn-glass{background:var(--glass-strong);color:var(--text);border-color:var(--border)}
 body.poxy-sky-app-active #marketPage .coin-sm{width:15px;height:15px;display:inline-block;vertical-align:-2px;margin-right:2px}
+body.poxy-sky-app-active #marketPage .coin-sm svg{width:100%;height:100%}
+
+/* ── Market frog + passport modal ── */
+body.poxy-sky-app-active #marketPage .px-sky-mkt-frog{width:78px;height:92px;position:relative;transform:scale(1)}
+body.poxy-sky-app-active #marketPage .px-sky-mkt-frog .fb{position:absolute;inset:0;border-radius:46% 46% 42% 42%;background:linear-gradient(165deg,var(--c1),var(--c2));box-shadow:inset -5px -8px 0 rgba(0,0,0,.10),0 8px 18px rgba(0,0,0,.28)}
+body.poxy-sky-app-active #marketPage .px-sky-mkt-frog .fe{position:absolute;top:15px;width:22px;height:22px;border-radius:50%;background:#fff}
+body.poxy-sky-app-active #marketPage .px-sky-mkt-frog .fe.l{left:10px}
+body.poxy-sky-app-active #marketPage .px-sky-mkt-frog .fe.r{right:10px}
+body.poxy-sky-app-active #marketPage .px-sky-mkt-frog .fe::after{content:"";position:absolute;top:6px;left:6px;width:9px;height:9px;border-radius:50%;background:#1c1c1e}
+body.poxy-sky-app-active #marketPage .px-sky-mkt-frog .fm{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:32px;height:16px;background:var(--belly);border-radius:0 0 16px 16px}
+
+#pxSkyMarketFigureModal.modal{position:fixed;inset:0;z-index:210;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#pxSkyMarketFigureModal.modal.open{display:flex}
+#pxSkyMarketFigureModal .modal-card{max-width:420px;width:100%;border-radius:var(--r-lg);background:var(--bg-2);border:1px solid var(--border);box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden}
+#pxSkyMarketFigureModal .modal-frame{height:230px;display:grid;place-items:center;position:relative;background:radial-gradient(110% 80% at 50% 16%,color-mix(in srgb,var(--mr) 26%,var(--bg-2)),var(--bg-2));border-bottom:1px solid var(--border)}
+#pxSkyMarketFigureModal .modal-frame::before{content:"";position:absolute;inset:14px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--mr) 36%,transparent)}
+#pxSkyMarketFigureModal .modal-body{padding:22px}
+#pxSkyMarketFigureModal .modal-body h3{font-size:20px;font-weight:700;color:var(--text-strong);margin:0}
+#pxSkyMarketFigureModal .modal-body .mrar{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+#pxSkyMarketFigureModal .modal-passport{margin:16px 0;display:flex;flex-direction:column;gap:9px}
+#pxSkyMarketFigureModal .mp-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px}
+#pxSkyMarketFigureModal .mp-row .k{color:var(--text-dim)}
+#pxSkyMarketFigureModal .mp-row .v{color:var(--text-strong);font-weight:600;font-family:var(--mono);display:inline-flex;align-items:center;gap:4px}
+#pxSkyMarketFigureModal .modal-actions{display:flex;gap:9px;flex-wrap:wrap}
+#pxSkyMarketFigureModal .modal-actions .btn{flex:1;justify-content:center;min-width:110px}
+#pxSkyMarketFigureModal .btn-primary{background:var(--sky-800);color:#fff;border-color:transparent}
+[data-theme="dark"] #pxSkyMarketFigureModal .btn-primary{background:var(--sky-500);color:#fff}
+#pxSkyMarketFigureModal .frog{width:78px;height:92px;position:relative}
+#pxSkyMarketFigureModal .frog .fb{position:absolute;inset:0;border-radius:46% 46% 42% 42%;background:linear-gradient(165deg,var(--c1),var(--c2));box-shadow:inset -5px -8px 0 rgba(0,0,0,.10),0 8px 18px rgba(0,0,0,.28)}
+#pxSkyMarketFigureModal .frog .fe{position:absolute;top:15px;width:22px;height:22px;border-radius:50%;background:#fff}
+#pxSkyMarketFigureModal .frog .fe.l{left:10px}
+#pxSkyMarketFigureModal .frog .fe.r{right:10px}
+#pxSkyMarketFigureModal .frog .fe::after{content:"";position:absolute;top:6px;left:6px;width:9px;height:9px;border-radius:50%;background:#1c1c1e}
+#pxSkyMarketFigureModal .frog .fm{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:32px;height:16px;background:var(--belly);border-radius:0 0 16px 16px}
+#pxSkyMarketFigureModal .coin-sm{width:15px;height:15px;display:inline-block;vertical-align:-2px}
+#pxSkyMarketFigureModal .coin-sm svg{width:100%;height:100%}

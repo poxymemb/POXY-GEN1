@@ -529,7 +529,45 @@ body.poxy-sky-app-active #collectionPage .cell-meta{padding:12px 14px}
 body.poxy-sky-app-active #collectionPage .cell-name{font-size:13.5px;font-weight:650;color:var(--text-strong)}
 body.poxy-sky-app-active #collectionPage .cell-rar{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-top:3px}
 body.poxy-sky-app-active #collectionPage .miles{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:18px 20px}
-body.poxy-sky-app-active #collectionPage .ring-prog{--p:34;width:54px;height:54px;border-radius:50%;flex-shrink:0;
+body.poxy-sky-app-active #collectionPage .ring-prog{--p:34;width:54px;height:54px;border-radius:50%;flex-shrink:0;position:relative;
     background:conic-gradient(var(--sky-500) calc(var(--p)*1%),var(--border) 0);display:grid;place-items:center}
+body.poxy-sky-app-active #collectionPage .ring-prog::after{content:"";width:42px;height:42px;border-radius:50%;background:var(--card)}
+body.poxy-sky-app-active #collectionPage .ring-prog span{position:absolute;font-size:13px;font-weight:700;color:var(--text-strong)}
+body.poxy-sky-app-active #collectionPage .m-txt .mt{font-size:15px;font-weight:650;color:var(--text-strong)}
+body.poxy-sky-app-active #collectionPage .m-txt .md{font-size:13px;color:var(--text-dim)}
+
+body.poxy-sky-app-active #collectionPage #colContent .cell-frame::before,
+body.poxy-sky-app-active #collectionPage #colContent .pcard-s2::before{
+  content:"";position:absolute;inset:9px;border-radius:12px;
+  border:1.5px solid color-mix(in srgb,var(--ring,var(--rarity-color,var(--sky-500))) 38%,transparent);pointer-events:none}
+body.poxy-sky-app-active #collectionPage #colContent .pcard-s2{position:relative}
+
+/* ── Collection passport modal (mockup #modal) ── */
+#pxSkyFigureModal.modal{position:fixed;inset:0;z-index:210;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#pxSkyFigureModal.modal.open{display:flex}
+#pxSkyFigureModal .modal-card{max-width:420px;width:100%;border-radius:var(--r-lg);background:var(--bg-2);border:1px solid var(--border);box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden}
+#pxSkyFigureModal .modal-frame{height:230px;display:grid;place-items:center;position:relative;background:radial-gradient(110% 80% at 50% 16%,color-mix(in srgb,var(--mr) 26%,var(--bg-2)),var(--bg-2));border-bottom:1px solid var(--border)}
+#pxSkyFigureModal .modal-frame::before{content:"";position:absolute;inset:14px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--mr) 36%,transparent)}
+#pxSkyFigureModal .modal-body{padding:22px}
+#pxSkyFigureModal .modal-body h3{font-size:20px;font-weight:700;color:var(--text-strong);margin:0}
+#pxSkyFigureModal .modal-body .mrar{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+#pxSkyFigureModal .modal-passport{margin:16px 0;display:flex;flex-direction:column;gap:9px}
+#pxSkyFigureModal .mp-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px}
+#pxSkyFigureModal .mp-row .k{color:var(--text-dim)}
+#pxSkyFigureModal .mp-row .v{color:var(--text-strong);font-weight:600;font-family:var(--mono)}
+#pxSkyFigureModal .modal-actions{display:flex;gap:9px;flex-wrap:wrap}
+#pxSkyFigureModal .modal-actions .btn{flex:1;justify-content:center;min-width:110px}
+#pxSkyFigureModal .btn-primary{background:var(--sky-800);color:#fff;border-color:transparent}
+[data-theme="dark"] #pxSkyFigureModal .btn-primary{background:var(--sky-500);color:#fff}
+#pxSkyFigureModal .frog{width:78px;height:92px;position:relative}
+#pxSkyFigureModal .frog .fb{position:absolute;inset:0;border-radius:46% 46% 42% 42%;background:linear-gradient(165deg,var(--c1),var(--c2));box-shadow:inset -5px -8px 0 rgba(0,0,0,.10),0 8px 18px rgba(0,0,0,.28)}
+#pxSkyFigureModal .frog .fe{position:absolute;top:15px;width:22px;height:22px;border-radius:50%;background:#fff}
+#pxSkyFigureModal .frog .fe.l{left:10px}
+#pxSkyFigureModal .frog .fe.r{right:10px}
+#pxSkyFigureModal .frog .fe::after{content:"";position:absolute;top:6px;left:6px;width:9px;height:9px;border-radius:50%;background:#1c1c1e}
+#pxSkyFigureModal .frog .fm{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:32px;height:16px;background:var(--belly);border-radius:0 0 16px 16px}
+#pxSkyFigureModal .px-sky-fig-img{max-width:72%;max-height:72%;object-fit:contain;border-radius:12px}
+body.poxy-sky-app-active.poxy-sky-collection-active #assetViewerModal.open{display:none!important}
+
 body.poxy-sky-app-active #collectionPage .btn{font:600 14px var(--font);cursor:pointer;padding:11px 18px;border-radius:12px;border:1px solid transparent;transition:transform .15s,filter .2s;display:inline-flex;align-items:center;gap:8px}
 body.poxy-sky-app-active #collectionPage .btn-glass{background:var(--glass-strong);color:var(--text);border-color:var(--border)}

@@ -539,4 +539,5 @@ body.poxy-sky-app-active #storePage .btn{font:600 14px var(--font);cursor:pointe
 body.poxy-sky-app-active #storePage .btn-primary{background:var(--btn-bg);color:var(--btn-text)}
 body.poxy-sky-app-active #storePage .btn-glass{background:var(--glass-strong);color:var(--text);border-color:var(--border)}
 body.poxy-sky-app-active #storePage .coin-sm{width:15px;height:15px;display:inline-block;vertical-align:-2px;margin-right:2px}
+body.poxy-sky-app-active #storePage .coin-sm svg{width:100%;height:100%}
 body.poxy-sky-app-active #storePage .chip-filter{font:600 13px var(--font);padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text-dim);cursor:pointer}
