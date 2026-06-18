@@ -30,6 +30,16 @@ body.poxy-sky-app-active #pxSkyOpen .box-price{display:inline-flex;align-items:c
 #pxSkyRitual .frog .fe.r{right:10px}
 #pxSkyRitual .frog .fe::after{content:"";position:absolute;top:6px;left:6px;width:9px;height:9px;border-radius:50%;background:#1c1c1e}
 #pxSkyRitual .frog .fm{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:32px;height:16px;background:var(--belly);border-radius:0 0 16px 16px}
+#pxSkyRitual #pxSkyResultFig {
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+}
+
+#pxSkyRitual #pxSkyResultFig .frog {
+  transform: scale(1.08);
+}
+
 #pxSkyRitual .gen-reveal{position:relative;opacity:0;z-index:2}
 #pxSkyRitual .gen-sweep{position:absolute;left:0;right:0;height:40px;top:0;z-index:4;pointer-events:none;
     background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--sky-300) 80%,transparent),transparent);opacity:0}

@@ -34,6 +34,21 @@
     secret: '#D9744F',
   };
 
+  var MUTATION_BY_TIER = {
+    common: 'Classic',
+    uncommon: 'Verdant',
+    rare: 'Frost',
+    epic: 'Royal',
+    legendary: 'Aurora',
+    mythic: 'Ember',
+    obsidian: 'Void',
+    cursed: 'Hex',
+    souvenir: 'Keepsake',
+    stellar: 'Starlit',
+    diamond: 'Prism',
+    secret: 'Hidden',
+  };
+
   var FROG_BY_TIER = {
     common: { c1: '#6FD66F', c2: '#3AA83A' },
     uncommon: { c1: '#7BE0C0', c2: '#3AA888' },
@@ -67,6 +82,12 @@
   function tierRarColor(tier) {
     if (!tier || !tier.id) return '#60C2E0';
     return SKY_RAR_COLOR[tier.id] || tier.color || '#60C2E0';
+  }
+
+  function ritualFigureName(tier) {
+    if (!tier || !tier.id) return 'Heart · Figure';
+    var sub = MUTATION_BY_TIER[tier.id] || tier.label || 'Figure';
+    return 'Heart · ' + sub;
   }
 
   function renderFrogForTier(tier) {
@@ -294,8 +315,7 @@
       fig.innerHTML = renderFrogForTier(tier);
     }
     if (name) {
-      var label = tier.label || 'Figure';
-      name.textContent = serial ? 'POXY · ' + label + ' · ' + serial : 'POXY · ' + label;
+      name.textContent = ritualFigureName(tier);
     }
     if (rar) {
       rar.textContent = tier.label || 'POXY';

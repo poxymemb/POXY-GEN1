@@ -171,7 +171,7 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | App shell | `poxy-dashboard.html` (rail + topbar) | `#poxyAppShell`, `#pxSkyRail`, `#pxSkyTopbar` | **Near 1:1** | Rail-spacer pins profile/settings; sticky flex layout; `zoom:1` in Sky mode; stage `max-width:1120px` |
 | Home | `#sc-home` | `#pxSkyHome` | **Near 1:1** | Welcome + stats; smoke on real login advised |
 | Open — box picker | `#sc-open` | `#pxSkyOpen` | **Near 1:1** | Sky box grid matches mockup; Legend tier is production-only (5 cards) |
-| Open — ritual | mockup full-screen gen | `#pxSkyRitual`, `#btnOpen`, `#stSpinMount` | **Near 1:1** | Frog reveal top-to-bottom, sweep animation, Keep/Sell/Open another |
+| Open — ritual | mockup full-screen gen | `#pxSkyRitual`, `#btnOpen`, `#stSpinMount` | **Near 1:1** | Frog top-to-bottom reveal, sweep, result name `Heart · mutation`, Keep/Sell/Open another |
 | Collection | `#sc-collection` | `#collectionPage` | **Near 1:1** | Miles ring, filters, search, card grid; Sky `#pxSkyFigureModal` passport (frog, Serial/Edition/Season, Sell/Close) |
 | Market | `#sc-market` | `#stPanelMarket` / `#marketPage` | **Near 1:1** | Listing cards with rarity rings, coin prices, click-to-buy modal; sort chips + Sell CTA |
 | Store | `#sc-store` | store panel | **Near 1:1** | Free/Plus plans, Banners/Effects chips, coin buy buttons, Add funds |
