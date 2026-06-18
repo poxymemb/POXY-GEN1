@@ -24,7 +24,7 @@
           sub: 'Password, 2FA, backup codes',
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
           action: 'detail',
-          tab: 'security',
+          detailId: 'security',
         },
         {
           id: 'devices',
@@ -32,7 +32,7 @@
           sub: 'Linked devices, sessions',
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-7"/></svg>',
           action: 'detail',
-          tab: 'security',
+          detailId: 'devices',
         },
       ],
     },
@@ -78,7 +78,7 @@
           sub: 'English',
           icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>',
           action: 'detail',
-          tab: 'account',
+          detailId: 'language',
         },
       ],
     },
@@ -109,6 +109,23 @@
       ],
     },
   ];
+
+  var DETAIL_COPY = {
+    security: {
+      title: 'Security',
+      sub: 'Password, 2FA, and backup codes.',
+    },
+    devices: {
+      title: 'Devices',
+      sub: 'Linked devices and active sessions.',
+    },
+    language: {
+      title: 'Language',
+      sub: 'Interface language for POXY WORLD. Saved on this device.',
+    },
+  };
+
+  var LANG_LABELS = { en: 'English', ru: 'Русский' };
 
   function $(id) {
     return document.getElementById(id);
@@ -158,14 +175,134 @@
     if (global.PoxyScreensSky) global.PoxyScreensSky.ensureHead('settings');
   }
 
+  function setPageHead(title, subtitle) {
+    var head = document.querySelector('#settingsPage .px-sky-page-head');
+    if (!head) return;
+    var h1 = head.querySelector('h1');
+    var p = head.querySelector('p');
+    if (h1) h1.textContent = title;
+    if (p) p.textContent = subtitle;
+  }
+
+  function loadPrefs() {
+    try {
+      var raw = localStorage.getItem('poxy_settings_prefs_v1');
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function ensureDetailViews() {
+    var page = $('settingsPage');
+    if (!page || $('pxSkySettingsDetail')) return;
+
+    var detail = document.createElement('div');
+    detail.id = 'pxSkySettingsDetail';
+    detail.innerHTML =
+      '<div id="pxSkySettingsBack"><button type="button" id="pxSkySettingsBackBtn">← Settings</button></div>' +
+      '<div id="pxSkyDetailSecurity" class="px-sky-set-detail" hidden>' +
+      '<div class="set-group px-sky-set-detail-group"><h3>Change password</h3><div class="px-sky-set-panel">' +
+      '<div class="px-sky-set-field"><label class="px-sky-set-label" for="pxSkyPwdCurrent">Current password</label>' +
+      '<input class="px-sky-set-input" id="pxSkyPwdCurrent" type="password" autocomplete="current-password" placeholder="••••••••"></div>' +
+      '<div class="px-sky-set-field-grid">' +
+      '<div class="px-sky-set-field"><label class="px-sky-set-label" for="pxSkyPwdNew">New password</label>' +
+      '<input class="px-sky-set-input" id="pxSkyPwdNew" type="password" autocomplete="new-password" placeholder="Create a strong password"></div>' +
+      '<div class="px-sky-set-field"><label class="px-sky-set-label" for="pxSkyPwdConfirm">Confirm new password</label>' +
+      '<input class="px-sky-set-input" id="pxSkyPwdConfirm" type="password" autocomplete="new-password" placeholder="Repeat new password"></div>' +
+      '</div>' +
+      '<div class="px-sky-set-actions"><button type="button" class="px-sky-set-btn-primary" id="pxSkyPwdUpdate">Update password</button></div>' +
+      '<div class="px-sky-set-msg" id="pxSkyPwdMsg" aria-live="polite"></div></div></div>' +
+      '<div class="set-group px-sky-set-detail-group"><h3>Two-factor authentication</h3><div class="px-sky-set-panel">' +
+      '<div class="px-set-toggle-row"><div class="px-set-toggle-info"><p class="px-set-toggle-title">Authenticator app (TOTP)</p>' +
+      '<p class="px-set-toggle-desc">Require a one-time code when signing in from a new device.</p></div>' +
+      '<label class="px-set-switch"><input type="checkbox" id="pxSky2faTotp"><span class="px-set-switch-slider"></span></label></div>' +
+      '<div class="px-set-toggle-row"><div class="px-set-toggle-info"><p class="px-set-toggle-title">SMS backup codes</p>' +
+      '<p class="px-set-toggle-desc">Receive backup codes via verified phone. Rollout Q3.</p></div>' +
+      '<label class="px-set-switch"><input type="checkbox" id="pxSky2faSms" disabled><span class="px-set-switch-slider"></span></label></div>' +
+      '</div></div></div>' +
+      '<div id="pxSkyDetailDevices" class="px-sky-set-detail" hidden>' +
+      '<div class="set-group px-sky-set-detail-group"><h3>Sessions</h3><div class="px-sky-set-panel">' +
+      '<p class="px-set-toggle-desc px-sky-set-lead">Sign out everywhere except this browser. Use after a suspected login or device loss.</p>' +
+      '<div class="px-sky-set-actions"><button type="button" class="px-sky-set-btn-primary" id="pxSkySignOutOthers">Log out of all other devices</button></div>' +
+      '</div></div>' +
+      '<div class="set-group px-sky-set-detail-group"><h3>Recent login history</h3><div class="px-sky-set-panel">' +
+      '<div class="px-sky-session-list" id="pxSkyLoginHistory"></div></div></div></div>' +
+      '<div id="pxSkyDetailLanguage" class="px-sky-set-detail" hidden>' +
+      '<div class="set-group px-sky-set-detail-group"><h3>Language</h3><div class="px-sky-set-panel">' +
+      '<p class="px-set-toggle-desc px-sky-set-lead">Choose the interface language. Your choice is saved on this device.</p>' +
+      '<div class="px-sky-lang-row" id="pxSkyLangRow" role="group" aria-label="Interface language">' +
+      '<button type="button" class="px-sky-lang-btn" data-locale="en">English</button>' +
+      '<button type="button" class="px-sky-lang-btn" data-locale="ru">Русский</button>' +
+      '</div></div></div></div>';
+
+    page.appendChild(detail);
+
+    $('pxSkySettingsBackBtn').addEventListener('click', showHub);
+
+    $('pxSky2faTotp').addEventListener('change', function () {
+      if (typeof global.onSettings2faToggle === 'function') {
+        global.onSettings2faToggle(this.checked);
+      }
+    });
+
+    $('pxSkyPwdUpdate').addEventListener('click', function () {
+      var legacyNew = $('settingsPwdNew');
+      var legacyConfirm = $('settingsPwdConfirm');
+      var legacyCurrent = $('settingsPwdCurrent');
+      var legacyMsg = $('settingsPwdMsg');
+      var legacyBtn = $('btnSettingsUpdatePassword');
+      if (legacyNew) legacyNew.value = ($('pxSkyPwdNew') && $('pxSkyPwdNew').value) || '';
+      if (legacyConfirm) legacyConfirm.value = ($('pxSkyPwdConfirm') && $('pxSkyPwdConfirm').value) || '';
+      if (legacyCurrent) legacyCurrent.value = ($('pxSkyPwdCurrent') && $('pxSkyPwdCurrent').value) || '';
+      if (legacyBtn) {
+        legacyBtn.click();
+        if (legacyMsg && $('pxSkyPwdMsg')) {
+          $('pxSkyPwdMsg').className = legacyMsg.className.replace('poxy-settings-msg', 'px-sky-set-msg');
+          $('pxSkyPwdMsg').textContent = legacyMsg.textContent;
+        }
+      }
+    });
+
+    $('pxSkySignOutOthers').addEventListener('click', function () {
+      if (typeof global.clubSignOutAllDevices === 'function') global.clubSignOutAllDevices();
+    });
+
+    detail.querySelectorAll('#pxSkyLangRow .px-sky-lang-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.selectSettingsLocale === 'function') {
+          global.selectSettingsLocale(btn.dataset.locale);
+        }
+      });
+    });
+  }
+
+  function renderSkyLoginHistory() {
+    var list = $('pxSkyLoginHistory');
+    if (!list) return;
+    var user = global.currentUser;
+    var when = (user && (user.last_sign_in_at || user.created_at)) || null;
+    var whenStr = when ? new Date(when).toLocaleString() : 'Unknown';
+    var email = user && user.email ? user.email : '—';
+    list.innerHTML =
+      '<div class="px-sky-session-item"><div class="px-sky-session-main"><strong>This device · Active now</strong>' +
+      '<span class="px-sky-session-meta">' +
+      whenStr +
+      ' · ' +
+      email +
+      '</span></div><span class="px-sky-session-badge">Current</span></div>' +
+      '<div class="px-sky-session-item"><div class="px-sky-session-main"><strong>Web session</strong>' +
+      '<span class="px-sky-session-meta">POXY WORLD · Encrypted TLS</span></div></div>';
+  }
+
+  function syncSecurityPrefs() {
+    var p = loadPrefs();
+    var totp = $('pxSky2faTotp');
+    if (totp) totp.checked = !!p.totp2fa;
+  }
+
   function ensureBackBar() {
-    var viewport = document.querySelector('#settingsPage .poxy-settings-viewport');
-    if (!viewport || $('pxSkySettingsBack')) return;
-    var back = document.createElement('div');
-    back.id = 'pxSkySettingsBack';
-    back.innerHTML = '<button type="button" id="pxSkySettingsBackBtn">← Settings</button>';
-    back.querySelector('#pxSkySettingsBackBtn').addEventListener('click', showHub);
-    viewport.insertBefore(back, viewport.firstChild);
+    ensureDetailViews();
   }
 
   function buildRow(row) {
@@ -227,14 +364,34 @@
     if (!page) return;
     page.classList.add('px-sky-settings--hub');
     page.classList.remove('px-sky-settings--detail');
+    var detail = $('pxSkySettingsDetail');
+    if (detail) detail.hidden = true;
+    ensurePageHead();
+    setPageHead('Settings', 'Your account and everything around it.');
   }
 
-  function openDetail(tab) {
+  function openDetail(detailId) {
     var page = $('settingsPage');
     if (!page) return;
+    ensureDetailViews();
     page.classList.remove('px-sky-settings--hub');
     page.classList.add('px-sky-settings--detail');
-    if (typeof global.switchSettingsTab === 'function') global.switchSettingsTab(tab || 'account');
+    var detail = $('pxSkySettingsDetail');
+    if (detail) detail.hidden = false;
+    ['Security', 'Devices', 'Language'].forEach(function (name) {
+      var el = $('pxSkyDetail' + name);
+      if (el) el.hidden = name.toLowerCase() !== detailId;
+    });
+    var copy = DETAIL_COPY[detailId] || DETAIL_COPY.security;
+    setPageHead(copy.title, copy.sub);
+    if (detailId === 'devices') renderSkyLoginHistory();
+    if (detailId === 'security') syncSecurityPrefs();
+    if (detailId === 'language') syncLanguageSub();
+    var main = $('pxSkyMain');
+    if (main) main.scrollTop = 0;
+    try {
+      window.scrollTo(0, 0);
+    } catch (e) {}
   }
 
   function onRowClick(row, el) {
@@ -243,9 +400,7 @@
       return;
     }
     if (row.action === 'detail') {
-      openDetail(row.tab);
-      if (row.id === 'language') scrollToSettingsBlock('settingsLangRow');
-      else if (row.id === 'devices') scrollToSettingsBlock('settingsLoginHistory');
+      openDetail(row.detailId || row.tab);
       return;
     }
     if (row.action === 'topup') {
@@ -318,17 +473,34 @@
 
   function syncLanguageSub() {
     var sub = $('pxSkySetSub-language');
-    if (!sub) return;
-    var active = document.querySelector('#settingsLangRow .poxy-settings-lang-btn.active');
-    var label = active ? active.textContent.trim() : 'English';
-    sub.textContent = label || 'English';
+    var loc =
+      (global.PoxyI18n && global.PoxyI18n.getLocale && global.PoxyI18n.getLocale()) ||
+      loadPrefs().locale ||
+      'en';
+    var label = LANG_LABELS[loc] || 'English';
+    if (sub) sub.textContent = label;
+    document.querySelectorAll('#pxSkyLangRow .px-sky-lang-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.locale === loc);
+    });
+    document.querySelectorAll('#settingsLangRow .poxy-settings-lang-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.locale === loc);
+    });
+  }
+
+  function isSkySettingsDetail() {
+    var page = $('settingsPage');
+    return (
+      document.body.classList.contains('poxy-sky-app-active') &&
+      page &&
+      page.classList.contains('px-sky-settings--detail')
+    );
   }
 
   function wrapSwitchSettingsTab() {
     if (wrapSwitchSettingsTab.done || typeof global.switchSettingsTab !== 'function') return;
     var orig = global.switchSettingsTab;
     global.switchSettingsTab = function (tab) {
-      if (isSkySettingsHub()) {
+      if (isSkySettingsHub() || isSkySettingsDetail()) {
         syncLanguageSub();
         return;
       }
@@ -347,6 +519,7 @@
         syncProfileSub();
         syncLanguageSub();
         syncThemeToggle();
+        syncSecurityPrefs();
       }
     };
     wrapRenderSettingsPage.done = true;

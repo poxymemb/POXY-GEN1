@@ -82,9 +82,33 @@ body.poxy-sky-app-active #settingsPage.px-sky-settings--hub #pxSkySettingsHub {
 
 
 
-body.poxy-sky-app-active #settingsPage.px-sky-settings--detail .poxy-settings-panels {
+body.poxy-sky-app-active #settingsPage.px-sky-settings--detail .poxy-settings-shell {
+
+  display: none !important;
+
+}
+
+
+
+body.poxy-sky-app-active #settingsPage.px-sky-settings--detail #pxSkySettingsDetail {
+
+  display: block !important;
+
+  width: 100%;
+
+  max-width: 1120px;
+
+  margin: 0 auto;
 
   padding-bottom: 32px;
+
+}
+
+
+
+body.poxy-sky-app-active #settingsPage.px-sky-settings--detail .poxy-settings-viewport {
+
+  display: none !important;
 
 }
 
@@ -104,9 +128,7 @@ body.poxy-sky-app-active #settingsPage .poxy-settings-mobile-tabs {
 
 body.poxy-sky-app-active #settingsPage .poxy-settings-shell {
 
-  display: block !important;
-
-  grid-template-columns: 1fr !important;
+  display: none !important;
 
 }
 
@@ -136,41 +158,9 @@ body.poxy-sky-app-active #settingsPage.px-sky-settings--detail #pxSkySettingsHub
 
 
 
-body.poxy-sky-app-active #settingsPage.px-sky-settings--detail .poxy-settings-viewport {
+body.poxy-sky-app-active #settingsPage #pxSkySettingsDetail {
 
-  display: block !important;
-
-  width: 100% !important;
-
-  max-width: none !important;
-
-}
-
-
-
-body.poxy-sky-app-active #settingsPage #pxSkySettingsBack {
-
-  margin-bottom: 16px;
-
-}
-
-
-
-body.poxy-sky-app-active #settingsPage #pxSkySettingsBack button {
-
-  font: 600 14px var(--font);
-
-  padding: 8px 14px;
-
-  border-radius: 10px;
-
-  border: 1px solid var(--border);
-
-  background: var(--glass);
-
-  color: var(--text);
-
-  cursor: pointer;
+  display: none;
 
 }
 
@@ -342,3 +332,43 @@ body.poxy-sky-app-active #settingsPage .set-ic{width:34px;height:34px;border-rad
 body.poxy-sky-app-active #settingsPage .set-txt{flex:1}
 body.poxy-sky-app-active #settingsPage .set-arrow{color:var(--text-faint)}
 body.poxy-sky-app-active #settingsPage .set-toggle{width:44px;height:26px;border-radius:999px;background:var(--border);position:relative;transition:background .2s;flex-shrink:0}
+
+/* Settings detail sub-pages */
+body.poxy-sky-app-active #settingsPage #pxSkySettingsBack{margin-bottom:16px}
+body.poxy-sky-app-active #settingsPage #pxSkySettingsBack button{font:600 14px var(--font);padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text);cursor:pointer;font-family:var(--px-font)}
+body.poxy-sky-app-active #settingsPage .px-sky-set-detail-group{margin-bottom:14px}
+body.poxy-sky-app-active #settingsPage .px-sky-set-panel{padding:16px 18px 18px}
+body.poxy-sky-app-active #settingsPage .px-sky-set-lead{margin:0 0 14px;font-size:13.5px;color:var(--text-dim);line-height:1.45}
+body.poxy-sky-app-active #settingsPage .px-sky-set-field{margin-bottom:14px}
+body.poxy-sky-app-active #settingsPage .px-sky-set-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
+@media (max-width:680px){body.poxy-sky-app-active #settingsPage .px-sky-set-field-grid{grid-template-columns:1fr}}
+body.poxy-sky-app-active #settingsPage .px-sky-set-label{display:block;font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:6px}
+body.poxy-sky-app-active #settingsPage .px-sky-set-input{width:100%;box-sizing:border-box;padding:11px 13px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:var(--text);font:14px var(--px-font)}
+body.poxy-sky-app-active #settingsPage .px-sky-set-input:focus{outline:none;border-color:var(--sky-500);box-shadow:0 0 0 3px color-mix(in srgb,var(--sky-500) 22%,transparent)}
+body.poxy-sky-app-active #settingsPage .px-sky-set-actions{margin-top:4px}
+body.poxy-sky-app-active #settingsPage .px-sky-set-btn-primary{padding:11px 18px;border:none;border-radius:12px;background:var(--btn-bg);color:var(--btn-text);font:600 14px var(--px-font);cursor:pointer}
+body.poxy-sky-app-active #settingsPage .px-sky-set-msg{margin-top:10px;font-size:13px}
+body.poxy-sky-app-active #settingsPage .px-sky-set-msg.error{color:#d9744f}
+body.poxy-sky-app-active #settingsPage .px-sky-set-msg.success{color:#3dbe8b}
+body.poxy-sky-app-active #settingsPage .px-set-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid var(--border)}
+body.poxy-sky-app-active #settingsPage .px-sky-set-panel .px-set-toggle-row:first-child{border-top:none;padding-top:0}
+body.poxy-sky-app-active #settingsPage .px-set-toggle-title{font-size:14.5px;font-weight:600;color:var(--text-strong);margin:0 0 4px}
+body.poxy-sky-app-active #settingsPage .px-set-toggle-desc{font-size:13px;color:var(--text-dim);margin:0;line-height:1.4}
+body.poxy-sky-app-active #settingsPage .px-set-switch{position:relative;display:inline-block;width:44px;height:26px;flex-shrink:0}
+body.poxy-sky-app-active #settingsPage .px-set-switch input{opacity:0;width:0;height:0;position:absolute}
+body.poxy-sky-app-active #settingsPage .px-set-switch-slider{position:absolute;inset:0;border-radius:999px;background:var(--border);transition:background .2s;cursor:pointer}
+body.poxy-sky-app-active #settingsPage .px-set-switch-slider::before{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+body.poxy-sky-app-active #settingsPage .px-set-switch input:checked+.px-set-switch-slider{background:var(--sky-500)}
+body.poxy-sky-app-active #settingsPage .px-set-switch input:checked+.px-set-switch-slider::before{transform:translateX(18px)}
+body.poxy-sky-app-active #settingsPage .px-set-switch input:disabled+.px-set-switch-slider{opacity:.45;cursor:not-allowed}
+body.poxy-sky-app-active #settingsPage .px-sky-lang-row{display:flex;flex-wrap:wrap;gap:10px}
+body.poxy-sky-app-active #settingsPage .px-sky-lang-btn{padding:10px 16px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:var(--text);font:600 14px var(--px-font);cursor:pointer;transition:border-color .15s,background .15s}
+body.poxy-sky-app-active #settingsPage .px-sky-lang-btn:hover{border-color:var(--sky-500)}
+body.poxy-sky-app-active #settingsPage .px-sky-lang-btn.active{background:color-mix(in srgb,var(--sky-500) 16%,var(--card));border-color:var(--sky-500);color:var(--sky-700)}
+[data-theme="dark"] body.poxy-sky-app-active #settingsPage .px-sky-lang-btn.active{color:var(--sky-300)}
+body.poxy-sky-app-active #settingsPage .px-sky-session-list{display:flex;flex-direction:column;gap:10px}
+body.poxy-sky-app-active #settingsPage .px-sky-session-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border-radius:12px;border:1px solid var(--border);background:var(--glass)}
+body.poxy-sky-app-active #settingsPage .px-sky-session-main strong{display:block;font-size:14px;color:var(--text-strong);margin-bottom:3px}
+body.poxy-sky-app-active #settingsPage .px-sky-session-meta{display:block;font-size:12.5px;color:var(--text-dim)}
+body.poxy-sky-app-active #settingsPage .px-sky-session-badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:7px;background:color-mix(in srgb,var(--sky-500) 16%,transparent);color:var(--sky-700)}
+[data-theme="dark"] body.poxy-sky-app-active #settingsPage .px-sky-session-badge{color:var(--sky-300)}
