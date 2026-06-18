@@ -309,9 +309,105 @@
   };
 
   /* ── Community (club rail) ── */
+  var SHARE_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
+
+  var COMM_POSTS = [
+    {
+      commId: 'poxydev',
+      color: '#60C2E0',
+      initial: 'P',
+      name: 'POXY Dev Team',
+      time: '2h',
+      text: "Season 02 Tokens is almost here. Six new symbols, fresh mutations, and a launch event with an early-bird figure for everyone online. Get ready.",
+      likes: '1.2k',
+      reposts: '340',
+    },
+    {
+      commId: 'collectors',
+      color: '#9B8FE0',
+      initial: 'C',
+      name: 'Collectors Club',
+      time: '5h',
+      text: 'Showcase of the week: someone pulled Full BW Chained Heart on number #1 with a Dark Blood Red background. One of the rarest combos possible. Congrats to the lucky collector.',
+      likes: '864',
+      reposts: '210',
+      liked: true,
+      saved: true,
+    },
+    {
+      commId: 'rarehunt',
+      color: '#E0A23C',
+      initial: 'R',
+      name: 'Rare Hunters',
+      time: '1d',
+      text: 'Reminder: low numbers AND pretty numbers both carry a rarity bonus. A #11 beats a #47 even on the same mutation. Hunt smart.',
+      likes: '512',
+      reposts: '98',
+    },
+    {
+      commId: 'poxydev',
+      color: '#60C2E0',
+      initial: 'P',
+      name: 'POXY Dev Team',
+      time: '2d',
+      text: 'The Community Box Rush is live. Help open 1,000 boxes together and the top players take the rewards. Every box you open counts.',
+      likes: '945',
+      reposts: '187',
+    },
+  ];
+
+  var COMM_PROFILES = {
+    poxydev: {
+      banner: '#60C2E0',
+      color: '#60C2E0',
+      initial: 'P',
+      name: 'POXY Dev Team',
+      handle: '@poxydev · 24.1k followers',
+      desc: 'Official updates from the team building POXY WORLD. Announcements, seasons, and behind the scenes.',
+      channels: [
+        { label: 'Discord', handle: 'discord.gg/poxy' },
+        { label: 'X / Twitter', handle: '@poxyworld' },
+        { label: 'Telegram', handle: 't.me/poxyworld' },
+      ],
+      posts: ['poxydev', 'poxydev'],
+    },
+    collectors: {
+      banner: '#9B8FE0',
+      color: '#9B8FE0',
+      initial: 'C',
+      name: 'Collectors Club',
+      handle: '@collectors · 12.8k followers',
+      desc: 'The biggest player-run community. Trades, showcases, and rarity talk.',
+      channels: [
+        { label: 'Discord', handle: 'discord.gg/collectors' },
+        { label: 'X / Twitter', handle: '@poxycollect' },
+      ],
+      posts: ['collectors'],
+    },
+    rarehunt: {
+      banner: '#E0A23C',
+      color: '#E0A23C',
+      initial: 'R',
+      name: 'Rare Hunters',
+      handle: '@rarehunt · 7.3k followers',
+      desc: 'For the people chasing the lowest numbers and the rarest mutations.',
+      channels: [{ label: 'Discord', handle: 'discord.gg/rarehunt' }],
+      posts: ['rarehunt'],
+    },
+  };
+
   function communityPost(opts) {
+    var likeCls = opts.liked ? ' liked' : '';
+    var saveCls = opts.saved ? ' saved' : '';
+    var likeFill = opts.liked ? ' fill="#E0566A"' : ' fill="none"';
+    var saveFill = opts.saved ? ' fill="currentColor"' : ' fill="none"';
     return (
-      '<div class="post"><div class="post-head"><span class="post-av" style="--ac:' +
+      '<div class="post" data-comm="' +
+      opts.commId +
+      '"><button type="button" class="post-head" data-comm-open="' +
+      opts.commId +
+      '"><span class="post-av" style="--ac:' +
       opts.color +
       '">' +
       opts.initial +
@@ -319,18 +415,214 @@
       opts.name +
       '<span class="verified">✓</span></span><span class="post-time">' +
       opts.time +
-      '</span></div></div><div class="post-text">' +
+      '</span></div></button><div class="post-text">' +
       opts.text +
       '</div><div class="post-actions">' +
-      '<button type="button" class="pa like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><span>' +
+      '<button type="button" class="pa like' +
+      likeCls +
+      '"><svg viewBox="0 0 24 24"' +
+      likeFill +
+      ' stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><span>' +
       opts.likes +
       '</span></button>' +
       '<button type="button" class="pa repost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>' +
       opts.reposts +
       '</span></button>' +
-      '<button type="button" class="pa save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Save</span></button>' +
-      '</div></div>'
+      '<button type="button" class="pa save' +
+      saveCls +
+      '"><svg viewBox="0 0 24 24"' +
+      saveFill +
+      ' stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Save</span></button>' +
+      '<button type="button" class="pa share">' +
+      SHARE_SVG +
+      '<span>Share</span></button></div></div>'
     );
+  }
+
+  function postByCommId(commId, index) {
+    var matches = COMM_POSTS.filter(function (p) {
+      return p.commId === commId;
+    });
+    return matches[index || 0] || COMM_POSTS[0];
+  }
+
+  function commSideItem(id, color, initial, name, followers) {
+    return (
+      '<button type="button" class="cs-item" data-comm-open="' +
+      id +
+      '"><span class="cs-av" style="--ac:' +
+      color +
+      '">' +
+      initial +
+      '</span><span class="cs-mid"><span class="cs-name">' +
+      name +
+      '<span class="verified">✓</span></span><span class="cs-followers">' +
+      followers +
+      '</span></span><span class="cs-join">Follow</span></button>'
+    );
+  }
+
+  function buildCommProfilePage(id) {
+    var p = COMM_PROFILES[id];
+    if (!p) return '';
+    var channels = p.channels
+      .map(function (ch) {
+        return (
+          '<button type="button" class="cp-channel"><span class="cp-ch-ic">↗</span>' +
+          ch.label +
+          '<span class="cp-ch-handle">' +
+          ch.handle +
+          '</span></button>'
+        );
+      })
+      .join('');
+    var posts = p.posts
+      .map(function (commId, idx) {
+        return communityPost(postByCommId(commId, idx));
+      })
+      .join('');
+    return (
+      '<div class="cp-banner" style="--cpc:' +
+      p.banner +
+      '"></div><div class="cp-head"><span class="cp-av" style="--ac:' +
+      p.color +
+      '">' +
+      p.initial +
+      '</span><div class="cp-info"><h1 class="cp-name">' +
+      p.name +
+      '<span class="verified big">✓</span></h1><div class="cp-meta">' +
+      p.handle +
+      '</div></div><button type="button" class="px-sky-set-btn-primary cp-follow">Follow</button></div>' +
+      '<p class="cp-desc">' +
+      p.desc +
+      '</p><div class="panel-h">Channels & links</div><div class="cp-channels">' +
+      channels +
+      '</div><div class="panel-h" style="margin-top:22px">Latest posts</div><div class="cp-feed">' +
+      posts +
+      '</div>'
+    );
+  }
+
+  function showCommFeed() {
+    var feed = $('pxSkyCommFeed');
+    var detail = $('pxSkyCommDetail');
+    if (feed) feed.hidden = false;
+    if (detail) detail.hidden = true;
+    var panel = $('stPanelClub');
+    if (panel) {
+      ensurePageHead(
+        panel,
+        'community',
+        'Community',
+        'Posts from verified channels. Like, save, repost, and share.'
+      );
+    }
+    scrollCommTop();
+  }
+
+  function showCommDetail(id) {
+    var feed = $('pxSkyCommFeed');
+    var detail = $('pxSkyCommDetail');
+    var content = $('pxSkyCommDetailContent');
+    if (!detail || !content) return;
+    if (feed) feed.hidden = true;
+    detail.hidden = false;
+    content.innerHTML = buildCommProfilePage(id);
+    bindCommunityActions(content);
+    var p = COMM_PROFILES[id];
+    if (p) setCommHead(p.name, p.handle);
+    scrollCommTop();
+  }
+
+  function setCommHead(title, sub) {
+    var panel = $('stPanelClub');
+    if (!panel) return;
+    var head = panel.querySelector('.px-sky-page-head');
+    if (!head) return;
+    var h1 = head.querySelector('h1');
+    var p = head.querySelector('p');
+    if (h1) h1.textContent = title;
+    if (p) p.textContent = sub;
+  }
+
+  function scrollCommTop() {
+    var main = $('pxSkyMain');
+    if (main) main.scrollTop = 0;
+    try {
+      window.scrollTo(0, 0);
+    } catch (e) {}
+  }
+
+  function toggleCommLike(btn) {
+    var liked = btn.classList.toggle('liked');
+    var svg = btn.querySelector('svg');
+    if (svg) svg.setAttribute('fill', liked ? '#E0566A' : 'none');
+  }
+
+  function toggleCommSave(btn) {
+    var saved = btn.classList.toggle('saved');
+    var svg = btn.querySelector('svg');
+    if (svg) svg.setAttribute('fill', saved ? 'currentColor' : 'none');
+  }
+
+  function bumpCommRepost(btn) {
+    btn.style.color = 'var(--sky-700)';
+    setTimeout(function () {
+      btn.style.color = '';
+    }, 400);
+  }
+
+  function showCommShare() {
+    if (typeof global.showToast === 'function') {
+      global.showToast('Share: copy link · send to chat · share externally');
+    }
+  }
+
+  function bindCommunityActions(root) {
+    if (!root) return;
+    root.querySelectorAll('[data-comm-open]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        showCommDetail(btn.getAttribute('data-comm-open'));
+      });
+    });
+    root.querySelectorAll('.pa.like').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleCommLike(btn);
+      });
+    });
+    root.querySelectorAll('.pa.save').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleCommSave(btn);
+      });
+    });
+    root.querySelectorAll('.pa.repost').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        bumpCommRepost(btn);
+      });
+    });
+    root.querySelectorAll('.pa.share').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        showCommShare();
+      });
+    });
+    root.querySelectorAll('.cp-follow, .cs-join').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.showToast === 'function') {
+          global.showToast('Follow saved for this channel.');
+        }
+      });
+    });
+    root.querySelectorAll('.cp-channel').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.showToast === 'function') {
+          global.showToast('External links open in a future update.');
+        }
+      });
+    });
   }
 
   function ensureCommunityShell() {
@@ -339,64 +631,53 @@
     var shell = document.createElement('div');
     shell.id = 'pxSkyCommunityRoot';
     shell.innerHTML =
-      '<div class="comm-layout"><div>' +
+      '<div id="pxSkyCommFeed"><div class="comm-layout"><div>' +
       '<div class="comm-tabs">' +
-      '<button type="button" class="comm-tab on">Recommended</button>' +
-      '<button type="button" class="comm-tab">Following</button>' +
-      '</div><div class="feed">' +
-      communityPost({
-        color: '#60C2E0',
-        initial: 'P',
-        name: 'POXY Dev Team',
-        time: '2h',
-        text: "Season 02 Tokens is almost here. Six new symbols, fresh mutations, and a launch event with an early-bird figure for everyone online.",
-        likes: '1.2k',
-        reposts: '340',
-      }) +
-      communityPost({
-        color: '#9B8FE0',
-        initial: 'C',
-        name: 'Collectors Club',
-        time: '5h',
-        text: 'Showcase of the week: someone pulled Full BW Chained Heart on number #1 with a Dark Blood Red background. One of the rarest combos possible.',
-        likes: '864',
-        reposts: '210',
-      }) +
-      communityPost({
-        color: '#E0A23C',
-        initial: 'R',
-        name: 'Rare Hunters',
-        time: '1d',
-        text: 'Reminder: low numbers AND pretty numbers both carry a rarity bonus. A #11 beats a #47 even on the same mutation.',
-        likes: '512',
-        reposts: '98',
-      }) +
+      '<button type="button" class="comm-tab on" data-comm-tab="rec">Recommended</button>' +
+      '<button type="button" class="comm-tab" data-comm-tab="follow">Following</button>' +
+      '</div><div class="feed" id="pxSkyCommFeedList">' +
+      COMM_POSTS.map(communityPost).join('') +
       '</div></div>' +
-      '<aside class="comm-side"><div class="comm-side-card"><div class="panel-h">POXY Club</div>' +
-      '<p style="font-size:14px;color:var(--text-dim);line-height:1.5;margin:0 0 12px">Exclusive VIP boxes and members-only drops. Collect a Mythic to unlock instantly.</p>' +
-      '<button type="button" class="btn btn-glass" id="pxSkyClubLink" style="width:100%;justify-content:center">About POXY Club</button></div></div></aside></div>';
+      '<aside class="comm-side"><div class="comm-side-card"><h4>Find a community</h4>' +
+      '<div class="comm-search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>' +
+      '<input type="search" placeholder="Search communities" id="pxSkyCommSearch" aria-label="Search communities"></div>' +
+      commSideItem('poxydev', '#60C2E0', 'P', 'POXY Dev Team', '24.1k followers') +
+      commSideItem('collectors', '#9B8FE0', 'C', 'Collectors Club', '12.8k followers') +
+      commSideItem('rarehunt', '#E0A23C', 'R', 'Rare Hunters', '7.3k followers') +
+      '</div></aside></div></div>' +
+      '<div id="pxSkyCommDetail" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyCommBack">← Community</button></div>' +
+      '<div id="pxSkyCommDetailContent"></div></div>';
     panel.insertBefore(shell, panel.firstChild);
-    var clubBtn = $('pxSkyClubLink');
-    if (clubBtn) {
-      clubBtn.addEventListener('click', function () {
-        if (typeof global.showToast === 'function') {
-          global.showToast('POXY Club unlocks with a Mythic pull.');
+
+    $('pxSkyCommBack').addEventListener('click', showCommFeed);
+    shell.querySelectorAll('.comm-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        shell.querySelectorAll('.comm-tab').forEach(function (t) {
+          t.classList.toggle('on', t === tab);
+        });
+        if (tab.dataset.commTab === 'follow' && typeof global.showToast === 'function') {
+          global.showToast('Following feed shows channels you follow.');
         }
       });
+    });
+    var search = $('pxSkyCommSearch');
+    if (search) {
+      search.addEventListener('input', function () {
+        var q = search.value.trim().toLowerCase();
+        shell.querySelectorAll('.cs-item').forEach(function (item) {
+          var name = item.querySelector('.cs-name');
+          item.hidden = !!(q && name && name.textContent.toLowerCase().indexOf(q) === -1);
+        });
+      });
     }
+    bindCommunityActions(shell);
   }
 
   var PoxyCommunitySky = {
     onShow: function () {
       if (!isSky()) return;
-      var panel = $('stPanelClub');
-      ensurePageHead(
-        panel,
-        'community',
-        'Community',
-        'Posts from verified channels. Like, save, repost, and share.'
-      );
       ensureCommunityShell();
+      showCommFeed();
     },
   };
 
