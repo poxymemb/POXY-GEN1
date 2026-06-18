@@ -12,7 +12,15 @@ body.poxy-sky-app-active #stPanelQuests .quest .q-reward.is-ready {
 body.poxy-sky-app-active #stPanelQuests .page-head{margin-bottom:22px}
 body.poxy-sky-app-active #stPanelQuests .quest-group{margin-bottom:24px}
 body.poxy-sky-app-active #stPanelQuests .qg-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+body.poxy-sky-app-active #stPanelQuests .qg-head h3{font-size:16px;font-weight:700;color:var(--text-strong);letter-spacing:-.01em;margin:0}
 body.poxy-sky-app-active #stPanelQuests .qg-count{font-size:12px;font-weight:700;color:var(--sky-700);background:color-mix(in srgb,var(--sky-500) 14%,transparent);padding:3px 9px;border-radius:7px}
+[data-theme="dark"] body.poxy-sky-app-active #stPanelQuests .qg-count{color:var(--sky-300)}
+body.poxy-sky-app-active #stPanelQuests .quest.done{opacity:.66}
+body.poxy-sky-app-active #stPanelQuests .q-check.done{background:#3DBE8B;border-color:#3DBE8B;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+body.poxy-sky-app-active #stPanelQuests .q-reward.claimed{color:var(--text-faint);background:none;border-color:transparent;font-weight:600}
+body.poxy-sky-app-active #stPanelQuests .q-reward{border:none;font-family:var(--px-font)}
+body.poxy-sky-app-active #stPanelQuests .coin-sm svg{width:100%;height:100%}
+body.poxy-sky-app-active #stPanelQuests .px-sky-quest-loading{color:var(--text-dim);font-size:14px;margin:0;padding:0 4px}
 body.poxy-sky-app-active #stPanelQuests .quest-list{display:flex;flex-direction:column;gap:9px}
 body.poxy-sky-app-active #stPanelQuests .quest{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)}
 body.poxy-sky-app-active #stPanelQuests .q-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);flex-shrink:0}

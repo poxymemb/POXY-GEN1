@@ -1239,57 +1239,193 @@
   };
 
   /* ── Quests ── */
-  function renderQuestRows(quests, root) {
-    if (!root) return;
-    if (!quests || !quests.length) {
-      root.innerHTML =
-        '<div class="quest-group"><div class="qg-head"><h3>Today</h3></div><p style="color:var(--text-dim);font-size:14px">No quests loaded yet.</p></div>';
-      return;
+  var STATIC_QUEST_GROUPS = [
+    {
+      title: 'Get started',
+      quests: [
+        { key: 'avatar', title: 'Add a profile avatar', desc: 'Make your account yours', reward: 0 },
+        { key: 'email', title: 'Verify your email', desc: "Confirm it's really you", reward: 0 },
+        { key: 'first_box', title: 'Open your first box', desc: 'Start your collection', reward: 100 },
+        { key: 'profile_colour', title: 'Pick a profile colour', desc: 'Personalize your look', reward: 20 },
+      ],
+    },
+    {
+      title: 'Security',
+      quests: [
+        { key: '2fa', title: 'Enable 2FA', desc: 'Protect your account', reward: 150 },
+        { key: 'backup_codes', title: 'Save your backup codes', desc: 'Never lose access', reward: 50 },
+        { key: 'second_device', title: 'Link a second device', desc: 'Sign in anywhere by QR', reward: 80 },
+      ],
+    },
+    {
+      title: 'Account & payments',
+      quests: [
+        { key: 'account_details', title: 'Connect your details', desc: 'Add your account info', reward: 100 },
+        { key: 'verification', title: 'Complete verification', desc: 'Unlock full features', reward: 200 },
+        { key: 'topup', title: 'Top up coins once', desc: 'Fund your first boxes', reward: 60 },
+      ],
+    },
+    {
+      title: 'Collector',
+      quests: [
+        { key: 'collect_5', title: 'Collect 5 figures', desc: 'Build your shelf', reward: 120 },
+        { key: 'season_set', title: 'Complete a season set', desc: 'Finish all items in a drop', reward: 500 },
+        { key: 'first_trade', title: 'Make your first trade', desc: 'Trade with another player', reward: 90 },
+        { key: 'gift_figure', title: 'Gift a figure', desc: 'Send one to a friend', reward: 70 },
+      ],
+    },
+    {
+      title: 'Community',
+      quests: [
+        { key: 'join_group', title: 'Join a public group', desc: 'Find your people', reward: 40 },
+        { key: 'invite_friend', title: 'Invite a friend', desc: 'Grow the circle', reward: 100 },
+        { key: 'live_event', title: 'Join a live event', desc: 'Take part in a community goal', reward: 80 },
+      ],
+    },
+  ];
+
+  function staticQuestDone(key) {
+    var prof = global.currentProfile;
+    var user = global.currentUser;
+    var prefs = {};
+    try {
+      var raw = localStorage.getItem('poxy_settings_prefs_v1');
+      prefs = raw ? JSON.parse(raw) : {};
+    } catch (e) {}
+    if (key === 'avatar') {
+      return !!(prof && prof.avatar_url && String(prof.avatar_url).startsWith('http'));
     }
+    if (key === 'email') {
+      return !!(user && (user.email_confirmed_at || user.confirmed_at));
+    }
+    if (key === '2fa') return !!prefs.totp2fa;
+    if (key === 'profile_colour') {
+      return !!(prof && prof.profile_theme) || !!prefs.accent;
+    }
+    return false;
+  }
+
+  function questRewardHtml(reward, claimed, ready, questId) {
+    if (claimed) return '<span class="q-reward claimed">Claimed</span>';
+    if (ready && questId) {
+      return (
+        '<button type="button" class="q-reward is-ready" data-quest-claim="' +
+        questId +
+        '">Claim</button>'
+      );
+    }
+    return '<span class="q-reward">' + COIN_SVG + String(reward || 50) + '</span>';
+  }
+
+  function questRowHtml(opts) {
+    var done = !!opts.done;
+    var claimed = !!opts.claimed;
+    return (
+      '<div class="quest' +
+      (done || claimed ? ' done' : '') +
+      '"><span class="q-check' +
+      (done || claimed ? ' done' : '') +
+      '">' +
+      (done || claimed ? '✓' : '') +
+      '</span><div class="q-txt"><div class="q-title">' +
+      opts.title +
+      '</div><div class="q-desc">' +
+      opts.desc +
+      (opts.pct != null ? ' · ' + opts.pct + '%' : '') +
+      '</div></div>' +
+      questRewardHtml(opts.reward, claimed, opts.ready, opts.questId) +
+      '</div>'
+    );
+  }
+
+  function questGroupHtml(title, quests, rowsHtml) {
     var done = quests.filter(function (q) {
-      return q.claimed || q.progress >= q.goal;
+      return q.done || q.claimed;
     }).length;
-    root.innerHTML =
-      '<div class="quest-group"><div class="qg-head"><h3>Daily directives</h3><span class="qg-count">' +
+    return (
+      '<div class="quest-group"><div class="qg-head"><h3>' +
+      title +
+      '</h3><span class="qg-count">' +
       done +
       '/' +
       quests.length +
-      '</span></div><div class="quest-list" id="pxSkyQuestList"></div></div>';
-    var list = $('pxSkyQuestList');
-    if (!list) return;
-    quests.forEach(function (q) {
-      var meta = QUEST_LABELS[q.quest_key] || { title: q.quest_key, desc: 'Complete this task' };
-      var pct = Math.min(100, Math.round((q.progress / q.goal) * 100));
-      var claimed = !!q.claimed;
-      var ready = q.progress >= q.goal && !claimed;
-      var row = document.createElement('div');
-      row.className = 'quest' + (claimed || ready ? ' done' : '');
-      var reward = document.createElement('button');
-      reward.type = 'button';
-      reward.className =
-        'q-reward' + (claimed ? ' claimed' : ready ? ' is-ready' : '');
-      if (claimed) reward.textContent = 'Claimed';
-      else if (ready) {
-        reward.textContent = 'Claim';
-        reward.addEventListener('click', function () {
-          if (typeof global.claimQuestReward === 'function') global.claimQuestReward(q.id);
+      '</span></div><div class="quest-list">' +
+      rowsHtml +
+      '</div></div>'
+    );
+  }
+
+  function buildStaticQuestGroups() {
+    return STATIC_QUEST_GROUPS.map(function (group) {
+      var quests = group.quests.map(function (q) {
+        var done = staticQuestDone(q.key);
+        return {
+          title: q.title,
+          desc: q.desc,
+          reward: q.reward,
+          done: done,
+          claimed: group.title === 'Get started' && done,
+        };
+      });
+      var rows = quests
+        .map(function (q) {
+          return questRowHtml(q);
+        })
+        .join('');
+      return questGroupHtml(group.title, quests, rows);
+    }).join('');
+  }
+
+  function buildDailyQuestGroup(quests) {
+    if (!quests || !quests.length) return '';
+    var rows = quests
+      .map(function (q) {
+        var meta = QUEST_LABELS[q.quest_key] || { title: q.quest_key, desc: 'Complete this task' };
+        var pct = Math.min(100, Math.round((q.progress / q.goal) * 100));
+        var claimed = !!q.claimed;
+        var ready = q.progress >= q.goal && !claimed;
+        return questRowHtml({
+          title: meta.title,
+          desc: meta.desc,
+          reward: q.reward || 50,
+          done: claimed || ready,
+          claimed: claimed,
+          ready: ready,
+          questId: q.id,
+          pct: pct,
         });
-      } else reward.innerHTML = COIN_SVG + String(q.reward || 50);
-      row.innerHTML =
-        '<span class="q-check' +
-        (claimed || ready ? ' done' : '') +
-        '">' +
-        (claimed || ready ? '✓' : '') +
-        '</span><div class="q-txt"><div class="q-title">' +
-        meta.title +
-        '</div><div class="q-desc">' +
-        meta.desc +
-        ' · ' +
-        pct +
-        '%</div></div>';
-      row.appendChild(reward);
-      list.appendChild(row);
+      })
+      .join('');
+    var metaQuests = quests.map(function (q) {
+      return {
+        done: !!q.claimed || q.progress >= q.goal,
+        claimed: !!q.claimed,
+      };
     });
+    return questGroupHtml('Daily directives', metaQuests, rows);
+  }
+
+  function bindQuestClaims(root) {
+    if (!root) return;
+    root.querySelectorAll('[data-quest-claim]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.claimQuestReward === 'function') {
+          global.claimQuestReward(btn.getAttribute('data-quest-claim'));
+        }
+      });
+    });
+  }
+
+  function renderQuestPage(quests) {
+    var root = $('pxSkyQuestsRoot');
+    if (!root) return;
+    var daily = buildDailyQuestGroup(quests || global.dailyQuests || []);
+    var loading =
+      global.currentUser && !daily && (!quests || !quests.length)
+        ? '<div class="quest-group"><div class="qg-head"><h3>Daily directives</h3></div><p class="px-sky-quest-loading">Loading directives…</p></div>'
+        : '';
+    root.innerHTML = (daily || loading) + buildStaticQuestGroups();
+    bindQuestClaims(root);
   }
 
   function ensureQuestsShell() {
@@ -1300,8 +1436,7 @@
         '<div class="px-sky-page-head page-head" data-sky-key="quests"><h1>Quests</h1><p>Complete tasks, earn coins, and level up your account.</p></div>' +
         '<div id="pxSkyQuestsRoot"></div>';
     }
-    var quests = global.dailyQuests || [];
-    renderQuestRows(quests, $('pxSkyQuestsRoot'));
+    renderQuestPage(global.dailyQuests || []);
     if (typeof global.loadDailyQuests === 'function' && global.currentUser) {
       global.loadDailyQuests();
     }
@@ -1314,7 +1449,7 @@
     },
     syncFromDaily: function (quests) {
       if (!isSky()) return;
-      renderQuestRows(quests || global.dailyQuests || [], $('pxSkyQuestsRoot'));
+      renderQuestPage(quests || global.dailyQuests || []);
     },
   };
 
@@ -1334,10 +1469,47 @@
     );
   }
 
-  function levelNodeRow(node, currentLvl) {
-    var state = 'locked';
-    if (node.n < currentLvl) state = 'claimed';
-    else if (node.n === currentLvl) state = 'ready';
+  var PASS_NODES = [
+    { n: 1, name: 'Pass: Starter', reward: 'Bonus figure', coins: 100 },
+    { n: 2, name: 'Pass: Rare box', reward: 'Free Premium box' },
+    { n: 3, name: 'Pass: Coin surge', reward: 'Coin pack', coins: 250 },
+    { n: 4, name: 'Pass: Exclusive banner', reward: 'Pass-only banner' },
+    { n: 5, name: 'Pass: Mythic shot', reward: 'A Mythic-tier box' },
+  ];
+
+  function levelRewardState(nodeN, currentLvl) {
+    if (nodeN > currentLvl) return 'locked';
+    var readyAt = Math.max(1, currentLvl - 2);
+    if (nodeN < readyAt) return 'claimed';
+    if (nodeN === readyAt) return 'ready';
+    return 'locked';
+  }
+
+  function xpHeadline(lvl, progress) {
+    var eco = global.playerEconomy;
+    var prof = global.currentProfile;
+    var xpBal =
+      eco && eco.xp_balance != null
+        ? Number(eco.xp_balance)
+        : prof && prof.xp_balance != null
+          ? Number(prof.xp_balance)
+          : null;
+    if (xpBal != null && progress > 0 && progress < 1) {
+      var need = Math.max(1, Math.round(xpBal / progress));
+      return (
+        Number(xpBal).toLocaleString() +
+        ' / ' +
+        Number(need).toLocaleString() +
+        ' XP to level ' +
+        (lvl + 1)
+      );
+    }
+    if (progress >= 1) return 'Level cap reached for this track';
+    return 'Keep collecting and opening to climb';
+  }
+
+  function levelNodeRow(node, currentLvl, isPass) {
+    var state = isPass ? 'locked' : levelRewardState(node.n, currentLvl);
     var reward = node.reward;
     if (node.coins) {
       reward +=
@@ -1351,8 +1523,11 @@
           : '<span class="lvl-claim locked">Locked</span>';
     return (
       '<div class="lvl-node' +
+      (isPass ? ' pass' : '') +
       (state === 'claimed' ? ' done' : '') +
-      '"><span class="lvl-num">' +
+      '"><span class="lvl-num' +
+      (isPass ? ' pass' : '') +
+      '">' +
       node.n +
       '</span><div class="lvl-info"><div class="lvl-name">' +
       node.name +
@@ -1362,6 +1537,23 @@
       claim +
       '</div>'
     );
+  }
+
+  function bindLevelClaims(root) {
+    if (!root) return;
+    root.querySelectorAll('.lvl-claim.ready').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (typeof global.showToast === 'function') {
+          global.showToast('Level reward claimed.');
+        }
+        var row = btn.closest('.lvl-node');
+        var span = document.createElement('span');
+        span.className = 'lvl-claim claimed';
+        span.textContent = 'Claimed';
+        btn.replaceWith(span);
+        if (row) row.classList.add('done');
+      });
+    });
   }
 
   function bindLevelTabs(panel) {
@@ -1391,7 +1583,10 @@
     var lvl = playerLevel();
     var progress = playerXpProgress();
     var track = LEVEL_NODES.map(function (n) {
-      return levelNodeRow(n, lvl);
+      return levelNodeRow(n, lvl, false);
+    }).join('');
+    var passTrack = PASS_NODES.map(function (n) {
+      return levelNodeRow(n, lvl, true);
     }).join('');
     panel.innerHTML =
       '<div class="px-sky-page-head page-head" data-sky-key="levels"><h1>Levels</h1><p>Grow your account by collecting, opening, and taking part. Claim rewards as you climb.</p></div>' +
@@ -1404,7 +1599,9 @@
       levelTitle(lvl) +
       '</div><div class="lh-bar"><i id="pxSkyLvlBar" style="width:' +
       Math.round(progress * 100) +
-      '%"></i></div><div class="lh-xp" id="pxSkyLvlXp">Keep collecting and opening to climb</div></div></div>' +
+      '%"></i></div><div class="lh-xp" id="pxSkyLvlXp">' +
+      xpHeadline(lvl, progress) +
+      '</div></div></div>' +
       '<div class="lvl-tabs"><button type="button" class="lvl-tab on" id="pxSkyLvlTabMain">Account</button>' +
       '<button type="button" class="lvl-tab pass" id="pxSkyLvlTabPass">POXY PASS</button></div>' +
       '<div id="pxSkyLvlMain"><div class="lvl-track" id="pxSkyLvlTrack">' +
@@ -1412,15 +1609,20 @@
       '</div></div>' +
       '<div id="pxSkyLvlPass" hidden><div class="pass-banner"><span class="pb-ic">★</span>' +
       '<div class="pb-txt"><div class="t">POXY PASS</div><div class="d">A separate reward track with exclusive figures, boxes, and coins.</div></div>' +
-      '<button type="button" class="btn btn-primary">Get the Pass</button></div></div></div>';
+      '<button type="button" class="px-sky-pass-btn" id="pxSkyPassGet">Get the Pass · £9.99</button></div>' +
+      '<div class="lvl-track" id="pxSkyLvlPassTrack">' +
+      passTrack +
+      '</div></div></div>';
     bindLevelTabs(panel);
-    panel.querySelectorAll('.lvl-claim.ready').forEach(function (btn) {
-      btn.addEventListener('click', function () {
+    bindLevelClaims(panel);
+    var passBtn = $('pxSkyPassGet');
+    if (passBtn) {
+      passBtn.addEventListener('click', function () {
         if (typeof global.showToast === 'function') {
-          global.showToast('Level rewards sync with your account soon.');
+          global.showToast('POXY PASS checkout opens in a future update.');
         }
       });
-    });
+    }
   }
 
   function syncLevelsHead() {
@@ -1429,15 +1631,25 @@
     var big = $('pxSkyLvlBig');
     var name = $('pxSkyLvlName');
     var bar = $('pxSkyLvlBar');
+    var xp = $('pxSkyLvlXp');
     if (big) big.textContent = String(lvl);
     if (name) name.textContent = 'Level ' + lvl + ' · ' + levelTitle(lvl);
     if (bar) bar.style.width = Math.round(progress * 100) + '%';
+    if (xp) xp.textContent = xpHeadline(lvl, progress);
     var track = $('pxSkyLvlTrack');
     if (track) {
       track.innerHTML = LEVEL_NODES.map(function (n) {
-        return levelNodeRow(n, lvl);
+        return levelNodeRow(n, lvl, false);
       }).join('');
     }
+    var passTrack = $('pxSkyLvlPassTrack');
+    if (passTrack) {
+      passTrack.innerHTML = PASS_NODES.map(function (n) {
+        return levelNodeRow(n, lvl, true);
+      }).join('');
+    }
+    var root = $('pxSkyLevelsRoot');
+    bindLevelClaims(root);
   }
 
   var PoxyLevelsSky = {

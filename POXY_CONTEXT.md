@@ -181,8 +181,8 @@ Legend: **1:1** mockup match + gate smoke-tested · **Near** layout/copy close, 
 | Community | `#sc-community` | `club` / `PoxyCommunitySky` | **Near 1:1** | Feed, sidebar search, channel profile drill-down |
 | Messenger | `#sc-messenger` | `messenger` / `PoxyMessengerSky` | **Near 1:1** | Chat list, search, thread switch, attach menu, send |
 | Events | `#sc-events` | `events` / `PoxyEventsSky` | **Near 1:1** | Overview → detail with progress, leaderboard, read more |
-| Quests | `#sc-quests` | `quests` / `PoxyQuestsSky` | **Near** | Daily quest rows wired to production data |
-| Levels | `#sc-levels` | `levels` / `PoxyLevelsSky` | **Near** | Level path UI; legacy ranks podium hidden |
+| Quests | `#sc-quests` | `quests` / `PoxyQuestsSky` | **Near 1:1** | Five mockup groups + daily directives with claim wired |
+| Levels | `#sc-levels` | `levels` / `PoxyLevelsSky` | **Near 1:1** | Account track + POXY PASS tab with five pass nodes; XP headline from economy |
 | Modals / overlays | mockup modals | notify, support, top-up, crypto overlay | **Partial** | Functional legacy modals + `overlays.css` reskin |
 
 Known UI stubs (no backend): QR device login, forgot password flow, verify OTP polish.
