@@ -54,6 +54,114 @@ body.poxy-sky-app-active #topUpModal .px-sky-topup-bal strong {
   font-weight: 700 !important;
 }
 
+body.poxy-sky-app-active #topUpModal .px-sky-topup-tabs {
+  display: flex !important;
+  gap: 8px !important;
+  margin: 0 0 18px !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-topup-tab {
+  flex: 1 !important;
+  font: 600 14px var(--px-font, var(--font)) !important;
+  padding: 10px !important;
+  border-radius: 11px !important;
+  border: 1px solid var(--border) !important;
+  background: var(--glass) !important;
+  color: var(--text-dim) !important;
+  cursor: pointer !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-topup-tab.on {
+  background: var(--btn-bg) !important;
+  color: #fff !important;
+  border-color: var(--btn-bg) !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-field {
+  margin-bottom: 14px !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-field label {
+  display: block !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: var(--text-dim) !important;
+  margin-bottom: 6px !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-input {
+  width: 100% !important;
+  font: 500 15px var(--px-font, var(--font)) !important;
+  color: var(--text) !important;
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 11px !important;
+  padding: 12px 14px !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-input:focus {
+  border-color: var(--sky-500) !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-amts {
+  display: flex !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  margin-top: 8px !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-amt {
+  font: 700 13px var(--px-font, var(--font)) !important;
+  padding: 8px 14px !important;
+  border-radius: 9px !important;
+  border: 1px solid var(--border) !important;
+  background: var(--glass) !important;
+  color: var(--text-strong) !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-amt:hover,
+body.poxy-sky-app-active #topUpModal .px-sky-gift-amt.sel {
+  border-color: var(--sky-500) !important;
+  background: color-mix(in srgb, var(--sky-500) 12%, transparent) !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-send {
+  width: 100% !important;
+  margin-top: 8px !important;
+  padding: 12px 16px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  background: var(--btn-bg) !important;
+  color: #fff !important;
+  font: 600 14px var(--px-font, var(--font)) !important;
+  cursor: pointer !important;
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-send:hover {
+  filter: brightness(1.06);
+}
+
+body.poxy-sky-app-active #topUpModal .px-sky-gift-note {
+  margin: 14px 0 0 !important;
+  font-size: 12.5px !important;
+  color: var(--text-dim) !important;
+  line-height: 1.45 !important;
+  text-align: center !important;
+}
+
+body.poxy-sky-app-active #topUpModal .coin-sm {
+  width: 15px !important;
+  height: 15px !important;
+  display: inline-block !important;
+  vertical-align: -2px !important;
+}
+
 body.poxy-sky-app-active #topUpModal .tum-glow {
   display: none !important;
 }
