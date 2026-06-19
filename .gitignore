@@ -1,4 +1,4 @@
-.cursor/mcp.json
+﻿.cursor/mcp.json
 .env
 .env.*
 *.local
@@ -14,3 +14,5 @@ stitch-export/screens/*.html
 
 # Supabase CLI local cache (never commit)
 supabase/.temp/
+
+.playwright-mcp/
