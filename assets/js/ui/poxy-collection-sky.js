@@ -28,8 +28,7 @@
       tierLabel = global.TIER_BY_ID[tier].label || '';
     }
     var serial = String(item.serial_number != null ? item.serial_number : item.serial || '');
-    var vip = item.vip_serial != null ? String(item.vip_serial) : '';
-    var hay = (tier + ' ' + tierLabel + ' ' + serial + ' ' + vip).toLowerCase();
+    var hay = (tier + ' ' + tierLabel + ' ' + serial).toLowerCase();
     return hay.indexOf(q) !== -1;
   }
 
@@ -98,10 +97,6 @@
   function hideStageNoise() {
     document.body.classList.add('poxy-sky-collection-active');
     if (typeof global.hideHuntPageShell === 'function') global.hideHuntPageShell();
-    var club = $('clubPage');
-    if (club && club.parentElement && club.parentElement.id !== 'stPanelClub') {
-      club.style.display = 'none';
-    }
     var main = $('pxSkyMain');
     if (main) main.scrollTop = 0;
     try {

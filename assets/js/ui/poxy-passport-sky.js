@@ -57,7 +57,10 @@
 
   function passportEdition(item, tier) {
     if (!item) return '—';
-    if (item.vip_serial != null) return '#' + item.vip_serial + ' / Club';
+    if (item.vip_serial != null) {
+      var sn = String(item.vip_serial);
+      return '#' + sn.replace(/^#/, '') + ' / ' + ((tier && tier.id && TIER_EDITION_CAP[tier.id]) || 250);
+    }
     var cap = (tier && tier.id && TIER_EDITION_CAP[tier.id]) || 250;
     var n = null;
     if (item.traits && item.traits.edition != null) n = Number(item.traits.edition);

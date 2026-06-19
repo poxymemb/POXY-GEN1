@@ -84,7 +84,7 @@ const ROUTES = [
   { label: 'Store', indexNeedles: ['data-nav="store"', 'poxy-store-sky.js'] },
   {
     label: 'Community',
-    indexNeedles: ['data-nav="community"'],
+    indexNeedles: ['data-nav="community"', 'id="stPanelCommunity"', 'data-st-tab="community"'],
     stageNeedles: ['PoxyCommunitySky', 'global.PoxyCommunitySky'],
   },
   {

@@ -305,7 +305,7 @@
         : meta.name || 'POXY';
     }
     if (rar) {
-      rar.textContent = tier.label + (opts.isVip ? ' · VIP' : '');
+      rar.textContent = tier.label;
       rar.style.color = rc;
     }
     if (serial) serial.textContent = passport ? passport.passportSerial(poxy) : '—';
@@ -349,11 +349,6 @@
       ctx.opts.onCancel();
       return;
     }
-    if (ctx.opts.vipLocked) {
-      if (typeof global.showToast === 'function') {
-        global.showToast('VIP listing. You can buy it, but Club unlocks VIP visuals.');
-      }
-    }
     if (ctx.opts.onDetails) {
       ctx.opts.onDetails();
       return;
@@ -391,7 +386,7 @@
       '</div>';
     meta.querySelector('.cell-name').textContent = name;
     var rarEl = meta.querySelector('.cell-rar');
-    rarEl.textContent = tier.label + (opts.isVip ? ' · VIP' : '');
+    rarEl.textContent = tier.label;
     rarEl.style.color = rc;
     meta.querySelector('.cell-price').innerHTML = COIN_SVG + priceText;
 

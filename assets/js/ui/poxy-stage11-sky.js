@@ -308,7 +308,7 @@
     },
   };
 
-  /* ── Community (club rail) ── */
+  /* ── Community rail ── */
   var SHARE_SVG =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
 
@@ -327,7 +327,7 @@
       commId: 'collectors',
       color: '#9B8FE0',
       initial: 'C',
-      name: 'Collectors Club',
+      name: 'Collectors',
       time: '5h',
       text: 'Showcase of the week: someone pulled Full BW Chained Heart on number #1 with a Dark Blood Red background. One of the rarest combos possible. Congrats to the lucky collector.',
       likes: '864',
@@ -376,7 +376,7 @@
       banner: '#9B8FE0',
       color: '#9B8FE0',
       initial: 'C',
-      name: 'Collectors Club',
+      name: 'Collectors',
       handle: '@collectors · 12.8k followers',
       desc: 'The biggest player-run community. Trades, showcases, and rarity talk.',
       channels: [
@@ -508,7 +508,7 @@
     var detail = $('pxSkyCommDetail');
     if (feed) feed.hidden = false;
     if (detail) detail.hidden = true;
-    var panel = $('stPanelClub');
+    var panel = $('stPanelCommunity');
     if (panel) {
       ensurePageHead(
         panel,
@@ -535,7 +535,7 @@
   }
 
   function setCommHead(title, sub) {
-    var panel = $('stPanelClub');
+    var panel = $('stPanelCommunity');
     if (!panel) return;
     var head = panel.querySelector('.px-sky-page-head');
     if (!head) return;
@@ -626,7 +626,7 @@
   }
 
   function ensureCommunityShell() {
-    var panel = $('stPanelClub');
+    var panel = $('stPanelCommunity');
     if (!panel || $('pxSkyCommunityRoot')) return;
     var shell = document.createElement('div');
     shell.id = 'pxSkyCommunityRoot';
@@ -642,7 +642,7 @@
       '<div class="comm-search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>' +
       '<input type="search" placeholder="Search communities" id="pxSkyCommSearch" aria-label="Search communities"></div>' +
       commSideItem('poxydev', '#60C2E0', 'P', 'POXY Dev Team', '24.1k followers') +
-      commSideItem('collectors', '#9B8FE0', 'C', 'Collectors Club', '12.8k followers') +
+      commSideItem('collectors', '#9B8FE0', 'C', 'Collectors', '12.8k followers') +
       commSideItem('rarehunt', '#E0A23C', 'R', 'Rare Hunters', '7.3k followers') +
       '</div></aside></div></div>' +
       '<div id="pxSkyCommDetail" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyCommBack">← Community</button></div>' +
@@ -723,12 +723,12 @@
       id: 'collectors',
       color: '#9B8FE0',
       initial: 'C',
-      name: 'Collectors Club',
+      name: 'Collectors',
       time: '3h',
       last: 'alex: anyone got Golden Heart?',
       unread: 5,
       status: 'group · 12.8k members',
-      placeholder: 'Message Collectors Club',
+      placeholder: 'Message Collectors',
       messages: [
         { who: 'them', text: 'alex: anyone got Golden Heart?' },
         { who: 'them', text: 'nova: I have #47, not selling yet', time: '09:14' },
@@ -770,7 +770,7 @@
   ];
 
   var MSG_SEARCH_GROUPS = [
-    { color: '#9B8FE0', initial: 'C', name: 'Collectors Club', handle: '@collectors · 12.8k members', verified: true, chatId: 'collectors' },
+    { color: '#9B8FE0', initial: 'C', name: 'Collectors', handle: '@collectors · 12.8k members', verified: true, chatId: 'collectors' },
     { color: '#8BCFE4', initial: 'T', name: 'Trade Hub', handle: '@tradehub · 3.4k members', chatId: 'tradehub' },
     { color: '#E0A23C', initial: 'R', name: 'Rare Hunters', handle: '@rarehunt · 7.3k members', verified: true, chatId: 'collectors' },
   ];

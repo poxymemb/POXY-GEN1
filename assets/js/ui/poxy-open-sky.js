@@ -9,7 +9,6 @@
 
   var SKY_BOXES = [
     { caseId: 'standard', name: 'Starter', odds: 'Common to Rare', b1: '#8BCFE4', b2: '#60C2E0' },
-    { caseId: 'vip', name: 'Premium', odds: 'Rare to Epic', b1: '#60C2E0', b2: '#40ABCC' },
     { caseId: 'genesis', name: 'Elite', odds: 'Epic to Legendary', b1: '#40ABCC', b2: '#2E85A0' },
     { caseId: 'mythic', name: 'Mythic', odds: 'A shot at Mythic', b1: '#E0A23C', b2: '#D9744F' },
     { caseId: 'legend', name: 'Legend', odds: 'Legendary focus', b1: '#E0A23C', b2: '#B8862F' },

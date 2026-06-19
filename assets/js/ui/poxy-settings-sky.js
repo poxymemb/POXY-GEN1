@@ -265,7 +265,7 @@
     });
 
     $('pxSkySignOutOthers').addEventListener('click', function () {
-      if (typeof global.clubSignOutAllDevices === 'function') global.clubSignOutAllDevices();
+      if (typeof global.signOutAllDevices === 'function') global.signOutAllDevices();
     });
 
     detail.querySelectorAll('#pxSkyLangRow .px-sky-lang-btn').forEach(function (btn) {

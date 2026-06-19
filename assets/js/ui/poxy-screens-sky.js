@@ -30,10 +30,7 @@
     if (!stage || !main) return;
     Array.from(main.children).forEach(function (el) {
       if (el === stage || el.id === 'pxSkyTopbar') return;
-      if (
-        el.classList.contains('page') ||
-        (el.classList.contains('club-page') && el.id === 'clubPage')
-      ) {
+      if (el.classList.contains('page')) {
         stage.appendChild(el);
       }
     });
@@ -81,7 +78,7 @@
     if ((tab === 'tierlist' || tab === 'rarity') && global.PoxyCollectionsSky) {
       global.PoxyCollectionsSky.onShow();
     }
-    if (tab === 'club' && global.PoxyCommunitySky) global.PoxyCommunitySky.onShow();
+    if (tab === 'community' && global.PoxyCommunitySky) global.PoxyCommunitySky.onShow();
     if (tab === 'messenger' && global.PoxyMessengerSky) global.PoxyMessengerSky.onShow();
     if (tab === 'events' && global.PoxyEventsSky) global.PoxyEventsSky.onShow();
     if (tab === 'quests' && global.PoxyQuestsSky) global.PoxyQuestsSky.onShow();

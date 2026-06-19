@@ -14,6 +14,7 @@
     market: 'market',
     collection: 'collection',
     club: 'community',
+    community: 'community',
     ranks: 'levels',
     levels: 'levels',
     tierlist: 'collections',
@@ -55,7 +56,7 @@
       global.showStitchTab('store');
     },
     community: function () {
-      global.showStitchTab('club');
+      global.showStitchTab('community');
     },
     messenger: function () {
       global.showStitchTab('messenger');

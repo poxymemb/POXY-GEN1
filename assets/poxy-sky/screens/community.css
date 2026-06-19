@@ -1,80 +1,80 @@
 /* POXY Sky Stage 11 — community.css from poxy-dashboard.html */
 
-body.poxy-sky-app-active.dark-club #stPanelClub,
-body.poxy-sky-app-active #stPanelClub {
+body.poxy-sky-app-active.dark-club #stPanelCommunity,
+body.poxy-sky-app-active #stPanelCommunity {
   background: transparent !important;
 }
-body.poxy-sky-app-active #stPanelClub .club-page,
-body.poxy-sky-app-active #stPanelClub #clubPage {
+body.poxy-sky-app-active #stPanelCommunity .club-page,
+body.poxy-sky-app-active #stPanelCommunity #clubPage {
   background: transparent !important;
   color: var(--text) !important;
 }
-body.poxy-sky-app-active #stPanelClub .club-topbar,
-body.poxy-sky-app-active #stPanelClub .poxy-club-glass {
+body.poxy-sky-app-active #stPanelCommunity .club-topbar,
+body.poxy-sky-app-active #stPanelCommunity .poxy-club-glass {
   background: var(--card) !important;
   border-color: var(--border) !important;
   box-shadow: var(--shadow) !important;
   color: var(--text) !important;
 }
-body.poxy-sky-app-active #stPanelClub .club-nav-btn.active {
+body.poxy-sky-app-active #stPanelCommunity .club-nav-btn.active {
   background: var(--sky-500) !important;
   color: #fff !important;
 }
-body.poxy-sky-app-active #stPanelClub .page-head{margin-bottom:22px}
-body.poxy-sky-app-active #stPanelClub .comm-layout{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start}
-body.poxy-sky-app-active #stPanelClub .comm-tabs{display:flex;gap:8px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
-body.poxy-sky-app-active #stPanelClub .comm-tab.on{background:var(--btn-bg);color:#fff;border-color:var(--btn-bg)}
-body.poxy-sky-app-active #stPanelClub .comm-tab{font:600 14px var(--font);padding:9px 16px;border-radius:11px;border:1px solid var(--border);background:var(--glass);color:var(--text-dim);cursor:pointer}
-body.poxy-sky-app-active #stPanelClub .feed{max-width:600px;display:flex;flex-direction:column;gap:14px}
-body.poxy-sky-app-active #stPanelClub .post{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow)}
-body.poxy-sky-app-active #stPanelClub .post-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}
-body.poxy-sky-app-active #stPanelClub .post-av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:17px;display:grid;place-items:center;flex-shrink:0;border:none;cursor:pointer}
-body.poxy-sky-app-active #stPanelClub .post-who{display:flex;flex-direction:column}
-body.poxy-sky-app-active #stPanelClub .post-name{font-size:15px;font-weight:650;color:var(--text-strong);display:flex;align-items:center;gap:6px}
-body.poxy-sky-app-active #stPanelClub .post-time{font-size:12.5px;color:var(--text-faint)}
-body.poxy-sky-app-active #stPanelClub .post-text{font-size:15px;color:var(--text-strong);opacity:.9;line-height:1.55;margin-bottom:13px}
-body.poxy-sky-app-active #stPanelClub .post-actions{display:flex;align-items:center;gap:6px}
-body.poxy-sky-app-active #stPanelClub .pa{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font:600 13px var(--font);color:var(--text-dim);padding:7px 11px;border-radius:9px;transition:background .15s,color .15s}
-body.poxy-sky-app-active #stPanelClub .comm-side{position:sticky;top:80px}
-body.poxy-sky-app-active #stPanelClub .comm-side-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
-body.poxy-sky-app-active #stPanelClub .comm-search-box{display:flex;align-items:center;gap:9px;background:var(--glass);border:1px solid var(--border);border-radius:11px;padding:10px 13px;margin-bottom:6px}
-body.poxy-sky-app-active #stPanelClub .cs-item{display:flex;align-items:center;gap:11px;padding:10px 0;border:none;background:none;cursor:pointer;font-family:var(--font);text-align:left;width:100%;border-bottom:1px solid var(--border)}
-body.poxy-sky-app-active #stPanelClub .cs-av{width:38px;height:38px;border-radius:12px;background:var(--ac);color:#fff;font-weight:700;font-size:15px;display:grid;place-items:center;flex-shrink:0}
-body.poxy-sky-app-active #stPanelClub .cs-mid{flex:1;min-width:0;display:flex;flex-direction:column}
-body.poxy-sky-app-active #stPanelClub .cs-name{font-size:14px;font-weight:650;color:var(--text-strong);display:flex;align-items:center;gap:5px}
-body.poxy-sky-app-active #stPanelClub .cs-followers{font-size:12px;color:var(--text-dim)}
-body.poxy-sky-app-active #stPanelClub .cs-join{font-size:12px;font-weight:600;color:var(--sky-700);background:color-mix(in srgb,var(--sky-500) 14%,transparent);padding:5px 11px;border-radius:8px;flex-shrink:0}
-body.poxy-sky-app-active #stPanelClub .verified{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--sky-500);color:#fff;font-size:9px;font-weight:700;vertical-align:middle}
-body.poxy-sky-app-active #stPanelClub .post-head{width:100%;border:none;background:none;padding:0;margin:0 0 12px;cursor:pointer;text-align:left;font:inherit}
-body.poxy-sky-app-active #stPanelClub .post-head:hover .post-name{color:var(--sky-700)}
-[data-theme="dark"] body.poxy-sky-app-active #stPanelClub .post-head:hover .post-name{color:var(--sky-300)}
-body.poxy-sky-app-active #stPanelClub .pa:hover{background:var(--glass);color:var(--text)}
-body.poxy-sky-app-active #stPanelClub .pa.like.liked{color:#E0566A}
-body.poxy-sky-app-active #stPanelClub .pa.save.saved{color:var(--sky-700)}
-[data-theme="dark"] body.poxy-sky-app-active #stPanelClub .pa.save.saved{color:var(--sky-300)}
-body.poxy-sky-app-active #stPanelClub .pa.share{margin-left:auto}
-body.poxy-sky-app-active #stPanelClub .comm-side-card h4{font-size:15px;font-weight:650;color:var(--text-strong);margin:0 0 12px}
-body.poxy-sky-app-active #stPanelClub .comm-search-box input{border:none;background:none;outline:none;font:500 14px var(--font);color:var(--text);width:100%}
-body.poxy-sky-app-active #stPanelClub .comm-search-box svg{width:16px;height:16px;color:var(--text-faint);flex-shrink:0}
-body.poxy-sky-app-active #stPanelClub .cs-item:last-child{border-bottom:none}
-body.poxy-sky-app-active #stPanelClub .back-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-body.poxy-sky-app-active #stPanelClub .back-btn{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font:600 13px var(--font);color:var(--text-dim);cursor:pointer;font-family:var(--px-font)}
-body.poxy-sky-app-active #stPanelClub .back-btn:hover{color:var(--text)}
-body.poxy-sky-app-active #stPanelClub .panel-h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px}
-body.poxy-sky-app-active #stPanelClub .cp-banner{height:160px;border-radius:var(--r-lg);background:linear-gradient(135deg,var(--cpc),color-mix(in srgb,var(--cpc) 40%,#1c2630));border:1px solid var(--border);box-shadow:var(--shadow)}
-body.poxy-sky-app-active #stPanelClub .cp-head{display:flex;align-items:center;gap:16px;padding:0 4px;margin:-30px 0 14px;position:relative;flex-wrap:wrap}
-body.poxy-sky-app-active #stPanelClub .cp-av{width:78px;height:78px;border-radius:22px;background:var(--ac);color:#fff;font-weight:700;font-size:30px;display:grid;place-items:center;flex-shrink:0;border:4px solid var(--bg)}
-body.poxy-sky-app-active #stPanelClub .cp-info{flex:1;padding-top:30px;min-width:180px}
-body.poxy-sky-app-active #stPanelClub .cp-name{font-size:22px;font-weight:700;color:var(--text-strong);display:flex;align-items:center;gap:8px;margin:0}
-body.poxy-sky-app-active #stPanelClub .verified.big{width:18px;height:18px;font-size:11px}
-body.poxy-sky-app-active #stPanelClub .cp-meta{font-size:13.5px;color:var(--text-dim);margin-top:2px}
-body.poxy-sky-app-active #stPanelClub .cp-follow{align-self:center;margin-top:30px;padding:10px 18px;border:none;border-radius:12px;background:var(--btn-bg);color:var(--btn-text);font:600 14px var(--px-font);cursor:pointer}
-body.poxy-sky-app-active #stPanelClub .cp-desc{font-size:15px;color:var(--text-strong);opacity:.82;line-height:1.6;max-width:620px;margin-bottom:6px}
-body.poxy-sky-app-active #stPanelClub .cp-channels{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
-body.poxy-sky-app-active #stPanelClub .cp-channel{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--text);background:var(--glass);border:1px solid var(--border);padding:9px 14px;border-radius:11px;cursor:pointer;font-family:var(--px-font)}
-body.poxy-sky-app-active #stPanelClub .cp-channel:hover{border-color:var(--sky-500)}
-body.poxy-sky-app-active #stPanelClub .cp-ch-ic{color:var(--sky-700);font-weight:700}
-[data-theme="dark"] body.poxy-sky-app-active #stPanelClub .cp-ch-ic{color:var(--sky-300)}
-body.poxy-sky-app-active #stPanelClub .cp-ch-handle{color:var(--text-faint);font-weight:500;font-size:12.5px}
-body.poxy-sky-app-active #stPanelClub .cp-feed{display:flex;flex-direction:column;gap:14px;max-width:600px}
-@media (max-width:900px){body.poxy-sky-app-active #stPanelClub .comm-layout{grid-template-columns:1fr}body.poxy-sky-app-active #stPanelClub .comm-side{display:none}}
+body.poxy-sky-app-active #stPanelCommunity .page-head{margin-bottom:22px}
+body.poxy-sky-app-active #stPanelCommunity .comm-layout{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start}
+body.poxy-sky-app-active #stPanelCommunity .comm-tabs{display:flex;gap:8px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
+body.poxy-sky-app-active #stPanelCommunity .comm-tab.on{background:var(--btn-bg);color:#fff;border-color:var(--btn-bg)}
+body.poxy-sky-app-active #stPanelCommunity .comm-tab{font:600 14px var(--font);padding:9px 16px;border-radius:11px;border:1px solid var(--border);background:var(--glass);color:var(--text-dim);cursor:pointer}
+body.poxy-sky-app-active #stPanelCommunity .feed{max-width:600px;display:flex;flex-direction:column;gap:14px}
+body.poxy-sky-app-active #stPanelCommunity .post{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelCommunity .post-head{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+body.poxy-sky-app-active #stPanelCommunity .post-av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:17px;display:grid;place-items:center;flex-shrink:0;border:none;cursor:pointer}
+body.poxy-sky-app-active #stPanelCommunity .post-who{display:flex;flex-direction:column}
+body.poxy-sky-app-active #stPanelCommunity .post-name{font-size:15px;font-weight:650;color:var(--text-strong);display:flex;align-items:center;gap:6px}
+body.poxy-sky-app-active #stPanelCommunity .post-time{font-size:12.5px;color:var(--text-faint)}
+body.poxy-sky-app-active #stPanelCommunity .post-text{font-size:15px;color:var(--text-strong);opacity:.9;line-height:1.55;margin-bottom:13px}
+body.poxy-sky-app-active #stPanelCommunity .post-actions{display:flex;align-items:center;gap:6px}
+body.poxy-sky-app-active #stPanelCommunity .pa{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;font:600 13px var(--font);color:var(--text-dim);padding:7px 11px;border-radius:9px;transition:background .15s,color .15s}
+body.poxy-sky-app-active #stPanelCommunity .comm-side{position:sticky;top:80px}
+body.poxy-sky-app-active #stPanelCommunity .comm-side-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+body.poxy-sky-app-active #stPanelCommunity .comm-search-box{display:flex;align-items:center;gap:9px;background:var(--glass);border:1px solid var(--border);border-radius:11px;padding:10px 13px;margin-bottom:6px}
+body.poxy-sky-app-active #stPanelCommunity .cs-item{display:flex;align-items:center;gap:11px;padding:10px 0;border:none;background:none;cursor:pointer;font-family:var(--font);text-align:left;width:100%;border-bottom:1px solid var(--border)}
+body.poxy-sky-app-active #stPanelCommunity .cs-av{width:38px;height:38px;border-radius:12px;background:var(--ac);color:#fff;font-weight:700;font-size:15px;display:grid;place-items:center;flex-shrink:0}
+body.poxy-sky-app-active #stPanelCommunity .cs-mid{flex:1;min-width:0;display:flex;flex-direction:column}
+body.poxy-sky-app-active #stPanelCommunity .cs-name{font-size:14px;font-weight:650;color:var(--text-strong);display:flex;align-items:center;gap:5px}
+body.poxy-sky-app-active #stPanelCommunity .cs-followers{font-size:12px;color:var(--text-dim)}
+body.poxy-sky-app-active #stPanelCommunity .cs-join{font-size:12px;font-weight:600;color:var(--sky-700);background:color-mix(in srgb,var(--sky-500) 14%,transparent);padding:5px 11px;border-radius:8px;flex-shrink:0}
+body.poxy-sky-app-active #stPanelCommunity .verified{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--sky-500);color:#fff;font-size:9px;font-weight:700;vertical-align:middle}
+body.poxy-sky-app-active #stPanelCommunity .post-head{width:100%;border:none;background:none;padding:0;margin:0 0 12px;cursor:pointer;text-align:left;font:inherit}
+body.poxy-sky-app-active #stPanelCommunity .post-head:hover .post-name{color:var(--sky-700)}
+[data-theme="dark"] body.poxy-sky-app-active #stPanelCommunity .post-head:hover .post-name{color:var(--sky-300)}
+body.poxy-sky-app-active #stPanelCommunity .pa:hover{background:var(--glass);color:var(--text)}
+body.poxy-sky-app-active #stPanelCommunity .pa.like.liked{color:#E0566A}
+body.poxy-sky-app-active #stPanelCommunity .pa.save.saved{color:var(--sky-700)}
+[data-theme="dark"] body.poxy-sky-app-active #stPanelCommunity .pa.save.saved{color:var(--sky-300)}
+body.poxy-sky-app-active #stPanelCommunity .pa.share{margin-left:auto}
+body.poxy-sky-app-active #stPanelCommunity .comm-side-card h4{font-size:15px;font-weight:650;color:var(--text-strong);margin:0 0 12px}
+body.poxy-sky-app-active #stPanelCommunity .comm-search-box input{border:none;background:none;outline:none;font:500 14px var(--font);color:var(--text);width:100%}
+body.poxy-sky-app-active #stPanelCommunity .comm-search-box svg{width:16px;height:16px;color:var(--text-faint);flex-shrink:0}
+body.poxy-sky-app-active #stPanelCommunity .cs-item:last-child{border-bottom:none}
+body.poxy-sky-app-active #stPanelCommunity .back-row{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+body.poxy-sky-app-active #stPanelCommunity .back-btn{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font:600 13px var(--font);color:var(--text-dim);cursor:pointer;font-family:var(--px-font)}
+body.poxy-sky-app-active #stPanelCommunity .back-btn:hover{color:var(--text)}
+body.poxy-sky-app-active #stPanelCommunity .panel-h{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px}
+body.poxy-sky-app-active #stPanelCommunity .cp-banner{height:160px;border-radius:var(--r-lg);background:linear-gradient(135deg,var(--cpc),color-mix(in srgb,var(--cpc) 40%,#1c2630));border:1px solid var(--border);box-shadow:var(--shadow)}
+body.poxy-sky-app-active #stPanelCommunity .cp-head{display:flex;align-items:center;gap:16px;padding:0 4px;margin:-30px 0 14px;position:relative;flex-wrap:wrap}
+body.poxy-sky-app-active #stPanelCommunity .cp-av{width:78px;height:78px;border-radius:22px;background:var(--ac);color:#fff;font-weight:700;font-size:30px;display:grid;place-items:center;flex-shrink:0;border:4px solid var(--bg)}
+body.poxy-sky-app-active #stPanelCommunity .cp-info{flex:1;padding-top:30px;min-width:180px}
+body.poxy-sky-app-active #stPanelCommunity .cp-name{font-size:22px;font-weight:700;color:var(--text-strong);display:flex;align-items:center;gap:8px;margin:0}
+body.poxy-sky-app-active #stPanelCommunity .verified.big{width:18px;height:18px;font-size:11px}
+body.poxy-sky-app-active #stPanelCommunity .cp-meta{font-size:13.5px;color:var(--text-dim);margin-top:2px}
+body.poxy-sky-app-active #stPanelCommunity .cp-follow{align-self:center;margin-top:30px;padding:10px 18px;border:none;border-radius:12px;background:var(--btn-bg);color:var(--btn-text);font:600 14px var(--px-font);cursor:pointer}
+body.poxy-sky-app-active #stPanelCommunity .cp-desc{font-size:15px;color:var(--text-strong);opacity:.82;line-height:1.6;max-width:620px;margin-bottom:6px}
+body.poxy-sky-app-active #stPanelCommunity .cp-channels{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+body.poxy-sky-app-active #stPanelCommunity .cp-channel{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--text);background:var(--glass);border:1px solid var(--border);padding:9px 14px;border-radius:11px;cursor:pointer;font-family:var(--px-font)}
+body.poxy-sky-app-active #stPanelCommunity .cp-channel:hover{border-color:var(--sky-500)}
+body.poxy-sky-app-active #stPanelCommunity .cp-ch-ic{color:var(--sky-700);font-weight:700}
+[data-theme="dark"] body.poxy-sky-app-active #stPanelCommunity .cp-ch-ic{color:var(--sky-300)}
+body.poxy-sky-app-active #stPanelCommunity .cp-ch-handle{color:var(--text-faint);font-weight:500;font-size:12.5px}
+body.poxy-sky-app-active #stPanelCommunity .cp-feed{display:flex;flex-direction:column;gap:14px;max-width:600px}
+@media (max-width:900px){body.poxy-sky-app-active #stPanelCommunity .comm-layout{grid-template-columns:1fr}body.poxy-sky-app-active #stPanelCommunity .comm-side{display:none}}
