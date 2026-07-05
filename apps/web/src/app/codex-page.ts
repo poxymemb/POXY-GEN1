@@ -20,6 +20,11 @@ import { Icon, iconMarkup, ICONS, type IconName } from '../ui/icons';
 import { wireSuimon, suimon, unlockAudio, getFeelPrefs, setFeelPrefs } from '../ui/sound';
 import { onCue } from '../ui/motion/cues';
 import { FeelSettings } from '../ui/components/feel-settings';
+import { forceKoi } from '../ui/living/koi';
+import { playIntro } from '../ui/living/intro';
+import { overrideHour, type HourBand } from '../ui/living/hour';
+import { MuseumLightToggle } from '../ui/living/hour-setting';
+import { STATES, type StateVariant } from '../ui/copy/states';
 
 const ICON_HOME = iconMarkup('home');
 const ICON_GRID = iconMarkup('collection');
@@ -44,6 +49,7 @@ const CHAPTERS: Array<[string, string]> = [
   ['components', 'Components'],
   ['motion', 'Motion'],
   ['suimon', 'Sound'],
+  ['living', 'Living'],
   ['dna', 'Screen DNA'],
 ];
 
@@ -492,6 +498,43 @@ export function renderCodexPage(host: HTMLElement): void {
       'The Seal — authenticity only',
       'Demo of the verify verdict. Features other than verify/certificates never import it.',
       row(seal.root, Button({ label: 'Stamp', variant: 'ghost', onClick: () => void seal.stamp() }).root),
+    ),
+  );
+
+  // --- the living museum
+  const hourSelect = Select({
+    label: 'Hour override',
+    name: 'demo-hour',
+    options: [
+      { value: '', label: 'Follow the clock' },
+      { value: 'morning', label: 'Morning (default truth)' },
+      { value: 'day', label: 'Day (+1% brightness)' },
+      { value: 'dusk', label: 'Dusk (warms toward amber)' },
+      { value: 'night', label: 'Night (dims 3%, soft hairlines)' },
+    ],
+    onChange: (v) => overrideHour((v || null) as HourBand | null),
+  });
+
+  page.append(
+    section(
+      'living',
+      'The Living Museum',
+      'Four quiet features that make the museum inhabited, not rendered. ' +
+        'Each is killable: reduced-motion stops the koi and the intro, a ' +
+        'toggle covers the hour, and none of them block a task.',
+      row(
+        Button({ label: 'Force the koi', variant: 'ghost', onClick: () => forceKoi() }).root,
+        Button({ label: 'Replay the intro', variant: 'ghost', onClick: () => void playIntro() }).root,
+      ),
+      el('div', { class: 'cx-grid-2' }, [hourSelect.root, MuseumLightToggle()]),
+      el('div', { class: 'cx-states' },
+        (Object.keys(STATES) as StateVariant[]).map((v) =>
+          el('div', { class: 'cx-state-card m-paper-raised' }, [
+            el('span', { class: 't-mono cx-state-card__tag' }, [v]),
+            EmptyState({ variant: v, onAction: () => {} }),
+          ]),
+        ),
+      ),
     ),
   );
 
