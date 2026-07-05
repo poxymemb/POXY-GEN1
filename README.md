@@ -1,74 +1,74 @@
-# POXY WORLD — AI Development Setup
+# POXY WORLD
 
-This folder configures POXY WORLD for disciplined AI-assisted development: an
-**architect + agents** model (Builder + Reviewer), security and bug-fixing first, and a
-safe **Strangler Fig** path to finish the Sky v2 rebrand and then clean up legacy.
+A digital atelier of collectible figures by **AETRYX LTD** (UK). Players open
+cases, collect limited-run figures across seasons, display them in a personal
+Museum, trade on a player Market, and climb the Collector Score leaderboard.
 
-## What goes where
+The brand pillar is **proof, not promises**: every case shows its odds before
+purchase, every opening is verifiable through commit-reveal RNG with a public
+verify page, and every run size is published. Honesty as a feature, in a
+category people distrust.
 
-Drop these into the **root** of your POXY WORLD repo:
-
-```
-POXY_CONTEXT.md          ← master brief. Agents read this first, every session.
-.cursorrules             ← global Cursor rules (always loaded).
-PROMPTS.md               ← copy-paste prompt templates for each stage.
-.cursor/rules/
-  architecture.md        ← stack reality + no-framework ruling (alwaysApply)
-  workflow.md            ← architect + Builder + Reviewer model (alwaysApply)
-  security.md            ← Supabase/RLS/secrets/crypto rules (alwaysApply)
-  builder.md             ← how the Builder implements a unit
-  reviewer.md            ← how the Reviewer audits a change
-  testing.md             ← smoke + structural + Edge Function checks
-  cleanup.md             ← post-Stage-11 legacy removal + restructure
-```
-
-Keep your mockups in `design/v2/` (they're the UI source of truth) and your
-existing `DESIGN.md`.
-
-## How the model works
+## Repository layout
 
 ```
-        ┌─────────────┐
-        │  ARCHITECT  │  Nikita — sets goals, approves plans, final call
-        └──────┬──────┘
-               │ goal
-        ┌──────▼──────┐     plan      ┌──────────────┐
-        │   BUILDER   │ ────────────► │  ARCHITECT   │ approves plan
-        │  (Исполн.)  │ ◄──────────── │              │
-        └──────┬──────┘    implement  └──────────────┘
-               │ change
-        ┌──────▼──────┐
-        │  REVIEWER   │  audits: behavior preserved, security, scope, copy
-        │ (Контролёр) │  → APPROVED  or  CHANGES REQUIRED (max 3 rounds)
-        └──────┬──────┘
-               │ approved
-        ┌──────▼──────┐
-        │   COMMIT    │  only after review passes
-        └─────────────┘
+apps/web          the game — Vite + vanilla TypeScript (no framework)
+apps/mcu          POXY OS — staff admin console (Next.js)
+packages/tokens   Sky Design System tokens (single source of truth)
+packages/shared   shared types + locked game constants
+supabase/         migrations, edge functions, seed data
+assets/           art sources and .riv files (git-lfs)
+design/           v2 mockups and the Rive lab (reference)
+docs/             vision, brand, game design, economy, architecture, glossary
+archive/          retired single-file prototype (still deployed, hotfix-only)
 ```
 
-The author never approves their own work. Plan precedes code; review follows it.
+Agents and contributors: start with `CLAUDE.md`, then the docs your zone
+needs. Collaboration workflow: `docs/COLLABORATION.md`.
 
-## The order of operations
+## Setup
 
-1. **Commit Stages 2–4** (they're uncommitted — do this first; PROMPTS.md §0).
-2. **Stages 5–11:** one screen per stage, Builder → Reviewer → commit (PROMPTS.md §1–2).
-3. **Cleanup:** only when every screen is on Sky and the legacy mount list is empty
-   (PROMPTS.md §5, cleanup.md).
+Requirements: Node 22 (`nvm use`), git-lfs (`git lfs install`).
 
-## Non-negotiables (full list in POXY_CONTEXT.md §8)
+```bash
+git clone https://github.com/poxymemb/POXY-GEN1.git
+cd POXY-GEN1
+npm install            # installs all workspaces
+```
 
-- Never change backend logic / Supabase hooks / crypto / economy during a visual task.
-- Never blind-delete legacy. Strangle, then delete. Commit before destructive changes.
-- Security and child safety outrank speed and features.
-- Default theme light (`poxy-sky-theme`). Coin, not "PX". "Sell for coins", not "burn".
-- No em-dashes; plain human copy.
-- We are NOT migrating to React now. Vanilla SPA stays.
+## Commands (from repo root)
 
-## Why vanilla, not React (the deliberate call)
+| Command | What it does |
+|---|---|
+| `npm run dev` | apps/web dev server |
+| `npm run build` | apps/web production build (tsc + vite) |
+| `npm run preview` | preview the web build |
+| `npm run dev:mcu` | MCU dev server |
+| `npm run build:mcu` | MCU production build |
 
-The SPA already has a working economy, crypto engine, and Supabase integration. A framework
-rewrite would discard all of that for months of risk. Telegram's web client itself ran on
-vanilla JS for years. We finish the visual rebrand on the working foundation; a React
-migration, if ever, is a separate explicitly-scoped project — not something an agent starts
-on its own.
+### MCU environment
+
+`apps/mcu` needs a local `.env.local` (never committed):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...   # server-only, staff console
+```
+
+The web app (`apps/web`) will use `VITE_SUPABASE_URL` and
+`VITE_SUPABASE_ANON_KEY` once the Supabase client lands (PROMPT 03).
+
+## Deployment
+
+Vercel deploys from `main`. During the beta rebuild the deployed product is
+the archived prototype (`archive/prototype-v1`, see `vercel.json`); switching
+the deploy to `apps/web` is an explicit later step. Never push to `main`
+directly — feature branch → PR → architect review.
+
+## Status
+
+Monorepo restructure complete (Beta Launch Pack PROMPT 01). Next sessions in
+order: design system & UI kit, app shell + auth + onboarding, gacha engine.
+
+© 2026 AETRYX LTD. All rights reserved.

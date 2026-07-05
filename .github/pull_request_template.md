@@ -2,17 +2,22 @@
 
 <!-- What changed and why (1–3 bullets) -->
 
-## Scope
+## Zone
 
-- [ ] Visual / Sky only (no Supabase RPC, RLS, economy, crypto)
-- [ ] Screen(s): <!-- e.g. landing, market -->
+- [ ] `apps/web` / `packages/*`
+- [ ] `apps/mcu`
+- [ ] `supabase/`
+- [ ] docs / repo tooling
+- [ ] `archive/prototype-v1` (hotfix only — justify below)
 
 ## Test plan
 
-- [ ] `node scripts/smoke-gate.js`
-- [ ] `node scripts/verify-dashboard-parity.js`
-- [ ] Manual: login → touched screen → light + dark → 375px
+- [ ] `npm run build` (apps/web) passes
+- [ ] `npm run build:mcu` passes (if MCU touched)
+- [ ] Manual check at 390px + reduced motion (if UI touched)
+- [ ] RLS respected; no client-trusted prices/odds (if backend touched)
 
-## Hooks preserved
+## Contracts preserved
 
-List any `id` / `bootApp` / RPC names verified unchanged, or N/A.
+<!-- Ledger law, crypto engine, RLS policies, glossary terms, locked tokens.
+     List anything verified unchanged, or N/A. -->
