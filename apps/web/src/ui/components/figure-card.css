@@ -69,6 +69,21 @@ button.px-figure-card {
   color: var(--text-dim);
 }
 
+/* Scarcity caption (unowned): Space Grotesk carries the numbers. */
+.px-figure-card--unowned .px-figure-card__plaque {
+  font-family: var(--px-font-data);
+}
+
+/* Sold out: the plaque turns ink-solid — a closed run reads as fact. */
+.px-figure-card__plaque--soldout {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--px-ink);
+  color: var(--px-paper);
+}
+
 /* Unowned: elegant absence — grayscale, dashed hairline (Codex §2). */
 .px-figure-card--unowned {
   border-style: dashed;

@@ -286,7 +286,8 @@ export function renderCodexPage(host: HTMLElement): void {
       el('div', { class: 'cx-cards' }, [
         FigureCard({ name: 'Kaze no Katana', rarity: 'legendary', mint: 17, run: 250, state: 'new', onClick: () => {} }),
         FigureCard({ name: 'Koi no Yoru', rarity: 'rare', mint: 402, run: 1800, onClick: () => {} }),
-        FigureCard({ name: 'Tsuki Usagi', rarity: 'common', run: 2500, state: 'unowned' }),
+        FigureCard({ name: 'Tsuki Usagi', rarity: 'common', run: 2500, remaining: 1203, state: 'unowned' }),
+        FigureCard({ name: 'Hoshi no Ko', rarity: 'epic', run: 800, remaining: 0, state: 'unowned' }),
       ]),
     ),
   );
