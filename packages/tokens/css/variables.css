@@ -57,7 +57,7 @@
   --px-radius-full: 999px;
 
   /* type families */
-  --px-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --px-font-display: 'Fraunces', 'Playfair Display', Georgia, 'Times New Roman', serif;
   --px-font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --px-font-data: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --px-font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
