@@ -131,25 +131,117 @@
     );
   }
 
-  function itemCard(name) {
+  function itemCard(opts) {
+    var id = opts.id || opts.name || opts;
+    var name = opts.name || opts;
+    var sub = opts.sub || '6 mutations';
+    var frameInner =
+      id === 'Katana'
+        ? '<div class="px-col-katana-icon" aria-hidden="true"></div>'
+        : frogMini('#60C2E0', '#3A90B0');
     return (
       '<button type="button" class="item-card" data-col-item="' +
-      name +
+      id +
       '"><div class="item-frame">' +
-      frogMini('#E0566A', '#B03048') +
+      frameInner +
       '</div><div class="item-meta"><div class="item-name">' +
       name +
-      '</div><div class="item-sub">14 mutations · 100 minted</div></div></button>'
+      '</div><div class="item-sub">' +
+      sub +
+      '</div></div></button>'
     );
   }
 
-  var COL_HEARTS_ITEMS = ['Heart', 'Star', 'Drop', 'Bolt', 'Moon', 'Crown'];
+  var RIV_KATANA_SRC = 'assets/figures/season1/katana/katanaresize.riv';
+  var activeRivePlayer = null;
+
+  var COL_S1_ITEMS = [
+    { id: 'Katana', name: 'Katana', sub: '6 mutations · Rive pilot live' },
+    { id: 'Origami', name: 'Origami', sub: '6 mutations · preview soon' },
+    { id: 'Maneki-neko', name: 'Maneki-neko', sub: '6 mutations · preview soon' },
+    { id: 'Fan', name: 'Fan', sub: '6 mutations · preview soon' },
+  ];
+
+  var KATANA_MUTATIONS = [
+    { name: 'Worn Steel', rate: '28.0%', c1: '#8A8F98', c2: '#5C6370' },
+    { name: 'River Stone', rate: '28.0%', c1: '#7A8A98', c2: '#456DB0' },
+    { name: 'Maple Edge', rate: '17.0%', c1: '#C04848', c2: '#8A3030' },
+    { name: 'Bamboo Spirit', rate: '17.0%', c1: '#6A9A68', c2: '#3A6A40' },
+    { name: 'Crimson Vow', rate: '8.0%', c1: '#8A1828', c2: '#1C1C1E' },
+    { name: 'Flawless Night', rate: '2.0%', rive: true },
+  ];
+
+  function destroyColRive() {
+    if (activeRivePlayer) {
+      try {
+        activeRivePlayer.destroy();
+      } catch (e) {}
+      activeRivePlayer = null;
+    }
+  }
+
+  function mutChip(mut) {
+    if (mut.rive) {
+      return (
+        '<div class="mut-chip mut-chip--rive">' +
+        '<div class="mut-swatch mut-swatch--katana" aria-hidden="true"></div>' +
+        '<div class="mut-info"><span class="mut-name">' +
+        mut.name +
+        '</span><span class="mut-rate">' +
+        mut.rate +
+        ' · animated preview above</span></div></div>'
+      );
+    }
+    return (
+      '<div class="mut-chip"><div class="mut-swatch">' +
+      frogMini(mut.c1, mut.c2) +
+      '</div><div class="mut-info"><span class="mut-name">' +
+      mut.name +
+      '</span><span class="mut-rate">' +
+      mut.rate +
+      '</span></div></div>'
+    );
+  }
+
+  function mountColRive(canvas, host) {
+    destroyColRive();
+    if (!canvas || !global.PoxyRiveFigure) return;
+    global.PoxyRiveFigure.mount({
+      canvas: canvas,
+      src: RIV_KATANA_SRC,
+      scale: 1,
+    })
+      .then(function (player) {
+        activeRivePlayer = player;
+      })
+      .catch(function () {
+        if (host) host.classList.add('px-col-rive-fallback');
+      });
+  }
+
+  function renderKatanaItem() {
+    var body = $('pxSkyColItemBody');
+    if (!body) return;
+    body.innerHTML =
+      '<div class="item-detail-head">' +
+      '<div class="idh-frame idh-frame--rive" id="pxSkyColRiveHost">' +
+      '<canvas id="pxSkyColRiveCanvas" width="280" height="320" aria-label="Katana figure preview"></canvas>' +
+      '</div><div class="idh-txt"><h2 id="pxSkyColItemTitle">Katana</h2>' +
+      '<p id="pxSkyColItemDesc">Wind-up, swing, return. Hover or tap the preview to play the react animation once.</p>' +
+      '</div></div>' +
+      '<div class="axis-block"><div class="ab-h"><h3>1 · Mutation</h3><span>named looks with their own drop rates</span></div>' +
+      '<div class="mut-grid">' +
+      KATANA_MUTATIONS.map(mutChip).join('') +
+      '</div></div>';
+    mountColRive($('pxSkyColRiveCanvas'), $('pxSkyColRiveHost'));
+  }
 
   function colView(id) {
     return $('pxSkyCol' + id);
   }
 
   function showColView(which) {
+    if (which !== 'Item') destroyColRive();
     ['Overview', 'Detail', 'Item'].forEach(function (v) {
       var el = colView(v);
       if (el) el.hidden = v !== which;
@@ -181,8 +273,8 @@
       ensurePageHead(
         panel,
         'collections',
-        'Hearts · Season 01',
-        'Six symbols, each with its own mutations. Tap an item to see the full rarity system.'
+        'Japanese Memories · Season 01',
+        'Four items from Season 01. Tap Katana to see mutations and the live Rive preview.'
       );
     }
   }
@@ -190,17 +282,37 @@
   function showColItem(name) {
     showColView('Item');
     var panel = $('stPanelTierList');
-    var title = name || 'Heart';
+    var itemId = name || 'Katana';
+    if (itemId === 'Katana') {
+      if (panel) {
+        ensurePageHead(
+          panel,
+          'collections',
+          'Katana',
+          'Season 01 · Japanese Memories. Flawless Night is the first live Rive figure in this drop.'
+        );
+      }
+      renderKatanaItem();
+      return;
+    }
+    destroyColRive();
     if (panel) {
       ensurePageHead(
         panel,
         'collections',
-        title,
-        'The signature symbol of Season 01. Fourteen mutations, one hundred minted, three rarity axes stacked on every copy.'
+        itemId,
+        'Preview art for this item is coming soon. Katana is the first Rive pilot in Season 01.'
       );
     }
-    var h2 = $('pxSkyColItemTitle');
-    if (h2) h2.textContent = title;
+    var body = $('pxSkyColItemBody');
+    if (body) {
+      body.innerHTML =
+        '<div class="item-detail-head"><div class="idh-frame">' +
+        frogMini('#60C2E0', '#3A90B0') +
+        '</div><div class="idh-txt"><h2 id="pxSkyColItemTitle">' +
+        itemId +
+        '</h2><p>Animation preview lands with the next art pass. Open Katana to see the live Rive figure.</p></div></div>';
+    }
   }
 
   /* ── Collections (tierlist rail) ── */
@@ -213,14 +325,14 @@
       '<div id="pxSkyColOverview">' +
       '<div class="col-section"><div class="col-sec-h">Current</div><div class="col-grid">' +
       colCard({
-        acc: '#E0566A',
+        acc: '#456DB0',
         status: 'Live now',
         statusColor: '#3DBE8B',
-        title: 'Hearts',
+        title: 'Japanese Memories',
         season: 'Season 01',
-        tag: 'The first drop. Six symbols, fourteen mutations each.',
-        stats: '<span>6 items</span><span>·</span><span>100 each</span><span>·</span><span>63 minted</span>',
-        prog: 63,
+        tag: 'Four items from Japan. Katana is the first live Rive pilot.',
+        stats: '<span>4 items</span><span>·</span><span>6 mutations each</span><span>·</span><span>pilot build</span>',
+        prog: 12,
         cta: 'Explore drop →',
       }) +
       '</div></div>' +
@@ -238,6 +350,16 @@
       '</div></div>' +
       '<div class="col-section"><div class="col-sec-h">Past</div><div class="col-grid">' +
       colCard({
+        acc: '#E0566A',
+        status: 'Archive',
+        statusColor: '#8A8F98',
+        title: 'Hearts',
+        season: 'Dev set',
+        tag: 'Early Sky UI demo collection.',
+        stats: '<span>6 items</span><span>·</span><span>prototype</span>',
+        cta: 'View archive →',
+      }) +
+      colCard({
         acc: '#60C2E0',
         status: 'Completed',
         statusColor: '#8A8F98',
@@ -251,29 +373,15 @@
       '<div id="pxSkyColDetail" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyColBackOverview">← All collections</button></div>' +
       '<div class="panel-h">How rarity works</div>' +
       '<div class="rarity-explain">' +
-      '<div class="rx-axis"><div class="rx-n">1</div><h4>Mutation</h4><p>The look of the item. Each symbol has its own named mutations with their own drop rates.</p></div>' +
+      '<div class="rx-axis"><div class="rx-n">1</div><h4>Mutation</h4><p>The look of the item. Each figure has named mutations with their own drop rates.</p></div>' +
       '<div class="rx-axis"><div class="rx-n">2</div><h4>Number</h4><p>Your mint number out of the total. Low numbers and pretty patterns are worth more.</p></div>' +
       '<div class="rx-axis"><div class="rx-n">3</div><h4>Background</h4><p>The frame and glow behind the item. A system-wide scale, shared across every collection.</p></div>' +
       '</div><div class="panel-h">Items in this drop</div>' +
       '<div class="items-grid">' +
-      COL_HEARTS_ITEMS.map(itemCard).join('') +
+      COL_S1_ITEMS.map(itemCard).join('') +
       '</div></div>' +
-      '<div id="pxSkyColItem" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyColBackDetail">← Hearts</button></div>' +
-      '<div class="item-detail-head"><div class="idh-frame">' +
-      frogMini('#E0566A', '#B03048') +
-      '</div><div class="idh-txt"><h2 id="pxSkyColItemTitle">Heart</h2><p>The signature symbol of Season 01. Fourteen mutations, one hundred minted, three rarity axes stacked on every copy.</p></div></div>' +
-      '<div class="axis-block"><div class="ab-h"><h3>1 · Mutation</h3><span>the look, with its own drop rate</span></div>' +
-      '<div class="mut-grid">' +
-      '<div class="mut-chip"><div class="mut-swatch">' +
-      frogMini('#E0566A', '#B03048') +
-      '</div><div class="mut-info"><span class="mut-name">Classic Red</span><span class="mut-rate">30.0%</span></div></div>' +
-      '<div class="mut-chip"><div class="mut-swatch">' +
-      frogMini('#60C2E0', '#3A90B0') +
-      '</div><div class="mut-info"><span class="mut-name">Blue Sky Poxy</span><span class="mut-rate">10.0%</span></div></div>' +
-      '<div class="mut-chip"><div class="mut-swatch">' +
-      frogMini('#E5C84F', '#C0A52F') +
-      '</div><div class="mut-info"><span class="mut-name">Golden Heart</span><span class="mut-rate">5.0%</span></div></div>' +
-      '</div></div></div>';
+      '<div id="pxSkyColItem" hidden><div class="back-row"><button type="button" class="back-btn" id="pxSkyColBackDetail">← Japanese Memories</button></div>' +
+      '<div id="pxSkyColItemBody"></div></div>';
     var mount = $('rarityPageRoot');
     if (mount) mount.insertBefore(root, mount.firstChild);
     else panel.insertBefore(root, panel.firstChild);
@@ -284,7 +392,13 @@
         btn.addEventListener('click', function () {
           if (idx === 0) showColDetail();
           else if (typeof global.showToast === 'function') {
-            global.showToast(idx === 1 ? 'Tokens preview opens at launch.' : 'Beginnings archive is read-only.');
+            var msg =
+              idx === 1
+                ? 'Tokens preview opens at launch.'
+                : idx === 2
+                  ? 'Hearts archive is read-only.'
+                  : 'Beginnings archive is read-only.';
+            global.showToast(msg);
           }
         });
       });

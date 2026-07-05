@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katana Rive pilot · POXY</title>
+  <link rel="stylesheet" href="../../assets/poxy-sky/tokens.css?v=3">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: var(--px-font, system-ui, sans-serif);
+      background: var(--px-bg, #f4f6f8);
+      color: var(--px-text, #1a1d21);
+    }
+    .px-rive-lab {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    .px-rive-lab__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--px-text-muted, #5c6370);
+      text-decoration: none;
+    }
+    .px-rive-lab__back:hover { color: var(--sky-600, #3a9fbf); }
+    .px-rive-lab h1 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+    .px-rive-lab__sub {
+      margin: 0 0 24px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--px-text-muted, #5c6370);
+    }
+    .px-rive-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 420px;
+      margin: 0 auto 20px;
+      border-radius: 20px;
+      background: var(--px-surface, #fff);
+      border: 1px solid var(--px-border, rgba(0,0,0,.08));
+      box-shadow: 0 12px 40px rgba(26, 29, 33, 0.06);
+      overflow: hidden;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .px-rive-stage:focus-visible {
+      outline: 2px solid var(--sky-500, #60c2e0);
+      outline-offset: 3px;
+    }
+    #katanaCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .px-rive-hint {
+      text-align: center;
+      font-size: 13px;
+      color: var(--px-text-muted, #5c6370);
+      margin-bottom: 24px;
+    }
+    .px-rive-debug {
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: var(--px-surface-2, rgba(0,0,0,.03));
+      border: 1px solid var(--px-border, rgba(0,0,0,.06));
+      font-family: var(--px-mono, ui-monospace, monospace);
+      font-size: 12px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--px-text-muted, #5c6370);
+    }
+    .px-rive-debug strong { color: var(--px-text, #1a1d21); }
+    .px-rive-badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(96, 194, 224, 0.15);
+      color: var(--sky-700, #2d7f99);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .px-rive-stage { cursor: default; }
+    }
+  </style>
+</head>
+<body>
+  <main class="px-rive-lab">
+    <a class="px-rive-lab__back" href="../../index.html">← Back to POXY</a>
+    <h1>Katana · Flawless Night</h1>
+    <p class="px-rive-lab__sub">Rive pilot for Season 1. Hover (desktop) or tap (mobile) to play <strong>react</strong> once. Returns to <strong>idle</strong> when done.</p>
+
+    <div id="katanaStage" class="px-rive-stage" role="img" aria-label="Katana figure animation" tabindex="0">
+      <canvas id="katanaCanvas" width="420" height="420"></canvas>
+    </div>
+    <p class="px-rive-hint">Hover or tap the figure · mid-play inputs are ignored by the state machine</p>
+
+    <div id="riveDebug" class="px-rive-debug">Loading Rive runtime…</div>
+    <span class="px-rive-badge">Dev only · not in production shell</span>
+  </main>
+
+  <script type="module">
+    const debugEl = document.getElementById('riveDebug');
+
+    function showError(msg) {
+      debugEl.innerHTML = '<strong>Runtime error</strong>\n' + msg;
+    }
+
+    window.addEventListener('error', function (e) {
+      showError((e.message || 'Unknown error') + (e.filename ? '\n' + e.filename : ''));
+    });
+    window.addEventListener('unhandledrejection', function (e) {
+      showError(String(e.reason && e.reason.message ? e.reason.message : e.reason));
+    });
+
+    let Rive, Fit, Alignment, Layout, EventType;
+    try {
+      const riveMod = await import('../../assets/vendor/rive/rive.mjs');
+      ({ Rive, Fit, Alignment, Layout, EventType } = riveMod.default || riveMod);
+    } catch (err) {
+      showError('Failed to load Rive module: ' + (err && err.message ? err.message : err));
+      throw err;
+    }
+
+    const RIV_SCALE = 1;
+
+    const RIV_SRC = '../../assets/figures/season1/katana/katanaresize.riv';
+    const canvas = document.getElementById('katanaCanvas');
+    const stage = document.getElementById('katanaStage');
+
+    let riveInstance = null;
+    let reactTrigger = null;
+    let smName = '';
+    let lastStates = ['idle'];
+    let fireCount = 0;
+    let manualReactActive = false;
+    let useManualReact = false;
+
+    function log(lines) {
+      debugEl.innerHTML = lines.map(function (line) {
+        return line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      }).join('\n');
+    }
+
+    function appendStatus(msg) {
+      var lines = debugEl.innerHTML.split('\n');
+      if (lines.length > 10) lines = lines.slice(0, 4).concat(lines.slice(-6));
+      lines.push(msg.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'));
+      debugEl.innerHTML = lines.join('\n');
+    }
+
+    function isReacting() {
+      if (manualReactActive) return true;
+      return lastStates.indexOf('react') >= 0;
+    }
+
+    function pickTrigger(inputs) {
+      if (!inputs || !inputs.length) return null;
+      var names = ['react', 'tap', 'hover', 'trigger', 'pointer'];
+      for (var i = 0; i < names.length; i++) {
+        var hit = inputs.find(function (inp) {
+          return inp.name && inp.name.toLowerCase() === names[i];
+        });
+        if (hit && typeof hit.fire === 'function') return hit;
+      }
+      return inputs.find(function (inp) { return typeof inp.fire === 'function'; }) || null;
+    }
+
+    function findAnimName(target) {
+      var names = riveInstance.animationNames || [];
+      var lower = target.toLowerCase();
+      return names.find(function (n) { return n.toLowerCase() === lower; }) || null;
+    }
+
+    function resumeIdle() {
+      manualReactActive = false;
+      if (smName) {
+        riveInstance.play(smName);
+        appendStatus('Back to **idle** (state machine)');
+        return;
+      }
+      var idleName = findAnimName('idle');
+      if (idleName) riveInstance.play(idleName);
+    }
+
+    function playManualReact(source) {
+      if (isReacting()) return;
+      var reactName = findAnimName('react');
+      if (!reactName) return;
+      manualReactActive = true;
+      if (smName) riveInstance.stop(smName);
+      riveInstance.play(reactName);
+      fireCount += 1;
+      appendStatus('Manual **react** via ' + source + ' (#' + fireCount + ')');
+    }
+
+    function fireReact(source) {
+      if (isReacting()) return;
+
+      if (reactTrigger) {
+        reactTrigger.fire();
+        fireCount += 1;
+        appendStatus('Fired **' + reactTrigger.name + '** via ' + source + ' (#' + fireCount + ')');
+        return;
+      }
+
+      if (useManualReact) {
+        playManualReact(source);
+        return;
+      }
+
+      relayPointer(source);
+    }
+
+    function relayPointer(source) {
+      var rect = canvas.getBoundingClientRect();
+      var x = rect.left + rect.width * 0.5;
+      var y = rect.top + rect.height * 0.5;
+      canvas.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: x, clientY: y }));
+      if (source === 'tap' || source === 'keyboard') {
+        canvas.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: x, clientY: y }));
+        canvas.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: x, clientY: y }));
+      }
+      appendStatus('Relayed pointer via **' + source + '**');
+    }
+
+    function bindInteraction() {
+      stage.addEventListener('pointerenter', function (e) {
+        if (window.matchMedia('(hover: hover)').matches) fireReact('hover');
+      });
+      stage.addEventListener('pointermove', function (e) {
+        if (!window.matchMedia('(hover: hover)').matches) return;
+        canvas.dispatchEvent(new MouseEvent('mousemove', {
+          bubbles: true,
+          clientX: e.clientX,
+          clientY: e.clientY
+        }));
+      });
+      stage.addEventListener('click', function () {
+        fireReact('tap');
+      });
+      stage.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          fireReact('keyboard');
+        }
+      });
+    }
+
+    try {
+      riveInstance = new Rive({
+        src: RIV_SRC,
+        canvas: canvas,
+        autoplay: true,
+        layout: new Layout({
+          fit: Fit.Contain,
+          alignment: Alignment.Center,
+          layoutScaleFactor: RIV_SCALE
+        }),
+        onLoad: function () {
+          riveInstance.resizeDrawingSurfaceToCanvas();
+
+          var smNames = riveInstance.stateMachineNames || [];
+          smName = smNames[0] || '';
+          if (smName) {
+            riveInstance.play(smName);
+          } else if (findAnimName('idle')) {
+            riveInstance.play(findAnimName('idle'));
+          }
+
+          var inputs = smName ? (riveInstance.stateMachineInputs(smName) || []) : [];
+          reactTrigger = pickTrigger(inputs);
+          useManualReact = !reactTrigger && !!findAnimName('react');
+
+          var inputSummary = inputs.map(function (inp) {
+            return inp.name + ' (' + (inp.type || 'unknown') + ')';
+          }).join(', ') || 'none';
+
+          var mode = reactTrigger
+            ? 'trigger input'
+            : (useManualReact ? 'manual react animation' : 'rive pointer listeners');
+
+          log([
+            '**Ready** · artboard: ' + (riveInstance.activeArtboard || '—'),
+            'Animations: ' + ((riveInstance.animationNames || []).join(', ') || '—'),
+            'State machine: **' + (smName || '—') + '**',
+            'Inputs: ' + inputSummary,
+            'Mode: **' + mode + '**',
+            'Asset: katanaresize.riv'
+          ]);
+
+          if (EventType) {
+            riveInstance.on(EventType.StateChange, function (ev) {
+              var states = ev && ev.data ? ev.data : [];
+              if (!states.length) return;
+              lastStates = states;
+              appendStatus('State → **' + states.join(' → ') + '**');
+            });
+            riveInstance.on(EventType.Stop, function (ev) {
+              if (!manualReactActive) return;
+              var name = ev && ev.data ? String(ev.data) : '';
+              if (name.toLowerCase().indexOf('react') >= 0) resumeIdle();
+            });
+          }
+
+          bindInteraction();
+          window.__poxyKatanaRive = riveInstance;
+        },
+        onLoadError: function (err) {
+          log([
+            '**Load failed**',
+            String(err && err.data ? err.data : err),
+            'Path: ' + RIV_SRC
+          ]);
+        }
+      });
+    } catch (err) {
+      log(['**Runtime error**', String(err && err.message ? err.message : err)]);
+    }
+
+    window.addEventListener('resize', function () {
+      if (riveInstance) riveInstance.resizeDrawingSurfaceToCanvas();
+    });
+
+    window.addEventListener('beforeunload', function () {
+      if (riveInstance) riveInstance.cleanup();
+    });
+  </script>
+</body>
+</html>

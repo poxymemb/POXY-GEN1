@@ -83,3 +83,11 @@ body.poxy-sky-app-active #stPanelTierList .mut-swatch .frog{transform:scale(.42)
 body.poxy-sky-app-active #stPanelTierList .mut-info{flex:1;display:flex;flex-direction:column}
 body.poxy-sky-app-active #stPanelTierList .mut-name{font-size:13.5px;font-weight:600;color:var(--text-strong)}
 body.poxy-sky-app-active #stPanelTierList .mut-rate{font-size:12px;color:var(--text-dim);font-family:var(--mono)}
+body.poxy-sky-app-active #stPanelTierList .idh-frame--rive{width:min(100%,200px);height:220px;padding:0;overflow:hidden;cursor:pointer;background:radial-gradient(110% 80% at 50% 16%,color-mix(in srgb,#1c1c1e 40%,var(--bg-2)),#141418);touch-action:manipulation}
+body.poxy-sky-app-active #stPanelTierList .idh-frame--rive canvas{display:block;width:100%;height:100%}
+body.poxy-sky-app-active #stPanelTierList .mut-chip--rive{border-color:color-mix(in srgb,var(--sky-500) 35%,var(--border));background:color-mix(in srgb,var(--sky-500) 6%,var(--glass))}
+body.poxy-sky-app-active #stPanelTierList .mut-swatch--katana{width:40px;height:46px;border-radius:8px;background:linear-gradient(135deg,#1c1c1e,#2a2a30);position:relative;overflow:hidden}
+body.poxy-sky-app-active #stPanelTierList .mut-swatch--katana::after{content:"";position:absolute;inset:10px 8px;background:linear-gradient(135deg,#9098a0 0%,#1c1c1e 55%);border-radius:3px;transform:rotate(-38deg)}
+body.poxy-sky-app-active #stPanelTierList .px-col-katana-icon{width:56px;height:56px;position:relative}
+body.poxy-sky-app-active #stPanelTierList .px-col-katana-icon::after{content:"";position:absolute;inset:8px 6px;background:linear-gradient(135deg,#b8c0c8 0%,#1c1c1e 60%);border-radius:4px;transform:rotate(-38deg);box-shadow:0 8px 18px rgba(0,0,0,.25)}
+body.poxy-sky-app-active #stPanelTierList .item-frame:has(.px-col-katana-icon){background:radial-gradient(110% 80% at 50% 16%,color-mix(in srgb,#1c1c1e 35%,var(--bg-2)),var(--bg-2))}
