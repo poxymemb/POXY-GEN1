@@ -3,11 +3,9 @@
 import './header.css';
 import { el } from '../../lib/dom';
 import { IconButton } from './icon-button';
+import { iconMarkup } from '../icons';
 
-const BELL = `<svg viewBox="0 0 20 20" aria-hidden="true">
-  <path d="M10 2.5c-2.9 0-5 2.2-5 5.2v2.9l-1.3 2.6a.7.7 0 0 0 .6 1h11.4a.7.7 0 0 0 .6-1L15 10.6V7.7c0-3-2.1-5.2-5-5.2Z M8.3 15.7a1.8 1.8 0 0 0 3.4 0"
-    fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
+const BELL = iconMarkup('bell');
 
 export interface BalanceChip {
   id: string;

@@ -25,3 +25,4 @@ export { Pedestal } from './components/pedestal';
 export { NavRail, TabBar } from './components/nav';
 export { EmptyState } from './components/empty-state';
 export { Header } from './components/header';
+export { Icon, iconMarkup, type IconName } from './icons';

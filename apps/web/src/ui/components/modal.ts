@@ -1,5 +1,6 @@
 import './modal.css';
 import { el } from '../../lib/dom';
+import { Icon } from '../icons';
 
 /* Modal (centered) and Sheet (bottom, mobile-first). Scrim = vault-abyss
    60%. Focus is trapped while open; Escape and scrim click dismiss. */
@@ -29,7 +30,7 @@ export function Modal(options: ModalOptions): ModalHandle {
   const closeBtn = el(
     'button',
     { class: 'px-modal__close', type: 'button', 'aria-label': 'Close', onclick: () => close() },
-    ['\u00d7'],
+    [Icon('close', 18)],
   );
 
   const panel = el(

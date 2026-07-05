@@ -82,3 +82,10 @@
   color: var(--text-dim);
   display: flex;
 }
+
+/* Sumi 'forward' rotated to point down. */
+.px-select__arrow svg {
+  width: 16px;
+  height: 16px;
+  transform: rotate(90deg);
+}

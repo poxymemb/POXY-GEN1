@@ -117,6 +117,8 @@ export function Icon(name: IconName, size = 24): SVGSVGElement {
   const svg = doc.documentElement as unknown as SVGSVGElement;
   svg.setAttribute('width', String(size));
   svg.setAttribute('height', String(size));
+  // Direction-sensitive icons mirror under RTL via ui/materials.css.
+  svg.setAttribute('data-icon', name);
   return document.importNode(svg, true);
 }
 

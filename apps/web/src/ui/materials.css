@@ -20,6 +20,12 @@
   color: var(--px-ink);
 }
 
+/* Sumi Icons: direction-sensitive glyphs mirror under RTL. */
+[dir='rtl'] svg[data-icon='back'],
+[dir='rtl'] svg[data-icon='forward'] {
+  transform: scaleX(-1);
+}
+
 /* ---------- paper (washi) ---------- */
 
 .m-paper,
