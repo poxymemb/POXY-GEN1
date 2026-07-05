@@ -326,3 +326,8 @@ the math, "trust us" copy without the recompute path.
 - Empty states = invitations with the star at 10% ink.
 - Reduced motion: instant final states everywhere, no exceptions.
 - Touch targets ≥44px; content column ≤680px; test at 390px.
+- User text in display type (museum titles, reveals, certificates) calls
+  `ensureDisplayFontFor()` first — Cyrillic names fall back to Playfair,
+  not the OS serif (ADR-0003).
+- Loading: washi skeletons (`ui/skeleton.ts`), never shimmer sweeps; the
+  star spinner is reserved for full-screen waits.

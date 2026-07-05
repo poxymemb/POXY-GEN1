@@ -119,6 +119,123 @@
   color: var(--text-dim);
 }
 
+/* Brand surfaces (02H) */
+.cx-cert-slot {
+  display: flex;
+  justify-content: center;
+  padding: var(--px-space-16) 0;
+}
+
+.cx-emails {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--px-space-16);
+}
+
+.cx-email {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-8);
+}
+
+/* Letters lay out at their true 640px width, scaled to fit the column so
+   the preview matches what an inbox renders. */
+.cx-email__stage {
+  width: 100%;
+  aspect-ratio: 640 / 900;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-8);
+  background: #f0f0f1;
+  container-type: inline-size;
+}
+
+.cx-email__frame {
+  width: 640px;
+  height: 900px;
+  border: 0;
+  transform-origin: 0 0;
+  transform: scale(calc(100cqw / 640px));
+}
+
+.cx-email__cap,
+.cx-og__cap,
+.cx-appicon__cap {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.cx-ogs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--px-space-16);
+  align-items: start;
+}
+
+.cx-og {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-8);
+}
+
+.cx-og__img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-8);
+}
+
+.cx-og--story .cx-og__img {
+  max-width: 200px;
+}
+
+.cx-appicons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--px-space-24);
+}
+
+.cx-appicon {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-8);
+}
+
+/* The favicon follows the OS scheme (ink star in light, paper in dark),
+   so its tile sits on mid-grey where both renderings stay visible. */
+.cx-appicon__img {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--px-radius-16);
+  border: 1px solid var(--hairline);
+  padding: 8px;
+  background: var(--px-rarity-common, #8a8f98);
+}
+
+.cx-appicon--ink .cx-appicon__img {
+  padding: 0;
+  border: none;
+}
+
+.cx-skeletons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--px-space-24);
+  align-items: start;
+}
+
+.cx-skeleton-demo {
+  max-width: 220px;
+}
+
+.cx-skeleton-demo--rows {
+  max-width: 320px;
+}
+
 /* Suimon cue log */
 .cx-cue-log {
   margin: 0;

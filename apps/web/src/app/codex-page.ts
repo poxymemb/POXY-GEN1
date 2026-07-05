@@ -25,6 +25,21 @@ import { playIntro } from '../ui/living/intro';
 import { overrideHour, type HourBand } from '../ui/living/hour';
 import { MuseumLightToggle } from '../ui/living/hour-setting';
 import { STATES, type StateVariant } from '../ui/copy/states';
+import { Certificate, downloadCertificatePng, type CertificateData } from '../ui/certificate';
+import {
+  SkeletonFigureCard,
+  SkeletonRow,
+  SkeletonPedestal,
+  StarSpinner,
+} from '../ui/skeleton';
+import emailConfirm from '../../../../supabase/templates/confirm-signup.html?raw';
+import emailMagic from '../../../../supabase/templates/magic-link.html?raw';
+import emailReset from '../../../../supabase/templates/password-reset.html?raw';
+import emailReceipt from '../../../../supabase/templates/purchase-receipt.html?raw';
+import ogFigure from './og/og-test-figure.png';
+import ogOpening from './og/og-test-opening.png';
+import ogMuseum from './og/og-test-museum.png';
+import ogPassport from './og/og-test-passport.png';
 
 const ICON_HOME = iconMarkup('home');
 const ICON_GRID = iconMarkup('collection');
@@ -50,6 +65,7 @@ const CHAPTERS: Array<[string, string]> = [
   ['motion', 'Motion'],
   ['suimon', 'Sound'],
   ['living', 'Living'],
+  ['surfaces', 'Surfaces'],
   ['dna', 'Screen DNA'],
 ];
 
@@ -535,6 +551,95 @@ export function renderCodexPage(host: HTMLElement): void {
           ]),
         ),
       ),
+    ),
+  );
+
+  // --- brand surfaces (02H)
+  const certData: CertificateData = {
+    name: 'Katana',
+    series: 'Season 1 \u00b7 The Awakening',
+    rarity: 'Legendary',
+    mint: 142,
+    run: 2500,
+    acquisition: 'Opened',
+    date: '2026-03-12',
+    openingId: 'opn_9f3k2m8q1x',
+    collector: 'Aiko',
+  };
+
+  const certSlot = el('div', { class: 'cx-cert-slot' });
+  void Certificate(certData).then((cert) => certSlot.append(cert));
+
+  const emailPreview = (title: string, html: string) =>
+    el('figure', { class: 'cx-email' }, [
+      el('figcaption', { class: 't-mono cx-email__cap' }, [title]),
+      el('div', { class: 'cx-email__stage' }, [
+        el('iframe', {
+          class: 'cx-email__frame',
+          srcdoc: html,
+          title,
+          loading: 'lazy',
+          sandbox: '',
+        }),
+      ]),
+    ]);
+
+  const ogShot = (label: string, src: string, story = false) =>
+    el('figure', { class: `cx-og${story ? ' cx-og--story' : ''}` }, [
+      el('img', { src, alt: label, class: 'cx-og__img' }),
+      el('figcaption', { class: 't-mono cx-og__cap' }, [label]),
+    ]);
+
+  const iconTile = (label: string, src: string, dark = false) =>
+    el('figure', { class: `cx-appicon${dark ? ' cx-appicon--ink' : ''}` }, [
+      el('img', { src, alt: label, class: 'cx-appicon__img' }),
+      el('figcaption', { class: 't-mono cx-appicon__cap' }, [label]),
+    ]);
+
+  page.append(
+    section(
+      'surfaces',
+      'Brand surfaces',
+      'The margins where a brand is judged: the certificate, the inbox, the ' +
+        'link preview, the home screen, the loading state. All Still Water.',
+      el('h3', { class: 'cx-sub' }, ['Certificate of Authenticity']),
+      certSlot,
+      row(
+        Button({ label: 'Export PNG', variant: 'ghost', onClick: () => void downloadCertificatePng(certData) }).root,
+        Button({ label: 'Print (A5)', variant: 'ghost', onClick: () => window.print() }).root,
+      ),
+      el('h3', { class: 'cx-sub' }, ['Emails \u2014 supabase/templates/']),
+      el('div', { class: 'cx-emails' }, [
+        emailPreview('confirm-signup', emailConfirm),
+        emailPreview('magic-link', emailMagic),
+        emailPreview('password-reset', emailReset),
+        emailPreview('purchase-receipt', emailReceipt),
+      ]),
+      el('h3', { class: 'cx-sub' }, ['OG share cards \u2014 og-image edge function']),
+      el('div', { class: 'cx-ogs' }, [
+        ogShot('kind=figure', ogFigure),
+        ogShot('kind=opening', ogOpening),
+        ogShot('kind=museum', ogMuseum),
+        ogShot('kind=passport (story 9:16)', ogPassport, true),
+      ]),
+      el('h3', { class: 'cx-sub' }, ['App identity']),
+      el('div', { class: 'cx-appicons' }, [
+        iconTile('favicon.svg', '/favicon.svg'),
+        iconTile('icon-192 (maskable)', '/icon-192.png', true),
+        iconTile('icon-512 (maskable)', '/icon-512.png', true),
+        iconTile('apple-touch-icon', '/apple-touch-icon.png', true),
+      ]),
+      el('h3', { class: 'cx-sub' }, ['Skeletons \u2014 washi, not shimmer']),
+      el('div', { class: 'cx-skeletons' }, [
+        el('div', { class: 'cx-skeleton-demo' }, [SkeletonFigureCard()]),
+        el('div', { class: 'cx-skeleton-demo cx-skeleton-demo--rows' }, [
+          SkeletonRow(),
+          SkeletonRow(),
+          SkeletonRow(),
+        ]),
+        el('div', { class: 'cx-skeleton-demo' }, [SkeletonPedestal()]),
+        el('div', { class: 'cx-skeleton-demo' }, [StarSpinner()]),
+      ]),
     ),
   );
 
