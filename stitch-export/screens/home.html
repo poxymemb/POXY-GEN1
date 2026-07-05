@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY World - Immutable Exclusivity</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed": "#400014",
+                        "on-primary-container": "#ffcaff",
+                        "surface-dim": "#131313",
+                        "on-tertiary-container": "#ffd1c5",
+                        "outline": "#9d8b9b",
+                        "secondary-container": "#d70357",
+                        "surface-bright": "#393939",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#3b0900",
+                        "on-secondary": "#660025",
+                        "on-surface-variant": "#d5c1d2",
+                        "primary-fixed": "#ffd6fe",
+                        "electric-cyan": "#00E5FF",
+                        "secondary": "#ffb2be",
+                        "surface-variant": "#353535",
+                        "on-error-container": "#ffdad6",
+                        "glass-stroke": "rgba(255, 255, 255, 0.08)",
+                        "surface-container-low": "#1c1b1b",
+                        "primary": "#f9abff",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#ffdbd1",
+                        "on-secondary-container": "#ffeced",
+                        "surface-container-high": "#2a2a2a",
+                        "on-tertiary": "#5f1500",
+                        "primary-container": "#9c27b0",
+                        "primary-fixed-dim": "#f9abff",
+                        "inverse-on-surface": "#313030",
+                        "surface": "#131313",
+                        "error": "#ffb4ab",
+                        "background": "#131313",
+                        "surface-container-highest": "#353535",
+                        "tertiary": "#ffb5a0",
+                        "on-secondary-fixed-variant": "#900038",
+                        "on-surface": "#e5e2e1",
+                        "inverse-surface": "#e5e2e1",
+                        "on-primary-fixed-variant": "#7b008f",
+                        "secondary-fixed": "#ffd9de",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-tertiary-fixed-variant": "#862200",
+                        "inverse-primary": "#9a25ae",
+                        "outline-variant": "#514250",
+                        "surface-tint": "#f9abff",
+                        "on-primary-fixed": "#35003f",
+                        "secondary-fixed-dim": "#ffb2be",
+                        "slate-gray": "#2D3436",
+                        "on-primary": "#570066",
+                        "deep-charcoal": "#121212",
+                        "tertiary-fixed-dim": "#ffb5a0",
+                        "tertiary-container": "#b33000",
+                        "surface-container": "#20201f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "section-gap": "120px",
+                        "base": "8px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "20px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "display-lg-mobile": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUpAnim 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeUpAnim {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        
+        .ambient-glow {
+            box-shadow: 0 0 80px 0 rgba(249, 171, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden antialiased">
+<!-- TopNavBar -->
+<nav class="bg-background/70 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-glass-stroke shadow-sm font-body-md text-body-md">
+<div class="flex justify-between items-center px-margin-desktop py-base max-w-container-max mx-auto md:px-margin-desktop px-margin-mobile">
+<div class="flex items-center gap-base">
+<span class="font-display-lg text-body-lg font-bold tracking-tighter text-on-surface">POXY WORLD</span>
+</div>
+<div class="hidden md:flex gap-gutter items-center">
+<!-- Active Item -->
+<a class="text-primary font-bold border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-300 transform active:scale-95 duration-200" href="#">Ecosystem</a>
+<!-- Inactive Items -->
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 transform active:scale-95 duration-200" href="#">Roadmap</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 transform active:scale-95 duration-200" href="#">Tiers</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 transform active:scale-95 duration-200" href="#">Marketplace</a>
+</div>
+<div class="flex gap-base items-center">
+<button class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 hidden md:inline-block">Connect</button>
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded font-medium hover:scale-[1.02] transition-transform duration-300 ambient-glow">Club Entry</button>
+</div>
+</div>
+</nav>
+<main class="pt-[100px] pb-section-gap max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-section-gap">
+<!-- Hero Section -->
+<section class="flex flex-col md:flex-row gap-gutter items-center justify-between min-h-[716px] fade-up">
+<div class="flex-1 space-y-6 z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-glass-stroke bg-surface-container-low font-label-caps text-label-caps text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">token</span>
+                    THE POXY CODEX
+                </div>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface text-balance">
+                    POXY <br/> <span class="text-primary">Collect the Uncollectable</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    The Definitive Record of Immutable Digital Heritage. Every POXY is an immutable cryptographic entity. From the precise nanosecond of its generation, each asset carries a permanent, unalterable chain of custody.
+                </p>
+<div class="flex gap-4 pt-4">
+<button class="bg-primary text-on-primary px-8 py-3 rounded hover:scale-[1.02] transition-all duration-300 ambient-glow font-bold">
+                        View Ecosystem
+                    </button>
+<button class="border border-glass-stroke bg-transparent text-on-surface px-8 py-3 rounded hover:bg-slate-gray transition-colors duration-300 font-bold">
+                        Read the Codex
+                    </button>
+</div>
+</div>
+<div class="flex-1 relative w-full aspect-square md:aspect-auto md:h-[600px] flex items-center justify-center fade-up delay-100">
+<!-- Abstract Glassmorphic Orb replacement for complex 3D graphic -->
+<div class="absolute w-[300px] h-[300px] bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
+<div class="relative w-3/4 h-3/4 border border-glass-stroke bg-surface-container-low/40 backdrop-blur-xl rounded-2xl flex flex-col items-center justify-center p-8 text-center space-y-4 hover:scale-[1.01] transition-transform duration-500">
+<span class="material-symbols-outlined text-[64px] text-primary" style="font-variation-settings: 'FILL' 1;">diamond</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">The Asset Philosophy</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Ownership is not a permission granted by a platform. It is a verifiable mathematical fact recorded on an immutable ledger. Rarity tiers — Common through Mythic — represent genuine scarcity coefficients.
+                    </p>
+</div>
+</div>
+</section>
+<!-- London Private Club Section -->
+<section class="space-y-12 fade-up delay-200">
+<div class="max-w-3xl space-y-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">London Private Club Roadmap</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                    POXY World is building the world's first digital collectible-backed private member's club in central London. Ownership of a Legendary or Mythic tier POXY confers provisional membership candidacy.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="border border-glass-stroke bg-surface-container-low rounded-xl p-6 hover:bg-slate-gray hover:scale-[1.01] transition-all duration-300 ease-out group">
+<div class="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">local_bar</span>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold mb-2">Private Mixology Bar</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Curated cocktail programme operated by internationally certified bartenders. Members-only menu crafted exclusively for the POXY community.
+                    </p>
+</div>
+<!-- Card 2 -->
+<div class="border border-glass-stroke bg-surface-container-low rounded-xl p-6 hover:bg-slate-gray hover:scale-[1.01] transition-all duration-300 ease-out group">
+<div class="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">sports_esports</span>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold mb-2">Billiards Rooms</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Three championship-grade billiard tables in a dedicated room finished with bespoke POXY-branded equipment and premium low-glare lighting systems.
+                    </p>
+</div>
+<!-- Card 3 -->
+<div class="border border-glass-stroke bg-surface-container-low rounded-xl p-6 hover:bg-slate-gray hover:scale-[1.01] transition-all duration-300 ease-out group">
+<div class="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">handshake</span>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold mb-2">Executive Networking</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Closed-door sessions with curated guest speakers from technology, finance, and creative industries. Attendance by verified holder invitation only.
+                    </p>
+</div>
+<!-- Card 4 -->
+<div class="border border-glass-stroke bg-surface-container-low rounded-xl p-6 hover:bg-slate-gray hover:scale-[1.01] transition-all duration-300 ease-out group md:col-span-2">
+<div class="w-12 h-12 rounded-full bg-surface-bright flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">inventory_2</span>
+</div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold mb-2">Heavyweight Merchandise &amp; Figurines</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Limited physical runs of museum-quality collectible objects and premium hand-finished resin figurines of your specific POXY character, individually stamped with your exact serial code. Maximum edition runs of 10 per character variant.
+                    </p>
+</div>
+<!-- Status Card -->
+<div class="border border-primary/30 bg-primary/5 rounded-xl p-6 flex flex-col justify-center items-center text-center ambient-glow">
+<span class="material-symbols-outlined text-[48px] text-primary mb-4" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<h3 class="font-body-lg text-body-lg text-primary font-bold mb-2">Founder Status Achieved</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant">
+                        You own all 5 base Gen 1 items. Your Founder badge has been permanently unlocked.
+                    </p>
+</div>
+</div>
+<div class="w-full border-t border-glass-stroke pt-6 mt-6">
+<p class="font-label-caps text-label-caps text-on-surface-variant text-center tracking-widest">
+                    London club opening: target Q4 2026, subject to membership threshold requirements.
+                </p>
+</div>
+</section>
+<!-- Store / Bank Interface -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-start fade-up delay-300">
+<!-- Left Side: User Profile / Context -->
+<div class="space-y-6">
+<div class="border border-glass-stroke bg-surface-container-low rounded-2xl p-8 hover:bg-slate-gray transition-colors duration-300">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Store &amp; Bank</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Manage your PC (Poxy Coin) balance and marketplace acquisitions.</p>
+</div>
+<div class="bg-surface-bright px-4 py-2 rounded-lg text-center">
+<span class="block font-label-caps text-label-caps text-on-surface-variant">PC Balance</span>
+<span class="font-headline-md text-headline-md text-primary font-bold">0 PC</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4 bg-surface-dim p-4 rounded-lg border border-glass-stroke">
+<span class="material-symbols-outlined text-electric-cyan">info</span>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">
+                                POXY Box Appraisal Guide — Current Estimated Market Values dynamically calculated using rarity scarcity coefficients.
+                            </p>
+</div>
+<div class="flex items-center gap-4 bg-surface-dim p-4 rounded-lg border border-glass-stroke">
+<span class="material-symbols-outlined text-error">warning</span>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">
+                                Generation 1 Seals In: <span class="text-on-surface font-mono">--d --h --m</span><br/>
+                                After seal: acquisition via marketplace only.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Add Funds / Test Mode -->
+<div class="border border-glass-stroke bg-surface-container-low rounded-2xl p-8 backdrop-blur-md shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-secondary-container text-on-secondary px-4 py-1 rounded-bl-lg font-label-caps text-label-caps font-bold">
+                    TEST MODE
+                </div>
+<h3 class="font-body-lg text-body-lg text-on-surface font-semibold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">account_balance_wallet</span> ADD FUNDS
+                </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                    Deposit Poxy Coins (PC) — 1 PC per unit deposited. Test mode — no real charges.
+                </p>
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Card Number</label>
+<input class="w-full bg-transparent border border-glass-stroke rounded px-4 py-3 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-mono" disabled="" placeholder="0000 0000 0000 0000" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Expiry</label>
+<input class="w-full bg-transparent border border-glass-stroke rounded px-4 py-3 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-mono" disabled="" placeholder="MM/YY" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant">CVV</label>
+<input class="w-full bg-transparent border border-glass-stroke rounded px-4 py-3 text-on-surface focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all font-mono" disabled="" placeholder="123" type="text"/>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-bold rounded py-3 mt-4 hover:scale-[1.02] transition-transform duration-300 ambient-glow flex justify-center items-center gap-2" disabled="">
+<span class="material-symbols-outlined">lock</span> Pay with Card (Test)
+                    </button>
+<div class="text-center mt-4">
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">or pay with</span>
+</div>
+<button class="w-full bg-surface-bright text-on-surface font-bold border border-glass-stroke rounded py-3 mt-2 hover:bg-slate-gray transition-colors duration-300 flex justify-center items-center gap-2" disabled="">
+                        🍎 Apple Pay
+                    </button>
+</form>
+</div>
+</section>
+<!-- Verbatim Legal/Terms Accordion Concept (Simplified) -->
+<section class="max-w-4xl mx-auto space-y-8 fade-up delay-300">
+<div class="border-t border-glass-stroke pt-8">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Privacy &amp; Terms</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<h4 class="font-body-lg text-body-lg text-on-surface font-semibold">Privacy Policy</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm opacity-80">
+<strong>Data Collection:</strong> POXY World collects email address, username, avatar URL, and usage metadata strictly for platform operation. No personal data is sold, shared with third parties for marketing purposes, or transmitted outside secure Supabase infrastructure.
+                        </p>
+</div>
+<div class="space-y-4">
+<h4 class="font-body-lg text-body-lg text-on-surface font-semibold">Terms of Service</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm opacity-80">
+<strong>Platform Utilisation:</strong> Access to POXY World requires acceptance of these terms. Users are prohibited from: automated scripts or bots; exploiting pricing vulnerabilities; selling account credentials; engaging in market manipulation.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest text-primary font-label-caps text-label-caps w-full py-section-gap border-t border-glass-stroke flat no shadows">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-base max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="font-display-lg text-body-md font-black text-on-surface mb-4 md:mb-0">
+                © 2024 POXY WORLD. IMMUTABLE EXCLUSIVITY.
+            </div>
+<div class="flex flex-wrap gap-6 items-center justify-center">
+<!-- Links -->
+<a class="text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Club Rules</a>
+<a class="text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

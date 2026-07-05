@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POXY WORLD - Spin &amp; Win</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;900&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-primary-fixed": "#35003f",
+                            "on-tertiary-fixed-variant": "#862200",
+                            "surface-container-low": "#1c1b1b",
+                            "on-surface": "#e5e2e1",
+                            "on-secondary": "#660025",
+                            "on-primary": "#570066",
+                            "primary-fixed": "#ffd6fe",
+                            "on-surface-variant": "#d5c1d2",
+                            "surface-tint": "#f9abff",
+                            "tertiary-container": "#b33000",
+                            "surface-container-high": "#2a2a2a",
+                            "on-primary-fixed-variant": "#7b008f",
+                            "tertiary-fixed": "#ffdbd1",
+                            "slate-gray": "#2D3436",
+                            "primary-fixed-dim": "#f9abff",
+                            "surface": "#131313",
+                            "on-tertiary": "#5f1500",
+                            "glass-stroke": "rgba(255, 255, 255, 0.08)",
+                            "primary": "#f9abff",
+                            "primary-container": "#9c27b0",
+                            "error-container": "#93000a",
+                            "background": "#131313",
+                            "inverse-primary": "#9a25ae",
+                            "on-error-container": "#ffdad6",
+                            "electric-cyan": "#00E5FF",
+                            "inverse-on-surface": "#313030",
+                            "secondary-container": "#d70357",
+                            "on-tertiary-container": "#ffd1c5",
+                            "on-secondary-fixed": "#400014",
+                            "secondary": "#ffb2be",
+                            "tertiary-fixed-dim": "#ffb5a0",
+                            "surface-dim": "#131313",
+                            "on-secondary-container": "#ffeced",
+                            "secondary-fixed": "#ffd9de",
+                            "on-primary-container": "#ffcaff",
+                            "on-background": "#e5e2e1",
+                            "surface-container-highest": "#353535",
+                            "on-error": "#690005",
+                            "secondary-fixed-dim": "#ffb2be",
+                            "outline": "#9d8b9b",
+                            "outline-variant": "#514250",
+                            "surface-container": "#20201f",
+                            "on-secondary-fixed-variant": "#900038",
+                            "surface-container-lowest": "#0e0e0e",
+                            "deep-charcoal": "#121212",
+                            "error": "#ffb4ab",
+                            "tertiary": "#ffb5a0",
+                            "surface-variant": "#353535",
+                            "surface-bright": "#393939",
+                            "on-tertiary-fixed": "#3b0900",
+                            "inverse-surface": "#e5e2e1"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.125rem",
+                            "lg": "0.25rem",
+                            "xl": "0.5rem",
+                            "full": "0.75rem"
+                    },
+                    "spacing": {
+                            "section-gap": "120px",
+                            "margin-desktop": "64px",
+                            "container-max": "1280px",
+                            "margin-mobile": "20px",
+                            "gutter": "24px",
+                            "base": "8px"
+                    },
+                    "fontFamily": {
+                            "label-caps": [
+                                    "JetBrains Mono"
+                            ],
+                            "display-lg": [
+                                    "Hanken Grotesk"
+                            ],
+                            "body-md": [
+                                    "Inter"
+                            ],
+                            "body-lg": [
+                                    "Inter"
+                            ],
+                            "display-lg-mobile": [
+                                    "Hanken Grotesk"
+                            ],
+                            "headline-md": [
+                                    "Hanken Grotesk"
+                            ]
+                    },
+                    "fontSize": {
+                            "label-caps": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "16px",
+                                            "letterSpacing": "0.1em",
+                                            "fontWeight": "500"
+                                    }
+                            ],
+                            "display-lg": [
+                                    "64px",
+                                    {
+                                            "lineHeight": "72px",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "body-md": [
+                                    "16px",
+                                    {
+                                            "lineHeight": "24px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "body-lg": [
+                                    "18px",
+                                    {
+                                            "lineHeight": "28px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "display-lg-mobile": [
+                                    "40px",
+                                    {
+                                            "lineHeight": "48px",
+                                            "letterSpacing": "-0.01em",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "headline-md": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "40px",
+                                            "fontWeight": "600"
+                                    }
+                            ]
+                    },
+                    "animation": {
+                        "pulse-glow": "pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "ticker": "ticker 20s linear infinite",
+                        "float": "float 6s ease-in-out infinite",
+                    },
+                    "keyframes": {
+                        "pulseGlow": {
+                            "0%, 100%": { boxShadow: "0 0 15px rgba(249, 171, 255, 0.4)", opacity: "1" },
+                            "50%": { boxShadow: "0 0 30px rgba(249, 171, 255, 0.8)", opacity: "0.8" }
+                        },
+                        "ticker": {
+                            "0%": { transform: "translateX(0)" },
+                            "100%": { transform: "translateX(-50%)" }
+                        },
+                        "float": {
+                            "0%, 100%": { transform: "translateY(0)" },
+                            "50%": { transform: "translateY(-10px)" }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(28, 27, 27, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid theme('colors.glass-stroke');
+        }
+
+        .ambient-glow {
+            box-shadow: 0 0 60px rgba(249, 171, 255, 0.15);
+        }
+
+        /* Hide scrollbar for ticker */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .magma-border {
+            position: relative;
+            background: linear-gradient(45deg, #ffb5a0, #b33000, #ffb5a0);
+            background-size: 200% 200%;
+            animation: gradient-move 3s ease infinite;
+            padding: 2px;
+            border-radius: 50%;
+        }
+
+        @keyframes gradient-move {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pt-24">
+<!-- TopNavBar (From JSON) -->
+<nav class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-glass-stroke shadow-sm">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-base max-w-container-max mx-auto">
+<div class="font-display-lg-mobile md:font-display-lg text-body-lg font-bold tracking-tighter text-on-surface">
+                POXY WORLD
+            </div>
+<div class="hidden md:flex gap-gutter">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md hover:text-primary transition-colors duration-300" href="#">Ecosystem</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="#">Roadmap</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="#">Tiers</a>
+<a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-300" href="#">Marketplace</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">BALANCE:</span>
+<span class="font-body-md text-body-md font-bold text-primary">2,450 PC</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high px-3 py-1.5 rounded-full border border-glass-stroke cursor-pointer hover:bg-surface-variant transition-colors">
+<div class="magma-border">
+<img alt="User Avatar" class="w-8 h-8 rounded-full object-cover border-2 border-background" data-alt="A highly detailed close-up portrait of a futuristic digital avatar representing a user named Nikita. The avatar features a sleek, stylized human face with subtle cybernetic enhancements. The lighting is dramatic, casting deep shadows that contrast with a fiery, magma-like ambient glow surrounding the face. The overall aesthetic perfectly matches a high-end, modern minimalist sci-fi UI with a dark background and intense electric cyan and primary violet accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABXKn3T6dIrjzyP7Yib-4Cew5CIZ3OMRBwgDgKmMjPt4KUwBl7ddImlZp7_YnITkwl255520xGeZ9Tik5yBnpEWZZqrSgfXYociz9jAE8-RklKym67-wcUYlUvmsfCu46C-jQCC0O49DWRMIg4b-5p5wAety5NIKWR3ZYyvS04OxRokOtcFqLeSJIxZV2mptsCpaJ3Rh6GtRhgDL9SIbRO1NcRfgucB2onvol5hRazmgXMeKRbmxXi1yHHVtVL6yiojd21-HH0cQ"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface pr-2 hidden sm:block">Nikita</span>
+</div>
+<button class="hidden md:block px-4 py-2 bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded hover:scale-95 transition-transform duration-200">
+                    Club Entry
+                </button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-section-gap max-w-container-max mx-auto w-full relative">
+<!-- Background Ambient Glow -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
+<div class="w-3/4 h-3/4 rounded-full bg-primary/5 blur-[120px]"></div>
+</div>
+<!-- Header Section -->
+<div class="text-center mb-16 animate-float">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">
+                IMMUTABLE EXCLUSIVITY
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Engage the quantum carousel. Unlock rare digital assets and elevate your tier within the POXY ecosystem.
+            </p>
+</div>
+<!-- Carousel / Loot Box Container -->
+<div class="w-full max-w-4xl relative glass-panel rounded-xl ambient-glow p-8 md:p-12 mb-16 flex flex-col items-center">
+<!-- Selection Indicator Line -->
+<div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-electric-cyan/50 -translate-x-1/2 z-20 pointer-events-none shadow-[0_0_10px_theme('colors.electric-cyan')]"></div>
+<!-- Ticker Window -->
+<div class="w-full overflow-hidden relative h-48 md:h-64 flex items-center mb-10 border-y border-glass-stroke/50 bg-deep-charcoal/30">
+<!-- Fade Gradients -->
+<div class="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background/90 to-transparent z-10"></div>
+<div class="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background/90 to-transparent z-10"></div>
+<!-- Carousel Items Container (Simplified static view for visual design) -->
+<div class="flex gap-6 items-center w-[200%] absolute left-1/2 -translate-x-[20%] transition-transform duration-1000 ease-in-out">
+<!-- Item 1 -->
+<div class="w-32 h-32 md:w-48 md:h-48 flex-shrink-0 glass-panel rounded-lg flex items-center justify-center opacity-50 scale-90 transition-all duration-300">
+<span class="material-symbols-outlined text-6xl text-slate-gray" style="font-variation-settings: 'FILL' 0;">diamond</span>
+</div>
+<!-- Item 2 (Active/Center) -->
+<div class="w-32 h-32 md:w-48 md:h-48 flex-shrink-0 bg-surface-container-high border-2 border-primary rounded-lg flex flex-col items-center justify-center opacity-100 scale-110 shadow-[0_0_30px_theme('colors.primary-container')] z-10 transition-all duration-300 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-50"></div>
+<span class="material-symbols-outlined text-6xl text-primary mb-2" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-label-caps text-label-caps text-primary z-10 relative">LEGENDARY TIER</span>
+</div>
+<!-- Item 3 -->
+<div class="w-32 h-32 md:w-48 md:h-48 flex-shrink-0 glass-panel rounded-lg flex items-center justify-center opacity-50 scale-90 transition-all duration-300">
+<span class="material-symbols-outlined text-6xl text-electric-cyan" style="font-variation-settings: 'FILL' 1;">token</span>
+</div>
+<!-- Item 4 -->
+<div class="w-32 h-32 md:w-48 md:h-48 flex-shrink-0 glass-panel rounded-lg flex items-center justify-center opacity-50 scale-90 transition-all duration-300">
+<span class="material-symbols-outlined text-6xl text-secondary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<!-- Item 5 -->
+<div class="w-32 h-32 md:w-48 md:h-48 flex-shrink-0 glass-panel rounded-lg flex items-center justify-center opacity-50 scale-90 transition-all duration-300">
+<span class="material-symbols-outlined text-6xl text-slate-gray" style="font-variation-settings: 'FILL' 0;">diamond</span>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<button class="bg-primary text-on-primary-fixed font-headline-md text-headline-md py-4 px-12 rounded-full hover:scale-[1.02] transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] animate-pulse-glow flex items-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">autorenew</span>
+                SPIN FOR 100 PC
+            </button>
+</div>
+<!-- Recent Drops Ticker -->
+<div class="w-full max-w-5xl">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 px-4 uppercase tracking-widest text-center">Recent Network Drops</h3>
+<div class="glass-panel rounded-lg py-3 overflow-hidden flex relative">
+<!-- Ticker Fade Edges -->
+<div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-surface-container-low to-transparent z-10"></div>
+<div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-surface-container-low to-transparent z-10"></div>
+<!-- Scrolling Content -->
+<div class="flex gap-8 whitespace-nowrap animate-ticker pl-[100%] w-[200%]">
+<!-- Drop Items (Duplicated for infinite scroll effect) -->
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-electric-cyan"></span>
+<span class="font-body-md text-body-md text-on-surface">Alex_99 extracted <span class="text-primary font-bold">Quantum Core</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-body-md text-body-md text-on-surface">Zara.eth secured <span class="text-secondary font-bold">Magma Frame</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-body-md text-body-md text-on-surface">User_4421 found <span class="text-outline font-bold">50 PC</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-electric-cyan"></span>
+<span class="font-body-md text-body-md text-on-surface">Neon_Knight extracted <span class="text-primary font-bold">Elite Badge</span></span>
+</div>
+<!-- Duplicate items for seamless loop -->
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-electric-cyan"></span>
+<span class="font-body-md text-body-md text-on-surface">Alex_99 extracted <span class="text-primary font-bold">Quantum Core</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-body-md text-body-md text-on-surface">Zara.eth secured <span class="text-secondary font-bold">Magma Frame</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-body-md text-body-md text-on-surface">User_4421 found <span class="text-outline font-bold">50 PC</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-electric-cyan"></span>
+<span class="font-body-md text-body-md text-on-surface">Neon_Knight extracted <span class="text-primary font-bold">Elite Badge</span></span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (From JSON) -->
+<footer class="bg-surface-container-lowest w-full py-section-gap border-t border-glass-stroke mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop gap-base max-w-container-max mx-auto">
+<div class="font-display-lg-mobile md:font-display-lg text-body-md font-black text-on-surface opacity-80 hover:opacity-100 transition-opacity">
+                © 2024 POXY WORLD. IMMUTABLE EXCLUSIVITY.
+            </div>
+<div class="flex flex-wrap justify-center gap-4 md:gap-8">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Club Rules</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-electric-cyan transition-all opacity-80 hover:opacity-100" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

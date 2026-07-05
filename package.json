@@ -1,10 +1,20 @@
 {
-  "name": "poxy-world",
+  "name": "poxy-gen1",
   "private": true,
-  "description": "POXY WORLD — static single-file app",
+  "description": "POXY WORLD monorepo: web game (Vite + vanilla TS), MCU admin (Next.js), design tokens, shared game constants, Supabase backend.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "dev": "npx serve -l 3000",
-    "serve:local": "powershell -ExecutionPolicy Bypass -File scripts/serve-local.ps1",
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "preview": "npm run preview -w apps/web",
+    "dev:mcu": "npm run dev -w apps/mcu",
+    "build:mcu": "npm run build -w apps/mcu",
     "vercel-build": "node scripts/verify-static.mjs"
   }
 }
