@@ -1,0 +1,35 @@
+.px-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: var(--px-radius-12);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background-color var(--px-dur-surface) var(--px-ease-surface),
+    color var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-icon-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.px-icon-btn:hover:not(:disabled) {
+  background: var(--surface-sunken);
+  color: var(--text);
+}
+
+.px-icon-btn.is-active {
+  color: var(--px-sky-500);
+}
+
+.px-icon-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

@@ -1,0 +1,36 @@
+.px-star {
+  display: inline-block;
+  flex: none;
+  color: currentColor;
+}
+
+.px-star svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The only spinner in the product: slow rotation with a scale breath. */
+.px-star--spin svg {
+  animation: px-star-spin 1.6s linear infinite, px-star-breath 1.6s ease-in-out infinite;
+}
+
+.px-star--breathe svg {
+  animation: px-star-breath 2.4s ease-in-out infinite;
+}
+
+@keyframes px-star-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes px-star-breath {
+  0%, 100% { scale: 1; }
+  50% { scale: 1.06; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-star--spin svg,
+  .px-star--breathe svg {
+    animation: none;
+  }
+}

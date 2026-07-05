@@ -1,0 +1,84 @@
+/* Shared field shell for Input and Select. */
+
+.px-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.px-field__label {
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  line-height: var(--px-type-caption-line);
+  letter-spacing: var(--px-type-caption-tracking);
+  color: var(--text-dim);
+}
+
+.px-field__control {
+  min-height: 44px;
+  padding: 0 var(--px-space-16);
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-12);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-family: var(--px-type-body-family);
+  font-size: var(--px-type-body-size);
+  transition: border-color var(--px-dur-surface) var(--px-ease-surface),
+    background-color var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-field__control::placeholder {
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+.px-field__control:hover:not(:disabled) {
+  border-color: var(--text-dim);
+}
+
+.px-field__control:focus {
+  outline: none;
+  border-color: var(--px-sky-500);
+  background: var(--surface-raised);
+}
+
+[data-env='vault'] .px-field__control:focus {
+  background: var(--surface);
+}
+
+.px-field__control:disabled {
+  opacity: 0.45;
+}
+
+/* Error = fact + fix, caption size, functional color (Codex §4, §9). */
+.px-field__error {
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  line-height: var(--px-type-caption-line);
+  color: var(--px-danger);
+}
+
+.px-field.has-error .px-field__control {
+  border-color: var(--px-danger);
+}
+
+.px-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.px-select .px-field__control {
+  appearance: none;
+  width: 100%;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.px-select__arrow {
+  position: absolute;
+  right: 14px;
+  pointer-events: none;
+  color: var(--text-dim);
+  display: flex;
+}

@@ -1,0 +1,16 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="POXY star">
+  <!-- The Star (hikari). Canonical construction per docs/10-BRAND.md §3:
+       two superellipse lobes crossed at 45°, concave sides,
+       waist 36% of bounding box, point radius 6%. Single path, currentColor.
+       Do not redraw, skew, or add points. -->
+  <path fill="currentColor" d="M 49.5 7.8
+    Q 50 2 50.5 7.8
+    C 53.6 33.9 66.1 46.4 92.2 49.5
+    Q 98 50 92.2 50.5
+    C 66.1 53.6 53.6 66.1 50.5 92.2
+    Q 50 98 49.5 92.2
+    C 46.4 66.1 33.9 53.6 7.8 50.5
+    Q 2 50 7.8 49.5
+    C 33.9 46.4 46.4 33.9 49.5 7.8
+    Z"/>
+</svg>

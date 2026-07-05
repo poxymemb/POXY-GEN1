@@ -1,0 +1,79 @@
+.px-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.px-modal--sheet {
+  align-items: flex-end;
+}
+
+.px-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 13, 0.6);
+  opacity: 0;
+  transition: opacity var(--px-dur-current) var(--px-ease-current);
+}
+
+.px-modal__panel {
+  position: relative;
+  width: min(92vw, 480px);
+  max-height: 86vh;
+  overflow: auto;
+  background: var(--surface-raised, var(--px-paper-raised));
+  color: var(--text, var(--px-ink));
+  border: 1px solid var(--hairline, rgba(28, 28, 30, 0.12));
+  border-radius: var(--px-radius-24);
+  padding: var(--px-space-24);
+  opacity: 0;
+  translate: 0 16px;
+  transition: opacity var(--px-dur-current) var(--px-ease-current),
+    translate var(--px-dur-current) var(--px-ease-current);
+}
+
+.px-modal__panel--sheet {
+  width: 100%;
+  max-width: 680px;
+  border-radius: var(--px-radius-24) var(--px-radius-24) 0 0;
+  border-bottom: none;
+  padding-bottom: calc(var(--px-space-24) + env(safe-area-inset-bottom, 0px));
+  translate: 0 40px;
+}
+
+.px-modal.is-open .px-modal__scrim {
+  opacity: 1;
+}
+
+.px-modal.is-open .px-modal__panel {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.px-modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--px-space-16);
+  margin-bottom: var(--px-space-16);
+}
+
+.px-modal__close {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--px-radius-8);
+  background: none;
+  color: var(--text-dim, var(--px-ink-soft));
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.px-modal__close:hover {
+  background: var(--surface-sunken, var(--px-paper-sunken));
+  color: var(--text, var(--px-ink));
+}

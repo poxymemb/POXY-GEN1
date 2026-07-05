@@ -1,0 +1,34 @@
+.px-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 var(--px-space-16);
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-full);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  letter-spacing: var(--px-type-caption-tracking);
+  cursor: pointer;
+  transition: border-color var(--px-dur-surface) var(--px-ease-surface),
+    color var(--px-dur-surface) var(--px-ease-surface),
+    background-color var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-chip:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.px-chip.is-selected {
+  background: var(--px-sky-100);
+  border-color: var(--px-sky-500);
+  color: var(--px-sky-900);
+}
+
+/* On vault glass, selected chips use sky on deep instead of sky-100 fill. */
+[data-env='vault'] .px-chip.is-selected {
+  background: rgba(96, 194, 224, 0.14);
+  color: var(--px-sky-300);
+}

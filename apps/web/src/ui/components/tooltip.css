@@ -1,0 +1,33 @@
+.px-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.px-tooltip__bubble {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 4px;
+  padding: 6px 10px;
+  border-radius: var(--px-radius-8);
+  background: var(--px-ink);
+  color: var(--px-paper);
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  line-height: var(--px-type-caption-line);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--px-dur-surface) var(--px-ease-surface),
+    translate var(--px-dur-surface) var(--px-ease-surface);
+}
+
+[data-env='vault'] .px-tooltip__bubble {
+  background: var(--px-paper);
+  color: var(--px-ink);
+}
+
+.px-tooltip.is-open .px-tooltip__bubble {
+  opacity: 1;
+  translate: -50% 0;
+}

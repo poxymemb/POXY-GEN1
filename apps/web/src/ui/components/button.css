@@ -1,0 +1,80 @@
+.px-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--px-space-8);
+  border: 1px solid transparent;
+  border-radius: var(--px-radius-12);
+  font-family: var(--px-type-body-family);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--px-dur-surface) var(--px-ease-surface),
+    color var(--px-dur-surface) var(--px-ease-surface),
+    border-color var(--px-dur-surface) var(--px-ease-surface),
+    translate var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-btn--m {
+  min-height: 44px;
+  padding: 0 var(--px-space-16);
+  font-size: 15px;
+}
+
+.px-btn--l {
+  min-height: 52px;
+  padding: 0 var(--px-space-24);
+  font-size: 16px;
+}
+
+.px-btn--primary {
+  background: var(--px-sky-500);
+  color: var(--px-ink);
+}
+
+.px-btn--primary:hover:not(:disabled) {
+  background: var(--px-sky-300);
+  translate: 0 -1px;
+}
+
+.px-btn--primary:active:not(:disabled) {
+  background: var(--px-sky-700);
+  color: var(--px-paper);
+  translate: 0 0;
+}
+
+.px-btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--hairline);
+}
+
+.px-btn--ghost:hover:not(:disabled) {
+  border-color: var(--text-dim);
+  translate: 0 -1px;
+}
+
+.px-btn--ghost:active:not(:disabled) {
+  background: var(--surface-sunken);
+  translate: 0 0;
+}
+
+/* Functional color at button scale is sanctioned for destructive confirms
+   only; it stays quiet (ghost-like), not a red slab. */
+.px-btn--danger {
+  background: transparent;
+  color: var(--px-danger);
+  border-color: currentColor;
+}
+
+.px-btn--danger:hover:not(:disabled) {
+  background: rgba(194, 74, 85, 0.08);
+}
+
+.px-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.px-btn.is-loading .px-btn__label {
+  opacity: 0.7;
+}
