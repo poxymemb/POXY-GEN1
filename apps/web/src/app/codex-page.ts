@@ -17,6 +17,9 @@ import { Seal } from '../ui/components/seal';
 import { openRitual } from '../ui/motion/ritual';
 import { lightsDown, lightsUp, sparkle, travel, chipTick } from '../ui/motion';
 import { Icon, iconMarkup, ICONS, type IconName } from '../ui/icons';
+import { wireSuimon, suimon, unlockAudio, getFeelPrefs, setFeelPrefs } from '../ui/sound';
+import { onCue } from '../ui/motion/cues';
+import { FeelSettings } from '../ui/components/feel-settings';
 
 const ICON_HOME = iconMarkup('home');
 const ICON_GRID = iconMarkup('collection');
@@ -40,6 +43,7 @@ const CHAPTERS: Array<[string, string]> = [
   ['icons', 'Icons'],
   ['components', 'Components'],
   ['motion', 'Motion'],
+  ['suimon', 'Sound'],
   ['dna', 'Screen DNA'],
 ];
 
@@ -429,6 +433,54 @@ export function renderCodexPage(host: HTMLElement): void {
           },
         }).root,
       ),
+    ),
+  );
+
+  // --- suimon: sound & haptics ("Feel")
+  wireSuimon();
+  const cueLog = el('pre', { class: 'cx-cue-log t-mono' }, ['cue log: (run a ritual with sound on)']);
+  let cueT0 = 0;
+  onCue((cue, detail) => {
+    const now = performance.now();
+    if (now - cueT0 > 8000) {
+      cueT0 = now;
+      cueLog.textContent = '';
+    }
+    cueLog.textContent += `t+${Math.round(now - cueT0)}ms  ${cue}${detail.rarity ? ` (${detail.rarity})` : ''}\n`;
+  });
+
+  const soundBtn = (label: string, name: Parameters<typeof suimon.play>[0], rarity?: 'common' | 'rare' | 'legendary' | 'mythic') =>
+    Button({
+      label,
+      variant: 'ghost',
+      onClick: () => {
+        if (!getFeelPrefs().sound) setFeelPrefs({ sound: true });
+        unlockAudio();
+        suimon.play(name, { rarity });
+      },
+    }).root;
+
+  page.append(
+    section(
+      'suimon',
+      'Suimon — sound & haptics',
+      'Silence is the default instrument. Five sounds, meaning-moments only: ' +
+        'water, paper, wood, stone. Never on hovers or navigation. Sound and ' +
+        'haptics are OFF until the player turns them on in Settings > Feel.',
+      row(
+        soundBtn('Drop \u00b7 Common', 'drop', 'common'),
+        soundBtn('Drop \u00b7 Rare', 'drop', 'rare'),
+        soundBtn('Drop \u00b7 Legendary', 'drop', 'legendary'),
+        soundBtn('Drop \u00b7 Mythic', 'drop', 'mythic'),
+      ),
+      row(
+        soundBtn('Washi (sheet)', 'washi'),
+        soundBtn('Hanko (seal)', 'hanko'),
+        soundBtn('Break (ritual)', 'break'),
+        soundBtn('Tick (plaque)', 'tick'),
+      ),
+      FeelSettings(),
+      cueLog,
     ),
   );
 

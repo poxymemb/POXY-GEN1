@@ -1,6 +1,10 @@
 import '@poxy/tokens/css/variables.css';
 import './ui/fonts.css';
 import './style.css';
+import { wireSuimon } from './ui/sound';
+
+// The senses subscribe to motion cues once, at shell level.
+wireSuimon();
 
 // Entry point. The real router and shell arrive with PROMPT 03.
 // #/codex is the dev-only living styleguide (02B/02C); the dynamic import

@@ -382,6 +382,45 @@ micro-signatures) are specified beat-for-beat in `docs/11-SCREEN-DNA.md`.
 
 ---
 
+## 7b. Sound — Suimon 水音
+
+Silence is the default instrument. Sound is OFF by default (respect), one
+toggle in Settings ("Feel"), but when on it must feel like the room itself
+responded — not like an app playing files.
+
+**Law**
+- Sounds exist only at meaning-moments, never on hovers or navigation.
+- Palette: water, paper, wood, stone. Nothing electronic, no chimes,
+  no slot-machine tails.
+- Peak loudness ≈ -18 LUFS; everything ducks under the reveal. If two
+  sounds would overlap, the lesser one is dropped.
+- All five are WebAudio-synthesized in `ui/sound/suimon.ts` — no samples,
+  no licensing, tiny. Zero audio before a user gesture.
+
+**The five**
+1. **Drop** (reveal) — a single water drop into deep water. Pitch scales
+   with rarity: Common 440 base → Mythic 260. Deeper water = rarer.
+2. **Washi** (navigate/sheet) — paper slide, very quiet. Sheet open/close
+   and lightsDown only.
+3. **Hanko** (seal) — the stamp: wooden knock + felt thump. Verify verdict
+   only.
+4. **Break** (ritual) — the hairline of light: glass harmonic stretched
+   200ms, immediately swallowed by the Drop.
+5. **Tick** (plaque) — one soft stone click when a countUp lands. Never
+   per-digit — no slot-machine ticking, ever.
+
+**Ritual cue table.** Oath — silence (honesty is silent) · Break — Break ·
+Emergence — Drop(rarity) · Plaque — Tick. Seal.stamp() — Hanko.
+Sheets/lightsDown — Washi.
+
+**Haptics.** `navigator.vibrate` grammar (Android; iOS web no-ops):
+reveal Common [10] · Epic+ [10,40,20] · Mythic [10,40,20,60,30] mirrors the
+ritual beats · seal stamp [30] · pity ring at 100% [15,30,15]. Never on
+navigation. "Haptics" sits next to "Sound" in Settings > Feel, both off
+by default.
+
+---
+
 ## 8. Layout DNA — tokonoma & tatami
 
 **Tokonoma principle.** In a Japanese home, the tokonoma is the alcove that

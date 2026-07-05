@@ -99,6 +99,19 @@
   color: rgba(240, 240, 241, 0.7);
 }
 
+/* Suimon cue log */
+.cx-cue-log {
+  margin: 0;
+  padding: var(--px-space-8) 12px;
+  min-height: 60px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-8);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+}
+
 /* Sumi Icons chapter */
 .cx-sub {
   margin: var(--px-space-8) 0 0;
