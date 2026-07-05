@@ -22,17 +22,21 @@ import { waitlistSection } from './sections/waitlist';
 import { faqSection } from './sections/faq';
 import { footerSection } from './sections/footer';
 import { observeReveals } from './reveal';
+import { wireScrollLights } from './scroll-lights';
 
 export function renderPrelaunch(host: HTMLElement): void {
   host.textContent = '';
+  // A previous render may have left its dawn overlay on the body.
+  document.querySelectorAll('.px-lp__dawn').forEach((n) => n.remove());
 
   const skip = el('a', { class: 'px-lp__skip', href: '#px-lp-offer' }, ['Skip to Founder Pass']);
+  const hero = heroSection();
 
   // The page opens in the Vault (the hero is water and light); scrolling into
   // The Promise lightsUp into the Gallery. Env is set per-section below.
   const page = el('main', { class: 'px-lp', id: 'px-lp-top' }, [
     skip,
-    heroSection(),
+    hero,
     promiseSection(),
     visionVideoSection(),
     seasonWallSection(),
@@ -50,4 +54,8 @@ export function renderPrelaunch(host: HTMLElement): void {
   // Section entrances: travel once via IntersectionObserver, one thing at a
   // time (codex law). Reduced motion resolves everything to final state.
   observeReveals(page);
+
+  // The dawn wash across the Vault-hero seam — the environment shift is the
+  // wow. Static split (no wash) under reduced motion.
+  wireScrollLights(hero);
 }

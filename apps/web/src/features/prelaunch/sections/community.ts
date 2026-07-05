@@ -2,7 +2,7 @@
    community for the beta test), a social links row (Sumi icons; hrefs from
    config, empty hides the link), and the Founding Collectors wall (opted-in
    founder names rendered as plaques). PROMPT 00 section 8. */
-import { el } from '../../../lib/dom';
+import { el, svgFromString } from '../../../lib/dom';
 import { Button, iconMarkup } from '../../../ui';
 import { LINKS } from '../config';
 import { foundingCollectors } from '../mock-state';
@@ -20,9 +20,11 @@ const SOCIALS: SocialLink[] = [
 ];
 
 function svg(markup: string): HTMLElement {
-  const span = el('span', { class: 'px-community__social-icon', 'aria-hidden': 'true' });
-  span.innerHTML = markup; // trusted static icon markup from our own set
-  return span;
+  // Trusted static icon markup from our own set (svgFromString, not innerHTML,
+  // to stay consistent with the kit and the XSS rule in .cursor/rules/10-web).
+  return el('span', { class: 'px-community__social-icon', 'aria-hidden': 'true' }, [
+    svgFromString(markup),
+  ]);
 }
 
 function discordCard(): HTMLElement {

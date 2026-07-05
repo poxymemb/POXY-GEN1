@@ -69,3 +69,16 @@
 .px-lp__reveal.is-in {
   opacity: 1;
 }
+
+/* The dawn wash between the Vault hero and the Gallery — the environment
+   shift as the hero scrolls away. A paper veil, driven by scroll ratio in
+   scroll-lights.ts; absent entirely under reduced motion. */
+.px-lp__dawn {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(120% 80% at 50% 0%, var(--px-paper) 0%, transparent 72%);
+  will-change: opacity;
+}
