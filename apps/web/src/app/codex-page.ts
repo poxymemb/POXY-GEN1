@@ -182,11 +182,25 @@ export function renderCodexPage(host: HTMLElement): void {
     section(
       'components',
       'Buttons',
-      'One primary per viewport. Danger is quiet, for destructive confirms only.',
+      'One primary per viewport. Danger is quiet by default; solid danger lives only inside confirmation sheets.',
       row(
         Button({ label: 'Open case' }).root,
         Button({ label: 'View odds', variant: 'ghost' }).root,
-        Button({ label: 'Dissolve', variant: 'danger' }).root,
+        Button({
+          label: 'Dissolve',
+          variant: 'danger',
+          onClick: () =>
+            Sheet({
+              title: 'Confirm dissolve',
+              content: el('div', {}, [
+                el('p', { class: 't-body' }, ['Dissolving returns 60 shards. The figure and its number are gone for good.']),
+                el('div', { class: 'cx-row', style: 'margin-top:16px' }, [
+                  Button({ label: 'Dissolve', variant: 'danger-solid' }).root,
+                  Button({ label: 'Keep it', variant: 'ghost' }).root,
+                ]),
+              ]),
+            }),
+        }).root,
       ),
       row(
         loadingDemo.root,
@@ -244,7 +258,7 @@ export function renderCodexPage(host: HTMLElement): void {
               content: el('div', {}, [
                 el('p', { class: 't-body' }, ['Dissolving returns 60 shards. The figure and its number are gone for good.']),
                 el('div', { class: 'cx-row', style: 'margin-top:16px' }, [
-                  Button({ label: 'Dissolve', variant: 'danger' }).root,
+                  Button({ label: 'Dissolve', variant: 'danger-solid' }).root,
                   Button({ label: 'Keep it', variant: 'ghost' }).root,
                 ]),
               ]),

@@ -222,6 +222,13 @@ System feedback only, muted derivatives, caption-size text and small marks:
 success `#4E9D74` · danger `#C24A55` · warning `#D9A441`. Functional colors
 never decorate; a form error is a caption in danger, not a red panel.
 
+**Danger buttons (Amendment 1).** Destructive entry points are quiet: ghost
+buttons with danger-colored text on an ink hairline. A filled danger button
+(`danger-solid`) exists only inside confirmation sheets, as the final
+destructive confirm step of a two-step flow — quiet "Dissolve" on the screen,
+solid confirm inside the sheet. A red slab must never be the first thing a
+visitor can tap.
+
 **Rules**
 - Core values are locked; pigments are locked; do not tint, lighten or remix.
 - One sky moment per viewport. Pigments quarantined to gem/badge/glow.

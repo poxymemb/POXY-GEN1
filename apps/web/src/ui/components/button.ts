@@ -4,8 +4,10 @@ import { Star } from './star';
 
 export interface ButtonOptions {
   label: string;
-  /** primary = sky action · ghost = ink outline · danger = functional */
-  variant?: 'primary' | 'ghost' | 'danger';
+  /** primary = sky action · ghost = ink outline · danger = quiet ghost
+      (danger text, ink hairline) · danger-solid = filled, permitted ONLY
+      inside confirmation sheets as the destructive confirm step. */
+  variant?: 'primary' | 'ghost' | 'danger' | 'danger-solid';
   size?: 'm' | 'l';
   disabled?: boolean;
   type?: 'button' | 'submit';

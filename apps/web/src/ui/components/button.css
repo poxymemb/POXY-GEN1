@@ -58,16 +58,29 @@
   translate: 0 0;
 }
 
-/* Functional color at button scale is sanctioned for destructive confirms
-   only; it stays quiet (ghost-like), not a red slab. */
+/* Quiet danger (Codex Amendment 1): danger-colored text on an ink
+   hairline — the default for any destructive entry point. */
 .px-btn--danger {
   background: transparent;
   color: var(--px-danger);
-  border-color: currentColor;
+  border-color: var(--hairline);
 }
 
 .px-btn--danger:hover:not(:disabled) {
-  background: rgba(194, 74, 85, 0.08);
+  background: rgba(194, 74, 85, 0.06);
+  border-color: var(--px-danger);
+}
+
+/* Solid danger exists ONLY inside confirmation sheets, as the final
+   destructive confirm step. Never as a first-tap button on a screen. */
+.px-btn--danger-solid {
+  background: var(--px-danger);
+  color: var(--px-paper);
+}
+
+.px-btn--danger-solid:hover:not(:disabled) {
+  filter: brightness(1.06);
+  translate: 0 -1px;
 }
 
 .px-btn:disabled {
