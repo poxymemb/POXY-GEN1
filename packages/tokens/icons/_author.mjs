@@ -1,0 +1,85 @@
+/* One-off authoring script: emits the Sumi Icons masters as individual
+   .svg files. The .svg files are the source of truth after this runs;
+   this script is kept only as provenance for the geometry. */
+import { writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+
+// Grid 24x24, live area 20x20 (coords 2..22), stroke 1.5, round caps/joins,
+// currentColor. No fills except the star (nav-active + the star itself).
+const STROKE = 'fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
+
+// The brand star scaled onto the 24 grid (canonical path x0.2 +2).
+const STAR_24 = 'M 11.9 3.56 Q 12 2.4 12.1 3.56 C 12.72 8.78 15.22 11.28 20.44 11.9 Q 21.6 12 20.44 12.1 C 15.22 12.72 12.72 15.22 12.1 20.44 Q 12 21.6 11.9 20.44 C 11.28 15.22 8.78 12.72 3.56 12.1 Q 2.4 12 3.56 11.9 C 8.78 11.28 11.28 8.78 11.9 3.56 Z';
+
+/** name -> inner markup (paths only; wrapper is added below) */
+const icons = {
+  // ---- NAV (10) ------------------------------------------------------
+  home: `<path d="M4.5 11 12 4.5 19.5 11"/><path d="M6.5 9.5v9a1 1 0 0 0 1 1H10v-4.5h4V19.5h2.5a1 1 0 0 0 1-1v-9"/>`,
+  // The star: the ONLY filled icon (sanctioned: nav-active morph + itself).
+  open: `<path d="${STAR_24}" fill="currentColor" stroke="none"/>`,
+  collection: `<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10.5h16M4 15.5h16M9 7.5h0M14 13h0"/>`,
+  market: `<path d="M4 5.5h16"/><path d="M6.5 5.5V18c0 .8.5 1.3 1.1.8L9 17.5"/><path d="M17.5 5.5V18c0 .8-.5 1.3-1.1.8L15 17.5"/><path d="M12 5.5v5"/>`,
+  more: `<path d="M5.5 12h.01M12 12h.01M18.5 12h.01"/>`,
+  quests: `<ellipse cx="8" cy="16.4" rx="3.4" ry="2.5"/><ellipse cx="15.8" cy="15.2" rx="2.7" ry="2.1"/><ellipse cx="11.6" cy="9" rx="2.3" ry="1.9"/>`,
+  events: `<path d="M3.5 13.5c2-4.5 4.5-4.5 6.5 0s4.5 4.5 6.5 0 3-3.4 4-2.4"/><path d="M6 17.8c1.7-2.6 3.3-2.6 5 0"/>`,
+  store: `<rect x="6.9" y="6.9" width="10.2" height="10.2" rx="1.8" transform="rotate(45 12 12)"/>`,
+  profile: `<rect x="6" y="3.5" width="12" height="17" rx="2"/><circle cx="12" cy="9.8" r="2.2"/><path d="M8.8 16.6c.6-1.8 1.8-2.7 3.2-2.7s2.6.9 3.2 2.7"/>`,
+  settings: `<path d="M4 8.5h16M4 15.5h16"/><circle cx="9.5" cy="8.5" r="2.1"/><circle cx="14.5" cy="15.5" r="2.1"/>`,
+  // ---- ACTIONS (19) ---------------------------------------------------
+  close: `<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>`,
+  back: `<path d="M14.5 5.5 8 12l6.5 6.5"/>`,
+  forward: `<path d="M9.5 5.5 16 12l-6.5 6.5"/>`,
+  search: `<circle cx="10.5" cy="10.5" r="5.8"/><path d="M14.9 14.9 19.5 19.5"/>`,
+  filter: `<path d="M4.5 7.5h15M7.5 12h9M10.5 16.5h3"/>`,
+  sort: `<path d="M8 18.5v-13M8 5.5 5 8.5M8 5.5l3 3"/><path d="M16 5.5v13M16 18.5l-3-3M16 18.5l3-3"/>`,
+  share: `<path d="M12 14V4.5M12 4.5 8.5 8M12 4.5 15.5 8"/><path d="M7 11.5h-.5A1.5 1.5 0 0 0 5 13v5a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 18v-5a1.5 1.5 0 0 0-1.5-1.5H17"/>`,
+  copy: `<rect x="9" y="9" width="10.5" height="10.5" rx="1.5"/><path d="M6 15H5.5A1.5 1.5 0 0 1 4 13.5v-8A1.5 1.5 0 0 1 5.5 4h8A1.5 1.5 0 0 1 15 5.5V6"/>`,
+  external: `<path d="M13.5 4.5h6v6"/><path d="M19.5 4.5 11 13"/><path d="M16.5 13.5v4a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h4"/>`,
+  edit: `<path d="M4.5 19.5l.9-3.6L16.6 4.7a1.6 1.6 0 0 1 2.2 0l.5.5a1.6 1.6 0 0 1 0 2.2L8.1 18.6l-3.6.9Z"/><path d="M14.5 6.5l3 3"/>`,
+  'drag-handle': `<path d="M9.5 6.5h.01M9.5 12h.01M9.5 17.5h.01M14.5 6.5h.01M14.5 12h.01M14.5 17.5h.01"/>`,
+  pin: `<path d="M9.3 4.5h5.4l-.7 5 2.5 3.5H7.5L10 9.5Z"/><path d="M12 13v6.5"/>`,
+  unpin: `<path d="M9.3 4.5h5.4l-.7 5 2.5 3.5H7.5L10 9.5Z"/><path d="M12 13v6.5"/><path d="M4.5 4.5l15 15"/>`,
+  plus: `<path d="M12 5.5v13M5.5 12h13"/>`,
+  minus: `<path d="M5.5 12h13"/>`,
+  check: `<path d="M5 12.8l4.3 4.4C10.6 12.5 13.8 8.6 19 6.2"/>`,
+  dissolve: `<path d="M12 4.5c3.6 4.3 5.4 7.1 5.4 9.6a5.4 5.4 0 1 1-10.8 0c0-2.5 1.8-5.3 5.4-9.6Z"/>`,
+  refresh: `<path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M19.5 4.5v3.6h-3.6"/>`,
+  download: `<path d="M12 4.5V14M12 14 8.5 10.5M12 14l3.5-3.5"/><path d="M4.5 16.5V18A1.5 1.5 0 0 0 6 19.5h12a1.5 1.5 0 0 0 1.5-1.5v-1.5"/>`,
+  // ---- OBJECTS / STATUS (21) ------------------------------------------
+  bell: `<path d="M12 4.5c-2.9 0-5 2.2-5 5.2v2.9l-1.4 2.7a.7.7 0 0 0 .6 1h11.6a.7.7 0 0 0 .6-1L17 12.6V9.7c0-3-2.1-5.2-5-5.2Z"/><path d="M10.3 18.8a1.8 1.8 0 0 0 3.4 0"/>`,
+  'bell-dot': `<path d="M12 4.5c-2.9 0-5 2.2-5 5.2v2.9l-1.4 2.7a.7.7 0 0 0 .6 1h11.6a.7.7 0 0 0 .6-1L17 12.6V9.7c0-3-2.1-5.2-5-5.2Z"/><path d="M10.3 18.8a1.8 1.8 0 0 0 3.4 0"/><circle cx="17.8" cy="5.8" r="1.9"/>`,
+  chat: `<path d="M4.5 7A2 2 0 0 1 6.5 5h11a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H11l-4.5 3.5V16h-.5a2 2 0 0 1-1.5-2Z"/>`,
+  friend: `<circle cx="12" cy="8.2" r="3.2"/><path d="M5.5 19.5c.9-3.4 3.4-5.2 6.5-5.2s5.6 1.8 6.5 5.2"/>`,
+  'friend-add': `<circle cx="10" cy="8.7" r="3"/><path d="M4 19.5c.8-3.1 3-4.8 6-4.8s5.2 1.7 6 4.8"/><path d="M18.5 4.5v5M16 7h5"/>`,
+  block: `<circle cx="12" cy="12" r="7.5"/><path d="M6.8 6.8l10.4 10.4"/>`,
+  lock: `<rect x="6" y="10.5" width="12" height="9" rx="1.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>`,
+  eye: `<path d="M3.5 12c2.5-4.3 5.3-6.5 8.5-6.5s6 2.2 8.5 6.5c-2.5 4.3-5.3 6.5-8.5 6.5S6 16.3 3.5 12Z"/><circle cx="12" cy="12" r="2.5"/>`,
+  'eye-off': `<path d="M5.2 8.2C4.6 9.3 4 10.5 3.5 12c2.5 4.3 5.3 6.5 8.5 6.5 1.5 0 2.9-.5 4.2-1.4M9.9 6C10.6 5.7 11.3 5.5 12 5.5c3.2 0 6 2.2 8.5 6.5-.6 1.1-1.3 2-2 2.9"/><path d="M4.5 4.5l15 15"/>`,
+  info: `<circle cx="12" cy="12" r="7.5"/><path d="M12 11.2v4.3"/><path d="M12 8.2h.01"/>`,
+  warning: `<path d="M12 4.5 20 18.5H4Z"/><path d="M12 10.2v3.6"/><path d="M12 16.4h.01"/>`,
+  error: `<circle cx="12" cy="12" r="7.5"/><path d="M9.4 9.4l5.2 5.2M14.6 9.4l-5.2 5.2"/>`,
+  'seal-mini': `<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M12 8.4c.4 2.4 1.2 3.2 3.6 3.6-2.4.4-3.2 1.2-3.6 3.6-.4-2.4-1.2-3.2-3.6-3.6 2.4-.4 3.2-1.2 3.6-3.6Z"/>`,
+  shard: `<path d="M9.5 4.5h5l3.2 5.2L12 19.5 6.3 9.7Z"/><path d="M6.3 9.7h11.4M12 9.7v9.8"/>`,
+  px: `<circle cx="12" cy="12" r="7.5"/><path d="M12 7.8 15.4 12 12 16.2 8.6 12Z"/>`,
+  'streak-star': `<path d="M14.3 5c.55 3.3 2 4.75 5.3 5.3-3.3.55-4.75 2-5.3 5.3-.55-3.3-2-4.75-5.3-5.3 3.3-.55 4.75-2 5.3-5.3Z"/><path d="M4 8.3h3M3.5 12.8h3.6M5 17h4"/>`,
+  clock: `<circle cx="12" cy="12" r="7.5"/><path d="M12 7.8V12l3 2.1"/>`,
+  calendar: `<rect x="4.5" y="6" width="15" height="13.5" rx="1.5"/><path d="M4.5 10.5h15M8.5 4v3.5M15.5 4v3.5"/>`,
+  gift: `<rect x="4.5" y="9" width="15" height="10.5" rx="1.5"/><path d="M12 9v10.5M4.5 13.5h15"/><path d="M12 9c-.5-2.4-1.8-4-3.4-4-1.1 0-1.8.8-1.4 1.9C7.7 8.3 9.6 9 12 9Zm0 0c.5-2.4 1.8-4 3.4-4 1.1 0 1.8.8 1.4 1.9C16.3 8.3 14.4 9 12 9Z"/>`,
+  link: `<path d="M10 14l4-4"/><path d="M8.7 12.3l-2.2 2.2a3.4 3.4 0 0 0 4.9 4.9l2.2-2.2"/><path d="M15.3 11.7l2.2-2.2a3.4 3.4 0 0 0-4.9-4.9L10.4 6.8"/>`,
+  trophy: `<ellipse cx="12" cy="13.8" rx="3.6" ry="2.9"/><path d="M5 6.5c.9 3.2 1 6.3 3.4 8.6M19 6.5c-.9 3.2-1 6.3-3.4 8.6"/><path d="M8 19.5h8"/>`,
+};
+
+for (const [name, inner] of Object.entries(icons)) {
+  const usesFill = name === 'open';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" ${usesFill ? '' : STROKE + ' '}aria-hidden="true">
+  <!-- Sumi Icons: grid 24, live 20, stroke 1.5 round. docs/10-BRAND.md \u00a7Iconography -->
+  ${inner}
+</svg>
+`;
+  writeFileSync(join(here, `${name}.svg`), svg, 'utf8');
+}
+
+console.log(`authored ${Object.keys(icons).length} sumi icon masters`);
