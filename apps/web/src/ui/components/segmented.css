@@ -8,7 +8,7 @@
 }
 
 .px-segmented__seg {
-  min-height: 36px;
+  min-height: 38px;
   padding: 0 var(--px-space-16);
   border: none;
   border-radius: 9px;

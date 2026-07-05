@@ -42,9 +42,11 @@
   border: none;
   background: none;
   padding: 8px 0;
+  min-height: 44px;
   font-family: var(--px-type-caption-family);
   font-size: var(--px-type-caption-size);
-  color: var(--px-sky-700);
+  /* sky-900, not 700: caption-size text on paper needs AA (4.5:1). */
+  color: var(--px-sky-900);
   cursor: pointer;
 }
 

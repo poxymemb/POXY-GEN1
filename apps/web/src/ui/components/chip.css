@@ -1,4 +1,5 @@
 .px-chip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   min-height: 32px;
@@ -14,6 +15,13 @@
   transition: border-color var(--px-dur-surface) var(--px-ease-surface),
     color var(--px-dur-surface) var(--px-ease-surface),
     background-color var(--px-dur-surface) var(--px-ease-surface);
+}
+
+/* Invisible hit-area extension: visual stays 32px, touch target is 44px. */
+.px-chip::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
 }
 
 .px-chip:hover {

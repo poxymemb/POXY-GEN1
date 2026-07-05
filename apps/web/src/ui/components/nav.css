@@ -66,7 +66,8 @@
 }
 
 .px-nav__item[aria-current='page'] {
-  color: var(--px-sky-700);
+  /* sky-900 for the 11px label: AA on paper; the star itself stays sky-500. */
+  color: var(--px-sky-900);
 }
 
 [data-env='vault'] .px-nav__item[aria-current='page'] {
