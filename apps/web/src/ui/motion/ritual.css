@@ -1,0 +1,278 @@
+.px-ritual {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--px-space-24);
+  padding: var(--px-space-24);
+  background: var(--px-vault-abyss);
+  color: var(--px-paper);
+  opacity: 0;
+  transition: opacity 420ms var(--px-ease-current);
+}
+
+.px-ritual.is-open {
+  opacity: 1;
+}
+
+.px-ritual.is-closing {
+  opacity: 0;
+}
+
+/* --- the Oath ------------------------------------------------------- */
+
+.px-ritual__oath {
+  position: absolute;
+  top: calc(var(--px-space-24) + env(safe-area-inset-top, 0px));
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: 92vw;
+  text-align: center;
+  opacity: 0;
+  transition: opacity var(--px-dur-current) var(--px-ease-current);
+}
+
+.px-ritual.is-oath .px-ritual__oath {
+  opacity: 1;
+}
+
+/* After its beat the hash stays pinned, dimmed to 60% — the proof never
+   leaves the room. */
+.px-ritual.is-oath-rested .px-ritual__oath {
+  opacity: 0.6;
+}
+
+.px-ritual__hash {
+  word-break: break-all;
+  color: var(--px-paper);
+}
+
+.px-ritual__oath-caption {
+  color: rgba(240, 240, 241, 0.6);
+  opacity: 0;
+  transition: opacity var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-ritual__oath-caption.is-visible {
+  opacity: 1;
+}
+
+/* --- the stage ------------------------------------------------------ */
+
+.px-ritual__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(62vw, 260px);
+  aspect-ratio: 3 / 4;
+}
+
+.px-ritual__glow {
+  position: absolute;
+  inset: -30%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.px-ritual__case {
+  position: absolute;
+  inset: 0;
+}
+
+.px-ritual__case-half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.px-ritual__case-half--top {
+  top: 0;
+  height: 50%;
+}
+
+.px-ritual__case-half--bottom {
+  bottom: 0;
+  height: 50%;
+}
+
+.px-ritual__case-face {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(240, 240, 241, 0.12);
+  border-radius: var(--px-radius-16);
+  background:
+    linear-gradient(160deg, rgba(240, 240, 241, 0.07) 0%, rgba(240, 240, 241, 0.02) 60%),
+    var(--px-vault-deep);
+  box-shadow: inset 0 1px 0 rgba(240, 240, 241, 0.1);
+}
+
+.px-ritual__case-half--top .px-ritual__case-face {
+  top: 0;
+}
+
+.px-ritual__case-half--bottom .px-ritual__case-face {
+  bottom: 0;
+}
+
+.px-ritual__case-face svg {
+  width: 34%;
+  height: auto;
+  color: rgba(240, 240, 241, 0.16);
+}
+
+/* The Break: one sky hairline, 1px, crossing the case. */
+.px-ritual__break {
+  position: absolute;
+  top: 50%;
+  left: -6%;
+  right: -6%;
+  height: 1px;
+  background: var(--px-sky-500);
+  box-shadow: 0 0 12px 1px var(--px-sky-500);
+  opacity: 0;
+  scale: 0 1;
+  transform-origin: left center;
+}
+
+.px-ritual__break.is-lit {
+  opacity: 1;
+  scale: 1 1;
+  transition: scale 150ms linear, opacity 40ms linear;
+}
+
+.px-ritual.is-emerged .px-ritual__break {
+  opacity: 0;
+  transition: opacity var(--px-dur-current) var(--px-ease-current);
+}
+
+/* After emergence the case halves recede from attention. */
+.px-ritual.is-emerged .px-ritual__case {
+  opacity: 0.25;
+  transition: opacity var(--px-dur-current) var(--px-ease-current);
+}
+
+.px-ritual__figure {
+  position: relative;
+  width: 46%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.px-ritual__figure svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- the plaque zone ------------------------------------------------ */
+
+.px-ritual__plaque-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-8);
+  min-height: 118px;
+  text-align: center;
+  opacity: 0;
+}
+
+.px-ritual.is-emerged .px-ritual__plaque-zone {
+  opacity: 1;
+}
+
+.px-ritual__rarity {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(240, 240, 241, 0.6);
+}
+
+.px-ritual__name {
+  margin: 0;
+  font-family: var(--px-type-title-family);
+  font-size: var(--px-type-title-size);
+  line-height: var(--px-type-title-line);
+  font-weight: var(--px-type-title-weight);
+  letter-spacing: var(--px-type-title-tracking);
+}
+
+.px-ritual__plaque-bar {
+  display: inline-block;
+  background: var(--px-paper);
+  color: var(--px-ink);
+  border-radius: var(--px-radius-8);
+  padding: 5px 12px;
+  font-family: var(--px-type-mono-family);
+  font-size: var(--px-type-mono-size);
+  line-height: var(--px-type-mono-line);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* --- result rest ---------------------------------------------------- */
+
+.px-ritual__sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: var(--px-space-8);
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: var(--px-space-16) var(--px-space-16)
+    calc(var(--px-space-24) + env(safe-area-inset-bottom, 0px));
+  background: rgba(240, 240, 241, 0.06);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-top: 1px solid rgba(240, 240, 241, 0.1);
+  visibility: hidden;
+}
+
+.px-ritual.is-rested .px-ritual__sheet {
+  visibility: visible;
+}
+
+.px-ritual__action {
+  min-height: 44px;
+  padding: 0 var(--px-space-16);
+  border: 1px solid rgba(240, 240, 241, 0.14);
+  border-radius: var(--px-radius-12);
+  background: transparent;
+  color: var(--px-paper);
+  font-family: var(--px-type-body-family);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-ritual__action:hover {
+  background: rgba(240, 240, 241, 0.08);
+}
+
+.px-ritual__action--primary {
+  background: var(--px-sky-500);
+  border-color: var(--px-sky-500);
+  color: var(--px-ink);
+}
+
+.px-ritual__action--primary:hover {
+  background: var(--px-sky-300);
+}

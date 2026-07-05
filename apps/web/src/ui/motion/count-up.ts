@@ -22,7 +22,8 @@ export function countUp(el: Element, to: number, options: CountUpOptions = {}): 
     const from = 0;
 
     const tick = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
+      // rAF timestamps can precede the captured start on the first frame.
+      const t = Math.max(0, Math.min((now - start) / duration, 1));
       // Ease-out cubic: fast start, settling landing — a roll, not a timer.
       const eased = 1 - Math.pow(1 - t, 3);
       el.textContent = format(Math.round(from + (to - from) * eased));

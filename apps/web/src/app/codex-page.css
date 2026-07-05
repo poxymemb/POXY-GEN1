@@ -119,6 +119,14 @@
   width: 100%;
 }
 
+.cx-lights-demo {
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+}
+
 .cx-foot {
   margin-top: var(--px-space-64);
   text-align: center;

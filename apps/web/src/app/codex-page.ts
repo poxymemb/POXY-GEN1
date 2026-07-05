@@ -14,6 +14,8 @@ import {
 // Direct import, not via barrel: the codex page demos the Seal in its
 // sanctioned context (a verify verdict mock). Features must not copy this.
 import { Seal } from '../ui/components/seal';
+import { openRitual } from '../ui/motion/ritual';
+import { lightsDown, lightsUp, sparkle, travel, chipTick } from '../ui/motion';
 
 const ICON_HOME = `<svg viewBox="0 0 22 22" aria-hidden="true"><path d="M4 10.5 11 4l7 6.5V18a1 1 0 0 1-1 1h-4v-5H9v5H5a1 1 0 0 1-1-1v-7.5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
 const ICON_GRID = `<svg viewBox="0 0 22 22" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="4" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="12" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="12" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
@@ -252,6 +254,80 @@ export function renderCodexPage(host: HTMLElement): void {
         ],
         onProofLink: () => toast({ message: 'The fairness page arrives with PROMPT 04.' }),
       }),
+    ),
+  );
+
+  // --- motion: the ritual and the transition
+  const demoRitual = (rarity: 'common' | 'rare' | 'legendary' | 'mythic', name: string, run: number) => () =>
+    openRitual(
+      {
+        figureName: name,
+        rarity,
+        mint: Math.ceil(Math.random() * run),
+        run,
+        commitHash: 'a3f81c…e92d 7f04…b6c1 sha-256',
+        dissolveYield: { common: 10, rare: 60, legendary: 400, mythic: 1000 }[rarity],
+      },
+      { onVerify: () => toast({ message: 'Verify opens the fairness page (PROMPT 04).' }) },
+    );
+
+  const lightsBox = el('div', { class: 'cx-lights-demo m-paper-raised' }, [
+    el('p', { class: 't-body', style: 'padding: 16px' }, ['A gallery scene. Press the button to walk into the vault.']),
+  ]);
+  let lightsState: 'gallery' | 'vault' = 'gallery';
+
+  page.append(
+    section(
+      'Motion — water & light',
+      'The Open Ritual (tap during the Still skips to Emergence; the Oath never skips). lightsDown/lightsUp is THE route transition.',
+      row(
+        Button({ label: 'Ritual: Common', variant: 'ghost', onClick: demoRitual('common', 'Tsuki Usagi', 2500) }).root,
+        Button({ label: 'Ritual: Rare', variant: 'ghost', onClick: demoRitual('rare', 'Koi no Yoru', 1800) }).root,
+        Button({ label: 'Ritual: Legendary', onClick: demoRitual('legendary', 'Kaze no Katana', 250) }).root,
+        Button({ label: 'Ritual: Mythic', variant: 'ghost', onClick: demoRitual('mythic', 'Akane no Ryu', 100) }).root,
+      ),
+      lightsBox,
+      row(
+        Button({
+          label: 'lightsDown / lightsUp',
+          variant: 'ghost',
+          onClick: () => {
+            const swap = (env: 'gallery' | 'vault', text: string) => () => {
+              lightsBox.className = `cx-lights-demo ${env === 'vault' ? 'm-glass' : 'm-paper-raised'}`;
+              lightsBox.setAttribute('data-env', env);
+              const p = el('p', { class: 't-body', style: 'padding: 16px' }, [text]);
+              lightsBox.textContent = '';
+              lightsBox.append(p);
+              return lightsBox;
+            };
+            if (lightsState === 'gallery') {
+              lightsState = 'vault';
+              void lightsDown({ outgoing: lightsBox, swap: swap('vault', 'The vault. Dark water, one light.') });
+            } else {
+              lightsState = 'gallery';
+              void lightsUp({ outgoing: lightsBox, swap: swap('gallery', 'Back in the gallery. Museum morning.') });
+            }
+          },
+        }).root,
+        Button({
+          label: 'sparkle()',
+          variant: 'ghost',
+          onClick: () => void sparkle(lightsBox, { pigment: 'legendary', count: 10 }),
+        }).root,
+        Button({
+          label: 'travel()',
+          variant: 'ghost',
+          onClick: () => void travel(lightsBox, { from: 'below' }),
+        }).root,
+        Button({
+          label: 'chip tick',
+          variant: 'ghost',
+          onClick: () => {
+            const value = header.root.querySelector<HTMLElement>('.px-header__chip-value');
+            if (value) void chipTick(value, 1240 + Math.floor(Math.random() * 400));
+          },
+        }).root,
+      ),
     ),
   );
 
