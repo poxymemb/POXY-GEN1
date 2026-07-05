@@ -147,6 +147,12 @@ export function renderCodexPage(host: HTMLElement): void {
       'materials',
       'Materials',
       'Paper, glass, ink. Hairlines draw walls; shadows stay soft.',
+      el('div', { class: 'm-paper-raised m-paper--grain cx-material-hero' }, [
+        el('p', { class: 'cx-material-hero__quote' }, [
+          'Paper is not white. Paper is a room with the lights on.',
+        ]),
+        el('span', { class: 't-caption cx-material-hero__tag' }, ['m-paper--grain \u00b7 3% \u00b7 hero surfaces only']),
+      ]),
       el('div', { class: 'cx-materials' }, [
         el('div', { class: 'm-paper cx-material' }, [el('span', { class: 't-caption' }, ['m-paper'])]),
         el('div', { class: 'm-paper-raised cx-material' }, [el('span', { class: 't-caption' }, ['m-paper-raised'])]),

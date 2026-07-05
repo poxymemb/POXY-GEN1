@@ -55,6 +55,33 @@
   align-items: start;
 }
 
+/* Materials hero: full-width grain panel, judged at real scale (02D-5). */
+.cx-material-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--px-space-16);
+  min-height: 320px;
+  padding: var(--px-space-40);
+  text-align: center;
+}
+
+.cx-material-hero__quote {
+  margin: 0;
+  max-width: 520px;
+  font-family: var(--px-type-display-family);
+  font-size: 32px;
+  line-height: 1.25;
+  font-weight: 560;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.cx-material-hero__tag {
+  color: var(--text-dim);
+}
+
 .cx-materials {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
