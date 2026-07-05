@@ -1,0 +1,99 @@
+/* VideoFrame — paper stage with a star play button. Tokens only. */
+
+.px-video {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+}
+
+.px-video__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-8);
+}
+
+.px-video__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.px-video__note {
+  color: var(--text-dim);
+  max-width: 52ch;
+}
+
+.px-video__stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.px-video__el {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.px-video__play {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-8);
+  min-width: 44px;
+  min-height: 44px;
+  padding: var(--px-space-16) var(--px-space-24);
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-full);
+  background: var(--surface-raised);
+  color: var(--px-sky-500);
+  cursor: pointer;
+  transition: transform var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-video__play:hover {
+  transform: translateY(-2px);
+}
+
+.px-video__play-label {
+  color: var(--text);
+}
+
+.px-video__stage.is-playing .px-video__play {
+  display: none;
+}
+
+/* --- coming-soon paper state --- */
+
+.px-video__stage--pending {
+  place-items: center;
+}
+
+.px-video__pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-8);
+  color: var(--text-dim);
+}
+
+.px-video__pending-star {
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-video__play {
+    transition: none;
+  }
+  .px-video__play:hover {
+    transform: none;
+  }
+}

@@ -50,18 +50,15 @@ async function route(): Promise<void> {
     return;
   }
 
-  // Known rooms only; everything else is a wing we don't have.
+  // The root is the public pre-launch landing (the waiting-for-the-game
+  // campaign). Everything else is a wing we don't have yet.
   const hash = location.hash;
   if (hash && hash !== '#' && hash !== '#/') {
     return renderState('not-found');
   }
 
-  app.innerHTML = `
-    <main class="px-boot" data-env="gallery">
-      <h1 class="px-boot__title">POXY WORLD</h1>
-      <p class="px-boot__note">The atelier is being built.</p>
-    </main>
-  `;
+  const { renderPrelaunch } = await import('./features/prelaunch/prelaunch-page');
+  renderPrelaunch(app);
 }
 
 window.addEventListener('hashchange', () => void route());

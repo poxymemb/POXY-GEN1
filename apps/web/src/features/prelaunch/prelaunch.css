@@ -1,0 +1,71 @@
+/* Pre-launch landing — the first product built from our own bricks.
+   Tatami grid (8pt, content <=680px), tokonoma (one hero per section),
+   one sky accent per viewport. Tokens only; zero hardcoded hex. */
+
+.px-lp {
+  min-height: 100dvh;
+  /* Mobile safety: no element may push a horizontal scrollbar. */
+  overflow-x: hidden;
+}
+
+.px-lp * {
+  min-width: 0;
+}
+
+/* Content column: <=680px, centered, 8pt gutters. */
+.px-lp__col {
+  width: 100%;
+  max-width: var(--px-content-max);
+  margin-inline: auto;
+  padding-inline: var(--px-space-24);
+}
+
+/* Sections breathe: Gallery >=24pt gaps. */
+.px-lp__section {
+  padding-block: 72px;
+}
+
+.px-lp__section + .px-lp__section {
+  border-top: 1px solid var(--hairline);
+}
+
+.px-lp__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--px-space-8);
+}
+
+.px-lp__section-title {
+  margin-bottom: var(--px-space-16);
+}
+
+.px-lp__lead {
+  color: var(--text-dim);
+  max-width: 56ch;
+  margin-bottom: var(--px-space-32);
+}
+
+/* --- skip link (a11y) --- */
+.px-lp__skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: var(--px-space-8) var(--px-space-16);
+  background: var(--px-ink);
+  color: var(--px-paper);
+  border-radius: var(--px-radius-8);
+}
+.px-lp__skip:focus {
+  left: var(--px-space-16);
+  top: var(--px-space-16);
+}
+
+/* Reveal-on-scroll baseline: hidden until IntersectionObserver adds
+   .is-in. Reduced motion shows everything immediately (handled in TS). */
+.px-lp__reveal {
+  opacity: 0;
+}
+.px-lp__reveal.is-in {
+  opacity: 1;
+}

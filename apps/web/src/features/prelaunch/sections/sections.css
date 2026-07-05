@@ -1,0 +1,459 @@
+/* Pre-launch landing — per-section styles. Tokens only; zero hardcoded hex.
+   One sky accent per section; pigments only via RarityGem/Badge/glow. */
+
+/* ============================ HERO (Vault) ============================ */
+
+.px-hero {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.px-hero__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-16);
+}
+
+.px-hero__star-wrap {
+  color: var(--px-sky-500);
+  margin-bottom: var(--px-space-8);
+  filter: drop-shadow(0 0 24px var(--glow));
+}
+
+.px-hero__wordmark {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-dim);
+}
+
+.px-hero__title {
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.px-hero__sub {
+  color: var(--text-dim);
+  max-width: 44ch;
+}
+
+.px-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--px-space-16);
+  justify-content: center;
+  margin-top: var(--px-space-16);
+}
+
+.px-hero__counter {
+  color: var(--text-dim);
+  margin-top: var(--px-space-8);
+  letter-spacing: 0.04em;
+}
+
+/* ========================= THE PROMISE (Gallery) ===================== */
+
+.px-promise__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--px-space-24);
+}
+
+.px-promise__card {
+  padding: var(--px-space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+}
+
+.px-promise__card-title {
+  margin: 0;
+}
+
+.px-promise__card-note {
+  color: var(--text-dim);
+}
+
+.px-promise__runline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-8);
+  align-items: flex-start;
+}
+
+/* the mock verify verdict block */
+.px-promise__verify {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-8);
+  padding: var(--px-space-16);
+  border-radius: var(--px-radius-12);
+  background: var(--surface-sunken);
+}
+
+.px-promise__verify-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--px-space-16);
+  word-break: break-all;
+}
+
+.px-promise__verify-row .t-mono {
+  color: var(--text-dim);
+}
+
+/* ============================ VIDEO sections ========================= */
+
+.px-lp__section--video .px-lp__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-24);
+}
+
+/* ========================= SEASON 1 WALL (Gallery) =================== */
+
+.px-wall__meta {
+  display: flex;
+  gap: var(--px-space-16);
+  align-items: baseline;
+  margin-bottom: var(--px-space-16);
+}
+
+.px-wall__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--px-space-16);
+}
+
+.px-wall__lore {
+  color: var(--text-dim);
+}
+
+/* Brush-redacted words: the ink covers the word until it is unveiled. */
+.px-wall__redact {
+  position: relative;
+  color: transparent;
+  border-radius: 3px;
+  background: var(--px-ink-soft);
+  opacity: 0.55;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.px-wall__sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+}
+
+.px-wall__sheet-head {
+  display: flex;
+  align-items: center;
+  gap: var(--px-space-16);
+}
+
+.px-wall__sheet-note {
+  color: var(--text-dim);
+}
+
+/* ======================= THE RITUAL, LIVE (Vault) =================== */
+
+.px-ritual-demo {
+  text-align: center;
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+}
+
+.px-ritual-demo__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-16);
+}
+
+.px-ritual-demo .px-lp__lead {
+  text-align: center;
+}
+
+/* DEMO watermark so the opening is never mistaken for a real mint. A quiet
+   pill above the plaque zone (ink on paper, mono), plus a faint corner mark
+   on the overlay itself. */
+.px-ritual.is-demo .px-ritual__plaque-zone::before {
+  content: 'Demo opening';
+  display: inline-block;
+  margin: 0 auto var(--px-space-8);
+  padding: 4px 12px;
+  border-radius: var(--px-radius-full);
+  background: var(--px-paper);
+  color: var(--px-ink);
+  font-family: var(--px-type-mono-family);
+  font-size: var(--px-type-mono-size);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.px-ritual.is-demo::after {
+  content: 'DEMO';
+  position: fixed;
+  top: var(--px-space-24);
+  right: var(--px-space-24);
+  font-family: var(--px-type-mono-family);
+  font-size: var(--px-type-mono-size);
+  letter-spacing: 0.3em;
+  color: var(--px-paper);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ========================= FOUNDER PASS (Gallery) =================== */
+
+.px-founder__reveal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-24);
+}
+
+.px-founder__card {
+  padding: var(--px-space-32);
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+}
+
+.px-founder__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--px-space-16);
+}
+
+.px-founder__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.px-founder__scarcity {
+  color: var(--text-dim);
+}
+
+.px-founder__contents {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+}
+
+.px-founder__content {
+  display: flex;
+  gap: var(--px-space-16);
+  align-items: flex-start;
+}
+
+.px-founder__bullet {
+  color: var(--px-sky-500);
+  flex: none;
+  margin-top: 4px;
+}
+
+.px-founder__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--px-space-16);
+  margin-top: var(--px-space-8);
+}
+
+.px-founder__price-cap {
+  color: var(--text-dim);
+}
+
+.px-founder__fallback {
+  color: var(--text-dim);
+}
+
+.px-founder__fallback-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--px-sky-500);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.px-founder__honesty {
+  padding-top: var(--px-space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-8);
+  color: var(--text-dim);
+}
+
+/* ============================ COMMUNITY ============================= */
+
+.px-community__discord {
+  padding: var(--px-space-32);
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+  align-items: flex-start;
+}
+
+.px-community__note {
+  color: var(--text-dim);
+  max-width: 52ch;
+}
+
+.px-community__socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--px-space-16);
+  margin-top: var(--px-space-24);
+}
+
+.px-community__social {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--px-space-8);
+  min-height: 44px;
+  padding: var(--px-space-8) var(--px-space-16);
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-full);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.px-community__social-icon {
+  display: inline-flex;
+  color: var(--text-dim);
+}
+
+.px-community__wall {
+  margin-top: var(--px-space-40);
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+}
+
+.px-community__plaques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--px-space-8);
+}
+
+.px-community__plaque {
+  font-size: var(--px-type-mono-size);
+}
+
+.px-community__wall-note {
+  color: var(--text-dim);
+}
+
+/* ============================ WAITLIST ============================== */
+
+.px-waitlist__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-24);
+  max-width: 420px;
+}
+
+.px-waitlist__success {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+  max-width: 480px;
+}
+
+.px-waitlist__success-note {
+  color: var(--text-dim);
+}
+
+.px-waitlist__passport {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-8);
+  align-items: flex-start;
+}
+
+/* ============================== FAQ ================================= */
+
+.px-faq__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.px-faq__item {
+  padding-block: var(--px-space-24);
+}
+
+.px-faq__q {
+  cursor: pointer;
+  list-style: none;
+}
+
+.px-faq__q::-webkit-details-marker {
+  display: none;
+}
+
+.px-faq__a {
+  color: var(--text-dim);
+  margin-top: var(--px-space-16);
+  max-width: 62ch;
+}
+
+/* ============================= FOOTER ============================== */
+
+.px-footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+  align-items: center;
+  text-align: center;
+}
+
+.px-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--px-space-24);
+  justify-content: center;
+}
+
+.px-footer__link {
+  color: var(--text);
+}
+
+.px-footer__play {
+  color: var(--text-dim);
+}
+
+/* ============================ responsive =========================== */
+
+@media (min-width: 560px) {
+  .px-promise__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .px-wall__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .px-founder__reveal {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .px-founder__card {
+    flex: 1 1 60%;
+  }
+  .px-founder__honesty {
+    flex: 1 1 40%;
+    border-top: 0;
+    padding-top: 0;
+    border-left: 1px solid var(--hairline);
+    padding-left: var(--px-space-24);
+  }
+}
