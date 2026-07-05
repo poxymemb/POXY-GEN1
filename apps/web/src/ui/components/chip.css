@@ -29,14 +29,15 @@
   border-color: var(--text-dim);
 }
 
+/* Codex Amendment 1: only the ACTIVE chip renders sky (border + text);
+   no fill — the group must never read as a row of sky pills. Inactive
+   chips stay ghost (ink-soft text on hairline). */
 .px-chip.is-selected {
-  background: var(--px-sky-100);
+  background: transparent;
   border-color: var(--px-sky-500);
   color: var(--px-sky-900);
 }
 
-/* On vault glass, selected chips use sky on deep instead of sky-100 fill. */
 [data-env='vault'] .px-chip.is-selected {
-  background: rgba(96, 194, 224, 0.14);
   color: var(--px-sky-300);
 }
