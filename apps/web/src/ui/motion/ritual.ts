@@ -131,6 +131,7 @@ export function openRitual(reveal: RitualReveal, actions: RitualActions = {}): R
   ]);
 
   document.body.append(root);
+  emitCue('ritual-start'); // silent cue: the living layer yields to the ritual
 
   function close() {
     root.classList.add('is-closing');

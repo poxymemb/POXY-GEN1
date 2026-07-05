@@ -5,6 +5,7 @@
 import type { Rarity } from '@poxy/shared';
 
 export type MotionCue =
+  | 'ritual-start' // overlay mounted; the museum holds its breath
   | 'break'        // ritual: the hairline of light
   | 'reveal'       // ritual: emergence (carries rarity)
   | 'tick'         // plaque count-up landed
