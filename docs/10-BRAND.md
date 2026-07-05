@@ -125,13 +125,21 @@ never carries its own.
 
 ```svg
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <path d="M50 2 C54 26, 60 38, 74 44 C86 48, 94 49, 98 50
-           C94 51, 86 52, 74 56 C60 62, 54 74, 50 98
-           C46 74, 40 62, 26 56 C14 52, 6 51, 2 50
-           C6 49, 14 48, 26 44 C40 38, 46 26, 50 2 Z"
-        fill="currentColor"/>
+  <path fill="currentColor" d="M 49.5 7.8
+    Q 50 2 50.5 7.8
+    C 53.6 33.9 66.1 46.4 92.2 49.5
+    Q 98 50 92.2 50.5
+    C 66.1 53.6 53.6 66.1 50.5 92.2
+    Q 50 98 49.5 92.2
+    C 46.4 66.1 33.9 53.6 7.8 50.5
+    Q 2 50 7.8 49.5
+    C 33.9 46.4 46.4 33.9 49.5 7.8 Z"/>
 </svg>
 ```
+
+(The master file is the authority; this snippet is a copy for orientation.
+The seal's path lives only in `assets/brand/seal.svg` — it is not meant to
+be re-inlined by features; the `Seal` component renders it.)
 
 Everything derives from the star:
 
