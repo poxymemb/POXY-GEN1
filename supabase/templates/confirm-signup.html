@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+  POXY WORLD - confirm signup (Supabase auth template).
+  Still Water email rules: 600px bulletproof tables, paper bg, ink text,
+  star divider as a text glyph (SVG is stripped by Gmail), all CSS inline.
+  Gmail quirks: no <style> reliance, no margin on <td>, bgcolor attr doubles
+  the CSS background. Apple Mail: dark-mode meta + color-scheme supported.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>Welcome to POXY WORLD</title>
+</head>
+<body style="margin:0;padding:0;background-color:#F0F0F1;">
+  <!-- preheader (hidden preview text) -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+    One tap and your museum opens.
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F0F0F1" style="background-color:#F0F0F1;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:100%;">
+          <!-- wordmark -->
+          <tr>
+            <td align="center" style="padding:0 0 28px 0;font-family:Georgia,'Times New Roman',serif;font-size:22px;letter-spacing:0.14em;color:#1C1C1E;">
+              POXY&nbsp;WORLD
+            </td>
+          </tr>
+          <!-- card -->
+          <tr>
+            <td bgcolor="#FFFFFF" style="background-color:#FFFFFF;border:1px solid #E3E3E5;border-radius:8px;padding:44px 48px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.3;color:#1C1C1E;padding-bottom:12px;">
+                    The doors are ready to open.
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:#6E6E73;padding-bottom:28px;">
+                    Confirm your email and step into your museum.
+                  </td>
+                </tr>
+                <!-- button (bulletproof) -->
+                <tr>
+                  <td align="center" style="padding-bottom:28px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td align="center" bgcolor="#1C1C1E" style="background-color:#1C1C1E;border-radius:999px;">
+                          <a href="{{ .ConfirmationURL }}" target="_blank"
+                             style="display:inline-block;padding:14px 36px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#F0F0F1;text-decoration:none;border-radius:999px;">
+                            Confirm email
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <!-- star divider -->
+                <tr>
+                  <td align="center" style="font-size:14px;color:#B9BCC1;padding-bottom:24px;">&#10022;</td>
+                </tr>
+                <tr>
+                  <td align="center" style="font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:#8E8E93;">
+                    If the button does not work, paste this link into your browser:<br>
+                    <a href="{{ .ConfirmationURL }}" style="color:#3E8CA8;text-decoration:underline;word-break:break-all;">{{ .ConfirmationURL }}</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- legal footer -->
+          <tr>
+            <td align="center" style="padding:28px 16px 0;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;line-height:1.7;color:#8E8E93;">
+              You received this because someone entered this address at poxy.world.<br>
+              If it was not you, simply ignore this letter. No account will be created.<br><br>
+              AETRYX LTD &middot; London, United Kingdom &middot; poxy.world
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
