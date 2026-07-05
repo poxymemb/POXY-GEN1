@@ -1,0 +1,23 @@
+---
+description: apps/mcu — staff console; hands off unless the session declares it
+globs:
+  - "apps/mcu/**"
+alwaysApply: false
+---
+
+# MCU rules (`apps/mcu` — POXY OS staff console)
+
+- **Do not touch MCU unless the session explicitly declares `apps/mcu` as
+  its zone.** Game-facing sessions (web, supabase) never "drive-by edit"
+  the admin.
+- MCU is Next.js + Tailwind and keeps its own visual language. Do NOT apply
+  Sky player-facing tokens or the dual-environment system here.
+- Access model stays: middleware gate via Supabase auth + `admin_emails`
+  lookup. Never weaken it, never add public routes beyond
+  `/`, `/login`, `/unauthorized`, `/api/health`.
+- `SUPABASE_SERVICE_ROLE_KEY` is server-only (middleware, route handlers).
+  It must never reach a client component or `NEXT_PUBLIC_*` var.
+- Branding: AETRYX LTD replaces NULLSPACE LABS in MCU chrome — but only in
+  a session scoped to MCU.
+- The legacy staff terminal (`archive/prototype-v1/assets/admin-terminal.html`)
+  is retired reference material; do not resurrect it.

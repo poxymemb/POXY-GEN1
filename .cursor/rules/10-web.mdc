@@ -1,0 +1,53 @@
+---
+description: apps/web + packages — Sky DS constraints, vanilla TS, mobile-first
+globs:
+  - "apps/web/**"
+  - "packages/**"
+alwaysApply: false
+---
+
+# Web app rules (`apps/web`, `packages/*`)
+
+## Stack constraints
+
+- **Vanilla TypeScript only.** No React/Vue/JSX/virtual DOM, no UI
+  frameworks, no state libraries. Components are functions returning
+  `HTMLElement` in `src/ui/`. Tiny hand-rolled pub/sub for state.
+- Features live in `src/features/<zone>/`; router/shell in `src/app/`;
+  Supabase client and helpers in `src/lib/`.
+- Dependencies require strong justification — prefer zero.
+
+## Sky Design System
+
+- Tokens come ONLY from `@poxy/tokens` (`tokens.json` is the machine source;
+  `css/variables.css` its generated projection). **Zero hardcoded hex** in
+  `apps/web` outside the tokens package. Locked values: Sky-500 `#60C2E0`,
+  ink `#1C1C1E`, paper `#F0F0F1`.
+- Dual environment via `data-env="gallery|vault"` switching semantic
+  variables — never fork components per environment.
+- Rarity colors only in gem SVGs and `RarityBadge`/figure-card gems.
+- Type roles: UI = SF Pro/Inter; display numbers = Space Grotesk; hashes,
+  seeds and mint numbers = JetBrains Mono. Syne only in the landing hero.
+- Motion: 200ms micro / 320ms panel / 600–900ms ritual-only, easing
+  `cubic-bezier(0.32, 0.72, 0, 1)`. Always honor `prefers-reduced-motion`
+  (ritual → 150ms crossfade).
+
+## Mobile & accessibility
+
+- Mobile-first; verify at **390px**: no horizontal scroll, touch targets
+  ≥44px, contrast AA for text tokens, focus-visible ring in Sky-500.
+
+## Copy
+
+- Brand voice (docs/10-BRAND.md): sentence case, no exclamation marks, no
+  hype adjectives, no em-dashes in user-facing copy. Errors = fact + fix.
+- Odds are ALWAYS visible before purchase. Never hide or delay them.
+
+## Data discipline
+
+- All value mutations go through edge functions — the client never writes
+  wallets, mints, openings, listings directly.
+- Render user content as `textContent`, never `innerHTML` (XSS). Every
+  `innerHTML` use must be justified against untrusted input.
+- Rive is deferred: build `data-rive-slot` placeholders (star gem), do not
+  add the Rive runtime to the app until the dedicated post-beta session.

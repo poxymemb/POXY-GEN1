@@ -1,0 +1,42 @@
+---
+description: POXY-GEN1 global law — applies to every session in this repo
+alwaysApply: true
+---
+
+# Global rules (every zone, every session)
+
+Read `CLAUDE.md` first, every session. It maps docs and locations.
+Company is **AETRYX LTD** (replaces NULLSPACE LABS everywhere new).
+
+## Discipline
+
+- **One zone per session.** Declare scope up front; never touch files outside it.
+- **Phase plan first**, then implement phase by phase.
+- Commit after every completed phase: `feat(zone): phase N — summary`.
+  Push to the current feature branch. Never push directly to `main` — merges
+  go through PR review by the architect.
+- If a spec forces deviation: STOP, note it in the final report, add an ADR
+  in `docs/decisions/` if you decided something. No silent improvisation.
+
+## Vocabulary & brand
+
+- Use ONLY glossary terms (`docs/50-GLOSSARY.md`): Figure, Case, Mint, Run,
+  Shards, PX, Dissolve, Open Ritual, Museum, Passport, Vault/Gallery.
+  Never "lootbox", "NFT", "burn" in UI copy.
+- Voice: museum curator, not casino barker. Sentence case. No exclamation
+  marks in system UI. Numbers are heroes.
+- **Rarity colors appear ONLY in gem SVGs and rarity badges** — never on
+  layout, surfaces, buttons or text. The single sanctioned glow is the
+  Open Ritual reveal.
+
+## Safety (outranks features and speed)
+
+- Client never holds secrets, service-role keys, or authoritative
+  prices/odds/yields. Server reads them from the DB.
+- Every balance change goes through the ledger tables. No exceptions.
+- Crypto engine (commit-reveal RNG, SHA-256 identity hashes, ED25519,
+  Merkle) is server-side only and append-only.
+- 18+ gate, spending limits, self-exclusion are server-enforced. Never
+  weaken RLS.
+- `archive/prototype-v1/` is the still-deployed legacy product: hotfixes
+  only, never restructure it.

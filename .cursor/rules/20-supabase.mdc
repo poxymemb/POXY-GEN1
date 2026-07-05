@@ -1,0 +1,51 @@
+---
+description: supabase/ — migrations only, RLS everywhere, edge function law
+globs:
+  - "supabase/**"
+alwaysApply: false
+---
+
+# Supabase rules (`supabase/`)
+
+Production project: `rbrtjkfawdnomvvyxwvp`. Treat it as live money.
+
+## Migrations
+
+- Schema changes ONLY via new timestamped CLI migrations in
+  `supabase/migrations/`. Never edit an applied migration. Never patch prod
+  by hand.
+- `supabase/migrations/legacy/` is frozen prototype-era SQL; its apply order
+  is `legacy/MIGRATIONS.md`, not filename order. Read-only reference.
+- Every new table ships in the same migration with: RLS ENABLED, its
+  policies, and indexes for its access paths.
+
+## RLS law
+
+- No table without RLS — even "harmless" ones.
+- Users read own rows (`auth.uid() = user_id`); catalog tables (figures,
+  case_types, case_odds, seasons) are public read; public profile data goes
+  through column-whitelisting views only.
+- Value tables (wallets, ledgers, openings, mints, listings, trades) accept
+  NO client writes — service role via edge functions only.
+- Ledgers are append-only: no UPDATE/DELETE for anyone.
+- Staff gating in RLS policies uses the `admin_emails` + `profiles` join
+  pattern — never helper functions like `private_is_admin()` inside a
+  policy (SECURITY DEFINER RPCs may use them internally).
+- Never commit real emails/UUIDs; `admin_emails` is seeded manually in prod.
+
+## Edge functions (Deno)
+
+- Validate every input with zod: lengths, enums, uuids. Trust nothing from
+  the request body — prices, odds, yields, costs are read from the DB.
+- Money/mint mutations: single transaction (RPC), idempotency key required,
+  ledger row with `(reason, ref_id)` unique guard, refund path on failure.
+- Advisory locks for mint allocation and listing purchases (race safety).
+- Secrets via `supabase secrets set` — never in code, never in git.
+- Log to the audit tables; failures must leave a traceable row.
+
+## Crypto engine
+
+Commit-reveal RNG, SHA-256 identity hashes, ED25519 signatures, Merkle
+roots: server-side only, immutable after write. The existing 13 prototype
+functions in `supabase/functions/` are LIVE — extend carefully, never break
+their contracts within a visual or unrelated task.
