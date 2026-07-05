@@ -15,13 +15,45 @@ startHour();
 // keeps it out of production bundles entirely.
 const app = document.querySelector<HTMLDivElement>('#app');
 
+async function renderState(variant: 'not-found' | 'offline'): Promise<void> {
+  if (!app) return;
+  const { EmptyState } = await import('./ui');
+  app.textContent = '';
+  const main = document.createElement('main');
+  main.className = 'px-boot';
+  main.setAttribute('data-env', 'gallery');
+  main.append(
+    EmptyState({
+      variant,
+      onAction: () => {
+        if (variant === 'offline') location.reload();
+        else {
+          location.hash = '#/';
+          void route();
+        }
+      },
+    }),
+  );
+  app.append(main);
+}
+
 async function route(): Promise<void> {
   if (!app) return;
+
+  if (!navigator.onLine) {
+    return renderState('offline');
+  }
 
   if (import.meta.env.DEV && location.hash.startsWith('#/codex')) {
     const { renderCodexPage } = await import('./app/codex-page');
     renderCodexPage(app);
     return;
+  }
+
+  // Known rooms only; everything else is a wing we don't have.
+  const hash = location.hash;
+  if (hash && hash !== '#' && hash !== '#/') {
+    return renderState('not-found');
   }
 
   app.innerHTML = `
@@ -33,4 +65,6 @@ async function route(): Promise<void> {
 }
 
 window.addEventListener('hashchange', () => void route());
+window.addEventListener('offline', () => void renderState('offline'));
+window.addEventListener('online', () => void route());
 void route();

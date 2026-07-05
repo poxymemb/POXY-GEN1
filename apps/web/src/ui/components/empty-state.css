@@ -21,3 +21,8 @@
   letter-spacing: var(--px-type-title-tracking);
   color: var(--text-dim);
 }
+
+.px-empty__sub {
+  margin: -8px 0 0;
+  color: var(--text-dim);
+}
