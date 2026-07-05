@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Katana Rive pilot · POXY</title>
-  <link rel="stylesheet" href="../../assets/poxy-sky/tokens.css?v=3">
+  <link rel="stylesheet" href="../../archive/prototype-v1/assets/poxy-sky/tokens.css?v=3">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body {
@@ -103,7 +103,7 @@
 </head>
 <body>
   <main class="px-rive-lab">
-    <a class="px-rive-lab__back" href="../../index.html">← Back to POXY</a>
+    <a class="px-rive-lab__back" href="../../archive/prototype-v1/index.html">← Back to POXY</a>
     <h1>Katana · Flawless Night</h1>
     <p class="px-rive-lab__sub">Rive pilot for Season 1. Hover (desktop) or tap (mobile) to play <strong>react</strong> once. Returns to <strong>idle</strong> when done.</p>
 
@@ -132,7 +132,7 @@
 
     let Rive, Fit, Alignment, Layout, EventType;
     try {
-      const riveMod = await import('../../assets/vendor/rive/rive.mjs');
+      const riveMod = await import('./rive.mjs');
       ({ Rive, Fit, Alignment, Layout, EventType } = riveMod.default || riveMod);
     } catch (err) {
       showError('Failed to load Rive module: ' + (err && err.message ? err.message : err));

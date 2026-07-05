@@ -2,8 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "",
-  "buildCommand": "npm run vercel-build",
-  "outputDirectory": ".",
+  "buildCommand": "node scripts/verify-static.mjs",
+  "outputDirectory": "archive/prototype-v1",
   "rewrites": [
     { "source": "/sw.js", "destination": "/public/sw.js" },
     { "source": "/icon-192.png", "destination": "/public/icon-192.png" },
