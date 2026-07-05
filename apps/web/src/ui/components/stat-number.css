@@ -1,0 +1,13 @@
+.px-stat {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.px-stat__caption {
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  line-height: var(--px-type-caption-line);
+  letter-spacing: var(--px-type-caption-tracking);
+  color: var(--text-dim);
+}

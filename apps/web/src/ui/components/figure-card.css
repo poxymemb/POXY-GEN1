@@ -1,0 +1,100 @@
+.px-figure-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  background: var(--surface-raised);
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-16);
+  overflow: hidden;
+  color: inherit;
+  transition: translate var(--px-dur-surface) var(--px-ease-surface),
+    box-shadow var(--px-dur-surface) var(--px-ease-surface);
+}
+
+button.px-figure-card {
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Micro-signature #1: card lift, 2px, Surface tempo. */
+.px-figure-card:hover {
+  translate: 0 -2px;
+  box-shadow: 0 4px 12px rgba(28, 28, 30, 0.08);
+}
+
+.px-figure-card__art {
+  aspect-ratio: var(--px-card-ratio);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+}
+
+.px-figure-card__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0.32;
+}
+
+.px-figure-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--hairline);
+}
+
+.px-figure-card__name {
+  font-family: var(--px-type-title-family);
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: var(--px-type-title-weight);
+  letter-spacing: var(--px-type-title-tracking);
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.px-figure-card__plaque {
+  font-family: var(--px-type-mono-family);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-dim);
+}
+
+/* Unowned: elegant absence — grayscale, dashed hairline (Codex §2). */
+.px-figure-card--unowned {
+  border-style: dashed;
+  background: var(--surface);
+}
+
+.px-figure-card--unowned .px-figure-card__art,
+.px-figure-card--unowned .px-figure-card__name {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+/* New: one quiet sky dot. */
+.px-figure-card__new-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--px-sky-500);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-figure-card:hover {
+    translate: 0 0;
+  }
+}

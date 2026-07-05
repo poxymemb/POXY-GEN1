@@ -1,0 +1,9 @@
+.px-gem {
+  display: inline-flex;
+  flex: none;
+  line-height: 0;
+}
+
+.px-gem svg {
+  display: block;
+}

@@ -1,0 +1,43 @@
+.px-pity {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.px-pity svg {
+  position: absolute;
+  inset: 0;
+}
+
+.px-pity__track {
+  stroke: var(--hairline);
+}
+
+.px-pity__fill {
+  stroke: var(--px-sky-500);
+  transition: stroke-dashoffset var(--px-dur-current) var(--px-ease-current);
+}
+
+.px-pity__counter {
+  font-family: var(--px-type-data-m-family);
+  font-size: var(--px-type-data-m-size);
+  font-weight: var(--px-type-data-m-weight);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+/* Micro-signature #3: pity pulse at 90% — Surface tempo, exactly once. */
+.px-pity.is-near svg {
+  animation: px-pity-pulse var(--px-dur-surface) var(--px-ease-surface) 2 alternate;
+}
+
+@keyframes px-pity-pulse {
+  to { scale: 1.05; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-pity.is-near svg {
+    animation: none;
+  }
+}
