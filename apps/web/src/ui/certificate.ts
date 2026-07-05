@@ -54,7 +54,7 @@ export async function Certificate(data: CertificateData): Promise<HTMLElement> {
   const seal = Seal({ size: 56 });
   seal.root.classList.add('px-cert__seal');
 
-  const art = el('div', { class: 'px-cert__art m-paper-sunken' }, [
+  const art = el('div', { class: 'px-cert__art' }, [
     data.artworkUrl
       ? el('img', { src: data.artworkUrl, alt: data.name, class: 'px-cert__art-img' })
       : el('span', { class: 'px-cert__art-star' }, [svgFromString(starMarkup)]),
