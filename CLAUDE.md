@@ -11,7 +11,8 @@ published run sizes. Orient yourself here first, every session.
 | Doc | Contents |
 |---|---|
 | `docs/00-VISION.md` | Why the product exists, the anti-casino stance |
-| `docs/10-BRAND.md` | Sky DS tokens, dual environment, motion, voice |
+| `docs/10-BRAND.md` | The POXY Codex (Still Water): materials, pigments, star/seal, type, motion, layout DNA |
+| `docs/11-SCREEN-DNA.md` | Per-screen composition blueprints (lands with 02C) |
 | `docs/20-GAME-DESIGN.md` | Loops, pity, scarcity, Collector Score formula |
 | `docs/30-ECONOMY.md` | Currencies, prices, yields, sinks/sources, ledger law |
 | `docs/40-ARCHITECTURE.md` | Stack, data flow, RLS philosophy, crypto engine |

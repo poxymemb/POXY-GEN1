@@ -26,8 +26,13 @@ addition via `docs/decisions/` — never invent a synonym mid-task.
 | **Passport** | The player identity document: avatar, level, score, plaques. Exportable image. |
 | **Season Atlas** | The season's full figure checklist; completing sets/atlas grants plaques and score bonuses. |
 | **Set** | All 6 rarities of one item (e.g. all Katana figures). |
-| **Gallery** | Light scene environment (paper base): collection, market, profile, quests. |
-| **Vault** | Dark scene environment (ink base): Open Ritual, events, live drops. |
+| **Gallery** | Light scene environment (paper/washi base): collection, market, profile, quests. |
+| **Vault** | Dark scene environment (water/glass base): Open Ritual, events, live drops. |
+| **The Codex** | `docs/10-BRAND.md` — the design law (Still Water). Outranks all visual decisions. |
+| **The Star** | The 4-pointed hikari mark (`assets/brand/star.svg`): the only decorative glyph. |
+| **The Seal** | The akane hanko stamp (`assets/brand/seal.svg`): authenticity moments only. |
+| **The Plaque** | The ownership primitive: ink bar + mono "№ 0142 / 2,500", optional provenance line. |
+| **The Oath** | The ritual beat showing the commit hash before the roll. Never skippable. |
 | **MCU / POXY OS** | The staff admin console (`apps/mcu`). Out of player-facing scope. |
 | **POXY PASS** | The £9.99 seasonal pass: 50 tiers, free + premium tracks. |
 | **VIP** | The £4.99/month subscription (second daily case, 3% market fee, frame, early access). |

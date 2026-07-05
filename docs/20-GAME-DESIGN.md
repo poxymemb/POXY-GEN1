@@ -91,18 +91,27 @@ trade honesty screen ("You give 340 · You receive 120"), seasonal rewards.
 
 ## The Open Ritual (signature moment)
 
-1. Lights down (Gallery→Vault primitive), case art centered.
-2. **The commit is shown first**: seed hash in mono, "Sealed before your
-   roll. Verify later." Honesty IS the theatre.
-3. Anticipation: star gem pulse, ≤900ms.
-4. Reveal: figure card flips in with rarity glow (the only sanctioned rarity
-   color glow), mint number counts up in mono. Legendary+ gets one overshoot
-   and a spark burst.
-5. Result sheet: Keep · Dissolve (+N shards) · Open another · Verify this
-   opening.
+The authoritative beat-for-beat timeline lives in `docs/11-SCREEN-DNA.md`
+(implemented as `ritual.ts`). The shape:
 
-Reduced motion: crossfade + immediate result. Multi-open ×10: compact grid,
-rarest lands last. Tap-to-reveal under 2.5 seconds, always.
+1. **Lights down** — the Gallery→Vault primitive; chrome fades, only the
+   case remains.
+2. **The Oath** — the commit hash types on in mono: "Sealed before your
+   roll." Honesty IS the theatre, and it is never skippable.
+3. **The Still** — one slow breath. Silence is the drama; no rarity hints,
+   no near-miss theatre, ever.
+4. **The Break & Emergence** — a single hairline of light crosses the case;
+   the figure travels up from depth; the pigment glow blooms behind it (the
+   only sanctioned rarity-color moment).
+5. **The Plaque** — name sets in Fraunces, mint number counts up in mono;
+   Epic+ fires one star sparkle.
+6. **Result rest** — Keep · Dissolve (+N shards) · Open another · Verify
+   this opening.
+
+Common/Uncommon shorten the ceremony (~1.4s — respect the player's time);
+Mythic extends the Still. Tap during the Still skips to Emergence; the Oath
+never skips. Reduced motion: Oath shown instantly, result fades in.
+Multi-open ×10: face-down grid, rarest flips last (sorted server-side).
 
 ## Responsible design (UK posture, day one)
 
