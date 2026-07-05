@@ -4,6 +4,7 @@
    with it, never use it as a loading state, never recolor it. */
 import './seal.css';
 import { el, svgFromString } from '../../lib/dom';
+import { emitCue } from '../motion/cues';
 import sealMarkup from '../brand/seal.svg?raw';
 
 export interface SealOptions {
@@ -37,6 +38,7 @@ export function Seal(options: SealOptions = {}): SealHandle {
   function stamp(): Promise<void> {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     root.classList.add('is-stamped');
+    emitCue('seal-stamp');
     if (reduced) return Promise.resolve();
 
     const settle = mark.animate(

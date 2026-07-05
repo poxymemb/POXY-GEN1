@@ -3,6 +3,7 @@
    clockwise. At >=90% a single quiet sky pulse (micro-signature #3). */
 import './pity-ring.css';
 import { el, svgFromString } from '../../lib/dom';
+import { emitCue } from '../motion/cues';
 
 export interface PityRingOptions {
   /** Openings done toward the guarantee. */
@@ -44,6 +45,7 @@ export function PityRing(options: PityRingOptions): PityRingHandle {
 
   const fill = svg.querySelector<SVGCircleElement>('.px-pity__fill')!;
   let pulsed = false;
+  let announcedFull = false;
 
   function setProgress(value: number) {
     const clamped = Math.max(0, Math.min(value, threshold));
@@ -59,6 +61,14 @@ export function PityRing(options: PityRingOptions): PityRingHandle {
     } else if (ratio < 0.9) {
       pulsed = false;
       root.classList.remove('is-near');
+    }
+
+    // Haptic-only cue when the guarantee is reached.
+    if (ratio >= 1 && !announcedFull) {
+      announcedFull = true;
+      emitCue('pity-full');
+    } else if (ratio < 1) {
+      announcedFull = false;
     }
   }
 

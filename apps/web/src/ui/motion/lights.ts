@@ -5,6 +5,7 @@
 import './lights.css';
 import { Current, Reduced, prefersReducedMotion } from './tempo';
 import { travel } from './travel';
+import { emitCue } from './cues';
 
 export interface LightsScene {
   /** The screen content being dimmed away (the gallery). */
@@ -31,6 +32,7 @@ async function fadeSwap(scene: LightsScene): Promise<HTMLElement> {
 }
 
 export async function lightsDown(scene: LightsScene): Promise<HTMLElement> {
+  emitCue('lights-down');
   if (prefersReducedMotion()) return fadeSwap(scene);
 
   const overlay = document.createElement('div');

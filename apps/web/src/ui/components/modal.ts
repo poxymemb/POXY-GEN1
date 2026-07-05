@@ -1,6 +1,7 @@
 import './modal.css';
 import { el } from '../../lib/dom';
 import { Icon } from '../icons';
+import { emitCue } from '../motion/cues';
 
 /* Modal (centered) and Sheet (bottom, mobile-first). Scrim = vault-abyss
    60%. Focus is trapped while open; Escape and scrim click dismiss. */
@@ -76,6 +77,7 @@ export function Modal(options: ModalOptions): ModalHandle {
 
   function close() {
     document.removeEventListener('keydown', onKeydown);
+    emitCue('sheet-close');
     root.classList.remove('is-open');
     const remove = () => {
       root.remove();
@@ -88,6 +90,7 @@ export function Modal(options: ModalOptions): ModalHandle {
 
   document.addEventListener('keydown', onKeydown);
   document.body.append(root);
+  emitCue('sheet-open');
   requestAnimationFrame(() => {
     root.classList.add('is-open');
     (panel.querySelector<HTMLElement>(FOCUSABLE) ?? closeBtn).focus();

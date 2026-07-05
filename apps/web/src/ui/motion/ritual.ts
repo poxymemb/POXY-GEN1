@@ -27,6 +27,7 @@ import { Current, RitualEase, prefersReducedMotion } from './tempo';
 import { travel } from './travel';
 import { sparkle } from './sparkle';
 import { countUp } from './count-up';
+import { emitCue } from './cues';
 import starMarkup from '../brand/star.svg?raw';
 
 export interface RitualReveal {
@@ -206,6 +207,7 @@ export function openRitual(reveal: RitualReveal, actions: RitualActions = {}): R
     // 1800–1950 — THE BREAK (Epic+ only): one sky hairline, then the split.
     if (!simple) {
       breakLine.classList.add('is-lit');
+      emitCue('break');
       await wait(150);
       caseHalfTop.animate(
         [{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-14px) rotate(-1.2deg)' }],
@@ -219,6 +221,7 @@ export function openRitual(reveal: RitualReveal, actions: RitualActions = {}): R
 
     // 1950–2350 — EMERGENCE: the figure travels up from depth; glow blooms.
     root.classList.add('is-emerged');
+    emitCue('reveal', { rarity: reveal.rarity });
     glow.animate([{ opacity: 0 }, { opacity: 1 }], {
       duration: 400,
       easing: 'ease-out',
@@ -245,6 +248,7 @@ export function openRitual(reveal: RitualReveal, actions: RitualActions = {}): R
       void sparkle(stage, { pigment: reveal.rarity, count: mythic ? 14 : 8 });
     }
     await mintRoll;
+    emitCue('tick'); // one soft stone click on landing — never per-digit
     await wait(130);
 
     // 2900+ — RESULT REST: the action sheet travels up.
