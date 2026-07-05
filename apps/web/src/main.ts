@@ -1,4 +1,5 @@
 import '@poxy/tokens/css/variables.css';
+import './ui/fonts.css';
 import './style.css';
 
 // Entry point. The router, shell and features arrive in later sessions
