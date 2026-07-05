@@ -1,0 +1,12 @@
+.px-lights-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: var(--px-vault-abyss);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.px-lights-overlay--paper {
+  background: var(--px-paper);
+}
