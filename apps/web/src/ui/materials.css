@@ -1,0 +1,213 @@
+/* Material layer — paper (washi) / water-glass / ink (sumi).
+   Codex §1, §8. Env-aware via [data-env] semantic vars from @poxy/tokens.
+   Features compose these classes; they never restyle materials locally. */
+
+/* ---------- global ground ---------- */
+
+[data-env] {
+  background: var(--surface);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--px-sky-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--px-sky-100);
+  color: var(--px-ink);
+}
+
+/* ---------- paper (washi) ---------- */
+
+.m-paper,
+.m-paper-raised {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-16);
+  box-shadow: var(--shadow);
+}
+
+.m-paper-raised {
+  background: var(--surface-raised);
+}
+
+/* Paper grain — OPTIONAL, hero surfaces only (texture is seasoning, not
+   sauce). 2% noise via inline SVG turbulence; decision on keeping it is a
+   visual call on the Codex page. */
+.m-paper--grain {
+  position: relative;
+}
+
+.m-paper--grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- water / glass ---------- */
+
+.m-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--px-radius-16);
+  /* inner top highlight: light catching the glass edge */
+  box-shadow:
+    inset 0 1px 0 rgba(240, 240, 241, 0.12),
+    var(--shadow);
+}
+
+@supports (backdrop-filter: blur(20px)) {
+  .m-glass {
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  }
+}
+
+/* ---------- ink (sumi) ---------- */
+
+.m-ink {
+  background: var(--px-ink);
+  color: var(--px-paper);
+  border-radius: var(--px-radius-8);
+}
+
+/* ---------- hairlines: walls are drawn, not shaded ---------- */
+
+.hairline-t { border-top: 1px solid var(--hairline); }
+.hairline-b { border-bottom: 1px solid var(--hairline); }
+.hairline-l { border-left: 1px solid var(--hairline); }
+.hairline-r { border-right: 1px solid var(--hairline); }
+
+/* ---------- the plaque: ownership primitive ---------- */
+
+.plaque {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--px-space-8);
+  background: var(--px-ink);
+  color: var(--px-paper);
+  border-radius: var(--px-radius-8);
+  padding: 6px 12px;
+  font-family: var(--px-type-mono-family);
+  font-size: var(--px-type-mono-size);
+  line-height: var(--px-type-mono-line);
+  font-weight: var(--px-type-mono-weight);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.plaque__sep {
+  opacity: 0.35;
+}
+
+/* ---------- vault ambient: the caustic drift ---------- */
+/* The water is alive if you stare, invisible if you don't (Codex §7).
+   60s loop, opacity <= .05, CSS only. The single ambient motion allowed. */
+
+.env-vault {
+  position: relative;
+  isolation: isolate;
+}
+
+.env-vault::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  background:
+    radial-gradient(42% 34% at 24% 30%, var(--px-sky-500) 0%, transparent 70%),
+    radial-gradient(36% 30% at 72% 64%, var(--px-sky-700) 0%, transparent 70%),
+    radial-gradient(30% 26% at 50% 88%, var(--px-sky-300) 0%, transparent 70%);
+  animation: px-caustic-drift 60s ease-in-out infinite alternate;
+}
+
+@keyframes px-caustic-drift {
+  0%   { transform: translate3d(-2%, -1%, 0) scale(1); }
+  50%  { transform: translate3d(2%, 2%, 0) scale(1.06); }
+  100% { transform: translate3d(-1%, 3%, 0) scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .env-vault::before {
+    animation-play-state: paused;
+  }
+}
+
+/* ---------- type roles as utilities ---------- */
+
+.t-display, .t-title, .t-heading, .t-body, .t-caption, .t-data-l, .t-data-m, .t-mono {
+  margin: 0;
+}
+
+.t-display {
+  font-family: var(--px-type-display-family);
+  font-size: var(--px-type-display-size);
+  line-height: var(--px-type-display-line);
+  font-weight: var(--px-type-display-weight);
+  letter-spacing: var(--px-type-display-tracking);
+  font-variation-settings: 'opsz' 100;
+}
+
+.t-title {
+  font-family: var(--px-type-title-family);
+  font-size: var(--px-type-title-size);
+  line-height: var(--px-type-title-line);
+  font-weight: var(--px-type-title-weight);
+  letter-spacing: var(--px-type-title-tracking);
+  font-variation-settings: 'opsz' 60;
+}
+
+.t-heading {
+  font-family: var(--px-type-heading-family);
+  font-size: var(--px-type-heading-size);
+  line-height: var(--px-type-heading-line);
+  font-weight: var(--px-type-heading-weight);
+}
+
+.t-body {
+  font-family: var(--px-type-body-family);
+  font-size: var(--px-type-body-size);
+  line-height: var(--px-type-body-line);
+  font-weight: var(--px-type-body-weight);
+}
+
+.t-caption {
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  line-height: var(--px-type-caption-line);
+  font-weight: var(--px-type-caption-weight);
+  letter-spacing: var(--px-type-caption-tracking);
+  color: var(--text-dim);
+}
+
+.t-data-l {
+  font-family: var(--px-type-data-l-family);
+  font-size: var(--px-type-data-l-size);
+  line-height: var(--px-type-data-l-line);
+  font-weight: var(--px-type-data-l-weight);
+  font-variant-numeric: tabular-nums;
+}
+
+.t-data-m {
+  font-family: var(--px-type-data-m-family);
+  font-size: var(--px-type-data-m-size);
+  line-height: var(--px-type-data-m-line);
+  font-weight: var(--px-type-data-m-weight);
+  font-variant-numeric: tabular-nums;
+}
+
+.t-mono {
+  font-family: var(--px-type-mono-family);
+  font-size: var(--px-type-mono-size);
+  line-height: var(--px-type-mono-line);
+  font-weight: var(--px-type-mono-weight);
+}
