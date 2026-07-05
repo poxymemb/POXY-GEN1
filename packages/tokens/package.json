@@ -1,0 +1,11 @@
+{
+  "name": "@poxy/tokens",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Sky Design System tokens. tokens.json is the machine source of truth; css/variables.css is its generated CSS projection.",
+  "type": "module",
+  "exports": {
+    "./tokens.json": "./tokens.json",
+    "./css/variables.css": "./css/variables.css"
+  }
+}
