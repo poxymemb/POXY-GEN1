@@ -1,0 +1,126 @@
+.cx-page {
+  min-height: 100vh;
+  max-width: var(--px-content-max);
+  margin: 0 auto;
+  padding: var(--px-space-24) var(--px-space-16) var(--px-space-64);
+  background: var(--surface);
+  color: var(--text);
+  transition: background-color var(--px-dur-current) var(--px-ease-current),
+    color var(--px-dur-current) var(--px-ease-current);
+}
+
+.cx-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--px-space-16);
+  flex-wrap: wrap;
+  margin-bottom: var(--px-space-32);
+}
+
+.cx-title {
+  margin: 0 0 4px;
+}
+
+.cx-section {
+  margin-bottom: var(--px-space-40);
+}
+
+.cx-section__title {
+  margin: 0 0 4px;
+}
+
+.cx-section__note {
+  margin: 0 0 var(--px-space-16);
+}
+
+.cx-section__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--px-space-16);
+  padding-top: var(--px-space-8);
+}
+
+.cx-row {
+  display: flex;
+  align-items: center;
+  gap: var(--px-space-16);
+  flex-wrap: wrap;
+}
+
+.cx-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--px-space-24);
+  align-items: start;
+}
+
+.cx-materials {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: var(--px-space-16);
+}
+
+.cx-material {
+  display: flex;
+  align-items: flex-end;
+  min-height: 88px;
+  padding: var(--px-space-8) 12px;
+}
+
+.cx-material.m-ink .t-caption {
+  color: rgba(240, 240, 241, 0.7);
+}
+
+.cx-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--px-space-8);
+}
+
+.cx-swatch__chip {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+}
+
+.cx-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--px-space-16);
+  max-width: 560px;
+}
+
+.cx-nav-demo {
+  display: flex;
+  gap: var(--px-space-24);
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.cx-nav-demo .px-nav-rail {
+  min-height: 280px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-16);
+}
+
+.cx-nav-demo__tabbar {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-16);
+  overflow: hidden;
+}
+
+.cx-nav-demo__tabbar .px-tabbar {
+  width: 100%;
+}
+
+.cx-foot {
+  margin-top: var(--px-space-64);
+  text-align: center;
+  font-style: italic;
+}
