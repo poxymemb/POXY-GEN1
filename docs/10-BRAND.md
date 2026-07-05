@@ -310,6 +310,36 @@ Fraunces tight (-0.01em), captions +0.01em, mono as cast.
 
 ---
 
+## 6b. Iconography — Sumi Icons
+
+Every glyph in the interface belongs to one proprietary set drawn on one
+geometry, so the whole product reads as one hand's calligraphy. Masters live
+in `packages/tokens/icons/`; the build emits a typed `Icon(name, size?)`
+factory in `apps/web/src/ui/icons.ts`.
+
+**Geometry law**
+- Grid 24×24, live area 20×20 (2px quiet margin on every side).
+- Stroke 1.5px, `stroke-linecap="round"`, `stroke-linejoin="round"`,
+  `currentColor`. No fills — with exactly two exceptions: nav-active states
+  (the star-fill morph) and the star glyph itself.
+- Geometry inherits the brand star: outer corners use the star's point
+  radius (6%); interior angles echo the 45°/90° of the crossed
+  superellipses; curves prefer single arcs — sumi discipline, the fewest
+  strokes that still read.
+- No perspective, no 3D, no filled duotones. An icon must survive at 16px.
+
+**Metaphors follow the world**
+delete = dissolve (droplet) · verified = seal (tiny square stamp) ·
+market = noren curtain · museum = pedestal · collection = shelf wall ·
+quests = three stones · pass = torii path · trophy = laurel and stone.
+
+**Usage**
+- Import via `Icon('name')` or `iconMarkup('name')` — never paste raw SVG
+  into features, never borrow a third-party set.
+- `back`/`forward` mirror automatically under RTL (CSS in materials.css).
+
+---
+
 ## 7. Motion — water & light
 
 Motion is water: it flows through space, it never pops. Three tempos exist,

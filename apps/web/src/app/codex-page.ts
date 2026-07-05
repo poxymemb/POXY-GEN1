@@ -16,11 +16,12 @@ import {
 import { Seal } from '../ui/components/seal';
 import { openRitual } from '../ui/motion/ritual';
 import { lightsDown, lightsUp, sparkle, travel, chipTick } from '../ui/motion';
+import { Icon, iconMarkup, ICONS, type IconName } from '../ui/icons';
 
-const ICON_HOME = `<svg viewBox="0 0 22 22" aria-hidden="true"><path d="M4 10.5 11 4l7 6.5V18a1 1 0 0 1-1 1h-4v-5H9v5H5a1 1 0 0 1-1-1v-7.5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
-const ICON_GRID = `<svg viewBox="0 0 22 22" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="4" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="12" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="12" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`;
-const ICON_OPEN = `<svg viewBox="0 0 22 22" aria-hidden="true"><path d="M5 8h12v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8Zm-1-3h14v3H4V5Zm5 6h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
-const ICON_MARKET = `<svg viewBox="0 0 22 22" aria-hidden="true"><path d="M4 9l1.2-4h11.6L18 9M4 9h14M4 9v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9m-9 4h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+const ICON_HOME = iconMarkup('home');
+const ICON_GRID = iconMarkup('collection');
+const ICON_OPEN = iconMarkup('open');
+const ICON_MARKET = iconMarkup('market');
 
 function section(id: string, title: string, note: string | null, ...content: HTMLElement[]): HTMLElement {
   return el('section', { class: 'cx-section', id: `cx-${id}` }, [
@@ -36,6 +37,7 @@ const CHAPTERS: Array<[string, string]> = [
   ['pigments', 'Pigments'],
   ['type', 'Type'],
   ['materials', 'Materials'],
+  ['icons', 'Icons'],
   ['components', 'Components'],
   ['motion', 'Motion'],
   ['dna', 'Screen DNA'],
@@ -161,6 +163,36 @@ export function renderCodexPage(host: HTMLElement): void {
         el('div', { class: 'm-ink cx-material' }, [el('span', { class: 't-caption' }, ['m-ink'])]),
       ]),
       row(Plaque({ mint: 142, run: 2500 }), Plaque({ mint: 17, run: 250, provenance: 'Opened 12 Mar 2026' })),
+    ),
+  );
+
+  // --- iconography: Sumi Icons — one hand's calligraphy
+  const iconNames = Object.keys(ICONS) as IconName[];
+  const iconGrid = (size: number) =>
+    el(
+      'div',
+      { class: 'cx-icons' },
+      iconNames.map((n) =>
+        el('figure', { class: 'cx-icon' }, [
+          el('span', { class: 'cx-icon__glyph' }, [Icon(n, size)]),
+          el('figcaption', { class: 'cx-icon__name t-mono' }, [n]),
+        ]),
+      ),
+    );
+
+  page.append(
+    section(
+      'icons',
+      'Sumi Icons',
+      'One geometry: grid 24, live 20, stroke 1.5 round, currentColor. ' +
+        'Corners echo the star point radius; fewest strokes that still read. ' +
+        'No perspective, no 3D, no duotones. Only the star may fill.',
+      el('h3', { class: 't-heading cx-sub' }, ['24px \u2014 native grid']),
+      iconGrid(24),
+      el('h3', { class: 't-heading cx-sub' }, ['16px \u2014 must survive']),
+      iconGrid(16),
+      el('h3', { class: 't-heading cx-sub' }, ['Paper on vault']),
+      el('div', { class: 'm-ink cx-icons-inverse' }, [iconGrid(24)]),
     ),
   );
 
