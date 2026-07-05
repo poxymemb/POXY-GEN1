@@ -1,0 +1,53 @@
+.px-odds {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+}
+
+.px-odds__row {
+  display: flex;
+  align-items: center;
+  gap: var(--px-space-8);
+  min-height: 40px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.px-odds__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.px-odds__label {
+  flex: 1;
+  font-family: var(--px-type-body-family);
+  font-size: 14px;
+  color: var(--text);
+}
+
+.px-odds__value {
+  font-family: var(--px-type-data-m-family);
+  font-size: var(--px-type-data-m-size);
+  font-weight: var(--px-type-data-m-weight);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.px-odds__footer {
+  padding-top: var(--px-space-8);
+}
+
+.px-odds__proof {
+  border: none;
+  background: none;
+  padding: 8px 0;
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  color: var(--px-sky-700);
+  cursor: pointer;
+}
+
+[data-env='vault'] .px-odds__proof {
+  color: var(--px-sky-300);
+}

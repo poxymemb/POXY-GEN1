@@ -1,0 +1,90 @@
+.px-nav-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-8);
+  width: var(--px-rail-w);
+  padding: var(--px-space-16) 0;
+  border-right: 1px solid var(--hairline);
+  background: var(--surface);
+}
+
+.px-tabbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  border-top: 1px solid var(--hairline);
+  background: var(--surface);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.px-nav__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 56px;
+  min-height: 52px;
+  padding: 6px 4px;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: var(--px-radius-12);
+  transition: color var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-nav__item:hover {
+  color: var(--text);
+}
+
+.px-nav__icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.px-nav__icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Micro-signature #4: outline -> star fill morph on activate. */
+.px-nav__icon--star {
+  position: absolute;
+  top: 6px;
+  color: var(--px-sky-500);
+  opacity: 0;
+  scale: 0.6;
+  transition: opacity var(--px-dur-surface) var(--px-ease-surface),
+    scale var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.px-nav__item[aria-current='page'] {
+  color: var(--px-sky-700);
+}
+
+[data-env='vault'] .px-nav__item[aria-current='page'] {
+  color: var(--px-sky-300);
+}
+
+.px-nav__item[aria-current='page'] .px-nav__icon--outline {
+  opacity: 0;
+}
+
+.px-nav__item[aria-current='page'] .px-nav__icon--star {
+  opacity: 1;
+  scale: 1;
+}
+
+.px-nav__label {
+  font-family: var(--px-type-caption-family);
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: var(--px-type-caption-tracking);
+}

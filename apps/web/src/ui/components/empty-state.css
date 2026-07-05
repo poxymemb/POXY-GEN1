@@ -1,0 +1,23 @@
+.px-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-16);
+  padding: var(--px-space-48) var(--px-space-24);
+  text-align: center;
+}
+
+.px-empty__star {
+  color: var(--text);
+  opacity: 0.1;
+}
+
+.px-empty__message {
+  margin: 0;
+  font-family: var(--px-type-title-family);
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: var(--px-type-title-weight);
+  letter-spacing: var(--px-type-title-tracking);
+  color: var(--text-dim);
+}

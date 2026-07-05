@@ -1,0 +1,33 @@
+.px-pedestal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-8);
+  margin: 0;
+}
+
+.px-pedestal__case {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: var(--px-space-16);
+}
+
+.px-pedestal__ground {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  translate: -50% 0;
+  width: 55%;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(28, 28, 30, 0.18) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+[data-env='vault'] .px-pedestal__ground {
+  background: radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
+}
