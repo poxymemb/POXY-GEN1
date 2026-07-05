@@ -22,13 +22,24 @@ const ICON_GRID = `<svg viewBox="0 0 22 22" aria-hidden="true"><rect x="4" y="4"
 const ICON_OPEN = `<svg viewBox="0 0 22 22" aria-hidden="true"><path d="M5 8h12v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8Zm-1-3h14v3H4V5Zm5 6h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
 const ICON_MARKET = `<svg viewBox="0 0 22 22" aria-hidden="true"><path d="M4 9l1.2-4h11.6L18 9M4 9h14M4 9v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9m-9 4h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
 
-function section(title: string, note: string | null, ...content: HTMLElement[]): HTMLElement {
-  return el('section', { class: 'cx-section' }, [
+function section(id: string, title: string, note: string | null, ...content: HTMLElement[]): HTMLElement {
+  return el('section', { class: 'cx-section', id: `cx-${id}` }, [
     el('h2', { class: 'cx-section__title t-heading' }, [title]),
     note ? el('p', { class: 'cx-section__note t-caption' }, [note]) : null,
     el('div', { class: 'cx-section__body' }, content),
   ]);
 }
+
+const CHAPTERS: Array<[string, string]> = [
+  ['philosophy', 'Philosophy'],
+  ['star', 'Star'],
+  ['pigments', 'Pigments'],
+  ['type', 'Type'],
+  ['materials', 'Materials'],
+  ['components', 'Components'],
+  ['motion', 'Motion'],
+  ['dna', 'Screen DNA'],
+];
 
 function row(...items: Array<HTMLElement | string>): HTMLElement {
   return el(
@@ -68,15 +79,44 @@ export function renderCodexPage(host: HTMLElement): void {
     el('header', { class: 'cx-head' }, [
       el('div', {}, [
         el('h1', { class: 'cx-title t-title' }, ['The POXY Codex']),
-        el('p', { class: 't-caption' }, ['Styleguide stub. Still Water v1.1. Living demos arrive with 02C.']),
+        el('p', { class: 't-caption' }, ['Living styleguide. Still Water v1.1. Dev build only.']),
       ]),
       envSwitch.root,
     ]),
+    el(
+      'nav',
+      { class: 'cx-chapters', 'aria-label': 'Codex chapters' },
+      CHAPTERS.map(([id, label]) =>
+        el('a', { class: 'cx-chapters__link', href: `#cx-${id}`, onclick: (e: Event) => {
+          e.preventDefault();
+          document.getElementById(`cx-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } }, [label]),
+      ),
+    ),
+  );
+
+  // --- philosophy pull-quotes (from docs/10-BRAND.md)
+  page.append(
+    section(
+      'philosophy',
+      '静水 Still Water',
+      'The design law. Full text: docs/10-BRAND.md.',
+      el('blockquote', { class: 'cx-quote' }, [
+        el('p', { class: 'cx-quote__line' }, ['A still water surface with depth beneath. Anticipation lives in silence, not noise.']),
+      ]),
+      el('blockquote', { class: 'cx-quote' }, [
+        el('p', { class: 'cx-quote__line' }, ['Would this exist in a quiet museum, or only in a casino? If casino — delete it.']),
+      ]),
+      el('blockquote', { class: 'cx-quote' }, [
+        el('p', { class: 'cx-quote__line' }, ['Quiet is what makes the reveal loud. The number is the drama.']),
+      ]),
+    ),
   );
 
   // --- type ramp
   page.append(
     section(
+      'type',
       'Type — the museum voice',
       'Max three faces per screen. Fraunces and Space Grotesk never share a line.',
       el('p', { class: 't-display' }, ['Kaze no Katana']),
@@ -92,6 +132,7 @@ export function renderCodexPage(host: HTMLElement): void {
   // --- pigments
   page.append(
     section(
+      'pigments',
       'Pigments — quarantined',
       'Gems, badges, reveal glow. Nowhere else.',
       row(...RARITIES.map((r) => RarityGem({ rarity: r, size: 'l', labelled: true }))),
@@ -103,6 +144,7 @@ export function renderCodexPage(host: HTMLElement): void {
   // --- materials
   page.append(
     section(
+      'materials',
       'Materials',
       'Paper, glass, ink. Hairlines draw walls; shadows stay soft.',
       el('div', { class: 'cx-materials' }, [
@@ -119,6 +161,7 @@ export function renderCodexPage(host: HTMLElement): void {
   // --- the star
   page.append(
     section(
+      'star',
       'The Star',
       'The only decorative glyph. Spin is the only spinner.',
       row(
@@ -137,6 +180,7 @@ export function renderCodexPage(host: HTMLElement): void {
 
   page.append(
     section(
+      'components',
       'Buttons',
       'One primary per viewport. Danger is quiet, for destructive confirms only.',
       row(
@@ -158,6 +202,7 @@ export function renderCodexPage(host: HTMLElement): void {
 
   page.append(
     section(
+      'fields',
       'Fields & selection',
       null,
       el('div', { class: 'cx-grid-2' }, [
@@ -221,6 +266,7 @@ export function renderCodexPage(host: HTMLElement): void {
   // --- figure cards
   page.append(
     section(
+      'cards',
       'Figure cards',
       'Locked 3:4. Placeholders look intentional. Absence is designed.',
       el('div', { class: 'cx-cards' }, [
@@ -235,6 +281,7 @@ export function renderCodexPage(host: HTMLElement): void {
   const pity = PityRing({ current: 27, threshold: 30 });
   page.append(
     section(
+      'numbers',
       'Numbers are heroes',
       'StatNumber, PityRing (quiet pulse at 90%), OddsTable with proof footer.',
       row(
@@ -278,6 +325,7 @@ export function renderCodexPage(host: HTMLElement): void {
 
   page.append(
     section(
+      'motion',
       'Motion — water & light',
       'The Open Ritual (tap during the Still skips to Emergence; the Oath never skips). lightsDown/lightsUp is THE route transition.',
       row(
@@ -335,6 +383,7 @@ export function renderCodexPage(host: HTMLElement): void {
   const seal = Seal({ size: 72, caption: 'Proven fair.' });
   page.append(
     section(
+      'seal',
       'The Seal — authenticity only',
       'Demo of the verify verdict. Features other than verify/certificates never import it.',
       row(seal.root, Button({ label: 'Stamp', variant: 'ghost', onClick: () => void seal.stamp() }).root),
@@ -344,6 +393,7 @@ export function renderCodexPage(host: HTMLElement): void {
   // --- pedestal + empty state
   page.append(
     section(
+      'pedestal',
       'Museum pedestal & empty state',
       null,
       el('div', { class: 'cx-grid-2' }, [
@@ -375,12 +425,41 @@ export function renderCodexPage(host: HTMLElement): void {
 
   page.append(
     section(
+      'header-nav',
       'Header & navigation',
       'Active nav = star fill + sky (micro-signature #4).',
       header.root,
       el('div', { class: 'cx-nav-demo' }, [
         NavRail({ items: navItems, active: 'collection' }).root,
         el('div', { class: 'cx-nav-demo__tabbar' }, [TabBar({ items: navItems, active: 'open' }).root]),
+      ]),
+    ),
+  );
+
+  // --- screen DNA thumbnails (blueprints live in docs/11-SCREEN-DNA.md)
+  const dnaThumb = (name: string, env: 'gallery' | 'vault', heroNote: string) =>
+    el('div', { class: `cx-dna ${env === 'vault' ? 'cx-dna--vault' : ''}` }, [
+      el('span', { class: 'cx-dna__hero' }),
+      el('span', { class: 'cx-dna__row' }),
+      el('span', { class: 'cx-dna__row cx-dna__row--short' }),
+      el('span', { class: 'cx-dna__name t-caption' }, [name]),
+      el('span', { class: 'cx-dna__note t-mono' }, [heroNote]),
+    ]);
+
+  page.append(
+    section(
+      'dna',
+      'Screen DNA',
+      'One hero per screen (tokonoma). Full blueprints: docs/11-SCREEN-DNA.md.',
+      el('div', { class: 'cx-dna-grid' }, [
+        dnaThumb('Home', 'gallery', "hero: today's case"),
+        dnaThumb('Open', 'vault', 'hero: the altar'),
+        dnaThumb('Collection', 'gallery', 'hero: the wall'),
+        dnaThumb('Figure detail', 'gallery', 'hero: the figure'),
+        dnaThumb('Market', 'gallery', 'hero: the crowd'),
+        dnaThumb('Museum', 'gallery', 'hero: pedestals'),
+        dnaThumb('Passport', 'vault', 'hero: the card'),
+        dnaThumb('Verify', 'gallery', 'hero: the verdict'),
       ]),
     ),
   );

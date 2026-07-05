@@ -73,7 +73,11 @@ npm run build:mcu            # MCU production build
 
 ## Current state (updated 2026-07-05)
 
-Repo restructured to monorepo (PROMPT 01 of the Beta Launch Pack complete).
-`apps/web` is a boot placeholder; the design system (PROMPT 02), shell/auth
-(PROMPT 03) and gacha engine (PROMPT 04) are the next sessions in order.
-The deployed product is still the archived prototype.
+Monorepo restructure (PROMPT 01) and the design core (PROMPTS 02A/02B/02C)
+are complete. The POXY Codex (`docs/10-BRAND.md`, Still Water v1.1) is the
+design law; `docs/11-SCREEN-DNA.md` holds per-screen blueprints. `apps/web`
+has the full UI kit (`src/ui`), the motion library incl. the Open Ritual
+(`src/ui/motion`), tokens generated from `packages/tokens/tokens.json`
+(`node packages/tokens/build.mjs`), and a dev-only living styleguide at
+`#/codex`. Next sessions in order: shell/auth (PROMPT 03), gacha engine
+(PROMPT 04). The deployed product is still the archived prototype.

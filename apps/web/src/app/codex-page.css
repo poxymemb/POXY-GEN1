@@ -127,6 +127,126 @@
   overflow: visible;
 }
 
+.cx-chapters {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: var(--px-space-4);
+  overflow-x: auto;
+  padding: var(--px-space-8) 0;
+  margin-bottom: var(--px-space-24);
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  scrollbar-width: none;
+}
+
+.cx-chapters::-webkit-scrollbar {
+  display: none;
+}
+
+.cx-chapters__link {
+  flex: none;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: var(--px-radius-full);
+  color: var(--text-dim);
+  text-decoration: none;
+  font-family: var(--px-type-caption-family);
+  font-size: var(--px-type-caption-size);
+  letter-spacing: var(--px-type-caption-tracking);
+  transition: color var(--px-dur-surface) var(--px-ease-surface),
+    background-color var(--px-dur-surface) var(--px-ease-surface);
+}
+
+.cx-chapters__link:hover {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.cx-quote {
+  margin: 0;
+  padding: var(--px-space-8) var(--px-space-16);
+  border-left: 2px solid var(--px-sky-500);
+}
+
+.cx-quote__line {
+  margin: 0;
+  font-family: var(--px-type-title-family);
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: var(--px-type-title-weight);
+  letter-spacing: var(--px-type-title-tracking);
+  color: var(--text);
+}
+
+.cx-dna-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--px-space-16);
+}
+
+.cx-dna {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  aspect-ratio: 3 / 4;
+  padding: 10px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-12);
+  background: var(--surface-raised);
+}
+
+.cx-dna--vault {
+  background: var(--px-vault-deep);
+  border-color: rgba(240, 240, 241, 0.1);
+}
+
+.cx-dna__hero {
+  flex: 1;
+  border: 1px dashed var(--hairline);
+  border-radius: var(--px-radius-8);
+}
+
+.cx-dna--vault .cx-dna__hero {
+  border-color: rgba(240, 240, 241, 0.18);
+}
+
+.cx-dna__row {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--hairline);
+}
+
+.cx-dna__row--short {
+  width: 60%;
+}
+
+.cx-dna--vault .cx-dna__row {
+  background: rgba(240, 240, 241, 0.12);
+}
+
+.cx-dna__name {
+  margin-top: 2px;
+  color: var(--text);
+}
+
+.cx-dna--vault .cx-dna__name,
+.cx-dna--vault .cx-dna__note {
+  color: var(--px-paper);
+}
+
+.cx-dna__note {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.cx-dna--vault .cx-dna__note {
+  color: rgba(240, 240, 241, 0.55);
+}
+
 .cx-foot {
   margin-top: var(--px-space-64);
   text-align: center;
