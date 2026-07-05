@@ -1,0 +1,202 @@
+/* Certificate of Authenticity — A5-proportioned document (Codex, 02H).
+   Screen rendering + print stylesheet. Ratio 1:1.414 (A-series). */
+
+.px-cert {
+  --cert-pad: clamp(20px, 5%, 40px);
+  position: relative;
+  width: min(420px, 100%);
+  aspect-ratio: 1 / 1.414;
+  margin-inline: auto;
+  padding: var(--cert-pad);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--px-space-8);
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-8);
+  box-shadow: var(--px-shadow-raised);
+  color: var(--px-ink);
+  background: var(--px-paper);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Inner hairline frame, inset like a mount board. */
+.px-cert::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.px-cert__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.px-cert__title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.px-cert__series {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.px-cert__art {
+  width: 62%;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: var(--px-radius-4);
+}
+
+.px-cert__art-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.px-cert__art-star {
+  width: 36%;
+  opacity: 0.5;
+}
+
+.px-cert__art-star svg {
+  width: 100%;
+  height: auto;
+}
+
+.px-cert__name {
+  font-family: var(--px-type-display-family);
+  font-size: clamp(22px, 6cqw, 28px);
+  font-weight: 560;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.px-cert__rarity {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.px-cert__plaque .px-plaque__bar {
+  display: inline-block;
+  padding: 5px 14px;
+  background: var(--px-ink);
+  color: var(--px-paper);
+  font-family: var(--px-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  border-radius: 2px;
+}
+
+.px-cert__provenance {
+  width: 100%;
+  margin: var(--px-space-4) 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.px-cert__prov-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--px-space-16);
+  padding: 5px 2px;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 11px;
+}
+
+.px-cert__prov-row dt {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.px-cert__prov-row dd {
+  margin: 0;
+  color: var(--px-ink);
+}
+
+.px-cert__opening-id {
+  font-size: 10px;
+}
+
+.px-cert__foot {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.px-cert__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.px-cert__qr svg {
+  width: 64px;
+  height: 64px;
+}
+
+.px-cert__qr-hint {
+  font-size: 9px;
+  color: var(--text-dim);
+}
+
+.px-cert__imprint {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.px-cert__legal {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------- print --- */
+
+@media print {
+  @page {
+    size: A5 portrait;
+    margin: 0;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .px-cert,
+  .px-cert * {
+    visibility: visible;
+  }
+
+  .px-cert {
+    position: fixed;
+    inset: 0;
+    width: 148mm;
+    height: 210mm;
+    margin: 0;
+    padding: 12mm;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
